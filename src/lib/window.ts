@@ -9,57 +9,11 @@ import { isTauri } from "@/lib/platform";
 export async function openSettingsWindow(): Promise<void> {
   if (isTauri()) {
     try {
-      const { WebviewWindow } = await import("@tauri-apps/api/webviewWindow");
-      const existing = await WebviewWindow.getByLabel("settings");
-      if (existing) {
-        await existing.unminimize();
-        await existing.show();
-        await existing.setFocus();
-        return;
-      }
-
-      const settingsWin = new WebviewWindow("settings", {
-        url: "index.html?view=settings",
-        title: t().settings.title,
-        width: 720,
-        height: 560,
-        minWidth: 540,
-        minHeight: 440,
-        resizable: true,
-        center: true,
-        decorations: true,
-        visible: false, // Hidden until content has painted to prevent flash
-        focus: true,
-      });
-
-      settingsWin.once("tauri://dom-loaded", async () => {
-        try {
-          await settingsWin.show();
-          await settingsWin.setFocus();
-        } catch {
-          // ignore
-        }
-      });
-
-      // Safety timeout fallback
-      setTimeout(async () => {
-        try {
-          const isVis = await settingsWin.isVisible();
-          if (!isVis) {
-            await settingsWin.show();
-            await settingsWin.setFocus();
-          }
-        } catch {
-          // ignore
-        }
-      }, 500);
-
-      settingsWin.once("tauri://error", (err) => {
-        console.error("Failed to create settings window:", err);
-      });
+      const { invoke } = await import("@tauri-apps/api/core");
+      await invoke("open_settings_window", { title: t().settings.title });
       return;
     } catch (err) {
-      console.warn("Failed to open native settings window:", err);
+      console.warn("Failed to open native settings window via invoke:", err);
     }
   }
 
