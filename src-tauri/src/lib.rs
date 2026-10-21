@@ -43,6 +43,9 @@ async fn open_settings_window(app: tauri::AppHandle, title: Option<String>) -> R
 #[tauri::command]
 async fn open_about_window(app: tauri::AppHandle, title: Option<String>) -> Result<(), String> {
     if let Some(win) = app.get_webview_window("about") {
+        if let Some(t) = title {
+            let _ = win.set_title(&t);
+        }
         let _ = win.unminimize();
         let _ = win.show();
         let _ = win.set_focus();
@@ -55,7 +58,7 @@ async fn open_about_window(app: tauri::AppHandle, title: Option<String>) -> Resu
         .title(win_title)
         .inner_size(480.0, 360.0)
         .min_inner_size(420.0, 320.0)
-        .resizable(false)
+        .resizable(true)
         .center()
         .decorations(false)
         .shadow(true)

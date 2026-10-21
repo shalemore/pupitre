@@ -38,6 +38,21 @@
         "shadow": true,
         "visible": false,
         "additionalBrowserArgs": "--disable-features=RendererCodeIntegrity,msWebOOUI,msPdfOOUI,msSmartScreenProtection --enable-font-antialiasing"
+      },
+      {
+        "label": "about",
+        "title": "About Pupitre",
+        "url": "index.html#about",
+        "width": 480,
+        "height": 360,
+        "minWidth": 420,
+        "minHeight": 320,
+        "resizable": true,
+        "decorations": false,
+        "center": true,
+        "shadow": true,
+        "visible": false,
+        "additionalBrowserArgs": "--disable-features=RendererCodeIntegrity,msWebOOUI,msPdfOOUI,msSmartScreenProtection --enable-font-antialiasing"
       }
     ],
     "security": {

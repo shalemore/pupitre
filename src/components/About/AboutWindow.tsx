@@ -1,12 +1,13 @@
-import { BookOpen, Check, Copy, X } from "lucide-solid";
+import { BookOpen, Check, Copy } from "lucide-solid";
 import { createSignal, onCleanup, onMount, Show, type Component } from "solid-js";
-import { Button } from "@/components/ui";
+import { Button, WindowControls } from "@/components/ui";
 import { setLanguageSetting, t } from "@/i18n";
 import { formatAboutText, getAboutInfo } from "@/lib/about";
 import { setupConfigSync } from "@/lib/config";
-import { isTauri } from "@/lib/platform";
+import { isMacOS, isTauri } from "@/lib/platform";
 import { applyTheme } from "@/lib/theme";
-import { closeCurrentWindow } from "@/lib/window";
+import { closeCurrentWindow, toggleMaximizeCurrentWindow } from "@/lib/window";
+import { cn } from "cn";
 
 export const AboutWindow: Component = () => {
   const [copied, setCopied] = createSignal(false);
@@ -24,7 +25,11 @@ export const AboutWindow: Component = () => {
     });
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" || e.key === "Enter") {
+      if (
+        e.key === "Escape" ||
+        e.key === "Enter" ||
+        (e.key.toLowerCase() === "w" && (e.metaKey || e.ctrlKey))
+      ) {
         e.preventDefault();
         closeCurrentWindow();
       } else if (e.altKey && e.key.toLowerCase() === "c") {
@@ -82,25 +87,22 @@ export const AboutWindow: Component = () => {
   };
 
   return (
-    <div class="h-screen w-screen flex flex-col bg-surface-1 text-foreground select-none overflow-hidden font-sans border border-border/80">
+    <div class="h-screen w-screen flex flex-col bg-surface-1 text-foreground select-none overflow-hidden font-sans">
       {/* Native Drag Region Header */}
       <header
         data-tauri-drag-region
-        class="h-9 w-full relative flex items-center justify-between px-3 select-none bg-surface-0 border-b border-border/80 text-xs shrink-0"
+        class={cn(
+          "h-10 w-full relative flex items-center justify-between px-3 select-none bg-surface-0 border-b border-border/80 transition-colors text-xs z-30 shrink-0",
+          !isMacOS() && "pr-36",
+        )}
+        onDblClick={toggleMaximizeCurrentWindow}
       >
         <div class="flex items-center gap-2 pointer-events-none" data-tauri-drag-region>
           <img src="/logo.svg" alt="logo" class="rounded-sm shadow-sm size-4 select-none" />
-          <span class="font-medium text-foreground tracking-wide">{info.name}</span>
+          <span class="font-semibold text-foreground tracking-wide">{info.name}</span>
         </div>
 
-        <button
-          type="button"
-          onClick={() => closeCurrentWindow()}
-          title={t().settings.closeTip}
-          class="size-7 flex items-center justify-center rounded-md hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors cursor-pointer"
-        >
-          <X class="size-3.5" />
-        </button>
+        <WindowControls class="absolute right-0 top-0" />
       </header>
 
       {/* Main Content */}
