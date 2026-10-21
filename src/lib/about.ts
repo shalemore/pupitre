@@ -1,5 +1,6 @@
 import { t } from "@/i18n";
 import { isTauri } from "@/lib/platform";
+import pkg from "../../package.json";
 
 export interface AboutInfo {
   name: string;
@@ -12,7 +13,7 @@ export interface AboutInfo {
 }
 
 export function getAboutInfo(): AboutInfo {
-  const version = "0.2.0";
+  const version = pkg.version;
   const date = "2026-10-21";
   const userAgent = typeof navigator !== "undefined" ? navigator.userAgent : "Unknown";
   const platform = typeof navigator !== "undefined" ? navigator.platform : "Unknown";
