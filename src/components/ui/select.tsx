@@ -3,24 +3,24 @@ import { createSignal, For, type JSX, Show, splitProps } from "solid-js";
 import { cn } from "cn";
 import { useClickOutside } from "@/lib/dom";
 
-export interface SelectOption {
-  value: string;
+export interface SelectOption<T extends string = string> {
+  value: T;
   label: string;
   icon?: JSX.Element;
   description?: string;
 }
 
-export interface SelectProps {
-  value: string;
-  onChange: (value: string) => void;
-  options: SelectOption[];
+export interface SelectProps<T extends string = string> {
+  value: T;
+  onChange: (value: T) => void;
+  options: readonly SelectOption<T>[] | SelectOption<T>[];
   placeholder?: string;
   size?: "sm" | "default";
   class?: string;
   disabled?: boolean;
 }
 
-export function Select(props: SelectProps) {
+export function Select<T extends string = string>(props: SelectProps<T>) {
   const [local, rest] = splitProps(props, [
     "value",
     "onChange",
@@ -41,7 +41,7 @@ export function Select(props: SelectProps) {
     () => setIsOpen(false),
   );
 
-  const handleSelect = (val: string) => {
+  const handleSelect = (val: T) => {
     local.onChange(val);
     setIsOpen(false);
   };

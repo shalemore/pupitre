@@ -1,8 +1,9 @@
 import { render } from "solid-js/web";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { App } from "@/App";
 import "@/app.css";
 import { SettingsWindow } from "@/components/Settings/SettingsWindow";
-import { isMacOS } from "@/lib/platform";
+import { isMacOS, isTauri } from "@/lib/platform";
 import { applyTheme } from "@/lib/theme";
 
 // Tag root HTML element with platform attribute for platform-tailored font smoothing and metrics
@@ -29,22 +30,12 @@ function isSettingsView(): boolean {
   if (typeof window === "undefined") return false;
 
   const params = new URLSearchParams(window.location.search);
-  if (params.get("view") === "settings") return true;
-
-  if (window.location.hash.includes("settings")) return true;
-
-  if ((window as unknown as { pupitreView?: string }).pupitreView === "settings") {
+  if (params.get("view") === "settings" || window.location.hash.includes("settings")) {
     return true;
   }
 
-  try {
-    const winRecord = window as unknown as Record<string, any>;
-    const internals = winRecord["__TAURI_INTERNALS__"];
-    if (internals?.metadata?.currentWindow?.label === "settings") {
-      return true;
-    }
-  } catch {
-    // ignore
+  if (isTauri()) {
+    return getCurrentWindow().label === "settings";
   }
 
   return false;

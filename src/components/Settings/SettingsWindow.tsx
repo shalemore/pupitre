@@ -27,7 +27,7 @@ import {
   TabsTrigger,
   WindowControls,
 } from "@/components/ui";
-import { setLanguageSetting, SUPPORTED_LOCALES, t } from "@/i18n";
+import { type LanguageSetting, setLanguageSetting, SUPPORTED_LOCALES, t } from "@/i18n";
 import { getAboutInfo } from "@/lib/about";
 import {
   config,
@@ -103,7 +103,7 @@ export const SettingsWindow: Component = () => {
     }
   };
 
-  const themeOptions = (): SelectOption[] => [
+  const themeOptions = (): SelectOption<PupitreConfig["theme"]>[] => [
     {
       value: "system",
       label: t().settings.themeSystem,
@@ -121,20 +121,20 @@ export const SettingsWindow: Component = () => {
     },
   ];
 
-  const editorWidthOptions = (): SelectOption[] => [
+  const editorWidthOptions = (): SelectOption<EditorWidth>[] => [
     { value: "compact", label: `${t().settings.editorWidthCompact} (720px)` },
     { value: "normal", label: `${t().settings.editorWidthNormal} (880px)` },
     { value: "wide", label: `${t().settings.editorWidthWide} (1040px)` },
     { value: "full", label: `${t().settings.editorWidthFull} (100%)` },
   ];
 
-  const fontOptions = (): SelectOption[] => [
+  const fontOptions = (): SelectOption<FontFamilyOption>[] => [
     { value: "sans", label: t().settings.fontFamilySans },
     { value: "mono", label: t().settings.fontFamilyMono },
     { value: "serif", label: t().settings.fontFamilySerif },
   ];
 
-  const languageOptions = (): SelectOption[] => [
+  const languageOptions = (): SelectOption<LanguageSetting>[] => [
     { value: "auto", label: t().settings.followSystem },
     ...SUPPORTED_LOCALES.map((l) => ({ value: l.code, label: l.label })),
   ];
@@ -207,9 +207,7 @@ export const SettingsWindow: Component = () => {
                   >
                     <Select
                       value={config().theme}
-                      onChange={(val) =>
-                        handleUpdate({ theme: val as "system" | "light" | "dark" })
-                      }
+                      onChange={(theme) => handleUpdate({ theme })}
                       options={themeOptions()}
                     />
                   </SettingRow>
@@ -221,7 +219,7 @@ export const SettingsWindow: Component = () => {
                   >
                     <Select
                       value={config().editorWidth}
-                      onChange={(val) => handleUpdate({ editorWidth: val as EditorWidth })}
+                      onChange={(editorWidth) => handleUpdate({ editorWidth })}
                       options={editorWidthOptions()}
                     />
                   </SettingRow>
@@ -243,7 +241,7 @@ export const SettingsWindow: Component = () => {
                   >
                     <Select
                       value={config().fontFamily}
-                      onChange={(val) => handleUpdate({ fontFamily: val as FontFamilyOption })}
+                      onChange={(fontFamily) => handleUpdate({ fontFamily })}
                       options={fontOptions()}
                     />
                   </SettingRow>
@@ -338,7 +336,7 @@ export const SettingsWindow: Component = () => {
                   >
                     <Select
                       value={config().locale}
-                      onChange={(val) => handleUpdate({ locale: val as any })}
+                      onChange={(locale) => handleUpdate({ locale })}
                       options={languageOptions()}
                     />
                   </SettingRow>
