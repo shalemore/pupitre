@@ -3,6 +3,7 @@ name = "pupitre"
 version = "0.2.1"
 description = "A markdown editor"
 edition = "2021"
+license = "MIT"
 
 [lib]
 name = "pupitre_lib"
