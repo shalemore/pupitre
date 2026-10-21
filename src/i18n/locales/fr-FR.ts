@@ -99,6 +99,11 @@ export const frFR = {
     downloadUpdate: "Mettre à jour maintenant",
     downloadingUpdate: "Téléchargement de la mise à jour",
     restartToApply: "Redémarrer pour appliquer",
+    updateErrorNotFound: "Aucune nouvelle version disponible. Vous êtes à jour.",
+    updateErrorNetwork: "Échec de connexion réseau. Veuillez vérifier votre réseau.",
+    updateErrorSignature:
+      "Échec de vérification de signature. Téléchargez manuellement la mise à jour.",
+    updateErrorGeneric: "Impossible de vérifier les mises à jour. Réessayez plus tard.",
   },
   about: {
     versionLabel: "Version :",

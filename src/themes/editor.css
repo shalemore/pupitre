@@ -263,6 +263,14 @@
   color: var(--editor-text-muted) !important;
 }
 
+/* Universal LTR Direction for code and technical diagrams (W3C i18n Standard) */
+.cm-editor
+  :is(.cm-codeblock-line, .cm-code, .cm-inline-code, .cm-codeblock-header, .ondine-diagram) {
+  direction: ltr;
+  text-align: left;
+  unicode-bidi: isolate;
+}
+
 /* Inline Code */
 .cm-code,
 .cm-inline-code {
@@ -273,9 +281,6 @@
   background-color: var(--editor-inline-code-bg) !important;
   color: var(--editor-inline-code-text) !important;
   border: 1px solid var(--editor-inline-code-border) !important;
-  direction: ltr !important;
-  unicode-bidi: isolate !important;
-  text-align: left !important;
 }
 
 /* Fenced Code Block styling (Native CodeMirror line-based, seamlessly continuous) */
@@ -291,9 +296,6 @@
   border-left: 1px solid var(--editor-codeblock-border);
   border-right: 1px solid var(--editor-codeblock-border);
   position: relative;
-  direction: ltr !important;
-  text-align: left !important;
-  unicode-bidi: isolate !important;
 }
 
 .cm-codeblock-first {
@@ -330,8 +332,6 @@
   gap: 10px !important;
   z-index: 10;
   pointer-events: auto;
-  direction: ltr !important;
-  unicode-bidi: isolate !important;
 }
 
 .cm-codeblock-lang {
@@ -453,12 +453,6 @@
 .cm-selectionMatch {
   background-color: oklch(from var(--ui-text-primary) l c h / 12%);
   border-radius: var(--radius-xs);
-}
-
-/* Ondine Mermaid Diagram Preview (Always LTR) */
-.ondine-diagram {
-  direction: ltr !important;
-  unicode-bidi: isolate !important;
 }
 
 /* Markdown Image Preview */

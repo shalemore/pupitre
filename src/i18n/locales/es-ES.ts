@@ -100,6 +100,10 @@ export const esES = {
     downloadUpdate: "Actualizar ahora",
     downloadingUpdate: "Descargando actualización",
     restartToApply: "Reiniciar para aplicar",
+    updateErrorNotFound: "No se encontraron nuevas versiones. Ya tienes la última versión.",
+    updateErrorNetwork: "Error de conexión de red. Comprueba tu conexión e inténtalo de nuevo.",
+    updateErrorSignature: "Error al verificar la firma. Descarga la actualización manualmente.",
+    updateErrorGeneric: "No se pudo comprobar la actualización. Inténtalo más tarde.",
   },
   about: {
     versionLabel: "Versión:",

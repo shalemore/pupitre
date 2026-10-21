@@ -3,7 +3,7 @@
 > **Pupitre** (del francés _atril_ o _pupitre_) es un editor Markdown de escritorio ágil, ligero y libre de distracciones, desarrollado con **Tauri v2 + SolidJS + CodeMirror 6**.
 > Diseñado exclusivamente para la escritura pura y una tipografía impecable.
 
-![Pupitre Logo](/logo-front.svg)
+![Pupitre Logo](/logo.svg)
 
 ---
 

@@ -3,7 +3,7 @@
 > **Pupitre** (French for _music stand_ or _lectern_) is a distraction-free, high-performance desktop Markdown editor built on **Tauri v2 + SolidJS + CodeMirror 6**.
 > Designed for pure writing and effortless typographic flow.
 
-![Pupitre Logo](/logo-front.svg)
+![Pupitre Logo](/logo.svg)
 ---
 
 > [!NOTE]

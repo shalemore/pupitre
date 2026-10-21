@@ -99,6 +99,10 @@ export const zhTW = {
     downloadUpdate: "立即更新",
     downloadingUpdate: "正在下載更新",
     restartToApply: "重啟以套用更新",
+    updateErrorNotFound: "暫未檢測到新版本，當前已是最新狀態",
+    updateErrorNetwork: "網路連線失敗，請檢查網路設定或稍後重試",
+    updateErrorSignature: "更新包簽名校驗未通過，請前往官網下載",
+    updateErrorGeneric: "檢查更新失敗，請稍後重試",
   },
   about: {
     versionLabel: "版本:",

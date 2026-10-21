@@ -117,6 +117,10 @@ export const arSA = {
     downloadUpdate: "تحديث الآن",
     downloadingUpdate: "جارٍ تنزيل التحديث",
     restartToApply: "إعادة التشغيل للتطبيق",
+    updateErrorNotFound: "لم يتم العثور على إصدارات جديدة، التطبيق محدث بالفعل.",
+    updateErrorNetwork: "فشل الاتصال بالشبكة، يرجى التحقق من اتصالك والمحاولة لاحقاً.",
+    updateErrorSignature: "فشل التحقق من التوقيع الرقمي، يرجى التنزيل يدوياً من الموقع.",
+    updateErrorGeneric: "فشل البحث عن تحديثات، يرجى المحاولة مرة أخرى لاحقاً.",
   },
   about: {
     versionLabel: "الإصدار:",

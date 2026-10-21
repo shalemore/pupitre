@@ -3,7 +3,7 @@
 > **Pupitre**(프랑스어로 '악보대' 또는 '강연대')는 **Tauri v2 + SolidJS + CodeMirror 6**를 기반으로 제작된 가볍고 빠르며 세련된 데스크톱 Markdown 인플레이스 편집기입니다.
 > 오직 순수한 글쓰기와 방해 없는 타이포그래피 경험을 위해 설계되었습니다.
 
-![Pupitre Logo](/logo-front.svg)
+![Pupitre Logo](/logo.svg)
 
 ---
 

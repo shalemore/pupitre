@@ -99,6 +99,10 @@ export const itIT = {
     downloadUpdate: "Aggiorna ora",
     downloadingUpdate: "Download aggiornamento",
     restartToApply: "Riavvia per applicare",
+    updateErrorNotFound: "Nessuna nuova versione trovata. Sei già alla versione più recente.",
+    updateErrorNetwork: "Connessione di rete fallita. Verifica la connessione e riprova.",
+    updateErrorSignature: "Verifica della firma fallita. Scarica l'aggiornamento manualmente.",
+    updateErrorGeneric: "Impossibile verificare gli aggiornamenti. Riprova più tardi.",
   },
   about: {
     versionLabel: "Versione:",

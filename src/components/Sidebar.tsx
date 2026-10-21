@@ -39,10 +39,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
                 <button
                   type="button"
                   onClick={() => props.onSelectHeading(heading.blockIndex)}
-                  style={{
-                    "padding-inline-start": `${8 + indent()}px`,
-                    "text-align": "start",
-                  }}
+                  style={{ "padding-inline-start": `${8 + indent()}px` }}
                   class={`w-full text-start py-1.5 pe-2.5 rounded-md text-[12px] transition-colors cursor-pointer block ${
                     isCurrent()
                       ? "bg-brand/10 text-brand font-medium shadow-sm"
@@ -50,13 +47,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
                   }`}
                   title={heading.title}
                 >
-                  <span
-                    dir="auto"
-                    class="block truncate"
-                    style={{ "text-align": "start", "unicode-bidi": "isolate" }}
-                  >
-                    {heading.title}
-                  </span>
+                  <bdi class="block truncate">{heading.title}</bdi>
                 </button>
               );
             }}

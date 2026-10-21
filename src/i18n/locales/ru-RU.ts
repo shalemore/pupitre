@@ -99,6 +99,10 @@ export const ruRU = {
     downloadUpdate: "Обновить сейчас",
     downloadingUpdate: "Загрузка обновления",
     restartToApply: "Перезапустить для обновления",
+    updateErrorNotFound: "Новых версий не найдено. У вас установлена актуальная версия.",
+    updateErrorNetwork: "Ошибка подключения к сети. Проверьте соединение и повторите попытку.",
+    updateErrorSignature: "Ошибка проверки подписи обновления. Скачайте релиз вручную.",
+    updateErrorGeneric: "Не удалось проверить наличие обновлений. Попробуйте позже.",
   },
   about: {
     versionLabel: "Версия:",

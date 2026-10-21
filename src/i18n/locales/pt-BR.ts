@@ -99,6 +99,10 @@ export const ptBR = {
     downloadUpdate: "Atualizar agora",
     downloadingUpdate: "Baixando atualização",
     restartToApply: "Reiniciar para aplicar",
+    updateErrorNotFound: "Nenhuma nova versão encontrada. Você já está na versão mais recente.",
+    updateErrorNetwork: "Falha na conexão de rede. Verifique suas configurações e tente novamente.",
+    updateErrorSignature: "Falha na verificação de assinatura. Baixe a atualização manualmente.",
+    updateErrorGeneric: "Falha ao verificar atualizações. Tente novamente mais tarde.",
   },
   about: {
     versionLabel: "Versão:",

@@ -1,4 +1,4 @@
-import { BookOpen, Check, Info, X } from "lucide-solid";
+import { BookOpen, Check, X } from "lucide-solid";
 import { createSignal, onCleanup, onMount, Show, type Component } from "solid-js";
 import { Button } from "@/components/ui";
 import { t } from "@/i18n";
@@ -123,9 +123,11 @@ export const AboutModal: Component<AboutModalProps> = (props) => {
           </div>
 
           <div class="p-6 flex items-start gap-4">
-            <div class="size-9 rounded-full bg-brand text-brand-foreground flex items-center justify-center shrink-0 shadow-sm">
-              <Info class="size-5 stroke-[2.5]" />
-            </div>
+            <img
+              src="/logo.svg"
+              alt="Pupitre"
+              class="size-11 rounded-xl select-none shadow-sm shrink-0"
+            />
 
             <div class="flex-1 space-y-3 pt-0.5 text-xs">
               <h2 class="text-lg font-semibold tracking-tight text-foreground">{info.name}</h2>

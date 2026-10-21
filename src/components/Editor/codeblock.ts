@@ -223,14 +223,13 @@ export const codeBlockNativePlugin = ViewPlugin.fromClass(
       }
 
       for (const [lineFrom, { classes, indentLength }] of lineMap) {
-        const spec: { class: string; attributes?: { [key: string]: string } } = {
+        const attributes: { [key: string]: string } = { dir: "ltr" };
+        if (indentLength > 0) {
+          attributes["style"] = `--codeblock-indent: ${indentLength}ch;`;
+        }
+        const spec = {
           class: Array.from(classes).join(" "),
-          attributes: {
-            dir: "ltr",
-            style: `direction: ltr !important; text-align: left !important; unicode-bidi: isolate !important;${
-              indentLength > 0 ? ` --codeblock-indent: ${indentLength}ch;` : ""
-            }`,
-          },
+          attributes,
         };
         decos.push(Decoration.line(spec).range(lineFrom));
       }

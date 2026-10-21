@@ -3,7 +3,7 @@
 > **Pupitre** (französisch für _Notenständer_ oder _Pult_) ist ein eleganter, ablenkungsfreier Desktop-Markdown-Editor, der auf **Tauri v2 + SolidJS + CodeMirror 6** basiert.
 > Entwickelt für reines Schreiben und makellose Typografie.
 
-![Pupitre Logo](/logo-front.svg)
+![Pupitre Logo](/logo.svg)
 ---
 
 > [!NOTE]

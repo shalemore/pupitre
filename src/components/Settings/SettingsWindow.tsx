@@ -15,7 +15,6 @@ import {
 import { createSignal, onCleanup, onMount, Show, type Component } from "solid-js";
 import {
   Button,
-  Card,
   Input,
   Select,
   type SelectOption,
@@ -45,6 +44,7 @@ import { applyTheme } from "@/lib/theme";
 import {
   checkForUpdates,
   downloadAndInstallUpdate,
+  getFriendlyUpdateError,
   relaunchApp,
   updaterState,
 } from "@/lib/updater";
@@ -230,12 +230,8 @@ export const SettingsWindow: Component = () => {
                   {t().settings.appearance}
                 </h3>
 
-                <Card class="p-2 divide-y divide-border/50">
-                  <SettingRow
-                    title={t().settings.theme}
-                    description={t().settings.themeDark}
-                    class="px-2"
-                  >
+                <div class="divide-y divide-border/40">
+                  <SettingRow title={t().settings.theme} description={t().settings.themeDark}>
                     <Select
                       value={config().theme}
                       onChange={(theme) => handleUpdate({ theme })}
@@ -246,7 +242,6 @@ export const SettingsWindow: Component = () => {
                   <SettingRow
                     title={t().settings.editorWidth}
                     description={t().settings.editorWidthNormal}
-                    class="px-2"
                   >
                     <Select
                       value={config().editorWidth}
@@ -254,7 +249,7 @@ export const SettingsWindow: Component = () => {
                       options={editorWidthOptions()}
                     />
                   </SettingRow>
-                </Card>
+                </div>
               </div>
             </TabsContent>
 
@@ -264,11 +259,10 @@ export const SettingsWindow: Component = () => {
                   {t().settings.editor}
                 </h3>
 
-                <Card class="p-2 divide-y divide-border/50">
+                <div class="divide-y divide-border/40">
                   <SettingRow
                     title={t().settings.typography}
                     description={t().settings.fontFamilySans}
-                    class="px-2"
                   >
                     <Select
                       value={config().fontFamily}
@@ -277,11 +271,7 @@ export const SettingsWindow: Component = () => {
                     />
                   </SettingRow>
 
-                  <SettingRow
-                    title={t().settings.fontSize}
-                    description={`${config().fontSize}px`}
-                    class="px-2"
-                  >
+                  <SettingRow title={t().settings.fontSize} description={`${config().fontSize}px`}>
                     <input
                       type="range"
                       min="13"
@@ -298,7 +288,6 @@ export const SettingsWindow: Component = () => {
                   <SettingRow
                     title={t().settings.lineHeight}
                     description={`${config().lineHeight.toFixed(2)}`}
-                    class="px-2"
                   >
                     <input
                       type="range"
@@ -315,11 +304,7 @@ export const SettingsWindow: Component = () => {
                     />
                   </SettingRow>
 
-                  <SettingRow
-                    title={t().settings.tabSize}
-                    description={t().settings.tabSizeDesc}
-                    class="px-2"
-                  >
+                  <SettingRow title={t().settings.tabSize} description={t().settings.tabSizeDesc}>
                     <Select
                       value={String(config().tabSize)}
                       onChange={(val) => handleUpdate({ tabSize: Number.parseInt(val, 10) })}
@@ -328,28 +313,20 @@ export const SettingsWindow: Component = () => {
                     />
                   </SettingRow>
 
-                  <SettingRow
-                    title={t().settings.wordWrap}
-                    description={t().settings.wordWrapDesc}
-                    class="px-2"
-                  >
+                  <SettingRow title={t().settings.wordWrap} description={t().settings.wordWrapDesc}>
                     <Switch
                       checked={config().wordWrap}
                       onChange={(checked) => handleUpdate({ wordWrap: checked })}
                     />
                   </SettingRow>
 
-                  <SettingRow
-                    title={t().settings.autoSave}
-                    description={t().settings.autoSaveDesc}
-                    class="px-2"
-                  >
+                  <SettingRow title={t().settings.autoSave} description={t().settings.autoSaveDesc}>
                     <Switch
                       checked={config().autoSave}
                       onChange={(checked) => handleUpdate({ autoSave: checked })}
                     />
                   </SettingRow>
-                </Card>
+                </div>
               </div>
             </TabsContent>
 
@@ -359,28 +336,26 @@ export const SettingsWindow: Component = () => {
                   {t().settings.language}
                 </h3>
 
-                <Card class="p-2">
-                  <SettingRow
-                    title={t().settings.language}
-                    description={t().settings.followSystem}
-                    class="px-2"
-                  >
+                <div class="py-1">
+                  <SettingRow title={t().settings.language} description={t().settings.followSystem}>
                     <Select
                       value={config().locale}
                       onChange={(locale) => handleUpdate({ locale })}
                       options={languageOptions()}
                     />
                   </SettingRow>
-                </Card>
+                </div>
               </div>
             </TabsContent>
 
             <TabsContent value="about">
               <div class="space-y-4 max-w-lg text-xs">
                 <div class="flex items-center gap-3">
-                  <div class="size-10 rounded-xl bg-brand text-brand-foreground flex items-center justify-center font-bold text-lg shadow-sm">
-                    P
-                  </div>
+                  <img
+                    src="/logo.svg"
+                    alt="Pupitre"
+                    class="size-10 rounded-xl select-none shadow-sm shrink-0"
+                  />
                   <div class="flex-1 min-w-0">
                     <h2 class="text-base font-semibold text-foreground">{aboutInfo.name}</h2>
                     <div class="text-[11px] text-muted-foreground">
@@ -474,12 +449,15 @@ export const SettingsWindow: Component = () => {
                 </Show>
 
                 <Show when={updaterState.status() === "error"}>
-                  <div class="p-2.5 rounded-md bg-destructive/10 border border-destructive/20 text-destructive text-xs">
-                    {updaterState.errorMessage() || "Update check failed"}
+                  <div
+                    class="p-2.5 rounded-md bg-destructive/10 border border-destructive/20 text-destructive text-xs"
+                    title={updaterState.errorMessage() ?? undefined}
+                  >
+                    {getFriendlyUpdateError(updaterState.errorMessage())}
                   </div>
                 </Show>
 
-                <Card class="space-y-1.5 font-mono text-[11px] text-muted-foreground bg-surface-0/60 p-3">
+                <div class="space-y-1.5 font-mono text-[11px] text-muted-foreground py-1">
                   <div>
                     <span class="text-foreground/70 font-sans">{t().about.osLabel}</span>{" "}
                     {aboutInfo.os}
@@ -492,11 +470,11 @@ export const SettingsWindow: Component = () => {
                     <span class="text-foreground/70 font-sans">{t().about.userAgentLabel}</span>{" "}
                     {aboutInfo.userAgent}
                   </div>
-                </Card>
+                </div>
 
                 <Separator />
 
-                <div class="p-3 rounded-lg bg-surface-0 border border-border/80 flex items-center justify-between gap-3 text-xs">
+                <div class="py-2 flex items-center justify-between gap-3 text-xs">
                   <div class="min-w-0">
                     <div class="font-medium text-foreground">{t().about.sampleDocTitle}</div>
                     <div class="text-[11px] text-muted-foreground truncate">

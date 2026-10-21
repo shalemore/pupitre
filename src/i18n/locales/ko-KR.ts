@@ -100,6 +100,10 @@ export const koKR = {
     downloadUpdate: "지금 업데이트",
     downloadingUpdate: "업데이트 다운로드 중",
     restartToApply: "재시작하여 적용",
+    updateErrorNotFound: "새로운 버전을 찾을 수 없습니다. 현재 최신 상태입니다.",
+    updateErrorNetwork: "네트워크 연결에 실패했습니다. 네트워크 설정을 확인해 주세요.",
+    updateErrorSignature: "서명 확인에 실패했습니다. 수동으로 다운로드해 주세요.",
+    updateErrorGeneric: "업데이트 확인에 실패했습니다. 나중에 다시 시도해 주세요.",
   },
   about: {
     versionLabel: "버전:",

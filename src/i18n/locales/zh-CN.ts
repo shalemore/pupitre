@@ -98,6 +98,10 @@ export const zhCN = {
     downloadUpdate: "立即更新",
     downloadingUpdate: "正在下载更新",
     restartToApply: "重启以应用更新",
+    updateErrorNotFound: "暂未检测到新版本，当前已是最新状态",
+    updateErrorNetwork: "网络连接失败，请检查网络设置或稍后重试",
+    updateErrorSignature: "更新包签名校验未通过，请前往官网下载",
+    updateErrorGeneric: "检查更新失败，请稍后重试",
   },
   about: {
     versionLabel: "版本:",

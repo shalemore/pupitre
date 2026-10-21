@@ -3,7 +3,7 @@
 > **Pupitre** (dal francese _leggio_ o _pulpito_) è un editor Markdown desktop leggero, scattante e privo di distrazioni, sviluppato su **Tauri v2 + SolidJS + CodeMirror 6**.
 > Creato esclusivamente per la scrittura pura e un'esperienza tipografica senza compromessi.
 
-![Pupitre Logo](/logo-front.svg)
+![Pupitre Logo](/logo.svg)
 
 ---
 

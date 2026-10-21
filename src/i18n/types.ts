@@ -122,6 +122,10 @@ export interface TranslationSchema {
     readonly downloadUpdate: string;
     readonly downloadingUpdate: string;
     readonly restartToApply: string;
+    readonly updateErrorNotFound: string;
+    readonly updateErrorNetwork: string;
+    readonly updateErrorSignature: string;
+    readonly updateErrorGeneric: string;
   };
   readonly about: {
     readonly versionLabel: string;

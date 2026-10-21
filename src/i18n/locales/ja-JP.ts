@@ -99,6 +99,11 @@ export const jaJP = {
     downloadUpdate: "今すぐ更新",
     downloadingUpdate: "アップデートをダウンロード中",
     restartToApply: "再起動して適用",
+    updateErrorNotFound: "新しいバージョンは見つかりませんでした。最新の状態です。",
+    updateErrorNetwork: "ネットワーク接続に失敗しました。接続設定を確認してください。",
+    updateErrorSignature:
+      "更新パッケージの署名検証に失敗しました。手動でダウンロードしてください。",
+    updateErrorGeneric: "更新の確認に失敗しました。後でもう一度お試しください。",
   },
   about: {
     versionLabel: "バージョン:",

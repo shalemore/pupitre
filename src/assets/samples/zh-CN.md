@@ -3,7 +3,7 @@
 > **Pupitre**（法文原意：琴谱架、讲台）是一款基于 **Tauri v2 + SolidJS + CodeMirror 6** 打造的极简、轻量、高颜值的桌面 Markdown 原位编辑器。
 > 专为纯粹写作与沉浸式排版体验而生。
 
-![Pupitre Logo](/logo-front.svg)
+![Pupitre Logo](/logo.svg)
 
 ---
 

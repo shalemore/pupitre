@@ -3,7 +3,7 @@
 > **Pupitre** (du français _pupitre d'orchestre_ ou _lutrin_) est un éditeur Markdown de bureau, léger, rapide et épuré, propulsé par **Tauri v2 + SolidJS + CodeMirror 6**.
 > Conçu exclusivement pour la rédaction pure et l'élégance typographique.
 
-![Pupitre Logo](/logo-front.svg)
+![Pupitre Logo](/logo.svg)
 ---
 
 > [!NOTE]

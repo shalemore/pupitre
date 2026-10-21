@@ -3,7 +3,7 @@
 > **Pupitre**（フランス語で「譜面台」「演台」）は、**Tauri v2 + SolidJS + CodeMirror 6** を基盤に構築された、軽量・高速・美麗なデスクトップ Markdown インプレースエディタです。
 > 純粋な執筆と快適なタイポグラフィ体験のために設計されました。
 
-![Pupitre Logo](/logo-front.svg)
+![Pupitre Logo](/logo.svg)
 ---
 
 > [!NOTE]

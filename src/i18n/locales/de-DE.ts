@@ -99,6 +99,11 @@ export const deDE = {
     downloadUpdate: "Jetzt aktualisieren",
     downloadingUpdate: "Update wird heruntergeladen",
     restartToApply: "Neu starten zum Anwenden",
+    updateErrorNotFound: "Keine neuere Version gefunden. Sie sind auf dem neuesten Stand.",
+    updateErrorNetwork: "Netzwerkverbindung fehlgeschlagen. Bitte prüfen Sie Ihre Verbindung.",
+    updateErrorSignature:
+      "Signaturprüfung fehlgeschlagen. Bitte laden Sie das Update manuell herunter.",
+    updateErrorGeneric: "Suche nach Updates fehlgeschlagen. Bitte später erneut versuchen.",
   },
   about: {
     versionLabel: "Version:",

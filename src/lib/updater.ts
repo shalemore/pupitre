@@ -1,5 +1,6 @@
 import { createSignal } from "solid-js";
 import { isTauri } from "@/lib/platform";
+import { t } from "@/i18n";
 import type { Update } from "@tauri-apps/plugin-updater";
 
 export type UpdateStatus =
@@ -110,4 +111,38 @@ export async function relaunchApp(): Promise<void> {
   } catch (err) {
     console.error("Failed to relaunch:", err);
   }
+}
+
+export function getFriendlyUpdateError(rawError: string | null): string {
+  if (!rawError) return "";
+  const err = rawError.toLowerCase();
+
+  // No release found on remote / 404 / JSON parsing error from empty endpoint
+  if (
+    err.includes("release json") ||
+    err.includes("not found") ||
+    err.includes("404") ||
+    err.includes("could not fetch a valid release")
+  ) {
+    return t().settings.updateErrorNotFound;
+  }
+
+  // Network connection issues
+  if (
+    err.includes("network") ||
+    err.includes("connect") ||
+    err.includes("timeout") ||
+    err.includes("dns") ||
+    err.includes("failed to send request") ||
+    err.includes("offline")
+  ) {
+    return t().settings.updateErrorNetwork;
+  }
+
+  // Signature validation failure
+  if (err.includes("signature") || err.includes("pubkey") || err.includes("verify")) {
+    return t().settings.updateErrorSignature;
+  }
+
+  return t().settings.updateErrorGeneric;
 }

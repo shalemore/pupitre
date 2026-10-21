@@ -99,6 +99,10 @@ export const enUS = {
     downloadUpdate: "Update Now",
     downloadingUpdate: "Downloading update",
     restartToApply: "Restart to Apply",
+    updateErrorNotFound: "No new version found. You are already on the latest release.",
+    updateErrorNetwork: "Network connection failed. Please check your network and try again.",
+    updateErrorSignature: "Signature verification failed. Please download the release manually.",
+    updateErrorGeneric: "Failed to check for updates. Please try again later.",
   },
   about: {
     versionLabel: "Version:",
