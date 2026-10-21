@@ -28,6 +28,10 @@
     "fs:allow-exists",
     "fs:allow-home-read-recursive",
     "fs:allow-home-write-recursive",
+    {
+      "identifier": "fs:scope",
+      "allow": ["**", "**/*"]
+    },
     "updater:default",
     "process:default",
     "process:allow-restart"

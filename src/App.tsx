@@ -355,6 +355,31 @@ export const App: Component = () => {
       setTimeout(() => editorHandle?.focus(), 50);
     } catch (err) {
       console.error("Failed to open recent file:", err);
+      if (isTauri()) {
+        try {
+          const { message } = await import("@tauri-apps/plugin-dialog");
+          await message(`${targetPath}\n\n${err instanceof Error ? err.message : String(err)}`, {
+            title: t().common.appName,
+            kind: "error",
+          });
+        } catch {
+          // ignore
+        }
+      }
+      if (isTauri()) {
+        try {
+          const { message } = await import("@tauri-apps/plugin-dialog");
+          await message(
+            `${targetPath}\n\n${err instanceof Error ? err.message : String(err)}`,
+            {
+              title: t().common.appName,
+              kind: "error",
+            },
+          );
+        } catch {
+          // ignore
+        }
+      }
     }
   };
 

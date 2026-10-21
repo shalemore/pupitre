@@ -194,3 +194,9 @@ export async function addRecentFile(filePath: string): Promise<void> {
   const updated = [filePath, ...current].slice(0, 10);
   await updateConfig({ recentFiles: updated });
 }
+
+export async function removeRecentFile(filePath: string): Promise<void> {
+  if (!filePath) return;
+  const updated = config().recentFiles.filter((p) => p !== filePath);
+  await updateConfig({ recentFiles: updated });
+}
