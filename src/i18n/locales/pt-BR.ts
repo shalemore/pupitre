@@ -125,6 +125,7 @@ export const ptBR = {
     noRecentFiles: "Nenhum arquivo recente",
     save: "Salvar",
     saveAs: "Salvar Como...",
+    exportPdf: "Exportar como PDF...",
     close: "Fechar Janela",
     undo: "Desfazer",
     redo: "Refazer",

@@ -125,6 +125,7 @@ export const itIT = {
     noRecentFiles: "Nessun file recente",
     save: "Salva",
     saveAs: "Salva con nome...",
+    exportPdf: "Esporta come PDF...",
     close: "Chiudi finestra",
     undo: "Annulla",
     redo: "Ripeti",

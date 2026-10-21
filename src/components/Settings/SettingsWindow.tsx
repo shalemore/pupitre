@@ -153,10 +153,10 @@ export const SettingsWindow: Component = () => {
   ];
 
   const editorWidthOptions = (): SelectOption<EditorWidth>[] => [
-    { value: "compact", label: `${t().settings.editorWidthCompact} (720px)` },
-    { value: "normal", label: `${t().settings.editorWidthNormal} (880px)` },
-    { value: "wide", label: `${t().settings.editorWidthWide} (1040px)` },
-    { value: "full", label: `${t().settings.editorWidthFull} (100%)` },
+    { value: "compact", label: t().settings.editorWidthCompact },
+    { value: "normal", label: t().settings.editorWidthNormal },
+    { value: "wide", label: t().settings.editorWidthWide },
+    { value: "full", label: t().settings.editorWidthFull },
   ];
 
   const fontOptions = (): SelectOption<FontFamilyOption>[] => [

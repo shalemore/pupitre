@@ -199,6 +199,11 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
               shortcut="Ctrl+Shift+S"
               onClick={() => executeAction(props.onSaveAs)}
             />
+            <Show when={props.onExportPdf}>
+              {(handler) => (
+                <MenuItem label={menu().exportPdf} onClick={() => executeAction(handler())} />
+              )}
+            </Show>
 
             <MenuDivider />
 

@@ -125,6 +125,7 @@ export const zhTW = {
     noRecentFiles: "無最近檔案",
     save: "儲存",
     saveAs: "另存新檔...",
+    exportPdf: "匯出為 PDF...",
     close: "關閉視窗",
     undo: "復原",
     redo: "重做",

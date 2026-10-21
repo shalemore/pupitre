@@ -39,6 +39,7 @@ export const TitleBar: Component<TitleBarProps> = (props) => {
           onOpenRecent={props.onOpenRecent}
           onSave={props.onSave}
           onSaveAs={props.onSaveAs}
+          onExportPdf={props.onExportPdf}
           onToggleSidebar={props.onToggleSidebar}
           onToggleTheme={props.onToggleTheme}
           onOpenSettings={props.onOpenSettings}

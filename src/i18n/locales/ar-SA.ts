@@ -143,6 +143,7 @@ export const arSA = {
     noRecentFiles: "لا توجد ملفات أخيرة",
     save: "حفظ",
     saveAs: "حفظ باسم...",
+    exportPdf: "تصدير كـ PDF...",
     close: "إغلاق النافذة",
     undo: "تراجع",
     redo: "إعادة",

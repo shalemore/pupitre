@@ -271,6 +271,14 @@
   unicode-bidi: isolate;
 }
 
+/* Universal LTR Direction for code and technical diagrams (W3C i18n Standard) */
+.cm-editor
+  :is(.cm-codeblock-line, .cm-code, .cm-inline-code, .cm-codeblock-header, .ondine-diagram) {
+  direction: ltr;
+  text-align: left;
+  unicode-bidi: isolate;
+}
+
 /* Inline Code */
 .cm-code,
 .cm-inline-code {

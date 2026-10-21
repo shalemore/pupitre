@@ -148,6 +148,7 @@ export interface TranslationSchema {
     readonly noRecentFiles: string;
     readonly save: string;
     readonly saveAs: string;
+    readonly exportPdf: string;
     readonly close: string;
     readonly undo: string;
     readonly redo: string;

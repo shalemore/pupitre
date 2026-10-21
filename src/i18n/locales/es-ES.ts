@@ -126,6 +126,7 @@ export const esES = {
     noRecentFiles: "No hay archivos recientes",
     save: "Guardar",
     saveAs: "Guardar como...",
+    exportPdf: "Exportar como PDF...",
     close: "Cerrar ventana",
     undo: "Deshacer",
     redo: "Rehacer",

@@ -25,6 +25,7 @@ export interface AppActionHandlers {
   onOpenRecent: (filePath: string) => void;
   onSave: () => void;
   onSaveAs: () => void;
+  onExportPdf?: (() => void) | undefined;
   onToggleSidebar: () => void;
   onToggleTheme: () => void;
   onOpenSettings: () => void;

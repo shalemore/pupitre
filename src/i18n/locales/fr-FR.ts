@@ -126,6 +126,7 @@ export const frFR = {
     noRecentFiles: "Aucun fichier récent",
     save: "Enregistrer",
     saveAs: "Enregistrer sous...",
+    exportPdf: "Exporter au format PDF...",
     close: "Fermer la fenêtre",
     undo: "Annuler",
     redo: "Rétablir",

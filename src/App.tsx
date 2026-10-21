@@ -343,6 +343,27 @@ export const App: Component = () => {
     }
   };
 
+  const [isExportingPdf, setIsExportingPdf] = createSignal<boolean>(false);
+
+  const handleExportPdf = async () => {
+    if (isExportingPdf()) return;
+    const content = source();
+    if (!content.trim() && !hasDocument()) return;
+    setIsExportingPdf(true);
+    try {
+      const { exportMarkdownToPdf } = await import("@/lib/exportPdf");
+      const defaultName =
+        customFileName() ??
+        (filePath() ? filePath()!.split(/[\\/]/).pop() : null) ??
+        t().common.untitledFileName;
+      await exportMarkdownToPdf(content, defaultName);
+    } catch (err) {
+      console.error("Failed to export PDF:", err);
+    } finally {
+      setIsExportingPdf(false);
+    }
+  };
+
   const handleOpenAbout = () => {
     setIsAboutOpen(true);
   };
@@ -504,6 +525,7 @@ export const App: Component = () => {
         onOpenRecent={handleOpenRecent}
         onSave={handleSave}
         onSaveAs={handleSaveAs}
+        onExportPdf={handleExportPdf}
         onToggleSidebar={toggleSidebar}
         onToggleTheme={toggleTheme}
         onOpenSettings={openSettingsWindow}
