@@ -106,6 +106,9 @@ export const deDE = {
     osLabel: "Betriebssystem:",
     engineLabel: "Engine:",
     userAgentLabel: "User-Agent:",
+    openSampleDoc: "Beispieldokument öffnen",
+    sampleDocTitle: "Beispieldokument",
+    sampleDocDesc: "Pupitre-Funktionsdemo und Markdown-Syntax erkunden",
   },
   menu: {
     file: "Datei",
@@ -133,6 +136,7 @@ export const deDE = {
     toggleSidebar: "Gliederung ein-/ausblenden",
     toggleTheme: "Design wechseln",
     preferences: "Einstellungen...",
+    sampleDocument: "Markdown-Beispieldokument",
     about: "Über Pupitre",
     documentation: "Dokumentation",
     shortcuts: "Tastaturkürzel",

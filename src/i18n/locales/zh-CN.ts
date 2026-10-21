@@ -105,6 +105,9 @@ export const zhCN = {
     osLabel: "操作系统:",
     engineLabel: "内核引擎:",
     userAgentLabel: "用户代理:",
+    openSampleDoc: "打开示例文档",
+    sampleDocTitle: "示例文档",
+    sampleDocDesc: "浏览 Pupitre 功能演示与全部 Markdown 语法示例",
   },
   menu: {
     file: "文件",
@@ -132,6 +135,7 @@ export const zhCN = {
     toggleSidebar: "显示/隐藏大纲",
     toggleTheme: "切换深浅主题",
     preferences: "首选项设置...",
+    sampleDocument: "示例 Markdown 文档",
     about: "关于 Pupitre",
     documentation: "在线文档",
     shortcuts: "快捷键指南",

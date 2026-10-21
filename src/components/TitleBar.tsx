@@ -43,6 +43,7 @@ export const TitleBar: Component<TitleBarProps> = (props) => {
           onToggleTheme={props.onToggleTheme}
           onOpenSettings={props.onOpenSettings}
           onOpenAbout={props.onOpenAbout}
+          onOpenSample={props.onOpenSample}
           onFind={props.onFind}
           onReplace={props.onReplace}
           onZoomIn={props.onZoomIn}

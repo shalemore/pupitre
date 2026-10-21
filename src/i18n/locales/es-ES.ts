@@ -107,6 +107,9 @@ export const esES = {
     osLabel: "SO:",
     engineLabel: "Motor:",
     userAgentLabel: "Agente de usuario:",
+    openSampleDoc: "Abrir documento de ejemplo",
+    sampleDocTitle: "Documento de ejemplo",
+    sampleDocDesc: "Explora la demo y la sintaxis Markdown completa",
   },
   menu: {
     file: "Archivo",
@@ -134,6 +137,7 @@ export const esES = {
     toggleSidebar: "Mostrar/Ocultar esquema",
     toggleTheme: "Cambiar tema claro/oscuro",
     preferences: "Preferencias...",
+    sampleDocument: "Documento Markdown de ejemplo",
     about: "Acerca de Pupitre",
     documentation: "Documentación",
     shortcuts: "Atajos de teclado",

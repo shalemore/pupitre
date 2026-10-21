@@ -124,6 +124,9 @@ export const arSA = {
     osLabel: "نظام التشغيل:",
     engineLabel: "المحرك:",
     userAgentLabel: "وكيل المستخدم:",
+    openSampleDoc: "فتح المستند النموذجي",
+    sampleDocTitle: "مستند نموذجي",
+    sampleDocDesc: "استكشف ميزات Pupitre ودليل تنسيق Markdown الكامل",
   },
   menu: {
     file: "ملف",
@@ -151,6 +154,7 @@ export const arSA = {
     toggleSidebar: "تبديل المخطط الجانبي",
     toggleTheme: "تبديل السمة",
     preferences: "التفضيلات...",
+    sampleDocument: "مستند Markdown نموذجي",
     about: "حول Pupitre",
     documentation: "التوثيق",
     shortcuts: "اختصارات لوحة المفاتيح",

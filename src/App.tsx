@@ -7,7 +7,7 @@ import { TitleBar } from "@/components/TitleBar";
 import { Welcome } from "@/components/Welcome";
 import { ZoomIndicator } from "@/components/ZoomIndicator";
 import { setLanguageSetting, t } from "@/i18n";
-import { openNativeAboutDialog } from "@/lib/about";
+import { SAMPLE_MARKDOWN_DOC } from "@/assets/sampleDocument";
 import { setupBrowserInterceptors } from "@/lib/browserInterceptors";
 import {
   addRecentFile,
@@ -319,11 +319,21 @@ export const App: Component = () => {
     }
   };
 
-  const handleOpenAbout = async () => {
-    const handled = await openNativeAboutDialog();
-    if (!handled) {
-      setIsAboutOpen(true);
+  const handleOpenAbout = () => {
+    setIsAboutOpen(true);
+  };
+
+  const handleOpenSample = async () => {
+    if (isDirty()) {
+      const ok = await confirmDiscard(t().dialogs.discardActionOpen);
+      if (!ok) return;
     }
+    setFilePath(null);
+    setCustomFileName("Pupitre-Guide.md");
+    updateDocument(SAMPLE_MARKDOWN_DOC, false);
+    setIsDirty(false);
+    setIsAboutOpen(false);
+    setTimeout(() => editorHandle?.focus(), 50);
   };
 
   onMount(() => {
@@ -388,7 +398,23 @@ export const App: Component = () => {
     window.addEventListener("keydown", handleGlobalKeyDown);
     window.addEventListener("drop", handleDrop);
 
+    let actionChannel: BroadcastChannel | null = null;
+    const handleActionMessage = (event: MessageEvent<{ action?: string }>) => {
+      if (event.data?.action === "open-sample") {
+        handleOpenSample();
+      }
+    };
+    if (typeof BroadcastChannel !== "undefined") {
+      try {
+        actionChannel = new BroadcastChannel("pupitre-actions");
+        actionChannel.addEventListener("message", handleActionMessage);
+      } catch {
+        // ignore
+      }
+    }
+
     let unlistenMenu: (() => void) | null = null;
+    let unlistenAppAction: (() => void) | null = null;
     if (typeof window !== "undefined" && "__TAURI_INTERNALS__" in window) {
       import("@tauri-apps/api/event").then(({ listen }) => {
         listen<string>("menu-action", (event) => {
@@ -402,6 +428,8 @@ export const App: Component = () => {
             openSettingsWindow();
           } else if (event.payload === "about") {
             handleOpenAbout();
+          } else if (event.payload === "sample-doc") {
+            handleOpenSample();
           } else if (event.payload === "find") {
             handleOpenFind();
           } else if (event.payload === "replace") {
@@ -410,6 +438,14 @@ export const App: Component = () => {
         }).then((fn) => {
           unlistenMenu = fn;
         });
+
+        listen<string>("app-action", (event) => {
+          if (event.payload === "open-sample") {
+            handleOpenSample();
+          }
+        }).then((fn) => {
+          unlistenAppAction = fn;
+        });
       });
     }
 
@@ -417,7 +453,10 @@ export const App: Component = () => {
       if (autoSaveTimeout) clearTimeout(autoSaveTimeout);
       if (zoomTimeout) clearTimeout(zoomTimeout);
       cleanupInterceptors();
+      actionChannel?.removeEventListener("message", handleActionMessage);
+      actionChannel?.close();
       unlistenMenu?.();
+      unlistenAppAction?.();
       window.removeEventListener("keydown", handleGlobalKeyDown);
       window.removeEventListener("drop", handleDrop);
     });
@@ -441,6 +480,7 @@ export const App: Component = () => {
         onToggleTheme={toggleTheme}
         onOpenSettings={openSettingsWindow}
         onOpenAbout={handleOpenAbout}
+        onOpenSample={handleOpenSample}
         onFind={handleOpenFind}
         onReplace={handleOpenReplace}
         onZoomIn={handleZoomIn}
@@ -513,7 +553,11 @@ export const App: Component = () => {
         </main>
       </div>
 
-      <AboutModal isOpen={isAboutOpen()} onClose={() => setIsAboutOpen(false)} />
+      <AboutModal
+        isOpen={isAboutOpen()}
+        onClose={() => setIsAboutOpen(false)}
+        onOpenSample={handleOpenSample}
+      />
     </div>
   );
 };

@@ -106,6 +106,9 @@ export const ruRU = {
     osLabel: "ОС:",
     engineLabel: "Движок:",
     userAgentLabel: "User Agent:",
+    openSampleDoc: "Открыть пример документа",
+    sampleDocTitle: "Пример документа",
+    sampleDocDesc: "Демонстрация возможностей Pupitre и синтаксиса Markdown",
   },
   menu: {
     file: "Файл",
@@ -133,6 +136,7 @@ export const ruRU = {
     toggleSidebar: "Показать/скрыть содержание",
     toggleTheme: "Переключить тему",
     preferences: "Настройки...",
+    sampleDocument: "Пример Markdown-документа",
     about: "О программе Pupitre",
     documentation: "Документация",
     shortcuts: "Горячие клавиши",

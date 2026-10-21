@@ -106,6 +106,9 @@ export const ptBR = {
     osLabel: "SO:",
     engineLabel: "Mecanismo:",
     userAgentLabel: "User Agent:",
+    openSampleDoc: "Abrir documento de exemplo",
+    sampleDocTitle: "Documento de exemplo",
+    sampleDocDesc: "Explore a demonstração e sintaxe Markdown completa",
   },
   menu: {
     file: "Arquivo",
@@ -133,6 +136,7 @@ export const ptBR = {
     toggleSidebar: "Alternar Sumário",
     toggleTheme: "Alternar Tema",
     preferences: "Preferências...",
+    sampleDocument: "Documento Markdown de exemplo",
     about: "Sobre o Pupitre",
     documentation: "Documentação",
     shortcuts: "Atalhos de Teclado",

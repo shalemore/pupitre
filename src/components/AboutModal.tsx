@@ -1,4 +1,4 @@
-import { Check, Info, X } from "lucide-solid";
+import { BookOpen, Check, Info, X } from "lucide-solid";
 import { createSignal, onCleanup, onMount, Show, type Component } from "solid-js";
 import { Button } from "@/components/ui";
 import { t } from "@/i18n";
@@ -7,6 +7,7 @@ import { formatAboutText, getAboutInfo } from "@/lib/about";
 export interface AboutModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onOpenSample?: () => void;
 }
 
 export const AboutModal: Component<AboutModalProps> = (props) => {
@@ -149,19 +150,39 @@ export const AboutModal: Component<AboutModalProps> = (props) => {
             </div>
           </div>
 
-          <div class="px-5 py-3 border-t border-border/60 bg-surface-0 flex items-center justify-end gap-2 text-xs">
-            <Button variant="outline" size="sm" onClick={handleCopy} class="min-w-20">
-              <Show when={copied()} fallback={<span>{copyLabel()}</span>}>
-                <span class="flex items-center justify-center gap-1 text-success font-medium">
-                  <Check class="size-3" />
-                  {t().common.copied}
-                </span>
+          <div class="px-5 py-3 border-t border-border/60 bg-surface-0 flex items-center justify-between gap-2 text-xs">
+            <div>
+              <Show when={props.onOpenSample}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    props.onClose();
+                    props.onOpenSample?.();
+                  }}
+                  class="gap-1.5 text-xs"
+                  title={t().about.sampleDocDesc}
+                >
+                  <BookOpen class="size-3.5" />
+                  <span>{t().about.openSampleDoc}</span>
+                </Button>
               </Show>
-            </Button>
+            </div>
 
-            <Button variant="brand" size="sm" onClick={props.onClose} class="min-w-20">
-              {okLabel()}
-            </Button>
+            <div class="flex items-center gap-2">
+              <Button variant="outline" size="sm" onClick={handleCopy} class="min-w-20">
+                <Show when={copied()} fallback={<span>{copyLabel()}</span>}>
+                  <span class="flex items-center justify-center gap-1 text-success font-medium">
+                    <Check class="size-3" />
+                    {t().common.copied}
+                  </span>
+                </Show>
+              </Button>
+
+              <Button variant="brand" size="sm" onClick={props.onClose} class="min-w-20">
+                {okLabel()}
+              </Button>
+            </div>
           </div>
         </div>
       </div>

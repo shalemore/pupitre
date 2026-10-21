@@ -29,6 +29,7 @@ export interface AppActionHandlers {
   onToggleTheme: () => void;
   onOpenSettings: () => void;
   onOpenAbout: () => void;
+  onOpenSample?: (() => void) | undefined;
   onFind?: (() => void) | undefined;
   onReplace?: (() => void) | undefined;
   onZoomIn?: (() => void) | undefined;

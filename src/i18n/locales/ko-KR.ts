@@ -107,6 +107,9 @@ export const koKR = {
     osLabel: "운영체제:",
     engineLabel: "엔진:",
     userAgentLabel: "사용자 에이전트:",
+    openSampleDoc: "예제 문서 열기",
+    sampleDocTitle: "예제 문서",
+    sampleDocDesc: "Pupitre 기능 데모 및 전체 Markdown 구문 가이드 탐색",
   },
   menu: {
     file: "파일",
@@ -134,6 +137,7 @@ export const koKR = {
     toggleSidebar: "개요 사이드바 토글",
     toggleTheme: "테마 전환",
     preferences: "환경설정...",
+    sampleDocument: "예제 Markdown 문서",
     about: "Pupitre 정보",
     documentation: "온라인 설명서",
     shortcuts: "단축키 안내",

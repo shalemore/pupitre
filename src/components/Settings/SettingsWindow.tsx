@@ -1,4 +1,5 @@
 import {
+  BookOpen,
   CheckCircle2,
   Download,
   FolderOpen,
@@ -99,6 +100,36 @@ export const SettingsWindow: Component = () => {
         await openPath(dir);
       } catch (err) {
         console.error("Failed to open config directory:", err);
+      }
+    }
+  };
+
+  const handleOpenSampleDoc = async () => {
+    if (typeof BroadcastChannel !== "undefined") {
+      try {
+        const bc = new BroadcastChannel("pupitre-actions");
+        // oxlint-disable-next-line unicorn/require-post-message-target-origin
+        bc.postMessage({ action: "open-sample" });
+        bc.close();
+      } catch {
+        // ignore
+      }
+    }
+
+    if (isTauri()) {
+      try {
+        const { emit } = await import("@tauri-apps/api/event");
+        await emit("app-action", "open-sample");
+        const { getAllWindows } = await import("@tauri-apps/api/window");
+        const allWins = await getAllWindows();
+        const mainWin = allWins.find((w) => w.label === "main");
+        if (mainWin) {
+          await mainWin.unminimize();
+          await mainWin.show();
+          await mainWin.setFocus();
+        }
+      } catch (err) {
+        console.error("Failed to focus main window for sample doc:", err);
       }
     }
   };
@@ -462,6 +493,26 @@ export const SettingsWindow: Component = () => {
                     {aboutInfo.userAgent}
                   </div>
                 </Card>
+
+                <Separator />
+
+                <div class="p-3 rounded-lg bg-surface-0 border border-border/80 flex items-center justify-between gap-3 text-xs">
+                  <div class="min-w-0">
+                    <div class="font-medium text-foreground">{t().about.sampleDocTitle}</div>
+                    <div class="text-[11px] text-muted-foreground truncate">
+                      {t().about.sampleDocDesc}
+                    </div>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleOpenSampleDoc}
+                    class="text-xs shrink-0 gap-1.5"
+                  >
+                    <BookOpen class="size-3.5" />
+                    <span>{t().about.openSampleDoc}</span>
+                  </Button>
+                </div>
 
                 <Separator />
 

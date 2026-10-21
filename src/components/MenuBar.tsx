@@ -337,6 +337,12 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
         <Show when={activeMenu() === "help"}>
           <div class="absolute left-0 top-full mt-1 w-52 py-1 rounded-lg border border-border/80 bg-surface-2 shadow-float text-xs z-50 animate-in fade-in zoom-in-95 duration-(--duration-snap)">
             <MenuItem label={menu().documentation} onClick={() => executeAction(handleOpenDocs)} />
+            <Show when={props.onOpenSample}>
+              <MenuItem
+                label={menu().sampleDocument}
+                onClick={() => executeAction(props.onOpenSample!)}
+              />
+            </Show>
 
             <MenuDivider />
 

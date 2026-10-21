@@ -129,6 +129,9 @@ export interface TranslationSchema {
     readonly osLabel: string;
     readonly engineLabel: string;
     readonly userAgentLabel: string;
+    readonly openSampleDoc: string;
+    readonly sampleDocTitle: string;
+    readonly sampleDocDesc: string;
   };
   readonly menu: {
     readonly file: string;
@@ -156,6 +159,7 @@ export interface TranslationSchema {
     readonly toggleSidebar: string;
     readonly toggleTheme: string;
     readonly preferences: string;
+    readonly sampleDocument: string;
     readonly about: string;
     readonly documentation: string;
     readonly shortcuts: string;

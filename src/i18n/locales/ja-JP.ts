@@ -106,6 +106,9 @@ export const jaJP = {
     osLabel: "OS:",
     engineLabel: "エンジン:",
     userAgentLabel: "ユーザーエージェント:",
+    openSampleDoc: "サンプルドキュメントを開く",
+    sampleDocTitle: "サンプルドキュメント",
+    sampleDocDesc: "Pupitre の機能デモと Markdown 記法ガイドを表示",
   },
   menu: {
     file: "ファイル",
@@ -133,6 +136,7 @@ export const jaJP = {
     toggleSidebar: "目次サイドバーの表示切替",
     toggleTheme: "テーマの切り替え",
     preferences: "環境設定...",
+    sampleDocument: "サンプル Markdown",
     about: "Pupitre について",
     documentation: "ドキュメント",
     shortcuts: "ショートカット一覧",

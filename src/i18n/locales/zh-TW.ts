@@ -106,6 +106,9 @@ export const zhTW = {
     osLabel: "作業系統:",
     engineLabel: "核心引擎:",
     userAgentLabel: "使用者代理:",
+    openSampleDoc: "開啟範例文檔",
+    sampleDocTitle: "範例文檔",
+    sampleDocDesc: "瀏覽 Pupitre 功能展示與完整 Markdown 語法範例",
   },
   menu: {
     file: "檔案",
@@ -133,6 +136,7 @@ export const zhTW = {
     toggleSidebar: "顯示/隱藏大綱",
     toggleTheme: "切換深淺佈景主題",
     preferences: "偏好設定...",
+    sampleDocument: "範例 Markdown 文檔",
     about: "關於 Pupitre",
     documentation: "線上文件",
     shortcuts: "快捷鍵指南",

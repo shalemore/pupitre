@@ -106,6 +106,9 @@ export const enUS = {
     osLabel: "OS:",
     engineLabel: "Engine:",
     userAgentLabel: "User Agent:",
+    openSampleDoc: "Open Example Document",
+    sampleDocTitle: "Example Document",
+    sampleDocDesc: "Explore Pupitre feature demo and full Markdown syntax guide",
   },
   menu: {
     file: "File",
@@ -133,6 +136,7 @@ export const enUS = {
     toggleSidebar: "Toggle Outline",
     toggleTheme: "Toggle Theme",
     preferences: "Preferences...",
+    sampleDocument: "Example Markdown Document",
     about: "About Pupitre",
     documentation: "Documentation",
     shortcuts: "Keyboard Shortcuts",
