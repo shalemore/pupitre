@@ -1,4 +1,4 @@
-import { createSignal, onCleanup, onMount, Show, type Component } from "solid-js";
+import { createEffect, createSignal, onCleanup, onMount, Show, type Component } from "solid-js";
 import { AboutModal } from "@/components/AboutModal";
 import { Editor, type EditorHandle, type MatchStats } from "@/components/Editor";
 import { FindReplaceBar } from "@/components/Editor/FindReplaceBar";
@@ -6,8 +6,9 @@ import { Sidebar } from "@/components/Sidebar";
 import { TitleBar } from "@/components/TitleBar";
 import { Welcome } from "@/components/Welcome";
 import { ZoomIndicator } from "@/components/ZoomIndicator";
-import { setLanguageSetting, t } from "@/i18n";
-import { SAMPLE_MARKDOWN_DOC } from "@/assets/sampleDocument";
+import { currentLocale, setLanguageSetting, t } from "@/i18n";
+import type { SupportedLocale } from "@/i18n/types";
+import { getSampleDocument } from "@/assets/sampleDocument";
 import { setupBrowserInterceptors } from "@/lib/browserInterceptors";
 import {
   addRecentFile,
@@ -35,6 +36,8 @@ export const App: Component = () => {
   const [isDark, setIsDark] = createSignal<boolean>(false);
   const [isSidebarVisible, setIsSidebarVisible] = createSignal<boolean>(true);
   const [isAboutOpen, setIsAboutOpen] = createSignal<boolean>(false);
+  const [isSampleDoc, setIsSampleDoc] = createSignal<boolean>(false);
+  let lastSampleLocale: SupportedLocale | null = null;
 
   const [zoom, setZoom] = createSignal<number>(1.0);
   const [isZoomHudVisible, setIsZoomHudVisible] = createSignal<boolean>(false);
@@ -209,6 +212,19 @@ export const App: Component = () => {
     }
   };
 
+  createEffect(() => {
+    const loc = currentLocale();
+    if (isSampleDoc() && !isDirty()) {
+      if (lastSampleLocale !== loc) {
+        lastSampleLocale = loc;
+        updateDocument(getSampleDocument(loc), false);
+        setIsDirty(false);
+      }
+    } else if (!isSampleDoc()) {
+      lastSampleLocale = null;
+    }
+  });
+
   const handleContentChange = (newSource: string) => {
     updateDocument(newSource, true);
   };
@@ -245,6 +261,7 @@ export const App: Component = () => {
     setStats({ words: 0, chars: 0 });
     setFilePath(null);
     setCustomFileName(null);
+    setIsSampleDoc(false);
     setIsDirty(false);
     setActiveHeadingIndex(null);
     setTimeout(() => editorHandle?.focus(), 50);
@@ -255,6 +272,9 @@ export const App: Component = () => {
     setHasDocument(true);
     setHeadings([]);
     setStats({ words: 0, chars: 0 });
+    setFilePath(null);
+    setCustomFileName(null);
+    setIsSampleDoc(false);
     setIsDirty(false);
     setTimeout(() => editorHandle?.focus(), 50);
   };
@@ -269,6 +289,7 @@ export const App: Component = () => {
 
     setFilePath(result.path);
     setCustomFileName(result.name);
+    setIsSampleDoc(false);
     setIsDirty(false);
     setActiveHeadingIndex(null);
     updateDocument(result.content, false);
@@ -287,6 +308,7 @@ export const App: Component = () => {
       const result = await readFileFromPath(targetPath);
       setFilePath(result.path);
       setCustomFileName(result.name);
+      setIsSampleDoc(false);
       setIsDirty(false);
       setActiveHeadingIndex(null);
       updateDocument(result.content, false);
@@ -302,6 +324,7 @@ export const App: Component = () => {
     if (savedPath) {
       setFilePath(savedPath);
       setCustomFileName(savedPath.split(/[\\/]/).pop() || null);
+      setIsSampleDoc(false);
       setIsDirty(false);
       await addRecentFile(savedPath);
     } else if (filePath()) {
@@ -314,6 +337,7 @@ export const App: Component = () => {
     if (savedPath) {
       setFilePath(savedPath);
       setCustomFileName(savedPath.split(/[\\/]/).pop() || null);
+      setIsSampleDoc(false);
       setIsDirty(false);
       await addRecentFile(savedPath);
     }
@@ -328,9 +352,12 @@ export const App: Component = () => {
       const ok = await confirmDiscard(t().dialogs.discardActionOpen);
       if (!ok) return;
     }
+    const loc = currentLocale();
     setFilePath(null);
     setCustomFileName("Pupitre-Guide.md");
-    updateDocument(SAMPLE_MARKDOWN_DOC, false);
+    lastSampleLocale = loc;
+    setIsSampleDoc(true);
+    updateDocument(getSampleDocument(loc), false);
     setIsDirty(false);
     setIsAboutOpen(false);
     setTimeout(() => editorHandle?.focus(), 50);
@@ -385,6 +412,7 @@ export const App: Component = () => {
           const fullPath = (file as unknown as { path?: string }).path || null;
           setFilePath(fullPath);
           setCustomFileName(file.name);
+          setIsSampleDoc(false);
           setIsDirty(false);
           setActiveHeadingIndex(null);
           updateDocument(text, false);

@@ -103,7 +103,7 @@ export const AboutModal: Component<AboutModalProps> = (props) => {
                 }
               : undefined
           }
-          class={`w-[460px] max-w-[95vw] rounded-2xl bg-surface-2 border border-border shadow-float flex flex-col overflow-hidden text-foreground animate-in fade-in-0 zoom-in-95 duration-(--duration-ui) ease-(--ease-emphasized) ${
+          class={`w-115 max-w-[95vw] rounded-2xl bg-surface-2 border border-border shadow-float flex flex-col overflow-hidden text-foreground animate-in fade-in-0 zoom-in-95 duration-(--duration-ui) ease-(--ease-emphasized) ${
             !position() ? "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" : ""
           }`}
         >
@@ -143,7 +143,7 @@ export const AboutModal: Component<AboutModalProps> = (props) => {
                 <div>
                   <span class="text-tertiary">{t().about.engineLabel}</span> {info.engine}
                 </div>
-                <div class="truncate max-w-[340px]" title={info.userAgent}>
+                <div class="truncate max-w-85" title={info.userAgent}>
                   <span class="text-tertiary">{t().about.userAgentLabel}</span> {info.userAgent}
                 </div>
               </div>

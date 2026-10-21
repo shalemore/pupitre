@@ -13,8 +13,8 @@ export type UpdateStatus =
 
 export interface UpdateInfo {
   version: string;
-  date?: string;
-  body?: string;
+  date?: string | undefined;
+  body?: string | undefined;
 }
 
 const [status, setStatus] = createSignal<UpdateStatus>("idle");
