@@ -3,6 +3,7 @@
 > **Pupitre**（フランス語で「譜面台」「演台」）は、**Tauri v2 + SolidJS + CodeMirror 6** を基盤に構築された、軽量・高速・美麗なデスクトップ Markdown インプレースエディタです。
 > 純粋な執筆と快適なタイポグラフィ体験のために設計されました。
 
+![Pupitre Logo](/logo-front.svg)
 ---
 
 > [!NOTE]
@@ -39,21 +40,17 @@
 
 ---
 
-## 2. 見出しの 6 段階階層 (Headings)
+## 2. 見出し階層システム (Heading Hierarchy)
 
-Pupitre はドキュメント内の見出しを即座に解析し、サイドバーに目次ツリーを自動生成します：
+Pupitre は文書内のすべての見出しを自動解析し、左サイドバーにリアルタイムな階層型目次（アウトライン）を生成します：
 
-# 見出し 1 (H1) - ドキュメントの主題・タイトル
+### 2.1 レベル 3 見出し (H3) - 機能モジュールと論点
 
-## 見出し 2 (H2) - 主要な章・セクション
+#### 2.1.1 レベル 4 見出し (H4) - 詳細トピックの説明
 
-### 見出し 3 (H3) - 具体的なトピックや論点
+##### 2.1.1.1 レベル 5 見出し (H5) - 補足ガイダンス
 
-#### 見出し 4 (H4) - 詳細な補足説明
-
-##### 見出し 5 (H5) - 小見出し
-
-###### 見出し 6 (H6) - 最小単位の注記
+###### 2.1.1.1.1 レベル 6 見出し (H6) - 最小注釈
 
 ---
 
@@ -83,6 +80,27 @@ Pupitre はドキュメント内の見出しを即座に解析し、サイドバ
    2. 数式と図表の正確性をチェック
    3. バージョン管理システムへコミット
 3. 公開・アーカイブフェーズ
+
+### 3.3 リスト内のインデントコードブロック
+
+手順ガイドや技術ドキュメントでは、リスト項目内にインデントされたコードブロックを直接記述できます：
+
+1. クライアントにログインしてロックを解除し、同期が完了するのを待ちます。
+2. 環境設定で **SSH Agent** とローカル認証情報のサポートを有効にします。
+3. シームレスな認証のために公開鍵設定を書き込みます：
+
+   ```powershell
+   New-Item -ItemType Directory -Path $HOME\.ssh -Force | Out-Null
+   Set-Content `
+     -Path $HOME\.ssh\github-pupitre.pub `
+     -Value 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID3FhmdqRz1VHUTNHuAKBA1nchfD63/9NTQmwQkx7tC'
+   ```
+
+4. ターミナルでの SSH 接続状態をテストします：
+
+   ```powershell
+   & "$env:WINDIR\System32\OpenSSH\ssh.exe" -T git@github.com
+   ```
 
 ---
 
@@ -157,7 +175,7 @@ sequenceDiagram
 
 右上に言語バッジとワンクリックコピーボタンが自動配置されます：
 
-### Rust (Tauri コマンド定義)
+### 6.1 Rust (Tauri Command の例)
 
 ```rust
 use tauri::{AppHandle, Manager};
@@ -174,7 +192,7 @@ pub async fn open_settings_window(app: AppHandle) -> Result<(), String> {
 }
 ```
 
-### TypeScript (SolidJS リアクティブ状態)
+### 6.2 TypeScript (SolidJS リアクティブ状態)
 
 ```typescript
 import { createSignal, createMemo } from "solid-js";

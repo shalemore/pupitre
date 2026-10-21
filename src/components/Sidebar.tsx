@@ -11,7 +11,7 @@ interface SidebarProps {
 
 export const Sidebar: Component<SidebarProps> = (props) => {
   return (
-    <aside class="w-60 h-full flex flex-col justify-between bg-surface-0 border-e border-border/80 select-none text-xs">
+    <aside class="w-64 h-full flex flex-col justify-between bg-surface-0 border-e border-border/80 select-none text-xs">
       <div class="px-3.5 py-3 border-b border-border/60 flex items-center justify-between">
         <div class="text-foreground font-medium tracking-wide">
           <span>{t().sidebar.outline}</span>
@@ -39,15 +39,24 @@ export const Sidebar: Component<SidebarProps> = (props) => {
                 <button
                   type="button"
                   onClick={() => props.onSelectHeading(heading.blockIndex)}
-                  style={{ "padding-inline-start": `${8 + indent()}px` }}
-                  class={`w-full text-start py-1.5 pe-2 rounded-md text-[12px] truncate transition-colors cursor-pointer block ${
+                  style={{
+                    "padding-inline-start": `${8 + indent()}px`,
+                    "text-align": "start",
+                  }}
+                  class={`w-full text-start py-1.5 pe-2.5 rounded-md text-[12px] transition-colors cursor-pointer block ${
                     isCurrent()
                       ? "bg-brand/10 text-brand font-medium shadow-sm"
                       : "text-muted-foreground hover:text-foreground hover:bg-accent"
                   }`}
                   title={heading.title}
                 >
-                  <span>{heading.title}</span>
+                  <span
+                    dir="auto"
+                    class="block truncate"
+                    style={{ "text-align": "start", "unicode-bidi": "isolate" }}
+                  >
+                    {heading.title}
+                  </span>
                 </button>
               );
             }}

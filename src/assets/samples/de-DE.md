@@ -3,6 +3,7 @@
 > **Pupitre** (französisch für _Notenständer_ oder _Pult_) ist ein eleganter, ablenkungsfreier Desktop-Markdown-Editor, der auf **Tauri v2 + SolidJS + CodeMirror 6** basiert.
 > Entwickelt für reines Schreiben und makellose Typografie.
 
+![Pupitre Logo](/logo-front.svg)
 ---
 
 > [!NOTE]
@@ -39,21 +40,17 @@ Beim Verfassen Ihrer Texte bietet Pupitre ein harmonisches Schriftbild und flüs
 
 ---
 
-## 2. Sechsstufige Überschriften-Hierarchie (Headings)
+## 2. Überschriftenhierarchie (Heading Hierarchy)
 
-Pupitre verarbeitet Überschriften in Echtzeit und erzeugt daraus die interaktive Gliederung:
+Pupitre analysiert alle Überschriften dynamisch und generiert eine Baumstruktur in der linken Seitenleiste:
 
-# Überschrift Ebene 1 (H1) - Dokumenttitel
+### 2.1 Überschrift Ebene 3 (H3) - Funktionsmodul & Thesen
 
-## Überschrift Ebene 2 (H2) - Hauptkapitel oder Bereich
+#### 2.1.1 Überschrift Ebene 4 (H4) - Spezifische Unterpunkte
 
-### Überschrift Ebene 3 (H3) - Unterabschnitt oder These
+##### 2.1.1.1 Überschrift Ebene 5 (H5) - Ergänzende Hinweise
 
-#### Überschrift Ebene 4 (H4) - Detailthema
-
-##### Überschrift Ebene 5 (H5) - Randbemerkung
-
-###### Überschrift Ebene 6 (H6) - Unterste Gliederungsstufe
+###### 2.1.1.1.1 Überschrift Ebene 6 (H6) - Detaillierte Randnotiz
 
 ---
 
@@ -83,6 +80,27 @@ Pupitre verarbeitet Überschriften in Echtzeit und erzeugt daraus die interaktiv
    2. Formeln und Diagramme auf Richtigkeit testen
    3. Änderungen in die Versionsverwaltung übertragen
 3. Veröffentlichungsphase
+
+### 3.3 Eingerückte Codeblöcke in Listen
+
+Schritt-für-Schritt-Anleitungen unterstützen eingerückte Codeblöcke innerhalb von Listenelementen:
+
+1. Melden Sie sich an und entsperren Sie den Client, bis die Synchronisierung abgeschlossen ist.
+2. Aktivieren Sie **SSH Agent** und lokale Anmeldeinformationen in den Einstellungen.
+3. Schreiben Sie die Konfiguration des öffentlichen Schlüssels:
+
+   ```powershell
+   New-Item -ItemType Directory -Path $HOME\.ssh -Force | Out-Null
+   Set-Content `
+     -Path $HOME\.ssh\github-pupitre.pub `
+     -Value 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID3FhmdqRz1VHUTNHuAKBA1nchfD63/9NTQmwQkx7tC'
+   ```
+
+4. Testen Sie die Terminal-Konnektivität:
+
+   ```powershell
+   & "$env:WINDIR\System32\OpenSSH\ssh.exe" -T git@github.com
+   ```
 
 ---
 
@@ -157,7 +175,7 @@ sequenceDiagram
 
 Jeder Codeblock besitzt eine schwebende Leiste mit Sprachanzeige und Kopier-Schaltfläche:
 
-### Rust (Tauri-Befehlsdefinition)
+### 6.1 Rust (Tauri Command Beispiel)
 
 ```rust
 use tauri::{AppHandle, Manager};
@@ -174,7 +192,7 @@ pub async fn open_settings_window(app: AppHandle) -> Result<(), String> {
 }
 ```
 
-### TypeScript (Reaktiver Zustand in SolidJS)
+### 6.2 TypeScript (SolidJS Reaktiver Zustand)
 
 ```typescript
 import { createSignal, createMemo } from "solid-js";

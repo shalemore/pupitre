@@ -3,6 +3,8 @@
 > **Pupitre**(프랑스어로 '악보대' 또는 '강연대')는 **Tauri v2 + SolidJS + CodeMirror 6**를 기반으로 제작된 가볍고 빠르며 세련된 데스크톱 Markdown 인플레이스 편집기입니다.
 > 오직 순수한 글쓰기와 방해 없는 타이포그래피 경험을 위해 설계되었습니다.
 
+![Pupitre Logo](/logo-front.svg)
+
 ---
 
 > [!NOTE]
@@ -39,21 +41,17 @@
 
 ---
 
-## 2. 6단계 제목 계층 구조 (Headings)
+## 2. 제목 계층 구조 (Heading Hierarchy)
 
-Pupitre는 문서 내 제목을 실시간으로 파싱하여 사이드바에 대화형 개요 목록을 생성합니다:
+Pupitre는 문서 내의 모든 제목을 동적으로 파싱하여 왼쪽 사이드바에 실시간 트리형 목차(아웃라인)를 생성합니다:
 
-# 1단계 제목 (H1) - 문서 주제 및 타이틀
+### 2.1 3단계 제목 (H3) - 기능 모듈 및 논점
 
-## 2단계 제목 (H2) - 핵심 장 및 섹션
+#### 2.1.1 4단계 제목 (H4) - 세부 항목 설명
 
-### 3단계 제목 (H3) - 세부 논점 및 기능
+##### 2.1.1.1 5단계 제목 (H5) - 추가 안내 사항
 
-#### 4단계 제목 (H4) - 상세 항목 설명
-
-##### 5단계 제목 (H5) - 보조 설명
-
-###### 6단계 제목 (H6) - 최소 단위 주석
+###### 2.1.1.1.1 6단계 제목 (H6) - 최소 단위 주석
 
 ---
 
@@ -83,6 +81,27 @@ Pupitre는 문서 내 제목을 실시간으로 파싱하여 사이드바에 대
    2. 수식과 도표 논리 검증
    3. 버전 관리 시스템에 커밋
 3. 배포 및 보관 단계
+
+### 3.3 목록 내 코드 블록 들여쓰기
+
+단계별 가이드나 기술 문서에서는 목록 항목 내에 들여쓰기된 코드 블록을 포함할 수 있습니다:
+
+1. 클라이언트에 로그인하고 잠금을 해제한 후 동기화가 완료될 때까지 기다립니다.
+2. 환경설정에서 **SSH Agent** 및 로컬 인증 정보 지원을 활성화합니다.
+3. 원활한 인증을 위해 공개 키 구성을 작성합니다:
+
+   ```powershell
+   New-Item -ItemType Directory -Path $HOME\.ssh -Force | Out-Null
+   Set-Content `
+     -Path $HOME\.ssh\github-pupitre.pub `
+     -Value 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID3FhmdqRz1VHUTNHuAKBA1nchfD63/9NTQmwQkx7tC'
+   ```
+
+4. 터미널에서 SSH 연결 상태를 테스트합니다:
+
+   ```powershell
+   & "$env:WINDIR\System32\OpenSSH\ssh.exe" -T git@github.com
+   ```
 
 ---
 
@@ -157,7 +176,7 @@ sequenceDiagram
 
 우측 상단에 언어 배지와 원클릭 복사 버튼이 자동으로 배치됩니다:
 
-### Rust (Tauri 커맨드 정의)
+### 6.1 Rust (Tauri Command 예제)
 
 ```rust
 use tauri::{AppHandle, Manager};
@@ -174,7 +193,7 @@ pub async fn open_settings_window(app: AppHandle) -> Result<(), String> {
 }
 ```
 
-### TypeScript (SolidJS 반응형 상태)
+### 6.2 TypeScript (SolidJS 반응형 상태)
 
 ```typescript
 import { createSignal, createMemo } from "solid-js";

@@ -3,6 +3,7 @@
 > **Pupitre** (du français _pupitre d'orchestre_ ou _lutrin_) est un éditeur Markdown de bureau, léger, rapide et épuré, propulsé par **Tauri v2 + SolidJS + CodeMirror 6**.
 > Conçu exclusivement pour la rédaction pure et l'élégance typographique.
 
+![Pupitre Logo](/logo-front.svg)
 ---
 
 > [!NOTE]
@@ -39,21 +40,17 @@ Au fil de votre écriture, Pupitre offre des styles impeccables et des micro-ani
 
 ---
 
-## 2. Hiérarchie de titres sur 6 niveaux (Headings)
+## 2. Hiérarchie des titres (Heading Hierarchy)
 
-Pupitre analyse les titres en temps réel pour alimenter le sommaire interactif du volet latéral :
+Pupitre analyse dynamiquement les titres du document et génère un plan arborescent en temps réel dans la barre latérale :
 
-# Titre Niveau 1 (H1) - Sujet principal du document
+### 2.1 Titre niveau 3 (H3) - Modules fonctionnels
 
-## Titre Niveau 2 (H2) - Chapitre ou section majeure
+#### 2.1.1 Titre niveau 4 (H4) - Spécifications détaillées
 
-### Titre Niveau 3 (H3) - Sous-section ou argument
+##### 2.1.1.1 Titre niveau 5 (H5) - Conseils complémentaires
 
-#### Titre Niveau 4 (H4) - Sujet détaillé
-
-##### Titre Niveau 5 (H5) - Remarque mineure
-
-###### Titre Niveau 6 (H6) - Précision ponctuelle
+###### 2.1.1.1.1 Titre niveau 6 (H6) - Annotations terminales
 
 ---
 
@@ -83,6 +80,27 @@ Pupitre analyse les titres en temps réel pour alimenter le sommaire interactif 
    2. Valider les formules scientifiques et diagrammes
    3. Sauvegarder dans le gestionnaire de versions
 3. Phase de publication et d'archivage
+
+### 3.3 Blocs de code indentés dans les listes
+
+Les guides par étapes prennent en charge les blocs de code imbriqués dans les éléments de liste :
+
+1. Connectez-vous et déverrouillez le client, en attendant la fin de la synchronisation.
+2. Activez **SSH Agent** et les identifiants locaux dans les préférences.
+3. Enregistrez la configuration de clé publique pour une authentification transparente :
+
+   ```powershell
+   New-Item -ItemType Directory -Path $HOME\.ssh -Force | Out-Null
+   Set-Content `
+     -Path $HOME\.ssh\github-pupitre.pub `
+     -Value 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID3FhmdqRz1VHUTNHuAKBA1nchfD63/9NTQmwQkx7tC'
+   ```
+
+4. Testez la connectivité du terminal :
+
+   ```powershell
+   & "$env:WINDIR\System32\OpenSSH\ssh.exe" -T git@github.com
+   ```
 
 ---
 
@@ -157,7 +175,7 @@ sequenceDiagram
 
 Chaque bloc est surmonté d'un en-tête flottant avec le badge du langage et un bouton de copie rapide :
 
-### Rust (Définition de commande Tauri)
+### 6.1 Rust (Exemple de commande Tauri)
 
 ```rust
 use tauri::{AppHandle, Manager};
@@ -174,7 +192,7 @@ pub async fn open_settings_window(app: AppHandle) -> Result<(), String> {
 }
 ```
 
-### TypeScript (État réactif SolidJS)
+### 6.2 TypeScript (État réactif SolidJS)
 
 ```typescript
 import { createSignal, createMemo } from "solid-js";

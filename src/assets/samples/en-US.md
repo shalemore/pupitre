@@ -3,6 +3,7 @@
 > **Pupitre** (French for _music stand_ or _lectern_) is a distraction-free, high-performance desktop Markdown editor built on **Tauri v2 + SolidJS + CodeMirror 6**.
 > Designed for pure writing and effortless typographic flow.
 
+![Pupitre Logo](/logo-front.svg)
 ---
 
 > [!NOTE]
@@ -41,19 +42,15 @@ Pupitre delivers refined typographic styling with smooth micro-interactions:
 
 ## 2. Heading Hierarchy (H1 to H6)
 
-Pupitre parses headings on the fly to generate your interactive outline in the sidebar:
+Pupitre dynamically parses document headings and renders a nested outline in the left sidebar:
 
-# Level 1 Heading (H1) - Document Subject
+### 2.1 Level 3 Heading (H3) - Functional Modules
 
-## Level 2 Heading (H2) - Major Chapter or Topic
+#### 2.1.1 Level 4 Heading (H4) - Topic Specifications
 
-### Level 3 Heading (H3) - Sub-section Argument
+##### 2.1.1.1 Level 5 Heading (H5) - Supplemental Guidance
 
-#### Level 4 Heading (H4) - Detailed Topic
-
-##### Level 5 Heading (H5) - Minor Annotation
-
-###### Level 6 Heading (H6) - Leaf-level Notice
+###### 2.1.1.1.1 Level 6 Heading (H6) - Leaf-level Annotations
 
 ---
 
@@ -83,6 +80,27 @@ Pupitre parses headings on the fly to generate your interactive outline in the s
    2. Verify equations and diagram accuracy
    3. Commit changes to version control
 3. Archival & Distribution Phase
+
+### 3.3 Indented Code Blocks in Lists
+
+Technical documentation and step-by-step guides support nested code blocks inside list items:
+
+1. Log in and unlock the client, waiting for synchronization to finish.
+2. Enable **SSH Agent** and local credentials in system preferences.
+3. Write public key configuration for seamless authentication:
+
+   ```powershell
+   New-Item -ItemType Directory -Path $HOME\.ssh -Force | Out-Null
+   Set-Content `
+     -Path $HOME\.ssh\github-pupitre.pub `
+     -Value 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID3FhmdqRz1VHUTNHuAKBA1nchfD63/9NTQmwQkx7tC'
+   ```
+
+4. Test terminal SSH connectivity:
+
+   ```powershell
+   & "$env:WINDIR\System32\OpenSSH\ssh.exe" -T git@github.com
+   ```
 
 ---
 
@@ -157,7 +175,7 @@ sequenceDiagram
 
 Each fenced block features a floating header with language badge and a one-click copy button:
 
-### Rust (Tauri Command Definition)
+### 6.1 Rust (Tauri Command Example)
 
 ```rust
 use tauri::{AppHandle, Manager};
@@ -174,7 +192,7 @@ pub async fn open_settings_window(app: AppHandle) -> Result<(), String> {
 }
 ```
 
-### TypeScript (SolidJS Reactive State)
+### 6.2 TypeScript (SolidJS Reactive State)
 
 ```typescript
 import { createSignal, createMemo } from "solid-js";

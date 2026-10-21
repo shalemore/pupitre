@@ -273,6 +273,9 @@
   background-color: var(--editor-inline-code-bg) !important;
   color: var(--editor-inline-code-text) !important;
   border: 1px solid var(--editor-inline-code-border) !important;
+  direction: ltr !important;
+  unicode-bidi: isolate !important;
+  text-align: left !important;
 }
 
 /* Fenced Code Block styling (Native CodeMirror line-based, seamlessly continuous) */
@@ -282,12 +285,15 @@
   line-height: 1.65 !important;
   background-color: var(--editor-codeblock-bg) !important;
   box-sizing: border-box !important;
-  margin-left: var(--codeblock-indent, 0ch) !important;
+  margin-inline-start: var(--codeblock-indent, 0ch) !important;
   padding-left: 16px !important;
   padding-right: 16px !important;
   border-left: 1px solid var(--editor-codeblock-border);
   border-right: 1px solid var(--editor-codeblock-border);
   position: relative;
+  direction: ltr !important;
+  text-align: left !important;
+  unicode-bidi: isolate !important;
 }
 
 .cm-codeblock-first {
@@ -324,6 +330,8 @@
   gap: 10px !important;
   z-index: 10;
   pointer-events: auto;
+  direction: ltr !important;
+  unicode-bidi: isolate !important;
 }
 
 .cm-codeblock-lang {
@@ -445,4 +453,31 @@
 .cm-selectionMatch {
   background-color: oklch(from var(--ui-text-primary) l c h / 12%);
   border-radius: var(--radius-xs);
+}
+
+/* Ondine Mermaid Diagram Preview (Always LTR) */
+.ondine-diagram {
+  direction: ltr !important;
+  unicode-bidi: isolate !important;
+}
+
+/* Markdown Image Preview */
+.cm-image-widget {
+  display: block !important;
+  margin: 1.5rem auto !important;
+  text-align: center !important;
+}
+
+.cm-image-widget img {
+  display: inline-block !important;
+  max-width: 100% !important;
+  max-height: 260px !important;
+  height: auto !important;
+  border-radius: var(--radius-lg, 8px) !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.12) !important;
+  transition: transform var(--duration-ui) var(--ease-out-expo) !important;
+}
+
+.cm-image-widget img:hover {
+  transform: scale(1.02);
 }

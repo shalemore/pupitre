@@ -41,6 +41,7 @@ class CodeBlockHeaderWidget extends WidgetType {
 
   override toDOM(): HTMLElement {
     const header = document.createElement("div");
+    header.dir = "ltr";
     header.className = "cm-codeblock-header select-none";
 
     if (this.lang) {
@@ -91,6 +92,7 @@ class MermaidPreviewWidget extends WidgetType {
 
   override toDOM(): HTMLElement {
     const container = document.createElement("div");
+    container.dir = "ltr";
     container.className =
       "ondine-diagram my-3 flex justify-center p-4 rounded-lg bg-surface-0 border border-border overflow-x-auto shadow-sm select-none";
     try {
@@ -223,10 +225,13 @@ export const codeBlockNativePlugin = ViewPlugin.fromClass(
       for (const [lineFrom, { classes, indentLength }] of lineMap) {
         const spec: { class: string; attributes?: { [key: string]: string } } = {
           class: Array.from(classes).join(" "),
+          attributes: {
+            dir: "ltr",
+            style: `direction: ltr !important; text-align: left !important; unicode-bidi: isolate !important;${
+              indentLength > 0 ? ` --codeblock-indent: ${indentLength}ch;` : ""
+            }`,
+          },
         };
-        if (indentLength > 0) {
-          spec.attributes = { style: `--codeblock-indent: ${indentLength}ch;` };
-        }
         decos.push(Decoration.line(spec).range(lineFrom));
       }
 

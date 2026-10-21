@@ -3,6 +3,8 @@
 > **Pupitre**（法文原意：琴谱架、讲台）是一款基于 **Tauri v2 + SolidJS + CodeMirror 6** 打造的极简、轻量、高颜值的桌面 Markdown 原位编辑器。
 > 专为纯粹写作与沉浸式排版体验而生。
 
+![Pupitre Logo](/logo-front.svg)
+
 ---
 
 > [!NOTE]
@@ -39,21 +41,17 @@
 
 ---
 
-## 二、六级标题层级体系 (Headings)
+## 二、标题层级体系 (Heading Hierarchy)
 
-Pupitre 会自动解析所有标题并生成实时动态目录大纲（左侧边栏）：
+Pupitre 会自动解析所有各级标题，并在左侧边栏生成实时树状动态目录大纲：
 
-# 标题一级 H1 - 主题或项目名称
+### 2.1 标题三级 (H3) - 功能子模块与论点
 
-## 标题二级 H2 - 核心章节模块
+#### 2.1.1 标题四级 (H4) - 子项细节说明
 
-### 标题三级 H3 - 具体功能点与论点
+##### 2.1.1.1 标题五级 (H5) - 补充提示
 
-#### 标题四级 H4 - 子项细节说明
-
-##### 标题五级 H5 - 补充提示
-
-###### 标题六级 H6 - 最小层级标注
+###### 2.1.1.1.1 标题六级 (H6) - 最小层级标注
 
 ---
 
@@ -83,6 +81,27 @@ Pupitre 会自动解析所有标题并生成实时动态目录大纲（左侧边
    2. 校验公式与图表逻辑
    3. 导出或提交至版本控制
 3. 发布归档阶段
+
+### 3.3 列表嵌套代码块演示 (Indented Code in Lists)
+
+在步骤指引与技术文档中，列表支持直接内嵌缩进代码块：
+
+1. 登录并解锁客户端，等待数据同步完成。
+2. 在系统首选项中启用 **SSH Agent** 与本地凭据支持。
+3. 写入公钥配置，供系统组件无感调用：
+
+   ```powershell
+   New-Item -ItemType Directory -Path $HOME\.ssh -Force | Out-Null
+   Set-Content `
+     -Path $HOME\.ssh\github-pupitre.pub `
+     -Value 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID3FhmdqRz1VHUTNHuAKBA1nchfD63/9NTQmwQkx7tC'
+   ```
+
+4. 测试终端连接状态：
+
+   ```powershell
+   & "$env:WINDIR\System32\OpenSSH\ssh.exe" -T git@github.com
+   ```
 
 ---
 
@@ -157,7 +176,7 @@ sequenceDiagram
 
 右上角具备一键复制代码按钮以及语言徽标提示：
 
-### Rust (Tauri Command 示例)
+### 6.1 Rust (Tauri Command 示例)
 
 ```rust
 use tauri::{AppHandle, Manager};
@@ -174,7 +193,7 @@ pub async fn open_settings_window(app: AppHandle) -> Result<(), String> {
 }
 ```
 
-### TypeScript (SolidJS 响应式状态)
+### 6.2 TypeScript (SolidJS 响应式状态)
 
 ```typescript
 import { createSignal, createMemo } from "solid-js";
