@@ -1,5 +1,4 @@
 import { For, Show, type Component } from "solid-js";
-import { Badge } from "@/components/ui";
 import { t } from "@/i18n";
 import type { HeadingItem } from "@/types";
 
@@ -22,22 +21,8 @@ export const Sidebar: Component<SidebarProps> = (props) => {
         width: `${widthPx()}px`,
         "font-size": `${fontSizePx()}px`,
       }}
-      class="h-full flex flex-col justify-between bg-surface-0 border-e border-border/80 select-none shrink-0"
+      class="h-full flex flex-col bg-surface-0 border-e border-border/80 select-none shrink-0"
     >
-      <div
-        style={{
-          padding: `${Math.round(12 * z())}px ${Math.round(14 * z())}px`,
-        }}
-        class="border-b border-border/60 flex items-center justify-between"
-      >
-        <div class="text-foreground font-medium tracking-wide">
-          <span>{t().sidebar.outline}</span>
-        </div>
-        <Badge variant="secondary" size="sm" class="tabular-nums font-medium">
-          {t().sidebar.sectionsCount(props.headings.length)}
-        </Badge>
-      </div>
-
       <div
         dir={props.docDir ?? "ltr"}
         style={{
@@ -63,15 +48,19 @@ export const Sidebar: Component<SidebarProps> = (props) => {
                   type="button"
                   onClick={() => props.onSelectHeading(heading.blockIndex)}
                   style={{
-                    "padding-inline-start": `${Math.round(8 * z()) + indent()}px`,
+                    "padding-top": `${Math.round(6 * z())}px`,
+                    "padding-bottom": `${Math.round(6 * z())}px`,
+                    "padding-inline-end": `${Math.round(10 * z())}px`,
+                    "padding-inline-start": `${Math.round(10 * z()) + indent()}px`,
                     "text-align": "start",
                     "font-size": `${fontSizePx()}px`,
-                    padding: `${Math.round(6 * z())}px ${Math.round(10 * z())}px`,
                   }}
                   class={`w-full rounded-md transition-colors cursor-pointer block ${
                     isCurrent()
                       ? "bg-brand/10 text-brand font-medium shadow-sm"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                      : heading.level === 1
+                        ? "text-foreground font-medium hover:bg-accent"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent"
                   }`}
                   title={heading.title}
                 >
