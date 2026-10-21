@@ -19,9 +19,10 @@ import {
   updateConfig,
 } from "@/lib/config";
 import { confirmDiscard, openFileDialog, readFileFromPath, saveFileDialog } from "@/lib/file";
-import { calculateStats, extractHeadings } from "@/lib/parser";
+import { calculateStats, detectTextDirection, extractHeadings } from "@/lib/parser";
 import { applyTheme, listenSystemTheme } from "@/lib/theme";
 import { openSettingsWindow } from "@/lib/window";
+import { resolveEditorFontFamily } from "@/lib/fonts";
 import type { DocumentStats, HeadingItem } from "@/types";
 
 export const App: Component = () => {
@@ -54,6 +55,13 @@ export const App: Component = () => {
   const displayFileName = () => {
     if (!hasDocument()) return "";
     return customFileName() ?? t().common.untitledFileName;
+  };
+
+  const documentDirection = () => {
+    if (isSampleDoc() && currentLocale() === "ar-SA") {
+      return "rtl";
+    }
+    return detectTextDirection(source());
   };
 
   const applyThemeFromConfig = (theme: "system" | "light" | "dark") => {
@@ -211,6 +219,28 @@ export const App: Component = () => {
       triggerAutoSaveIfEnabled();
     }
   };
+
+  createEffect(() => {
+    const cfg = config();
+    const z = zoom();
+    const fs = cfg.fontSize * z;
+    const lh = cfg.lineHeight;
+    const ff = resolveEditorFontFamily(cfg.fontFamily, cfg.fallbackFont);
+    const mw =
+      cfg.editorWidth === "compact"
+        ? "720px"
+        : cfg.editorWidth === "wide"
+          ? "1040px"
+          : cfg.editorWidth === "full"
+            ? "100%"
+            : "880px";
+
+    const root = document.documentElement.style;
+    root.setProperty("--editor-font-size", `${fs}px`);
+    root.setProperty("--editor-line-height", `${lh}`);
+    root.setProperty("--editor-font-family", ff);
+    root.setProperty("--editor-max-width", mw);
+  });
 
   createEffect(() => {
     const loc = currentLocale();
@@ -544,10 +574,14 @@ export const App: Component = () => {
             headings={headings()}
             currentBlockIndex={activeHeadingIndex()}
             onSelectHeading={handleSelectHeading}
+            docDir={documentDirection()}
           />
         </Show>
 
-        <main class="flex-1 h-full overflow-hidden bg-surface-1 focus:outline-none relative">
+        <main
+          dir={documentDirection()}
+          class="flex-1 h-full overflow-hidden bg-surface-1 focus:outline-none relative"
+        >
           <Show when={!hasDocument()}>
             <div class="absolute inset-0 z-20 bg-surface-1">
               <Welcome
@@ -582,6 +616,7 @@ export const App: Component = () => {
             fontSize={config().fontSize}
             lineHeight={config().lineHeight}
             fontFamily={config().fontFamily}
+            fallbackFont={config().fallbackFont}
             tabSize={config().tabSize}
             wordWrap={config().wordWrap}
             editorWidth={config().editorWidth}

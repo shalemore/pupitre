@@ -1,11 +1,11 @@
 import { cn } from "cn";
 import { type JSX, Show, splitProps } from "solid-js";
 
-export interface SettingRowProps extends JSX.HTMLAttributes<HTMLDivElement> {
-  title: string;
-  description?: string;
-  icon?: JSX.Element;
-  action?: JSX.Element;
+export interface SettingRowProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "title"> {
+  title: JSX.Element | string;
+  description?: string | undefined;
+  icon?: JSX.Element | undefined;
+  action?: JSX.Element | undefined;
 }
 
 export function SettingRow(props: SettingRowProps) {

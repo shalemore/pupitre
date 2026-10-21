@@ -32,13 +32,13 @@ import { getAboutInfo } from "@/lib/about";
 import {
   config,
   type EditorWidth,
-  type FontFamilyOption,
   getConfigFilePath,
   loadConfig,
   type PupitreConfig,
   setupConfigSync,
   updateConfig,
 } from "@/lib/config";
+import { getSystemFontFamilies } from "@/lib/fonts";
 import { isMacOS, isTauri } from "@/lib/platform";
 import { applyTheme } from "@/lib/theme";
 import {
@@ -54,9 +54,24 @@ import { closeCurrentWindow, toggleMaximizeCurrentWindow } from "@/lib/window";
 export const SettingsWindow: Component = () => {
   const [activeTab, setActiveTab] = createSignal<string>("appearance");
   const [configPath, setConfigPath] = createSignal<string>("");
+  const [availableFonts, setAvailableFonts] = createSignal<string[]>([]);
+  const [isRefreshingFonts, setIsRefreshingFonts] = createSignal(false);
   const aboutInfo = getAboutInfo();
 
+  const loadFonts = async (forceRefresh = false) => {
+    setIsRefreshingFonts(true);
+    try {
+      const list = await getSystemFontFamilies(forceRefresh);
+      setAvailableFonts(list);
+    } catch (err) {
+      console.error("Failed to query system fonts:", err);
+    } finally {
+      setIsRefreshingFonts(false);
+    }
+  };
+
   onMount(async () => {
+    void loadFonts(false);
     const loaded = await loadConfig();
     applyTheme(loaded.theme);
     setLanguageSetting(loaded.locale);
@@ -159,10 +174,20 @@ export const SettingsWindow: Component = () => {
     { value: "full", label: t().settings.editorWidthFull },
   ];
 
-  const fontOptions = (): SelectOption<FontFamilyOption>[] => [
+  const fontOptions = (): SelectOption<string>[] => [
     { value: "sans", label: t().settings.fontFamilySans },
     { value: "mono", label: t().settings.fontFamilyMono },
     { value: "serif", label: t().settings.fontFamilySerif },
+    ...availableFonts()
+      .filter((f) => f !== "System Sans" && f !== "System Mono" && f !== "System Serif")
+      .map((f) => ({ value: f, label: f })),
+  ];
+
+  const fallbackFontOptions = (): SelectOption<string>[] => [
+    { value: "", label: t().settings.fontFallbackNone },
+    ...availableFonts()
+      .filter((f) => f !== "System Sans" && f !== "System Mono" && f !== "System Serif")
+      .map((f) => ({ value: f, label: f })),
   ];
 
   const languageOptions = (): SelectOption<LanguageSetting>[] => [
@@ -261,13 +286,48 @@ export const SettingsWindow: Component = () => {
 
                 <div class="divide-y divide-border/40">
                   <SettingRow
-                    title={t().settings.typography}
-                    description={t().settings.fontFamilySans}
+                    title={
+                      <div class="flex items-center gap-1.5">
+                        <span>{t().settings.primaryFont}</span>
+                        <button
+                          type="button"
+                          onClick={() => loadFonts(true)}
+                          class="p-1 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                          title={t().settings.refreshFonts}
+                        >
+                          <RefreshCw class={cn("size-3", isRefreshingFonts() && "animate-spin")} />
+                        </button>
+                      </div>
+                    }
+                    description={
+                      fontOptions().find((o) => o.value === config().fontFamily)?.label ??
+                      config().fontFamily
+                    }
                   >
                     <Select
                       value={config().fontFamily}
                       onChange={(fontFamily) => handleUpdate({ fontFamily })}
                       options={fontOptions()}
+                      searchable={true}
+                      searchPlaceholder={t().settings.searchFont}
+                    />
+                  </SettingRow>
+
+                  <SettingRow
+                    title={t().settings.fallbackFont}
+                    description={
+                      fallbackFontOptions().find((o) => o.value === (config().fallbackFont ?? ""))
+                        ?.label ??
+                      config().fallbackFont ??
+                      t().settings.fontFallbackNone
+                    }
+                  >
+                    <Select
+                      value={config().fallbackFont ?? ""}
+                      onChange={(fallbackFont) => handleUpdate({ fallbackFont })}
+                      options={fallbackFontOptions()}
+                      searchable={true}
+                      searchPlaceholder={t().settings.searchFont}
                     />
                   </SettingRow>
 

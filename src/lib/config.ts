@@ -11,6 +11,7 @@ export interface PupitreConfig {
   fontSize: number;
   lineHeight: number;
   fontFamily: FontFamilyOption;
+  fallbackFont?: string | undefined;
   tabSize: number;
   wordWrap: boolean;
   editorWidth: EditorWidth;
@@ -25,6 +26,7 @@ export const DEFAULT_CONFIG: PupitreConfig = {
   fontSize: 15,
   lineHeight: 1.75,
   fontFamily: "sans",
+  fallbackFont: "",
   tabSize: 2,
   wordWrap: true,
   editorWidth: "normal",

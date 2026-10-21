@@ -79,7 +79,105 @@ class CodeBlockHeaderWidget extends WidgetType {
 }
 
 /**
- * Mermaid diagram preview widget
+ * Dedicated Mermaid Full Card Widget (Shown when cursor is outside the code block)
+ * Hides raw markdown code and renders a spacious, elegant diagram card with Edit & Copy actions.
+ */
+class MermaidBlockWidget extends WidgetType {
+  constructor(
+    readonly code: string,
+    readonly blockPos: number,
+  ) {
+    super();
+  }
+
+  override eq(other: MermaidBlockWidget): boolean {
+    return this.code === other.code && this.blockPos === other.blockPos;
+  }
+
+  override toDOM(view: EditorView): HTMLElement {
+    const card = document.createElement("div");
+    card.dir = "ltr";
+    card.className =
+      "cm-mermaid-card my-4 rounded-xl border border-border/80 bg-surface-0 shadow-sm overflow-hidden select-none transition-all hover:border-brand/40 hover:shadow-md";
+
+    const header = document.createElement("div");
+    header.className =
+      "flex items-center justify-between px-4 py-2 border-b border-border/60 bg-surface-1/70 text-xs";
+
+    const titleBadge = document.createElement("span");
+    titleBadge.className =
+      "font-mono font-semibold text-[11px] text-muted-foreground tracking-wider uppercase";
+    titleBadge.textContent = "MERMAID DIAGRAM";
+    header.appendChild(titleBadge);
+
+    const btnGroup = document.createElement("div");
+    btnGroup.className = "flex items-center gap-2";
+
+    const editBtn = document.createElement("button");
+    editBtn.type = "button";
+    editBtn.className =
+      "px-2.5 py-1 rounded text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors cursor-pointer font-medium";
+    editBtn.textContent = t().editor.editCode;
+    editBtn.title = t().editor.clickToEdit;
+    editBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      view.dispatch({
+        selection: { anchor: this.blockPos + 3 },
+      });
+      view.focus();
+    });
+    btnGroup.appendChild(editBtn);
+
+    const copyBtn = document.createElement("button");
+    copyBtn.type = "button";
+    copyBtn.className =
+      "px-2.5 py-1 rounded text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors cursor-pointer font-medium";
+    copyBtn.textContent = t().common.copy;
+    copyBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      void navigator.clipboard.writeText(this.code).then(() => {
+        copyBtn.textContent = t().common.copied;
+        setTimeout(() => {
+          copyBtn.textContent = t().common.copy;
+        }, 1500);
+      });
+    });
+    btnGroup.appendChild(copyBtn);
+
+    header.appendChild(btnGroup);
+    card.appendChild(header);
+
+    const body = document.createElement("div");
+    body.className =
+      "p-6 flex justify-center items-center overflow-x-auto min-h-[100px] cursor-pointer";
+    body.title = t().editor.dblClickToEdit;
+    body.addEventListener("dblclick", () => {
+      view.dispatch({
+        selection: { anchor: this.blockPos + 3 },
+      });
+      view.focus();
+    });
+
+    try {
+      const ondine = getOndineRenderer();
+      const res = ondine.render(this.code);
+      body.innerHTML = res.svg;
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      body.className =
+        "p-4 text-xs bg-destructive/10 border-t border-destructive/20 text-destructive font-mono";
+      body.textContent = `Mermaid syntax error: ${msg}`;
+    }
+
+    card.appendChild(body);
+    return card;
+  }
+}
+
+/**
+ * Mermaid diagram preview widget (Shown when cursor is actively inside the code block)
  */
 class MermaidPreviewWidget extends WidgetType {
   constructor(readonly code: string) {
@@ -94,17 +192,26 @@ class MermaidPreviewWidget extends WidgetType {
     const container = document.createElement("div");
     container.dir = "ltr";
     container.className =
-      "ondine-diagram my-3 flex justify-center p-4 rounded-lg bg-surface-0 border border-border overflow-x-auto shadow-sm select-none";
+      "ondine-diagram mt-3 mb-2 flex flex-col p-4 rounded-xl border border-dashed border-border/80 bg-surface-0/60 overflow-x-auto shadow-sm select-none";
+
+    const title = document.createElement("div");
+    title.className =
+      "text-[10px] font-mono uppercase text-muted-foreground mb-3 flex items-center gap-1.5";
+    title.innerHTML = `<span class="size-1.5 rounded-full bg-brand inline-block"></span> ${t().editor.livePreview}`;
+    container.appendChild(title);
+
+    const body = document.createElement("div");
+    body.className = "flex justify-center overflow-x-auto";
     try {
       const ondine = getOndineRenderer();
       const res = ondine.render(this.code);
-      container.innerHTML = res.svg;
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
-      container.className =
-        "p-3 my-2 text-xs rounded-md bg-destructive/10 border border-destructive/20 text-destructive font-mono";
-      container.textContent = `Mermaid syntax error: ${msg}`;
+      body.innerHTML = res.svg;
+    } catch {
+      body.className = "text-[11px] text-muted-foreground italic text-center py-2";
+      body.textContent = t().editor.waitingDiagramSyntax;
     }
+
+    container.appendChild(body);
     return container;
   }
 
@@ -166,6 +273,30 @@ export const codeBlockNativePlugin = ViewPlugin.fromClass(
               const endLine = state.doc.lineAt(node.to);
 
               const firstLineText = startLine.text;
+              const langMatch = firstLineText.trimStart().match(/^```\s*(\S+)/);
+              const lang = langMatch ? (langMatch[1] ?? "") : "";
+
+              const rawBlock = state.sliceDoc(node.from, node.to);
+              const firstNewline = rawBlock.indexOf("\n");
+              const codeBody =
+                firstNewline !== -1
+                  ? rawBlock.slice(firstNewline + 1).replace(/\r?\n[ \t]*```$/, "")
+                  : "";
+
+              const isMermaid = lang.toLowerCase() === "mermaid";
+              const isSelected = rangeIntersectsSelection(node.from, node.to, selectionRanges);
+
+              // If Mermaid and NOT actively focused/selected: replace entire block with clean diagram card
+              if (isMermaid && !isSelected && codeBody.trim()) {
+                decos.push(
+                  Decoration.replace({
+                    widget: new MermaidBlockWidget(codeBody, startLine.from),
+                    block: true,
+                  }).range(startLine.from, endLine.to),
+                );
+                return;
+              }
+
               const indentMatch = firstLineText.match(/^([ \t]*)/);
               const leadingIndent = indentMatch ? (indentMatch[1] ?? "") : "";
               const indentLength = leadingIndent.length;
@@ -189,16 +320,6 @@ export const codeBlockNativePlugin = ViewPlugin.fromClass(
                 }
               }
 
-              const rawBlock = state.sliceDoc(node.from, node.to);
-              const langMatch = firstLineText.trimStart().match(/^```\s*(\S+)/);
-              const lang = langMatch ? (langMatch[1] ?? "") : "";
-
-              const firstNewline = rawBlock.indexOf("\n");
-              const codeBody =
-                firstNewline !== -1
-                  ? rawBlock.slice(firstNewline + 1).replace(/\r?\n[ \t]*```$/, "")
-                  : "";
-
               decos.push(
                 Decoration.widget({
                   widget: new CodeBlockHeaderWidget(lang, codeBody),
@@ -206,16 +327,14 @@ export const codeBlockNativePlugin = ViewPlugin.fromClass(
                 }).range(startLine.to),
               );
 
-              if (lang.toLowerCase() === "mermaid") {
-                const isSelected = rangeIntersectsSelection(node.from, node.to, selectionRanges);
-                if (!isSelected && codeBody.trim()) {
-                  decos.push(
-                    Decoration.widget({
-                      widget: new MermaidPreviewWidget(codeBody),
-                      side: 1,
-                    }).range(endLine.to),
-                  );
-                }
+              // When editing Mermaid: show active live preview below the code block
+              if (isMermaid && isSelected && codeBody.trim()) {
+                decos.push(
+                  Decoration.widget({
+                    widget: new MermaidPreviewWidget(codeBody),
+                    side: 1,
+                  }).range(endLine.to),
+                );
               }
             }
           },

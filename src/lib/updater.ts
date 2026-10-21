@@ -64,10 +64,28 @@ export async function checkForUpdates(manual = true): Promise<UpdateInfo | null>
     setStatus("upToDate");
     return null;
   } catch (err) {
+    const rawMsg = err instanceof Error ? err.message : String(err);
+    const lower = rawMsg.toLowerCase();
+
+    // 404 or missing release JSON means no newer release exists on remote -> up to date
+    if (
+      lower.includes("release json") ||
+      lower.includes("not found") ||
+      lower.includes("404") ||
+      lower.includes("could not fetch a valid release") ||
+      lower.includes("no release")
+    ) {
+      activeUpdate = null;
+      setUpdateInfo(null);
+      setStatus("upToDate");
+      setErrorMessage(null);
+      return null;
+    }
+
     console.error("Failed to check for updates:", err);
     activeUpdate = null;
     setStatus("error");
-    setErrorMessage(err instanceof Error ? err.message : String(err));
+    setErrorMessage(rawMsg);
     return null;
   }
 }

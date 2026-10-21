@@ -87,3 +87,13 @@ export function calculateStats(source: string): DocumentStats {
 
   return { words, chars };
 }
+
+/**
+ * Detect text base direction by checking for strong RTL characters (Arabic, Hebrew, etc.)
+ */
+export function detectTextDirection(text: string): "ltr" | "rtl" {
+  if (!text) return "ltr";
+  const sample = text.slice(0, 4000);
+  const rtlChars = sample.match(/[\u0591-\u07FF\uFB1D-\uFDFD\uFE70-\uFEFC]/g)?.length ?? 0;
+  return rtlChars > 25 ? "rtl" : "ltr";
+}

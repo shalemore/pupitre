@@ -7,6 +7,7 @@ interface SidebarProps {
   headings: HeadingItem[];
   currentBlockIndex: number | null;
   onSelectHeading: (blockIndex: number) => void;
+  docDir?: "ltr" | "rtl";
 }
 
 export const Sidebar: Component<SidebarProps> = (props) => {
@@ -21,7 +22,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
         </Badge>
       </div>
 
-      <div class="flex-1 overflow-y-auto p-2 space-y-0.5">
+      <div dir={props.docDir ?? "ltr"} class="flex-1 overflow-y-auto p-2 space-y-0.5">
         <Show
           when={props.headings.length > 0}
           fallback={
@@ -39,15 +40,18 @@ export const Sidebar: Component<SidebarProps> = (props) => {
                 <button
                   type="button"
                   onClick={() => props.onSelectHeading(heading.blockIndex)}
-                  style={{ "padding-inline-start": `${8 + indent()}px` }}
-                  class={`w-full text-start py-1.5 pe-2.5 rounded-md text-[12px] transition-colors cursor-pointer block ${
+                  style={{
+                    "padding-inline-start": `${8 + indent()}px`,
+                    "text-align": "start",
+                  }}
+                  class={`w-full py-1.5 pe-2.5 rounded-md text-[12px] transition-colors cursor-pointer block ${
                     isCurrent()
                       ? "bg-brand/10 text-brand font-medium shadow-sm"
                       : "text-muted-foreground hover:text-foreground hover:bg-accent"
                   }`}
                   title={heading.title}
                 >
-                  <bdi class="block truncate">{heading.title}</bdi>
+                  <span class="block truncate">{heading.title}</span>
                 </button>
               );
             }}

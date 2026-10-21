@@ -27,6 +27,7 @@ import { createEffect, onCleanup, onMount, type Component } from "solid-js";
 import { codeBlockNativePlugin } from "./codeblock";
 import { unifiedLivePreviewPlugin } from "./livePreview";
 import { getThemeExtension } from "./theme";
+import { resolveEditorFontFamily } from "@/lib/fonts";
 
 const externalChangeAnnotation = Annotation.define<boolean>();
 
@@ -60,6 +61,7 @@ export interface EditorProps {
   fontSize?: number;
   lineHeight?: number;
   fontFamily?: string;
+  fallbackFont?: string | undefined;
   tabSize?: number;
   wordWrap?: boolean;
   editorWidth?: string;
@@ -248,12 +250,7 @@ export const Editor: Component<EditorProps> = (props) => {
     const fs = props.fontSize ?? 15;
     const lh = props.lineHeight ?? 1.75;
     const zoom = props.zoom ?? 1.0;
-    const ff =
-      props.fontFamily === "mono"
-        ? "var(--editor-font-mono)"
-        : props.fontFamily === "serif"
-          ? "var(--editor-font-serif)"
-          : "var(--editor-font-sans)";
+    const ff = resolveEditorFontFamily(props.fontFamily ?? "sans", props.fallbackFont);
     const mw =
       props.editorWidth === "compact"
         ? "720px"

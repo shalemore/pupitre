@@ -204,6 +204,11 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
                 <MenuItem label={menu().exportPdf} onClick={() => executeAction(handler())} />
               )}
             </Show>
+            <Show when={props.onExportPdf}>
+              {(handler) => (
+                <MenuItem label={menu().exportPdf} onClick={() => executeAction(handler())} />
+              )}
+            </Show>
 
             <MenuDivider />
 

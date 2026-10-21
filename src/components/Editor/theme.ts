@@ -1,5 +1,6 @@
 import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import type { Extension } from "@codemirror/state";
+import { EditorView } from "@codemirror/view";
 import { tags as t } from "@lezer/highlight";
 
 /**
@@ -35,6 +36,20 @@ export const cssDrivenHighlightStyle = HighlightStyle.define([
   { tag: t.punctuation, color: "var(--syntax-punctuation)" },
 ]);
 
+export const editorCursorTheme = EditorView.theme({
+  "&.cm-focused .cm-cursor": {
+    borderLeftColor: "var(--editor-cursor)",
+    borderLeftWidth: "2.5px",
+  },
+  "& .cm-dropCursor": {
+    borderLeftColor: "var(--editor-cursor)",
+    borderLeftWidth: "2.5px",
+  },
+  ".cm-content": {
+    caretColor: "var(--editor-cursor)",
+  },
+});
+
 export function getThemeExtension(): Extension {
-  return syntaxHighlighting(cssDrivenHighlightStyle);
+  return [syntaxHighlighting(cssDrivenHighlightStyle), editorCursorTheme];
 }

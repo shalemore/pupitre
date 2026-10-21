@@ -6,9 +6,76 @@ import {
   EditorView,
   ViewPlugin,
   type ViewUpdate,
+  WidgetType,
 } from "@codemirror/view";
 import type { SyntaxNodeRef } from "@lezer/common";
 import { rangeIntersectsSelection } from "./syntaxUtils";
+
+class BulletWidget extends WidgetType {
+  override eq(): boolean {
+    return true;
+  }
+  override toDOM(): HTMLElement {
+    const span = document.createElement("span");
+    span.className = "cm-bullet-mark";
+    span.textContent = "•";
+    return span;
+  }
+  override ignoreEvent(): boolean {
+    return true;
+  }
+}
+
+class TaskCheckboxWidget extends WidgetType {
+  constructor(
+    readonly checked: boolean,
+    readonly fromPos: number,
+  ) {
+    super();
+  }
+
+  override eq(other: TaskCheckboxWidget): boolean {
+    return this.checked === other.checked && this.fromPos === other.fromPos;
+  }
+
+  override toDOM(view: EditorView): HTMLElement {
+    const span = document.createElement("span");
+    span.className = "cm-task-widget";
+
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.checked = this.checked;
+    input.className = "cm-task-checkbox";
+    input.addEventListener("change", (e) => {
+      e.stopPropagation();
+      const newChar = this.checked ? " " : "x";
+      view.dispatch({
+        changes: { from: this.fromPos + 1, to: this.fromPos + 2, insert: newChar },
+      });
+    });
+
+    span.appendChild(input);
+    return span;
+  }
+
+  override ignoreEvent(event: Event): boolean {
+    return event.type === "mousedown" || event.type === "click" || event.type === "change";
+  }
+}
+
+class HorizontalRuleWidget extends WidgetType {
+  override eq(): boolean {
+    return true;
+  }
+  override toDOM(): HTMLElement {
+    const hr = document.createElement("hr");
+    hr.className = "cm-hr-widget";
+    return hr;
+  }
+  override ignoreEvent(): boolean {
+    return true;
+  }
+}
 
 const INLINE_CONTAINER_NODES = new Set([
   "StrongEmphasis",
@@ -153,6 +220,53 @@ export const unifiedLivePreviewPlugin = ViewPlugin.fromClass(
                 : "cm-formatting-block";
               decos.push(Decoration.mark({ class: markClass }).range(node.from, markTo));
             }
+            return;
+          }
+
+          if (node.name === "ListMark") {
+            const lineNum = state.doc.lineAt(node.from).number;
+            const isLineActive = activeLines.has(lineNum);
+            const markText = state.sliceDoc(node.from, node.to);
+            if (!isLineActive && (markText === "-" || markText === "+" || markText === "*")) {
+              const parent = node.node.parent;
+              const hasTask = parent?.getChild("Task");
+              if (!hasTask) {
+                decos.push(
+                  Decoration.replace({
+                    widget: new BulletWidget(),
+                  }).range(node.from, node.to),
+                );
+              }
+            }
+            return;
+          }
+
+          if (node.name === "TaskMarker") {
+            const lineNum = state.doc.lineAt(node.from).number;
+            const isLineActive = activeLines.has(lineNum);
+            if (!isLineActive) {
+              const raw = state.sliceDoc(node.from, node.to);
+              const checked = raw.includes("x") || raw.includes("X");
+              decos.push(
+                Decoration.replace({
+                  widget: new TaskCheckboxWidget(checked, node.from),
+                }).range(node.from, node.to),
+              );
+            }
+            return;
+          }
+
+          if (node.name === "HorizontalRule") {
+            const lineNum = state.doc.lineAt(node.from).number;
+            const isLineActive = activeLines.has(lineNum);
+            if (!isLineActive) {
+              decos.push(
+                Decoration.replace({
+                  widget: new HorizontalRuleWidget(),
+                }).range(node.from, node.to),
+              );
+            }
+            return;
           }
         },
       });

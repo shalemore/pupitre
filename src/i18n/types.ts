@@ -96,6 +96,11 @@ export interface TranslationSchema {
     readonly fontSize: string;
     readonly lineHeight: string;
     readonly fontFamily: string;
+    readonly primaryFont: string;
+    readonly fallbackFont: string;
+    readonly refreshFonts: string;
+    readonly searchFont: string;
+    readonly fontFallbackNone: string;
     readonly fontFamilySans: string;
     readonly fontFamilyMono: string;
     readonly fontFamilySerif: string;
