@@ -91,6 +91,13 @@ export const zhCN = {
     version: "当前版本",
     openConfigFile: "在资源管理器中打开",
     closeTip: "关闭 (Esc)",
+    checkForUpdates: "检查更新",
+    checkingForUpdates: "正在检查更新...",
+    updateAvailable: "发现新版本",
+    upToDate: "已是最新版本",
+    downloadUpdate: "立即更新",
+    downloadingUpdate: "正在下载更新",
+    restartToApply: "重启以应用更新",
   },
   about: {
     versionLabel: "版本:",

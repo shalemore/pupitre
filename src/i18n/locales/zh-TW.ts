@@ -92,6 +92,13 @@ export const zhTW = {
     version: "目前版本",
     openConfigFile: "在檔案總管中開啟",
     closeTip: "關閉 (Esc)",
+    checkForUpdates: "檢查更新",
+    checkingForUpdates: "正在檢查更新...",
+    updateAvailable: "發現新版本",
+    upToDate: "已是最新版本",
+    downloadUpdate: "立即更新",
+    downloadingUpdate: "正在下載更新",
+    restartToApply: "重啟以套用更新",
   },
   about: {
     versionLabel: "版本:",

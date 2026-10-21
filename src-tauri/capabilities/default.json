@@ -27,6 +27,9 @@
     "fs:allow-mkdir",
     "fs:allow-exists",
     "fs:allow-home-read-recursive",
-    "fs:allow-home-write-recursive"
+    "fs:allow-home-write-recursive",
+    "updater:default",
+    "process:default",
+    "process:allow-restart"
   ]
 }

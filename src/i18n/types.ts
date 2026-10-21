@@ -115,6 +115,13 @@ export interface TranslationSchema {
     readonly version: string;
     readonly openConfigFile: string;
     readonly closeTip: string;
+    readonly checkForUpdates: string;
+    readonly checkingForUpdates: string;
+    readonly updateAvailable: string;
+    readonly upToDate: string;
+    readonly downloadUpdate: string;
+    readonly downloadingUpdate: string;
+    readonly restartToApply: string;
   };
   readonly about: {
     readonly versionLabel: string;

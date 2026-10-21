@@ -92,6 +92,13 @@ export const ptBR = {
     version: "Versão",
     openConfigFile: "Abrir no Gerenciador de Arquivos",
     closeTip: "Fechar (Esc)",
+    checkForUpdates: "Verificar atualizações",
+    checkingForUpdates: "Verificando atualizações...",
+    updateAvailable: "Nova versão disponível",
+    upToDate: "O Pupitre está atualizado",
+    downloadUpdate: "Atualizar agora",
+    downloadingUpdate: "Baixando atualização",
+    restartToApply: "Reiniciar para aplicar",
   },
   about: {
     versionLabel: "Versão:",

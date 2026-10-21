@@ -92,6 +92,13 @@ export const itIT = {
     version: "Versione",
     openConfigFile: "Apri in Gestione file",
     closeTip: "Chiudi (Esc)",
+    checkForUpdates: "Controlla aggiornamenti",
+    checkingForUpdates: "Controllo aggiornamenti...",
+    updateAvailable: "Nuova versione disponibile",
+    upToDate: "Pupitre è aggiornato",
+    downloadUpdate: "Aggiorna ora",
+    downloadingUpdate: "Download aggiornamento",
+    restartToApply: "Riavvia per applicare",
   },
   about: {
     versionLabel: "Versione:",

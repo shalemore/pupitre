@@ -92,6 +92,13 @@ export const frFR = {
     version: "Version",
     openConfigFile: "Ouvrir dans le gestionnaire de fichiers",
     closeTip: "Fermer (Échap)",
+    checkForUpdates: "Vérifier les mises à jour",
+    checkingForUpdates: "Vérification des mises à jour...",
+    updateAvailable: "Nouvelle version disponible",
+    upToDate: "Pupitre est à jour",
+    downloadUpdate: "Mettre à jour maintenant",
+    downloadingUpdate: "Téléchargement de la mise à jour",
+    restartToApply: "Redémarrer pour appliquer",
   },
   about: {
     versionLabel: "Version :",

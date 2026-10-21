@@ -93,6 +93,13 @@ export const koKR = {
     version: "현재 버전",
     openConfigFile: "파일 관리자에서 열기",
     closeTip: "닫기 (Esc)",
+    checkForUpdates: "업데이트 확인",
+    checkingForUpdates: "업데이트 확인 중...",
+    updateAvailable: "새 버전 사용 가능",
+    upToDate: "최신 버전을 사용 중입니다",
+    downloadUpdate: "지금 업데이트",
+    downloadingUpdate: "업데이트 다운로드 중",
+    restartToApply: "재시작하여 적용",
   },
   about: {
     versionLabel: "버전:",

@@ -92,6 +92,13 @@ export const enUS = {
     version: "Version",
     openConfigFile: "Open in File Manager",
     closeTip: "Close (Esc)",
+    checkForUpdates: "Check for Updates",
+    checkingForUpdates: "Checking for updates...",
+    updateAvailable: "New Version Available",
+    upToDate: "Pupitre is up to date",
+    downloadUpdate: "Update Now",
+    downloadingUpdate: "Downloading update",
+    restartToApply: "Restart to Apply",
   },
   about: {
     versionLabel: "Version:",

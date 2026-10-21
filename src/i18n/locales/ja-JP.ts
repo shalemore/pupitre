@@ -92,6 +92,13 @@ export const jaJP = {
     version: "現在のバージョン",
     openConfigFile: "ファイルマネージャーで開く",
     closeTip: "閉じる (Esc)",
+    checkForUpdates: "アップデートを確認",
+    checkingForUpdates: "アップデートを確認中...",
+    updateAvailable: "新しいバージョンが利用可能です",
+    upToDate: "最新バージョンです",
+    downloadUpdate: "今すぐ更新",
+    downloadingUpdate: "アップデートをダウンロード中",
+    restartToApply: "再起動して適用",
   },
   about: {
     versionLabel: "バージョン:",

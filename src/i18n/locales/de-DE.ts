@@ -92,6 +92,13 @@ export const deDE = {
     version: "Version",
     openConfigFile: "Im Dateimanager öffnen",
     closeTip: "Schließen (Esc)",
+    checkForUpdates: "Nach Updates suchen",
+    checkingForUpdates: "Suche nach Updates...",
+    updateAvailable: "Neue Version verfügbar",
+    upToDate: "Pupitre ist auf dem neuesten Stand",
+    downloadUpdate: "Jetzt aktualisieren",
+    downloadingUpdate: "Update wird heruntergeladen",
+    restartToApply: "Neu starten zum Anwenden",
   },
   about: {
     versionLabel: "Version:",

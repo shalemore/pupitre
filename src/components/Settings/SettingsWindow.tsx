@@ -1,4 +1,16 @@
-import { FolderOpen, Info, Languages, Moon, Palette, Sun, SunMoon, Type } from "lucide-solid";
+import {
+  CheckCircle2,
+  Download,
+  FolderOpen,
+  Info,
+  Languages,
+  Moon,
+  Palette,
+  RefreshCw,
+  Sun,
+  SunMoon,
+  Type,
+} from "lucide-solid";
 import { createSignal, onCleanup, onMount, Show, type Component } from "solid-js";
 import {
   Button,
@@ -28,6 +40,13 @@ import {
 } from "@/lib/config";
 import { isTauri } from "@/lib/platform";
 import { applyTheme } from "@/lib/theme";
+import {
+  checkForUpdates,
+  downloadAndInstallUpdate,
+  relaunchApp,
+  updaterState,
+} from "@/lib/updater";
+import { cn } from "cn";
 import { closeCurrentWindow, getCurrentAppWindow } from "@/lib/window";
 
 export const SettingsWindow: Component = () => {
@@ -321,13 +340,100 @@ export const SettingsWindow: Component = () => {
                 <div class="size-10 rounded-xl bg-brand text-brand-foreground flex items-center justify-center font-bold text-lg shadow-sm">
                   P
                 </div>
-                <div>
+                <div class="flex-1 min-w-0">
                   <h2 class="text-base font-semibold text-foreground">{aboutInfo.name}</h2>
                   <div class="text-[11px] text-muted-foreground">
                     {t().settings.version} {aboutInfo.version} · {aboutInfo.date}
                   </div>
                 </div>
+                <Show when={isTauri()}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => checkForUpdates(true)}
+                    disabled={
+                      updaterState.status() === "checking" ||
+                      updaterState.status() === "downloading"
+                    }
+                    class="text-xs"
+                  >
+                    <RefreshCw
+                      class={cn("size-3.5", updaterState.status() === "checking" && "animate-spin")}
+                    />
+                    <span>
+                      {updaterState.status() === "checking"
+                        ? t().settings.checkingForUpdates
+                        : t().settings.checkForUpdates}
+                    </span>
+                  </Button>
+                </Show>
               </div>
+
+              <Show when={updaterState.status() === "upToDate"}>
+                <div class="p-2.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center gap-2 text-xs">
+                  <CheckCircle2 class="size-4 shrink-0" />
+                  <span>
+                    {t().settings.upToDate} (v{aboutInfo.version})
+                  </span>
+                </div>
+              </Show>
+
+              <Show when={updaterState.status() === "available"}>
+                <div class="p-3 rounded-md bg-brand/10 border border-brand/20 text-foreground space-y-2 text-xs">
+                  <div class="flex items-center justify-between">
+                    <span class="font-medium text-brand">
+                      {t().settings.updateAvailable}: v{updaterState.updateInfo()?.version}
+                    </span>
+                    <Button
+                      variant="default"
+                      size="sm"
+                      onClick={downloadAndInstallUpdate}
+                      class="text-xs"
+                    >
+                      <Download class="size-3.5" />
+                      <span>{t().settings.downloadUpdate}</span>
+                    </Button>
+                  </div>
+                  <Show when={updaterState.updateInfo()?.body}>
+                    <p class="text-[11px] text-muted-foreground whitespace-pre-wrap max-h-24 overflow-y-auto">
+                      {updaterState.updateInfo()?.body}
+                    </p>
+                  </Show>
+                </div>
+              </Show>
+
+              <Show when={updaterState.status() === "downloading"}>
+                <div class="p-3 rounded-md bg-surface-0 border border-border space-y-2 text-xs">
+                  <div class="flex items-center justify-between">
+                    <span class="text-muted-foreground">{t().settings.downloadingUpdate}...</span>
+                    <span class="font-mono font-medium">{updaterState.progress()}%</span>
+                  </div>
+                  <div class="w-full h-1.5 bg-muted rounded-full overflow-hidden">
+                    <div
+                      class="h-full bg-brand transition-all duration-200"
+                      style={{ width: `${updaterState.progress()}%` }}
+                    />
+                  </div>
+                </div>
+              </Show>
+
+              <Show when={updaterState.status() === "ready"}>
+                <div class="p-3 rounded-md bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between text-xs">
+                  <div class="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+                    <CheckCircle2 class="size-4 shrink-0" />
+                    <span>{t().settings.restartToApply}</span>
+                  </div>
+                  <Button variant="default" size="sm" onClick={relaunchApp} class="text-xs">
+                    <span>{t().settings.restartToApply}</span>
+                  </Button>
+                </div>
+              </Show>
+
+              <Show when={updaterState.status() === "error"}>
+                <div class="p-2.5 rounded-md bg-destructive/10 border border-destructive/20 text-destructive text-xs">
+                  {updaterState.errorMessage() || "Update check failed"}
+                </div>
+              </Show>
 
               <Card class="space-y-1.5 font-mono text-[11px] text-muted-foreground bg-surface-0/60 p-3">
                 <div>

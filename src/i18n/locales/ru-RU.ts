@@ -92,6 +92,13 @@ export const ruRU = {
     version: "Версия",
     openConfigFile: "Открыть в диспетчере файлов",
     closeTip: "Закрыть (Esc)",
+    checkForUpdates: "Проверить обновления",
+    checkingForUpdates: "Проверка обновлений...",
+    updateAvailable: "Доступна новая версия",
+    upToDate: "У вас установлена последняя версия",
+    downloadUpdate: "Обновить сейчас",
+    downloadingUpdate: "Загрузка обновления",
+    restartToApply: "Перезапустить для обновления",
   },
   about: {
     versionLabel: "Версия:",

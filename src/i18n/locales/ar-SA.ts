@@ -110,6 +110,13 @@ export const arSA = {
     version: "الإصدار",
     openConfigFile: "فتح في مدير الملفات",
     closeTip: "إغلاق (Esc)",
+    checkForUpdates: "التحقق من وجود تحديثات",
+    checkingForUpdates: "جارٍ التحقق من وجود تحديثات...",
+    updateAvailable: "يتوفر إصدار جديد",
+    upToDate: "Pupitre محدث إلى أحدث إصدار",
+    downloadUpdate: "تحديث الآن",
+    downloadingUpdate: "جارٍ تنزيل التحديث",
+    restartToApply: "إعادة التشغيل للتطبيق",
   },
   about: {
     versionLabel: "الإصدار:",

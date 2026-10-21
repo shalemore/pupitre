@@ -93,6 +93,13 @@ export const esES = {
     version: "Versión",
     openConfigFile: "Abrir en el explorador de archivos",
     closeTip: "Cerrar (Esc)",
+    checkForUpdates: "Buscar actualizaciones",
+    checkingForUpdates: "Buscando actualizaciones...",
+    updateAvailable: "Nueva versión disponible",
+    upToDate: "Pupitre está actualizado",
+    downloadUpdate: "Actualizar ahora",
+    downloadingUpdate: "Descargando actualización",
+    restartToApply: "Reiniciar para aplicar",
   },
   about: {
     versionLabel: "Versión:",
