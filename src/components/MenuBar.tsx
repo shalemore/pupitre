@@ -36,14 +36,23 @@ const MenuTrigger: Component<MenuTriggerProps> = (props) => (
 interface MenuItemProps {
   label: string;
   shortcut?: string;
+  disabled?: boolean;
   onClick: () => void;
 }
 
 const MenuItem: Component<MenuItemProps> = (props) => (
   <button
     type="button"
-    onClick={props.onClick}
-    class="w-full px-3 py-1.5 flex items-center justify-between text-start hover:bg-accent text-foreground cursor-pointer"
+    disabled={props.disabled}
+    onClick={() => {
+      if (!props.disabled) props.onClick();
+    }}
+    class={cn(
+      "w-full px-3 py-1.5 flex items-center justify-between text-start text-foreground transition-colors",
+      props.disabled
+        ? "opacity-35 cursor-not-allowed pointer-events-none select-none"
+        : "hover:bg-accent cursor-pointer",
+    )}
   >
     <span>{props.label}</span>
     <Show when={props.shortcut}>
@@ -190,19 +199,16 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
             <MenuItem
               label={menu().save}
               shortcut="Ctrl+S"
+              disabled={!props.hasDocument}
               onClick={() => executeAction(props.onSave)}
             />
             <MenuItem
               label={menu().saveAs}
               shortcut="Ctrl+Shift+S"
+              disabled={!props.hasDocument}
               onClick={() => executeAction(props.onSaveAs)}
             />
-            <Show when={props.onExportPdf}>
-              {(handler) => (
-                <MenuItem label={menu().exportPdf} onClick={() => executeAction(handler())} />
-              )}
-            </Show>
-            <Show when={props.onExportPdf}>
+            <Show when={props.hasDocument && props.onExportPdf}>
               {(handler) => (
                 <MenuItem label={menu().exportPdf} onClick={() => executeAction(handler())} />
               )}
@@ -232,11 +238,13 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
             <MenuItem
               label={menu().undo}
               shortcut="Ctrl+Z"
+              disabled={!props.hasDocument}
               onClick={() => executeAction(() => document.execCommand?.("undo"))}
             />
             <MenuItem
               label={menu().redo}
               shortcut="Ctrl+Y"
+              disabled={!props.hasDocument}
               onClick={() => executeAction(() => document.execCommand?.("redo"))}
             />
 
@@ -245,16 +253,19 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
             <MenuItem
               label={menu().cut}
               shortcut="Ctrl+X"
+              disabled={!props.hasDocument}
               onClick={() => executeAction(() => document.execCommand?.("cut"))}
             />
             <MenuItem
               label={menu().copy}
               shortcut="Ctrl+C"
+              disabled={!props.hasDocument}
               onClick={() => executeAction(() => document.execCommand?.("copy"))}
             />
             <MenuItem
               label={menu().paste}
               shortcut="Ctrl+V"
+              disabled={!props.hasDocument}
               onClick={() => executeAction(() => document.execCommand?.("paste"))}
             />
 
@@ -263,6 +274,7 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
             <MenuItem
               label={menu().selectAll}
               shortcut="Ctrl+A"
+              disabled={!props.hasDocument}
               onClick={() => executeAction(() => document.execCommand?.("selectAll"))}
             />
 
@@ -272,6 +284,7 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
               <MenuItem
                 label={menu().find}
                 shortcut="Ctrl+F"
+                disabled={!props.hasDocument}
                 onClick={() => executeAction(props.onFind!)}
               />
             </Show>
@@ -279,6 +292,7 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
               <MenuItem
                 label={menu().replace}
                 shortcut="Ctrl+H"
+                disabled={!props.hasDocument}
                 onClick={() => executeAction(props.onReplace!)}
               />
             </Show>

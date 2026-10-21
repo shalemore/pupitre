@@ -20,6 +20,7 @@ export interface DocumentStats {
 }
 
 export interface AppActionHandlers {
+  hasDocument?: boolean;
   onNew: () => void;
   onOpen: () => void;
   onOpenRecent: (filePath: string) => void;

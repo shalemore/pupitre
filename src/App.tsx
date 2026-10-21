@@ -23,6 +23,7 @@ import { calculateStats, detectTextDirection, extractHeadings } from "@/lib/pars
 import { applyTheme, listenSystemTheme } from "@/lib/theme";
 import { applyMotion } from "@/lib/motion";
 import { openAboutWindow, openSettingsWindow } from "@/lib/window";
+import { syncNativeMenuItems } from "@/lib/nativeMenu";
 import { isTauri } from "@/lib/platform";
 import { resolveEditorFontFamily } from "@/lib/fonts";
 import type { DocumentStats, HeadingItem } from "@/types";
@@ -383,10 +384,18 @@ export const App: Component = () => {
 
   const [isExportingPdf, setIsExportingPdf] = createSignal<boolean>(false);
 
+  createEffect(() => {
+    const docOpen = hasDocument();
+    syncNativeMenuItems({
+      save_doc: docOpen,
+      export_pdf: docOpen,
+    });
+  });
+
   const handleExportPdf = async () => {
-    if (isExportingPdf()) return;
+    if (!hasDocument() || isExportingPdf()) return;
     const content = source();
-    if (!content.trim() && !hasDocument()) return;
+    if (!content.trim()) return;
     setIsExportingPdf(true);
     try {
       const { exportMarkdownToPdf } = await import("@/lib/exportPdf");
@@ -508,24 +517,24 @@ export const App: Component = () => {
     let unlistenAppAction: (() => void) | null = null;
     if (typeof window !== "undefined" && "__TAURI_INTERNALS__" in window) {
       import("@tauri-apps/api/event").then(({ listen }) => {
+        const actionMap: Record<string, () => void> = {
+          new: handleNew,
+          new_doc: handleNew,
+          open: handleOpen,
+          open_doc: handleOpen,
+          save: handleSave,
+          save_doc: handleSave,
+          export_pdf: handleExportPdf,
+          "export-pdf": handleExportPdf,
+          preferences: openSettingsWindow,
+          about: handleOpenAbout,
+          "sample-doc": handleOpenSample,
+          find: handleOpenFind,
+          replace: handleOpenReplace,
+        };
+
         listen<string>("menu-action", (event) => {
-          if (event.payload === "new") {
-            handleNew();
-          } else if (event.payload === "open") {
-            handleOpen();
-          } else if (event.payload === "save") {
-            handleSave();
-          } else if (event.payload === "preferences") {
-            openSettingsWindow();
-          } else if (event.payload === "about") {
-            handleOpenAbout();
-          } else if (event.payload === "sample-doc") {
-            handleOpenSample();
-          } else if (event.payload === "find") {
-            handleOpenFind();
-          } else if (event.payload === "replace") {
-            handleOpenReplace();
-          }
+          actionMap[event.payload]?.();
         }).then((fn) => {
           unlistenMenu = fn;
         });

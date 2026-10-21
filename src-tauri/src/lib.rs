@@ -78,6 +78,28 @@ async fn open_about_window(app: tauri::AppHandle, title: Option<String>) -> Resu
     Ok(())
 }
 
+#[tauri::command]
+async fn set_menu_items_enabled(
+    app: tauri::AppHandle,
+    items: std::collections::HashMap<String, bool>,
+) -> Result<(), String> {
+    #[cfg(target_os = "macos")]
+    {
+        if let Some(menu) = app.menu() {
+            for (id, enabled) in items {
+                if let Some(item) = menu.get(&id) {
+                    if let Some(menu_item) = item.as_menuitem() {
+                        let _ = menu_item.set_enabled(enabled);
+                    }
+                }
+            }
+        }
+    }
+    let _ = app;
+    let _ = items;
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -149,7 +171,14 @@ pub fn run() {
                 let open_item =
                     MenuItem::with_id(handle, "open_doc", "Open...", true, Some("CmdOrCtrl+O"))?;
                 let save_item =
-                    MenuItem::with_id(handle, "save_doc", "Save", true, Some("CmdOrCtrl+S"))?;
+                    MenuItem::with_id(handle, "save_doc", "Save", false, Some("CmdOrCtrl+S"))?;
+                let export_pdf_item = MenuItem::with_id(
+                    handle,
+                    "export_pdf",
+                    "Export as PDF…",
+                    false,
+                    None::<&str>,
+                )?;
 
                 let file_menu = Submenu::with_items(
                     handle,
@@ -159,6 +188,7 @@ pub fn run() {
                         &new_item,
                         &open_item,
                         &save_item,
+                        &export_pdf_item,
                         &PredefinedMenuItem::separator(handle)?,
                         &PredefinedMenuItem::close_window(handle, None)?,
                     ],
@@ -201,25 +231,22 @@ pub fn run() {
 
             Ok(())
         })
-        .on_menu_event(|app, event| match event.id().as_ref() {
-            "new_doc" => {
-                let _ = app.emit("menu-action", "new");
-            }
-            "open_doc" => {
-                let _ = app.emit("menu-action", "open");
-            }
-            "save_doc" => {
-                let _ = app.emit("menu-action", "save");
-            }
-            "preferences" => {
+        .on_menu_event(|app, event| {
+            let id = event.id().as_ref();
+            if id == "preferences" {
                 let handle = app.clone();
                 tauri::async_runtime::spawn(async move {
                     let _ = open_settings_window(handle, None).await;
                 });
+            } else {
+                let _ = app.emit("menu-action", id);
             }
-            _ => {}
         })
-        .invoke_handler(tauri::generate_handler![open_settings_window, open_about_window])
+        .invoke_handler(tauri::generate_handler![
+            open_settings_window,
+            open_about_window,
+            set_menu_items_enabled
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

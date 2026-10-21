@@ -34,6 +34,7 @@ export const TitleBar: Component<TitleBarProps> = (props) => {
         </div>
 
         <MenuBar
+          hasDocument={props.hasDocument}
           onNew={props.onNew}
           onOpen={props.onOpen}
           onOpenRecent={props.onOpenRecent}
