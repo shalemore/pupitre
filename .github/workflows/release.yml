@@ -1,0 +1,123 @@
+name: Release
+
+# Automatically build multi-platform installers, generate changelog, and publish release when a new version is pushed to main.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: Pre-flight & Version
+    runs-on: ubuntu-latest
+    outputs:
+      publish: ${{ steps.check.outputs.publish }}
+      version: ${{ steps.preflight.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - id: preflight
+        uses: ./.github/actions/preflight
+        with:
+          filter-ci: true
+
+      - id: check
+        if: steps.preflight.outputs.skip != 'true'
+        run: |
+          ver="${{ steps.preflight.outputs.version }}"
+          if git rev-parse -q --verify "refs/tags/v$ver" > /dev/null; then
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  build-artifacts:
+    needs: check
+    if: needs.check.outputs.publish == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: "macos-latest"
+            target: "aarch64-apple-darwin"
+            args: "--target aarch64-apple-darwin"
+          - platform: "macos-13"
+            target: "x86_64-apple-darwin"
+            args: "--target x86_64-apple-darwin"
+          - platform: "ubuntu-22.04"
+            target: "x86_64-unknown-linux-gnu"
+            args: ""
+          - platform: "windows-latest"
+            target: "x86_64-pc-windows-msvc"
+            args: ""
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-frontend
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "src-tauri -> target"
+
+      - name: Install dependencies (Ubuntu only)
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: v${{ needs.check.outputs.version }}
+          releaseName: "Pupitre v${{ needs.check.outputs.version }}"
+          releaseDraft: true
+          prerelease: false
+          args: ${{ matrix.args }}
+
+  publish-release:
+    needs: [check, build-artifacts]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      VERSION: ${{ needs.check.outputs.version }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate release notes and publish release
+        run: |
+          previous=$(git describe --tags --abbrev=0 2>/dev/null || true)
+          section() {
+            lines=$(git log ${previous:+"$previous..HEAD"} --no-merges --format=%s \
+              | { grep -E "^($2)(\([^)]*\))?$3: " || true; } \
+              | sed -E 's/^[a-z]+(\([^)]*\))?!?: //; s/^(.)/\U\1/; s/([^.])$/\1./; s/^/* /')
+            if [ -n "$lines" ]; then printf '### %s\n\n%s\n\n' "$1" "$lines"; fi
+          }
+          {
+            section 'Breaking changes' '[a-z]+' '!'
+            section 'New features' feat ''
+            section 'Improvements' 'perf|refactor' ''
+            section 'Bug fixes' fix ''
+            if [ -n "$previous" ]; then
+              echo "**Full Changelog**: https://github.com/$GITHUB_REPOSITORY/compare/$previous...v$VERSION"
+            fi
+          } > notes.md
+
+          # Publish draft release created by tauri-action with generated changelog
+          gh release edit "v$VERSION" --draft=false --notes-file notes.md

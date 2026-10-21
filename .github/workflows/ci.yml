@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Pre-flight & Version
+    runs-on: ubuntu-latest
+    outputs:
+      skip: ${{ steps.preflight.outputs.skip }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: preflight
+        uses: ./.github/actions/preflight
+
+  frontend:
+    name: Frontend Lint & Build
+    needs: check
+    if: needs.check.outputs.skip != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-frontend
+      - run: bun run lint
+      - run: bun run build
+
+  rust:
+    name: Rust Backend
+    needs: check
+    if: needs.check.outputs.skip != 'true'
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "src-tauri -> target"
+      - run: cargo fmt --manifest-path src-tauri/Cargo.toml --check
+      - run: cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets --locked -- -D warnings
+      - run: cargo check --manifest-path src-tauri/Cargo.toml

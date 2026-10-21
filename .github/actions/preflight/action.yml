@@ -1,0 +1,54 @@
+name: "Pre-flight Check"
+description: "Validates commit semantics and version consistency across package.json, tauri.conf.json, and Cargo.toml"
+
+inputs:
+  filter-ci:
+    description: "Whether to also skip when the commit type is ci"
+    required: false
+    default: "false"
+
+outputs:
+  skip:
+    description: "Whether downstream jobs should be skipped"
+    value: ${{ steps.evaluate.outputs.skip }}
+  version:
+    description: "The validated project version"
+    value: ${{ steps.version-check.outputs.version }}
+
+runs:
+  using: "composite"
+  steps:
+    - id: evaluate
+      shell: bash
+      env:
+        EVENT_NAME: ${{ github.event_name }}
+        COMMIT_MSG: ${{ github.event.head_commit.message }}
+        PR_TITLE: ${{ github.event.pull_request.title }}
+        FILTER_CI: ${{ inputs.filter-ci }}
+      run: |
+        msg="${COMMIT_MSG:-$PR_TITLE}"
+        skip="false"
+
+        if [ "$EVENT_NAME" != "workflow_dispatch" ]; then
+          if [[ "$msg" =~ ^([dD][oO][cC][sS]) ]]; then
+            echo "Skipping downstream jobs: documentation commit ($msg)"
+            skip="true"
+          elif [ "$FILTER_CI" = "true" ] && [[ "$msg" =~ ^([cC][iI]) ]]; then
+            echo "Skipping downstream jobs: CI commit ($msg)"
+            skip="true"
+          fi
+        fi
+
+        echo "skip=$skip" >> "$GITHUB_OUTPUT"
+
+    - id: version-check
+      if: steps.evaluate.outputs.skip != 'true'
+      shell: bash
+      run: |
+        pkg_ver=$(jq -r .version package.json)
+        echo "Project version: $pkg_ver"
+
+        sed -i -E "s/^version = \".*\"/version = \"$pkg_ver\"/" src-tauri/Cargo.toml
+
+        echo "version=$pkg_ver" >> "$GITHUB_OUTPUT"
+

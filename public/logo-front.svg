@@ -1,0 +1,105 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#df8263"/>
+      <stop offset="100%" stop-color="#ba583a"/>
+    </linearGradient>
+    <linearGradient id="deskSurface" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#3d2015"/>
+      <stop offset="45%" stop-color="#30180f"/>
+      <stop offset="100%" stop-color="#231008"/>
+    </linearGradient>
+    <linearGradient id="topBevel" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.04"/>
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.04"/>
+    </linearGradient>
+    <linearGradient id="frontFascia" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2a120a"/>
+      <stop offset="100%" stop-color="#140602"/>
+    </linearGradient>
+    <linearGradient id="woodLedge" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4e291b"/>
+      <stop offset="50%" stop-color="#381a0f"/>
+      <stop offset="100%" stop-color="#220e06"/>
+    </linearGradient>
+    <linearGradient id="pedestalCol" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#260f07"/>
+      <stop offset="25%" stop-color="#381b10"/>
+      <stop offset="75%" stop-color="#2e140c"/>
+      <stop offset="100%" stop-color="#1a0804"/>
+    </linearGradient>
+    <linearGradient id="plinthUpper" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#3d1d11"/>
+      <stop offset="100%" stop-color="#271109"/>
+    </linearGradient>
+    <linearGradient id="plinthLower" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#30150d"/>
+      <stop offset="100%" stop-color="#180703"/>
+    </linearGradient>
+    <linearGradient id="paperGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ead5b8"/>
+      <stop offset="100%" stop-color="#d0ba9a"/>
+    </linearGradient>
+    <!-- Clip paper to desk surface to ensure clean edges -->
+    <clipPath id="deskClip">
+      <path d="M 141 138 L 371 138 C 374 138 376.5 142 378 145 L 396.5 223 C 397.5 224.5 396.5 226 394 226 L 118 226 C 115.5 226 114.5 224.5 115.5 223 L 134 145 C 135.5 142 138 138 141 138 Z"/>
+    </clipPath>
+  </defs>
+
+  <rect x="32" y="32" width="448" height="448" rx="104" fill="url(#bg)"/>
+  <ellipse cx="256" cy="417" rx="130" ry="3.5" fill="#180703" opacity="0.45"/>
+  <ellipse cx="256" cy="418.5" rx="138" ry="5" fill="#180703" opacity="0.16"/>
+
+  <g>
+    <path d="M 126 411 L 140 398 L 372 398 L 386 411 C 387 413.5 385 416 382 416 L 130 416 C 127 416 125 413.5 126 411 Z" fill="url(#plinthLower)"/>
+    <rect x="128" y="411" width="256" height="5" rx="0.5" fill="#150602"/>
+    <line x1="141" y1="398.5" x2="371" y2="398.5" stroke="#ffffff" stroke-width="0.5" opacity="0.14"/>
+
+    <path d="M 156 398 L 166 386 L 346 386 L 356 398 Z" fill="url(#plinthUpper)"/>
+    <line x1="167" y1="386.5" x2="345" y2="386.5" stroke="#ffffff" stroke-width="0.4" opacity="0.16"/>
+
+    <rect x="188" y="236" width="136" height="150" fill="url(#pedestalCol)"/>
+    <line x1="188.5" y1="236" x2="188.5" y2="386" stroke="#ffffff" stroke-width="0.4" opacity="0.12"/>
+    <line x1="323.5" y1="236" x2="323.5" y2="386" stroke="#000000" stroke-width="0.5" opacity="0.25"/>
+    <line x1="204" y1="244" x2="204" y2="378" stroke="#1d0a04" stroke-width="0.75" opacity="0.42"/>
+    <line x1="204.8" y1="244" x2="204.8" y2="378" stroke="#ffffff" stroke-width="0.5" opacity="0.08"/>
+    <line x1="308" y1="244" x2="308" y2="378" stroke="#1d0a04" stroke-width="0.75" opacity="0.42"/>
+    <line x1="308.8" y1="244" x2="308.8" y2="378" stroke="#ffffff" stroke-width="0.5" opacity="0.08"/>
+    <line x1="204" y1="244" x2="308" y2="244" stroke="#1d0a04" stroke-width="0.6" opacity="0.3"/>
+    <line x1="204" y1="378" x2="308" y2="378" stroke="#ffffff" stroke-width="0.5" opacity="0.08"/>
+
+    <path d="M 176 236 L 202 240 L 310 240 L 336 236 Z" fill="#180703"/>
+
+    <path d="M 141 138 L 371 138 C 374 138 376.5 142 378 145 L 396.5 223 C 397.5 224.5 396.5 226 394 226 L 118 226 C 115.5 226 114.5 224.5 115.5 223 L 134 145 C 135.5 142 138 138 141 138 Z" fill="url(#deskSurface)"/>
+    <line x1="141" y1="138.5" x2="371" y2="138.5" stroke="url(#topBevel)" stroke-width="0.8"/>
+    <line x1="136" y1="143" x2="117" y2="224" stroke="#ffffff" stroke-width="0.5" opacity="0.14"/>
+    <line x1="376" y1="143" x2="395" y2="224" stroke="#000000" stroke-width="0.5" opacity="0.25"/>
+
+    <path d="M 116 226 L 396 226 C 397.5 226 398 227 397.5 228.5 L 395.5 234.5 C 395 235.5 394 236 392.5 236 L 119.5 236 C 118 236 117 235.5 116.5 234.5 L 114.5 228.5 C 114 227 114.5 226 116 226 Z" fill="url(#frontFascia)"/>
+    <line x1="117" y1="226.5" x2="395" y2="226.5" stroke="#ffffff" stroke-width="0.5" opacity="0.18"/>
+    <line x1="119.5" y1="236" x2="392.5" y2="236" stroke="#0b0301" stroke-width="0.8"/>
+
+    <!-- Book Ledge (before paper) -->
+    <path d="M 132 225 L 380 225 L 378 226 L 134 226 Z" fill="#000000" opacity="0.5"/>
+    <path d="M 135 220.5 L 377 220.5 L 381 225 L 131 225 Z" fill="url(#woodLedge)"/>
+    <line x1="135.5" y1="220.5" x2="376.5" y2="220.5" stroke="#ffffff" stroke-width="0.6" opacity="0.24"/>
+
+    <!-- PAPER: clipped to desk surface, rectangle with explicit border stroke
+         Narrower (130px wide) and centered at 256 to stay well away from desk edges.
+         Explicit stroke makes edges unambiguously defined regardless of surrounding context. -->
+    <g clip-path="url(#deskClip)">
+      <!-- Paper body -->
+      <rect x="191" y="154" width="130" height="65" fill="url(#paperGrad)"/>
+      <!-- Paper border: thin, warm dark — defines all 4 edges clearly -->
+      <rect x="191" y="154" width="130" height="65" fill="none"
+            stroke="#8a6a48" stroke-width="1.2" stroke-opacity="0.45"/>
+    </g>
+
+    <!-- Text lines (drawn outside clip so they're on top) -->
+    <line x1="204" y1="167" x2="308" y2="167" stroke="#ba583a" stroke-width="2.4" stroke-linecap="round" opacity="0.78"/>
+    <line x1="201" y1="179" x2="311" y2="179" stroke="#3a1f12" stroke-width="1.3" stroke-linecap="round" opacity="0.30"/>
+    <line x1="201" y1="189" x2="311" y2="189" stroke="#3a1f12" stroke-width="1.3" stroke-linecap="round" opacity="0.30"/>
+    <line x1="201" y1="199" x2="271" y2="199" stroke="#3a1f12" stroke-width="1.3" stroke-linecap="round" opacity="0.22"/>
+  </g>
+</svg>

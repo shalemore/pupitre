@@ -1,0 +1,43 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Pupitre",
+  "version": "../package.json",
+  "identifier": "com.shalemore.pupitre",
+  "build": {
+    "beforeDevCommand": "bun run dev",
+    "devUrl": "http://127.0.0.1:1420",
+    "beforeBuildCommand": "bun run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Pupitre",
+        "width": 1180,
+        "height": 780,
+        "minWidth": 720,
+        "minHeight": 480,
+        "decorations": false,
+        "center": true,
+        "dragDropEnabled": true,
+        "shadow": true,
+        "additionalBrowserArgs": "--disable-features=RendererCodeIntegrity,msWebOOUI,msPdfOOUI,msSmartScreenProtection --enable-font-antialiasing"
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  }
+}
