@@ -132,7 +132,7 @@ export const AboutModal: Component<AboutModalProps> = (props) => {
             <div class="flex-1 space-y-3 pt-0.5 text-xs">
               <h2 class="text-lg font-semibold tracking-tight text-foreground">{info.name}</h2>
 
-              <div class="space-y-1 font-mono text-[11px] text-muted-foreground leading-relaxed">
+              <div class="space-y-1 tabular-nums text-[11px] text-muted-foreground leading-relaxed">
                 <div>
                   <span class="text-tertiary">{t().about.versionLabel}</span> {info.version}
                 </div>

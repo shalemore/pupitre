@@ -90,7 +90,7 @@ export function Select<T extends string = string>(props: SelectProps<T>) {
         onClick={handleToggle}
         class={cn(
           "flex items-center justify-between gap-2 rounded-md border border-input bg-surface-0/60 hover:bg-surface-0 px-2.5 py-1 text-xs text-foreground transition-all outline-none cursor-pointer focus-visible:shadow-focus disabled:cursor-not-allowed disabled:opacity-50",
-          local.size === "sm" ? "h-7" : "h-8 min-w-[130px]",
+          local.size === "sm" ? "h-7" : "h-8 min-w-32.5",
           isOpen() && "border-brand ring-1 ring-ring",
         )}
       >
@@ -111,7 +111,7 @@ export function Select<T extends string = string>(props: SelectProps<T>) {
       </button>
 
       <Show when={isOpen()}>
-        <div class="absolute right-0 top-full mt-1.5 z-50 min-w-[180px] max-w-[280px] flex flex-col rounded-xl border border-border/80 bg-surface-2 p-1 text-xs shadow-float backdrop-blur-md animate-in fade-in-0 zoom-in-95 duration-(--duration-ui) ease-(--ease-emphasized)">
+        <div class="absolute right-0 top-full mt-1.5 z-50 min-w-45 max-w-70 flex flex-col rounded-xl border border-border/80 bg-surface-2 p-1 text-xs shadow-float backdrop-blur-md animate-in fade-in-0 zoom-in-95 duration-(--duration-ui) ease-(--ease-emphasized)">
           <Show when={local.searchable}>
             <div class="p-1 pb-1.5 border-b border-border/50 sticky top-0 bg-surface-2 z-10 shrink-0">
               <input

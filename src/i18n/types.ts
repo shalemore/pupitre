@@ -92,6 +92,11 @@ export interface TranslationSchema {
     readonly themeSystem: string;
     readonly themeLight: string;
     readonly themeDark: string;
+    readonly animations: string;
+    readonly animationsDesc: string;
+    readonly animationsSystem: string;
+    readonly animationsOn: string;
+    readonly animationsOff: string;
     readonly typography: string;
     readonly fontSize: string;
     readonly lineHeight: string;
@@ -109,6 +114,8 @@ export interface TranslationSchema {
     readonly tabSizeDesc: string;
     readonly wordWrap: string;
     readonly wordWrapDesc: string;
+    readonly blockSpacing: string;
+    readonly blockSpacingDesc: string;
     readonly editorWidth: string;
     readonly editorWidthCompact: string;
     readonly editorWidthNormal: string;
@@ -133,6 +140,7 @@ export interface TranslationSchema {
     readonly updateErrorGeneric: string;
   };
   readonly about: {
+    readonly windowTitle: string;
     readonly versionLabel: string;
     readonly dateLabel: string;
     readonly osLabel: string;

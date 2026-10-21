@@ -40,6 +40,44 @@ async fn open_settings_window(app: tauri::AppHandle, title: Option<String>) -> R
     Ok(())
 }
 
+#[tauri::command]
+async fn open_about_window(app: tauri::AppHandle, title: Option<String>) -> Result<(), String> {
+    if let Some(win) = app.get_webview_window("about") {
+        let _ = win.unminimize();
+        let _ = win.show();
+        let _ = win.set_focus();
+        return Ok(());
+    }
+
+    let win_title = title.unwrap_or_else(|| "About Pupitre".to_string());
+
+    let win = WebviewWindowBuilder::new(&app, "about", WebviewUrl::App("index.html#about".into()))
+        .title(win_title)
+        .inner_size(480.0, 360.0)
+        .min_inner_size(420.0, 320.0)
+        .resizable(false)
+        .center()
+        .decorations(false)
+        .shadow(true)
+        .additional_browser_args(
+            "--disable-features=RendererCodeIntegrity,msWebOOUI,msPdfOOUI,msSmartScreenProtection --enable-font-antialiasing",
+        )
+        .build()
+        .map_err(|e| e.to_string())?;
+
+    let win_clone = win.clone();
+    win.on_window_event(move |event| {
+        if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+            api.prevent_close();
+            let _ = win_clone.hide();
+        }
+    });
+
+    let _ = win.show();
+    let _ = win.set_focus();
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -53,6 +91,16 @@ pub fn run() {
             if let Some(settings_win) = app.get_webview_window("settings") {
                 let win_clone = settings_win.clone();
                 settings_win.on_window_event(move |event| {
+                    if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+                        api.prevent_close();
+                        let _ = win_clone.hide();
+                    }
+                });
+            }
+
+            if let Some(about_win) = app.get_webview_window("about") {
+                let win_clone = about_win.clone();
+                about_win.on_window_event(move |event| {
                     if let tauri::WindowEvent::CloseRequested { api, .. } = event {
                         api.prevent_close();
                         let _ = win_clone.hide();
@@ -171,7 +219,7 @@ pub fn run() {
             }
             _ => {}
         })
-        .invoke_handler(tauri::generate_handler![open_settings_window])
+        .invoke_handler(tauri::generate_handler![open_settings_window, open_about_window])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

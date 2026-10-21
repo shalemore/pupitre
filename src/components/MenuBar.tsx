@@ -175,9 +175,7 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
                             title={filePath}
                           >
                             <span class="truncate font-medium text-foreground">{name}</span>
-                            <span class="text-[10px] text-tertiary truncate font-mono">
-                              {filePath}
-                            </span>
+                            <span class="text-[10px] text-tertiary truncate">{filePath}</span>
                           </button>
                         );
                       }}

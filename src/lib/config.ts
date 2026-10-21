@@ -4,6 +4,7 @@ import { isTauri } from "@/lib/platform";
 
 export type EditorWidth = "compact" | "normal" | "wide" | "full";
 export type FontFamilyOption = "sans" | "mono" | "serif" | string;
+export type AnimationSetting = "system" | "on" | "off";
 
 export interface PupitreConfig {
   theme: "system" | "light" | "dark";
@@ -17,6 +18,8 @@ export interface PupitreConfig {
   editorWidth: EditorWidth;
   sidebarVisible: boolean;
   autoSave: boolean;
+  animations: AnimationSetting;
+  blockSpacing: boolean;
   recentFiles: string[];
 }
 
@@ -32,6 +35,8 @@ export const DEFAULT_CONFIG: PupitreConfig = {
   editorWidth: "normal",
   sidebarVisible: true,
   autoSave: false,
+  animations: "system",
+  blockSpacing: true,
   recentFiles: [],
 };
 

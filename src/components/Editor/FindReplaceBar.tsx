@@ -177,7 +177,7 @@ export const FindReplaceBar: Component<FindReplaceBarProps> = (props) => {
             </div>
           </div>
 
-          <div class="shrink-0 text-[11px] font-mono">
+          <div class="shrink-0 text-[11px] tabular-nums">
             <Show
               when={searchText().length > 0}
               fallback={<span class="text-muted-foreground text-[10px]">0</span>}

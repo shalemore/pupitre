@@ -1,6 +1,18 @@
-import { defaultKeymap, history, historyKeymap, indentWithTab } from "@codemirror/commands";
-import { markdown } from "@codemirror/lang-markdown";
+import {
+  defaultKeymap,
+  history,
+  historyKeymap,
+  indentWithTab,
+  insertNewlineAndIndent,
+} from "@codemirror/commands";
+import {
+  deleteMarkupBackward,
+  insertNewlineContinueMarkup,
+  markdown,
+} from "@codemirror/lang-markdown";
 import { languages } from "@codemirror/language-data";
+import { syntaxTree } from "@codemirror/language";
+import type { SyntaxNode } from "@lezer/common";
 import {
   findNext,
   findPrevious,
@@ -66,6 +78,7 @@ export interface EditorProps {
   wordWrap?: boolean;
   editorWidth?: string;
   zoom?: number;
+  blockSpacing?: boolean;
   onChange: (newContent: string) => void;
   onCursorChange?: (pos: number, lineNumber: number) => void;
   ref?: (handle: EditorHandle) => void;
@@ -90,6 +103,153 @@ function computeMatchStats(view: EditorView, query: SearchQuery): MatchStats {
   return { current, total };
 }
 
+function isInsideCodeOrTable(node: SyntaxNode | null): boolean {
+  let cur: SyntaxNode | null = node;
+  while (cur) {
+    if (
+      cur.name === "FencedCode" ||
+      cur.name === "CodeBlock" ||
+      cur.name === "Table" ||
+      cur.name === "TableRow" ||
+      cur.name === "TableCell"
+    ) {
+      return true;
+    }
+    cur = cur.parent;
+  }
+  return false;
+}
+
+function createBlockSpacingKeymap(isBlockSpacingEnabled: () => boolean) {
+  return keymap.of([
+    {
+      key: "Enter",
+      run: (view) => {
+        // 1. Prioritize markdown list item continuation (- [ ] item, 1. item, etc.)
+        if (insertNewlineContinueMarkup(view)) {
+          return true;
+        }
+
+        if (!isBlockSpacingEnabled()) {
+          return false;
+        }
+
+        const { state } = view;
+        if (!state.selection.main.empty) {
+          return false;
+        }
+
+        const pos = state.selection.main.head;
+        const tree = syntaxTree(state);
+        const node = tree.resolveInner(pos, -1);
+
+        if (isInsideCodeOrTable(node)) {
+          return false;
+        }
+
+        const curLine = state.doc.lineAt(pos);
+
+        // If line is empty or whitespace-only, insert standard single newline
+        if (curLine.text.trim().length === 0) {
+          return false;
+        }
+
+        // If cursor is at the end of the line
+        if (pos === curLine.to) {
+          // If the next line already exists and is empty, advance cursor into it
+          if (curLine.number < state.doc.lines) {
+            const nextLine = state.doc.line(curLine.number + 1);
+            if (nextLine.text.trim().length === 0) {
+              view.dispatch({
+                selection: { anchor: nextLine.from },
+                scrollIntoView: true,
+              });
+              return true;
+            }
+          }
+          // Otherwise, insert \n\n to cleanly start a new block separated by an empty line
+          view.dispatch({
+            changes: { from: pos, to: pos, insert: "\n\n" },
+            selection: { anchor: pos + 2 },
+            scrollIntoView: true,
+          });
+          return true;
+        }
+
+        // If cursor is in the middle of a line, split paragraphs with an empty line
+        view.dispatch({
+          changes: { from: pos, to: pos, insert: "\n\n" },
+          selection: { anchor: pos + 2 },
+          scrollIntoView: true,
+        });
+        return true;
+      },
+    },
+    {
+      key: "Shift-Enter",
+      run: insertNewlineAndIndent,
+    },
+    {
+      key: "Backspace",
+      run: deleteMarkupBackward,
+    },
+    {
+      key: "ArrowDown",
+      run: (view) => {
+        if (!isBlockSpacingEnabled()) return false;
+        const { state } = view;
+        if (!state.selection.main.empty) return false;
+
+        const pos = state.selection.main.head;
+        const curLine = state.doc.lineAt(pos);
+
+        // If current line has content, and the next line is an empty separator line, jump over it
+        if (curLine.text.trim().length > 0 && curLine.number + 1 < state.doc.lines) {
+          const nextLine = state.doc.line(curLine.number + 1);
+          if (nextLine.text.trim().length === 0) {
+            const targetLine = state.doc.line(curLine.number + 2);
+            const col = pos - curLine.from;
+            const targetPos = targetLine.from + Math.min(col, targetLine.length);
+            view.dispatch({
+              selection: { anchor: targetPos },
+              scrollIntoView: true,
+            });
+            return true;
+          }
+        }
+        return false;
+      },
+    },
+    {
+      key: "ArrowUp",
+      run: (view) => {
+        if (!isBlockSpacingEnabled()) return false;
+        const { state } = view;
+        if (!state.selection.main.empty) return false;
+
+        const pos = state.selection.main.head;
+        const curLine = state.doc.lineAt(pos);
+
+        // If current line has content, and previous line is an empty separator line, jump over it
+        if (curLine.text.trim().length > 0 && curLine.number > 2) {
+          const prevLine = state.doc.line(curLine.number - 1);
+          if (prevLine.text.trim().length === 0) {
+            const targetLine = state.doc.line(curLine.number - 2);
+            const col = pos - curLine.from;
+            const targetPos = targetLine.from + Math.min(col, targetLine.length);
+            view.dispatch({
+              selection: { anchor: targetPos },
+              scrollIntoView: true,
+            });
+            return true;
+          }
+        }
+        return false;
+      },
+    },
+  ]);
+}
+
 export const Editor: Component<EditorProps> = (props) => {
   let containerRef: HTMLDivElement | null = null;
   let view: EditorView | null = null;
@@ -104,6 +264,7 @@ export const Editor: Component<EditorProps> = (props) => {
     const startState = EditorState.create({
       doc: props.content,
       extensions: [
+        createBlockSpacingKeymap(() => props.blockSpacing !== false),
         keymap.of([...defaultKeymap, ...historyKeymap, indentWithTab]),
         history(),
         wrapCompartment.of(props.wordWrap !== false ? EditorView.lineWrapping : []),

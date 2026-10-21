@@ -68,7 +68,7 @@ export const TitleBar: Component<TitleBarProps> = (props) => {
 
       <div class="flex items-center gap-2">
         <Show when={props.hasDocument}>
-          <div class="text-[11px] text-muted-foreground font-mono pointer-events-none flex items-center gap-1.5 me-2">
+          <div class="text-[11px] text-muted-foreground tabular-nums pointer-events-none flex items-center gap-1.5 me-2">
             <span>{t().common.wordsCount(props.wordsCount)}</span>
             <span>·</span>
             <span>{t().common.charsCount(props.charsCount)}</span>

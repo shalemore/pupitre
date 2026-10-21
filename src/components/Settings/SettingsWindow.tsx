@@ -30,6 +30,7 @@ import {
 import { type LanguageSetting, setLanguageSetting, SUPPORTED_LOCALES, t } from "@/i18n";
 import { getAboutInfo } from "@/lib/about";
 import {
+  type AnimationSetting,
   config,
   type EditorWidth,
   getConfigFilePath,
@@ -41,6 +42,7 @@ import {
 import { getSystemFontFamilies } from "@/lib/fonts";
 import { isMacOS, isTauri } from "@/lib/platform";
 import { applyTheme } from "@/lib/theme";
+import { applyMotion } from "@/lib/motion";
 import {
   checkForUpdates,
   downloadAndInstallUpdate,
@@ -75,6 +77,7 @@ export const SettingsWindow: Component = () => {
     const loaded = await loadConfig();
     applyTheme(loaded.theme);
     setLanguageSetting(loaded.locale);
+    applyMotion(loaded.animations);
 
     const p = await getConfigFilePath();
     if (p) setConfigPath(p);
@@ -82,6 +85,7 @@ export const SettingsWindow: Component = () => {
     const cleanup = setupConfigSync((newCfg) => {
       applyTheme(newCfg.theme);
       setLanguageSetting(newCfg.locale);
+      applyMotion(newCfg.animations);
     });
 
     onCleanup(cleanup);
@@ -94,6 +98,9 @@ export const SettingsWindow: Component = () => {
     }
     if ("locale" in partial) {
       setLanguageSetting(config().locale);
+    }
+    if ("animations" in partial && partial.animations) {
+      applyMotion(partial.animations);
     }
   };
 
@@ -165,6 +172,12 @@ export const SettingsWindow: Component = () => {
       label: t().settings.themeDark,
       icon: <Moon class="size-3.5" />,
     },
+  ];
+
+  const animationOptions = (): SelectOption<AnimationSetting>[] => [
+    { value: "system", label: t().settings.animationsSystem },
+    { value: "on", label: t().settings.animationsOn },
+    { value: "off", label: t().settings.animationsOff },
   ];
 
   const editorWidthOptions = (): SelectOption<EditorWidth>[] => [
@@ -274,6 +287,17 @@ export const SettingsWindow: Component = () => {
                       options={editorWidthOptions()}
                     />
                   </SettingRow>
+
+                  <SettingRow
+                    title={t().settings.animations}
+                    description={t().settings.animationsDesc}
+                  >
+                    <Select
+                      value={config().animations}
+                      onChange={(animations) => handleUpdate({ animations })}
+                      options={animationOptions()}
+                    />
+                  </SettingRow>
                 </div>
               </div>
             </TabsContent>
@@ -377,6 +401,16 @@ export const SettingsWindow: Component = () => {
                     <Switch
                       checked={config().wordWrap}
                       onChange={(checked) => handleUpdate({ wordWrap: checked })}
+                    />
+                  </SettingRow>
+
+                  <SettingRow
+                    title={t().settings.blockSpacing}
+                    description={t().settings.blockSpacingDesc}
+                  >
+                    <Switch
+                      checked={config().blockSpacing}
+                      onChange={(checked) => handleUpdate({ blockSpacing: checked })}
                     />
                   </SettingRow>
 
@@ -517,7 +551,7 @@ export const SettingsWindow: Component = () => {
                   </div>
                 </Show>
 
-                <div class="space-y-1.5 font-mono text-[11px] text-muted-foreground py-1">
+                <div class="space-y-1.5 tabular-nums text-[11px] text-muted-foreground py-1">
                   <div>
                     <span class="text-foreground/70 font-sans">{t().about.osLabel}</span>{" "}
                     {aboutInfo.os}

@@ -21,7 +21,9 @@ import {
 import { confirmDiscard, openFileDialog, readFileFromPath, saveFileDialog } from "@/lib/file";
 import { calculateStats, detectTextDirection, extractHeadings } from "@/lib/parser";
 import { applyTheme, listenSystemTheme } from "@/lib/theme";
-import { openSettingsWindow } from "@/lib/window";
+import { applyMotion } from "@/lib/motion";
+import { openAboutWindow, openSettingsWindow } from "@/lib/window";
+import { isTauri } from "@/lib/platform";
 import { resolveEditorFontFamily } from "@/lib/fonts";
 import type { DocumentStats, HeadingItem } from "@/types";
 
@@ -153,6 +155,7 @@ export const App: Component = () => {
     setIsSidebarVisible(loaded.sidebarVisible);
     applyThemeFromConfig(loaded.theme);
     setLanguageSetting(loaded.locale);
+    applyMotion(loaded.animations);
 
     const unlistenSystem = listenSystemTheme((isSysDark) => {
       if (config().theme === "system") {
@@ -164,6 +167,7 @@ export const App: Component = () => {
       setIsSidebarVisible(newCfg.sidebarVisible);
       applyThemeFromConfig(newCfg.theme);
       setLanguageSetting(newCfg.locale);
+      applyMotion(newCfg.animations);
     });
 
     onCleanup(() => {
@@ -183,6 +187,9 @@ export const App: Component = () => {
     }
     if ("sidebarVisible" in partial) {
       setIsSidebarVisible(cfg.sidebarVisible);
+    }
+    if ("animations" in partial) {
+      applyMotion(cfg.animations);
     }
   };
 
@@ -240,6 +247,7 @@ export const App: Component = () => {
     root.setProperty("--editor-line-height", `${lh}`);
     root.setProperty("--editor-font-family", ff);
     root.setProperty("--editor-max-width", mw);
+    root.setProperty("--app-zoom", `${z}`);
   });
 
   createEffect(() => {
@@ -395,6 +403,10 @@ export const App: Component = () => {
   };
 
   const handleOpenAbout = () => {
+    if (isTauri()) {
+      openAboutWindow();
+      return;
+    }
     setIsAboutOpen(true);
   };
 
@@ -575,6 +587,7 @@ export const App: Component = () => {
             currentBlockIndex={activeHeadingIndex()}
             onSelectHeading={handleSelectHeading}
             docDir={documentDirection()}
+            zoom={zoom()}
           />
         </Show>
 
@@ -620,6 +633,7 @@ export const App: Component = () => {
             tabSize={config().tabSize}
             wordWrap={config().wordWrap}
             editorWidth={config().editorWidth}
+            blockSpacing={config().blockSpacing}
             zoom={zoom()}
             onChange={handleContentChange}
             onCursorChange={handleCursorChange}

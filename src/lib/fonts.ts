@@ -112,7 +112,17 @@ export function resolveEditorFontFamily(primary: string, fallback?: string): str
     }
   }
 
-  // Standard safe fallbacks
-  parts.push("system-ui", "-apple-system", "BlinkMacSystemFont", "sans-serif");
+  // Standard safe modern fallbacks (ensuring modern CJK sans fallback instead of archaic SimSun)
+  parts.push(
+    "-apple-system",
+    "BlinkMacSystemFont",
+    "Segoe UI Variable Text",
+    "Segoe UI",
+    "Hiragino Sans GB",
+    "sans-serif",
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+  );
   return parts.join(", ");
 }

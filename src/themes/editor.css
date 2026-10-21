@@ -9,8 +9,7 @@
     -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif;
   --editor-font-mono:
-    "JetBrains Mono", "Cascadia Code", "Fira Code", Consolas, "Liberation Mono", Menlo, Courier,
-    monospace;
+    "JetBrains Mono", "Cascadia Code", "Fira Code", Consolas, "Liberation Mono", Menlo, monospace;
   --editor-font-serif: Georgia, Cambria, "Times New Roman", Times, serif;
 
   --editor-font-family: var(--editor-font-sans);
@@ -131,6 +130,11 @@
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
+  scroll-behavior: var(--app-scroll-behavior, smooth);
+}
+
+.reduce-motion .cm-scroller {
+  scroll-behavior: auto !important;
 }
 
 .cm-content {

@@ -17,11 +17,35 @@ export async function openSettingsWindow(): Promise<void> {
     }
   }
 
-  const url = `${window.location.origin}${window.location.pathname}?view=settings`;
+  const url = `${window.location.origin}${window.location.pathname}?view=settings#settings`;
   const popup = window.open(
     url,
     "Pupitre Preferences",
     "width=720,height=560,menubar=no,toolbar=no,location=no,status=no",
+  );
+  popup?.focus();
+}
+
+/**
+ * Open the About dialog in a dedicated native OS window.
+ * On desktop (Tauri), this spawns or focuses a standalone native window.
+ */
+export async function openAboutWindow(): Promise<void> {
+  if (isTauri()) {
+    try {
+      const { invoke } = await import("@tauri-apps/api/core");
+      await invoke("open_about_window", { title: t().about.windowTitle });
+      return;
+    } catch (err) {
+      console.warn("Failed to open native about window via invoke:", err);
+    }
+  }
+
+  const url = `${window.location.origin}${window.location.pathname}?view=about#about`;
+  const popup = window.open(
+    url,
+    "About Pupitre",
+    "width=480,height=360,menubar=no,toolbar=no,location=no,status=no",
   );
   popup?.focus();
 }
@@ -64,7 +88,7 @@ export async function isCurrentWindowMaximized(): Promise<boolean> {
 export async function closeCurrentWindow(): Promise<void> {
   const win = await getCurrentAppWindow();
   if (win) {
-    if (win.label === "settings") {
+    if (win.label === "settings" || win.label === "about") {
       await win.hide();
       return;
     }

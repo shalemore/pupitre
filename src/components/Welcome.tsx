@@ -54,7 +54,7 @@ export const Welcome: Component<WelcomeProps> = (props) => {
                   <span class="truncate font-medium text-foreground group-hover:text-brand">
                     {name}
                   </span>
-                  <span class="text-[10px] font-mono opacity-50 truncate max-w-[120px] ml-2">
+                  <span class="text-[10px] font-mono opacity-50 truncate max-w-30 ml-2">
                     {path}
                   </span>
                 </button>
@@ -64,7 +64,7 @@ export const Welcome: Component<WelcomeProps> = (props) => {
         </div>
       </Show>
 
-      <div class="text-[11px] text-muted-foreground/60 font-mono">
+      <div class="text-[11px] text-muted-foreground/60">
         <p>{t().welcome.dragDropHint}</p>
       </div>
     </div>

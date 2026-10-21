@@ -7,44 +7,68 @@ interface SidebarProps {
   headings: HeadingItem[];
   currentBlockIndex: number | null;
   onSelectHeading: (blockIndex: number) => void;
-  docDir?: "ltr" | "rtl";
+  docDir?: "ltr" | "rtl" | undefined;
+  zoom?: number | undefined;
 }
 
 export const Sidebar: Component<SidebarProps> = (props) => {
+  const z = () => props.zoom ?? 1.0;
+  const widthPx = () => Math.round(256 * z());
+  const fontSizePx = () => (12 * z()).toFixed(1);
+
   return (
-    <aside class="w-64 h-full flex flex-col justify-between bg-surface-0 border-e border-border/80 select-none text-xs">
-      <div class="px-3.5 py-3 border-b border-border/60 flex items-center justify-between">
+    <aside
+      style={{
+        width: `${widthPx()}px`,
+        "font-size": `${fontSizePx()}px`,
+      }}
+      class="h-full flex flex-col justify-between bg-surface-0 border-e border-border/80 select-none shrink-0"
+    >
+      <div
+        style={{
+          padding: `${Math.round(12 * z())}px ${Math.round(14 * z())}px`,
+        }}
+        class="border-b border-border/60 flex items-center justify-between"
+      >
         <div class="text-foreground font-medium tracking-wide">
           <span>{t().sidebar.outline}</span>
         </div>
-        <Badge variant="secondary" size="sm" class="font-mono">
+        <Badge variant="secondary" size="sm" class="tabular-nums font-medium">
           {t().sidebar.sectionsCount(props.headings.length)}
         </Badge>
       </div>
 
-      <div dir={props.docDir ?? "ltr"} class="flex-1 overflow-y-auto p-2 space-y-0.5">
+      <div
+        dir={props.docDir ?? "ltr"}
+        style={{
+          padding: `${Math.round(8 * z())}px`,
+        }}
+        class="flex-1 overflow-y-auto space-y-0.5"
+      >
         <Show
           when={props.headings.length > 0}
           fallback={
             <div class="h-32 flex flex-col items-center justify-center text-muted-foreground">
-              <p class="text-[11px]">{t().sidebar.noHeadings}</p>
+              <p style={{ "font-size": `${(11 * z()).toFixed(1)}px` }}>{t().sidebar.noHeadings}</p>
             </div>
           }
         >
           <For each={props.headings}>
             {(heading) => {
               const isCurrent = () => props.currentBlockIndex === heading.blockIndex;
-              const indent = () => (heading.level - 1) * 12;
+              const indent = () => (heading.level - 1) * Math.round(12 * z());
 
               return (
                 <button
                   type="button"
                   onClick={() => props.onSelectHeading(heading.blockIndex)}
                   style={{
-                    "padding-inline-start": `${8 + indent()}px`,
+                    "padding-inline-start": `${Math.round(8 * z()) + indent()}px`,
                     "text-align": "start",
+                    "font-size": `${fontSizePx()}px`,
+                    padding: `${Math.round(6 * z())}px ${Math.round(10 * z())}px`,
                   }}
-                  class={`w-full py-1.5 pe-2.5 rounded-md text-[12px] transition-colors cursor-pointer block ${
+                  class={`w-full rounded-md transition-colors cursor-pointer block ${
                     isCurrent()
                       ? "bg-brand/10 text-brand font-medium shadow-sm"
                       : "text-muted-foreground hover:text-foreground hover:bg-accent"
