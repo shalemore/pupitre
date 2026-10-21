@@ -28,7 +28,10 @@ try {
 const root = document.getElementById("root");
 if (root) {
   const params = new URLSearchParams(window.location.search);
-  const isSettings = params.get("view") === "settings";
+  const isSettings =
+    params.get("view") === "settings" ||
+    (typeof window !== "undefined" &&
+      (window as unknown as { pupitreView?: string }).pupitreView === "settings");
 
   if (isSettings) {
     render(() => <SettingsWindow />, root);

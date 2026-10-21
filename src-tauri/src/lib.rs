@@ -3,7 +3,7 @@ use tauri::menu::{Menu, MenuItem, PredefinedMenuItem, Submenu};
 use tauri::{Emitter, Manager, WebviewUrl, WebviewWindowBuilder};
 
 #[tauri::command]
-fn open_settings_window(app: tauri::AppHandle, title: Option<String>) -> Result<(), String> {
+async fn open_settings_window(app: tauri::AppHandle, title: Option<String>) -> Result<(), String> {
     if let Some(win) = app.get_webview_window("settings") {
         let _ = win.unminimize();
         let _ = win.show();
@@ -13,19 +13,17 @@ fn open_settings_window(app: tauri::AppHandle, title: Option<String>) -> Result<
 
     let win_title = title.unwrap_or_else(|| "Pupitre Preferences".to_string());
 
-    WebviewWindowBuilder::new(
-        &app,
-        "settings",
-        WebviewUrl::App("index.html?view=settings".into()),
-    )
-    .title(win_title)
-    .inner_size(720.0, 560.0)
-    .min_inner_size(540.0, 440.0)
-    .resizable(true)
-    .center()
-    .decorations(true)
-    .build()
-    .map_err(|e| e.to_string())?;
+    WebviewWindowBuilder::new(&app, "settings", WebviewUrl::App("index.html".into()))
+        .title(win_title)
+        .inner_size(720.0, 560.0)
+        .min_inner_size(540.0, 440.0)
+        .resizable(true)
+        .center()
+        .decorations(false)
+        .shadow(true)
+        .initialization_script("window.pupitreView = 'settings';")
+        .build()
+        .map_err(|e| e.to_string())?;
 
     Ok(())
 }
@@ -144,7 +142,10 @@ pub fn run() {
                 let _ = app.emit("menu-action", "save");
             }
             "preferences" => {
-                let _ = open_settings_window(app.clone(), None);
+                let handle = app.clone();
+                tauri::async_runtime::spawn(async move {
+                    let _ = open_settings_window(handle, None).await;
+                });
             }
             _ => {}
         })
