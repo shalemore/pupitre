@@ -8,10 +8,10 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
-        .setup(|_app| {
+        .setup(|app| {
             #[cfg(target_os = "macos")]
             {
-                let handle = _app.handle();
+                let handle = app.handle();
 
                 let pref_item = MenuItem::with_id(
                     handle,
@@ -96,6 +96,9 @@ pub fn run() {
                     Menu::with_items(handle, &[&app_menu, &file_menu, &edit_menu, &window_menu])?;
                 app.set_menu(menu)?;
             }
+
+            #[cfg(not(target_os = "macos"))]
+            let _ = app;
 
             Ok(())
         })
