@@ -13,7 +13,7 @@ async fn open_settings_window(app: tauri::AppHandle, title: Option<String>) -> R
 
     let win_title = title.unwrap_or_else(|| "Pupitre Preferences".to_string());
 
-    WebviewWindowBuilder::new(&app, "settings", WebviewUrl::App("index.html".into()))
+    let win = WebviewWindowBuilder::new(&app, "settings", WebviewUrl::App("index.html#settings".into()))
         .title(win_title)
         .inner_size(720.0, 560.0)
         .min_inner_size(540.0, 440.0)
@@ -21,10 +21,22 @@ async fn open_settings_window(app: tauri::AppHandle, title: Option<String>) -> R
         .center()
         .decorations(false)
         .shadow(true)
-        .initialization_script("window.pupitreView = 'settings';")
+        .additional_browser_args(
+            "--disable-features=RendererCodeIntegrity,msWebOOUI,msPdfOOUI,msSmartScreenProtection --enable-font-antialiasing",
+        )
         .build()
         .map_err(|e| e.to_string())?;
 
+    let win_clone = win.clone();
+    win.on_window_event(move |event| {
+        if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+            api.prevent_close();
+            let _ = win_clone.hide();
+        }
+    });
+
+    let _ = win.show();
+    let _ = win.set_focus();
     Ok(())
 }
 
@@ -38,6 +50,16 @@ pub fn run() {
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .setup(|app| {
+            if let Some(settings_win) = app.get_webview_window("settings") {
+                let win_clone = settings_win.clone();
+                settings_win.on_window_event(move |event| {
+                    if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+                        api.prevent_close();
+                        let _ = win_clone.hide();
+                    }
+                });
+            }
+
             #[cfg(target_os = "macos")]
             {
                 let handle = app.handle();

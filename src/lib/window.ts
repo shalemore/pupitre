@@ -59,11 +59,15 @@ export async function isCurrentWindowMaximized(): Promise<boolean> {
 }
 
 /**
- * Close current native window.
+ * Close current native window (hides the window if it's the settings window to allow instant re-open).
  */
 export async function closeCurrentWindow(): Promise<void> {
   const win = await getCurrentAppWindow();
   if (win) {
+    if (win.label === "settings") {
+      await win.hide();
+      return;
+    }
     await win.close();
     return;
   }

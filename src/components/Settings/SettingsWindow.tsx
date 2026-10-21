@@ -39,7 +39,7 @@ import {
   setupConfigSync,
   updateConfig,
 } from "@/lib/config";
-import { isTauri } from "@/lib/platform";
+import { isMacOS, isTauri } from "@/lib/platform";
 import { applyTheme } from "@/lib/theme";
 import {
   checkForUpdates,
@@ -48,7 +48,7 @@ import {
   updaterState,
 } from "@/lib/updater";
 import { cn } from "cn";
-import { closeCurrentWindow, getCurrentAppWindow, toggleMaximizeCurrentWindow } from "@/lib/window";
+import { closeCurrentWindow, toggleMaximizeCurrentWindow } from "@/lib/window";
 
 export const SettingsWindow: Component = () => {
   const [activeTab, setActiveTab] = createSignal<string>("appearance");
@@ -66,14 +66,6 @@ export const SettingsWindow: Component = () => {
     const cleanup = setupConfigSync((newCfg) => {
       applyTheme(newCfg.theme);
       setLanguageSetting(newCfg.locale);
-    });
-
-    // Make window visible now that initial state is parsed and theme applied
-    getCurrentAppWindow().then(async (win) => {
-      if (win) {
-        await win.show();
-        await win.setFocus();
-      }
     });
 
     onCleanup(cleanup);
@@ -157,7 +149,10 @@ export const SettingsWindow: Component = () => {
     <div class="h-screen w-screen flex flex-col bg-surface-1 text-foreground select-none overflow-hidden font-sans">
       <header
         data-tauri-drag-region
-        class="h-10 w-full relative flex items-center justify-between px-3 select-none bg-surface-0 border-b border-border/80 transition-colors text-xs z-30 shrink-0"
+        class={cn(
+          "h-10 w-full relative flex items-center justify-between px-3 select-none bg-surface-0 border-b border-border/80 transition-colors text-xs z-30 shrink-0",
+          !isMacOS() && "pr-36",
+        )}
         onDblClick={toggleMaximizeCurrentWindow}
       >
         <div class="flex items-center gap-2 pointer-events-none" data-tauri-drag-region>

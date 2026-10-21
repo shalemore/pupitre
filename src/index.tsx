@@ -25,15 +25,34 @@ try {
   // ignore
 }
 
+function isSettingsView(): boolean {
+  if (typeof window === "undefined") return false;
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("view") === "settings") return true;
+
+  if (window.location.hash.includes("settings")) return true;
+
+  if ((window as unknown as { pupitreView?: string }).pupitreView === "settings") {
+    return true;
+  }
+
+  try {
+    const winRecord = window as unknown as Record<string, any>;
+    const internals = winRecord["__TAURI_INTERNALS__"];
+    if (internals?.metadata?.currentWindow?.label === "settings") {
+      return true;
+    }
+  } catch {
+    // ignore
+  }
+
+  return false;
+}
+
 const root = document.getElementById("root");
 if (root) {
-  const params = new URLSearchParams(window.location.search);
-  const isSettings =
-    params.get("view") === "settings" ||
-    (typeof window !== "undefined" &&
-      (window as unknown as { pupitreView?: string }).pupitreView === "settings");
-
-  if (isSettings) {
+  if (isSettingsView()) {
     render(() => <SettingsWindow />, root);
   } else {
     render(() => <App />, root);

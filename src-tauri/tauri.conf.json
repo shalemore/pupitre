@@ -23,6 +23,21 @@
         "dragDropEnabled": true,
         "shadow": true,
         "additionalBrowserArgs": "--disable-features=RendererCodeIntegrity,msWebOOUI,msPdfOOUI,msSmartScreenProtection --enable-font-antialiasing"
+      },
+      {
+        "label": "settings",
+        "title": "Pupitre Preferences",
+        "url": "index.html#settings",
+        "width": 720,
+        "height": 560,
+        "minWidth": 540,
+        "minHeight": 440,
+        "resizable": true,
+        "decorations": false,
+        "center": true,
+        "shadow": true,
+        "visible": false,
+        "additionalBrowserArgs": "--disable-features=RendererCodeIntegrity,msWebOOUI,msPdfOOUI,msSmartScreenProtection --enable-font-antialiasing"
       }
     ],
     "security": {
