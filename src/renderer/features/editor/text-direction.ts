@@ -31,7 +31,7 @@ function textDirection(node: Node): "ltr" | "rtl" | undefined {
 function directionDecorations(doc: Node): DecorationSet {
   const decorations: Decoration[] = [];
   doc.descendants((node, pos) => {
-    if (node.type.name === "code_block") {
+    if (node.type.spec.code) {
       decorations.push(Decoration.node(pos, pos + node.nodeSize, { dir: "ltr" }));
       return false;
     }

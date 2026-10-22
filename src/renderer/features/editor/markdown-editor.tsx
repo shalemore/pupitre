@@ -23,8 +23,10 @@ import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { settings } from "@/lib/settings";
 import { countText, type TextStats } from "@/lib/text-stats";
+import { githubAlerts } from "./alerts";
 import { codeHighlight } from "./code-highlight";
 import { formatKeymap, runFormatAction } from "./format-commands";
+import { frontMatter } from "./front-matter";
 import { preserveImageAlt } from "./image-block-schema";
 import { renderMermaidPreview } from "./mermaid-preview";
 import {
@@ -32,7 +34,9 @@ import {
   documentObserverPlugin,
   findActiveHeading,
   type OutlineHeading,
+  readableText,
 } from "./prose-plugins";
+import { editableHtmlSchema, rawHtml } from "./raw-html";
 import { syntaxRevealPlugin } from "./syntax-reveal";
 import { textDirectionPlugin } from "./text-direction";
 
@@ -195,18 +199,19 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     const updateStats = (doc: Node) => {
       // Counting walks the whole text, so coalesce it while typing in long documents
       clearTimeout(statsTimer);
-      statsTimer = window.setTimeout(
-        () => props.onStatsChange(countText(doc.textBetween(0, doc.content.size, "\n", " "))),
-        200,
-      );
+      statsTimer = window.setTimeout(() => props.onStatsChange(countText(readableText(doc))), 200);
     };
 
     crepe.editor
       .config(preserveImageAlt)
+      .config(editableHtmlSchema)
       .config((ctx) => {
         const style = markdownStyle(settings());
         ctx.update(remarkStringifyOptionsCtx, (options) => ({ ...options, ...style }));
       })
+      .use(frontMatter)
+      .use(rawHtml(resolveUrl))
+      .use(githubAlerts)
       .use($prose(() => formatKeymap(() => crepe.editor)))
       .use(
         $prose(() =>

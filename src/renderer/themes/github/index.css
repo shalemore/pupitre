@@ -154,7 +154,7 @@
   width: 0.25em;
   inset-block: 0;
   border-radius: 0;
-  background: var(--ui-alpha-3);
+  background: var(--alert-color, var(--ui-alpha-3));
 }
 
 .milkdown .ProseMirror hr {

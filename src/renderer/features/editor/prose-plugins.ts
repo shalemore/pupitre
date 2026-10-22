@@ -8,12 +8,33 @@ export interface OutlineHeading {
   pos: number;
 }
 
+const HTML_MARKUP = /<!--[^]*?-->|<[^>]*>/g;
+
+/**
+ * The text a reader sees: front matter is left out and raw HTML contributes the text between its
+ * tags, so markup does not count as words or show up in the outline.
+ */
+export function readableText(node: Node): string {
+  let text = "";
+  node.descendants((child) => {
+    if (child.type.name === "front_matter") return false;
+    if (child.type.name === "html") {
+      text += child.textContent.replace(HTML_MARKUP, "");
+      return false;
+    }
+    if (child.isText) text += child.text;
+    else if (child.isBlock && text !== "") text += "\n";
+    return true;
+  });
+  return text;
+}
+
 export function collectHeadings(doc: Node): OutlineHeading[] {
   const headings: OutlineHeading[] = [];
   doc.descendants((node, pos) => {
     if (node.type.name !== "heading") return true;
     const level: unknown = node.attrs["level"];
-    headings.push({ level: typeof level === "number" ? level : 1, text: node.textContent, pos });
+    headings.push({ level: typeof level === "number" ? level : 1, text: readableText(node), pos });
     return false;
   });
   return headings;

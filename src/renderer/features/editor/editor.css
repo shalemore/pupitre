@@ -61,6 +61,109 @@
     user-select: none;
   }
 
+  /* Raw HTML, see raw-html.ts: complete elements show their source only while the cursor is on them */
+  .milkdown .md-html-source {
+    color: var(--ui-text-muted);
+    font-family: var(--crepe-font-code);
+    font-size: 0.875em;
+    white-space: pre-wrap;
+  }
+
+  .milkdown .md-html.is-rendered:not(.is-editing) .md-html-source,
+  .milkdown .md-html:is(.is-editing, :not(.is-rendered)) .md-html-preview {
+    display: none;
+  }
+
+  .milkdown .ProseMirror kbd {
+    padding: 0.1em 0.4em;
+    border: 1px solid var(--ui-alpha-3);
+    border-block-end-width: 2px;
+    border-radius: 4px;
+    background: var(--ui-alpha-1);
+    font-family: var(--crepe-font-code);
+    font-size: 0.85em;
+  }
+
+  .milkdown .ProseMirror mark {
+    border-radius: 2px;
+    background: oklch(from var(--ui-brand) l c h / 25%);
+    color: inherit;
+  }
+
+  /* Front matter, see front-matter.ts */
+  .milkdown .ProseMirror pre[data-type="front-matter"] {
+    margin-block: 0 1.5em;
+    padding: 0.75em 1em;
+    border-radius: 8px;
+    background: var(--ui-alpha-1);
+    color: var(--ui-text-secondary);
+    font-family: var(--crepe-font-code);
+    font-size: 0.85em;
+    white-space: pre-wrap;
+    direction: ltr;
+    text-align: left;
+  }
+
+  .milkdown .ProseMirror pre[data-type="front-matter"] > code {
+    padding: 0;
+    background: none;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  /*
+   * GitHub alerts, see alerts.ts. Themes draw the quote bar with
+   * `var(--alert-color, <their quote color>)` so alerts keep their color in every theme.
+   */
+  .milkdown .md-alert[data-alert="note"] {
+    --alert-color: oklch(0.62 0.15 255);
+  }
+
+  .milkdown .md-alert[data-alert="tip"] {
+    --alert-color: oklch(0.63 0.15 150);
+  }
+
+  .milkdown .md-alert[data-alert="important"] {
+    --alert-color: oklch(0.6 0.18 300);
+  }
+
+  .milkdown .md-alert[data-alert="warning"] {
+    --alert-color: oklch(0.72 0.15 75);
+  }
+
+  .milkdown .md-alert[data-alert="caution"] {
+    --alert-color: oklch(0.63 0.21 25);
+  }
+
+  .milkdown .md-alert > p:first-child > .md-html:first-child .md-html-source {
+    color: var(--alert-color);
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 600;
+  }
+
+  /* Footnote definitions: the label sits before the note on the same line */
+  .milkdown .ProseMirror dl[data-type="footnote_definition"] {
+    display: flex;
+    gap: 0.5em;
+    margin-block: 0.25em;
+    font-size: 0.9em;
+    color: var(--ui-text-secondary);
+  }
+
+  .milkdown .ProseMirror dl[data-type="footnote_definition"] > dt::after {
+    content: ".";
+  }
+
+  .milkdown .ProseMirror dl[data-type="footnote_definition"] > dd {
+    flex: 1;
+    margin: 0;
+  }
+
+  .milkdown .ProseMirror dl[data-type="footnote_definition"] p {
+    margin: 0;
+  }
+
   /*
    * Bidirectional text, see text-direction.ts. Code, math and diagrams are left-to-right and
    * isolated, so their punctuation never flips the surrounding sentence. Inline code uses

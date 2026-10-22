@@ -16,6 +16,8 @@
  *   - Document typography: the elements inside `.milkdown .ProseMirror`.
  *   - Code colors: --syntax-*.
  *   - --font-document: the default body font (--font-mono is the code font).
+ *   - Quote bars: draw them with `var(--alert-color, <quote color>)` so GitHub alerts
+ *     (`blockquote.md-alert`) keep their color.
  *
  * What a theme should leave alone
  *   Body font size, line height and content width belong to the user and are applied in a
@@ -195,7 +197,7 @@
 
 .milkdown .ProseMirror blockquote::before {
   width: 3px;
-  background: var(--ui-alpha-3);
+  background: var(--alert-color, var(--ui-alpha-3));
 }
 
 .milkdown .ProseMirror hr {
