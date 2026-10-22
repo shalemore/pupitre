@@ -1,5 +1,6 @@
 appId: com.shalemore.pupitre
 productName: Pupitre
+artifactName: ${productName}-${version}-${os}-${arch}.${ext}
 directories:
   buildResources: build
   output: release
@@ -17,7 +18,10 @@ nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
 mac:
-  target: dmg
+  # electron-updater updates macOS from the zip; the dmg is for the first install
+  target:
+    - { target: dmg, arch: arm64 }
+    - { target: zip, arch: arm64 }
   category: public.app-category.productivity
 linux:
   target: [AppImage, deb]
