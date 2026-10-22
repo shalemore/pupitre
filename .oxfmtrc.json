@@ -1,5 +1,11 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
   "printWidth": 100,
-  "ignorePatterns": ["node_modules/**", "out/**", "release/**", "bun.lock", "preview.html"]
+  "ignorePatterns": [
+    "node_modules/**",
+    "out/**",
+    "release/**",
+    "bun.lock",
+    "docs/design/app-icon.html"
+  ]
 }

@@ -24,6 +24,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui";
+import { TitleBar } from "@/components/title-bar";
 import { type LanguageSetting, SUPPORTED_LOCALES, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { getSystemFontFamilies } from "@/lib/fonts";
@@ -31,8 +32,8 @@ import { settings, updateSettings } from "@/lib/settings";
 import { THEME_NAMES } from "@/lib/theme";
 import type { AnimationSetting, EditorWidth, Settings } from "@shared/settings";
 import { cn } from "cn";
-import pkg from "../../../../package.json";
-import { UpdateButton, UpdateStatusPanel } from "./UpdateSection";
+import { UpdateButton, UpdateStatusPanel } from "@/features/settings/update-section";
+import pkg from "../../../package.json";
 
 export const SettingsWindow: Component = () => {
   const [activeTab, setActiveTab] = createSignal<string>("appearance");
@@ -120,12 +121,10 @@ export const SettingsWindow: Component = () => {
 
   return (
     <div class="h-screen w-screen flex flex-col bg-surface-1 text-foreground select-none overflow-hidden font-sans">
-      <header class="app-title-bar h-10 w-full relative flex items-center justify-between px-3 select-none bg-surface-0 border-b border-border/80 transition-colors text-xs z-30 shrink-0">
-        <div class="flex items-center gap-2 pointer-events-none">
-          <img src="./logo.svg" alt="logo" class="rounded-sm shadow-sm size-4 select-none" />
-          <span class="font-semibold text-foreground tracking-wide">{t().settings.title}</span>
-        </div>
-      </header>
+      <TitleBar>
+        <img src="./logo.svg" alt="" class="rounded-sm shadow-sm size-4" />
+        <span class="font-semibold text-foreground tracking-wide">{t().settings.title}</span>
+      </TitleBar>
 
       <div class="flex-1 flex overflow-hidden">
         <Tabs

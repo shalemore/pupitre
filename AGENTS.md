@@ -24,6 +24,14 @@ src/
   preload/    contextBridge that exposes the typed `window.desktop` API
   shared/     Code used by both sides: IPC contract, settings schema, i18n dictionaries
   renderer/   SolidJS UI (one bundle, the window kind is picked from `location.hash`)
+    main.tsx        entry: applies appearance, then renders the window for the hash
+    windows/        one top-level component per window (main window, settings window)
+    features/<x>/   components, state and helpers used by one feature (editor, outline, …)
+    components/     components shared by several features; components/ui holds primitives
+    lib/            cross-feature helpers (desktop API, settings, theme, fonts, text stats)
+    themes/<name>/  theme folders, see "Themes"
+build/        icons and other electron-builder resources
+docs/         design notes and mockups
 ```
 
 - `src/shared/desktop-api.ts` is the IPC contract. Every channel is declared there once and both

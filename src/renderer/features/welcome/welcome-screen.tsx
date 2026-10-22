@@ -5,7 +5,7 @@ import { t } from "@/i18n";
 import { isMacOS } from "@/lib/desktop";
 import { fileNameOf } from "@/lib/file";
 
-interface WelcomeProps {
+interface WelcomeScreenProps {
   recentFiles: readonly string[];
   onNewDocument: () => void;
   onOpenFile: () => void;
@@ -14,7 +14,7 @@ interface WelcomeProps {
 
 const modifier = isMacOS ? "⌘" : "Ctrl+";
 
-export const Welcome: Component<WelcomeProps> = (props) => {
+export const WelcomeScreen: Component<WelcomeScreenProps> = (props) => {
   return (
     <div class="h-full flex flex-col items-center justify-center text-center select-none px-4 py-12 animate-in fade-in-0 duration-(--duration-ui)">
       <img src="./logo.svg" alt="" class="size-14 select-none mb-4 opacity-90 drop-shadow-sm" />

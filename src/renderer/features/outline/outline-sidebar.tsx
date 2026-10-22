@@ -3,14 +3,14 @@ import { For, Show, type Component } from "solid-js";
 import { t } from "@/i18n";
 import type { OutlineHeading } from "@/features/editor/prose-plugins";
 
-interface SidebarProps {
+interface OutlineSidebarProps {
   headings: readonly OutlineHeading[];
   /** Index in headings of the section the cursor is in; -1 means the cursor is before the first heading. */
   activeIndex: number;
   onSelectHeading: (heading: OutlineHeading) => void;
 }
 
-export const Sidebar: Component<SidebarProps> = (props) => {
+export const OutlineSidebar: Component<OutlineSidebarProps> = (props) => {
   return (
     <aside class="w-64 h-full flex print:hidden flex-col bg-surface-0 border-e border-border/80 select-none shrink-0 text-xs">
       <div class="flex-1 overflow-y-auto p-2 space-y-0.5">
