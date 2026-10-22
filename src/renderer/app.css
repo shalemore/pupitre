@@ -284,12 +284,15 @@ html {
 }
 
 /*
- * The window title bar: draggable as a whole except interactive controls. On Windows and Linux the native window buttons are drawn by the Window Controls Overlay
- * in the top-right corner, and the titlebar-area variables give up their width; on macOS the left side leaves room for the traffic lights.
- * The position of the window buttons does not flip with the text direction, hence physical padding.
+ * The window title bar is draggable except for interactive controls. On Windows and Linux the
+ * native caption buttons are drawn by the Window Controls Overlay; the titlebar-area variables
+ * describe the free space between them, so the padding works whichever side the buttons are on
+ * (GNOME can put them on the left). On macOS the traffic lights sit on the left.
+ * Caption buttons do not flip with the text direction, hence physical padding.
  */
 .app-title-bar {
   -webkit-app-region: drag;
+  padding-left: max(0.75rem, env(titlebar-area-x, 0px));
   padding-right: max(
     0.75rem,
     calc(100vw - env(titlebar-area-x, 0px) - env(titlebar-area-width, 100vw))

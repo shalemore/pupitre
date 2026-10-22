@@ -1,9 +1,12 @@
 import { app, BrowserWindow, nativeTheme, session } from "electron";
 import { registerIpcHandlers } from "./ipc";
+import { allowMacTypeInjection } from "./mactype";
 import { rebuildApplicationMenu } from "./menu";
 import { getSettings, onSettingsChange } from "./settings-store";
 import { checkForUpdatesOnStartup, setupUpdater } from "./updater";
 import { createMainWindow, getMainWindow } from "./windows";
+
+allowMacTypeInjection();
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
