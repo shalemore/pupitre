@@ -22,3 +22,10 @@ mac:
 linux:
   target: [AppImage, deb]
   category: Office
+# Registers Pupitre as a handler for Markdown files; the installers remove it on uninstall
+fileAssociations:
+  - ext: [md, markdown, mdown, mkd]
+    name: Markdown
+    description: Markdown document
+    mimeType: text/markdown
+    role: Editor

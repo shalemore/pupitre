@@ -2,22 +2,18 @@ import { app, BrowserWindow, nativeTheme, session } from "electron";
 import { registerIpcHandlers } from "./ipc";
 import { allowMacTypeInjection } from "./mactype";
 import { rebuildApplicationMenu } from "./menu";
+import { handleOpenFileRequests } from "./open-files";
 import { onRecentFilesChange } from "./recent-files";
 import { getSettings, onSettingsChange } from "./settings-store";
 import { checkForUpdatesOnStartup, setupUpdater } from "./updater";
-import { createMainWindow, getMainWindow } from "./windows";
+import { createMainWindow } from "./windows";
 
 allowMacTypeInjection();
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
 } else {
-  app.on("second-instance", () => {
-    const window = getMainWindow();
-    if (!window) return;
-    if (window.isMinimized()) window.restore();
-    window.focus();
-  });
+  handleOpenFileRequests();
 
   void app.whenReady().then(() => {
     nativeTheme.themeSource = getSettings().colorScheme;

@@ -55,6 +55,9 @@ export interface WindowColors {
   dark: boolean;
 }
 
+/** What happened when the user asked to make Pupitre the default Markdown app. */
+export type DefaultAppResult = "done" | "opened-settings" | "manual" | "failed";
+
 /** How a window's frame was created. */
 export interface WindowFrame {
   style: Settings["windowStyle"];
@@ -90,6 +93,7 @@ export interface InvokeChannels {
   "window:open-settings": () => void;
   "window:set-colors": (colors: WindowColors) => void;
   "app:show-about": () => void;
+  "app:set-default-markdown-app": () => DefaultAppResult;
   "app:dispatch": (command: AppCommand) => void;
   "menu:popup": (menu: TopMenu, x: number, y: number) => void;
   "window:set-document-state": (state: DocumentState) => void;
@@ -122,6 +126,8 @@ export interface InitialState {
   settingsPath: string;
   recentFiles: readonly string[];
   frame: WindowFrame;
+  /** A file the system asked to open when Pupitre started; only given to the main window. */
+  launchFile: string | undefined;
 }
 
 export const INITIAL_STATE_SYNC = "app:initial-state";

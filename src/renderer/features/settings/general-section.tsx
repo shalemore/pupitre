@@ -1,9 +1,42 @@
+import type { DefaultAppResult } from "@shared/desktop-api";
 import type { Settings } from "@shared/settings";
-import type { Component } from "solid-js";
-import { Select, Switch } from "@/components/ui";
+import { createSignal, type Component } from "solid-js";
+import { Button, Select, SettingRow, Switch } from "@/components/ui";
 import { type LanguageSetting, SUPPORTED_LOCALES, t } from "@/i18n";
+import { desktop } from "@/lib/desktop";
 import { settings, updateSettings } from "@/lib/settings";
 import { SettingField, SettingsSection } from "./settings-section";
+
+/** Not a setting: the choice belongs to the system, see src/main/default-app.ts. */
+const DefaultAppRow: Component = () => {
+  const [result, setResult] = createSignal<DefaultAppResult>();
+  const description = () => {
+    const labels = t().settings;
+    switch (result()) {
+      case "done":
+        return labels.defaultAppDone;
+      case "opened-settings":
+        return labels.defaultAppOpenedSettings;
+      case "manual":
+        return labels.defaultAppManual;
+      case "failed":
+        return labels.defaultAppFailed;
+      default:
+        return labels.defaultAppDesc;
+    }
+  };
+  return (
+    <SettingRow title={t().settings.defaultApp} description={description()}>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => void desktop.invoke("app:set-default-markdown-app").then(setResult)}
+      >
+        {t().settings.setAsDefault}
+      </Button>
+    </SettingRow>
+  );
+};
 
 export const GeneralSection: Component = () => (
   <SettingsSection title={t().settings.general}>
@@ -63,5 +96,7 @@ export const GeneralSection: Component = () => (
         aria-label={t().settings.autoCheckUpdates}
       />
     </SettingField>
+
+    <DefaultAppRow />
   </SettingsSection>
 );

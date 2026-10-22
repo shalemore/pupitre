@@ -224,6 +224,13 @@ export interface TranslationSchema {
     readonly windowStyleDesc: string;
     readonly windowStyleClassic: string;
     readonly windowStyleImmersive: string;
+    readonly defaultApp: string;
+    readonly defaultAppDesc: string;
+    readonly setAsDefault: string;
+    readonly defaultAppDone: string;
+    readonly defaultAppOpenedSettings: string;
+    readonly defaultAppManual: string;
+    readonly defaultAppFailed: string;
   };
   readonly format: {
     readonly bold: string;

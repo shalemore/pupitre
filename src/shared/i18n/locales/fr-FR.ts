@@ -201,6 +201,16 @@ export const frFR = {
       "Immersif masque la barre de titre et le plan pendant l’écriture. S’applique aux fenêtres ouvertes ensuite.",
     windowStyleClassic: "Classique",
     windowStyleImmersive: "Immersif",
+    defaultApp: "Application Markdown par défaut",
+    defaultAppDesc: "Ouvrir les fichiers .md avec Pupitre par double-clic",
+    setAsDefault: "Définir par défaut",
+    defaultAppDone: "Pupitre ouvre désormais les fichiers Markdown",
+    defaultAppOpenedSettings:
+      "Dans Applications par défaut, choisissez Pupitre pour les fichiers .md",
+    defaultAppManual:
+      "Dans le Finder, sélectionnez un fichier .md, choisissez Fichier › Lire les informations, sélectionnez Pupitre sous Ouvrir avec et cliquez sur Tout modifier",
+    defaultAppFailed:
+      "Impossible de changer l’application par défaut ; modifiez-la dans les réglages du système",
   },
   format: {
     bold: "Gras",

@@ -11,8 +11,10 @@ import {
   type InitialState,
 } from "@shared/desktop-api";
 import { showAboutDialog } from "./about";
+import { setAsDefaultMarkdownApp } from "./default-app";
 import { t } from "./i18n";
 import { popupTopMenu, setDocumentState } from "./menu";
+import { takeLaunchFile } from "./open-files";
 import { addRecentFile, getRecentFiles, removeRecentFile } from "./recent-files";
 import { getSettings, getSettingsPath, resetSetting, updateSettings } from "./settings-store";
 import { checkForUpdates, downloadUpdate, getUpdateStatus, installUpdate } from "./updater";
@@ -20,6 +22,7 @@ import {
   applyWindowColors,
   closeWithoutPrompt,
   dispatchToMainWindow,
+  getMainWindow,
   getWindowFrame,
   setDocumentEdited,
   showSettingsWindow,
@@ -93,6 +96,7 @@ export function registerIpcHandlers(): void {
       settingsPath: getSettingsPath(),
       recentFiles: getRecentFiles(),
       frame: getWindowFrame(event.sender),
+      launchFile: event.sender === getMainWindow()?.webContents ? takeLaunchFile() : undefined,
     };
     event.returnValue = state;
   });
@@ -161,6 +165,7 @@ export function registerIpcHandlers(): void {
   handle("window:open-settings", () => showSettingsWindow());
   handle("window:set-colors", (event, colors) => applyWindowColors(senderWindow(event), colors));
   handle("app:show-about", (event) => showAboutDialog(senderWindow(event)));
+  handle("app:set-default-markdown-app", () => setAsDefaultMarkdownApp());
   handle("app:dispatch", (_event, command) => dispatchToMainWindow(command));
   handle("menu:popup", (event, menu, x, y) => popupTopMenu(senderWindow(event), menu, x, y));
   handle("window:set-document-state", (event, state) => {

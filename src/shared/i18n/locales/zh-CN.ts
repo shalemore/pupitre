@@ -197,6 +197,14 @@ export const zhCN = {
     windowStyleDesc: "沉浸式会在输入时隐藏标题栏和大纲。对之后打开的窗口生效。",
     windowStyleClassic: "经典",
     windowStyleImmersive: "沉浸式",
+    defaultApp: "默认 Markdown 应用",
+    defaultAppDesc: "双击 .md 文件时用 Pupitre 打开",
+    setAsDefault: "设为默认",
+    defaultAppDone: "Markdown 文件现在会用 Pupitre 打开",
+    defaultAppOpenedSettings: "请在“默认应用”中为 .md 文件选择 Pupitre",
+    defaultAppManual:
+      "在访达中选中一个 .md 文件，选择“文件 › 显示简介”，在“打开方式”中选择 Pupitre 并点按“全部更改”",
+    defaultAppFailed: "无法更改默认应用，请在系统设置中更改",
   },
   format: {
     bold: "加粗",

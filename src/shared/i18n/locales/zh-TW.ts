@@ -197,6 +197,14 @@ export const zhTW = {
     windowStyleDesc: "沉浸式會在輸入時隱藏標題列和大綱。對之後開啟的視窗生效。",
     windowStyleClassic: "經典",
     windowStyleImmersive: "沉浸式",
+    defaultApp: "預設 Markdown 應用程式",
+    defaultAppDesc: "按兩下 .md 檔案時以 Pupitre 開啟",
+    setAsDefault: "設為預設",
+    defaultAppDone: "Markdown 檔案現在會以 Pupitre 開啟",
+    defaultAppOpenedSettings: "請在「預設應用程式」中為 .md 檔案選擇 Pupitre",
+    defaultAppManual:
+      "在 Finder 中選取一個 .md 檔案，選擇「檔案 › 取得資訊」，在「打開檔案的應用程式」中選擇 Pupitre 並按一下「全部更改」",
+    defaultAppFailed: "無法變更預設應用程式，請在系統設定中變更",
   },
   format: {
     bold: "粗體",

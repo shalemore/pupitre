@@ -199,6 +199,15 @@ export const ruRU = {
       "Иммерсивный стиль скрывает заголовок окна и оглавление во время набора. Применяется к окнам, открытым после изменения.",
     windowStyleClassic: "Классический",
     windowStyleImmersive: "Иммерсивный",
+    defaultApp: "Приложение по умолчанию для Markdown",
+    defaultAppDesc: "Открывать файлы .md в Pupitre двойным щелчком",
+    setAsDefault: "Сделать основным",
+    defaultAppDone: "Теперь файлы Markdown открываются в Pupitre",
+    defaultAppOpenedSettings: "В разделе «Приложения по умолчанию» выберите Pupitre для файлов .md",
+    defaultAppManual:
+      "В Finder выберите файл .md, затем «Файл» › «Свойства», в разделе «Открывать в программе» выберите Pupitre и нажмите «Изменить все»",
+    defaultAppFailed:
+      "Не удалось изменить приложение по умолчанию; задайте его в настройках системы",
   },
   format: {
     bold: "Полужирный",

@@ -210,6 +210,14 @@ export const arSA = {
       "يُخفي الوضع الغامر شريط العنوان والمخطط أثناء الكتابة. يُطبَّق على النوافذ التي تُفتح لاحقًا.",
     windowStyleClassic: "كلاسيكي",
     windowStyleImmersive: "غامر",
+    defaultApp: "تطبيق Markdown الافتراضي",
+    defaultAppDesc: "فتح ملفات ‎.md باستخدام Pupitre عند النقر عليها نقرًا مزدوجًا",
+    setAsDefault: "تعيين كافتراضي",
+    defaultAppDone: "يفتح Pupitre الآن ملفات Markdown",
+    defaultAppOpenedSettings: "في التطبيقات الافتراضية، اختر Pupitre لملفات ‎.md",
+    defaultAppManual:
+      "في Finder، حدد ملف ‎.md، واختر ملف › إظهار المعلومات، ثم اختر Pupitre ضمن الفتح باستخدام وانقر على تغيير الكل",
+    defaultAppFailed: "تعذر تغيير التطبيق الافتراضي؛ عيّنه من إعدادات النظام",
   },
   format: {
     bold: "غامق",

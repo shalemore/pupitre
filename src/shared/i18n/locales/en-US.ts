@@ -200,6 +200,14 @@ export const enUS = {
       "Immersive hides the title bar and outline while you write. Applies to windows opened afterwards.",
     windowStyleClassic: "Classic",
     windowStyleImmersive: "Immersive",
+    defaultApp: "Default Markdown App",
+    defaultAppDesc: "Open .md files with Pupitre when you double-click them",
+    setAsDefault: "Set as Default",
+    defaultAppDone: "Pupitre now opens Markdown files",
+    defaultAppOpenedSettings: "In Default apps, choose Pupitre for .md files",
+    defaultAppManual:
+      "In Finder, select a .md file, choose File › Get Info, pick Pupitre under Open With and click Change All",
+    defaultAppFailed: "Could not change the default app; set it in your system settings",
   },
   format: {
     bold: "Bold",

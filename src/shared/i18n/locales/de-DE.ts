@@ -199,6 +199,15 @@ export const deDE = {
       "Immersiv blendet Titelleiste und Gliederung beim Schreiben aus. Gilt für danach geöffnete Fenster.",
     windowStyleClassic: "Klassisch",
     windowStyleImmersive: "Immersiv",
+    defaultApp: "Standard-App für Markdown",
+    defaultAppDesc: ".md-Dateien per Doppelklick mit Pupitre öffnen",
+    setAsDefault: "Als Standard festlegen",
+    defaultAppDone: "Pupitre öffnet jetzt Markdown-Dateien",
+    defaultAppOpenedSettings: "Wählen Sie unter „Standard-Apps“ Pupitre für .md-Dateien",
+    defaultAppManual:
+      "Wählen Sie im Finder eine .md-Datei, dann Ablage › Informationen, unter „Öffnen mit“ Pupitre und klicken Sie auf „Alle ändern“",
+    defaultAppFailed:
+      "Die Standard-App konnte nicht geändert werden; legen Sie sie in den Systemeinstellungen fest",
   },
   format: {
     bold: "Fett",

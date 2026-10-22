@@ -137,6 +137,8 @@ export function createDocumentSession(
 
   /** When the window opens, the "On startup" setting decides between the welcome page, the last file or a new document. */
   const restoreOnStartup = () => {
+    const { launchFile } = desktop.initialState;
+    if (launchFile !== undefined) return void openPath(launchFile);
     const { startup } = settings();
     const [lastFile] = recentFiles();
     if (startup === "new-file") void newDocument();

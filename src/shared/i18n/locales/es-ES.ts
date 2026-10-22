@@ -200,6 +200,16 @@ export const esES = {
       "Inmersivo oculta la barra de título y el esquema mientras escribes. Se aplica a las ventanas abiertas después.",
     windowStyleClassic: "Clásico",
     windowStyleImmersive: "Inmersivo",
+    defaultApp: "Aplicación predeterminada para Markdown",
+    defaultAppDesc: "Abrir los archivos .md con Pupitre al hacer doble clic",
+    setAsDefault: "Establecer como predeterminada",
+    defaultAppDone: "Pupitre ahora abre los archivos Markdown",
+    defaultAppOpenedSettings:
+      "En Aplicaciones predeterminadas, elige Pupitre para los archivos .md",
+    defaultAppManual:
+      "En el Finder, selecciona un archivo .md, elige Archivo › Obtener información, selecciona Pupitre en Abrir con y haz clic en Cambiar todo",
+    defaultAppFailed:
+      "No se pudo cambiar la aplicación predeterminada; cámbiala en la configuración del sistema",
   },
   format: {
     bold: "Negrita",

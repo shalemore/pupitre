@@ -198,6 +198,14 @@ export const jaJP = {
       "没入型では入力中にタイトルバーとアウトラインを隠します。以降に開くウィンドウに適用されます。",
     windowStyleClassic: "クラシック",
     windowStyleImmersive: "没入型",
+    defaultApp: "Markdown の既定のアプリ",
+    defaultAppDesc: ".md ファイルをダブルクリックで Pupitre で開きます",
+    setAsDefault: "既定に設定",
+    defaultAppDone: "Markdown ファイルを Pupitre で開くようになりました",
+    defaultAppOpenedSettings: "[既定のアプリ] で .md ファイルに Pupitre を選んでください",
+    defaultAppManual:
+      "Finder で .md ファイルを選び、[ファイル] › [情報を見る] の [このアプリケーションで開く] で Pupitre を選んで [すべてを変更] をクリックします",
+    defaultAppFailed: "既定のアプリを変更できませんでした。システム設定で変更してください",
   },
   format: {
     bold: "太字",

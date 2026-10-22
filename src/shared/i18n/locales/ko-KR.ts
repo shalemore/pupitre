@@ -198,6 +198,14 @@ export const koKR = {
       "몰입형은 작성 중에 제목 표시줄과 개요를 숨깁니다. 이후에 여는 창에 적용됩니다.",
     windowStyleClassic: "클래식",
     windowStyleImmersive: "몰입형",
+    defaultApp: "기본 Markdown 앱",
+    defaultAppDesc: ".md 파일을 두 번 클릭하면 Pupitre로 엽니다",
+    setAsDefault: "기본값으로 설정",
+    defaultAppDone: "이제 Pupitre가 Markdown 파일을 엽니다",
+    defaultAppOpenedSettings: "기본 앱에서 .md 파일에 Pupitre를 선택하세요",
+    defaultAppManual:
+      "Finder에서 .md 파일을 선택하고 파일 › 정보 가져오기에서 다음으로 열기를 Pupitre로 바꾼 뒤 모두 변경을 클릭하세요",
+    defaultAppFailed: "기본 앱을 변경하지 못했습니다. 시스템 설정에서 변경하세요",
   },
   format: {
     bold: "굵게",
