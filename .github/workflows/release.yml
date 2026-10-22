@@ -45,16 +45,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - platform: "macos-latest"
-            target: "aarch64-apple-darwin"
-            args: "--target aarch64-apple-darwin"
-          - platform: "ubuntu-22.04"
-            target: "x86_64-unknown-linux-gnu"
-            args: ""
-          - platform: "windows-latest"
-            target: "x86_64-pc-windows-msvc"
-            args: ""
+        platform: [macos-latest, ubuntu-latest, windows-latest]
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -62,30 +53,10 @@ jobs:
 
       - uses: ./.github/actions/setup-frontend
 
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: ${{ matrix.target }}
-
-      - uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: "src-tauri -> target"
-
-      - name: Install dependencies (Ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
-
-      - uses: tauri-apps/tauri-action@v0
+      # electron-builder finds the draft release named after the package.json version and uploads the installers and update metadata to it
+      - run: bun run build && bunx electron-builder --publish always
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-        with:
-          tagName: v${{ needs.check.outputs.version }}
-          releaseName: "Pupitre v${{ needs.check.outputs.version }}"
-          releaseDraft: true
-          prerelease: false
-          args: ${{ matrix.args }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish-release:
     needs: [check, build-artifacts]
@@ -119,5 +90,5 @@ jobs:
             fi
           } > notes.md
 
-          # Publish draft release created by tauri-action with generated changelog
+          # Publish the draft release created by electron-builder with the generated changelog
           gh release edit "v$VERSION" --draft=false --notes-file notes.md
