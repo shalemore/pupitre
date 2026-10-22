@@ -303,7 +303,25 @@ html {
   padding-left: 80px;
 }
 
-.app-title-bar :is(button, input, select, a, .app-no-drag) {
+/* Caption buttons drawn by the page sit flush with the window edge */
+.app-title-bar[data-caption-buttons="left"] {
+  padding-left: 0;
+}
+
+.app-title-bar[data-caption-buttons="right"] {
+  padding-right: 0;
+}
+
+/* The frame around an immersive window's content card moves the window */
+.app-drag {
+  -webkit-app-region: drag;
+}
+
+.app-no-drag {
+  -webkit-app-region: no-drag;
+}
+
+.app-title-bar :is(button, input, select, a) {
   -webkit-app-region: no-drag;
 }
 

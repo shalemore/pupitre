@@ -193,6 +193,10 @@ export const zhCN = {
     focusModeDesc: "淡化正在编辑的段落以外的内容 (F8)",
     typewriterMode: "打字机模式",
     typewriterModeDesc: "让正在输入的行始终保持在窗口中央 (F9)",
+    windowStyle: "窗口样式",
+    windowStyleDesc: "沉浸式会在输入时隐藏标题栏和大纲。对之后打开的窗口生效。",
+    windowStyleClassic: "经典",
+    windowStyleImmersive: "沉浸式",
   },
   format: {
     bold: "加粗",
@@ -214,5 +218,11 @@ export const zhCN = {
     heading4: "4 级标题",
     heading5: "5 级标题",
     heading6: "6 级标题",
+  },
+  window: {
+    minimize: "最小化",
+    maximize: "最大化",
+    restore: "还原",
+    close: "关闭",
   },
 } satisfies TranslationSchema;

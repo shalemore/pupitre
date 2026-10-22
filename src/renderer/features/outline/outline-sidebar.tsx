@@ -8,11 +8,18 @@ interface OutlineSidebarProps {
   /** Index in headings of the section the cursor is in; -1 means the cursor is before the first heading. */
   activeIndex: number;
   onSelectHeading: (heading: OutlineHeading) => void;
+  class?: string;
 }
 
 export const OutlineSidebar: Component<OutlineSidebarProps> = (props) => {
   return (
-    <aside class="w-64 h-full flex print:hidden flex-col bg-surface-0 border-e border-border/80 select-none shrink-0 text-xs">
+    <aside
+      data-outline
+      class={cn(
+        "w-64 h-full flex print:hidden flex-col bg-surface-0 border-e border-border/80 select-none shrink-0 text-xs",
+        props.class,
+      )}
+    >
       <div class="flex-1 overflow-y-auto p-2 space-y-0.5">
         <Show
           when={props.headings.length > 0}

@@ -193,6 +193,11 @@ export const jaJP = {
     focusModeDesc: "書いている段落以外を薄く表示します (F8)",
     typewriterMode: "タイプライターモード",
     typewriterModeDesc: "書いている行をウィンドウの中央に保ちます (F9)",
+    windowStyle: "ウィンドウスタイル",
+    windowStyleDesc:
+      "没入型では入力中にタイトルバーとアウトラインを隠します。以降に開くウィンドウに適用されます。",
+    windowStyleClassic: "クラシック",
+    windowStyleImmersive: "没入型",
   },
   format: {
     bold: "太字",
@@ -214,5 +219,11 @@ export const jaJP = {
     heading4: "見出し 4",
     heading5: "見出し 5",
     heading6: "見出し 6",
+  },
+  window: {
+    minimize: "最小化",
+    maximize: "最大化",
+    restore: "元に戻す",
+    close: "閉じる",
   },
 } satisfies TranslationSchema;

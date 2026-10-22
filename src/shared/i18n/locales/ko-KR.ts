@@ -193,6 +193,11 @@ export const koKR = {
     focusModeDesc: "작성 중인 단락 외에는 흐리게 표시합니다 (F8)",
     typewriterMode: "타자기 모드",
     typewriterModeDesc: "작성 중인 줄을 창 가운데에 유지합니다 (F9)",
+    windowStyle: "창 스타일",
+    windowStyleDesc:
+      "몰입형은 작성 중에 제목 표시줄과 개요를 숨깁니다. 이후에 여는 창에 적용됩니다.",
+    windowStyleClassic: "클래식",
+    windowStyleImmersive: "몰입형",
   },
   format: {
     bold: "굵게",
@@ -214,5 +219,11 @@ export const koKR = {
     heading4: "제목 4",
     heading5: "제목 5",
     heading6: "제목 6",
+  },
+  window: {
+    minimize: "최소화",
+    maximize: "최대화",
+    restore: "이전 크기로 복원",
+    close: "닫기",
   },
 } satisfies TranslationSchema;

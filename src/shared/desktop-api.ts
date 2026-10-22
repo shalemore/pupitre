@@ -55,6 +55,16 @@ export interface WindowColors {
   dark: boolean;
 }
 
+/** How a window's frame was created. */
+export interface WindowFrame {
+  style: Settings["windowStyle"];
+  /**
+   * Side of the caption buttons the page draws itself (immersive windows on Windows and Linux);
+   * undefined when the system draws them.
+   */
+  captionButtons: "left" | "right" | undefined;
+}
+
 /** Document state the renderer reports to the main process: enables or disables menu items and decides whether closing the window must ask to save first. */
 export interface DocumentState {
   hasDocument: boolean;
@@ -88,6 +98,12 @@ export interface InvokeChannels {
   "window:set-document-state": (state: DocumentState) => void;
   /** The user has confirmed (saved or discarded changes); the window can really close. */
   "window:close-confirmed": () => void;
+  "window:minimize": () => void;
+  "window:toggle-maximize": () => void;
+  /** Closes the window, asking about unsaved changes first. */
+  "window:close": () => void;
+  /** Shows or hides the macOS traffic lights together with an immersive title bar. */
+  "window:set-buttons-visible": (visible: boolean) => void;
   "updater:get-status": () => UpdateStatus;
   "updater:check": () => void;
   "updater:download": () => void;
@@ -100,6 +116,7 @@ export interface RendererEvents {
   "recent-files:changed": readonly string[];
   "updater:status": UpdateStatus;
   "app:command": AppCommand;
+  "window:maximized-changed": boolean;
 }
 
 /** State a window needs before its first paint; fetched synchronously by the preload script. */
@@ -107,6 +124,7 @@ export interface InitialState {
   settings: Settings;
   settingsPath: string;
   recentFiles: readonly string[];
+  frame: WindowFrame;
 }
 
 export const INITIAL_STATE_SYNC = "app:initial-state";

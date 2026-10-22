@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { join } from "node:path";
 import {
   app,
@@ -5,14 +6,21 @@ import {
   type BrowserWindowConstructorOptions,
   nativeTheme,
   shell,
+  type WebContents,
 } from "electron";
-import type { AppCommand, WindowColors } from "@shared/desktop-api";
+import type { AppCommand, WindowColors, WindowFrame } from "@shared/desktop-api";
+import type { Settings } from "@shared/settings";
 import { setupContextMenu } from "./context-menu";
+import { getSettings } from "./settings-store";
 
 /** The renderer picks the view to show from location.hash. */
 type View = "main" | "settings";
 
 const TITLE_BAR_HEIGHT = 40;
+/** Gap between the window edge and the content card of an immersive window (p-1.5 in the page). */
+const IMMERSIVE_INSET = 6;
+
+const windowFrames = new WeakMap<WebContents, WindowFrame>();
 
 let mainWindow: BrowserWindow | undefined;
 // Windows with unsaved changes; the renderer must ask about saving before they close
@@ -29,11 +37,42 @@ function windowColors() {
   return nativeTheme.shouldUseDarkColors ? knownColors.dark : knownColors.light;
 }
 
-function titleBarOptions(): BrowserWindowConstructorOptions {
-  if (process.platform === "darwin") {
-    // The traffic lights are centered vertically in the 40px title bar
-    return { titleBarStyle: "hiddenInset", trafficLightPosition: { x: 14, y: 14 } };
+/**
+ * GNOME and other Linux desktops can put the caption buttons on the left. The layout lists the
+ * buttons left and right of a colon, e.g. "close,minimize,maximize:appmenu".
+ */
+function linuxCaptionSide(): "left" | "right" {
+  try {
+    const layout = execFileSync(
+      "gsettings",
+      ["get", "org.gnome.desktop.wm.preferences", "button-layout"],
+      { encoding: "utf8", timeout: 1000 },
+    );
+    const [left = ""] = layout.replaceAll("'", "").split(":");
+    return left.includes("close") ? "left" : "right";
+  } catch {
+    return "right";
   }
+}
+
+function windowFrame(style: Settings["windowStyle"]): WindowFrame {
+  // Native caption buttons cannot hide with an immersive title bar, so the page draws its own
+  const drawsButtons = style === "immersive" && process.platform !== "darwin";
+  const side = process.platform === "linux" ? linuxCaptionSide() : "right";
+  return { style, captionButtons: drawsButtons ? side : undefined };
+}
+
+function titleBarOptions(frame: WindowFrame): BrowserWindowConstructorOptions {
+  if (process.platform === "darwin") {
+    // The traffic lights are centered in the 40px title bar, which sits inside the content card
+    // of an immersive window
+    const inset = frame.style === "immersive" ? IMMERSIVE_INSET : 0;
+    return {
+      titleBarStyle: "hiddenInset",
+      trafficLightPosition: { x: 14 + inset, y: 14 + inset },
+    };
+  }
+  if (frame.captionButtons) return { titleBarStyle: "hidden" };
   return {
     titleBarStyle: "hidden",
     titleBarOverlay: {
@@ -44,11 +83,16 @@ function titleBarOptions(): BrowserWindowConstructorOptions {
   };
 }
 
-function createWindow(view: View, options: BrowserWindowConstructorOptions): BrowserWindow {
+function createWindow(
+  view: View,
+  style: Settings["windowStyle"],
+  options: BrowserWindowConstructorOptions,
+): BrowserWindow {
+  const frame = windowFrame(style);
   const window = new BrowserWindow({
     show: false,
     backgroundColor: windowColors().background,
-    ...titleBarOptions(),
+    ...titleBarOptions(frame),
     ...options,
     webPreferences: {
       preload: join(import.meta.dirname, "../preload/index.cjs"),
@@ -59,7 +103,10 @@ function createWindow(view: View, options: BrowserWindowConstructorOptions): Bro
   });
 
   const { webContents } = window;
+  windowFrames.set(webContents, frame);
   window.once("ready-to-show", () => window.show());
+  window.on("maximize", () => webContents.send("window:maximized-changed", true));
+  window.on("unmaximize", () => webContents.send("window:maximized-changed", false));
   setupContextMenu(webContents, { formatting: view === "main" });
   webContents.setWindowOpenHandler(({ url }) => {
     void shell.openExternal(url);
@@ -83,7 +130,7 @@ function createWindow(view: View, options: BrowserWindowConstructorOptions): Bro
 }
 
 export function createMainWindow(): BrowserWindow {
-  mainWindow = createWindow("main", {
+  mainWindow = createWindow("main", getSettings().windowStyle, {
     width: 1180,
     height: 780,
     minWidth: 720,
@@ -109,7 +156,7 @@ export function showSettingsWindow(): void {
     settingsWindow.focus();
     return;
   }
-  settingsWindow = createWindow("settings", {
+  settingsWindow = createWindow("settings", "classic", {
     width: 720,
     height: 560,
     minWidth: 540,
@@ -120,6 +167,10 @@ export function showSettingsWindow(): void {
   settingsWindow.on("closed", () => {
     settingsWindow = undefined;
   });
+}
+
+export function getWindowFrame(webContents: WebContents): WindowFrame {
+  return windowFrames.get(webContents) ?? windowFrame("classic");
 }
 
 export function getMainWindow(): BrowserWindow | undefined {
@@ -151,7 +202,7 @@ export function applyWindowColors(window: BrowserWindow, colors: WindowColors): 
   const { background, symbol } = colors;
   knownColors[colors.dark ? "dark" : "light"] = { background, symbol };
   window.setBackgroundColor(background);
-  if (process.platform !== "darwin") {
+  if (process.platform !== "darwin" && !getWindowFrame(window.webContents).captionButtons) {
     window.setTitleBarOverlay({
       color: "#00000000",
       symbolColor: symbol,

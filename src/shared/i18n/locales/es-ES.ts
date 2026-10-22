@@ -195,6 +195,11 @@ export const esES = {
     focusModeDesc: "Atenúa todo excepto el párrafo que se está escribiendo (F8)",
     typewriterMode: "Modo máquina de escribir",
     typewriterModeDesc: "Mantiene la línea que se escribe en el centro de la ventana (F9)",
+    windowStyle: "Estilo de ventana",
+    windowStyleDesc:
+      "Inmersivo oculta la barra de título y el esquema mientras escribes. Se aplica a las ventanas abiertas después.",
+    windowStyleClassic: "Clásico",
+    windowStyleImmersive: "Inmersivo",
   },
   format: {
     bold: "Negrita",
@@ -216,5 +221,11 @@ export const esES = {
     heading4: "Título 4",
     heading5: "Título 5",
     heading6: "Título 6",
+  },
+  window: {
+    minimize: "Minimizar",
+    maximize: "Maximizar",
+    restore: "Restaurar",
+    close: "Cerrar",
   },
 } satisfies TranslationSchema;

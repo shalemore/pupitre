@@ -89,6 +89,22 @@ export const AppearanceSection: Component = () => (
     </SettingField>
 
     <SettingField
+      name="windowStyle"
+      title={t().settings.windowStyle}
+      description={t().settings.windowStyleDesc}
+    >
+      <Select<Settings["windowStyle"]>
+        value={settings().windowStyle}
+        onChange={(windowStyle) => void updateSettings({ windowStyle })}
+        options={[
+          { value: "classic", label: t().settings.windowStyleClassic },
+          { value: "immersive", label: t().settings.windowStyleImmersive },
+        ]}
+        aria-label={t().settings.windowStyle}
+      />
+    </SettingField>
+
+    <SettingField
       name="sidebarVisible"
       title={t().settings.showOutline}
       description={t().settings.showOutlineDesc}

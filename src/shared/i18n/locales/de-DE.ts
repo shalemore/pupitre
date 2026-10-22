@@ -194,6 +194,11 @@ export const deDE = {
     focusModeDesc: "Alles außer dem aktuellen Absatz abdunkeln (F8)",
     typewriterMode: "Schreibmaschinenmodus",
     typewriterModeDesc: "Die aktuelle Zeile in der Fenstermitte halten (F9)",
+    windowStyle: "Fensterstil",
+    windowStyleDesc:
+      "Immersiv blendet Titelleiste und Gliederung beim Schreiben aus. Gilt für danach geöffnete Fenster.",
+    windowStyleClassic: "Klassisch",
+    windowStyleImmersive: "Immersiv",
   },
   format: {
     bold: "Fett",
@@ -215,5 +220,11 @@ export const deDE = {
     heading4: "Überschrift 4",
     heading5: "Überschrift 5",
     heading6: "Überschrift 6",
+  },
+  window: {
+    minimize: "Minimieren",
+    maximize: "Maximieren",
+    restore: "Wiederherstellen",
+    close: "Schließen",
   },
 } satisfies TranslationSchema;

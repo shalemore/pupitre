@@ -1,4 +1,5 @@
 import type { AppCommand } from "@shared/desktop-api";
+import { cn } from "cn";
 import { createEffect, createSignal, on, onCleanup, onMount, Show, type Component } from "solid-js";
 import { TitleBar } from "@/components/title-bar";
 import { createDocumentSession } from "@/features/document/document-session";
@@ -14,6 +15,7 @@ import { OutlineSidebar } from "@/features/outline/outline-sidebar";
 import { WelcomeScreen } from "@/features/welcome/welcome-screen";
 import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
+import { createImmersiveChrome } from "@/lib/immersive-chrome";
 import { recentFiles } from "@/lib/recent-files";
 import { settings, updateSettings } from "@/lib/settings";
 import type { TextStats } from "@/lib/text-stats";
@@ -29,6 +31,12 @@ export const MainWindow: Component = () => {
   const [findMode, setFindMode] = createSignal<FindMode>("closed");
   const [initialSearch, setInitialSearch] = createSignal("");
   const [matchStats, setMatchStats] = createSignal<MatchStats>({ current: 0, total: 0 });
+  // The frame is fixed when the window is created, so the layout follows it rather than the setting
+  const immersive = desktop.initialState.frame.style === "immersive";
+  const chrome = createImmersiveChrome({
+    enabled: immersive,
+    hasDocument: () => session.activeDocument() !== undefined,
+  });
 
   createEffect(() => {
     document.title = session.activeDocument() ? `${session.fileName()} - Pupitre` : "Pupitre";
@@ -43,7 +51,10 @@ export const MainWindow: Component = () => {
   createEffect(
     on(
       () => session.activeDocument()?.id,
-      () => setFindMode("closed"),
+      () => {
+        setFindMode("closed");
+        chrome.reset();
+      },
     ),
   );
 
@@ -130,94 +141,137 @@ export const MainWindow: Component = () => {
   });
 
   return (
-    <div class="h-screen w-screen flex flex-col overflow-hidden bg-surface-1 text-foreground print:block print:h-auto print:overflow-visible">
-      <TitleBar>
-        <div class="flex items-center gap-2 me-1 pointer-events-none">
-          <img src="./logo.svg" alt="" class="rounded-sm shadow-sm size-4" />
-          <span class="font-semibold text-muted-foreground tracking-wide">
-            {t().common.appName}
-          </span>
-        </div>
-        <Show when={!isMacOS}>
-          <MenuBar />
-        </Show>
+    <div
+      data-window-style={desktop.initialState.frame.style}
+      onPointerMove={(event) => chrome.onPointerMove(event)}
+      onPointerLeave={() => chrome.onPointerLeave()}
+      class={cn(
+        "h-screen w-screen overflow-hidden text-foreground print:block print:h-auto print:overflow-visible",
+        immersive ? "app-drag bg-surface-0 p-1.5 print:p-0" : "bg-surface-1",
+      )}
+    >
+      <div
+        class={cn(
+          "relative flex size-full flex-col overflow-hidden print:block print:h-auto print:overflow-visible",
+          immersive &&
+            "app-no-drag rounded-xl border border-border/80 bg-surface-1 shadow-sm print:rounded-none print:border-0 print:shadow-none",
+        )}
+      >
+        <TitleBar
+          class={cn(
+            immersive && "absolute inset-x-0 top-0 transition-[translate,opacity] duration-200",
+            !chrome.titleBarVisible() && "pointer-events-none -translate-y-full opacity-0",
+          )}
+        >
+          <div class="flex items-center gap-2 me-1 pointer-events-none">
+            <img src="./logo.svg" alt="" class="rounded-sm shadow-sm size-4" />
+            <span class="font-semibold text-muted-foreground tracking-wide">
+              {t().common.appName}
+            </span>
+          </div>
+          <Show when={!isMacOS}>
+            <MenuBar />
+          </Show>
 
-        <div class="flex-1 min-w-0 px-4 text-center font-medium text-foreground truncate">
-          <Show when={session.activeDocument()}>
-            {session.isDirty() ? "● " : ""}
-            <bdi>{session.fileName()}</bdi>
+          <div class="flex-1 min-w-0 px-4 text-center font-medium text-foreground truncate">
+            <Show when={session.activeDocument()}>
+              {session.isDirty() ? "● " : ""}
+              <bdi>{session.fileName()}</bdi>
+            </Show>
+          </div>
+
+          <Show when={session.activeDocument() !== undefined && settings().showWordCount}>
+            <div class="text-[11px] text-muted-foreground tabular-nums flex items-center gap-1.5 me-2">
+              <span>{t().common.wordsCount(stats().words)}</span>
+              <span>·</span>
+              <span>{t().common.charsCount(stats().characters)}</span>
+            </div>
+          </Show>
+        </TitleBar>
+
+        <div
+          onKeyDown={(event) => {
+            if (!event.ctrlKey && !event.metaKey && !event.altKey) chrome.hide();
+          }}
+          onWheel={() => chrome.hide()}
+          class="flex-1 flex overflow-hidden print:block print:overflow-visible"
+        >
+          <Show
+            when={session.activeDocument()}
+            fallback={
+              <main class="flex-1">
+                <WelcomeScreen
+                  recentFiles={recentFiles()}
+                  onNewDocument={session.newDocument}
+                  onOpenFile={session.open}
+                  onOpenRecent={session.openPath}
+                />
+              </main>
+            }
+          >
+            {(doc) => (
+              <>
+                <Show when={settings().sidebarVisible}>
+                  <div
+                    class={cn(
+                      immersive
+                        ? "relative shrink-0 transition-[width] duration-200 print:hidden"
+                        : "contents",
+                      immersive && (chrome.sidebarDocked() ? "w-66" : "w-0"),
+                    )}
+                  >
+                    <OutlineSidebar
+                      class={cn(
+                        immersive &&
+                          "absolute top-12 bottom-2 inset-s-2 z-20 h-auto rounded-lg border shadow-lg transition-[translate,opacity] duration-200",
+                        !chrome.sidebarVisible() &&
+                          "pointer-events-none -translate-x-[calc(100%+1rem)] opacity-0 rtl:translate-x-[calc(100%+1rem)]",
+                      )}
+                      headings={outline()}
+                      activeIndex={activeHeading()}
+                      onSelectHeading={(heading) => editor?.scrollTo(heading.pos)}
+                    />
+                  </div>
+                </Show>
+
+                <main class="flex-1 h-full overflow-hidden relative print:h-auto print:overflow-visible">
+                  <Show when={findMode() !== "closed"}>
+                    <FindBar
+                      class={cn(immersive && "top-13")}
+                      showReplace={findMode() === "replace"}
+                      initialSearch={initialSearch()}
+                      matchStats={matchStats()}
+                      onToggleReplace={() =>
+                        setFindMode(findMode() === "replace" ? "find" : "replace")
+                      }
+                      onClose={closeFind}
+                      onSearchChange={(options) => runSearch((handle) => handle.setSearch(options))}
+                      onFindNext={() => runSearch((handle) => handle.findNext())}
+                      onFindPrevious={() => runSearch((handle) => handle.findPrevious())}
+                      onReplaceNext={() => runSearch((handle) => handle.replaceNext())}
+                      onReplaceAll={() => runSearch((handle) => handle.replaceAll())}
+                    />
+                  </Show>
+
+                  {/* Rebuild the editor per document id; Save As only changes the path, so the editor and its undo history stay */}
+                  <Show when={doc().id} keyed>
+                    <MarkdownEditor
+                      markdown={doc().markdown}
+                      baseUrl={doc().baseUrl}
+                      documentPath={doc().path}
+                      onReady={session.markSaved}
+                      onMarkdownChange={session.handleMarkdownChange}
+                      onOutlineChange={setOutline}
+                      onActiveHeadingChange={setActiveHeading}
+                      onStatsChange={setStats}
+                      ref={(handle) => (editor = handle)}
+                    />
+                  </Show>
+                </main>
+              </>
+            )}
           </Show>
         </div>
-
-        <Show when={session.activeDocument() !== undefined && settings().showWordCount}>
-          <div class="text-[11px] text-muted-foreground tabular-nums flex items-center gap-1.5 me-2">
-            <span>{t().common.wordsCount(stats().words)}</span>
-            <span>·</span>
-            <span>{t().common.charsCount(stats().characters)}</span>
-          </div>
-        </Show>
-      </TitleBar>
-
-      <div class="flex-1 flex overflow-hidden print:block print:overflow-visible">
-        <Show
-          when={session.activeDocument()}
-          fallback={
-            <main class="flex-1">
-              <WelcomeScreen
-                recentFiles={recentFiles()}
-                onNewDocument={session.newDocument}
-                onOpenFile={session.open}
-                onOpenRecent={session.openPath}
-              />
-            </main>
-          }
-        >
-          {(doc) => (
-            <>
-              <Show when={settings().sidebarVisible}>
-                <OutlineSidebar
-                  headings={outline()}
-                  activeIndex={activeHeading()}
-                  onSelectHeading={(heading) => editor?.scrollTo(heading.pos)}
-                />
-              </Show>
-
-              <main class="flex-1 h-full overflow-hidden relative print:h-auto print:overflow-visible">
-                <Show when={findMode() !== "closed"}>
-                  <FindBar
-                    showReplace={findMode() === "replace"}
-                    initialSearch={initialSearch()}
-                    matchStats={matchStats()}
-                    onToggleReplace={() =>
-                      setFindMode(findMode() === "replace" ? "find" : "replace")
-                    }
-                    onClose={closeFind}
-                    onSearchChange={(options) => runSearch((handle) => handle.setSearch(options))}
-                    onFindNext={() => runSearch((handle) => handle.findNext())}
-                    onFindPrevious={() => runSearch((handle) => handle.findPrevious())}
-                    onReplaceNext={() => runSearch((handle) => handle.replaceNext())}
-                    onReplaceAll={() => runSearch((handle) => handle.replaceAll())}
-                  />
-                </Show>
-
-                {/* Rebuild the editor per document id; Save As only changes the path, so the editor and its undo history stay */}
-                <Show when={doc().id} keyed>
-                  <MarkdownEditor
-                    markdown={doc().markdown}
-                    baseUrl={doc().baseUrl}
-                    documentPath={doc().path}
-                    onReady={session.markSaved}
-                    onMarkdownChange={session.handleMarkdownChange}
-                    onOutlineChange={setOutline}
-                    onActiveHeadingChange={setActiveHeading}
-                    onStatsChange={setStats}
-                    ref={(handle) => (editor = handle)}
-                  />
-                </Show>
-              </main>
-            </>
-          )}
-        </Show>
       </div>
     </div>
   );

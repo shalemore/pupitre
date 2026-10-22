@@ -195,6 +195,11 @@ export const itIT = {
     focusModeDesc: "Attenua tutto tranne il paragrafo in scrittura (F8)",
     typewriterMode: "Modalità macchina da scrivere",
     typewriterModeDesc: "Mantiene la riga in scrittura al centro della finestra (F9)",
+    windowStyle: "Stile finestra",
+    windowStyleDesc:
+      "Immersivo nasconde la barra del titolo e la struttura mentre scrivi. Si applica alle finestre aperte in seguito.",
+    windowStyleClassic: "Classico",
+    windowStyleImmersive: "Immersivo",
   },
   format: {
     bold: "Grassetto",
@@ -216,5 +221,11 @@ export const itIT = {
     heading4: "Titolo 4",
     heading5: "Titolo 5",
     heading6: "Titolo 6",
+  },
+  window: {
+    minimize: "Riduci a icona",
+    maximize: "Ingrandisci",
+    restore: "Ripristina",
+    close: "Chiudi",
   },
 } satisfies TranslationSchema;

@@ -20,6 +20,7 @@ import {
   applyWindowColors,
   closeWithoutPrompt,
   dispatchToMainWindow,
+  getWindowFrame,
   setDocumentEdited,
   showSettingsWindow,
 } from "./windows";
@@ -91,6 +92,7 @@ export function registerIpcHandlers(): void {
       settings: getSettings(),
       settingsPath: getSettingsPath(),
       recentFiles: getRecentFiles(),
+      frame: getWindowFrame(event.sender),
     };
     event.returnValue = state;
   });
@@ -167,6 +169,16 @@ export function registerIpcHandlers(): void {
     setDocumentEdited(senderWindow(event), state.isDirty);
   });
   handle("window:close-confirmed", (event) => closeWithoutPrompt(senderWindow(event)));
+  handle("window:minimize", (event) => senderWindow(event).minimize());
+  handle("window:toggle-maximize", (event) => {
+    const window = senderWindow(event);
+    if (window.isMaximized()) window.unmaximize();
+    else window.maximize();
+  });
+  handle("window:close", (event) => senderWindow(event).close());
+  handle("window:set-buttons-visible", (event, visible) => {
+    if (process.platform === "darwin") senderWindow(event).setWindowButtonVisibility(visible);
+  });
 
   // When an update fails, autoUpdater emits an error event and the status is updated, so it is not rethrown to the renderer
   handle("updater:get-status", () => getUpdateStatus());

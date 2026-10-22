@@ -195,6 +195,11 @@ export const enUS = {
     focusModeDesc: "Dim everything except the paragraph being written (F8)",
     typewriterMode: "Typewriter Mode",
     typewriterModeDesc: "Keep the line being written in the middle of the window (F9)",
+    windowStyle: "Window Style",
+    windowStyleDesc:
+      "Immersive hides the title bar and outline while you write. Applies to windows opened afterwards.",
+    windowStyleClassic: "Classic",
+    windowStyleImmersive: "Immersive",
   },
   format: {
     bold: "Bold",
@@ -216,5 +221,11 @@ export const enUS = {
     heading4: "Heading 4",
     heading5: "Heading 5",
     heading6: "Heading 6",
+  },
+  window: {
+    minimize: "Minimize",
+    maximize: "Maximize",
+    restore: "Restore",
+    close: "Close",
   },
 } satisfies TranslationSchema;

@@ -22,6 +22,8 @@ export const settingsSchema = z.object({
   /** Font of menus, sidebar and dialogs; empty means the platform's interface font. */
   uiFont: z.string().catch(""),
   animations: z.enum(["system", "on", "off"]).catch("system"),
+  /** Read when a window is created, so a change applies to windows opened afterwards. */
+  windowStyle: z.enum(["classic", "immersive"]).catch("classic"),
   sidebarVisible: z.boolean().catch(true),
   showWordCount: z.boolean().catch(true),
   focusMode: z.boolean().catch(false),

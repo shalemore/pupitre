@@ -194,6 +194,11 @@ export const ruRU = {
     focusModeDesc: "Приглушать всё, кроме текущего абзаца (F8)",
     typewriterMode: "Режим пишущей машинки",
     typewriterModeDesc: "Держать текущую строку в середине окна (F9)",
+    windowStyle: "Стиль окна",
+    windowStyleDesc:
+      "Иммерсивный стиль скрывает заголовок окна и оглавление во время набора. Применяется к окнам, открытым после изменения.",
+    windowStyleClassic: "Классический",
+    windowStyleImmersive: "Иммерсивный",
   },
   format: {
     bold: "Полужирный",
@@ -215,5 +220,11 @@ export const ruRU = {
     heading4: "Заголовок 4",
     heading5: "Заголовок 5",
     heading6: "Заголовок 6",
+  },
+  window: {
+    minimize: "Свернуть",
+    maximize: "Развернуть",
+    restore: "Восстановить",
+    close: "Закрыть",
   },
 } satisfies TranslationSchema;

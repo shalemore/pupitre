@@ -25,6 +25,7 @@ export interface FindBarProps {
   onFindPrevious: () => void;
   onReplaceNext: () => void;
   onReplaceAll: () => void;
+  class?: string;
 }
 
 export const FindBar: Component<FindBarProps> = (props) => {
@@ -83,7 +84,10 @@ export const FindBar: Component<FindBarProps> = (props) => {
   return (
     <div
       data-slot="find-bar"
-      class="absolute top-3 inset-e-5 z-40 flex flex-col gap-2 rounded-xl border border-border/80 bg-surface-2/95 p-2 shadow-float backdrop-blur-md text-xs select-none animate-in fade-in-0 slide-in-from-top-2 duration-(--duration-ui) max-w-sm w-full print:hidden"
+      class={cn(
+        "absolute top-3 inset-e-5 z-40 flex flex-col gap-2 rounded-xl border border-border/80 bg-surface-2/95 p-2 shadow-float backdrop-blur-md text-xs select-none animate-in fade-in-0 slide-in-from-top-2 duration-(--duration-ui) max-w-sm w-full print:hidden",
+        props.class,
+      )}
     >
       <div class="flex items-center gap-1.5">
         <Button

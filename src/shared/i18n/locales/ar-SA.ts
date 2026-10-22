@@ -205,6 +205,11 @@ export const arSA = {
     focusModeDesc: "تعتيم كل شيء باستثناء الفقرة الجاري كتابتها (F8)",
     typewriterMode: "وضع الآلة الكاتبة",
     typewriterModeDesc: "إبقاء السطر الجاري كتابته في منتصف النافذة (F9)",
+    windowStyle: "نمط النافذة",
+    windowStyleDesc:
+      "يُخفي الوضع الغامر شريط العنوان والمخطط أثناء الكتابة. يُطبَّق على النوافذ التي تُفتح لاحقًا.",
+    windowStyleClassic: "كلاسيكي",
+    windowStyleImmersive: "غامر",
   },
   format: {
     bold: "غامق",
@@ -226,5 +231,11 @@ export const arSA = {
     heading4: "عنوان 4",
     heading5: "عنوان 5",
     heading6: "عنوان 6",
+  },
+  window: {
+    minimize: "تصغير",
+    maximize: "تكبير",
+    restore: "استعادة",
+    close: "إغلاق",
   },
 } satisfies TranslationSchema;

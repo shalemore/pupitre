@@ -220,6 +220,10 @@ export interface TranslationSchema {
     readonly focusModeDesc: string;
     readonly typewriterMode: string;
     readonly typewriterModeDesc: string;
+    readonly windowStyle: string;
+    readonly windowStyleDesc: string;
+    readonly windowStyleClassic: string;
+    readonly windowStyleImmersive: string;
   };
   readonly format: {
     readonly bold: string;
@@ -241,5 +245,11 @@ export interface TranslationSchema {
     readonly heading4: string;
     readonly heading5: string;
     readonly heading6: string;
+  };
+  readonly window: {
+    readonly minimize: string;
+    readonly maximize: string;
+    readonly restore: string;
+    readonly close: string;
   };
 }

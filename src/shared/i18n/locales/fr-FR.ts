@@ -196,6 +196,11 @@ export const frFR = {
     focusModeDesc: "Estompe tout sauf le paragraphe en cours d’écriture (F8)",
     typewriterMode: "Mode machine à écrire",
     typewriterModeDesc: "Garde la ligne en cours d’écriture au milieu de la fenêtre (F9)",
+    windowStyle: "Style de fenêtre",
+    windowStyleDesc:
+      "Immersif masque la barre de titre et le plan pendant l’écriture. S’applique aux fenêtres ouvertes ensuite.",
+    windowStyleClassic: "Classique",
+    windowStyleImmersive: "Immersif",
   },
   format: {
     bold: "Gras",
@@ -217,5 +222,11 @@ export const frFR = {
     heading4: "Titre 4",
     heading5: "Titre 5",
     heading6: "Titre 6",
+  },
+  window: {
+    minimize: "Réduire",
+    maximize: "Agrandir",
+    restore: "Restaurer",
+    close: "Fermer",
   },
 } satisfies TranslationSchema;

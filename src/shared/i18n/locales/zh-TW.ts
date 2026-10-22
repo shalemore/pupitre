@@ -193,6 +193,10 @@ export const zhTW = {
     focusModeDesc: "淡化正在編輯的段落以外的內容 (F8)",
     typewriterMode: "打字機模式",
     typewriterModeDesc: "讓正在輸入的行始終保持在視窗中央 (F9)",
+    windowStyle: "視窗樣式",
+    windowStyleDesc: "沉浸式會在輸入時隱藏標題列和大綱。對之後開啟的視窗生效。",
+    windowStyleClassic: "經典",
+    windowStyleImmersive: "沉浸式",
   },
   format: {
     bold: "粗體",
@@ -214,5 +218,11 @@ export const zhTW = {
     heading4: "4 級標題",
     heading5: "5 級標題",
     heading6: "6 級標題",
+  },
+  window: {
+    minimize: "最小化",
+    maximize: "最大化",
+    restore: "還原",
+    close: "關閉",
   },
 } satisfies TranslationSchema;

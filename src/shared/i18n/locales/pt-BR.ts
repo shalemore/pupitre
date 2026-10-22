@@ -194,6 +194,11 @@ export const ptBR = {
     focusModeDesc: "Esmaece tudo exceto o parágrafo sendo escrito (F8)",
     typewriterMode: "Modo máquina de escrever",
     typewriterModeDesc: "Mantém a linha sendo escrita no meio da janela (F9)",
+    windowStyle: "Estilo da janela",
+    windowStyleDesc:
+      "Imersivo oculta a barra de título e o sumário enquanto você escreve. Aplica-se às janelas abertas depois.",
+    windowStyleClassic: "Clássico",
+    windowStyleImmersive: "Imersivo",
   },
   format: {
     bold: "Negrito",
@@ -215,5 +220,11 @@ export const ptBR = {
     heading4: "Título 4",
     heading5: "Título 5",
     heading6: "Título 6",
+  },
+  window: {
+    minimize: "Minimizar",
+    maximize: "Maximizar",
+    restore: "Restaurar",
+    close: "Fechar",
   },
 } satisfies TranslationSchema;
