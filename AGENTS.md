@@ -108,3 +108,16 @@ only make code generation easier.
   `crepe` (library defaults) < `document-theme` (the active theme) < `preferences` (user font,
   size, line height and width). Never fight specificity with `!important`; put the rule in the
   right layer instead.
+
+## Themes
+
+- A theme is a folder `src/renderer/themes/<name>/` with an `index.css`; the folder name is the
+  name shown in settings. Fonts or images used by a theme live in the same folder and are
+  referenced with relative `url()`s. `themes/pupitre` is the default and documents the contract.
+- `lib/theme.ts` discovers themes with `import.meta.glob` and injects the active one into the
+  `document-theme` layer at runtime. Every window (main and settings) loads the same theme.
+- Themes style the whole app through the `--ui-*` design tokens (surfaces, text, accent) and the
+  document through `.milkdown .ProseMirror` selectors and `--syntax-*` colors. Always provide
+  both light values and `@media (prefers-color-scheme: dark)` overrides.
+- Font family, body font size, line height and content width belong to the user. Themes may set
+  defaults, but sizes inside the document should use `em` so they scale with the user setting.

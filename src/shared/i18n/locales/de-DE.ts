@@ -130,6 +130,9 @@ export const deDE = {
     restartToApply: "Neu starten zum Anwenden",
     updateErrorGeneric: "Suche nach Updates fehlgeschlagen. Bitte später erneut versuchen.",
     updateReady: "Das Update wurde heruntergeladen.",
+    colorScheme: "Farbschema",
+    colorSchemeDesc: "Hell, dunkel oder wie das System",
+    themeDesc: "Gestaltet Dokument, Seitenleiste und Titelleiste",
   },
   about: {
     windowTitle: "Über Pupitre",

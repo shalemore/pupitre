@@ -33,7 +33,7 @@ export function updateSettings(patch: Partial<Settings>): void {
   writeFileSync(`${path}.tmp`, JSON.stringify(current, null, 2));
   renameSync(`${path}.tmp`, path);
 
-  nativeTheme.themeSource = current.theme;
+  nativeTheme.themeSource = current.colorScheme;
   for (const window of BrowserWindow.getAllWindows()) {
     window.webContents.send("settings:changed", current);
   }

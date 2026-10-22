@@ -131,6 +131,9 @@ export const enUS = {
     restartToApply: "Restart to Apply",
     updateErrorGeneric: "Failed to check for updates. Please try again later.",
     updateReady: "The update has been downloaded.",
+    colorScheme: "Color Scheme",
+    colorSchemeDesc: "Light, dark, or follow the system",
+    themeDesc: "Styles the document, sidebar and title bar",
   },
   about: {
     windowTitle: "About Pupitre",

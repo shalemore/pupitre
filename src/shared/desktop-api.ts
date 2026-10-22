@@ -39,6 +39,13 @@ export type AppCommand =
 export const TOP_MENUS = ["file", "edit", "view", "help"] as const;
 export type TopMenu = (typeof TOP_MENUS)[number];
 
+/** Window background and secondary text color under the current theme, used to avoid a flash before the window shows and to color the Windows title bar buttons. */
+export interface WindowColors {
+  background: string;
+  symbol: string;
+  dark: boolean;
+}
+
 /** Document state the renderer reports to the main process, used to enable or disable menu items. */
 export interface DocumentState {
   hasDocument: boolean;
@@ -58,6 +65,7 @@ export interface InvokeChannels {
   "dialog:confirm-unsaved": (fileName: string) => UnsavedChoice;
   "dialog:show-error": (message: string, detail: string) => void;
   "window:open-settings": () => void;
+  "window:set-colors": (colors: WindowColors) => void;
   "app:show-about": () => void;
   "app:dispatch": (command: AppCommand) => void;
   "menu:popup": (menu: TopMenu, x: number, y: number) => void;

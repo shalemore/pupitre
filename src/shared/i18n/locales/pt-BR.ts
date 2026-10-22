@@ -130,6 +130,9 @@ export const ptBR = {
     restartToApply: "Reiniciar para aplicar",
     updateErrorGeneric: "Falha ao verificar atualizações. Tente novamente mais tarde.",
     updateReady: "A atualização foi baixada.",
+    colorScheme: "Esquema de cores",
+    colorSchemeDesc: "Claro, escuro ou conforme o sistema",
+    themeDesc: "Estilo do documento, da barra lateral e da barra de título",
   },
   about: {
     windowTitle: "Sobre o Pupitre",

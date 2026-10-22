@@ -14,7 +14,7 @@ import { t } from "./i18n";
 import { popupTopMenu, setDocumentState } from "./menu";
 import { addRecentFile, getSettings, getSettingsPath, updateSettings } from "./settings-store";
 import { checkForUpdates, downloadUpdate, getUpdateStatus, installUpdate } from "./updater";
-import { dispatchToMainWindow, showSettingsWindow } from "./windows";
+import { applyWindowColors, dispatchToMainWindow, showSettingsWindow } from "./windows";
 
 function handle<K extends keyof InvokeChannels>(
   channel: K,
@@ -132,6 +132,7 @@ export function registerIpcHandlers(): void {
   });
 
   handle("window:open-settings", () => showSettingsWindow());
+  handle("window:set-colors", (event, colors) => applyWindowColors(senderWindow(event), colors));
   handle("app:show-about", (event) => showAboutDialog(senderWindow(event)));
   handle("app:dispatch", (_event, command) => dispatchToMainWindow(command));
   handle("menu:popup", (event, menu, x, y) => popupTopMenu(senderWindow(event), menu, x, y));

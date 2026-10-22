@@ -130,6 +130,9 @@ export const jaJP = {
     restartToApply: "再起動して適用",
     updateErrorGeneric: "更新の確認に失敗しました。後でもう一度お試しください。",
     updateReady: "アップデートのダウンロードが完了しました。",
+    colorScheme: "配色",
+    colorSchemeDesc: "ライト、ダーク、またはシステムに合わせる",
+    themeDesc: "ドキュメント、サイドバー、タイトルバーの外観",
   },
   about: {
     windowTitle: "Pupitre について",

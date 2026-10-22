@@ -1,4 +1,4 @@
-import { createEffect, createRoot } from "solid-js";
+import { createEffect, createRoot, on } from "solid-js";
 import { render } from "solid-js/web";
 import { App } from "@/App";
 import "@/app.css";
@@ -7,6 +7,7 @@ import { currentDirection, currentLocale } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { editorFontFamily } from "@/lib/fonts";
 import { settings } from "@/lib/settings";
+import { applyTheme, readWindowColors } from "@/lib/theme";
 import type { EditorWidth } from "@shared/settings";
 
 const CONTENT_WIDTHS: Record<EditorWidth, string> = {
@@ -19,7 +20,26 @@ const CONTENT_WIDTHS: Record<EditorWidth, string> = {
 const root = document.documentElement;
 root.dataset["platform"] = desktop.platform;
 
+const darkScheme = matchMedia("(prefers-color-scheme: dark)");
+const syncWindowColors = () =>
+  void desktop.invoke("window:set-colors", { ...readWindowColors(), dark: darkScheme.matches });
+darkScheme.addEventListener("change", syncWindowColors);
+
+// Load the theme before rendering, so the first frame does not flash with the default styles
+await applyTheme(settings().theme);
+syncWindowColors();
+
 createRoot(() => {
+  createEffect(
+    on(
+      () => settings().theme,
+      async (name) => {
+        await applyTheme(name);
+        syncWindowColors();
+      },
+      { defer: true },
+    ),
+  );
   createEffect(() => {
     root.lang = currentLocale();
     root.dir = currentDirection();

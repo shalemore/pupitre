@@ -1,0 +1,183 @@
+/*
+ * GitHub theme: close to how GitHub renders a README, with blue links and code blocks and tables in gray borders.
+ * The conventions for tokens and selectors are described at the top of themes/pupitre/index.css.
+ */
+
+:root {
+  --ui-surface-0: #f6f8fa;
+  --ui-surface-1: #ffffff;
+  --ui-surface-2: #ffffff;
+  --ui-surface-3: #ffffff;
+  --ui-text-primary: #1f2328;
+  --ui-text-secondary: #59636e;
+  --ui-text-muted: #818b98;
+  --ui-brand: #0969da;
+  --ui-brand-hover: #0550ae;
+  --ui-danger: #d1242f;
+
+  --syntax-keyword: #cf222e;
+  --syntax-string: #0a3069;
+  --syntax-special-string: #0550ae;
+  --syntax-number: #0550ae;
+  --syntax-variable: #1f2328;
+  --syntax-definition: #953800;
+  --syntax-function: #8250df;
+  --syntax-type: #953800;
+  --syntax-property: #0550ae;
+  --syntax-comment: #59636e;
+  --syntax-operator: #cf222e;
+  --syntax-punctuation: #1f2328;
+  --syntax-invalid: #82071e;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ui-surface-0: #151b23;
+    --ui-surface-1: #0d1117;
+    --ui-surface-2: #151b23;
+    --ui-surface-3: #212830;
+    --ui-text-primary: #f0f6fc;
+    --ui-text-secondary: #9198a1;
+    --ui-text-muted: #656c76;
+    --ui-brand: #4493f8;
+    --ui-brand-hover: #79b8ff;
+    --ui-danger: #f85149;
+
+    --syntax-keyword: #ff7b72;
+    --syntax-string: #a5d6ff;
+    --syntax-special-string: #79c0ff;
+    --syntax-number: #79c0ff;
+    --syntax-variable: #f0f6fc;
+    --syntax-definition: #ffa657;
+    --syntax-function: #d2a8ff;
+    --syntax-type: #ffa657;
+    --syntax-property: #79c0ff;
+    --syntax-comment: #9198a1;
+    --syntax-operator: #ff7b72;
+    --syntax-punctuation: #f0f6fc;
+    --syntax-invalid: #ffa198;
+  }
+}
+
+.milkdown .ProseMirror {
+  padding-block: 2.5em 40vh;
+  color: var(--ui-text-primary);
+  caret-color: var(--ui-text-primary);
+}
+
+.milkdown .ProseMirror p {
+  padding: 0;
+  margin: 0 0 1em;
+}
+
+.milkdown .ProseMirror :is(h1, h2, h3, h4, h5, h6) {
+  margin: 1.5em 0 1em;
+  padding: 0;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+/* GitHub underlines level 1 and 2 headings */
+.milkdown .ProseMirror :is(h1, h2) {
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--ui-alpha-2);
+}
+
+.milkdown .ProseMirror h1 {
+  font-size: 2em;
+  margin-top: 0.5em;
+}
+
+.milkdown .ProseMirror h2 {
+  font-size: 1.5em;
+}
+
+.milkdown .ProseMirror h3 {
+  font-size: 1.25em;
+}
+
+.milkdown .ProseMirror h4 {
+  font-size: 1em;
+}
+
+.milkdown .ProseMirror h5 {
+  font-size: 0.875em;
+}
+
+.milkdown .ProseMirror h6 {
+  font-size: 0.85em;
+  color: var(--ui-text-secondary);
+}
+
+.milkdown .ProseMirror a {
+  color: var(--ui-brand);
+  text-decoration: none;
+}
+
+.milkdown .ProseMirror a:hover {
+  text-decoration: underline;
+}
+
+.milkdown .ProseMirror :not(pre) > code {
+  display: inline;
+  color: inherit;
+  background: var(--ui-alpha-2);
+  border-radius: 6px;
+  padding: 0.2em 0.4em;
+  font-size: 85%;
+}
+
+.milkdown .milkdown-code-block {
+  margin: 0 0 1em;
+  padding: 0.5em 1em 1em;
+  border-radius: 6px;
+  background: var(--ui-surface-0);
+}
+
+.milkdown .milkdown-code-block .cm-content {
+  font-family: var(--font-mono);
+  font-size: 85%;
+  line-height: 1.45;
+}
+
+.milkdown .ProseMirror blockquote {
+  margin: 0 0 1em;
+  padding: 0 0 0 1em;
+  color: var(--ui-text-secondary);
+}
+
+.milkdown .ProseMirror blockquote::before {
+  width: 0.25em;
+  top: 0;
+  bottom: 0;
+  border-radius: 0;
+  background: var(--ui-alpha-3);
+}
+
+.milkdown .ProseMirror hr {
+  height: 0.25em;
+  margin: 1.5em 0;
+  padding: 0;
+  background-color: var(--ui-alpha-2);
+}
+
+.milkdown .milkdown-table-block :is(th, td) {
+  border: 1px solid var(--ui-alpha-3);
+  padding: 6px 13px;
+}
+
+.milkdown .milkdown-table-block :is(th, td) p {
+  margin: 0;
+}
+
+.milkdown .milkdown-table-block th {
+  font-weight: 600;
+}
+
+.milkdown .milkdown-table-block tr:nth-child(2n) td {
+  background: var(--ui-surface-0);
+}
+
+.milkdown .milkdown-list-item-block p {
+  margin: 0.25em 0;
+}

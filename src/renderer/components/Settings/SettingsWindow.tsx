@@ -28,6 +28,7 @@ import { type LanguageSetting, SUPPORTED_LOCALES, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { getSystemFontFamilies } from "@/lib/fonts";
 import { settings, updateSettings } from "@/lib/settings";
+import { THEME_NAMES } from "@/lib/theme";
 import type { AnimationSetting, EditorWidth, Settings } from "@shared/settings";
 import { cn } from "cn";
 import pkg from "../../../../package.json";
@@ -65,7 +66,7 @@ export const SettingsWindow: Component = () => {
 
   const handleUpdate = (patch: Partial<Settings>) => void updateSettings(patch);
 
-  const themeOptions = (): SelectOption<Settings["theme"]>[] => [
+  const colorSchemeOptions = (): SelectOption<Settings["colorScheme"]>[] => [
     {
       value: "system",
       label: t().settings.themeSystem,
@@ -163,11 +164,22 @@ export const SettingsWindow: Component = () => {
                 </h3>
 
                 <div class="divide-y divide-border/40">
-                  <SettingRow title={t().settings.theme} description={t().settings.themeDark}>
+                  <SettingRow
+                    title={t().settings.colorScheme}
+                    description={t().settings.colorSchemeDesc}
+                  >
+                    <Select
+                      value={settings().colorScheme}
+                      onChange={(colorScheme) => handleUpdate({ colorScheme })}
+                      options={colorSchemeOptions()}
+                    />
+                  </SettingRow>
+
+                  <SettingRow title={t().settings.theme} description={t().settings.themeDesc}>
                     <Select
                       value={settings().theme}
                       onChange={(theme) => handleUpdate({ theme })}
-                      options={themeOptions()}
+                      options={THEME_NAMES.map((name) => ({ value: name, label: name }))}
                     />
                   </SettingRow>
 

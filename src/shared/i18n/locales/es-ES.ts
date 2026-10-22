@@ -131,6 +131,9 @@ export const esES = {
     restartToApply: "Reiniciar para aplicar",
     updateErrorGeneric: "No se pudo comprobar la actualización. Inténtalo más tarde.",
     updateReady: "La actualización se ha descargado.",
+    colorScheme: "Esquema de color",
+    colorSchemeDesc: "Claro, oscuro o según el sistema",
+    themeDesc: "Define el estilo del documento, la barra lateral y la barra de título",
   },
   about: {
     windowTitle: "Acerca de Pupitre",

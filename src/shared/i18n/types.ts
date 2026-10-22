@@ -157,6 +157,9 @@ export interface TranslationSchema {
     readonly restartToApply: string;
     readonly updateErrorGeneric: string;
     readonly updateReady: string;
+    readonly colorScheme: string;
+    readonly colorSchemeDesc: string;
+    readonly themeDesc: string;
   };
   readonly about: {
     readonly windowTitle: string;

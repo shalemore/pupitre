@@ -130,6 +130,9 @@ export const itIT = {
     restartToApply: "Riavvia per applicare",
     updateErrorGeneric: "Impossibile verificare gli aggiornamenti. Riprova più tardi.",
     updateReady: "L'aggiornamento è stato scaricato.",
+    colorScheme: "Schema colori",
+    colorSchemeDesc: "Chiaro, scuro o come il sistema",
+    themeDesc: "Stile del documento, della barra laterale e della barra del titolo",
   },
   about: {
     windowTitle: "Informazioni su Pupitre",

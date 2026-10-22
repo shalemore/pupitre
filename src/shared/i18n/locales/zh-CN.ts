@@ -130,6 +130,9 @@ export const zhCN = {
     restartToApply: "重启以应用更新",
     updateErrorGeneric: "检查更新失败，请稍后重试",
     updateReady: "更新已下载完成。",
+    colorScheme: "配色",
+    colorSchemeDesc: "浅色、深色或跟随系统",
+    themeDesc: "决定文档、侧边栏和标题栏的样式",
   },
   about: {
     windowTitle: "关于 Pupitre",

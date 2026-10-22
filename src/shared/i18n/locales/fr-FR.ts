@@ -131,6 +131,9 @@ export const frFR = {
     restartToApply: "Redémarrer pour appliquer",
     updateErrorGeneric: "Impossible de vérifier les mises à jour. Réessayez plus tard.",
     updateReady: "La mise à jour a été téléchargée.",
+    colorScheme: "Jeu de couleurs",
+    colorSchemeDesc: "Clair, sombre ou selon le système",
+    themeDesc: "Style du document, de la barre latérale et de la barre de titre",
   },
   about: {
     windowTitle: "À propos de Pupitre",

@@ -6,7 +6,7 @@ import {
   nativeTheme,
   shell,
 } from "electron";
-import type { AppCommand } from "@shared/desktop-api";
+import type { AppCommand, WindowColors } from "@shared/desktop-api";
 import { setupContextMenu } from "./context-menu";
 
 /** The renderer picks the view to show from location.hash. */
@@ -17,11 +17,14 @@ const TITLE_BAR_HEIGHT = 40;
 let mainWindow: BrowserWindow | undefined;
 let settingsWindow: BrowserWindow | undefined;
 
-// Matches the light and dark values of --ui-surface-1 / --ui-text-secondary in app.css, avoiding a background flash before the window shows
+// Before a window shows there is no page yet, so it uses the colors a theme reported earlier; the first launch uses the default theme's values
+const knownColors = {
+  light: { background: "#fcfcfc", symbol: "#525252" },
+  dark: { background: "#131313", symbol: "#a4a4a4" },
+};
+
 function windowColors() {
-  return nativeTheme.shouldUseDarkColors
-    ? { background: "#131313", symbol: "#a4a4a4" }
-    : { background: "#fcfcfc", symbol: "#525252" };
+  return nativeTheme.shouldUseDarkColors ? knownColors.dark : knownColors.light;
 }
 
 function titleBarOptions(): BrowserWindowConstructorOptions {
@@ -123,17 +126,16 @@ export function dispatchToMainWindow(command: AppCommand): void {
   mainWindow.webContents.send("app:command", command);
 }
 
-/** Keeps the window background and the Windows title bar button colors in sync when the system or the user switches between light and dark. */
-export function syncWindowColors(): void {
-  const colors = windowColors();
-  for (const window of BrowserWindow.getAllWindows()) {
-    window.setBackgroundColor(colors.background);
-    if (process.platform !== "darwin") {
-      window.setTitleBarOverlay({
-        color: "#00000000",
-        symbolColor: colors.symbol,
-        height: TITLE_BAR_HEIGHT,
-      });
-    }
+/** Colors the renderer reports after loading a theme or switching between light and dark: applied to that window and remembered for windows created later. */
+export function applyWindowColors(window: BrowserWindow, colors: WindowColors): void {
+  const { background, symbol } = colors;
+  knownColors[colors.dark ? "dark" : "light"] = { background, symbol };
+  window.setBackgroundColor(background);
+  if (process.platform !== "darwin") {
+    window.setTitleBarOverlay({
+      color: "#00000000",
+      symbolColor: symbol,
+      height: TITLE_BAR_HEIGHT,
+    });
   }
 }

@@ -3,7 +3,7 @@ import { registerIpcHandlers } from "./ipc";
 import { rebuildApplicationMenu } from "./menu";
 import { getSettings, onSettingsChange } from "./settings-store";
 import { setupUpdater } from "./updater";
-import { createMainWindow, getMainWindow, syncWindowColors } from "./windows";
+import { createMainWindow, getMainWindow } from "./windows";
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
@@ -16,8 +16,7 @@ if (!app.requestSingleInstanceLock()) {
   });
 
   void app.whenReady().then(() => {
-    nativeTheme.themeSource = getSettings().theme;
-    nativeTheme.on("updated", syncWindowColors);
+    nativeTheme.themeSource = getSettings().colorScheme;
 
     // The font picker reads system fonts through queryLocalFonts, which needs the local-fonts permission
     session.defaultSession.setPermissionCheckHandler(

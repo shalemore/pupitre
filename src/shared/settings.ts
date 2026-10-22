@@ -6,7 +6,9 @@ import { LOCALE_CODES } from "./i18n/types";
  * One invalid field does not invalidate the whole file.
  */
 export const settingsSchema = z.object({
-  theme: z.enum(["system", "light", "dark"]).catch("system"),
+  colorScheme: z.enum(["system", "light", "dark"]).catch("system"),
+  /** Theme folder name, see src/renderer/themes. */
+  theme: z.string().catch("pupitre"),
   locale: z.enum(["auto", ...LOCALE_CODES]).catch("auto"),
   fontSize: z.number().min(10).max(32).catch(15),
   lineHeight: z.number().min(1).max(3).catch(1.75),

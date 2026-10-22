@@ -148,6 +148,9 @@ export const arSA = {
     restartToApply: "إعادة التشغيل للتطبيق",
     updateErrorGeneric: "فشل البحث عن تحديثات، يرجى المحاولة مرة أخرى لاحقاً.",
     updateReady: "تم تنزيل التحديث.",
+    colorScheme: "نظام الألوان",
+    colorSchemeDesc: "فاتح أو داكن أو حسب النظام",
+    themeDesc: "يحدد مظهر المستند والشريط الجانبي وشريط العنوان",
   },
   about: {
     windowTitle: "حول Pupitre",

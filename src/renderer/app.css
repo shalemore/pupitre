@@ -8,7 +8,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "./features/editor/editor.css";
-@import "./themes/pupitre/index.css" layer(document-theme);
 
 @custom-variant dark (@media (prefers-color-scheme: dark));
 
@@ -18,6 +17,7 @@
  * - A single accent color, terracotta;
  * - Alpha steps, borders and shadows are derived from the primary text color, so light and dark pair up automatically.
  * Raw values are defaults for themes to override and live in the base layer; derived tokens are evaluated at use and follow the theme.
+ * Themes are loaded at runtime, see lib/theme.ts.
  */
 @layer base {
   :root {

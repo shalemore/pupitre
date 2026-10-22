@@ -151,7 +151,7 @@ function buildTemplate(): MenuItemConstructorOptions[] {
         {
           label: labels.toggleTheme,
           click: () =>
-            updateSettings({ theme: nativeTheme.shouldUseDarkColors ? "light" : "dark" }),
+            updateSettings({ colorScheme: nativeTheme.shouldUseDarkColors ? "light" : "dark" }),
         },
         separator,
         { label: labels.zoomIn, role: "zoomIn" },

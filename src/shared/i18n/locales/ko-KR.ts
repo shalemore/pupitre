@@ -131,6 +131,9 @@ export const koKR = {
     restartToApply: "재시작하여 적용",
     updateErrorGeneric: "업데이트 확인에 실패했습니다. 나중에 다시 시도해 주세요.",
     updateReady: "업데이트를 다운로드했습니다.",
+    colorScheme: "색 구성",
+    colorSchemeDesc: "밝게, 어둡게 또는 시스템 설정 따르기",
+    themeDesc: "문서, 사이드바, 제목 표시줄의 스타일",
   },
   about: {
     windowTitle: "Pupitre 정보",

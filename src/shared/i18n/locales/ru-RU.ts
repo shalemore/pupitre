@@ -130,6 +130,9 @@ export const ruRU = {
     restartToApply: "Перезапустить для обновления",
     updateErrorGeneric: "Не удалось проверить наличие обновлений. Попробуйте позже.",
     updateReady: "Обновление загружено.",
+    colorScheme: "Цветовая схема",
+    colorSchemeDesc: "Светлая, тёмная или как в системе",
+    themeDesc: "Оформление документа, боковой панели и заголовка",
   },
   about: {
     windowTitle: "О программе Pupitre",
