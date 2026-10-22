@@ -14,14 +14,6 @@ export const itIT = {
     openDoc: "Apri",
     saveDoc: "Salva",
   },
-  shortcuts: {
-    newDocTip: "Nuovo documento (Ctrl+N)",
-    openDocTip: "Apri documento (Ctrl+O)",
-    saveDocTip: "Salva documento (Ctrl+S)",
-    toggleThemeLight: "Passa alla modalità chiara",
-    toggleThemeDark: "Passa alla modalità scura",
-    switchLangTip: "Cambia lingua",
-  },
   sidebar: {
     outline: "Struttura",
     sectionsCount: (count: number) => (count === 1 ? "1 sezione" : `${count} sezioni`),
@@ -43,6 +35,7 @@ export const itIT = {
     dblClickToEdit: "Fai doppio clic per accedere alla modalità di modifica",
     livePreview: "Anteprima dal vivo",
     waitingDiagramSyntax: "(In attesa della sintassi completa del diagramma...)",
+    toggleReplace: "Mostra/nascondi sostituzione",
   },
   dialogs: {
     copyButton: "Copia",
@@ -149,6 +142,10 @@ export const itIT = {
     sampleDocument: "Documento Markdown di esempio",
     about: "Informazioni su Pupitre",
     documentation: "Documentazione",
-    shortcuts: "Scorciatoie da tastiera",
+    clearRecent: "Cancella file recenti",
+    quit: "Esci",
+    pastePlain: "Incolla come testo normale",
+    fullScreen: "Attiva/disattiva schermo intero",
+    reportIssue: "Segnala un problema",
   },
 } satisfies TranslationSchema;

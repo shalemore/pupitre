@@ -69,7 +69,6 @@ export interface EditorHandle {
 
 export interface EditorProps {
   content: string;
-  isDark?: boolean;
   fontSize?: number;
   lineHeight?: number;
   fontFamily?: string;
@@ -77,7 +76,6 @@ export interface EditorProps {
   tabSize?: number;
   wordWrap?: boolean;
   editorWidth?: string;
-  zoom?: number;
   blockSpacing?: boolean;
   onChange: (newContent: string) => void;
   onCursorChange?: (pos: number, lineNumber: number) => void;
@@ -410,7 +408,6 @@ export const Editor: Component<EditorProps> = (props) => {
     if (!containerRef) return;
     const fs = props.fontSize ?? 15;
     const lh = props.lineHeight ?? 1.75;
-    const zoom = props.zoom ?? 1.0;
     const ff = resolveEditorFontFamily(props.fontFamily ?? "sans", props.fallbackFont);
     const mw =
       props.editorWidth === "compact"
@@ -421,12 +418,10 @@ export const Editor: Component<EditorProps> = (props) => {
             ? "100%"
             : "880px";
 
-    // Crisp native font sizing scaled with zoom (avoiding blurry CSS transforms)
-    containerRef.style.setProperty("--editor-font-size", `${fs * zoom}px`);
+    containerRef.style.setProperty("--editor-font-size", `${fs}px`);
     containerRef.style.setProperty("--editor-line-height", `${lh}`);
     containerRef.style.setProperty("--editor-font-family", ff);
     containerRef.style.setProperty("--editor-max-width", mw);
-    containerRef.style.setProperty("--editor-zoom", `${zoom}`);
   });
 
   onCleanup(() => {

@@ -14,14 +14,6 @@ export const deDE = {
     openDoc: "Öffnen",
     saveDoc: "Speichern",
   },
-  shortcuts: {
-    newDocTip: "Neues Dokument (Ctrl+N)",
-    openDocTip: "Dokument öffnen (Ctrl+O)",
-    saveDocTip: "Dokument speichern (Ctrl+S)",
-    toggleThemeLight: "Zu hellem Modus wechseln",
-    toggleThemeDark: "Zu dunklem Modus wechseln",
-    switchLangTip: "Sprache ändern",
-  },
   sidebar: {
     outline: "Gliederung",
     sectionsCount: (count: number) => (count === 1 ? "1 Abschnitt" : `${count} Abschnitte`),
@@ -43,6 +35,7 @@ export const deDE = {
     dblClickToEdit: "Doppelklicken, um in den Bearbeitungsmodus zu wechseln",
     livePreview: "Live-Vorschau",
     waitingDiagramSyntax: "(Warten auf vollständige Diagrammsyntax...)",
+    toggleReplace: "Ersetzen ein-/ausblenden",
   },
   dialogs: {
     copyButton: "Kopieren",
@@ -149,6 +142,10 @@ export const deDE = {
     sampleDocument: "Markdown-Beispieldokument",
     about: "Über Pupitre",
     documentation: "Dokumentation",
-    shortcuts: "Tastaturkürzel",
+    clearRecent: "Zuletzt geöffnete löschen",
+    quit: "Beenden",
+    pastePlain: "Als reinen Text einfügen",
+    fullScreen: "Vollbild umschalten",
+    reportIssue: "Problem melden",
   },
 } satisfies TranslationSchema;

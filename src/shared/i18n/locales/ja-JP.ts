@@ -14,14 +14,6 @@ export const jaJP = {
     openDoc: "開く",
     saveDoc: "保存",
   },
-  shortcuts: {
-    newDocTip: "新規ドキュメント (Ctrl+N)",
-    openDocTip: "ドキュメントを開く (Ctrl+O)",
-    saveDocTip: "ドキュメントを保存 (Ctrl+S)",
-    toggleThemeLight: "ライトモードに切り替え",
-    toggleThemeDark: "ダークモードに切り替え",
-    switchLangTip: "言語を切り替え",
-  },
   sidebar: {
     outline: "目次",
     sectionsCount: (count: number) => `${count} セクション`,
@@ -43,6 +35,7 @@ export const jaJP = {
     dblClickToEdit: "ダブルクリックして編集モードに入る",
     livePreview: "ライブプレビュー",
     waitingDiagramSyntax: "(ダイアグラム構文の入力を待機中...)",
+    toggleReplace: "置換の表示切り替え",
   },
   dialogs: {
     copyButton: "コピー(C)",
@@ -148,6 +141,10 @@ export const jaJP = {
     sampleDocument: "サンプル Markdown",
     about: "Pupitre について",
     documentation: "ドキュメント",
-    shortcuts: "ショートカット一覧",
+    clearRecent: "最近使ったファイルをクリア",
+    quit: "終了",
+    pastePlain: "プレーンテキストとして貼り付け",
+    fullScreen: "全画面表示の切り替え",
+    reportIssue: "問題を報告",
   },
 } satisfies TranslationSchema;

@@ -19,12 +19,25 @@ export type UpdateStatus =
 
 /** Commands the main process sends to the main window, triggered by the menu or other windows. */
 export type AppCommand =
-  | "file.new"
-  | "file.open"
-  | "file.save"
-  | "file.save-as"
-  | "file.export-pdf"
-  | "help.sample-document";
+  | { id: "file.new" }
+  | { id: "file.open" }
+  | { id: "file.open-path"; path: string }
+  | { id: "file.save" }
+  | { id: "file.save-as" }
+  | { id: "file.export-pdf" }
+  | { id: "edit.find" }
+  | { id: "edit.replace" }
+  | { id: "view.toggle-sidebar" }
+  | { id: "help.sample-document" };
+
+/** Top-level menus of the application menu; Windows and Linux render them in the title bar and pop up the matching native submenu on click. */
+export const TOP_MENUS = ["file", "edit", "view", "help"] as const;
+export type TopMenu = (typeof TOP_MENUS)[number];
+
+/** Document state the renderer reports to the main process, used to enable or disable menu items. */
+export interface DocumentState {
+  hasDocument: boolean;
+}
 
 /** Channels the renderer calls through `ipcRenderer.invoke` and the main process implements with `ipcMain.handle`. */
 export interface InvokeChannels {
@@ -40,6 +53,8 @@ export interface InvokeChannels {
   "window:open-settings": () => void;
   "app:show-about": () => void;
   "app:dispatch": (command: AppCommand) => void;
+  "menu:popup": (menu: TopMenu, x: number, y: number) => void;
+  "menu:set-document-state": (state: DocumentState) => void;
   "updater:get-status": () => UpdateStatus;
   "updater:check": () => void;
   "updater:download": () => void;

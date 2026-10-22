@@ -26,14 +26,6 @@ export const arSA = {
     openDoc: "فتح",
     saveDoc: "حفظ",
   },
-  shortcuts: {
-    newDocTip: "مستند جديد (Ctrl+N)",
-    openDocTip: "فتح مستند (Ctrl+O)",
-    saveDocTip: "حفظ المستند (Ctrl+S)",
-    toggleThemeLight: "التبديل إلى الوضع الفاتح",
-    toggleThemeDark: "التبديل إلى الوضع الداكن",
-    switchLangTip: "تغيير اللغة",
-  },
   sidebar: {
     outline: "المخطط",
     sectionsCount: (count: number) => {
@@ -61,6 +53,7 @@ export const arSA = {
     dblClickToEdit: "انقر نقرًا مزدوجًا للدخول إلى وضع التحرير",
     livePreview: "معاينة حية",
     waitingDiagramSyntax: "(في انتظار اكتمال بناء جملة المخطط...)",
+    toggleReplace: "إظهار/إخفاء الاستبدال",
   },
   dialogs: {
     copyButton: "نسخ",
@@ -166,6 +159,10 @@ export const arSA = {
     sampleDocument: "مستند Markdown نموذجي",
     about: "حول Pupitre",
     documentation: "التوثيق",
-    shortcuts: "اختصارات لوحة المفاتيح",
+    clearRecent: "مسح الملفات المفتوحة مؤخرًا",
+    quit: "خروج",
+    pastePlain: "لصق كنص عادي",
+    fullScreen: "تبديل ملء الشاشة",
+    reportIssue: "الإبلاغ عن مشكلة",
   },
 } satisfies TranslationSchema;

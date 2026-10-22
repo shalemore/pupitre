@@ -1,10 +1,9 @@
 import { Show, type Component } from "solid-js";
 import { t } from "@/i18n";
 import { isMacOS } from "@/lib/desktop";
-import type { AppActionHandlers } from "@/types";
 import { MenuBar } from "./MenuBar";
 
-export interface TitleBarProps extends AppActionHandlers {
+export interface TitleBarProps {
   fileName: string;
   isDirty: boolean;
   wordsCount: number;
@@ -22,33 +21,12 @@ export const TitleBar: Component<TitleBarProps> = (props) => {
             {t().common.appName}
           </span>
         </div>
-
         <Show when={!isMacOS}>
-          <MenuBar
-            class="app-no-drag"
-            hasDocument={props.hasDocument}
-            onNew={props.onNew}
-            onOpen={props.onOpen}
-            onOpenRecent={props.onOpenRecent}
-            onSave={props.onSave}
-            onSaveAs={props.onSaveAs}
-            onExportPdf={props.onExportPdf}
-            onToggleSidebar={props.onToggleSidebar}
-            onToggleTheme={props.onToggleTheme}
-            onOpenSettings={props.onOpenSettings}
-            onOpenAbout={props.onOpenAbout}
-            onOpenSample={props.onOpenSample}
-            onFind={props.onFind}
-            onReplace={props.onReplace}
-            onZoomIn={props.onZoomIn}
-            onZoomOut={props.onZoomOut}
-            onZoomReset={props.onZoomReset}
-            recentFiles={props.recentFiles}
-          />
+          <MenuBar />
         </Show>
       </div>
 
-      <div class="flex-1 flex items-center justify-center text-center font-medium text-foreground pointer-events-auto cursor-default truncate max-w-md px-4">
+      <div class="flex-1 flex items-center justify-center text-center font-medium text-foreground cursor-default truncate max-w-md px-4">
         <Show when={props.hasDocument && props.fileName}>
           <span class="truncate pointer-events-none">
             {props.isDirty ? "● " : ""}

@@ -14,14 +14,6 @@ export const koKR = {
     openDoc: "열기",
     saveDoc: "저장",
   },
-  shortcuts: {
-    newDocTip: "새 문서 (Ctrl+N)",
-    openDocTip: "문서 열기 (Ctrl+O)",
-    saveDocTip: "문서 저장 (Ctrl+S)",
-    toggleThemeLight: "라이트 모드로 전환",
-    toggleThemeDark: "다크 모드로 전환",
-    switchLangTip: "언어 변경",
-  },
   sidebar: {
     outline: "개요",
     sectionsCount: (count: number) => `${count}개 섹션`,
@@ -44,6 +36,7 @@ export const koKR = {
     dblClickToEdit: "편집 모드로 전환하려면 더블 클릭",
     livePreview: "실시간 미리보기",
     waitingDiagramSyntax: "(다이어그램 구문 완성을 기다리는 중...)",
+    toggleReplace: "바꾸기 표시 전환",
   },
   dialogs: {
     copyButton: "복사(C)",
@@ -149,6 +142,10 @@ export const koKR = {
     sampleDocument: "예제 Markdown 문서",
     about: "Pupitre 정보",
     documentation: "온라인 설명서",
-    shortcuts: "단축키 안내",
+    clearRecent: "최근 파일 목록 지우기",
+    quit: "끝내기",
+    pastePlain: "일반 텍스트로 붙여넣기",
+    fullScreen: "전체 화면 전환",
+    reportIssue: "문제 신고",
   },
 } satisfies TranslationSchema;

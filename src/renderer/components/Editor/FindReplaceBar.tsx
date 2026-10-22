@@ -114,7 +114,7 @@ export const FindReplaceBar: Component<FindReplaceBarProps> = (props) => {
             variant="ghost"
             size="icon-xs"
             onClick={props.onToggleReplace}
-            title={t().shortcuts.openDocTip}
+            title={t().editor.toggleReplace}
             class="text-muted-foreground hover:text-foreground shrink-0"
           >
             <ChevronRight

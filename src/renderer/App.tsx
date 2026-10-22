@@ -5,10 +5,8 @@ import { FindReplaceBar } from "@/components/Editor/FindReplaceBar";
 import { Sidebar } from "@/components/Sidebar";
 import { TitleBar } from "@/components/TitleBar";
 import { Welcome } from "@/components/Welcome";
-import { ZoomIndicator } from "@/components/ZoomIndicator";
 import { currentLocale, t, type SupportedLocale } from "@/i18n";
 import { getSampleDocument } from "@/assets/sampleDocument";
-import { setupBrowserInterceptors } from "@/lib/browserInterceptors";
 import { desktop } from "@/lib/desktop";
 import { fileNameOf, withTrailingNewline } from "@/lib/file";
 import { calculateStats, detectTextDirection, extractHeadings } from "@/lib/parser";
@@ -26,10 +24,6 @@ export const App: Component = () => {
   const [activeHeadingIndex, setActiveHeadingIndex] = createSignal<number | null>(null);
   const [isSampleDoc, setIsSampleDoc] = createSignal<boolean>(false);
   let lastSampleLocale: SupportedLocale | null = null;
-
-  const [zoom, setZoom] = createSignal<number>(1.0);
-  const [isZoomHudVisible, setIsZoomHudVisible] = createSignal<boolean>(false);
-  let zoomTimeout: number | null = null;
 
   const [isFindOpen, setIsFindOpen] = createSignal<boolean>(false);
   const [isReplaceOpen, setIsReplaceOpen] = createSignal<boolean>(false);
@@ -53,27 +47,6 @@ export const App: Component = () => {
       return "rtl";
     }
     return detectTextDirection(source());
-  };
-
-  const triggerZoomHud = () => {
-    setIsZoomHudVisible(true);
-    if (zoomTimeout) clearTimeout(zoomTimeout);
-    zoomTimeout = window.setTimeout(() => setIsZoomHudVisible(false), 1500);
-  };
-
-  const handleZoomIn = () => {
-    setZoom((prev) => Math.min(2.5, Math.round((prev + 0.1) * 10) / 10));
-    triggerZoomHud();
-  };
-
-  const handleZoomOut = () => {
-    setZoom((prev) => Math.max(0.5, Math.round((prev - 0.1) * 10) / 10));
-    triggerZoomHud();
-  };
-
-  const handleZoomReset = () => {
-    setZoom(1.0);
-    triggerZoomHud();
   };
 
   const handleOpenFind = () => {
@@ -115,11 +88,6 @@ export const App: Component = () => {
 
   const handleReplaceAll = () => {
     if (editorHandle) setMatchStats(editorHandle.replaceAll());
-  };
-
-  const toggleTheme = () => {
-    const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    void updateSettings({ theme: isDark ? "light" : "dark" });
   };
 
   const toggleSidebar = () => {
@@ -264,9 +232,6 @@ export const App: Component = () => {
     }
   };
 
-  const handleOpenSettings = () => void desktop.invoke("window:open-settings");
-  const handleOpenAbout = () => void desktop.invoke("app:show-about");
-
   const handleOpenSample = async () => {
     if (!(await confirmReplaceDocument())) return;
     const loc = currentLocale();
@@ -279,62 +244,51 @@ export const App: Component = () => {
     setTimeout(() => editorHandle?.focus(), 50);
   };
 
+  createEffect(() => {
+    void desktop.invoke("menu:set-document-state", { hasDocument: hasDocument() });
+  });
+
+  const runCommand = (command: AppCommand) => {
+    switch (command.id) {
+      case "file.new":
+        return void handleNew();
+      case "file.open":
+        return void handleOpen();
+      case "file.open-path":
+        return void handleOpenPath(command.path);
+      case "file.save":
+        return void handleSave();
+      case "file.save-as":
+        return void handleSaveAs();
+      case "file.export-pdf":
+        return void handleExportPdf();
+      case "edit.find":
+        return handleOpenFind();
+      case "edit.replace":
+        return handleOpenReplace();
+      case "view.toggle-sidebar":
+        return toggleSidebar();
+      case "help.sample-document":
+        return void handleOpenSample();
+    }
+  };
+
   onMount(() => {
-    const cleanupInterceptors = setupBrowserInterceptors({
-      onZoomIn: handleZoomIn,
-      onZoomOut: handleZoomOut,
-      onZoomReset: handleZoomReset,
-      onFind: handleOpenFind,
-      onReplace: handleOpenReplace,
-    });
-
-    const handleGlobalKeyDown = (e: KeyboardEvent) => {
-      // On macOS these shortcuts are handled by the native menu
-      if (desktop.platform === "darwin") return;
-      const isCmdOrCtrl = e.ctrlKey || e.metaKey;
-      if (isCmdOrCtrl && e.key.toLowerCase() === "s") {
-        e.preventDefault();
-        void (e.shiftKey ? handleSaveAs() : handleSave());
-      } else if (isCmdOrCtrl && e.key.toLowerCase() === "o") {
-        e.preventDefault();
-        void handleOpen();
-      } else if (isCmdOrCtrl && e.key.toLowerCase() === "n") {
-        e.preventDefault();
-        void handleNew();
-      } else if (isCmdOrCtrl && e.key.toLowerCase() === "b") {
-        e.preventDefault();
-        toggleSidebar();
-      } else if (isCmdOrCtrl && e.key === ",") {
-        e.preventDefault();
-        handleOpenSettings();
-      }
-    };
-
+    // dragover's default behavior must be prevented, otherwise drop never fires
+    const handleDragOver = (e: DragEvent) => e.preventDefault();
     const handleDrop = (e: DragEvent) => {
       e.preventDefault();
       const file = e.dataTransfer?.files[0];
       if (file) void handleOpenPath(desktop.getPathForFile(file));
     };
-
-    const commands: Record<AppCommand, () => void> = {
-      "file.new": () => void handleNew(),
-      "file.open": () => void handleOpen(),
-      "file.save": () => void handleSave(),
-      "file.save-as": () => void handleSaveAs(),
-      "file.export-pdf": () => void handleExportPdf(),
-      "help.sample-document": () => void handleOpenSample(),
-    };
-    const unlistenCommands = desktop.on("app:command", (command) => commands[command]());
-
-    window.addEventListener("keydown", handleGlobalKeyDown);
+    const unlistenCommands = desktop.on("app:command", runCommand);
+    window.addEventListener("dragover", handleDragOver);
     window.addEventListener("drop", handleDrop);
 
     onCleanup(() => {
       if (autoSaveTimeout) clearTimeout(autoSaveTimeout);
-      if (zoomTimeout) clearTimeout(zoomTimeout);
-      cleanupInterceptors();
       unlistenCommands();
-      window.removeEventListener("keydown", handleGlobalKeyDown);
+      window.removeEventListener("dragover", handleDragOver);
       window.removeEventListener("drop", handleDrop);
     });
   });
@@ -347,23 +301,6 @@ export const App: Component = () => {
         wordsCount={stats().words}
         charsCount={stats().chars}
         hasDocument={hasDocument()}
-        recentFiles={settings().recentFiles}
-        onNew={handleNew}
-        onOpen={handleOpen}
-        onOpenRecent={handleOpenPath}
-        onSave={handleSave}
-        onSaveAs={handleSaveAs}
-        onExportPdf={handleExportPdf}
-        onToggleSidebar={toggleSidebar}
-        onToggleTheme={toggleTheme}
-        onOpenSettings={handleOpenSettings}
-        onOpenAbout={handleOpenAbout}
-        onOpenSample={handleOpenSample}
-        onFind={handleOpenFind}
-        onReplace={handleOpenReplace}
-        onZoomIn={handleZoomIn}
-        onZoomOut={handleZoomOut}
-        onZoomReset={handleZoomReset}
       />
 
       <div class="flex-1 flex overflow-hidden">
@@ -372,8 +309,6 @@ export const App: Component = () => {
             headings={headings()}
             currentBlockIndex={activeHeadingIndex()}
             onSelectHeading={handleSelectHeading}
-            docDir={documentDirection()}
-            zoom={zoom()}
           />
         </Show>
 
@@ -419,20 +354,11 @@ export const App: Component = () => {
             wordWrap={settings().wordWrap}
             editorWidth={settings().editorWidth}
             blockSpacing={settings().blockSpacing}
-            zoom={zoom()}
             onChange={(newSource) => updateDocument(newSource, true)}
             onCursorChange={handleCursorChange}
             ref={(h) => {
               editorHandle = h;
             }}
-          />
-
-          <ZoomIndicator
-            zoom={zoom()}
-            visible={isZoomHudVisible()}
-            onZoomIn={handleZoomIn}
-            onZoomOut={handleZoomOut}
-            onReset={handleZoomReset}
           />
         </main>
       </div>

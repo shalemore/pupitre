@@ -376,7 +376,9 @@ export const SettingsWindow: Component = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => void desktop.invoke("app:dispatch", "help.sample-document")}
+                    onClick={() =>
+                      void desktop.invoke("app:dispatch", { id: "help.sample-document" })
+                    }
                     class="text-xs shrink-0 gap-1.5"
                   >
                     <BookOpen class="size-3.5" />

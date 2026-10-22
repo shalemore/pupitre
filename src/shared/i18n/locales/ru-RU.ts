@@ -14,14 +14,6 @@ export const ruRU = {
     openDoc: "Открыть",
     saveDoc: "Сохранить",
   },
-  shortcuts: {
-    newDocTip: "Новый документ (Ctrl+N)",
-    openDocTip: "Открыть документ (Ctrl+O)",
-    saveDocTip: "Сохранить документ (Ctrl+S)",
-    toggleThemeLight: "Переключить на светлую тему",
-    toggleThemeDark: "Переключить на темную тему",
-    switchLangTip: "Сменить язык",
-  },
   sidebar: {
     outline: "Содержание",
     sectionsCount: (count: number) => `${count} разделов`,
@@ -43,6 +35,7 @@ export const ruRU = {
     dblClickToEdit: "Двойной клик для перехода в режим редактирования",
     livePreview: "Предпросмотр в реальном времени",
     waitingDiagramSyntax: "(Ожидание завершения синтаксиса диаграммы...)",
+    toggleReplace: "Показать или скрыть замену",
   },
   dialogs: {
     copyButton: "Копировать",
@@ -148,6 +141,10 @@ export const ruRU = {
     sampleDocument: "Пример Markdown-документа",
     about: "О программе Pupitre",
     documentation: "Документация",
-    shortcuts: "Горячие клавиши",
+    clearRecent: "Очистить список недавних",
+    quit: "Выход",
+    pastePlain: "Вставить как обычный текст",
+    fullScreen: "Полноэкранный режим",
+    reportIssue: "Сообщить о проблеме",
   },
 } satisfies TranslationSchema;

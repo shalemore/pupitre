@@ -14,14 +14,6 @@ export const enUS = {
     openDoc: "Open",
     saveDoc: "Save",
   },
-  shortcuts: {
-    newDocTip: "New Document (Ctrl+N)",
-    openDocTip: "Open Document (Ctrl+O)",
-    saveDocTip: "Save Document (Ctrl+S)",
-    toggleThemeLight: "Switch to Light Mode",
-    toggleThemeDark: "Switch to Dark Mode",
-    switchLangTip: "Change Language",
-  },
   sidebar: {
     outline: "Outline",
     sectionsCount: (count: number) => (count === 1 ? "1 section" : `${count} sections`),
@@ -43,6 +35,7 @@ export const enUS = {
     dblClickToEdit: "Double-click to enter edit mode",
     livePreview: "Live Preview",
     waitingDiagramSyntax: "(Waiting for diagram syntax to complete...)",
+    toggleReplace: "Toggle Replace",
   },
   dialogs: {
     copyButton: "Copy",
@@ -150,6 +143,10 @@ export const enUS = {
     sampleDocument: "Example Markdown Document",
     about: "About Pupitre",
     documentation: "Documentation",
-    shortcuts: "Keyboard Shortcuts",
+    clearRecent: "Clear Recently Opened",
+    quit: "Exit",
+    pastePlain: "Paste as Plain Text",
+    fullScreen: "Toggle Full Screen",
+    reportIssue: "Report an Issue",
   },
 } satisfies TranslationSchema;

@@ -8,6 +8,7 @@ import {
 } from "@shared/desktop-api";
 import { showAboutDialog } from "./about";
 import { t } from "./i18n";
+import { popupTopMenu, setDocumentState } from "./menu";
 import { addRecentFile, getSettings, getSettingsPath, updateSettings } from "./settings-store";
 import { checkForUpdates, downloadUpdate, getUpdateStatus, installUpdate } from "./updater";
 import { dispatchToMainWindow, showSettingsWindow } from "./windows";
@@ -109,6 +110,8 @@ export function registerIpcHandlers(): void {
   handle("window:open-settings", () => showSettingsWindow());
   handle("app:show-about", (event) => showAboutDialog(senderWindow(event)));
   handle("app:dispatch", (_event, command) => dispatchToMainWindow(command));
+  handle("menu:popup", (event, menu, x, y) => popupTopMenu(senderWindow(event), menu, x, y));
+  handle("menu:set-document-state", (_event, state) => setDocumentState(state));
 
   // When an update fails, autoUpdater emits an error event and the status is updated, so it is not rethrown to the renderer
   handle("updater:get-status", () => getUpdateStatus());

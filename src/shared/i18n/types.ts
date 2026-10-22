@@ -41,14 +41,6 @@ export interface TranslationSchema {
     readonly openDoc: string;
     readonly saveDoc: string;
   };
-  readonly shortcuts: {
-    readonly newDocTip: string;
-    readonly openDocTip: string;
-    readonly saveDocTip: string;
-    readonly toggleThemeLight: string;
-    readonly toggleThemeDark: string;
-    readonly switchLangTip: string;
-  };
   readonly sidebar: {
     readonly outline: string;
     readonly sectionsCount: (count: number) => string;
@@ -70,6 +62,7 @@ export interface TranslationSchema {
     readonly dblClickToEdit: string;
     readonly livePreview: string;
     readonly waitingDiagramSyntax: string;
+    readonly toggleReplace: string;
   };
   readonly dialogs: {
     readonly copyButton: string;
@@ -175,6 +168,10 @@ export interface TranslationSchema {
     readonly sampleDocument: string;
     readonly about: string;
     readonly documentation: string;
-    readonly shortcuts: string;
+    readonly clearRecent: string;
+    readonly quit: string;
+    readonly pastePlain: string;
+    readonly fullScreen: string;
+    readonly reportIssue: string;
   };
 }

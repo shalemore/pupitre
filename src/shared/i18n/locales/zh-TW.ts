@@ -14,14 +14,6 @@ export const zhTW = {
     openDoc: "開啟",
     saveDoc: "儲存",
   },
-  shortcuts: {
-    newDocTip: "新增文件 (Ctrl+N)",
-    openDocTip: "開啟文件 (Ctrl+O)",
-    saveDocTip: "儲存文件 (Ctrl+S)",
-    toggleThemeLight: "切換為淺色模式",
-    toggleThemeDark: "切換為深色模式",
-    switchLangTip: "切換語言",
-  },
   sidebar: {
     outline: "大綱",
     sectionsCount: (count: number) => `${count} 個小節`,
@@ -43,6 +35,7 @@ export const zhTW = {
     dblClickToEdit: "按兩下進入編輯模式",
     livePreview: "即時預覽",
     waitingDiagramSyntax: "(等待圖表語法輸入完整...)",
+    toggleReplace: "切換取代",
   },
   dialogs: {
     copyButton: "複製(C)",
@@ -148,6 +141,10 @@ export const zhTW = {
     sampleDocument: "範例 Markdown 文檔",
     about: "關於 Pupitre",
     documentation: "線上文件",
-    shortcuts: "快捷鍵指南",
+    clearRecent: "清除最近開啟記錄",
+    quit: "結束",
+    pastePlain: "貼上為純文字",
+    fullScreen: "切換全螢幕",
+    reportIssue: "回報問題",
   },
 } satisfies TranslationSchema;

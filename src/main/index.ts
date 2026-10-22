@@ -1,6 +1,6 @@
 import { app, BrowserWindow, nativeTheme, session } from "electron";
 import { registerIpcHandlers } from "./ipc";
-import { setupApplicationMenu } from "./menu";
+import { rebuildApplicationMenu } from "./menu";
 import { getSettings, onSettingsChange } from "./settings-store";
 import { setupUpdater } from "./updater";
 import { createMainWindow, getMainWindow, syncWindowColors } from "./windows";
@@ -29,8 +29,8 @@ if (!app.requestSingleInstanceLock()) {
 
     registerIpcHandlers();
     setupUpdater();
-    setupApplicationMenu();
-    onSettingsChange(setupApplicationMenu);
+    rebuildApplicationMenu();
+    onSettingsChange(rebuildApplicationMenu);
     createMainWindow();
 
     app.on("activate", () => {

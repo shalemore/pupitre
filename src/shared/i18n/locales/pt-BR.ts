@@ -14,14 +14,6 @@ export const ptBR = {
     openDoc: "Abrir",
     saveDoc: "Salvar",
   },
-  shortcuts: {
-    newDocTip: "Novo Documento (Ctrl+N)",
-    openDocTip: "Abrir Documento (Ctrl+O)",
-    saveDocTip: "Salvar Documento (Ctrl+S)",
-    toggleThemeLight: "Alternar para Modo Claro",
-    toggleThemeDark: "Alternar para Modo Escuro",
-    switchLangTip: "Mudar Idioma",
-  },
   sidebar: {
     outline: "Sumário",
     sectionsCount: (count: number) => (count === 1 ? "1 seção" : `${count} seções`),
@@ -43,6 +35,7 @@ export const ptBR = {
     dblClickToEdit: "Clique duas vezes para entrar no modo de edição",
     livePreview: "Pré-visualização ao vivo",
     waitingDiagramSyntax: "(Aguardando sintaxe completa do diagrama...)",
+    toggleReplace: "Mostrar/ocultar substituição",
   },
   dialogs: {
     copyButton: "Copiar",
@@ -148,6 +141,10 @@ export const ptBR = {
     sampleDocument: "Documento Markdown de exemplo",
     about: "Sobre o Pupitre",
     documentation: "Documentação",
-    shortcuts: "Atalhos de Teclado",
+    clearRecent: "Limpar arquivos recentes",
+    quit: "Sair",
+    pastePlain: "Colar como texto simples",
+    fullScreen: "Alternar tela cheia",
+    reportIssue: "Relatar um problema",
   },
 } satisfies TranslationSchema;

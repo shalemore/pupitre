@@ -14,14 +14,6 @@ export const zhCN = {
     openDoc: "打开",
     saveDoc: "保存",
   },
-  shortcuts: {
-    newDocTip: "新建文档 (Ctrl+N)",
-    openDocTip: "打开文档 (Ctrl+O)",
-    saveDocTip: "保存文档 (Ctrl+S)",
-    toggleThemeLight: "切换为浅色模式",
-    toggleThemeDark: "切换为深色模式",
-    switchLangTip: "切换语言",
-  },
   sidebar: {
     outline: "大纲",
     sectionsCount: (count: number) => `${count} 个小节`,
@@ -43,6 +35,7 @@ export const zhCN = {
     dblClickToEdit: "双击进入编辑模式",
     livePreview: "实时预览",
     waitingDiagramSyntax: "(等待图表语法输入完整...)",
+    toggleReplace: "切换替换",
   },
   dialogs: {
     copyButton: "复制(C)",
@@ -148,6 +141,10 @@ export const zhCN = {
     sampleDocument: "示例 Markdown 文档",
     about: "关于 Pupitre",
     documentation: "在线文档",
-    shortcuts: "快捷键指南",
+    clearRecent: "清除最近打开记录",
+    quit: "退出",
+    pastePlain: "粘贴为纯文本",
+    fullScreen: "切换全屏",
+    reportIssue: "报告问题",
   },
 } satisfies TranslationSchema;

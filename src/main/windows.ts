@@ -7,6 +7,7 @@ import {
   shell,
 } from "electron";
 import type { AppCommand } from "@shared/desktop-api";
+import { setupContextMenu } from "./context-menu";
 
 /** The renderer picks the view to show from location.hash. */
 type View = "main" | "settings";
@@ -52,16 +53,19 @@ function createWindow(view: View, options: BrowserWindowConstructorOptions): Bro
     },
   });
 
+  const { webContents } = window;
   window.once("ready-to-show", () => window.show());
-  window.webContents.setWindowOpenHandler(({ url }) => {
+  setupContextMenu(webContents);
+  webContents.setWindowOpenHandler(({ url }) => {
     void shell.openExternal(url);
     return { action: "deny" };
   });
-  if (!app.isPackaged) {
-    window.webContents.on("before-input-event", (_event, input) => {
-      if (input.type === "keyDown" && input.key === "F12") window.webContents.toggleDevTools();
-    });
-  }
+  // Windows only show the app's own page; a dropped file or a clicked link must never navigate it away
+  webContents.on("will-navigate", (event) => event.preventDefault());
+  // Electron does not handle Ctrl+wheel zoom by itself; use the same step as the menu
+  webContents.on("zoom-changed", (_event, direction) => {
+    webContents.setZoomLevel(webContents.getZoomLevel() + (direction === "in" ? 0.5 : -0.5));
+  });
 
   const hash = view === "main" ? "" : view;
   const devServerUrl = process.env["ELECTRON_RENDERER_URL"];
