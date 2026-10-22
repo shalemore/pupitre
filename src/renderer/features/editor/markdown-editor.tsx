@@ -37,6 +37,7 @@ import { formatKeymap, runFormatAction } from "./format-commands";
 import { frontMatter } from "./front-matter";
 import { preserveImageAlt } from "./image-block-schema";
 import { renderMermaidPreview } from "./mermaid-preview";
+import { createPendingImages } from "./pending-images";
 import {
   collectHeadings,
   documentObserverPlugin,
@@ -74,6 +75,8 @@ export interface MarkdownEditorHandle {
   replaceNext: () => MatchStats;
   replaceAll: () => MatchStats;
   format: (action: FormatAction) => void;
+  /** Writes images pasted before the document had a file next to it, see pending-images.ts. */
+  persistImages: (documentPath: string) => Promise<void>;
 }
 
 export interface MarkdownEditorProps {
@@ -127,15 +130,6 @@ function matchStats(view: EditorView): MatchStats {
   return { current, total };
 }
 
-function readAsDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.addEventListener("load", () => resolve(String(reader.result)));
-    reader.addEventListener("error", () => reject(reader.error));
-    reader.readAsDataURL(file);
-  });
-}
-
 export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
   let container: HTMLDivElement | undefined;
   let view: EditorView | undefined;
@@ -145,12 +139,16 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     return new URL(url, props.baseUrl).href;
   };
 
-  // Saved documents store pasted images in a folder next to them; unsaved ones embed a data URL
-  const uploadImage = async (file: File): Promise<string> => {
-    if (!props.documentPath) return readAsDataUrl(file);
+  const saveImage = async (documentPath: string, file: File): Promise<string> => {
     const bytes = new Uint8Array(await file.arrayBuffer());
-    return desktop.invoke("document:save-image", props.documentPath, file.name, bytes);
+    return desktop.invoke("document:save-image", documentPath, file.name, bytes);
   };
+  const pendingImages = createPendingImages(saveImage);
+  onCleanup(pendingImages.dispose);
+
+  // Saved documents store pasted images in a folder next to them; unsaved ones keep them in memory
+  const uploadImage = async (file: File): Promise<string> =>
+    props.documentPath ? saveImage(props.documentPath, file) : pendingImages.add(file);
 
   onMount(() => {
     if (!container) return;
@@ -306,6 +304,9 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       format: (action) => {
         runFormatAction(crepe.editor, action);
         view?.focus();
+      },
+      persistImages: async (documentPath) => {
+        if (view) await pendingImages.persist(view, documentPath);
       },
     });
 

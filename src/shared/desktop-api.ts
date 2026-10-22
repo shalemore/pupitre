@@ -80,11 +80,8 @@ export interface InvokeChannels {
   "document:open": () => OpenedDocument | null;
   "document:read": (path: string) => OpenedDocument;
   "document:write": (path: string, content: string, lineEnding: LineEnding) => void;
-  "document:save-as": (
-    suggestedName: string,
-    content: string,
-    lineEnding: LineEnding,
-  ) => DocumentLocation | null;
+  /** Asks where to save a document; the document is written with document:write afterwards. */
+  "dialog:choose-save-path": (suggestedName: string) => DocumentLocation | null;
   /** Saves an image into the assets folder next to the document and returns a relative path ready for Markdown. */
   "document:save-image": (documentPath: string, fileName: string, data: Uint8Array) => string;
   "document:export-pdf": (suggestedName: string) => string | null;

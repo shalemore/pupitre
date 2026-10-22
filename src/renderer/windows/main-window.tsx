@@ -24,7 +24,7 @@ type FindMode = "closed" | "find" | "replace";
 
 export const MainWindow: Component = () => {
   let editor: MarkdownEditorHandle | undefined;
-  const session = createDocumentSession(() => editor?.getMarkdown());
+  const session = createDocumentSession(() => editor);
   const [outline, setOutline] = createSignal<OutlineHeading[]>([]);
   const [activeHeading, setActiveHeading] = createSignal(-1);
   const [stats, setStats] = createSignal<TextStats>({ words: 0, characters: 0 });

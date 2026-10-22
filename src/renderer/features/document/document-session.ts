@@ -1,5 +1,6 @@
 import type { LineEnding } from "@shared/desktop-api";
 import { createEffect, createSignal, on } from "solid-js";
+import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
 import { getSampleDocument } from "@/features/samples/sample-document";
 import { currentLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
@@ -26,7 +27,9 @@ let nextDocumentId = 1;
  * The life cycle of the current document: new, open, save, save as, and the unsaved-changes prompt before replacing it.
  * The editor content is serialized only on save; the caller provides it through getMarkdown.
  */
-export function createDocumentSession(getMarkdown: () => string | undefined) {
+export function createDocumentSession(
+  getEditor: () => Pick<MarkdownEditorHandle, "getMarkdown" | "persistImages"> | undefined,
+) {
   const [activeDocument, setActiveDocument] = createSignal<OpenDocument>();
   // The document has unsaved changes when its serialized content differs from the last saved (or opened) version; undoing back to that state clears the flag
   const [savedMarkdown, setSavedMarkdown] = createSignal("");
@@ -60,36 +63,32 @@ export function createDocumentSession(getMarkdown: () => string | undefined) {
     setCurrentMarkdown(markdown);
   };
 
-  const saveAs = async (): Promise<boolean> => {
-    const doc = activeDocument();
-    const markdown = getMarkdown();
-    if (!doc || markdown === undefined) return false;
-    const location = await desktop.invoke(
-      "document:save-as",
-      fileName(),
-      withTrailingNewline(markdown),
-      lineEndingFor(doc),
-    );
-    if (!location) return false;
-    // Only the path changes, not the document id, so the editor and its undo history stay
-    setActiveDocument({ ...doc, ...location, isSample: false });
+  /** Writes the editor content to `path`, after the images it still keeps in memory. */
+  const writeTo = async (doc: OpenDocument, path: string): Promise<boolean> => {
+    const editor = getEditor();
+    if (!editor) return false;
+    await editor.persistImages(path);
+    const markdown = editor.getMarkdown();
+    await desktop.invoke("document:write", path, withTrailingNewline(markdown), lineEndingFor(doc));
     markSaved(markdown);
     return true;
   };
 
+  const saveAs = async (): Promise<boolean> => {
+    const doc = activeDocument();
+    if (!doc) return false;
+    const location = await desktop.invoke("dialog:choose-save-path", fileName());
+    if (!location) return false;
+    // Only the path changes, not the document id, so the editor and its undo history stay; the
+    // new folder resolves relative image paths from now on
+    setActiveDocument({ ...doc, ...location, isSample: false });
+    return writeTo(doc, location.path);
+  };
+
   const save = async (): Promise<boolean> => {
     const doc = activeDocument();
-    const markdown = getMarkdown();
-    if (!doc || markdown === undefined) return false;
-    if (!doc.path) return saveAs();
-    await desktop.invoke(
-      "document:write",
-      doc.path,
-      withTrailingNewline(markdown),
-      lineEndingFor(doc),
-    );
-    markSaved(markdown);
-    return true;
+    if (!doc) return false;
+    return doc.path ? writeTo(doc, doc.path) : saveAs();
   };
 
   /** Before replacing the current document, asks to save, discard or cancel if there are unsaved changes; returns whether to continue. */

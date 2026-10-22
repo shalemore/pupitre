@@ -113,13 +113,12 @@ export function registerIpcHandlers(): void {
   handle("document:write", (_event, path, content, lineEnding) =>
     writeDocument(path, content, lineEnding),
   );
-  handle("document:save-as", async (event, suggestedName, content, lineEnding) => {
+  handle("dialog:choose-save-path", async (event, suggestedName) => {
     const { canceled, filePath } = await dialog.showSaveDialog(senderWindow(event), {
       defaultPath: suggestedName,
       filters: [{ name: "Markdown", extensions: ["md"] }],
     });
     if (canceled || !filePath) return null;
-    await writeDocument(filePath, content, lineEnding);
     addRecentFile(filePath);
     return locate(filePath);
   });
