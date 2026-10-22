@@ -33,8 +33,9 @@ export const MainWindow: Component = () => {
     document.title = session.activeDocument() ? `${session.fileName()} - Pupitre` : "Pupitre";
   });
   createEffect(() => {
-    void desktop.invoke("menu:set-document-state", {
+    void desktop.invoke("window:set-document-state", {
       hasDocument: session.activeDocument() !== undefined,
+      isDirty: session.isDirty(),
     });
   });
   // Close the find bar when the document changes; the old document's matches mean nothing
@@ -95,6 +96,10 @@ export const MainWindow: Component = () => {
         return void updateSettings({ sidebarVisible: !settings().sidebarVisible });
       case "help.sample-document":
         return void session.openSample();
+      case "window.close":
+        return void session.confirmDiscard().then((confirmed) => {
+          if (confirmed) void desktop.invoke("window:close-confirmed");
+        });
     }
   };
 

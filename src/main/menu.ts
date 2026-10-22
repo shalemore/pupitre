@@ -16,7 +16,7 @@ import { dispatchToMainWindow, getMainWindow, showSettingsWindow } from "./windo
 const REPOSITORY_URL = "https://github.com/shalemore/pupitre";
 const separator: MenuItemConstructorOptions = { type: "separator" };
 
-let documentState: DocumentState = { hasDocument: false };
+let documentState: DocumentState = { hasDocument: false, isDirty: false };
 
 function buildTemplate(): MenuItemConstructorOptions[] {
   const labels = t().menu;
@@ -191,8 +191,10 @@ export function rebuildApplicationMenu(): void {
 }
 
 export function setDocumentState(state: DocumentState): void {
+  // The menu only cares whether a document is open; the dirty state can change on every keystroke and must not rebuild the menu
+  const menuChanged = state.hasDocument !== documentState.hasDocument;
   documentState = state;
-  rebuildApplicationMenu();
+  if (menuChanged) rebuildApplicationMenu();
 }
 
 /** Menu buttons in the Windows and Linux title bar pop up the matching native submenu below the button. */

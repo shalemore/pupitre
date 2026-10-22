@@ -15,6 +15,8 @@ type View = "main" | "settings";
 const TITLE_BAR_HEIGHT = 40;
 
 let mainWindow: BrowserWindow | undefined;
+// Windows with unsaved changes; the renderer must ask about saving before they close
+const editedWindows = new WeakSet<BrowserWindow>();
 let settingsWindow: BrowserWindow | undefined;
 
 // Before a window shows there is no page yet, so it uses the colors a theme reported earlier; the first launch uses the default theme's values
@@ -88,6 +90,12 @@ export function createMainWindow(): BrowserWindow {
     minHeight: 480,
     title: "Pupitre",
   });
+  const window = mainWindow;
+  window.on("close", (event) => {
+    if (!editedWindows.has(window)) return;
+    event.preventDefault();
+    dispatchToMainWindow({ id: "window.close" });
+  });
   mainWindow.on("closed", () => {
     mainWindow = undefined;
     settingsWindow?.close();
@@ -116,6 +124,18 @@ export function showSettingsWindow(): void {
 
 export function getMainWindow(): BrowserWindow | undefined {
   return mainWindow;
+}
+
+export function setDocumentEdited(window: BrowserWindow, edited: boolean): void {
+  if (edited) editedWindows.add(window);
+  else editedWindows.delete(window);
+  // macOS shows a dot on the close button
+  window.setDocumentEdited(edited);
+}
+
+export function closeWithoutPrompt(window: BrowserWindow): void {
+  editedWindows.delete(window);
+  window.close();
 }
 
 /** Hands a command to the main window and brings it to the front. */

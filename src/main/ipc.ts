@@ -15,7 +15,13 @@ import { t } from "./i18n";
 import { popupTopMenu, setDocumentState } from "./menu";
 import { addRecentFile, getSettings, getSettingsPath, updateSettings } from "./settings-store";
 import { checkForUpdates, downloadUpdate, getUpdateStatus, installUpdate } from "./updater";
-import { applyWindowColors, dispatchToMainWindow, showSettingsWindow } from "./windows";
+import {
+  applyWindowColors,
+  closeWithoutPrompt,
+  dispatchToMainWindow,
+  setDocumentEdited,
+  showSettingsWindow,
+} from "./windows";
 
 function handle<K extends keyof InvokeChannels>(
   channel: K,
@@ -152,7 +158,11 @@ export function registerIpcHandlers(): void {
   handle("app:show-about", (event) => showAboutDialog(senderWindow(event)));
   handle("app:dispatch", (_event, command) => dispatchToMainWindow(command));
   handle("menu:popup", (event, menu, x, y) => popupTopMenu(senderWindow(event), menu, x, y));
-  handle("menu:set-document-state", (_event, state) => setDocumentState(state));
+  handle("window:set-document-state", (event, state) => {
+    setDocumentState(state);
+    setDocumentEdited(senderWindow(event), state.isDirty);
+  });
+  handle("window:close-confirmed", (event) => closeWithoutPrompt(senderWindow(event)));
 
   // When an update fails, autoUpdater emits an error event and the status is updated, so it is not rethrown to the renderer
   handle("updater:get-status", () => getUpdateStatus());

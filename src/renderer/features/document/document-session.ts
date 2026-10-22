@@ -177,6 +177,7 @@ export function createDocumentSession(getMarkdown: () => string | undefined) {
     openPath,
     openSample,
     restoreOnStartup,
+    confirmDiscard,
     dispose: () => clearTimeout(autoSaveTimer),
   };
 }

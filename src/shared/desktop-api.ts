@@ -38,7 +38,9 @@ export type AppCommand =
   | { id: "edit.find" }
   | { id: "edit.replace" }
   | { id: "view.toggle-sidebar" }
-  | { id: "help.sample-document" };
+  | { id: "help.sample-document" }
+  /** The document has unsaved changes before the window closes; the renderer should ask the user first. */
+  | { id: "window.close" };
 
 /** Top-level menus of the application menu; Windows and Linux render them in the title bar and pop up the matching native submenu on click. */
 export const TOP_MENUS = ["file", "edit", "view", "help"] as const;
@@ -51,9 +53,10 @@ export interface WindowColors {
   dark: boolean;
 }
 
-/** Document state the renderer reports to the main process, used to enable or disable menu items. */
+/** Document state the renderer reports to the main process: enables or disables menu items and decides whether closing the window must ask to save first. */
 export interface DocumentState {
   hasDocument: boolean;
+  isDirty: boolean;
 }
 
 /** Channels the renderer calls through `ipcRenderer.invoke` and the main process implements with `ipcMain.handle`. */
@@ -78,7 +81,9 @@ export interface InvokeChannels {
   "app:show-about": () => void;
   "app:dispatch": (command: AppCommand) => void;
   "menu:popup": (menu: TopMenu, x: number, y: number) => void;
-  "menu:set-document-state": (state: DocumentState) => void;
+  "window:set-document-state": (state: DocumentState) => void;
+  /** The user has confirmed (saved or discarded changes); the window can really close. */
+  "window:close-confirmed": () => void;
   "updater:get-status": () => UpdateStatus;
   "updater:check": () => void;
   "updater:download": () => void;
