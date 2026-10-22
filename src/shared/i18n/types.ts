@@ -1,17 +1,43 @@
 export type Direction = "ltr" | "rtl";
 
+/**
+ * BCP 47 tags. Most use the region CLDR gives each language by default (not always its
+ * homeland, hence en-US and pt-BR). Arabic carries no region because it is the standard
+ * language, understood everywhere it is read, not a regional dialect. The region only
+ * carries meaning for Portuguese, whose Brazilian and European forms are different
+ * languages in practice, and for the three Chinese standards.
+ */
 export const LOCALE_CODES = [
   "en-US",
-  "ar-SA",
+  "ar",
+  "cs-CZ",
+  "da-DK",
   "de-DE",
+  "el-GR",
   "es-ES",
+  "fa-IR",
+  "fi-FI",
   "fr-FR",
+  "hi-IN",
+  "hu-HU",
+  "id-ID",
+  "is-IS",
   "it-IT",
   "ja-JP",
   "ko-KR",
+  "nb-NO",
+  "nl-NL",
+  "pl-PL",
   "pt-BR",
+  "pt-PT",
   "ru-RU",
+  "sv-SE",
+  "th-TH",
+  "tr-TR",
+  "uk-UA",
+  "vi-VN",
   "zh-CN",
+  "zh-HK",
   "zh-TW",
 ] as const;
 

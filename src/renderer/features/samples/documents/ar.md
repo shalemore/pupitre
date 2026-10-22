@@ -59,13 +59,13 @@ Pupitre محرر Markdown لسطح المكتب. المستندات ملفات `
 
 ```css
 :root {
-  /* The schemes this theme supports: light, dark or both */
+  /* أنظمة الألوان التي تدعمها السمة: فاتح أو داكن أو كلاهما */
   color-scheme: light dark;
 
-  /* Default body font; users can override it in the preferences */
+  /* الخط الافتراضي لنص المتن، ويمكن تغييره من التفضيلات */
   --font-document: Georgia, serif;
 
-  /* Design tokens used by the whole window */
+  /* رموز التصميم المستخدمة في النافذة بأكملها */
   --ui-surface-1: oklch(0.99 0.01 90);
   --ui-brand: oklch(0.55 0.12 250);
 }

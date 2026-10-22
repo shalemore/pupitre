@@ -1,22 +1,25 @@
 import type { TranslationSchema } from "../types";
 
-export const arSA = {
+export const ar = {
   common: {
     appName: "Pupitre",
-    untitledFileName: "بلا_عنوان.md",
+    untitledFileName: "بلا عنوان.md",
+    // Arabic agreement follows the last two digits (CLDR): 3–10 take the plural, 11–99 the singular
     wordsCount: (count: number) => {
       if (count === 0) return "لا توجد كلمات";
       if (count === 1) return "كلمة واحدة";
       if (count === 2) return "كلمتان";
-      if (count >= 3 && count <= 10) return `${count} كلمات`;
+      const lastTwo = count % 100;
+      if (lastTwo >= 3 && lastTwo <= 10) return `${count} كلمات`;
       return `${count} كلمة`;
     },
     charsCount: (count: number) => {
       if (count === 0) return "لا توجد أحرف";
       if (count === 1) return "حرف واحد";
       if (count === 2) return "حرفان";
-      if (count >= 3 && count <= 10) return `${count} أحرف`;
-      return `${count} حرفاً`;
+      const lastTwo = count % 100;
+      if (lastTwo >= 3 && lastTwo <= 10) return `${count} أحرف`;
+      return `${count} حرفًا`;
     },
     copy: "نسخ",
   },
