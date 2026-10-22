@@ -197,5 +197,6 @@ export const deDE = {
     updateNotificationTitle: (version: string) => `Pupitre ${version} ist verfügbar`,
     updateNotificationBody: "Öffnen Sie die Einstellungen, um es herunterzuladen.",
     refreshFonts: "Schriftliste aktualisieren",
+    resetToDefault: "Auf Standard zurücksetzen",
   },
 } satisfies TranslationSchema;

@@ -2,8 +2,9 @@ import { z } from "zod";
 import { LOCALE_CODES } from "./i18n/types";
 
 /**
- * The settings file may be hand-edited and corrupted, so every field falls back to its default with `.catch`,
- * and one invalid field does not invalidate the whole file. An empty string for fonts and the like means "follow the theme default".
+ * The single definition of every setting and its default. The settings file only stores values
+ * the user changed; a missing or invalid value falls back to its own default through `.catch`, so
+ * one bad entry never discards the rest of the file. Unknown keys are ignored.
  */
 export const settingsSchema = z.object({
   // General
@@ -15,12 +16,12 @@ export const settingsSchema = z.object({
   // Appearance
   colorScheme: z.enum(["system", "light", "dark"]).catch("system"),
   /** Theme folder name, see src/renderer/themes. */
-  theme: z.string().catch("pupitre"),
+  theme: z.string().min(1).catch("pupitre"),
   animations: z.enum(["system", "on", "off"]).catch("system"),
   sidebarVisible: z.boolean().catch(true),
   showWordCount: z.boolean().catch(true),
 
-  // Editor
+  // Editor; an empty font name means "use the theme's font"
   bodyFont: z.string().catch(""),
   fallbackFont: z.string().catch(""),
   codeFont: z.string().catch(""),
@@ -29,7 +30,7 @@ export const settingsSchema = z.object({
   contentWidth: z.enum(["compact", "normal", "wide", "full"]).catch("normal"),
   spellcheck: z.boolean().catch(true),
 
-  // How Markdown is written, matching the remark-stringify options of the same names
+  // How Markdown is written, matching the remark-stringify options of the same meaning
   bulletMarker: z.enum(["-", "*", "+"]).catch("-"),
   emphasisMarker: z.enum(["*", "_"]).catch("*"),
   strongMarker: z.enum(["*", "_"]).catch("*"),
@@ -38,9 +39,20 @@ export const settingsSchema = z.object({
   incrementListMarker: z.boolean().catch(true),
   lineEnding: z.enum(["auto", "lf", "crlf"]).catch("auto"),
   imageFolder: z.string().min(1).catch("assets"),
-
-  recentFiles: z.array(z.string()).catch([]),
 });
 
-export type Settings = z.infer<typeof settingsSchema>;
+export type Settings = z.output<typeof settingsSchema>;
+export type SettingKey = keyof Settings;
 export type ContentWidth = Settings["contentWidth"];
+
+export const SETTING_KEYS = settingsSchema.keyof().options;
+export const DEFAULT_SETTINGS: Settings = settingsSchema.parse({});
+
+/** Reads a parsed settings file; anything that is not an object counts as "nothing changed". */
+export function resolveSettings(file: unknown): Settings {
+  return settingsSchema.catch(DEFAULT_SETTINGS).parse(file);
+}
+
+export function isModified(settings: Settings, key: SettingKey): boolean {
+  return !Object.is(settings[key], DEFAULT_SETTINGS[key]);
+}

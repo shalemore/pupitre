@@ -196,5 +196,6 @@ export const jaJP = {
     updateNotificationTitle: (version: string) => `Pupitre ${version} が利用可能です`,
     updateNotificationBody: "環境設定を開いてダウンロードしてください。",
     refreshFonts: "フォント一覧を更新",
+    resetToDefault: "既定値に戻す",
   },
 } satisfies TranslationSchema;

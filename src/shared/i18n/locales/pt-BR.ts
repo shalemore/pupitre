@@ -197,5 +197,6 @@ export const ptBR = {
     updateNotificationTitle: (version: string) => `O Pupitre ${version} está disponível`,
     updateNotificationBody: "Abra as Preferências para baixá-lo.",
     refreshFonts: "Atualizar lista de fontes",
+    resetToDefault: "Restaurar padrão",
   },
 } satisfies TranslationSchema;

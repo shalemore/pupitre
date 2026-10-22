@@ -10,7 +10,8 @@ import {
 import type { DocumentState, TopMenu } from "@shared/desktop-api";
 import { showAboutDialog } from "./about";
 import { t } from "./i18n";
-import { getSettings, updateSettings } from "./settings-store";
+import { clearRecentFiles, getRecentFiles } from "./recent-files";
+import { updateSettings } from "./settings-store";
 import { dispatchToMainWindow, getMainWindow, showSettingsWindow } from "./windows";
 
 const REPOSITORY_URL = "https://github.com/shalemore/pupitre";
@@ -22,7 +23,7 @@ function buildTemplate(): MenuItemConstructorOptions[] {
   const labels = t().menu;
   const isMac = process.platform === "darwin";
   const { hasDocument } = documentState;
-  const { recentFiles } = getSettings();
+  const recentFiles = getRecentFiles();
 
   const about: MenuItemConstructorOptions = {
     label: labels.about,
@@ -48,10 +49,7 @@ function buildTemplate(): MenuItemConstructorOptions[] {
           separator,
           {
             label: labels.clearRecent,
-            click: () => {
-              app.clearRecentDocuments();
-              updateSettings({ recentFiles: [] });
-            },
+            click: clearRecentFiles,
           },
         ];
   const appMenu: MenuItemConstructorOptions = {

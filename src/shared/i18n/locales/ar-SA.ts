@@ -208,5 +208,6 @@ export const arSA = {
     updateNotificationTitle: (version: string) => `يتوفر Pupitre ${version}`,
     updateNotificationBody: "افتح التفضيلات لتنزيله.",
     refreshFonts: "تحديث قائمة الخطوط",
+    resetToDefault: "إعادة التعيين إلى الافتراضي",
   },
 } satisfies TranslationSchema;

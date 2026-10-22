@@ -14,6 +14,7 @@ import { OutlineSidebar } from "@/features/outline/outline-sidebar";
 import { WelcomeScreen } from "@/features/welcome/welcome-screen";
 import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
+import { recentFiles } from "@/lib/recent-files";
 import { settings, updateSettings } from "@/lib/settings";
 import type { TextStats } from "@/lib/text-stats";
 
@@ -161,7 +162,7 @@ export const MainWindow: Component = () => {
           fallback={
             <main class="flex-1">
               <WelcomeScreen
-                recentFiles={settings().recentFiles}
+                recentFiles={recentFiles()}
                 onNewDocument={session.newDocument}
                 onOpenFile={session.open}
                 onOpenRecent={session.openPath}

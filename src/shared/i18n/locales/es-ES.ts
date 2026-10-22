@@ -197,5 +197,6 @@ export const esES = {
     updateNotificationTitle: (version: string) => `Pupitre ${version} está disponible`,
     updateNotificationBody: "Abre Preferencias para descargarlo.",
     refreshFonts: "Actualizar lista de fuentes",
+    resetToDefault: "Restablecer valor predeterminado",
   },
 } satisfies TranslationSchema;

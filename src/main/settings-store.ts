@@ -1,38 +1,43 @@
-import { mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { join } from "node:path";
 import { app, BrowserWindow, nativeTheme } from "electron";
-import { type Settings, settingsSchema } from "@shared/settings";
+import { z } from "zod";
+import {
+  DEFAULT_SETTINGS,
+  resolveSettings,
+  SETTING_KEYS,
+  type SettingKey,
+  type Settings,
+} from "@shared/settings";
+import { readJsonFile, writeJsonFile } from "./json-file";
 
+const fileObjectSchema = z.record(z.string(), z.unknown()).catch({});
 const listeners = new Set<(settings: Settings) => void>();
+
+/**
+ * The settings file as written on disk. Only keys the user changed are present; entries this
+ * version does not understand (or that are invalid) are kept untouched, like an editor would.
+ */
+let file: Record<string, unknown> | undefined;
 let current: Settings | undefined;
 
 export function getSettingsPath(): string {
   return join(app.getPath("userData"), "settings.json");
 }
 
-function load(): Settings {
-  try {
-    const raw: unknown = JSON.parse(readFileSync(getSettingsPath(), "utf8"));
-    return settingsSchema.parse(raw);
-  } catch {
-    // A missing or corrupt file starts from the defaults; the next save writes complete settings
-    return settingsSchema.parse({});
-  }
+function settingsFile(): Record<string, unknown> {
+  file ??= fileObjectSchema.parse(readJsonFile(getSettingsPath()));
+  return file;
 }
 
 export function getSettings(): Settings {
-  current ??= load();
+  current ??= resolveSettings(settingsFile());
   return current;
 }
 
-export function updateSettings(patch: Partial<Settings>): void {
-  current = settingsSchema.parse({ ...getSettings(), ...patch });
-  const path = getSettingsPath();
-  mkdirSync(dirname(path), { recursive: true });
-  // Write a temporary file and rename it, so a crash halfway never leaves truncated JSON
-  writeFileSync(`${path}.tmp`, JSON.stringify(current, null, 2));
-  renameSync(`${path}.tmp`, path);
-
+function save(next: Record<string, unknown>): void {
+  file = next;
+  writeJsonFile(getSettingsPath(), next);
+  current = resolveSettings(next);
   nativeTheme.themeSource = current.colorScheme;
   for (const window of BrowserWindow.getAllWindows()) {
     window.webContents.send("settings:changed", current);
@@ -40,13 +45,25 @@ export function updateSettings(patch: Partial<Settings>): void {
   for (const listener of listeners) listener(current);
 }
 
+/** Values equal to the default are removed from the file instead of being written. */
+export function updateSettings(patch: Partial<Settings>): void {
+  const next = { ...settingsFile() };
+  for (const key of SETTING_KEYS) {
+    if (!(key in patch)) continue;
+    const value = patch[key];
+    if (value === undefined || Object.is(value, DEFAULT_SETTINGS[key])) delete next[key];
+    else next[key] = value;
+  }
+  save(next);
+}
+
+export function resetSetting(key: SettingKey): void {
+  const next = { ...settingsFile() };
+  delete next[key];
+  save(next);
+}
+
 export function onSettingsChange(listener: (settings: Settings) => void): () => void {
   listeners.add(listener);
   return () => listeners.delete(listener);
-}
-
-export function addRecentFile(path: string): void {
-  const recentFiles = [path, ...getSettings().recentFiles.filter((p) => p !== path)].slice(0, 10);
-  updateSettings({ recentFiles });
-  app.addRecentDocument(path);
 }

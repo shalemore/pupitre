@@ -7,13 +7,14 @@ import {
   type InvokeChannels,
   type LineEnding,
   type OpenedDocument,
-  SETTINGS_GET_SYNC,
-  SETTINGS_PATH_SYNC,
+  INITIAL_STATE_SYNC,
+  type InitialState,
 } from "@shared/desktop-api";
 import { showAboutDialog } from "./about";
 import { t } from "./i18n";
 import { popupTopMenu, setDocumentState } from "./menu";
-import { addRecentFile, getSettings, getSettingsPath, updateSettings } from "./settings-store";
+import { addRecentFile, getRecentFiles, removeRecentFile } from "./recent-files";
+import { getSettings, getSettingsPath, resetSetting, updateSettings } from "./settings-store";
 import { checkForUpdates, downloadUpdate, getUpdateStatus, installUpdate } from "./updater";
 import {
   applyWindowColors,
@@ -71,7 +72,7 @@ async function readDocument(path: string): Promise<OpenedDocument> {
       lineEnding: raw.includes("\r\n") ? "crlf" : "lf",
     };
   } catch (error) {
-    updateSettings({ recentFiles: getSettings().recentFiles.filter((p) => p !== path) });
+    removeRecentFile(path);
     throw error;
   }
 }
@@ -85,13 +86,16 @@ function writeDocument(path: string, content: string, lineEnding: LineEnding): P
 }
 
 export function registerIpcHandlers(): void {
-  ipcMain.on(SETTINGS_GET_SYNC, (event) => {
-    event.returnValue = getSettings();
-  });
-  ipcMain.on(SETTINGS_PATH_SYNC, (event) => {
-    event.returnValue = getSettingsPath();
+  ipcMain.on(INITIAL_STATE_SYNC, (event) => {
+    const state: InitialState = {
+      settings: getSettings(),
+      settingsPath: getSettingsPath(),
+      recentFiles: getRecentFiles(),
+    };
+    event.returnValue = state;
   });
   handle("settings:update", (_event, patch) => updateSettings(patch));
+  handle("settings:reset", (_event, key) => resetSetting(key));
   handle("settings:reveal", () => shell.showItemInFolder(getSettingsPath()));
 
   handle("document:open", async (event) => {

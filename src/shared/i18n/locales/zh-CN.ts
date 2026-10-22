@@ -196,5 +196,6 @@ export const zhCN = {
     updateNotificationTitle: (version: string) => `Pupitre ${version} 已发布`,
     updateNotificationBody: "打开偏好设置即可下载。",
     refreshFonts: "刷新字体列表",
+    resetToDefault: "恢复默认值",
   },
 } satisfies TranslationSchema;

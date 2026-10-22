@@ -1,13 +1,13 @@
 import type { Settings } from "@shared/settings";
 import type { Component } from "solid-js";
-import { Input, Select, SettingRow } from "@/components/ui";
+import { Input, Select } from "@/components/ui";
 import { t } from "@/i18n";
 import { settings, updateSettings } from "@/lib/settings";
-import { SettingsSection } from "./settings-section";
+import { SettingField, SettingsSection } from "./settings-section";
 
 export const MarkdownSection: Component = () => (
   <SettingsSection title={t().settings.markdown} description={t().settings.markdownDesc}>
-    <SettingRow title={t().settings.bulletMarker}>
+    <SettingField name="bulletMarker" title={t().settings.bulletMarker}>
       <Select<Settings["bulletMarker"]>
         value={settings().bulletMarker}
         onChange={(bulletMarker) => void updateSettings({ bulletMarker })}
@@ -18,9 +18,9 @@ export const MarkdownSection: Component = () => (
         ]}
         aria-label={t().settings.bulletMarker}
       />
-    </SettingRow>
+    </SettingField>
 
-    <SettingRow title={t().settings.orderedList}>
+    <SettingField name="incrementListMarker" title={t().settings.orderedList}>
       <Select<"increment" | "same">
         value={settings().incrementListMarker ? "increment" : "same"}
         onChange={(mode) => void updateSettings({ incrementListMarker: mode === "increment" })}
@@ -30,9 +30,9 @@ export const MarkdownSection: Component = () => (
         ]}
         aria-label={t().settings.orderedList}
       />
-    </SettingRow>
+    </SettingField>
 
-    <SettingRow title={t().settings.emphasisMarker}>
+    <SettingField name="emphasisMarker" title={t().settings.emphasisMarker}>
       <Select<Settings["emphasisMarker"]>
         value={settings().emphasisMarker}
         onChange={(emphasisMarker) => void updateSettings({ emphasisMarker })}
@@ -42,9 +42,9 @@ export const MarkdownSection: Component = () => (
         ]}
         aria-label={t().settings.emphasisMarker}
       />
-    </SettingRow>
+    </SettingField>
 
-    <SettingRow title={t().settings.strongMarker}>
+    <SettingField name="strongMarker" title={t().settings.strongMarker}>
       <Select<Settings["strongMarker"]>
         value={settings().strongMarker}
         onChange={(strongMarker) => void updateSettings({ strongMarker })}
@@ -54,9 +54,9 @@ export const MarkdownSection: Component = () => (
         ]}
         aria-label={t().settings.strongMarker}
       />
-    </SettingRow>
+    </SettingField>
 
-    <SettingRow title={t().settings.fenceMarker}>
+    <SettingField name="fenceMarker" title={t().settings.fenceMarker}>
       <Select<Settings["fenceMarker"]>
         value={settings().fenceMarker}
         onChange={(fenceMarker) => void updateSettings({ fenceMarker })}
@@ -66,9 +66,9 @@ export const MarkdownSection: Component = () => (
         ]}
         aria-label={t().settings.fenceMarker}
       />
-    </SettingRow>
+    </SettingField>
 
-    <SettingRow title={t().settings.ruleMarker}>
+    <SettingField name="ruleMarker" title={t().settings.ruleMarker}>
       <Select<Settings["ruleMarker"]>
         value={settings().ruleMarker}
         onChange={(ruleMarker) => void updateSettings({ ruleMarker })}
@@ -79,9 +79,9 @@ export const MarkdownSection: Component = () => (
         ]}
         aria-label={t().settings.ruleMarker}
       />
-    </SettingRow>
+    </SettingField>
 
-    <SettingRow title={t().settings.lineEnding}>
+    <SettingField name="lineEnding" title={t().settings.lineEnding}>
       <Select<Settings["lineEnding"]>
         value={settings().lineEnding}
         onChange={(lineEnding) => void updateSettings({ lineEnding })}
@@ -92,12 +92,16 @@ export const MarkdownSection: Component = () => (
         ]}
         aria-label={t().settings.lineEnding}
       />
-    </SettingRow>
+    </SettingField>
 
-    <SettingRow title={t().settings.imageFolder} description={t().settings.imageFolderDesc}>
+    <SettingField
+      name="imageFolder"
+      title={t().settings.imageFolder}
+      description={t().settings.imageFolderDesc}
+    >
       <Input
         value={settings().imageFolder}
-        // The change event fires on blur or Enter, which avoids writing the settings file on every keystroke
+        // "change" only fires on blur or Enter, so the settings file is not rewritten per keystroke
         onChange={(e) => {
           const imageFolder = e.currentTarget.value.trim();
           if (imageFolder) void updateSettings({ imageFolder });
@@ -106,6 +110,6 @@ export const MarkdownSection: Component = () => (
         class="w-36 font-mono"
         aria-label={t().settings.imageFolder}
       />
-    </SettingRow>
+    </SettingField>
   </SettingsSection>
 );

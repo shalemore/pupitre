@@ -197,5 +197,6 @@ export const ruRU = {
     updateNotificationTitle: (version: string) => `Доступен Pupitre ${version}`,
     updateNotificationBody: "Откройте настройки, чтобы скачать обновление.",
     refreshFonts: "Обновить список шрифтов",
+    resetToDefault: "Сбросить по умолчанию",
   },
 } satisfies TranslationSchema;

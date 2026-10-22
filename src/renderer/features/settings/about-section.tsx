@@ -44,7 +44,7 @@ export const AboutSection: Component = () => (
     <div>
       <div class="mb-2 font-medium text-foreground">{t().settings.settingsFile}</div>
       <div class="flex items-center gap-2">
-        <Input readOnly value={desktop.getSettingsPath()} class="font-mono text-[11px]" />
+        <Input readOnly value={desktop.initialState.settingsPath} class="font-mono text-[11px]" />
         <Button variant="outline" size="sm" onClick={() => void desktop.invoke("settings:reveal")}>
           <FolderOpen class="size-3.5" />
           <span>{t().settings.revealSettingsFile}</span>

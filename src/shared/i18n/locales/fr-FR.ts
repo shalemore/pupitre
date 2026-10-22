@@ -198,5 +198,6 @@ export const frFR = {
     updateNotificationTitle: (version: string) => `Pupitre ${version} est disponible`,
     updateNotificationBody: "Ouvrez les Préférences pour le télécharger.",
     refreshFonts: "Actualiser la liste des polices",
+    resetToDefault: "Rétablir la valeur par défaut",
   },
 } satisfies TranslationSchema;

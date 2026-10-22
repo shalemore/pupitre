@@ -223,5 +223,6 @@ export interface TranslationSchema {
     readonly updateNotificationTitle: (version: string) => string;
     readonly updateNotificationBody: string;
     readonly refreshFonts: string;
+    readonly resetToDefault: string;
   };
 }

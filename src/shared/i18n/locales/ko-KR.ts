@@ -196,5 +196,6 @@ export const koKR = {
     updateNotificationTitle: (version: string) => `Pupitre ${version}을(를) 사용할 수 있습니다`,
     updateNotificationBody: "환경설정에서 다운로드하세요.",
     refreshFonts: "글꼴 목록 새로 고침",
+    resetToDefault: "기본값으로 재설정",
   },
 } satisfies TranslationSchema;

@@ -2,6 +2,7 @@ import { app, BrowserWindow, nativeTheme, session } from "electron";
 import { registerIpcHandlers } from "./ipc";
 import { allowMacTypeInjection } from "./mactype";
 import { rebuildApplicationMenu } from "./menu";
+import { onRecentFilesChange } from "./recent-files";
 import { getSettings, onSettingsChange } from "./settings-store";
 import { checkForUpdatesOnStartup, setupUpdater } from "./updater";
 import { createMainWindow, getMainWindow } from "./windows";
@@ -33,6 +34,7 @@ if (!app.requestSingleInstanceLock()) {
     setupUpdater();
     rebuildApplicationMenu();
     onSettingsChange(rebuildApplicationMenu);
+    onRecentFilesChange(rebuildApplicationMenu);
     createMainWindow();
     checkForUpdatesOnStartup();
 

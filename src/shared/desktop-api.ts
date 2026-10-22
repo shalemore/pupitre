@@ -1,4 +1,4 @@
-import type { Settings } from "./settings";
+import type { SettingKey, Settings } from "./settings";
 
 export interface DocumentLocation {
   path: string;
@@ -62,6 +62,8 @@ export interface DocumentState {
 /** Channels the renderer calls through `ipcRenderer.invoke` and the main process implements with `ipcMain.handle`. */
 export interface InvokeChannels {
   "settings:update": (patch: Partial<Settings>) => void;
+  /** Removes the key from the settings file so the default applies again. */
+  "settings:reset": (key: SettingKey) => void;
   "settings:reveal": () => void;
   "document:open": () => OpenedDocument | null;
   "document:read": (path: string) => OpenedDocument;
@@ -93,12 +95,19 @@ export interface InvokeChannels {
 /** Events the main process pushes to the renderer through `webContents.send`. */
 export interface RendererEvents {
   "settings:changed": Settings;
+  "recent-files:changed": readonly string[];
   "updater:status": UpdateStatus;
   "app:command": AppCommand;
 }
 
-export const SETTINGS_GET_SYNC = "settings:get-sync";
-export const SETTINGS_PATH_SYNC = "settings:path-sync";
+/** State a window needs before its first paint; fetched synchronously by the preload script. */
+export interface InitialState {
+  settings: Settings;
+  settingsPath: string;
+  recentFiles: readonly string[];
+}
+
+export const INITIAL_STATE_SYNC = "app:initial-state";
 
 export interface DesktopApi {
   readonly platform: "darwin" | "win32" | "linux";
@@ -111,7 +120,6 @@ export interface DesktopApi {
     channel: K,
     listener: (payload: RendererEvents[K]) => void,
   ): () => void;
-  getSettings(): Settings;
-  getSettingsPath(): string;
+  readonly initialState: InitialState;
   getPathForFile(file: File): string;
 }

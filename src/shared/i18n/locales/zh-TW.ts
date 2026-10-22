@@ -196,5 +196,6 @@ export const zhTW = {
     updateNotificationTitle: (version: string) => `Pupitre ${version} 已發布`,
     updateNotificationBody: "開啟偏好設定即可下載。",
     refreshFonts: "重新整理字型列表",
+    resetToDefault: "還原預設值",
   },
 } satisfies TranslationSchema;

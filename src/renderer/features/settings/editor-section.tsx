@@ -1,14 +1,15 @@
 import type { Settings } from "@shared/settings";
 import type { Component } from "solid-js";
-import { Select, SettingRow, Slider, Switch } from "@/components/ui";
+import { Select, Slider, Switch } from "@/components/ui";
 import { t } from "@/i18n";
 import { settings, updateSettings } from "@/lib/settings";
 import { FontSelect, RefreshFontsButton } from "./font-select";
-import { SettingsSection } from "./settings-section";
+import { SettingField, SettingsSection } from "./settings-section";
 
 export const EditorSection: Component = () => (
   <SettingsSection title={t().settings.editor}>
-    <SettingRow
+    <SettingField
+      name="bodyFont"
       title={
         <span class="flex items-center gap-1.5">
           {t().settings.bodyFont}
@@ -23,27 +24,39 @@ export const EditorSection: Component = () => (
         emptyLabel={t().settings.themeDefault}
         aria-label={t().settings.bodyFont}
       />
-    </SettingRow>
+    </SettingField>
 
-    <SettingRow title={t().settings.fallbackFont} description={t().settings.fallbackFontDesc}>
+    <SettingField
+      name="fallbackFont"
+      title={t().settings.fallbackFont}
+      description={t().settings.fallbackFontDesc}
+    >
       <FontSelect
         value={settings().fallbackFont}
         onChange={(fallbackFont) => void updateSettings({ fallbackFont })}
         emptyLabel={t().settings.noFallbackFont}
         aria-label={t().settings.fallbackFont}
       />
-    </SettingRow>
+    </SettingField>
 
-    <SettingRow title={t().settings.codeFont} description={t().settings.codeFontDesc}>
+    <SettingField
+      name="codeFont"
+      title={t().settings.codeFont}
+      description={t().settings.codeFontDesc}
+    >
       <FontSelect
         value={settings().codeFont}
         onChange={(codeFont) => void updateSettings({ codeFont })}
         emptyLabel={t().settings.themeDefault}
         aria-label={t().settings.codeFont}
       />
-    </SettingRow>
+    </SettingField>
 
-    <SettingRow title={t().settings.fontSize} description={`${settings().fontSize}px`}>
+    <SettingField
+      name="fontSize"
+      title={t().settings.fontSize}
+      description={`${settings().fontSize}px`}
+    >
       <Slider
         value={settings().fontSize}
         min={12}
@@ -52,9 +65,13 @@ export const EditorSection: Component = () => (
         onChange={(fontSize) => void updateSettings({ fontSize })}
         aria-label={t().settings.fontSize}
       />
-    </SettingRow>
+    </SettingField>
 
-    <SettingRow title={t().settings.lineHeight} description={settings().lineHeight.toFixed(2)}>
+    <SettingField
+      name="lineHeight"
+      title={t().settings.lineHeight}
+      description={settings().lineHeight.toFixed(2)}
+    >
       <Slider
         value={settings().lineHeight}
         min={1.2}
@@ -63,9 +80,13 @@ export const EditorSection: Component = () => (
         onChange={(lineHeight) => void updateSettings({ lineHeight })}
         aria-label={t().settings.lineHeight}
       />
-    </SettingRow>
+    </SettingField>
 
-    <SettingRow title={t().settings.contentWidth} description={t().settings.contentWidthDesc}>
+    <SettingField
+      name="contentWidth"
+      title={t().settings.contentWidth}
+      description={t().settings.contentWidthDesc}
+    >
       <Select<Settings["contentWidth"]>
         value={settings().contentWidth}
         onChange={(contentWidth) => void updateSettings({ contentWidth })}
@@ -77,14 +98,18 @@ export const EditorSection: Component = () => (
         ]}
         aria-label={t().settings.contentWidth}
       />
-    </SettingRow>
+    </SettingField>
 
-    <SettingRow title={t().settings.spellcheck} description={t().settings.spellcheckDesc}>
+    <SettingField
+      name="spellcheck"
+      title={t().settings.spellcheck}
+      description={t().settings.spellcheckDesc}
+    >
       <Switch
         checked={settings().spellcheck}
         onChange={(spellcheck) => void updateSettings({ spellcheck })}
         aria-label={t().settings.spellcheck}
       />
-    </SettingRow>
+    </SettingField>
   </SettingsSection>
 );

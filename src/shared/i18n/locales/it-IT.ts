@@ -197,5 +197,6 @@ export const itIT = {
     updateNotificationTitle: (version: string) => `Pupitre ${version} è disponibile`,
     updateNotificationBody: "Apri Preferenze per scaricarlo.",
     refreshFonts: "Aggiorna elenco caratteri",
+    resetToDefault: "Ripristina predefinito",
   },
 } satisfies TranslationSchema;

@@ -4,6 +4,7 @@ import { getSampleDocument } from "@/features/samples/sample-document";
 import { currentLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { fileNameOf, withTrailingNewline } from "@/lib/file";
+import { recentFiles } from "@/lib/recent-files";
 import { settings } from "@/lib/settings";
 
 export interface OpenDocument {
@@ -137,8 +138,8 @@ export function createDocumentSession(getMarkdown: () => string | undefined) {
 
   /** When the window opens, the "On startup" setting decides between the welcome page, the last file or a new document. */
   const restoreOnStartup = () => {
-    const { startup, recentFiles } = settings();
-    const [lastFile] = recentFiles;
+    const { startup } = settings();
+    const [lastFile] = recentFiles();
     if (startup === "new-file") void newDocument();
     else if (startup === "last-file" && lastFile !== undefined) void openPath(lastFile);
   };

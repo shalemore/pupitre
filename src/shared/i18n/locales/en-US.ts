@@ -198,5 +198,6 @@ export const enUS = {
     updateNotificationTitle: (version: string) => `Pupitre ${version} is available`,
     updateNotificationBody: "Open Preferences to download it.",
     refreshFonts: "Refresh Font List",
+    resetToDefault: "Reset to Default",
   },
 } satisfies TranslationSchema;

@@ -1,13 +1,17 @@
 import type { Settings } from "@shared/settings";
 import type { Component } from "solid-js";
-import { Select, SettingRow, Switch } from "@/components/ui";
+import { Select, Switch } from "@/components/ui";
 import { type LanguageSetting, SUPPORTED_LOCALES, t } from "@/i18n";
 import { settings, updateSettings } from "@/lib/settings";
-import { SettingsSection } from "./settings-section";
+import { SettingField, SettingsSection } from "./settings-section";
 
 export const GeneralSection: Component = () => (
   <SettingsSection title={t().settings.general}>
-    <SettingRow title={t().settings.language} description={t().settings.languageDesc}>
+    <SettingField
+      name="locale"
+      title={t().settings.language}
+      description={t().settings.languageDesc}
+    >
       <Select<LanguageSetting>
         value={settings().locale}
         onChange={(locale) => void updateSettings({ locale })}
@@ -17,9 +21,13 @@ export const GeneralSection: Component = () => (
         ]}
         aria-label={t().settings.language}
       />
-    </SettingRow>
+    </SettingField>
 
-    <SettingRow title={t().settings.startup} description={t().settings.startupDesc}>
+    <SettingField
+      name="startup"
+      title={t().settings.startup}
+      description={t().settings.startupDesc}
+    >
       <Select<Settings["startup"]>
         value={settings().startup}
         onChange={(startup) => void updateSettings({ startup })}
@@ -30,17 +38,22 @@ export const GeneralSection: Component = () => (
         ]}
         aria-label={t().settings.startup}
       />
-    </SettingRow>
+    </SettingField>
 
-    <SettingRow title={t().settings.autoSave} description={t().settings.autoSaveDesc}>
+    <SettingField
+      name="autoSave"
+      title={t().settings.autoSave}
+      description={t().settings.autoSaveDesc}
+    >
       <Switch
         checked={settings().autoSave}
         onChange={(autoSave) => void updateSettings({ autoSave })}
         aria-label={t().settings.autoSave}
       />
-    </SettingRow>
+    </SettingField>
 
-    <SettingRow
+    <SettingField
+      name="autoCheckUpdates"
       title={t().settings.autoCheckUpdates}
       description={t().settings.autoCheckUpdatesDesc}
     >
@@ -49,6 +62,6 @@ export const GeneralSection: Component = () => (
         onChange={(autoCheckUpdates) => void updateSettings({ autoCheckUpdates })}
         aria-label={t().settings.autoCheckUpdates}
       />
-    </SettingRow>
+    </SettingField>
   </SettingsSection>
 );
