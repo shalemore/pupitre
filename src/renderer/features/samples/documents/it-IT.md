@@ -1,258 +1,154 @@
-# 🪶 Pupitre - Guida all'editor Markdown minimalista e immersivo
+# Guida a Pupitre
 
-> **Pupitre** (dal francese _leggio_ o _pulpito_) è un editor Markdown desktop leggero, scattante e privo di distrazioni, sviluppato su **Tauri v2 + SolidJS + CodeMirror 6**.
-> Creato esclusivamente per la scrittura pura e un'esperienza tipografica senza compromessi.
+![Pupitre](./logo.svg)
 
-![Pupitre Logo](./logo.svg)
+Pupitre è un editor Markdown per desktop. I documenti sono semplici file `.md`: ciò che vedi viene mostrato già formattato sul posto, e la sintassi Markdown compare finché il cursore si trova su di essa. Questa guida è anche un esempio di ciò che l’editor mostra; modificala liberamente, non viene salvata a meno che tu scelga **Salva con nome**.
 
----
+## Modifica
 
-> [!NOTE]
-> **Anteprima sul posto in tempo reale (In-place Live Preview)**: In Pupitre, i simboli della sintassi Markdown si richiudono automaticamente mostrando la formattazione quando il cursore si allontana. Spostando il cursore sulla riga, la sintassi si riapre sul posto per una modifica naturale e immediata.
+Sposta il cursore dentro un **testo in grassetto**, un `frammento di codice` o un [link](https://github.com/shalemore/pupitre) e la sua sintassi compare intorno. I marcatori si comportano come testo:
 
-> [!TIP]
-> Scorciatoie essenziali:
->
-> - <kbd>Ctrl</kbd> + <kbd>S</kbd>: Salva il documento corrente
-> - <kbd>Ctrl</kbd> + <kbd>O</kbd>: Apri file Markdown locale
-> - <kbd>Ctrl</kbd> + <kbd>B</kbd>: Mostra/Nascondi la struttura laterale
-> - <kbd>Ctrl</kbd> + <kbd>,</kbd>: Apri le Preferenze in un istante
-
----
-
-## 1. Tipografia e formattazione del testo (Typography & Styles)
-
-Durante la stesura, Pupitre garantisce stili armoniosi e transizioni morbide:
-
-- **Grassetto (Bold)**: `**robusto e scattante**` appare come **robusto e scattante**
-- _Corsivo (Italic)_: `*flusso piacevole*` appare come _flusso piacevole_
-- _**Grassetto e corsivo (Bold & Italic)**_: `***il meglio di entrambi***` appare come _**il meglio di entrambi**_
-- ~~Barrato (Strikethrough)~~: `~~pesante e obsoleto~~` appare come ~~pesante e obsoleto~~
-- Codice in linea (Inline Code): `const app = new Pupitre();`
-- Formattazioni combinate: **~~testo in grassetto barrato~~** oppure _`badge di codice in corsivo`_
-- Tasti di scelta rapida: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> Salva con nome
-- Collegamento esterno: [Repository GitHub ufficiale di Pupitre](https://github.com/shalemore/pupitre)
-
-### Dimostrazione citazioni nidificate
-
-> I grandi strumenti sono come l'aria limpida: impercettibili mentre lavori, ma capaci di sostenere in silenzio la tua concentrazione.
->
-> > —— "La perfezione si ottiene non quando non c'è più nulla da aggiungere, ma quando non c'è più nulla da togliere."
-
----
-
-## 2. Gerarchia delle intestazioni (Heading Hierarchy)
-
-Pupitre analizza dinamicamente le intestazioni e genera una mappa concettuale in tempo reale nella barra laterale:
-
-### 2.1 Intestazione livello 3 (H3) - Modulo e argomentazione
-
-#### 2.1.1 Intestazione livello 4 (H4) - Specifiche di dettaglio
-
-##### 2.1.1.1 Intestazione livello 5 (H5) - Note supplementari
-
-###### 2.1.1.1.1 Intestazione livello 6 (H6) - Annotazione minima
-
----
-
-## 3. Elenchi e liste di controllo (Lists & Tasks)
-
-### 3.1 Tabella di marcia delle funzionalità
-
-- [x] Motore nativo ultrarapido basato su **Rust + Tauri 2.0**
-- [x] Interfaccia reattiva con **SolidJS** (zero sovraccarico Virtual-DOM)
-- [x] Architettura di editing moderna con **CodeMirror 6**
-- [x] Diagrammi Mermaid compilati all'istante tramite **Ondine WebAssembly**
-- [x] Modifica visiva in tempo reale di **Tabelle GFM interattive**
-- [x] Design **senza cornice (Frameless)** con ombreggiature armoniose
-- [x] Supporto nativo a **12 lingue** e passaggio automatico tema scuro/chiaro
-- [x] Sistema di aggiornamento automatico firmato **Auto-Updater**
-- [ ] Esportazione in PDF ad alta risoluzione e HTML indipendente
-- [ ] Collegamenti bidirezionali locali e grafo di conoscenza
-
-### 3.2 Esempi di elenchi nidificati
-
-1. Fase iniziale di bozza
-   - Registrare idee spontanee in testo semplice
-   - Inserire frammenti di codice pertinenti
-   - Tracciare schemi di architettura
-2. Fase di revisione
-   1. Verificare l'equilibrio dei titoli
-   2. Controllare formule matematiche e diagrammi
-   3. Eseguire il commit nel controllo versione
-3. Fase di pubblicazione e archiviazione
-
-### 3.3 Blocchi di codice indentati negli elenchi
-
-Le guide procedurali supportano blocchi di codice annidati all'interno degli elementi dell'elenco:
-
-1. Accedi e sblocca il client, attendendo il completamento della sincronizzazione.
-2. Abilita **SSH Agent** e le credenziali locali nelle preferenze di sistema.
-3. Scrivi la configurazione della chiave pubblica per l'autenticazione:
-
-   ```powershell
-   New-Item -ItemType Directory -Path $HOME\.ssh -Force | Out-Null
-   Set-Content `
-     -Path $HOME\.ssh\github-pupitre.pub `
-     -Value 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID3FhmdqRz1VHUTNHuAKBA1nchfD63/9NTQmwQkx7tC'
-   ```
-
-4. Verifica la connettività del terminale:
-
-   ```powershell
-   & "$env:WINDIR\System32\OpenSSH\ssh.exe" -T git@github.com
-   ```
-
----
-
-## 4. Tabelle di dati GFM (GFM Tables)
-
-Pupitre include il pieno supporto alle tabelle GitHub Flavored Markdown e all'allineamento delle colonne:
-
-| Proprietà           |       Editor Pupitre        | Editor Electron tradizionali | Blocco note di sistema |
-| :------------------ | :-------------------------: | :--------------------------: | ---------------------: |
-| Avvio a freddo      |        **< 300 ms**         |      Da 1500 a 3000 ms       |               < 100 ms |
-| Memoria RAM         |     **Circa 35-60 MB**      |       Da 200 a 500 MB        |                < 15 MB |
-| Tipo di anteprima   |  **Sul posto (In-place)**   |        Schermo diviso        |      Solo testo grezzo |
-| Motore diagrammi    | **Mermaid Wasm integrato**  |    Plugin esterni pesanti    |         Non supportato |
-| Piattaforma runtime |    **Tauri 2.0 (Rust)**     |   Browser Chromium intero    |  Specifica del sistema |
-| Aspetto finestra    | **Senza cornice con ombre** |         Non uniforme         |  Bordo nativo classico |
-
----
-
-## 5. Diagrammi di architettura e sequenza Mermaid (Mermaid)
-
-Grazie alla tecnologia WebAssembly integrata, i diagrammi Mermaid vengono elaborati senza connessione internet:
-
-### 5.1 Architettura complessiva
-
-```mermaid
-flowchart TD
-    subgraph UI["Livello Frontend (Webview / SolidJS)"]
-        CM["Motore CodeMirror 6"]
-        LP["Estensione Live Preview"]
-        OND["Ondine Mermaid Wasm"]
-        ST["Preferenze e i18n"]
-    end
-
-    subgraph IPC["Bus di comunicazione Tauri IPC"]
-        CMD["Commands (Chiamate asincrone)"]
-        EVT["Events (Diffusione bidirezionale)"]
-    end
-
-    subgraph CORE["Livello nativo di sistema (Rust Core)"]
-        FS["I/O File System locale"]
-        WIN["Gestore finestra frameless"]
-        UPD["Aggiornatore incrementale"]
-    end
-
-    CM --> LP
-    LP --> OND
-    UI <--> IPC
-    IPC <--> CORE
-```
-
-### 5.2 Sequenza di salvataggio automatico e sincronizzazione
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor User as Autore
-    participant Ed as Finestra editor
-    participant BC as Canale BroadcastChannel
-    participant Pref as Finestra preferenze
-    participant Disk as Memoria locale (.pupitre)
-
-    User->>Ed: Digita testo o modifica opzione
-    Ed->>BC: Notifica evento di modifica
-    BC-->>Pref: Sincronizzazione in tempo reale
-    Ed->>Disk: Scrittura asincrona ritardata (Auto-Save)
-    Disk-->>Ed: Riscontro di scrittura su disco
-```
-
----
-
-## 6. Blocchi di codice con evidenziazione della sintassi
-
-Ogni blocco include un'intestazione con etichetta del linguaggio e pulsante di copia:
-
-### 6.1 Rust (Esempio comando Tauri)
-
-```rust
-use tauri::{AppHandle, Manager};
-
-#[tauri::command]
-pub async fn open_settings_window(app: AppHandle) -> Result<(), String> {
-    if let Some(win) = app.get_webview_window("settings") {
-        let _ = win.unminimize();
-        let _ = win.show();
-        let _ = win.set_focus();
-        return Ok(());
-    }
-    Ok(())
-}
-```
-
-### 6.2 TypeScript (Stato reattivo SolidJS)
-
-```typescript
-import { createSignal, createMemo } from "solid-js";
-
-export function useWordCount(content: () => string) {
-  const stats = createMemo(() => {
-    const text = content();
-    const words = (text.match(/\S+/g) || []).length;
-    const chars = text.length;
-    return { words, chars };
-  });
-
-  return stats;
-}
-```
-
----
-
-## 7. Formule matematiche e scientifiche (KaTeX)
-
-Resa nitida delle equazioni matematiche, sia all'interno del testo che in blocchi dedicati:
-
-- Formula in linea: La celebre equazione massa-energia $E = mc^2$, e l'identità di Eulero $e^{i\pi} + 1 = 0$.
-- Formula in blocco (Distribuzione normale di Gauss e Legge di Maxwell-Ampère):
-
-$$
-f(x) = \frac{1}{\sigma \sqrt{2\pi}} \exp\left( -\frac{(x - \mu)^2}{2\sigma^2} \right)
-$$
-
-$$
-\oint_C \mathbf{B} \cdot d\boldsymbol{\ell} = \mu_0 I_{\text{enc}} + \mu_0 \varepsilon_0 \frac{d\Phi_E}{dt}
-$$
-
----
-
-## 8. Sezioni comprimibili interattive (Collapsible Details)
+- Backspace subito dopo un marcatore di apertura rimuove la formattazione.
+- All’inizio di un titolo, digita `#` per alzarne il livello e premi Backspace per abbassarlo.
+- La formattazione è nei menu **Paragrafo** e **Formato**, nel menu contestuale e nelle scorciatoie qui sotto.
 
 <details>
-<summary><b>🔍 Fai clic per espandere: Guida rapida alle scorciatoie di Pupitre</b></summary>
+<summary>Scorciatoie da tastiera (Ctrl è ⌘ su macOS)</summary>
 
-| Azione               | Scorciatoia Windows / Linux                       | Scorciatoia macOS                              |
-| :------------------- | :------------------------------------------------ | :--------------------------------------------- |
-| Nuovo documento      | <kbd>Ctrl</kbd> + <kbd>N</kbd>                    | <kbd>⌘</kbd> + <kbd>N</kbd>                    |
-| Apri file            | <kbd>Ctrl</kbd> + <kbd>O</kbd>                    | <kbd>⌘</kbd> + <kbd>O</kbd>                    |
-| Salva documento      | <kbd>Ctrl</kbd> + <kbd>S</kbd>                    | <kbd>⌘</kbd> + <kbd>S</kbd>                    |
-| Salva con nome       | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> | <kbd>⌘</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> |
-| Trova testo          | <kbd>Ctrl</kbd> + <kbd>F</kbd>                    | <kbd>⌘</kbd> + <kbd>F</kbd>                    |
-| Sostituisci testo    | <kbd>Ctrl</kbd> + <kbd>H</kbd>                    | <kbd>⌥</kbd> + <kbd>⌘</kbd> + <kbd>F</kbd>     |
-| Ingrandisci / Riduci | <kbd>Ctrl</kbd> + <kbd>+</kbd> / <kbd>-</kbd>     | <kbd>⌘</kbd> + <kbd>+</kbd> / <kbd>-</kbd>     |
-| Preferenze           | <kbd>Ctrl</kbd> + <kbd>,</kbd>                    | <kbd>⌘</kbd> + <kbd>,</kbd>                    |
+| Azione                                                  | Scorciatoia                                                                                                 |
+| :------------------------------------------------------ | :---------------------------------------------------------------------------------------------------------- |
+| Grassetto / Corsivo / Codice in linea                   | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
+| Barrato                                                 | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| Link                                                    | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| Titolo 1–6 / Paragrafo                                  | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
+| Citazione                                               | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
+| Elenco numerato / puntato                               | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
+| Blocco di codice / Blocco matematico                    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
+| Tabella                                                 | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
+| Trova / Sostituisci                                     | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Struttura                                               | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Modalità concentrazione / Modalità macchina da scrivere | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
+| Reimposta zoom                                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| Preferenze                                              | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>
 
----
+## Modalità di scrittura
 
-## 9. Note a piè di pagina e chiusura (Footnotes)
+- La **Modalità concentrazione** attenua tutto tranne il paragrafo che stai scrivendo.
+- La **Modalità macchina da scrivere** tiene la riga che stai scrivendo al centro della finestra.
 
-Pupitre nasce per accompagnare saggi, articoli tecnici, appunti quotidiani e architetture software[^1].
+Entrambe sono nel menu **Visualizza** e in Preferenze › Editor, e si possono combinare.
 
-Possa il tuo pensiero fluire libero e limpido sulla punta delle dita.
+## Stile finestra
 
-[^1]: Pupitre è un'opera open source per chi ama scrivere con chiarezza e tranquillità. Sentiti libero di proporre idee e codice su GitHub!
+Preferenze › Aspetto › Stile finestra passa da **Classico** a **Immersivo**. Nello stile immersivo il documento sta in una scheda dentro la finestra; la barra del titolo e la struttura si spostano quando scrivi o scorri e tornano quando il puntatore raggiunge il bordo superiore o iniziale della finestra. Lo stile si applica alle finestre aperte dopo la modifica.
+
+## File e immagini
+
+- Pupitre mantiene i fine riga del file aperto, salvo diversa indicazione in Preferenze › Markdown. Lì si imposta anche come vengono scritti al salvataggio elenchi, enfasi, recinti di codice e linee.
+- Le immagini incollate vengono salvate in una cartella accanto al documento (`assets` per impostazione predefinita, Preferenze › Markdown). Un documento non ancora salvato le tiene in memoria e le scrive al primo salvataggio.
+- Preferenze › Generale › App predefinita per Markdown fa aprire i file `.md` con Pupitre dal gestore file.
+- Le preferenze sono memorizzate in `settings.json`; Preferenze › Informazioni ne mostra la cartella. Vengono scritti solo i valori diversi da quelli predefiniti, e un campo illeggibile torna al valore predefinito senza toccare gli altri.
+
+## Temi
+
+Un tema dà stile a tutta la finestra e al documento. Preferenze › Aspetto li elenca con gli schemi di colore supportati, e per la modalità scura si può scegliere un tema separato.
+
+I temi sono inclusi nell’app: ognuno è una cartella in `src/renderer/themes/<name>/` con un `index.css`, e il nome della cartella è il nome del tema. Font o immagini del tema stanno nella stessa cartella e si richiamano con `url()` relativi.
+
+```css
+:root {
+  /* The schemes this theme supports: light, dark or both */
+  color-scheme: light dark;
+
+  /* Default body font; users can override it in the preferences */
+  --font-document: Georgia, serif;
+
+  /* Design tokens used by the whole window */
+  --ui-surface-1: oklch(0.99 0.01 90);
+  --ui-brand: oklch(0.55 0.12 250);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ui-surface-1: oklch(0.2 0.01 90);
+  }
+}
+
+.milkdown .ProseMirror h1 {
+  font-size: 2em;
+}
+```
+
+- I colori si impostano con i token `--ui-*` (superfici, testo, accento) e `--syntax-*` per il codice. I valori predefiniti e l’elenco completo sono in `src/renderer/app.css` e nel tema `pupitre`.
+- Le barre delle citazioni dovrebbero usare `var(--alert-color, …)` perché gli avvisi mantengano i loro colori.
+- Dimensione del testo, altezza di riga e larghezza del contenuto appartengono all’utente e prevalgono sempre; usa `em` per le dimensioni nel documento e proprietà logiche come `padding-inline-start` perché il testo da destra a sinistra venga specchiato.
+
+## Riferimento Markdown
+
+### Testo
+
+**Grassetto**, _corsivo_, ~~barrato~~, `codice in linea`, [link](https://commonmark.org), H<sub>2</sub>O, x<sup>2</sup>, <kbd>Esc</kbd> ed <mark>evidenziazioni</mark>. L’HTML in linea viene reso quando è un elemento completo, altrimenti è mostrato come sorgente.
+
+> Una citazione.
+>
+> > Una citazione annidata.
+
+> [!NOTE]
+> Avvisi GitHub: `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` e `[!CAUTION]`.
+
+> [!WARNING]
+> Il marcatore deve essere la prima riga della citazione.
+
+### Elenchi
+
+1. Numerato
+   - Annidato, puntato
+   - [x] Le attività si possono spuntare
+   - [ ] e deselezionare
+2. Gli elenchi possono contenere codice:
+
+   ```sh
+   npm run dev
+   ```
+
+### Tabella
+
+| Sinistra  | Centro | Destra |
+| :-------- | :----: | -----: |
+| Cella     | Cella  |   1.00 |
+| Più lungo | Testo  |  10.50 |
+
+### Codice
+
+```typescript
+function countWords(text: string): number {
+  const segmenter = new Intl.Segmenter(undefined, { granularity: "word" });
+  return [...segmenter.segment(text)].filter((part) => part.isWordLike).length;
+}
+```
+
+### Matematica
+
+In linea $e^{i\pi} + 1 = 0$ e in blocco:
+
+$$
+\int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
+$$
+
+### Diagrammi
+
+```mermaid
+flowchart LR
+    Open[Apri file] --> Edit[Modifica] --> Save[Salva]
+    Edit -->|Incolla immagine| Assets[(cartella assets)]
+```
+
+### Note a piè di pagina
+
+Una frase con una nota[^1].
+
+[^1]: Le note sono elencate alla fine del documento.
+
+<!-- I commenti restano nel file e sono mostrati come sorgente. -->

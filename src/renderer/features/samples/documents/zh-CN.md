@@ -1,258 +1,154 @@
-# 🪶 Pupitre - 沉浸式极简 Markdown 编辑器指南
+# Pupitre 指南
 
-> **Pupitre**（法文原意：琴谱架、讲台）是一款基于 **Tauri v2 + SolidJS + CodeMirror 6** 打造的极简、轻量、高颜值的桌面 Markdown 原位编辑器。
-> 专为纯粹写作与沉浸式排版体验而生。
+![Pupitre](./logo.svg)
 
-![Pupitre Logo](./logo.svg)
+Pupitre 是一款桌面 Markdown 编辑器。文档就是普通的 `.md` 文件:所见内容就地渲染,光标所在处会显示 Markdown 语法。本指南同时也是编辑器渲染效果的示例,可以随意编辑,除非选择**另存为**,否则不会保存。
 
----
+## 编辑
 
-> [!NOTE]
-> **原位实时预览 (In-place Live Preview)**：在 Pupitre 中，光标离开标记时自动呈现精美渲染排版；当光标移入相应行时，所有 Markdown 格式标记无缝展开，真正做到“所见即所思，所写即所得”。
+把光标移到**粗体文字**、`行内代码`或[链接](https://github.com/shalemore/pupitre)里,周围就会显示它的语法。这些标记的行为和文字一样:
 
-> [!TIP]
-> 常用快捷操作：
->
-> - <kbd>Ctrl</kbd> + <kbd>S</kbd>：快速保存当前文档
-> - <kbd>Ctrl</kbd> + <kbd>O</kbd>：打开本地 Markdown 文件
-> - <kbd>Ctrl</kbd> + <kbd>B</kbd>：展开 / 收起左侧大纲侧边栏
-> - <kbd>Ctrl</kbd> + <kbd>,</kbd>：秒级打开首选项设置
-
----
-
-## 一、排版与文本格式 (Typography & Inline Styles)
-
-在日常记录与写作中，Pupitre 提供了细腻的排版样式与过渡动画：
-
-- **粗体强调 (Bold)**：`**坚固可靠**` 显示为 **坚固可靠**
-- _斜体强调 (Italic)_：`*优雅从容*` 显示为 _优雅从容_
-- _**粗斜体 (Bold & Italic)**_：`***兼收并蓄***` 显示为 _**兼收并蓄**_
-- ~~删除线 (Strikethrough)~~：`~~臃肿沉重~~` 显示为 ~~臃肿沉重~~
-- 行内代码 (Inline Code)：`const app = new Pupitre();`
-- 组合修饰：**~~加粗且删除的内容~~** 或 _`带斜体的高亮标记`_
-- 键盘操作标签：<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> 另存为文件
-- 外部链接：[Pupitre GitHub 开源主页](https://github.com/shalemore/pupitre)
-
-### 嵌套引用块演示
-
-> 优秀的工具如同透明的空气，在工作时你感觉不到它的存在，但它却默默赋予你专注的力量。
->
-> > —— “极简并非缺乏细节，而是克制地删繁就简，直到无法再减去任何多余之物。”
-
----
-
-## 二、标题层级体系 (Heading Hierarchy)
-
-Pupitre 会自动解析所有各级标题，并在左侧边栏生成实时树状动态目录大纲：
-
-### 2.1 标题三级 (H3) - 功能子模块与论点
-
-#### 2.1.1 标题四级 (H4) - 子项细节说明
-
-##### 2.1.1.1 标题五级 (H5) - 补充提示
-
-###### 2.1.1.1.1 标题六级 (H6) - 最小层级标注
-
----
-
-## 三、任务清单与列表 (Lists & Task Checklists)
-
-### 3.1 核心特性开发计划
-
-- [x] 基于 **Rust + Tauri 2.0** 的极速原生内核
-- [x] **SolidJS** 细粒度响应式前端框架，0 冗余组件 Virtual-DOM 重绘
-- [x] **CodeMirror 6** 现代编辑器架构与即时预览插件系统
-- [x] 支持 **Ondine WebAssembly** 驱动的原生 Mermaid 图表渲染
-- [x] **GFM 交互式表格**实时渲染与可视化编辑
-- [x] **无原生标题栏 (Frameless)** 沉浸式设计与自定义窗口控制
-- [x] 内置 **12 种国际化多语言**与深浅模式自动跟随
-- [x] 官方 **Auto-Updater** 安全签名自动增量更新
-- [ ] 导出为高清 PDF 与单页 HTML
-- [ ] 本地双向链接与知识图谱预览
-
-### 3.2 嵌套列表演示
-
-1. 基础写作阶段
-   - 快速整理灵感草稿
-   - 插入关键代码片段
-   - 绘制结构草图
-2. 润色校对阶段
-   1. 检查语法与排版层级
-   2. 校验公式与图表逻辑
-   3. 导出或提交至版本控制
-3. 发布归档阶段
-
-### 3.3 列表嵌套代码块演示 (Indented Code in Lists)
-
-在步骤指引与技术文档中，列表支持直接内嵌缩进代码块：
-
-1. 登录并解锁客户端，等待数据同步完成。
-2. 在系统首选项中启用 **SSH Agent** 与本地凭据支持。
-3. 写入公钥配置，供系统组件无感调用：
-
-   ```powershell
-   New-Item -ItemType Directory -Path $HOME\.ssh -Force | Out-Null
-   Set-Content `
-     -Path $HOME\.ssh\github-pupitre.pub `
-     -Value 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID3FhmdqRz1VHUTNHuAKBA1nchfD63/9NTQmwQkx7tC'
-   ```
-
-4. 测试终端连接状态：
-
-   ```powershell
-   & "$env:WINDIR\System32\OpenSSH\ssh.exe" -T git@github.com
-   ```
-
----
-
-## 四、数据表格与对齐 (GFM Tables)
-
-Pupitre 完全支持 GitHub Flavored Markdown (GFM) 表格语法，并具备自适应排版：
-
-| 特性指标     |       Pupitre 编辑器        | 传统 Electron 编辑器 | 原生纯记事本 |
-| :----------- | :-------------------------: | :------------------: | -----------: |
-| 启动冷开销   |        **< 300 ms**         |    1500 ~ 3000 ms    |     < 100 ms |
-| 内存占用     |      **约 35 ~ 60 MB**      |     200 ~ 500 MB     |      < 15 MB |
-| 实时预览机制 | **原位就地切换 (In-place)** |  双栏分屏或源码切换  |     仅纯文本 |
-| 图表渲染支持 |    **内置 Mermaid Wasm**    |     依赖重型插件     |       不支持 |
-| 跨平台架构   |    **Tauri 2.0 (Rust)**     |   Chromium 运行时    |   单系统专属 |
-| 窗口外观定制 |    **沉浸式无边框阴影**     |       参差不齐       | 系统原生边框 |
-
----
-
-## 五、Mermaid 架构图与流程图 (Mermaid Diagrams)
-
-Pupitre 内置了基于 WebAssembly 编译的 Mermaid 渲染引擎，无需网络请求即可在编辑器中实时预览图表：
-
-### 5.1 软件整体技术架构
-
-```mermaid
-flowchart TD
-    subgraph UI["前端渲染层 (Webview / SolidJS)"]
-        CM["CodeMirror 6 核心"]
-        LP["原位实时预览插件 (Live Preview)"]
-        OND["Ondine Mermaid Wasm"]
-        ST["首选项与多语言系统 (i18n)"]
-    end
-
-    subgraph IPC["Tauri IPC 桥接通信"]
-        CMD["Commands (异步调用)"]
-        EVT["Events (双向广播总线)"]
-    end
-
-    subgraph CORE["系统底座层 (Rust Core)"]
-        FS["本地文件系统 IO"]
-        WIN["原生无边框窗口控制器"]
-        UPD["安全签名增量更新器"]
-    end
-
-    CM --> LP
-    LP --> OND
-    UI <--> IPC
-    IPC <--> CORE
-```
-
-### 5.2 自动保存与配置同步时序
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor User as 用户
-    participant Ed as 编辑器 (Editor)
-    participant BC as 广播通道 (BroadcastChannel)
-    participant Pref as 偏好设置窗口 (Settings)
-    participant Disk as 本地磁盘存储 (.pupitre)
-
-    User->>Ed: 编辑文档内容或修改偏好
-    Ed->>BC: 广播状态变更通知
-    BC-->>Pref: 跨窗口实时同步主题/配置
-    Ed->>Disk: 防抖自动保存文件内容 (Auto-Save)
-    Disk-->>Ed: 返回写入确认
-```
-
----
-
-## 六、代码块与语法高亮 (Syntax-Highlighted Code Blocks)
-
-右上角具备一键复制代码按钮以及语言徽标提示：
-
-### 6.1 Rust (Tauri Command 示例)
-
-```rust
-use tauri::{AppHandle, Manager};
-
-#[tauri::command]
-pub async fn open_settings_window(app: AppHandle) -> Result<(), String> {
-    if let Some(win) = app.get_webview_window("settings") {
-        let _ = win.unminimize();
-        let _ = win.show();
-        let _ = win.set_focus();
-        return Ok(());
-    }
-    Ok(())
-}
-```
-
-### 6.2 TypeScript (SolidJS 响应式状态)
-
-```typescript
-import { createSignal, createMemo } from "solid-js";
-
-export function useWordCount(content: () => string) {
-  const stats = createMemo(() => {
-    const text = content();
-    const words = (text.match(/\S+/g) || []).length;
-    const chars = text.length;
-    return { words, chars };
-  });
-
-  return stats;
-}
-```
-
----
-
-## 七、数学公式与科学记号 (Math Equations)
-
-支持行内公式与独立展示公式：
-
-- 行内公式：著名的质能转换方程为 $E = mc^2$，欧拉恒等式为 $e^{i\pi} + 1 = 0$。
-- 块级公式（高斯积分与概率密度）：
-
-$$
-f(x) = \frac{1}{\sigma \sqrt{2\pi}} \exp\left( -\frac{(x - \mu)^2}{2\sigma^2} \right)
-$$
-
-$$
-\oint_C \mathbf{B} \cdot d\boldsymbol{\ell} = \mu_0 I_{\text{enc}} + \mu_0 \varepsilon_0 \frac{d\Phi_E}{dt}
-$$
-
----
-
-## 八、折叠区块与交互提示 (Collapsible Details)
+- 在起始标记后面按 Backspace 会取消该格式。
+- 在标题开头输入 `#` 会提高级别,按 Backspace 会降低级别。
+- 格式命令在**段落**菜单和**格式**菜单、右键菜单以及下面的快捷键中。
 
 <details>
-<summary><b>🔍 点击展开：Pupitre 快捷键全览表</b></summary>
+<summary>键盘快捷键(macOS 上 Ctrl 对应 ⌘)</summary>
 
-| 功能指令      | Windows / Linux 快捷键                            | macOS 快捷键                                   |
-| :------------ | :------------------------------------------------ | :--------------------------------------------- |
-| 新建文档      | <kbd>Ctrl</kbd> + <kbd>N</kbd>                    | <kbd>⌘</kbd> + <kbd>N</kbd>                    |
-| 打开文件      | <kbd>Ctrl</kbd> + <kbd>O</kbd>                    | <kbd>⌘</kbd> + <kbd>O</kbd>                    |
-| 保存文档      | <kbd>Ctrl</kbd> + <kbd>S</kbd>                    | <kbd>⌘</kbd> + <kbd>S</kbd>                    |
-| 另存为        | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> | <kbd>⌘</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> |
-| 查找内容      | <kbd>Ctrl</kbd> + <kbd>F</kbd>                    | <kbd>⌘</kbd> + <kbd>F</kbd>                    |
-| 替换内容      | <kbd>Ctrl</kbd> + <kbd>H</kbd>                    | <kbd>⌥</kbd> + <kbd>⌘</kbd> + <kbd>F</kbd>     |
-| 缩放放大/缩小 | <kbd>Ctrl</kbd> + <kbd>+</kbd> / <kbd>-</kbd>     | <kbd>⌘</kbd> + <kbd>+</kbd> / <kbd>-</kbd>     |
-| 偏好设置      | <kbd>Ctrl</kbd> + <kbd>,</kbd>                    | <kbd>⌘</kbd> + <kbd>,</kbd>                    |
+| 操作                   | 快捷键                                                                                                      |
+| :--------------------- | :---------------------------------------------------------------------------------------------------------- |
+| 粗体 / 斜体 / 行内代码 | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
+| 删除线                 | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| 链接                   | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| 标题 1–6 / 正文        | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
+| 引用                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
+| 有序 / 无序列表        | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
+| 代码块 / 公式块        | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
+| 表格                   | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
+| 查找 / 替换            | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| 大纲                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| 专注模式 / 打字机模式  | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
+| 重置缩放               | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| 偏好设置               | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>
 
----
+## 写作模式
 
-## 九、脚注与结尾 (Footnotes)
+- **专注模式**会淡化正在编辑的段落以外的内容。
+- **打字机模式**让正在输入的行始终保持在窗口中央。
 
-Pupitre 将陪伴你完成长篇论著、技术博客、灵感备忘与系统架构设计[^1]。
+两者都在**视图**菜单和偏好设置 › 编辑器中,可以同时开启。
 
-愿你的思想在指尖自由流淌，无拘无束。
+## 窗口样式
 
-[^1]: Pupitre 是为崇尚极简与纯粹的创作者匠心打造的开源作品。欢迎在 GitHub 上提交反馈或贡献代码！
+偏好设置 › 外观 › 窗口样式 可在**经典**和**沉浸式**之间切换。沉浸式下文档位于窗口内的卡片中;开始输入或滚动时标题栏和大纲会让开,指针移到窗口顶部或起始边缘时再回来。样式对更改之后打开的窗口生效。
+
+## 文件和图片
+
+- 除非在偏好设置 › Markdown中另行设置,Pupitre 会保留所打开文件的换行符。保存时列表、强调、代码围栏和分隔线怎么写,也在那里设置。
+- 粘贴的图片保存在文档旁的文件夹中(默认 `assets`,见偏好设置 › Markdown)。尚未保存的文档会把图片放在内存里,第一次保存时再写入。
+- 偏好设置 › 常规 › 默认 Markdown 应用 可以让 Pupitre 从文件管理器打开 `.md` 文件。
+- 偏好设置保存在 `settings.json` 中,偏好设置 › 关于 可以显示它所在的文件夹。只写入与默认值不同的值,读不出来的字段会回到默认值,不影响其他字段。
+
+## 主题
+
+主题决定整个窗口和文档的样式。偏好设置 › 外观 会列出各主题及其支持的配色方案,深色模式可以单独选择另一个主题。
+
+主题随应用一起发布:每个主题是 `src/renderer/themes/<name>/` 下带有 `index.css` 的文件夹,文件夹名就是主题名。主题用到的字体或图片放在同一文件夹里,用相对 `url()` 引用。
+
+```css
+:root {
+  /* The schemes this theme supports: light, dark or both */
+  color-scheme: light dark;
+
+  /* Default body font; users can override it in the preferences */
+  --font-document: Georgia, serif;
+
+  /* Design tokens used by the whole window */
+  --ui-surface-1: oklch(0.99 0.01 90);
+  --ui-brand: oklch(0.55 0.12 250);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ui-surface-1: oklch(0.2 0.01 90);
+  }
+}
+
+.milkdown .ProseMirror h1 {
+  font-size: 2em;
+}
+```
+
+- 颜色通过 `--ui-*` 令牌(表面、文字、强调色)和代码用的 `--syntax-*` 设置。它们的默认值和完整列表见 `src/renderer/app.css` 和 `pupitre` 主题。
+- 引用条应使用 `var(--alert-color, …)`,这样提示块才能保持各自的颜色。
+- 正文字号、行高和内容宽度属于用户,始终优先;文档里的尺寸用 `em`,并使用 `padding-inline-start` 这样的逻辑属性,让从右到左的文字能够镜像。
+
+## Markdown 参考
+
+### 文本
+
+**粗体**、_斜体_、~~删除线~~、`行内代码`、[链接](https://commonmark.org)、H<sub>2</sub>O、x<sup>2</sup>、<kbd>Esc</kbd> 和 <mark>高亮</mark>。行内 HTML 是完整元素时会被渲染,否则显示为源码。
+
+> 一段引用。
+>
+> > 嵌套的引用。
+
+> [!NOTE]
+> GitHub 提示块:`[!NOTE]`、`[!TIP]`、`[!IMPORTANT]`、`[!WARNING]` 和 `[!CAUTION]`。
+
+> [!WARNING]
+> 标记必须位于引用的第一行。
+
+### 列表
+
+1. 有序
+   - 嵌套的无序
+   - [x] 任务可以勾选
+   - [ ] 也可以取消勾选
+2. 列表里可以放代码:
+
+   ```sh
+   npm run dev
+   ```
+
+### 表格
+
+| 左对齐 |  居中  | 右对齐 |
+| :----- | :----: | -----: |
+| 单元格 | 单元格 |   1.00 |
+| 更长的 |  文字  |  10.50 |
+
+### 代码
+
+```typescript
+function countWords(text: string): number {
+  const segmenter = new Intl.Segmenter(undefined, { granularity: "word" });
+  return [...segmenter.segment(text)].filter((part) => part.isWordLike).length;
+}
+```
+
+### 公式
+
+行内 $e^{i\pi} + 1 = 0$ 与独立公式:
+
+$$
+\int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
+$$
+
+### 图表
+
+```mermaid
+flowchart LR
+    Open[打开文件] --> Edit[编辑] --> Save[保存]
+    Edit -->|粘贴图片| Assets[(assets 文件夹)]
+```
+
+### 脚注
+
+带脚注的句子[^1].
+
+[^1]: 脚注会列在文档末尾。
+
+<!-- 注释会保留在文件中,并显示为源码。 -->

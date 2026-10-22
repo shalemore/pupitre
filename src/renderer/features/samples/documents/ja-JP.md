@@ -1,257 +1,154 @@
-# 🪶 Pupitre - 没入型ミニマル Markdown エディタガイド
+# Pupitre ガイド
 
-> **Pupitre**（フランス語で「譜面台」「演台」）は、**Tauri v2 + SolidJS + CodeMirror 6** を基盤に構築された、軽量・高速・美麗なデスクトップ Markdown インプレースエディタです。
-> 純粋な執筆と快適なタイポグラフィ体験のために設計されました。
+![Pupitre](./logo.svg)
 
-![Pupitre Logo](./logo.svg)
----
+Pupitre はデスクトップ向けの Markdown エディタです。ドキュメントは普通の `.md` ファイルで、見えているものはその場でレンダリングされ、カーソルがある間は Markdown の記法が表示されます。このガイドはエディタの表示例でもあります。自由に編集してください。**名前を付けて保存** を選ばない限り保存されません。
 
-> [!NOTE]
-> **インプレース・ライブプレビュー (In-place Live Preview)**: Pupitre では、カーソルが離れると Markdown 構文記号が自動で美麗な書式へと折りたたまれます。該当行を編集するときのみ記号がその場で展開され、思考を妨げない直感的な執筆が可能です。
+## 編集
 
-> [!TIP]
-> よく使うショートカットキー：
->
-> - <kbd>Ctrl</kbd> + <kbd>S</kbd>：現在のドキュメントを保存
-> - <kbd>Ctrl</kbd> + <kbd>O</kbd>：ローカルの Markdown ファイルを開く
-> - <kbd>Ctrl</kbd> + <kbd>B</kbd>：アウトラインサイドバーの表示切替
-> - <kbd>Ctrl</kbd> + <kbd>,</kbd>：環境設定をミリ秒で起動
+**太字**、`コードスパン`、[リンク](https://github.com/shalemore/pupitre) の中にカーソルを置くと、周囲に記法が表示されます。記号はテキストと同じように扱えます。
 
----
-
-## 1. タイポグラフィとインライン書式 (Typography & Styles)
-
-日々の執筆において、Pupitre は滑らかなトランジションと洗練されたスタイルを提供します：
-
-- **太字強調 (Bold)**：`**堅牢で高速**` は **堅牢で高速** と表示
-- _斜体強調 (Italic)_：`*優雅な体験*` は _優雅な体験_ と表示
-- _**太字斜体 (Bold & Italic)**_：`***両方の利点***` は _**両方の利点**_ と表示
-- ~~取り消し線 (Strikethrough)~~：`~~肥大化した過去~~` は ~~肥大化した過去~~ と表示
-- インラインコード：`const app = new Pupitre();`
-- 複合修飾：**~~太字かつ取り消し線~~** や _`斜体のコードバッジ`_
-- キーボードタグ：<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> 名前を付けて保存
-- ハイパーリンク：[Pupitre GitHub 公式リポジトリ](https://github.com/shalemore/pupitre)
-
-### ネスト引用ブロックのデモ
-
-> 優れたツールは空気のように透明であり、作業中は意識されることなく、ただ静かに集中力を高めてくれます。
->
-> > ——「完璧とは、付け加えるものがなくなったときではなく、取り去るものがなくなったときに達成される。」
-
----
-
-## 2. 見出し階層システム (Heading Hierarchy)
-
-Pupitre は文書内のすべての見出しを自動解析し、左サイドバーにリアルタイムな階層型目次（アウトライン）を生成します：
-
-### 2.1 レベル 3 見出し (H3) - 機能モジュールと論点
-
-#### 2.1.1 レベル 4 見出し (H4) - 詳細トピックの説明
-
-##### 2.1.1.1 レベル 5 見出し (H5) - 補足ガイダンス
-
-###### 2.1.1.1.1 レベル 6 見出し (H6) - 最小注釈
-
----
-
-## 3. タスクリストと箇条書き (Lists & Tasks)
-
-### 3.1 機能開発ロードマップ
-
-- [x] **Rust + Tauri 2.0** による軽量高速ネイティブコア
-- [x] **SolidJS** の細粒度リアクティブ機構（仮想 DOM 再描画ゼロ）
-- [x] **CodeMirror 6** 現代的インプレース編集アーキテクチャ
-- [x] **Ondine WebAssembly** によるネイティブ Mermaid 図表即時描画
-- [x] **GFM インタラクティブテーブル**のリアルタイム編集
-- [x] **フレームレス（枠線なし）**の没入型ウィンドウと独自コントロール
-- [x] **12 言語の国際化対応**とダーク・ライトモード自動追従
-- [x] 署名付きバイナリによる公式 **Auto-Updater** 自動増分更新
-- [ ] クリーンな HTML および高解像度 PDF へのエクスポート
-- [ ] ローカル双方向リンクとナレッジグラフ表示
-
-### 3.2 ネストリストの例
-
-1. アイデア出し・執筆フェーズ
-   - プレーンテキストで思考の素描を記録
-   - 重要なコードスニペットを貼り付け
-   - 構成の概略図をスケッチ
-2. 推敲・校正フェーズ
-   1. アウトラインの構造と見出し順を確認
-   2. 数式と図表の正確性をチェック
-   3. バージョン管理システムへコミット
-3. 公開・アーカイブフェーズ
-
-### 3.3 リスト内のインデントコードブロック
-
-手順ガイドや技術ドキュメントでは、リスト項目内にインデントされたコードブロックを直接記述できます：
-
-1. クライアントにログインしてロックを解除し、同期が完了するのを待ちます。
-2. 環境設定で **SSH Agent** とローカル認証情報のサポートを有効にします。
-3. シームレスな認証のために公開鍵設定を書き込みます：
-
-   ```powershell
-   New-Item -ItemType Directory -Path $HOME\.ssh -Force | Out-Null
-   Set-Content `
-     -Path $HOME\.ssh\github-pupitre.pub `
-     -Value 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID3FhmdqRz1VHUTNHuAKBA1nchfD63/9NTQmwQkx7tC'
-   ```
-
-4. ターミナルでの SSH 接続状態をテストします：
-
-   ```powershell
-   & "$env:WINDIR\System32\OpenSSH\ssh.exe" -T git@github.com
-   ```
-
----
-
-## 4. データテーブルと整列 (GFM Tables)
-
-GitHub Flavored Markdown (GFM) のテーブル記法に対応し、各列の整列が可能です：
-
-| 特性・指標         |       Pupitre エディタ       | 従来の Electron エディタ |        OS 標準メモ帳 |
-| :----------------- | :--------------------------: | :----------------------: | -------------------: |
-| 起動所要時間       |       **300 ms 未満**        |     1500 〜 3000 ms      |          100 ms 未満 |
-| メモリ使用量       |      **約 35 〜 60 MB**      |      200 〜 500 MB       |           15 MB 未満 |
-| プレビュー方式     | **インプレース（原位切替）** |   2 画面分割または切替   | プレーンテキストのみ |
-| 図表レンダラ       |    **Wasm Mermaid 内蔵**     |   重量級プラグイン依存   |               非対応 |
-| アプリ基盤         |     **Tauri 2.0 (Rust)**     |  Chromium ブラウザ基盤   |              OS 固有 |
-| ウィンドウデザイン |  **フレームレス＋美しい影**  |     不揃い・OS 依存      |   従来型ネイティブ枠 |
-
----
-
-## 5. Mermaid 構成図とシーケンス図 (Mermaid Diagrams)
-
-内蔵された WebAssembly エンジンにより、ネットワーク接続なしで Mermaid 図表をリアルタイム描画します：
-
-### 5.1 全体アーキテクチャ構成図
-
-```mermaid
-flowchart TD
-    subgraph UI["フロントエンド層 (Webview / SolidJS)"]
-        CM["CodeMirror 6 コア"]
-        LP["ライブプレビュー拡張"]
-        OND["Ondine Mermaid Wasm"]
-        ST["設定・多言語システム (i18n)"]
-    end
-
-    subgraph IPC["Tauri IPC メッセージバス"]
-        CMD["Commands (非同期呼び出し)"]
-        EVT["Events (双方向ブロードキャスト)"]
-    end
-
-    subgraph CORE["ネイティブシステム層 (Rust Core)"]
-        FS["ローカルファイル IO"]
-        WIN["フレームレスウィンドウ制御"]
-        UPD["署名付き増分アップデータ"]
-    end
-
-    CM --> LP
-    LP --> OND
-    UI <--> IPC
-    IPC <--> CORE
-```
-
-### 5.2 自動保存と設定同期シーケンス
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor User as ユーザー
-    participant Ed as エディタ (Editor)
-    participant BC as 配信チャネル (BroadcastChannel)
-    participant Pref as 設定ウィンドウ (Settings)
-    participant Disk as ローカル設定 (.pupitre)
-
-    User->>Ed: 本文編集または設定変更
-    Ed->>BC: 状態更新イベントを通知
-    BC-->>Pref: ウィンドウ間リアルタイム設定同期
-    Ed->>Disk: デバウンス非同期ファイル保存 (Auto-Save)
-    Disk-->>Ed: ディスク書き込み完了通知
-```
-
----
-
-## 6. シンタックスハイライト付きコードブロック
-
-右上に言語バッジとワンクリックコピーボタンが自動配置されます：
-
-### 6.1 Rust (Tauri Command の例)
-
-```rust
-use tauri::{AppHandle, Manager};
-
-#[tauri::command]
-pub async fn open_settings_window(app: AppHandle) -> Result<(), String> {
-    if let Some(win) = app.get_webview_window("settings") {
-        let _ = win.unminimize();
-        let _ = win.show();
-        let _ = win.set_focus();
-        return Ok(());
-    }
-    Ok(())
-}
-```
-
-### 6.2 TypeScript (SolidJS リアクティブ状態)
-
-```typescript
-import { createSignal, createMemo } from "solid-js";
-
-export function useWordCount(content: () => string) {
-  const stats = createMemo(() => {
-    const text = content();
-    const words = (text.match(/\S+/g) || []).length;
-    const chars = text.length;
-    return { words, chars };
-  });
-
-  return stats;
-}
-```
-
----
-
-## 7. 数式・科学表記 (KaTeX Math)
-
-インライン数式および独立したブロック数式を高品質に描画します：
-
-- インライン数式：アインシュタインの質量とエネルギーの等価性 $E = mc^2$、オイラーの等式 $e^{i\pi} + 1 = 0$。
-- ブロック数式（ガウス正規分布とマクスウェル方程式）：
-
-$$
-f(x) = \frac{1}{\sigma \sqrt{2\pi}} \exp\left( -\frac{(x - \mu)^2}{2\sigma^2} \right)
-$$
-
-$$
-\oint_C \mathbf{B} \cdot d\boldsymbol{\ell} = \mu_0 I_{\text{enc}} + \mu_0 \varepsilon_0 \frac{d\Phi_E}{dt}
-$$
-
----
-
-## 8. 折りたたみ詳細ブロック (Collapsible Details)
+- 開始記号のすぐ後ろで Backspace を押すと、書式が解除されます。
+- 見出しの先頭で `#` を入力するとレベルが上がり、Backspace で下がります。
+- 書式は **段落** メニューと **書式** メニュー、コンテキストメニュー、下記のショートカットから使えます。
 
 <details>
-<summary><b>🔍 クリックして展開：Pupitre ショートカット一覧</b></summary>
+<summary>キーボードショートカット(macOS では Ctrl が ⌘)</summary>
 
-| 操作項目           | Windows / Linux ショートカット                    | macOS ショートカット                           |
-| :----------------- | :------------------------------------------------ | :--------------------------------------------- |
-| 新規ドキュメント   | <kbd>Ctrl</kbd> + <kbd>N</kbd>                    | <kbd>⌘</kbd> + <kbd>N</kbd>                    |
-| ファイルを開く     | <kbd>Ctrl</kbd> + <kbd>O</kbd>                    | <kbd>⌘</kbd> + <kbd>O</kbd>                    |
-| ドキュメントを保存 | <kbd>Ctrl</kbd> + <kbd>S</kbd>                    | <kbd>⌘</kbd> + <kbd>S</kbd>                    |
-| 名前を付けて保存   | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> | <kbd>⌘</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> |
-| テキスト検索       | <kbd>Ctrl</kbd> + <kbd>F</kbd>                    | <kbd>⌘</kbd> + <kbd>F</kbd>                    |
-| テキスト置換       | <kbd>Ctrl</kbd> + <kbd>H</kbd>                    | <kbd>⌥</kbd> + <kbd>⌘</kbd> + <kbd>F</kbd>     |
-| 拡大 / 縮小        | <kbd>Ctrl</kbd> + <kbd>+</kbd> / <kbd>-</kbd>     | <kbd>⌘</kbd> + <kbd>+</kbd> / <kbd>-</kbd>     |
-| 環境設定を開く     | <kbd>Ctrl</kbd> + <kbd>,</kbd>                    | <kbd>⌘</kbd> + <kbd>,</kbd>                    |
+| 操作                                    | ショートカット                                                                                              |
+| :-------------------------------------- | :---------------------------------------------------------------------------------------------------------- |
+| 太字 / 斜体 / インラインコード          | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
+| 取り消し線                              | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| リンク                                  | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| 見出し 1–6 / 段落                       | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
+| 引用                                    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
+| 番号付きリスト / 箇条書き               | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
+| コードブロック / 数式ブロック           | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
+| 表                                      | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
+| 検索 / 置換                             | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| アウトライン                            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| フォーカスモード / タイプライターモード | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
+| ズームをリセット                        | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| 環境設定                                | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>
 
----
+## 執筆モード
 
-## 9. 脚注とおわりに (Footnotes)
+- **フォーカスモード** は書いている段落以外を薄く表示します。
+- **タイプライターモード** は書いている行をウィンドウの中央に保ちます。
 
-Pupitre は、あなたの論文、技術ブログ、ひらめきのメモ、システム設計の良きパートナーとなるでしょう[^1]。
+どちらも **表示** メニューと 環境設定 › エディタ にあり、組み合わせて使えます。
 
-思考が指先から淀みなくあふれ出しますように。
+## ウィンドウスタイル
 
-[^1]: Pupitre は、純粋で集中できる執筆環境を愛するクリエイターのためのオープンソース製品です。GitHub へのフィードバックやコントリビュートをお待ちしています！
+環境設定 › 外観 › ウィンドウスタイル で **クラシック** と **没入型** を切り替えます。没入型ではドキュメントがウィンドウ内のカードに表示され、入力やスクロールを始めるとタイトルバーとアウトラインが退き、ポインターがウィンドウの上端または開始側の端に来ると戻ります。変更後に開くウィンドウから適用されます。
+
+## ファイルと画像
+
+- 環境設定 › Markdown で変更しない限り、Pupitre は開いたファイルの改行コードを保ちます。リスト、強調、コードフェンス、水平線を保存時にどう書くかもそこで設定します。
+- 貼り付けた画像はドキュメントの隣のフォルダー(既定は `assets`、環境設定 › Markdown)に保存されます。まだ保存していないドキュメントでは画像をメモリに保持し、最初の保存時に書き出します。
+- 環境設定 › 一般 › Markdown の既定のアプリ で、ファイルマネージャーから `.md` ファイルを Pupitre で開けるようになります。
+- 設定は `settings.json` に保存され、環境設定 › 情報 でそのフォルダーを表示できます。既定値と異なる値だけが書き込まれ、読み取れない項目は他の項目に影響せず既定値に戻ります。
+
+## テーマ
+
+テーマはウィンドウ全体とドキュメントの見た目を決めます。環境設定 › 外観 に対応するカラースキームとともに一覧され、ダークモードには別のテーマを選べます。
+
+テーマはアプリに同梱されています。各テーマは `src/renderer/themes/<name>/` フォルダーにある `index.css` で、フォルダー名がテーマ名です。テーマが使うフォントや画像は同じフォルダーに置き、相対 `url()` で参照します。
+
+```css
+:root {
+  /* The schemes this theme supports: light, dark or both */
+  color-scheme: light dark;
+
+  /* Default body font; users can override it in the preferences */
+  --font-document: Georgia, serif;
+
+  /* Design tokens used by the whole window */
+  --ui-surface-1: oklch(0.99 0.01 90);
+  --ui-brand: oklch(0.55 0.12 250);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ui-surface-1: oklch(0.2 0.01 90);
+  }
+}
+
+.milkdown .ProseMirror h1 {
+  font-size: 2em;
+}
+```
+
+- 色は `--ui-*` トークン(面、テキスト、アクセント)とコード用の `--syntax-*` で設定します。既定値と全一覧は `src/renderer/app.css` と `pupitre` テーマにあります。
+- 引用の縦線は `var(--alert-color, …)` を使い、アラートが色を保てるようにしてください。
+- 本文のフォントサイズ、行間、コンテンツ幅はユーザーのもので常に優先されます。ドキュメント内のサイズには `em`、右から左のテキストが反転するよう `padding-inline-start` などの論理プロパティを使ってください。
+
+## Markdown リファレンス
+
+### テキスト
+
+**太字**、_斜体_、~~取り消し線~~、`インラインコード`、[リンク](https://commonmark.org)、H<sub>2</sub>O、x<sup>2</sup>、<kbd>Esc</kbd>、<mark>ハイライト</mark>。インライン HTML は完全な要素のときにレンダリングされ、それ以外はソースとして表示されます。
+
+> 引用。
+>
+> > 入れ子の引用。
+
+> [!NOTE]
+> GitHub アラート: `[!NOTE]`、`[!TIP]`、`[!IMPORTANT]`、`[!WARNING]`、`[!CAUTION]`。
+
+> [!WARNING]
+> マーカーは引用の最初の行に置く必要があります。
+
+### リスト
+
+1. 番号付き
+   - 入れ子の箇条書き
+   - [x] タスクはチェックでき
+   - [ ] 外すこともできます
+2. リストにはコードも入れられます:
+
+   ```sh
+   npm run dev
+   ```
+
+### 表
+
+| 左     |   中央   |    右 |
+| :----- | :------: | ----: |
+| セル   |   セル   |  1.00 |
+| 長めの | テキスト | 10.50 |
+
+### コード
+
+```typescript
+function countWords(text: string): number {
+  const segmenter = new Intl.Segmenter(undefined, { granularity: "word" });
+  return [...segmenter.segment(text)].filter((part) => part.isWordLike).length;
+}
+```
+
+### 数式
+
+インライン $e^{i\pi} + 1 = 0$ とディスプレイ数式:
+
+$$
+\int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
+$$
+
+### 図
+
+```mermaid
+flowchart LR
+    Open[ファイルを開く] --> Edit[編集] --> Save[保存]
+    Edit -->|画像を貼り付け| Assets[(assets フォルダー)]
+```
+
+### 脚注
+
+脚注のある文[^1].
+
+[^1]: 脚注はドキュメントの末尾に並びます。
+
+<!-- コメントはファイルに残り、ソースとして表示されます。 -->

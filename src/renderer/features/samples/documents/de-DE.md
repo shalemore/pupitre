@@ -1,257 +1,154 @@
-# 🪶 Pupitre - Handbuch für den minimalistischen Markdown-Editor
+# Pupitre-Anleitung
 
-> **Pupitre** (französisch für _Notenständer_ oder _Pult_) ist ein eleganter, ablenkungsfreier Desktop-Markdown-Editor, der auf **Tauri v2 + SolidJS + CodeMirror 6** basiert.
-> Entwickelt für reines Schreiben und makellose Typografie.
+![Pupitre](./logo.svg)
 
-![Pupitre Logo](./logo.svg)
----
+Pupitre ist ein Markdown-Editor für den Desktop. Dokumente sind einfache `.md`-Dateien: Was Sie sehen, wird an Ort und Stelle dargestellt, und die Markdown-Syntax erscheint, solange sich der Cursor darauf befindet. Diese Anleitung zeigt zugleich, was der Editor darstellt; bearbeiten Sie sie ruhig, sie wird nur gespeichert, wenn Sie **Speichern unter** wählen.
 
-> [!NOTE]
-> **Direkte Live-Vorschau (In-place Live Preview)**: In Pupitre werden Markdown-Formatierungszeichen automatisch ausgeblendet, sobald der Cursor die Zeile verlässt. Beim Bearbeiten erscheint die Syntax nahtlos wieder am selben Ort – für ein natürliches, ununterbrochenes Schreiberlebnis.
+## Bearbeiten
 
-> [!TIP]
-> Wichtige Tastenkombinationen:
->
-> - <kbd>Ctrl</kbd> + <kbd>S</kbd>: Dokument speichern
-> - <kbd>Ctrl</kbd> + <kbd>O</kbd>: Lokale Markdown-Datei öffnen
-> - <kbd>Ctrl</kbd> + <kbd>B</kbd>: Gliederungsleiste ein-/ausblenden
-> - <kbd>Ctrl</kbd> + <kbd>,</kbd>: Einstellungen blitzschnell öffnen
+Setzen Sie den Cursor in **fetten Text**, einen `Codeausschnitt` oder einen [Link](https://github.com/shalemore/pupitre), und die Syntax erscheint darum herum. Die Markierungen verhalten sich wie Text:
 
----
-
-## 1. Typografie und Textformate (Typography & Styles)
-
-Beim Verfassen Ihrer Texte bietet Pupitre ein harmonisches Schriftbild und flüssige Übergänge:
-
-- **Fettgedruckt (Bold)**: `**stabil und schnell**` wird als **stabil und schnell** dargestellt
-- _Kursiv (Italic)_: `*angenehmer Schreibfluss*` wird als _angenehmer Schreibfluss_ dargestellt
-- _**Fett und kursiv (Bold & Italic)**_: `***das Beste aus beidem***` wird als _**das Beste aus beidem**_ dargestellt
-- ~~Durchgestrichen (Strikethrough)~~: `~~schwerfällig und veraltet~~` wird als ~~schwerfällig und veraltet~~ dargestellt
-- Inline-Code: `const app = new Pupitre();`
-- Kombinierte Formatierung: **~~fetter, durchgestrichener Text~~** oder _`kursiver Code-Badge`_
-- Tastaturbefehle: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> Speichern unter
-- Hyperlinks: [Offizielles Pupitre-GitHub-Repository](https://github.com/shalemore/pupitre)
-
-### Verschachtelte Zitate
-
-> Großartige Werkzeuge fühlen sich wie reine Luft an: Während der Arbeit unbemerkt, stärken sie doch im Stillen Ihre Konzentration.
->
-> > —— „Vollkommenheit entsteht nicht dann, wenn man nichts mehr hinzufügen kann, sondern wenn man nichts mehr weglassen kann.“
-
----
-
-## 2. Überschriftenhierarchie (Heading Hierarchy)
-
-Pupitre analysiert alle Überschriften dynamisch und generiert eine Baumstruktur in der linken Seitenleiste:
-
-### 2.1 Überschrift Ebene 3 (H3) - Funktionsmodul & Thesen
-
-#### 2.1.1 Überschrift Ebene 4 (H4) - Spezifische Unterpunkte
-
-##### 2.1.1.1 Überschrift Ebene 5 (H5) - Ergänzende Hinweise
-
-###### 2.1.1.1.1 Überschrift Ebene 6 (H6) - Detaillierte Randnotiz
-
----
-
-## 3. Listen und Aufgaben-Checklisten (Lists & Tasks)
-
-### 3.1 Geplante Funktionen & Meilensteine
-
-- [x] Schneller nativer Kern auf Basis von **Rust + Tauri 2.0**
-- [x] Reaktives Frontend mit **SolidJS** (kein Virtual-DOM-Overhead)
-- [x] Moderner Editor-Aufbau mit **CodeMirror 6**
-- [x] Native Mermaid-Diagramme über **Ondine WebAssembly** in Echtzeit
-- [x] Interaktive **GFM-Tabellen** direkt im Text bearbeiten
-- [x] **Rahmenloses Design (Frameless)** mit eleganten Fensterschatten
-- [x] Volle Unterstützung von **12 Sprachen** und automatischer Hell/Dunkel-Modus
-- [x] Offizieller, kryptografisch signierter **Auto-Updater**
-- [ ] Export als hochauflösendes PDF und eigenständiges HTML
-- [ ] Lokale bidirektionale Verknüpfungen und Wissensgraph
-
-### 3.2 Verschachtelte Listenbeispiele
-
-1. Entwurfsphase
-   - Spontane Gedanken in reinem Text festhalten
-   - Wichtige Quellcode-Ausschnitte einfügen
-   - Skizzen und Architekturen anlegen
-2. Überarbeitungsphase
-   1. Gliederungsstruktur prüfen
-   2. Formeln und Diagramme auf Richtigkeit testen
-   3. Änderungen in die Versionsverwaltung übertragen
-3. Veröffentlichungsphase
-
-### 3.3 Eingerückte Codeblöcke in Listen
-
-Schritt-für-Schritt-Anleitungen unterstützen eingerückte Codeblöcke innerhalb von Listenelementen:
-
-1. Melden Sie sich an und entsperren Sie den Client, bis die Synchronisierung abgeschlossen ist.
-2. Aktivieren Sie **SSH Agent** und lokale Anmeldeinformationen in den Einstellungen.
-3. Schreiben Sie die Konfiguration des öffentlichen Schlüssels:
-
-   ```powershell
-   New-Item -ItemType Directory -Path $HOME\.ssh -Force | Out-Null
-   Set-Content `
-     -Path $HOME\.ssh\github-pupitre.pub `
-     -Value 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID3FhmdqRz1VHUTNHuAKBA1nchfD63/9NTQmwQkx7tC'
-   ```
-
-4. Testen Sie die Terminal-Konnektivität:
-
-   ```powershell
-   & "$env:WINDIR\System32\OpenSSH\ssh.exe" -T git@github.com
-   ```
-
----
-
-## 4. GFM-Datentabellen (GFM Tables)
-
-Pupitre unterstützt alle GitHub Flavored Markdown-Tabellen inklusive Spaltenausrichtung:
-
-| Eigenschaft     |        Pupitre Editor        | Herkömmliche Electron-Editoren | Standard-Editor des Betriebssystems |
-| :-------------- | :--------------------------: | :----------------------------: | ----------------------------------: |
-| Kaltstartzeit   |         **< 300 ms**         |        1500 bis 3000 ms        |                            < 100 ms |
-| RAM-Bedarf      |     **ca. 35 bis 60 MB**     |         200 bis 500 MB         |                             < 15 MB |
-| Vorschauart     | **Direkt am Ort (In-place)** |      Geteilter Bildschirm      |                     Nur reiner Text |
-| Diagramm-Engine | **Wasm Mermaid integriert**  |    Schwere externe Plugins     |                   Nicht unterstützt |
-| Plattformbasis  |     **Tauri 2.0 (Rust)**     |  Vollständige Chromium-Engine  |            Betriebssystemspezifisch |
-| Fensteroptik    |  **Rahmenlos mit Schatten**  |         Uneinheitlich          |          Klassischer nativer Rahmen |
-
----
-
-## 5. Mermaid-Architektur- und Sequenzdiagramme (Mermaid)
-
-Dank eingebetteter WebAssembly-Technologie werden Mermaid-Diagramme ohne Internetverbindung gerendert:
-
-### 5.1 Systemarchitektur
-
-```mermaid
-flowchart TD
-    subgraph UI["Frontend-Schicht (Webview / SolidJS)"]
-        CM["CodeMirror 6 Kern"]
-        LP["Live Preview Erweiterung"]
-        OND["Ondine Mermaid Wasm"]
-        ST["Einstellungen & i18n-System"]
-    end
-
-    subgraph IPC["Tauri IPC Nachrichtenbus"]
-        CMD["Commands (Asynchrone Aufrufe)"]
-        EVT["Events (Bidirektionale Übertragung)"]
-    end
-
-    subgraph CORE["Native Systemebene (Rust Core)"]
-        FS["Dateisystem-E/A"]
-        WIN["Rahmenloser Fenster-Controller"]
-        UPD["Signierter Update-Dienst"]
-    end
-
-    CM --> LP
-    LP --> OND
-    UI <--> IPC
-    IPC <--> CORE
-```
-
-### 5.2 Automatisches Speichern und Konfigurationsabgleich
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor User as Benutzer
-    participant Ed as Editor-Fenster
-    participant BC as BroadcastChannel
-    participant Pref as Einstellungsfenster
-    participant Disk as Lokaler Speicher (.pupitre)
-
-    User->>Ed: Schreibt Text oder ändert Option
-    Ed->>BC: Sendet Statusänderung an alle Fenster
-    BC-->>Pref: Echtzeit-Abgleich zwischen Fenstern
-    Ed->>Disk: Verzögertes asynchrones Schreiben (Auto-Save)
-    Disk-->>Ed: Bestätigung des Schreibvorgangs
-```
-
----
-
-## 6. Codeblöcke mit Syntax-Hervorhebung
-
-Jeder Codeblock besitzt eine schwebende Leiste mit Sprachanzeige und Kopier-Schaltfläche:
-
-### 6.1 Rust (Tauri Command Beispiel)
-
-```rust
-use tauri::{AppHandle, Manager};
-
-#[tauri::command]
-pub async fn open_settings_window(app: AppHandle) -> Result<(), String> {
-    if let Some(win) = app.get_webview_window("settings") {
-        let _ = win.unminimize();
-        let _ = win.show();
-        let _ = win.set_focus();
-        return Ok(());
-    }
-    Ok(())
-}
-```
-
-### 6.2 TypeScript (SolidJS Reaktiver Zustand)
-
-```typescript
-import { createSignal, createMemo } from "solid-js";
-
-export function useWordCount(content: () => string) {
-  const stats = createMemo(() => {
-    const text = content();
-    const words = (text.match(/\S+/g) || []).length;
-    const chars = text.length;
-    return { words, chars };
-  });
-
-  return stats;
-}
-```
-
----
-
-## 7. Mathematische Formeln (KaTeX)
-
-Gestochen scharfe mathematische Typografie für Formeln im Text und in abgesetzten Blöcken:
-
-- Formel im Fließtext: Einsteins berühmte Gleichung $E = mc^2$ sowie die Eulersche Identität $e^{i\pi} + 1 = 0$.
-- Abgesetzte Formeln (Gaußsche Normalverteilung und Maxwell-Ampère-Gesetz):
-
-$$
-f(x) = \frac{1}{\sigma \sqrt{2\pi}} \exp\left( -\frac{(x - \mu)^2}{2\sigma^2} \right)
-$$
-
-$$
-\oint_C \mathbf{B} \cdot d\boldsymbol{\ell} = \mu_0 I_{\text{enc}} + \mu_0 \varepsilon_0 \frac{d\Phi_E}{dt}
-$$
-
----
-
-## 8. Interaktive Ausklappbereiche (Collapsible Details)
+- Die Rücktaste direkt nach einer öffnenden Markierung entfernt die Formatierung.
+- Am Anfang einer Überschrift erhöht `#` die Ebene, die Rücktaste senkt sie.
+- Die Formatierung finden Sie in den Menüs **Absatz** und **Format**, im Kontextmenü und in den Tastenkürzeln unten.
 
 <details>
-<summary><b>🔍 Klicken zum Ausklappen: Tastaturkürzel-Übersicht</b></summary>
+<summary>Tastenkürzel (Strg entspricht ⌘ unter macOS)</summary>
 
-| Aktion                   | Windows- / Linux-Tastenkombination                | macOS-Tastenkombination                        |
-| :----------------------- | :------------------------------------------------ | :--------------------------------------------- |
-| Neues Dokument           | <kbd>Ctrl</kbd> + <kbd>N</kbd>                    | <kbd>⌘</kbd> + <kbd>N</kbd>                    |
-| Datei öffnen             | <kbd>Ctrl</kbd> + <kbd>O</kbd>                    | <kbd>⌘</kbd> + <kbd>O</kbd>                    |
-| Dokument speichern       | <kbd>Ctrl</kbd> + <kbd>S</kbd>                    | <kbd>⌘</kbd> + <kbd>S</kbd>                    |
-| Speichern unter          | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> | <kbd>⌘</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> |
-| Text suchen              | <kbd>Ctrl</kbd> + <kbd>F</kbd>                    | <kbd>⌘</kbd> + <kbd>F</kbd>                    |
-| Text ersetzen            | <kbd>Ctrl</kbd> + <kbd>H</kbd>                    | <kbd>⌥</kbd> + <kbd>⌘</kbd> + <kbd>F</kbd>     |
-| Vergrößern / Verkleinern | <kbd>Ctrl</kbd> + <kbd>+</kbd> / <kbd>-</kbd>     | <kbd>⌘</kbd> + <kbd>+</kbd> / <kbd>-</kbd>     |
-| Einstellungen            | <kbd>Ctrl</kbd> + <kbd>,</kbd>                    | <kbd>⌘</kbd> + <kbd>,</kbd>                    |
+| Aktion                             | Kürzel                                                                                                      |
+| :--------------------------------- | :---------------------------------------------------------------------------------------------------------- |
+| Fett / Kursiv / Inline-Code        | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
+| Durchgestrichen                    | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| Link                               | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| Überschrift 1–6 / Absatz           | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
+| Zitat                              | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
+| Nummerierte Liste / Aufzählung     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
+| Codeblock / Formelblock            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
+| Tabelle                            | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
+| Suchen / Ersetzen                  | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Gliederung                         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Fokusmodus / Schreibmaschinenmodus | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
+| Zoom zurücksetzen                  | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| Einstellungen                      | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>
 
----
+## Schreibmodi
 
-## 9. Fußnoten und Ausblick (Footnotes)
+- Der **Fokusmodus** blendet alles außer dem Absatz aus, an dem Sie schreiben.
+- Der **Schreibmaschinenmodus** hält die Zeile, in der Sie schreiben, in der Mitte des Fensters.
 
-Pupitre begleitet Sie bei Aufsätzen, technischen Artikeln, Architekturentwürfen und täglichen Notizen[^1].
+Beide finden Sie im Menü **Ansicht** und unter Einstellungen › Editor; sie lassen sich kombinieren.
 
-Mögen Ihre Gedanken frei und ungehindert auf das Papier fließen.
+## Fensterstil
 
-[^1]: Pupitre ist ein Open-Source-Projekt für alle, die Freude an ungestörtem, fokussiertem Schreiben haben. Wir freuen uns über Beiträge auf GitHub!
+Unter Einstellungen › Darstellung › Fensterstil wechseln Sie zwischen **Klassisch** und **Immersiv**. Im immersiven Stil liegt das Dokument in einer Karte im Fenster; Titelleiste und Gliederung weichen, sobald Sie tippen oder scrollen, und kehren zurück, wenn der Zeiger den oberen oder den vorderen Fensterrand erreicht. Der Stil gilt für Fenster, die nach der Änderung geöffnet werden.
+
+## Dateien und Bilder
+
+- Pupitre behält die Zeilenenden der geöffneten Datei, sofern Einstellungen › Markdown nichts anderes festlegt. Dort stellen Sie auch ein, wie Listen, Hervorhebungen, Code-Zäune und Trennlinien beim Speichern geschrieben werden.
+- Eingefügte Bilder werden in einem Ordner neben dem Dokument gespeichert (standardmäßig `assets`, Einstellungen › Markdown). Ein noch nicht gespeichertes Dokument hält sie im Speicher und schreibt sie beim ersten Speichern.
+- Mit Einstellungen › Allgemein › Standard-App für Markdown öffnet Pupitre `.md`-Dateien aus dem Dateimanager.
+- Die Einstellungen liegen in `settings.json`; Einstellungen › Über zeigt den Ordner. Es werden nur Werte geschrieben, die vom Standard abweichen, und ein nicht lesbares Feld fällt auf seinen Standard zurück, ohne die anderen zu beeinflussen.
+
+## Designs
+
+Ein Design gestaltet das ganze Fenster und das Dokument. Einstellungen › Darstellung listet sie mit den unterstützten Farbschemata auf; für den dunklen Modus lässt sich ein eigenes Design wählen.
+
+Designs werden mit der App ausgeliefert: Jedes ist ein Ordner `src/renderer/themes/<name>/` mit einer `index.css`, und der Ordnername ist der Name des Designs. Schriften oder Bilder eines Designs liegen im selben Ordner und werden mit relativen `url()` eingebunden.
+
+```css
+:root {
+  /* The schemes this theme supports: light, dark or both */
+  color-scheme: light dark;
+
+  /* Default body font; users can override it in the preferences */
+  --font-document: Georgia, serif;
+
+  /* Design tokens used by the whole window */
+  --ui-surface-1: oklch(0.99 0.01 90);
+  --ui-brand: oklch(0.55 0.12 250);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ui-surface-1: oklch(0.2 0.01 90);
+  }
+}
+
+.milkdown .ProseMirror h1 {
+  font-size: 2em;
+}
+```
+
+- Farben werden über die Token `--ui-*` (Flächen, Text, Akzent) und `--syntax-*` für Code gesetzt. Ihre Standardwerte und die vollständige Liste stehen in `src/renderer/app.css` und im Design `pupitre`.
+- Zitatbalken sollten `var(--alert-color, …)` verwenden, damit Hinweise ihre Farben behalten.
+- Schriftgröße, Zeilenhöhe und Inhaltsbreite gehören dem Benutzer und haben immer Vorrang; verwenden Sie `em` für Größen im Dokument und logische Eigenschaften wie `padding-inline-start`, damit rechtsläufiger Text gespiegelt wird.
+
+## Markdown-Referenz
+
+### Text
+
+**Fett**, _kursiv_, ~~durchgestrichen~~, `Inline-Code`, [Links](https://commonmark.org), H<sub>2</sub>O, x<sup>2</sup>, <kbd>Esc</kbd> und <mark>Hervorhebungen</mark>. Inline-HTML wird dargestellt, wenn es ein vollständiges Element ist, sonst als Quelltext angezeigt.
+
+> Ein Zitat.
+>
+> > Ein verschachteltes Zitat.
+
+> [!NOTE]
+> GitHub-Hinweise: `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` und `[!CAUTION]`.
+
+> [!WARNING]
+> Die Markierung muss die erste Zeile des Zitats sein.
+
+### Listen
+
+1. Nummeriert
+   - Verschachtelt, mit Aufzählungszeichen
+   - [x] Aufgaben lassen sich abhaken
+   - [ ] und wieder öffnen
+2. Listen können Code enthalten:
+
+   ```sh
+   npm run dev
+   ```
+
+### Tabelle
+
+| Links  | Mitte | Rechts |
+| :----- | :---: | -----: |
+| Zelle  | Zelle |   1.00 |
+| Länger | Text  |  10.50 |
+
+### Code
+
+```typescript
+function countWords(text: string): number {
+  const segmenter = new Intl.Segmenter(undefined, { granularity: "word" });
+  return [...segmenter.segment(text)].filter((part) => part.isWordLike).length;
+}
+```
+
+### Formeln
+
+Inline $e^{i\pi} + 1 = 0$ und abgesetzt:
+
+$$
+\int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
+$$
+
+### Diagramme
+
+```mermaid
+flowchart LR
+    Open[Datei öffnen] --> Edit[Bearbeiten] --> Save[Speichern]
+    Edit -->|Bild einfügen| Assets[(Ordner assets)]
+```
+
+### Fußnoten
+
+Ein Satz mit Fußnote[^1].
+
+[^1]: Fußnoten stehen am Ende des Dokuments.
+
+<!-- Kommentare bleiben in der Datei und werden als Quelltext angezeigt. -->

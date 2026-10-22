@@ -175,8 +175,14 @@
     unicode-bidi: isolate;
   }
 
-  .milkdown .ProseMirror :is(code, .katex) {
+  .milkdown .ProseMirror code {
     unicode-bidi: plaintext;
+  }
+
+  /* KaTeX lays out its own boxes and would be mirrored by an inherited right-to-left direction */
+  .milkdown .ProseMirror .katex {
+    direction: ltr;
+    unicode-bidi: isolate;
   }
 
   /* Crepe positions these with physical properties; mirror them in right-to-left blocks */
@@ -260,6 +266,20 @@
   .milkdown .ProseMirror {
     max-width: none;
     padding: 0;
+  }
+
+  /* The page shows the finished document: no syntax markers, no source of rendered HTML, no dimming */
+  .milkdown .md-syntax,
+  .milkdown .md-html.is-rendered .md-html-source {
+    display: none;
+  }
+
+  .milkdown .md-html.is-rendered .md-html-preview {
+    display: inline;
+  }
+
+  .milkdown .ProseMirror.focus-mode * {
+    opacity: 1;
   }
 
   .milkdown

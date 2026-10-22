@@ -1,257 +1,154 @@
-# 🪶 Pupitre - Immersive Minimalist Markdown Editor Guide
+# Pupitre Guide
 
-> **Pupitre** (French for _music stand_ or _lectern_) is a distraction-free, high-performance desktop Markdown editor built on **Tauri v2 + SolidJS + CodeMirror 6**.
-> Designed for pure writing and effortless typographic flow.
+![Pupitre](./logo.svg)
 
-![Pupitre Logo](./logo.svg)
----
+Pupitre is a desktop Markdown editor. Documents are plain `.md` files: what you see is rendered in place, and the Markdown syntax appears while the cursor is on it. This guide is also a sample of what the editor renders; edit it freely, it is not saved unless you choose **Save As**.
 
-> [!NOTE]
-> **In-place Live Preview**: In Pupitre, Markdown syntax marks collapse smoothly into rendered typography when the cursor moves away. When editing a line, the raw syntax reveals itself in place for seamless, intuitive writing.
+## Editing
 
-> [!TIP]
-> Essential Shortcuts:
->
-> - <kbd>Ctrl</kbd> + <kbd>S</kbd>: Save document
-> - <kbd>Ctrl</kbd> + <kbd>O</kbd>: Open local Markdown file
-> - <kbd>Ctrl</kbd> + <kbd>B</kbd>: Toggle Outline sidebar
-> - <kbd>Ctrl</kbd> + <kbd>,</kbd>: Open Preferences in milliseconds
+Move the cursor into **bold text**, a `code span` or a [link](https://github.com/shalemore/pupitre) and its syntax appears around it. The markers behave like text:
 
----
-
-## 1. Typography & Inline Styles
-
-Pupitre delivers refined typographic styling with smooth micro-interactions:
-
-- **Bold emphasis**: `**reliable & fast**` renders as **reliable & fast**
-- _Italic emphasis_: `*graceful workflow*` renders as _graceful workflow_
-- _**Bold & Italic**_: `***the best of both***` renders as _**the best of both**_
-- ~~Strikethrough~~: `~~bloated legacy~~` renders as ~~bloated legacy~~
-- Inline code: `const editor = new Pupitre();`
-- Combined formatting: **~~bold and struck through~~** or _`italicized code badge`_
-- Keyboard key styling: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> Save As
-- Hyperlinks: [Pupitre GitHub Repository](https://github.com/shalemore/pupitre)
-
-### Nested Blockquote Demo
-
-> Great creative tools feel like clean air: imperceptible in moment-to-moment thought, yet sustaining your focus and creativity.
->
-> > — "Perfection is achieved not when there is nothing more to add, but when there is nothing left to take away."
-
----
-
-## 2. Heading Hierarchy (H1 to H6)
-
-Pupitre dynamically parses document headings and renders a nested outline in the left sidebar:
-
-### 2.1 Level 3 Heading (H3) - Functional Modules
-
-#### 2.1.1 Level 4 Heading (H4) - Topic Specifications
-
-##### 2.1.1.1 Level 5 Heading (H5) - Supplemental Guidance
-
-###### 2.1.1.1.1 Level 6 Heading (H6) - Leaf-level Annotations
-
----
-
-## 3. Lists & Task Checklists
-
-### 3.1 Feature Development Roadmap
-
-- [x] Lightweight **Rust + Tauri 2.0** desktop backend core
-- [x] Fine-grained **SolidJS** reactive UI (0 virtual-DOM overhead)
-- [x] Modern **CodeMirror 6** live-preview document model
-- [x] Built-in **Ondine WebAssembly** instant Mermaid diagrams
-- [x] **GFM Interactive Tables** with visual live editing
-- [x] **Frameless design** with native window shadows & custom controls
-- [x] Native **12-locale internationalization** with auto dark/light theme
-- [x] Cryptographically signed **Auto-Updater** pipeline
-- [ ] Export to clean standalone HTML & high-fidelity PDF
-- [ ] Local bidirectional document linking and graph view
-
-### 3.2 Nested Ordered & Unordered Lists
-
-1. Drafting Phase
-   - Capture fleeting concepts in plain text
-   - Insert key source code snippets
-   - Sketch architecture flows
-2. Revision & Polishing Phase
-   1. Check hierarchy and outline clarity
-   2. Verify equations and diagram accuracy
-   3. Commit changes to version control
-3. Archival & Distribution Phase
-
-### 3.3 Indented Code Blocks in Lists
-
-Technical documentation and step-by-step guides support nested code blocks inside list items:
-
-1. Log in and unlock the client, waiting for synchronization to finish.
-2. Enable **SSH Agent** and local credentials in system preferences.
-3. Write public key configuration for seamless authentication:
-
-   ```powershell
-   New-Item -ItemType Directory -Path $HOME\.ssh -Force | Out-Null
-   Set-Content `
-     -Path $HOME\.ssh\github-pupitre.pub `
-     -Value 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID3FhmdqRz1VHUTNHuAKBA1nchfD63/9NTQmwQkx7tC'
-   ```
-
-4. Test terminal SSH connectivity:
-
-   ```powershell
-   & "$env:WINDIR\System32\OpenSSH\ssh.exe" -T git@github.com
-   ```
-
----
-
-## 4. GFM Data Tables
-
-Pupitre provides full GitHub Flavored Markdown (GFM) table support with column alignment:
-
-| Capability       |        Pupitre Editor         | Traditional Electron Editor |   Native Notepad |
-| :--------------- | :---------------------------: | :-------------------------: | ---------------: |
-| Cold Launch Time |         **< 300 ms**          |       1500 ~ 3000 ms        |         < 100 ms |
-| Working Memory   |        **~35 - 60 MB**        |        200 - 500 MB         |          < 15 MB |
-| Live Preview     |       **In-place Flow**       |      Dual split panes       |  Plain text only |
-| Diagram Engine   |   **Built-in Wasm Mermaid**   |   Heavy external plugins    |      Unsupported |
-| Runtime Stack    |     **Tauri 2.0 (Rust)**      |   Chromium Browser Engine   |     OS-exclusive |
-| Window Esthetics | **Frameless Floating Shadow** |        Inconsistent         | Native OS border |
-
----
-
-## 5. Mermaid Architecture & Sequence Diagrams
-
-Powered by embedded WebAssembly, Mermaid diagrams compile and render instantaneously right in your document:
-
-### 5.1 Architecture Overview
-
-```mermaid
-flowchart TD
-    subgraph UI["Frontend Layer (Webview / SolidJS)"]
-        CM["CodeMirror 6 Engine"]
-        LP["Live Preview Extension"]
-        OND["Ondine Mermaid Wasm"]
-        ST["Preferences & i18n System"]
-    end
-
-    subgraph IPC["Tauri IPC Message Bus"]
-        CMD["Commands (Async Invocation)"]
-        EVT["Events (Bi-directional Broadcast)"]
-    end
-
-    subgraph CORE["Native System Layer (Rust Core)"]
-        FS["File System IO"]
-        WIN["Frameless Window Controller"]
-        UPD["Signed Delta Auto-Updater"]
-    end
-
-    CM --> LP
-    LP --> OND
-    UI <--> IPC
-    IPC <--> CORE
-```
-
-### 5.2 Auto-Save & Config Sync Sequence
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor User as Writer
-    participant Ed as Editor Window
-    participant BC as BroadcastChannel
-    participant Pref as Preferences Window
-    participant Disk as Local Storage (.pupitre)
-
-    User->>Ed: Types content or tweaks settings
-    Ed->>BC: Broadcasts state change event
-    BC-->>Pref: Real-time window synchronization
-    Ed->>Disk: Debounced async disk write (Auto-Save)
-    Disk-->>Ed: Flush acknowledgement
-```
-
----
-
-## 6. Syntax-Highlighted Code Blocks
-
-Each fenced block features a floating header with language badge and a one-click copy button:
-
-### 6.1 Rust (Tauri Command Example)
-
-```rust
-use tauri::{AppHandle, Manager};
-
-#[tauri::command]
-pub async fn open_settings_window(app: AppHandle) -> Result<(), String> {
-    if let Some(win) = app.get_webview_window("settings") {
-        let _ = win.unminimize();
-        let _ = win.show();
-        let _ = win.set_focus();
-        return Ok(());
-    }
-    Ok(())
-}
-```
-
-### 6.2 TypeScript (SolidJS Reactive State)
-
-```typescript
-import { createSignal, createMemo } from "solid-js";
-
-export function useWordCount(content: () => string) {
-  const stats = createMemo(() => {
-    const text = content();
-    const words = (text.match(/\S+/g) || []).length;
-    const chars = text.length;
-    return { words, chars };
-  });
-
-  return stats;
-}
-```
-
----
-
-## 7. Mathematical Expressions (KaTeX)
-
-Both inline and display equations are rendered with crisp mathematical typography:
-
-- Inline formulas: Einstein's mass-energy equivalence $E = mc^2$, and Euler's formula $e^{i\pi} + 1 = 0$.
-- Display formula (Gaussian Normal Distribution & Maxwell-Ampère Law):
-
-$$
-f(x) = \frac{1}{\sigma \sqrt{2\pi}} \exp\left( -\frac{(x - \mu)^2}{2\sigma^2} \right)
-$$
-
-$$
-\oint_C \mathbf{B} \cdot d\boldsymbol{\ell} = \mu_0 I_{\text{enc}} + \mu_0 \varepsilon_0 \frac{d\Phi_E}{dt}
-$$
-
----
-
-## 8. Interactive Collapsible Sections
+- Backspace right after an opening marker removes the format.
+- At the start of a heading, type `#` to raise its level and press Backspace to lower it.
+- Formatting is in the **Paragraph** and **Format** menus, the context menu and the shortcuts below.
 
 <details>
-<summary><b>🔍 Click to expand: Pupitre Shortcuts Quick Reference</b></summary>
+<summary>Keyboard shortcuts (Ctrl is ⌘ on macOS)</summary>
 
-| Action        | Windows / Linux Shortcut                          | macOS Shortcut                                 |
-| :------------ | :------------------------------------------------ | :--------------------------------------------- |
-| New Document  | <kbd>Ctrl</kbd> + <kbd>N</kbd>                    | <kbd>⌘</kbd> + <kbd>N</kbd>                    |
-| Open File     | <kbd>Ctrl</kbd> + <kbd>O</kbd>                    | <kbd>⌘</kbd> + <kbd>O</kbd>                    |
-| Save File     | <kbd>Ctrl</kbd> + <kbd>S</kbd>                    | <kbd>⌘</kbd> + <kbd>S</kbd>                    |
-| Save As       | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> | <kbd>⌘</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> |
-| Find Text     | <kbd>Ctrl</kbd> + <kbd>F</kbd>                    | <kbd>⌘</kbd> + <kbd>F</kbd>                    |
-| Replace Text  | <kbd>Ctrl</kbd> + <kbd>H</kbd>                    | <kbd>⌥</kbd> + <kbd>⌘</kbd> + <kbd>F</kbd>     |
-| Zoom In / Out | <kbd>Ctrl</kbd> + <kbd>+</kbd> / <kbd>-</kbd>     | <kbd>⌘</kbd> + <kbd>+</kbd> / <kbd>-</kbd>     |
-| Preferences   | <kbd>Ctrl</kbd> + <kbd>,</kbd>                    | <kbd>⌘</kbd> + <kbd>,</kbd>                    |
+| Action                       | Shortcut                                                                                                    |
+| :--------------------------- | :---------------------------------------------------------------------------------------------------------- |
+| Bold / Italic / Inline code  | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
+| Strikethrough                | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| Link                         | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| Heading 1–6 / Paragraph      | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
+| Quote                        | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
+| Numbered / Bulleted list     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
+| Code block / Math block      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
+| Table                        | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
+| Find / Replace               | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Outline                      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Focus mode / Typewriter mode | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
+| Reset zoom                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| Preferences                  | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>
 
----
+## Writing modes
 
-## 9. Footnotes & Acknowledgements
+- **Focus mode** dims everything except the paragraph you are writing.
+- **Typewriter mode** keeps the line you are writing in the middle of the window.
 
-Pupitre is crafted to accompany your essays, system designs, daily journals, and research notes[^1].
+Both are in the **View** menu and in Preferences › Editor, and they can be combined.
 
-May your thoughts flow unhindered at the speed of thought.
+## Window style
 
-[^1]: Pupitre is an open-source project dedicated to pure, distraction-free writing. Feel free to contribute or file suggestions on GitHub!
+Preferences › Appearance › Window Style switches between **Classic** and **Immersive**. In the immersive style the document sits in a card inside the window; the title bar and the outline step aside once you type or scroll and come back when the pointer reaches the top or the start edge of the window. The style applies to windows opened after the change.
+
+## Files and images
+
+- Pupitre keeps the line endings of the file it opened unless Preferences › Markdown says otherwise. How lists, emphasis, code fences and rules are written on save is set there too.
+- Pasted images are saved in a folder next to the document (`assets` by default, Preferences › Markdown). A document that has not been saved yet keeps them in memory and writes them on the first save.
+- Preferences › General › Default Markdown App makes Pupitre open `.md` files from the file manager.
+- Preferences are stored in `settings.json`; Preferences › About shows its folder. Only values that differ from the defaults are written, and a field that cannot be read falls back to its default without affecting the others.
+
+## Themes
+
+A theme styles the whole window and the document. Preferences › Appearance lists them with the color schemes they support, and a separate theme can be chosen for dark mode.
+
+Themes ship with the app: each one is a folder in `src/renderer/themes/<name>/` with an `index.css`, and the folder name is the theme's name. Fonts or images a theme uses go in the same folder and are referenced with relative `url()`s.
+
+```css
+:root {
+  /* The schemes this theme supports: light, dark or both */
+  color-scheme: light dark;
+
+  /* Default body font; users can override it in the preferences */
+  --font-document: Georgia, serif;
+
+  /* Design tokens used by the whole window */
+  --ui-surface-1: oklch(0.99 0.01 90);
+  --ui-brand: oklch(0.55 0.12 250);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ui-surface-1: oklch(0.2 0.01 90);
+  }
+}
+
+.milkdown .ProseMirror h1 {
+  font-size: 2em;
+}
+```
+
+- Colors are set through the `--ui-*` tokens (surfaces, text, accent) and `--syntax-*` for code. Their defaults and the full list are in `src/renderer/app.css` and the `pupitre` theme.
+- Quote bars should use `var(--alert-color, …)` so alerts keep their colors.
+- Body font size, line height and content width belong to the user and always win; use `em` for sizes in the document and logical properties such as `padding-inline-start` so right-to-left text mirrors.
+
+## Markdown reference
+
+### Text
+
+**Bold**, _italic_, ~~strikethrough~~, `inline code`, [links](https://commonmark.org), H<sub>2</sub>O, x<sup>2</sup>, <kbd>Esc</kbd> and <mark>highlights</mark>. Inline HTML is rendered when it is a complete element and shown as source otherwise.
+
+> A quote.
+>
+> > A nested quote.
+
+> [!NOTE]
+> GitHub alerts: `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` and `[!CAUTION]`.
+
+> [!WARNING]
+> The marker must be the first line of the quote.
+
+### Lists
+
+1. Ordered
+   - Nested, bulleted
+   - [x] Tasks can be checked
+   - [ ] And unchecked
+2. Lists can hold code:
+
+   ```sh
+   npm run dev
+   ```
+
+### Table
+
+| Left   | Center | Right |
+| :----- | :----: | ----: |
+| Cell   |  Cell  |  1.00 |
+| Longer |  Text  | 10.50 |
+
+### Code
+
+```typescript
+function countWords(text: string): number {
+  const segmenter = new Intl.Segmenter(undefined, { granularity: "word" });
+  return [...segmenter.segment(text)].filter((part) => part.isWordLike).length;
+}
+```
+
+### Math
+
+Inline $e^{i\pi} + 1 = 0$ and display:
+
+$$
+\int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
+$$
+
+### Diagrams
+
+```mermaid
+flowchart LR
+    Open[Open file] --> Edit[Edit] --> Save[Save]
+    Edit -->|Paste image| Assets[(assets folder)]
+```
+
+### Footnotes
+
+A sentence with a footnote[^1].
+
+[^1]: Footnotes are listed at the end of the document.
+
+<!-- Comments are kept in the file and shown as source. -->
