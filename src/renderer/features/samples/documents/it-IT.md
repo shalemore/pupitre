@@ -59,13 +59,13 @@ I temi sono inclusi nell’app: ognuno è una cartella in `src/renderer/themes/<
 
 ```css
 :root {
-  /* The schemes this theme supports: light, dark or both */
+  /* Gli schemi di colore supportati dal tema: chiaro, scuro o entrambi */
   color-scheme: light dark;
 
-  /* Default body font; users can override it in the preferences */
+  /* Font del corpo del testo predefinito; si cambia nelle preferenze */
   --font-document: Georgia, serif;
 
-  /* Design tokens used by the whole window */
+  /* Token di design usati da tutta la finestra */
   --ui-surface-1: oklch(0.99 0.01 90);
   --ui-brand: oklch(0.55 0.12 250);
 }

@@ -1,11 +1,13 @@
 import type { TranslationSchema } from "../types";
+import { slavicPlural } from "../plural";
 
 export const ruRU = {
   common: {
     appName: "Pupitre",
-    untitledFileName: "Без_названия.md",
-    wordsCount: (count: number) => `${count} слов`,
-    charsCount: (count: number) => `${count} симв.`,
+    untitledFileName: "Без названия.md",
+    wordsCount: (count: number) => `${count} ${slavicPlural(count, "слово", "слова", "слов")}`,
+    charsCount: (count: number) =>
+      `${count} ${slavicPlural(count, "символ", "символа", "символов")}`,
     copy: "Копировать",
   },
   actions: {
@@ -201,7 +203,7 @@ export const ruRU = {
     windowStyleImmersive: "Иммерсивный",
     defaultApp: "Приложение по умолчанию для Markdown",
     defaultAppDesc: "Открывать файлы .md в Pupitre двойным щелчком",
-    setAsDefault: "Сделать основным",
+    setAsDefault: "Сделать по умолчанию",
     defaultAppDone: "Теперь файлы Markdown открываются в Pupitre",
     defaultAppOpenedSettings: "В разделе «Приложения по умолчанию» выберите Pupitre для файлов .md",
     defaultAppManual:

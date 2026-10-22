@@ -26,7 +26,7 @@ Pupitre는 데스크톱용 Markdown 편집기입니다. 문서는 일반 `.md` �
 | 코드 블록 / 수식 블록          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | 표                             | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | 찾기 / 바꾸기                  | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
-| 개요                           | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| 아웃라인                       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | 집중 모드 / 타자기 모드        | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | 확대/축소 초기화               | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | 환경설정                       | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
@@ -42,7 +42,7 @@ Pupitre는 데스크톱용 Markdown 편집기입니다. 문서는 일반 `.md` �
 
 ## 창 스타일
 
-환경설정 › 모양 › 창 스타일에서 **클래식**과 **몰입형**를 전환합니다. 몰입형에서는 문서가 창 안의 카드에 놓이고, 입력하거나 스크롤하면 제목 표시줄과 개요가 물러났다가 포인터가 창 위쪽이나 시작 쪽 가장자리에 닿으면 돌아옵니다. 변경 후에 여는 창부터 적용됩니다.
+환경설정 › 모양 › 창 스타일에서 **클래식**과 **몰입형**을 전환합니다. 몰입형에서는 문서가 창 안의 카드에 놓이고, 입력하거나 스크롤하면 제목 표시줄과 개요가 물러났다가 포인터가 창 위쪽이나 시작 쪽 가장자리에 닿으면 돌아옵니다. 변경 후에 여는 창부터 적용됩니다.
 
 ## 파일과 이미지
 
@@ -59,13 +59,13 @@ Pupitre는 데스크톱용 Markdown 편집기입니다. 문서는 일반 `.md` �
 
 ```css
 :root {
-  /* The schemes this theme supports: light, dark or both */
+  /* 이 테마가 지원하는 색상 구성표: 라이트, 다크 또는 둘 다 */
   color-scheme: light dark;
 
-  /* Default body font; users can override it in the preferences */
+  /* 기본 본문 글꼴. 사용자는 환경설정에서 변경할 수 있습니다 */
   --font-document: Georgia, serif;
 
-  /* Design tokens used by the whole window */
+  /* 창 전체에서 사용하는 디자인 토큰 */
   --ui-surface-1: oklch(0.99 0.01 90);
   --ui-brand: oklch(0.55 0.12 250);
 }

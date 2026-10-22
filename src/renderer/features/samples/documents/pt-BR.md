@@ -26,7 +26,7 @@ Mova o cursor para dentro de um **texto em negrito**, um `trecho de código` ou 
 | Bloco de código / Bloco matemático   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | Tabela                               | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Localizar / Substituir               | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
-| Sumário                              | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Estrutura                            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Modo foco / Modo máquina de escrever | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Redefinir zoom                       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | Preferências                         | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
@@ -42,7 +42,7 @@ Ambos estão no menu **Exibir** e em Preferências › Editor, e podem ser combi
 
 ## Estilo da janela
 
-Preferências › Aparência › Estilo da janela alterna entre **Clássico** e **Imersivo**. No estilo imersivo o documento fica em um cartão dentro da janela; a barra de título e o sumário saem do caminho quando você digita ou rola e voltam quando o ponteiro chega ao topo ou à borda inicial da janela. O estilo vale para as janelas abertas depois da mudança.
+Preferências › Aparência › Estilo da janela alterna entre **Clássico** e **Imersivo**. No estilo imersivo o documento fica em um cartão dentro da janela; a barra de título e a estrutura sai do caminho quando você digita ou rola e voltam quando o ponteiro chega ao topo ou à borda inicial da janela. O estilo vale para as janelas abertas depois da mudança.
 
 ## Arquivos e imagens
 
@@ -59,13 +59,13 @@ Os temas acompanham o app: cada um é uma pasta em `src/renderer/themes/<name>/`
 
 ```css
 :root {
-  /* The schemes this theme supports: light, dark or both */
+  /* Os esquemas de cores aceitos por este tema: claro, escuro ou ambos */
   color-scheme: light dark;
 
-  /* Default body font; users can override it in the preferences */
+  /* Fonte padrão do corpo do texto; dá para trocar nas preferências */
   --font-document: Georgia, serif;
 
-  /* Design tokens used by the whole window */
+  /* Tokens de design usados na janela inteira */
   --ui-surface-1: oklch(0.99 0.01 90);
   --ui-brand: oklch(0.55 0.12 250);
 }

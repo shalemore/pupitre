@@ -3,7 +3,7 @@ import type { TranslationSchema } from "../types";
 export const itIT = {
   common: {
     appName: "Pupitre",
-    untitledFileName: "Senza_titolo.md",
+    untitledFileName: "Senza titolo.md",
     wordsCount: (count: number) => (count === 1 ? "1 parola" : `${count} parole`),
     charsCount: (count: number) => (count === 1 ? "1 carattere" : `${count} caratteri`),
     copy: "Copia",
@@ -13,7 +13,7 @@ export const itIT = {
     openDoc: "Apri",
   },
   sidebar: {
-    noHeadings: "Nessuna intestazione presente",
+    noHeadings: "Nessuna intestazione",
   },
   welcome: {
     dragDropHint: "Oppure trascina e rilascia i file Markdown in questa finestra",
@@ -183,7 +183,7 @@ export const itIT = {
     updateNotificationBody: "Apri Preferenze per scaricarlo.",
     refreshFonts: "Aggiorna elenco caratteri",
     resetToDefault: "Ripristina predefinito",
-    darkTheme: "Tema modalità scura",
+    darkTheme: "Tema per la modalità scura",
     darkThemeDesc: "Usato con lo schema colori scuro",
     sameTheme: "Come il tema",
     schemeBoth: "Chiaro e scuro",
@@ -206,7 +206,7 @@ export const itIT = {
     defaultAppDone: "Ora Pupitre apre i file Markdown",
     defaultAppOpenedSettings: "In App predefinite, scegli Pupitre per i file .md",
     defaultAppManual:
-      "Nel Finder, seleziona un file .md, scegli Archivio › Ottieni informazioni, seleziona Pupitre in Apri con e fai clic su Modifica tutto",
+      "Nel Finder, seleziona un file .md, scegli File › Ottieni informazioni, seleziona Pupitre in Apri con e fai clic su Modifica tutto",
     defaultAppFailed:
       "Impossibile cambiare l’app predefinita; impostala nelle impostazioni di sistema",
   },

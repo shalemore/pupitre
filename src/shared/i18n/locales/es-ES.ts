@@ -149,7 +149,7 @@ export const esES = {
     contentWidthDesc: "Ancho máximo de la columna de texto",
     widthCompact: "Compacto",
     widthNormal: "Normal",
-    widthWide: "Ancho",
+    widthWide: "Ancha",
     widthFull: "Ancho completo",
     spellcheck: "Revisión ortográfica",
     spellcheckDesc: "Subrayar palabras mal escritas; clic derecho para sugerencias",

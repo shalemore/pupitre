@@ -59,13 +59,13 @@ Designs werden mit der App ausgeliefert: Jedes ist ein Ordner `src/renderer/them
 
 ```css
 :root {
-  /* The schemes this theme supports: light, dark or both */
+  /* Die Farbschemata dieses Designs: hell, dunkel oder beides */
   color-scheme: light dark;
 
-  /* Default body font; users can override it in the preferences */
+  /* Standard-Schrift für den Fließtext; lässt sich in den Einstellungen ändern */
   --font-document: Georgia, serif;
 
-  /* Design tokens used by the whole window */
+  /* Design-Token, die im ganzen Fenster gelten */
   --ui-surface-1: oklch(0.99 0.01 90);
   --ui-brand: oklch(0.55 0.12 250);
 }

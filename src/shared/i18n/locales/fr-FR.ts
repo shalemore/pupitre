@@ -25,7 +25,7 @@ export const frFR = {
     preview: "Aperçu",
     editSource: "Modifier",
     hidePreview: "Masquer",
-    upload: "Téléverser",
+    upload: "Importer",
     confirm: "Confirmer",
     imageUrlPlaceholder: "Collez un lien d'image…",
     captionPlaceholder: "Saisissez une légende…",
@@ -47,7 +47,7 @@ export const frFR = {
     copyButton: "Copier",
     okButton: "OK",
     unsavedMessage: (fileName: string) =>
-      `Voulez-vous enregistrer les modifications apportées à ${fileName} ?`,
+      `Voulez-vous enregistrer les modifications apportées à ${fileName} ?`,
     unsavedDetail: "Vos modifications seront perdues si vous ne les enregistrez pas.",
     save: "Enregistrer",
     dontSave: "Ne pas enregistrer",
@@ -56,8 +56,8 @@ export const frFR = {
   },
   about: {
     windowTitle: "À propos de Pupitre",
-    versionLabel: "Version :",
-    osLabel: "Système :",
+    versionLabel: "Version :",
+    osLabel: "Système :",
     openSampleDoc: "Ouvrir le document d'exemple",
     sampleDocTitle: "Document d'exemple",
     sampleDocDesc: "Découvrez la démo de Pupitre et la syntaxe Markdown complète",
@@ -69,7 +69,7 @@ export const frFR = {
     help: "Aide",
     newFile: "Nouveau document",
     openFile: "Ouvrir...",
-    openRecent: "Ouvrir récent",
+    openRecent: "Ouvrir récemment",
     noRecentFiles: "Aucun fichier récent",
     save: "Enregistrer",
     saveAs: "Enregistrer sous...",
@@ -141,7 +141,7 @@ export const frFR = {
     fallbackFontDesc: "Pour les caractères absents de la police principale, comme le CJK",
     codeFont: "Police du code",
     codeFontDesc: "Pour les blocs de code et le code en ligne",
-    themeDefault: "Par défaut du thème",
+    themeDefault: "Valeur par défaut du thème",
     noFallbackFont: "Aucune",
     searchFont: "Rechercher une police…",
     fontSize: "Taille de police",
@@ -153,7 +153,7 @@ export const frFR = {
     widthWide: "Large",
     widthFull: "Pleine largeur",
     spellcheck: "Vérification orthographique",
-    spellcheckDesc: "Souligner les fautes ; clic droit pour les suggestions",
+    spellcheckDesc: "Souligner les fautes ; clic droit pour les suggestions",
     markdownDesc:
       "Façon d'écrire le Markdown à l'enregistrement. S'applique aux documents ouverts après la modification.",
     bulletMarker: "Puce de liste",
@@ -167,7 +167,7 @@ export const frFR = {
     lineEnding: "Fins de ligne",
     lineEndingAuto: "Conserver ceux du fichier",
     imageFolder: "Dossier des images collées",
-    imageFolderDesc: "Relatif au document ; les documents non enregistrés intègrent les images",
+    imageFolderDesc: "Relatif au document ; les documents non enregistrés intègrent les images",
     version: "Version",
     checkForUpdates: "Rechercher des mises à jour",
     checkingForUpdates: "Vérification…",
@@ -190,7 +190,7 @@ export const frFR = {
     schemeBoth: "Clair et sombre",
     uiFont: "Police de l'interface",
     uiFontDesc:
-      "Menus, barre latérale et dialogues ; les caractères manquants utilisent la police de secours",
+      "Menus, barre latérale et dialogues ; les caractères manquants utilisent la police de secours",
     systemDefault: "Par défaut du système",
     focusMode: "Mode concentration",
     focusModeDesc: "Estompe tout sauf le paragraphe en cours d’écriture (F8)",
@@ -208,9 +208,9 @@ export const frFR = {
     defaultAppOpenedSettings:
       "Dans Applications par défaut, choisissez Pupitre pour les fichiers .md",
     defaultAppManual:
-      "Dans le Finder, sélectionnez un fichier .md, choisissez Fichier › Lire les informations, sélectionnez Pupitre sous Ouvrir avec et cliquez sur Tout modifier",
+      "Dans le Finder, sélectionnez un fichier .md, choisissez Fichier › Lire les informations, sélectionnez Pupitre sous Ouvrir avec et cliquez sur Tout modifier",
     defaultAppFailed:
-      "Impossible de changer l’application par défaut ; modifiez-la dans les réglages du système",
+      "Impossible de changer l’application par défaut ; modifiez-la dans les réglages du système",
   },
   format: {
     bold: "Gras",

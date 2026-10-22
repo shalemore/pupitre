@@ -59,13 +59,13 @@ Los temas vienen con la aplicación: cada uno es una carpeta en `src/renderer/th
 
 ```css
 :root {
-  /* The schemes this theme supports: light, dark or both */
+  /* Los esquemas de color que admite este tema: claro, oscuro o ambos */
   color-scheme: light dark;
 
-  /* Default body font; users can override it in the preferences */
+  /* Fuente del cuerpo de texto por defecto; se cambia en las preferencias */
   --font-document: Georgia, serif;
 
-  /* Design tokens used by the whole window */
+  /* Tokens de diseño que usa toda la ventana */
   --ui-surface-1: oklch(0.99 0.01 90);
   --ui-brand: oklch(0.55 0.12 250);
 }

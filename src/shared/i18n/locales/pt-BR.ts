@@ -3,7 +3,7 @@ import type { TranslationSchema } from "../types";
 export const ptBR = {
   common: {
     appName: "Pupitre",
-    untitledFileName: "Sem_título.md",
+    untitledFileName: "Sem título.md",
     wordsCount: (count: number) => (count === 1 ? "1 palavra" : `${count} palavras`),
     charsCount: (count: number) => (count === 1 ? "1 caractere" : `${count} caracteres`),
     copy: "Copiar",
@@ -59,7 +59,7 @@ export const ptBR = {
     osLabel: "SO:",
     openSampleDoc: "Abrir documento de exemplo",
     sampleDocTitle: "Documento de exemplo",
-    sampleDocDesc: "Explore a demonstração e sintaxe Markdown completa",
+    sampleDocDesc: "Explore a demonstração e a sintaxe Markdown completa",
   },
   menu: {
     file: "Arquivo",
@@ -85,7 +85,7 @@ export const ptBR = {
     zoomIn: "Aumentar zoom",
     zoomOut: "Diminuir zoom",
     resetZoom: "Redefinir zoom",
-    toggleSidebar: "Alternar Sumário",
+    toggleSidebar: "Alternar Estrutura",
     toggleTheme: "Alternar Tema",
     preferences: "Preferências...",
     sampleDocument: "Documento Markdown de exemplo",
@@ -196,7 +196,7 @@ export const ptBR = {
     typewriterModeDesc: "Mantém a linha sendo escrita no meio da janela (F9)",
     windowStyle: "Estilo da janela",
     windowStyleDesc:
-      "Imersivo oculta a barra de título e o sumário enquanto você escreve. Aplica-se às janelas abertas depois.",
+      "Imersivo oculta a barra de título e a estrutura enquanto você escreve. Aplica-se às janelas abertas depois.",
     windowStyleClassic: "Clássico",
     windowStyleImmersive: "Imersivo",
     defaultApp: "App padrão para Markdown",

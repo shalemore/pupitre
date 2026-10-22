@@ -2,11 +2,11 @@
 
 ![Pupitre](./logo.svg)
 
-Pupitre est un éditeur Markdown pour le bureau. Les documents sont de simples fichiers `.md` : ce que vous voyez est rendu sur place, et la syntaxe Markdown apparaît tant que le curseur s’y trouve. Ce guide illustre aussi ce que l’éditeur affiche ; modifiez-le librement, il n’est enregistré que si vous choisissez **Enregistrer sous**.
+Pupitre est un éditeur Markdown pour le bureau. Les documents sont de simples fichiers `.md` : ce que vous voyez est rendu sur place, et la syntaxe Markdown apparaît tant que le curseur s’y trouve. Ce guide illustre aussi ce que l’éditeur affiche ; modifiez-le librement, il n’est enregistré que si vous choisissez **Enregistrer sous**.
 
 ## Édition
 
-Placez le curseur dans du **texte en gras**, un `extrait de code` ou un [lien](https://github.com/shalemore/pupitre) et sa syntaxe apparaît autour. Les marqueurs se comportent comme du texte :
+Placez le curseur dans du **texte en gras**, un `extrait de code` ou un [lien](https://github.com/shalemore/pupitre) et sa syntaxe apparaît autour. Les marqueurs se comportent comme du texte :
 
 - Retour arrière juste après un marqueur ouvrant supprime la mise en forme.
 - Au début d’un titre, tapez `#` pour augmenter son niveau et Retour arrière pour le diminuer.
@@ -15,21 +15,21 @@ Placez le curseur dans du **texte en gras**, un `extrait de code` ou un [lien](h
 <details>
 <summary>Raccourcis clavier (Ctrl correspond à ⌘ sous macOS)</summary>
 
-| Action                                     | Raccourci                                                                                                   |
-| :----------------------------------------- | :---------------------------------------------------------------------------------------------------------- |
-| Gras / Italique / Code en ligne            | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
-| Barré                                      | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
-| Lien                                       | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
-| Titre 1–6 / Paragraphe                     | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
-| Citation                                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
-| Liste numérotée / à puces                  | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
-| Bloc de code / Bloc mathématique           | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
-| Tableau                                    | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
-| Rechercher / Remplacer                     | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
-| Plan                                       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
-| Mode concentration / Mode machine à écrire | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| Réinitialiser le zoom                      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
-| Préférences                                | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
+| Action | Raccourci |
+| :----------------------------------------- | :---------------------------------------------------------------------------------------------------------- |
+| Gras / Italique / Code en ligne | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd> |
+| Barré | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd> |
+| Lien | <kbd>Ctrl</kbd>+<kbd>K</kbd> |
+| Titre 1–6 / Paragraphe | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd> |
+| Citation | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd> |
+| Liste numérotée / à puces | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd> |
+| Bloc de code / Bloc mathématique | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd> |
+| Tableau | <kbd>Ctrl</kbd>+<kbd>T</kbd> |
+| Rechercher / Remplacer | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Plan | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd> |
+| Mode concentration / Mode machine à écrire | <kbd>F8</kbd> / <kbd>F9</kbd> |
+| Réinitialiser le zoom | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd> |
+| Préférences | <kbd>Ctrl</kbd>+<kbd>,</kbd> |
 
 </details>
 
@@ -38,40 +38,40 @@ Placez le curseur dans du **texte en gras**, un `extrait de code` ou un [lien](h
 - Le **Mode concentration** estompe tout sauf le paragraphe que vous écrivez.
 - Le **Mode machine à écrire** garde la ligne en cours d’écriture au milieu de la fenêtre.
 
-Les deux sont dans le menu **Affichage** et dans Préférences › Éditeur, et peuvent être combinés.
+Les deux sont dans le menu **Affichage** et dans Préférences › Éditeur, et peuvent être combinés.
 
 ## Style de fenêtre
 
-Préférences › Apparence › Style de fenêtre permet de passer de **Classique** à **Immersif**. Dans le style immersif, le document est placé dans une carte à l’intérieur de la fenêtre ; la barre de titre et le plan s’effacent dès que vous tapez ou faites défiler, et reviennent quand le pointeur atteint le haut ou le bord de début de la fenêtre. Le style s’applique aux fenêtres ouvertes après le changement.
+Préférences › Apparence › Style de fenêtre permet de passer de **Classique** à **Immersif**. Dans le style immersif, le document est placé dans une carte à l’intérieur de la fenêtre ; la barre de titre et le plan s’effacent dès que vous tapez ou faites défiler, et reviennent quand le pointeur atteint le haut ou le bord de début de la fenêtre. Le style s’applique aux fenêtres ouvertes après le changement.
 
 ## Fichiers et images
 
-- Pupitre conserve les fins de ligne du fichier ouvert, sauf indication contraire dans Préférences › Markdown. C’est aussi là que se règle la façon dont les listes, l’emphase, les blocs de code et les filets sont écrits à l’enregistrement.
-- Les images collées sont enregistrées dans un dossier à côté du document (`assets` par défaut, Préférences › Markdown). Un document pas encore enregistré les garde en mémoire et les écrit au premier enregistrement.
-- Préférences › Général › Application Markdown par défaut fait ouvrir les fichiers `.md` avec Pupitre depuis le gestionnaire de fichiers.
-- Les préférences sont stockées dans `settings.json` ; Préférences › À propos affiche son dossier. Seules les valeurs différentes des valeurs par défaut sont écrites, et un champ illisible revient à sa valeur par défaut sans toucher aux autres.
+- Pupitre conserve les fins de ligne du fichier ouvert, sauf indication contraire dans Préférences › Markdown. C’est aussi là que se règle la façon dont les listes, l’emphase, les blocs de code et les lignes horizontales sont écrits à l’enregistrement.
+- Les images collées sont enregistrées dans un dossier à côté du document (`assets` par défaut, Préférences › Markdown). Un document pas encore enregistré les garde en mémoire et les écrit au premier enregistrement.
+- Préférences › Général › Application Markdown par défaut fait ouvrir les fichiers `.md` avec Pupitre depuis le gestionnaire de fichiers.
+- Les préférences sont stockées dans `settings.json` ; Préférences › À propos affiche son dossier. Seules les valeurs différentes des valeurs par défaut sont écrites, et un champ illisible revient à sa valeur par défaut sans toucher aux autres.
 
 ## Thèmes
 
-Un thème met en forme toute la fenêtre et le document. Préférences › Apparence les liste avec les modes de couleur qu’ils gèrent, et un thème distinct peut être choisi pour le mode sombre.
+Un thème met en forme toute la fenêtre et le document. Préférences › Apparence les répertorie avec les modes de couleur qu’ils gèrent, et un thème distinct peut être choisi pour le mode sombre.
 
-Les thèmes sont livrés avec l’application : chacun est un dossier `src/renderer/themes/<name>/` contenant un `index.css`, et le nom du dossier est le nom du thème. Les polices ou images d’un thème se placent dans le même dossier et s’appellent avec des `url()` relatives.
+Les thèmes sont livrés avec l’application : chacun est un dossier `src/renderer/themes/<name>/` contenant un `index.css`, et le nom du dossier est le nom du thème. Les polices ou images d’un thème se placent dans le même dossier et s’appellent avec des `url()` relatives.
 
 ```css
 :root {
-  /* The schemes this theme supports: light, dark or both */
+  /* Les schémas de couleurs pris en charge : clair, sombre ou les deux */
   color-scheme: light dark;
 
-  /* Default body font; users can override it in the preferences */
+  /* Police du corps de texte par défaut ; modifiable dans les préférences */
   --font-document: Georgia, serif;
 
-  /* Design tokens used by the whole window */
+  /* Jetons de design utilisés par toute la fenêtre */
   --ui-surface-1: oklch(0.99 0.01 90);
   --ui-brand: oklch(0.55 0.12 250);
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+   :root {
     --ui-surface-1: oklch(0.2 0.01 90);
   }
 }
@@ -83,7 +83,7 @@ Les thèmes sont livrés avec l’application : chacun est un dossier `src/rende
 
 - Les couleurs se définissent avec les jetons `--ui-*` (surfaces, texte, accent) et `--syntax-*` pour le code. Leurs valeurs par défaut et la liste complète se trouvent dans `src/renderer/app.css` et le thème `pupitre`.
 - Les barres de citation doivent utiliser `var(--alert-color, …)` pour que les alertes gardent leurs couleurs.
-- La taille de police, l’interligne et la largeur du contenu appartiennent à l’utilisateur et priment toujours ; utilisez `em` pour les tailles dans le document et des propriétés logiques comme `padding-inline-start` pour que le texte de droite à gauche soit inversé.
+- La taille de police, l’interligne et la largeur du contenu appartiennent à l’utilisateur et priment toujours ; utilisez `em` pour les tailles dans le document et des propriétés logiques comme `padding-inline-start` pour que le texte de droite à gauche soit inversé.
 
 ## Référence Markdown
 
@@ -96,7 +96,7 @@ Les thèmes sont livrés avec l’application : chacun est un dossier `src/rende
 > > Une citation imbriquée.
 
 > [!NOTE]
-> Alertes GitHub : `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` et `[!CAUTION]`.
+> Alertes GitHub : `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` et `[!CAUTION]`.
 
 > [!WARNING]
 > Le marqueur doit être la première ligne de la citation.
@@ -107,7 +107,7 @@ Les thèmes sont livrés avec l’application : chacun est un dossier `src/rende
    - Imbriquée, à puces
    - [x] Les tâches peuvent être cochées
    - [ ] et décochées
-2. Les listes peuvent contenir du code :
+2. Les listes peuvent contenir du code :
 
    ```sh
    npm run dev
@@ -115,10 +115,10 @@ Les thèmes sont livrés avec l’application : chacun est un dossier `src/rende
 
 ### Tableau
 
-| Gauche    | Centre  | Droite |
-| :-------- | :-----: | -----: |
-| Cellule   | Cellule |   1.00 |
-| Plus long |  Texte  |  10.50 |
+| Gauche | Centre | Droite |
+| :-------- | :-----: | -----: |
+| Cellule | Cellule | 1.00 |
+| Plus long | Texte | 10.50 |
 
 ### Code
 
@@ -131,7 +131,7 @@ function countWords(text: string): number {
 
 ### Mathématiques
 
-En ligne $e^{i\pi} + 1 = 0$ et en bloc :
+En ligne $e^{i\pi} + 1 = 0$ et en bloc :
 
 $$
 \int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
