@@ -1,176 +1,84 @@
-import { Check, ChevronDown } from "lucide-solid";
-import { createSignal, For, type JSX, Show, splitProps } from "solid-js";
+import { Select as KobalteSelect } from "@kobalte/core/select";
 import { cn } from "cn";
-import { useClickOutside } from "@/lib/dom";
+import { Check, ChevronDown } from "lucide-solid";
+import { type JSX, Show } from "solid-js";
 
 export interface SelectOption<T extends string = string> {
   value: T;
   label: string;
+  /** Secondary text next to the option, such as a font's localized name; it is searchable too. */
+  description?: string | undefined;
   icon?: JSX.Element;
-  description?: string;
+  /** Style of the option text; the font list uses it to preview each font in itself. */
+  style?: JSX.CSSProperties | undefined;
 }
 
-export interface SelectProps<T extends string = string> {
+export interface SelectProps<T extends string> {
   value: T;
+  options: readonly SelectOption<T>[];
   onChange: (value: T) => void;
-  options: readonly SelectOption<T>[] | SelectOption<T>[];
-  placeholder?: string;
-  searchable?: boolean;
-  searchPlaceholder?: string;
-  size?: "sm" | "default";
   class?: string;
-  disabled?: boolean;
+  "aria-label"?: string;
 }
 
-export function Select<T extends string = string>(props: SelectProps<T>) {
-  const [local, rest] = splitProps(props, [
-    "value",
-    "onChange",
-    "options",
-    "placeholder",
-    "searchable",
-    "searchPlaceholder",
-    "size",
-    "class",
-    "disabled",
-  ]);
-
-  const [isOpen, setIsOpen] = createSignal(false);
-  const [searchQuery, setSearchQuery] = createSignal("");
-  let containerRef: HTMLDivElement | null = null;
-
-  const selectedOption = () => local.options.find((opt) => opt.value === local.value);
-
-  const filteredOptions = () => {
-    const q = searchQuery().trim().toLowerCase();
-    if (!q || !local.searchable) return local.options;
-    return local.options.filter(
-      (opt) =>
-        opt.label.toLowerCase().includes(q) ||
-        opt.value.toLowerCase().includes(q) ||
-        (opt.description && opt.description.toLowerCase().includes(q)),
-    );
-  };
-
-  useClickOutside(
-    () => containerRef,
-    () => {
-      setIsOpen(false);
-      setSearchQuery("");
-    },
-  );
-
-  const handleSelect = (val: T) => {
-    local.onChange(val);
-    setIsOpen(false);
-    setSearchQuery("");
-  };
-
-  const handleToggle = () => {
-    if (local.disabled) return;
-    const next = !isOpen();
-    setIsOpen(next);
-    if (!next) {
-      setSearchQuery("");
-    }
-  };
+/** A dropdown select built on Kobalte, which handles keyboard navigation, type-ahead and accessibility attributes. */
+export function Select<T extends string>(props: SelectProps<T>) {
+  const selected = () => props.options.find((option) => option.value === props.value);
 
   return (
-    <div
-      ref={(el) => {
-        containerRef = el;
+    <KobalteSelect<SelectOption<T>>
+      options={[...props.options]}
+      optionValue="value"
+      optionTextValue="label"
+      value={selected() ?? null}
+      onChange={(option) => {
+        if (option) props.onChange(option.value);
       }}
-      data-slot="select"
-      class={cn("relative inline-block text-xs select-none", local.class)}
-      {...rest}
+      gutter={6}
+      placement="bottom-end"
+      itemComponent={(itemProps) => (
+        <KobalteSelect.Item
+          item={itemProps.item}
+          class="flex items-center justify-between gap-3 rounded-md px-2.5 py-1.5 text-xs text-muted-foreground outline-none cursor-pointer data-highlighted:bg-accent data-highlighted:text-foreground data-selected:text-brand data-selected:font-medium"
+        >
+          <span class="flex items-center gap-2 min-w-0">
+            <Show when={itemProps.item.rawValue.icon}>{(icon) => icon()}</Show>
+            <KobalteSelect.ItemLabel class="truncate" style={itemProps.item.rawValue.style}>
+              {itemProps.item.rawValue.label}
+            </KobalteSelect.ItemLabel>
+          </span>
+          <KobalteSelect.ItemIndicator>
+            <Check class="size-3 shrink-0" />
+          </KobalteSelect.ItemIndicator>
+        </KobalteSelect.Item>
+      )}
     >
-      <button
-        type="button"
-        disabled={local.disabled}
-        onClick={handleToggle}
+      <KobalteSelect.Trigger
+        aria-label={props["aria-label"]}
         class={cn(
-          "flex items-center justify-between gap-2 rounded-md border border-input bg-surface-0/60 hover:bg-surface-0 px-2.5 py-1 text-xs text-foreground transition-all outline-none cursor-pointer focus-visible:shadow-focus disabled:cursor-not-allowed disabled:opacity-50",
-          local.size === "sm" ? "h-7" : "h-8 min-w-32.5",
-          isOpen() && "border-brand ring-1 ring-ring",
+          "flex h-8 min-w-36 items-center justify-between gap-2 rounded-md border border-input bg-surface-0/60 px-2.5 text-xs text-foreground outline-none cursor-pointer transition-colors hover:bg-surface-0 focus-visible:shadow-focus data-expanded:border-brand",
+          props.class,
         )}
       >
-        <div class="flex items-center gap-1.5 truncate">
-          <Show when={selectedOption()?.icon}>
-            <span class="text-muted-foreground shrink-0">{selectedOption()!.icon}</span>
-          </Show>
-          <span class="truncate">
-            {selectedOption()?.label ?? local.placeholder ?? "Select..."}
-          </span>
-        </div>
-        <ChevronDown
-          class={cn(
-            "size-3.5 text-muted-foreground shrink-0 transition-transform duration-(--duration-snap)",
-            isOpen() && "rotate-180",
+        <KobalteSelect.Value<SelectOption<T>> class="flex items-center gap-1.5 truncate">
+          {(state) => (
+            <>
+              <Show when={state.selectedOption().icon}>{(icon) => icon()}</Show>
+              <span class="truncate" style={state.selectedOption().style}>
+                {state.selectedOption().label}
+              </span>
+            </>
           )}
-        />
-      </button>
-
-      <Show when={isOpen()}>
-        <div class="absolute right-0 top-full mt-1.5 z-50 min-w-45 max-w-70 flex flex-col rounded-xl border border-border/80 bg-surface-2 p-1 text-xs shadow-float backdrop-blur-md animate-in fade-in-0 zoom-in-95 duration-(--duration-ui) ease-(--ease-emphasized)">
-          <Show when={local.searchable}>
-            <div class="p-1 pb-1.5 border-b border-border/50 sticky top-0 bg-surface-2 z-10 shrink-0">
-              <input
-                type="text"
-                placeholder={local.searchPlaceholder ?? "Search..."}
-                value={searchQuery()}
-                onInput={(e) => setSearchQuery(e.currentTarget.value)}
-                class="w-full px-2 py-1 text-xs rounded bg-surface-1 border border-border/70 text-foreground outline-none focus:border-brand focus:ring-1 focus:ring-ring"
-              />
-            </div>
-          </Show>
-
-          <div class="overflow-y-auto max-h-56 pt-0.5 space-y-0.5">
-            <Show
-              when={filteredOptions().length > 0}
-              fallback={
-                <div class="p-3 text-[11px] text-muted-foreground text-center italic">
-                  No matching options
-                </div>
-              }
-            >
-              <For each={filteredOptions()}>
-                {(option) => {
-                  const isSelected = () => option.value === local.value;
-                  return (
-                    <button
-                      type="button"
-                      onClick={() => handleSelect(option.value)}
-                      class={cn(
-                        "w-full flex items-center justify-between gap-2 rounded-md px-2.5 py-1.5 text-start transition-colors cursor-pointer outline-none",
-                        isSelected()
-                          ? "bg-brand/10 text-brand font-medium"
-                          : "text-muted-foreground hover:bg-accent hover:text-foreground",
-                      )}
-                    >
-                      <div class="flex flex-col min-w-0">
-                        <div class="flex items-center gap-2 truncate">
-                          <Show when={option.icon}>
-                            <span class="shrink-0">{option.icon}</span>
-                          </Show>
-                          <span class="truncate">{option.label}</span>
-                        </div>
-                        <Show when={option.description}>
-                          <span class="text-[10px] text-tertiary truncate mt-0.5">
-                            {option.description}
-                          </span>
-                        </Show>
-                      </div>
-                      <Show when={isSelected()}>
-                        <Check class="size-3 text-brand shrink-0" />
-                      </Show>
-                    </button>
-                  );
-                }}
-              </For>
-            </Show>
-          </div>
-        </div>
-      </Show>
-    </div>
+        </KobalteSelect.Value>
+        <KobalteSelect.Icon class="text-muted-foreground transition-transform data-expanded:rotate-180">
+          <ChevronDown class="size-3.5" />
+        </KobalteSelect.Icon>
+      </KobalteSelect.Trigger>
+      <KobalteSelect.Portal>
+        <KobalteSelect.Content class="z-50 min-w-(--kb-popper-anchor-width) rounded-xl border border-border/80 bg-surface-2 p-1 shadow-float animate-in fade-in-0 zoom-in-95 duration-(--duration-ui)">
+          <KobalteSelect.Listbox class="max-h-72 overflow-y-auto outline-none" />
+        </KobalteSelect.Content>
+      </KobalteSelect.Portal>
+    </KobalteSelect>
   );
 }

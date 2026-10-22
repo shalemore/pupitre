@@ -1,63 +1,25 @@
-import { cn } from "cn";
-import { splitProps } from "solid-js";
+import { Switch as KobalteSwitch } from "@kobalte/core/switch";
 
 export interface SwitchProps {
   checked: boolean;
   onChange: (checked: boolean) => void;
   disabled?: boolean;
-  size?: "sm" | "default";
-  class?: string;
-  id?: string;
   "aria-label"?: string;
 }
 
 export function Switch(props: SwitchProps) {
-  const [local, rest] = splitProps(props, [
-    "checked",
-    "onChange",
-    "disabled",
-    "size",
-    "class",
-    "id",
-  ]);
-
-  const size = () => local.size ?? "default";
-
   return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={local.checked}
-      disabled={local.disabled}
-      id={local.id}
-      onClick={() => {
-        if (!local.disabled) {
-          local.onChange(!local.checked);
-        }
-      }}
-      data-slot="switch"
-      data-checked={local.checked ? "" : undefined}
-      data-size={size()}
-      class={cn(
-        "peer group/switch relative inline-flex shrink-0 cursor-pointer items-center rounded-full border border-transparent transition-all outline-none select-none focus-visible:shadow-focus disabled:cursor-not-allowed disabled:opacity-50",
-        size() === "sm" ? "h-[14px] w-[24px]" : "h-[18.4px] w-[32px]",
-        local.checked ? "bg-brand text-brand-foreground" : "bg-input/80 dark:bg-input/60",
-        local.class,
-      )}
-      {...rest}
+    <KobalteSwitch
+      checked={props.checked}
+      onChange={props.onChange}
+      disabled={props.disabled ?? false}
+      aria-label={props["aria-label"]}
+      class="inline-flex items-center"
     >
-      <span
-        data-slot="switch-thumb"
-        class={cn(
-          "pointer-events-none block rounded-full bg-white dark:bg-white shadow-sm transition-transform duration-(--duration-snap) ease-snap",
-          size() === "sm" ? "size-2.5" : "size-3.5",
-          local.checked
-            ? size() === "sm"
-              ? "translate-x-[11px]"
-              : "translate-x-[14.5px]"
-            : "translate-x-[1.5px]",
-        )}
-      />
-    </button>
+      <KobalteSwitch.Input class="peer" />
+      <KobalteSwitch.Control class="inline-flex h-4.5 w-8 shrink-0 items-center rounded-full bg-input/80 p-0.5 transition-colors cursor-pointer peer-focus-visible:shadow-focus data-checked:bg-brand data-disabled:cursor-not-allowed data-disabled:opacity-50">
+        <KobalteSwitch.Thumb class="size-3.5 rounded-full bg-white shadow-sm transition-transform duration-(--duration-snap) ease-snap data-checked:translate-x-3.5 rtl:data-checked:-translate-x-3.5" />
+      </KobalteSwitch.Control>
+    </KobalteSwitch>
   );
 }

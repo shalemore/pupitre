@@ -13,11 +13,13 @@ import {
 import { createEffect, createSignal, onCleanup, onMount, type Component } from "solid-js";
 import {
   Button,
+  Combobox,
   Input,
   Select,
   type SelectOption,
   Separator,
   SettingRow,
+  Slider,
   Switch,
   Tabs,
   TabsContent,
@@ -130,8 +132,8 @@ export const SettingsWindow: Component = () => {
         <Tabs
           orientation="vertical"
           value={activeTab()}
-          onValueChange={setActiveTab}
-          class="gap-0 size-full"
+          onChange={setActiveTab}
+          class="flex size-full"
         >
           <aside class="w-44 border-r border-border/80 bg-surface-0/60 p-3 flex flex-col gap-1 shrink-0">
             <TabsList class="w-full">
@@ -233,12 +235,12 @@ export const SettingsWindow: Component = () => {
                       settings().fontFamily
                     }
                   >
-                    <Select
+                    <Combobox
                       value={settings().fontFamily}
                       onChange={(fontFamily) => handleUpdate({ fontFamily })}
                       options={fontOptions()}
-                      searchable={true}
-                      searchPlaceholder={t().settings.searchFont}
+                      placeholder={t().settings.searchFont}
+                      emptyText={t().settings.searchFont}
                     />
                   </SettingRow>
 
@@ -251,12 +253,12 @@ export const SettingsWindow: Component = () => {
                       t().settings.fontFallbackNone
                     }
                   >
-                    <Select
-                      value={settings().fallbackFont ?? ""}
+                    <Combobox
+                      value={settings().fallbackFont}
                       onChange={(fallbackFont) => handleUpdate({ fallbackFont })}
                       options={fallbackFontOptions()}
-                      searchable={true}
-                      searchPlaceholder={t().settings.searchFont}
+                      placeholder={t().settings.searchFont}
+                      emptyText={t().settings.searchFont}
                     />
                   </SettingRow>
 
@@ -264,16 +266,12 @@ export const SettingsWindow: Component = () => {
                     title={t().settings.fontSize}
                     description={`${settings().fontSize}px`}
                   >
-                    <input
-                      type="range"
-                      min="13"
-                      max="24"
-                      step="1"
+                    <Slider
                       value={settings().fontSize}
-                      onInput={(e) =>
-                        handleUpdate({ fontSize: Number.parseInt(e.currentTarget.value, 10) })
-                      }
-                      class="w-32 accent-brand cursor-pointer"
+                      min={13}
+                      max={24}
+                      step={1}
+                      onChange={(fontSize) => handleUpdate({ fontSize })}
                     />
                   </SettingRow>
 
@@ -281,18 +279,12 @@ export const SettingsWindow: Component = () => {
                     title={t().settings.lineHeight}
                     description={`${settings().lineHeight.toFixed(2)}`}
                   >
-                    <input
-                      type="range"
-                      min="1.3"
-                      max="2.4"
-                      step="0.05"
+                    <Slider
                       value={settings().lineHeight}
-                      onInput={(e) =>
-                        handleUpdate({
-                          lineHeight: Number.parseFloat(e.currentTarget.value),
-                        })
-                      }
-                      class="w-32 accent-brand cursor-pointer"
+                      min={1.3}
+                      max={2.4}
+                      step={0.05}
+                      onChange={(lineHeight) => handleUpdate({ lineHeight })}
                     />
                   </SettingRow>
 
