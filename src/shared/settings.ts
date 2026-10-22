@@ -24,6 +24,8 @@ export const settingsSchema = z.object({
   animations: z.enum(["system", "on", "off"]).catch("system"),
   sidebarVisible: z.boolean().catch(true),
   showWordCount: z.boolean().catch(true),
+  focusMode: z.boolean().catch(false),
+  typewriterMode: z.boolean().catch(false),
 
   // Editor; an empty font name means "use the theme's font"
   bodyFont: z.string().catch(""),

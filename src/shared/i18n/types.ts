@@ -125,6 +125,8 @@ export interface TranslationSchema {
     readonly reportIssue: string;
     readonly format: string;
     readonly paragraphMenu: string;
+    readonly focusMode: string;
+    readonly typewriterMode: string;
   };
   readonly settings: {
     readonly title: string;
@@ -214,6 +216,10 @@ export interface TranslationSchema {
     readonly uiFont: string;
     readonly uiFontDesc: string;
     readonly systemDefault: string;
+    readonly focusMode: string;
+    readonly focusModeDesc: string;
+    readonly typewriterMode: string;
+    readonly typewriterModeDesc: string;
   };
   readonly format: {
     readonly bold: string;

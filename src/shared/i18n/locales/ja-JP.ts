@@ -98,6 +98,8 @@ export const jaJP = {
     reportIssue: "問題を報告",
     format: "書式",
     paragraphMenu: "段落",
+    focusMode: "フォーカスモード",
+    typewriterMode: "タイプライターモード",
   },
   settings: {
     title: "環境設定",
@@ -187,6 +189,10 @@ export const jaJP = {
     uiFont: "インターフェースのフォント",
     uiFontDesc: "メニュー、サイドバー、ダイアログ。足りない文字は代替フォントで表示",
     systemDefault: "システムの既定",
+    focusMode: "フォーカスモード",
+    focusModeDesc: "書いている段落以外を薄く表示します (F8)",
+    typewriterMode: "タイプライターモード",
+    typewriterModeDesc: "書いている行をウィンドウの中央に保ちます (F9)",
   },
   format: {
     bold: "太字",

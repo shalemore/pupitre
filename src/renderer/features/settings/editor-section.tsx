@@ -111,5 +111,29 @@ export const EditorSection: Component = () => (
         aria-label={t().settings.spellcheck}
       />
     </SettingField>
+
+    <SettingField
+      name="focusMode"
+      title={t().settings.focusMode}
+      description={t().settings.focusModeDesc}
+    >
+      <Switch
+        checked={settings().focusMode}
+        onChange={(focusMode) => void updateSettings({ focusMode })}
+        aria-label={t().settings.focusMode}
+      />
+    </SettingField>
+
+    <SettingField
+      name="typewriterMode"
+      title={t().settings.typewriterMode}
+      description={t().settings.typewriterModeDesc}
+    >
+      <Switch
+        checked={settings().typewriterMode}
+        onChange={(typewriterMode) => void updateSettings({ typewriterMode })}
+        aria-label={t().settings.typewriterMode}
+      />
+    </SettingField>
   </SettingsSection>
 );

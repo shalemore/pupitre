@@ -18,7 +18,15 @@ import {
 } from "prosemirror-search";
 import type { FormatAction } from "@shared/format";
 import type { Settings } from "@shared/settings";
-import { createEffect, getOwner, onCleanup, onMount, runWithOwner, type Component } from "solid-js";
+import {
+  createEffect,
+  getOwner,
+  on,
+  onCleanup,
+  onMount,
+  runWithOwner,
+  type Component,
+} from "solid-js";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { settings } from "@/lib/settings";
@@ -39,6 +47,7 @@ import {
 import { editableHtmlSchema, rawHtml } from "./raw-html";
 import { syntaxRevealPlugin } from "./syntax-reveal";
 import { textDirectionPlugin } from "./text-direction";
+import { focusModePlugin, typewriterModePlugin } from "./writing-modes";
 
 export interface SearchOptions {
   search: string;
@@ -223,6 +232,8 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       )
       .use($prose(() => search()))
       .use($prose(() => textDirectionPlugin))
+      .use($prose(() => focusModePlugin(() => settings().focusMode)))
+      .use($prose(() => typewriterModePlugin(() => settings().typewriterMode)))
       .use(
         $prose(() =>
           documentObserverPlugin({
@@ -245,11 +256,19 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     void crepe.create().then((editor) => {
       const editorView = editor.ctx.get(editorViewCtx);
       view = editorView;
-      runWithOwner(owner, () =>
+      runWithOwner(owner, () => {
         createEffect(() => {
           editorView.dom.spellcheck = settings().spellcheck;
-        }),
-      );
+        });
+        // Writing modes read their settings while rendering; an empty transaction re-renders them
+        createEffect(
+          on(
+            () => [settings().focusMode, settings().typewriterMode],
+            () => editorView.dispatch(editorView.state.tr),
+            { defer: true },
+          ),
+        );
+      });
       props.onReady(crepe.getMarkdown());
       editorView.focus();
     });

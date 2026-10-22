@@ -98,6 +98,8 @@ export const ptBR = {
     reportIssue: "Relatar um problema",
     format: "Formatar",
     paragraphMenu: "Parágrafo",
+    focusMode: "Modo foco",
+    typewriterMode: "Modo máquina de escrever",
   },
   settings: {
     title: "Preferências",
@@ -188,6 +190,10 @@ export const ptBR = {
     uiFont: "Fonte da interface",
     uiFontDesc: "Menus, barra lateral e diálogos; caracteres ausentes usam a fonte alternativa",
     systemDefault: "Padrão do sistema",
+    focusMode: "Modo foco",
+    focusModeDesc: "Esmaece tudo exceto o parágrafo sendo escrito (F8)",
+    typewriterMode: "Modo máquina de escrever",
+    typewriterModeDesc: "Mantém a linha sendo escrita no meio da janela (F9)",
   },
   format: {
     bold: "Negrito",

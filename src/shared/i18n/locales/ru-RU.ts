@@ -98,6 +98,8 @@ export const ruRU = {
     reportIssue: "Сообщить о проблеме",
     format: "Формат",
     paragraphMenu: "Абзац",
+    focusMode: "Режим фокуса",
+    typewriterMode: "Режим пишущей машинки",
   },
   settings: {
     title: "Настройки",
@@ -188,6 +190,10 @@ export const ruRU = {
     uiFont: "Шрифт интерфейса",
     uiFontDesc: "Меню, боковая панель и диалоги; недостающие символы берутся из резервного шрифта",
     systemDefault: "Системный",
+    focusMode: "Режим фокуса",
+    focusModeDesc: "Приглушать всё, кроме текущего абзаца (F8)",
+    typewriterMode: "Режим пишущей машинки",
+    typewriterModeDesc: "Держать текущую строку в середине окна (F9)",
   },
   format: {
     bold: "Полужирный",

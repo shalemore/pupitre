@@ -99,6 +99,8 @@ export const enUS = {
     reportIssue: "Report an Issue",
     format: "Format",
     paragraphMenu: "Paragraph",
+    focusMode: "Focus Mode",
+    typewriterMode: "Typewriter Mode",
   },
   settings: {
     title: "Preferences",
@@ -189,6 +191,10 @@ export const enUS = {
     uiFont: "Interface Font",
     uiFontDesc: "Menus, sidebar and dialogs; missing characters use the fallback font",
     systemDefault: "System Default",
+    focusMode: "Focus Mode",
+    focusModeDesc: "Dim everything except the paragraph being written (F8)",
+    typewriterMode: "Typewriter Mode",
+    typewriterModeDesc: "Keep the line being written in the middle of the window (F9)",
   },
   format: {
     bold: "Bold",

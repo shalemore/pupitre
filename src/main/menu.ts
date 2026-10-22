@@ -13,7 +13,7 @@ import { formatItems } from "./format-menu";
 import { showAboutDialog } from "./about";
 import { t } from "./i18n";
 import { clearRecentFiles, getRecentFiles } from "./recent-files";
-import { updateSettings } from "./settings-store";
+import { getSettings, updateSettings } from "./settings-store";
 import { dispatchToMainWindow, getMainWindow, showSettingsWindow } from "./windows";
 
 const REPOSITORY_URL = "https://github.com/shalemore/pupitre";
@@ -173,6 +173,21 @@ function buildTemplate(): MenuItemConstructorOptions[] {
           label: labels.toggleTheme,
           click: () =>
             updateSettings({ colorScheme: nativeTheme.shouldUseDarkColors ? "light" : "dark" }),
+        },
+        separator,
+        {
+          label: labels.focusMode,
+          type: "checkbox",
+          accelerator: "F8",
+          checked: getSettings().focusMode,
+          click: () => updateSettings({ focusMode: !getSettings().focusMode }),
+        },
+        {
+          label: labels.typewriterMode,
+          type: "checkbox",
+          accelerator: "F9",
+          checked: getSettings().typewriterMode,
+          click: () => updateSettings({ typewriterMode: !getSettings().typewriterMode }),
         },
         separator,
         { label: labels.zoomIn, role: "zoomIn" },

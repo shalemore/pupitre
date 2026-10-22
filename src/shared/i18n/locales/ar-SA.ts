@@ -110,6 +110,8 @@ export const arSA = {
     reportIssue: "الإبلاغ عن مشكلة",
     format: "تنسيق",
     paragraphMenu: "فقرة",
+    focusMode: "وضع التركيز",
+    typewriterMode: "وضع الآلة الكاتبة",
   },
   settings: {
     title: "التفضيلات",
@@ -199,6 +201,10 @@ export const arSA = {
     uiFont: "خط الواجهة",
     uiFontDesc: "القوائم والشريط الجانبي ومربعات الحوار؛ تستخدم الأحرف الناقصة الخط الاحتياطي",
     systemDefault: "افتراضي النظام",
+    focusMode: "وضع التركيز",
+    focusModeDesc: "تعتيم كل شيء باستثناء الفقرة الجاري كتابتها (F8)",
+    typewriterMode: "وضع الآلة الكاتبة",
+    typewriterModeDesc: "إبقاء السطر الجاري كتابته في منتصف النافذة (F9)",
   },
   format: {
     bold: "غامق",

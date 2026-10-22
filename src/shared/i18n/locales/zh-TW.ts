@@ -98,6 +98,8 @@ export const zhTW = {
     reportIssue: "回報問題",
     format: "格式",
     paragraphMenu: "段落",
+    focusMode: "專注模式",
+    typewriterMode: "打字機模式",
   },
   settings: {
     title: "偏好設定",
@@ -187,6 +189,10 @@ export const zhTW = {
     uiFont: "介面字型",
     uiFontDesc: "選單、側邊欄和對話方塊；缺字時使用後備字型",
     systemDefault: "系統預設",
+    focusMode: "專注模式",
+    focusModeDesc: "淡化正在編輯的段落以外的內容 (F8)",
+    typewriterMode: "打字機模式",
+    typewriterModeDesc: "讓正在輸入的行始終保持在視窗中央 (F9)",
   },
   format: {
     bold: "粗體",

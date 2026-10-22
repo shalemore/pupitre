@@ -99,6 +99,8 @@ export const frFR = {
     reportIssue: "Signaler un problème",
     format: "Format",
     paragraphMenu: "Paragraphe",
+    focusMode: "Mode concentration",
+    typewriterMode: "Mode machine à écrire",
   },
   settings: {
     title: "Préférences",
@@ -190,6 +192,10 @@ export const frFR = {
     uiFontDesc:
       "Menus, barre latérale et dialogues ; les caractères manquants utilisent la police de secours",
     systemDefault: "Par défaut du système",
+    focusMode: "Mode concentration",
+    focusModeDesc: "Estompe tout sauf le paragraphe en cours d’écriture (F8)",
+    typewriterMode: "Mode machine à écrire",
+    typewriterModeDesc: "Garde la ligne en cours d’écriture au milieu de la fenêtre (F9)",
   },
   format: {
     bold: "Gras",

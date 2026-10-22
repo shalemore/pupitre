@@ -98,6 +98,8 @@ export const deDE = {
     reportIssue: "Problem melden",
     format: "Format",
     paragraphMenu: "Absatz",
+    focusMode: "Fokusmodus",
+    typewriterMode: "Schreibmaschinenmodus",
   },
   settings: {
     title: "Einstellungen",
@@ -188,6 +190,10 @@ export const deDE = {
     uiFont: "Oberflächenschrift",
     uiFontDesc: "Menüs, Seitenleiste und Dialoge; fehlende Zeichen nutzen die Ersatzschrift",
     systemDefault: "Systemstandard",
+    focusMode: "Fokusmodus",
+    focusModeDesc: "Alles außer dem aktuellen Absatz abdunkeln (F8)",
+    typewriterMode: "Schreibmaschinenmodus",
+    typewriterModeDesc: "Die aktuelle Zeile in der Fenstermitte halten (F9)",
   },
   format: {
     bold: "Fett",

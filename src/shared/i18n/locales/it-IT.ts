@@ -98,6 +98,8 @@ export const itIT = {
     reportIssue: "Segnala un problema",
     format: "Formato",
     paragraphMenu: "Paragrafo",
+    focusMode: "Modalità concentrazione",
+    typewriterMode: "Modalità macchina da scrivere",
   },
   settings: {
     title: "Preferenze",
@@ -189,6 +191,10 @@ export const itIT = {
     uiFontDesc:
       "Menu, barra laterale e finestre; i caratteri mancanti usano il carattere di riserva",
     systemDefault: "Predefinito di sistema",
+    focusMode: "Modalità concentrazione",
+    focusModeDesc: "Attenua tutto tranne il paragrafo in scrittura (F8)",
+    typewriterMode: "Modalità macchina da scrivere",
+    typewriterModeDesc: "Mantiene la riga in scrittura al centro della finestra (F9)",
   },
   format: {
     bold: "Grassetto",

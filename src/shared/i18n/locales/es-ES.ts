@@ -98,6 +98,8 @@ export const esES = {
     reportIssue: "Informar de un problema",
     format: "Formato",
     paragraphMenu: "Párrafo",
+    focusMode: "Modo concentración",
+    typewriterMode: "Modo máquina de escribir",
   },
   settings: {
     title: "Preferencias",
@@ -189,6 +191,10 @@ export const esES = {
     uiFontDesc:
       "Menús, barra lateral y diálogos; los caracteres que falten usan la fuente alternativa",
     systemDefault: "Predeterminada del sistema",
+    focusMode: "Modo concentración",
+    focusModeDesc: "Atenúa todo excepto el párrafo que se está escribiendo (F8)",
+    typewriterMode: "Modo máquina de escribir",
+    typewriterModeDesc: "Mantiene la línea que se escribe en el centro de la ventana (F9)",
   },
   format: {
     bold: "Negrita",

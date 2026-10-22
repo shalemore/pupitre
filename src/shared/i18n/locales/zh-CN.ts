@@ -98,6 +98,8 @@ export const zhCN = {
     reportIssue: "报告问题",
     format: "格式",
     paragraphMenu: "段落",
+    focusMode: "专注模式",
+    typewriterMode: "打字机模式",
   },
   settings: {
     title: "偏好设置",
@@ -187,6 +189,10 @@ export const zhCN = {
     uiFont: "界面字体",
     uiFontDesc: "菜单、侧边栏和对话框；缺字时使用后备字体",
     systemDefault: "系统默认",
+    focusMode: "专注模式",
+    focusModeDesc: "淡化正在编辑的段落以外的内容 (F8)",
+    typewriterMode: "打字机模式",
+    typewriterModeDesc: "让正在输入的行始终保持在窗口中央 (F9)",
   },
   format: {
     bold: "加粗",

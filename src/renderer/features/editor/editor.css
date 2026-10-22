@@ -226,6 +226,27 @@
   .milkdown :is(.ProseMirror code, .milkdown-code-block .cm-content) {
     font-family: var(--pref-code-font, revert-layer);
   }
+
+  /*
+   * Writing modes, see writing-modes.ts. Focus mode dims leaf blocks rather than containers, so
+   * nested blocks are never dimmed twice.
+   */
+  .milkdown
+    .ProseMirror.focus-mode
+    :is(p, h1, h2, h3, h4, h5, h6, hr, pre, dt, .milkdown-code-block, .milkdown-image-block):not(
+      .is-current
+    ),
+  .milkdown .ProseMirror.focus-mode blockquote:not(:has(.is-current))::before,
+  .milkdown
+    .ProseMirror.focus-mode
+    .milkdown-list-item-block:not(:has(.is-current))
+    .label-wrapper {
+    opacity: 0.3;
+  }
+
+  .milkdown .ProseMirror.typewriter-mode {
+    padding-block-end: 50vh;
+  }
 }
 
 @media print {

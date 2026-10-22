@@ -98,6 +98,8 @@ export const koKR = {
     reportIssue: "문제 신고",
     format: "서식",
     paragraphMenu: "단락",
+    focusMode: "집중 모드",
+    typewriterMode: "타자기 모드",
   },
   settings: {
     title: "환경설정",
@@ -187,6 +189,10 @@ export const koKR = {
     uiFont: "인터페이스 글꼴",
     uiFontDesc: "메뉴, 사이드바, 대화 상자. 없는 문자는 대체 글꼴로 표시",
     systemDefault: "시스템 기본값",
+    focusMode: "집중 모드",
+    focusModeDesc: "작성 중인 단락 외에는 흐리게 표시합니다 (F8)",
+    typewriterMode: "타자기 모드",
+    typewriterModeDesc: "작성 중인 줄을 창 가운데에 유지합니다 (F9)",
   },
   format: {
     bold: "굵게",
