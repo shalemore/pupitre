@@ -93,3 +93,18 @@ only make code generation easier.
   that belongs in commit messages.
 - Commits follow Conventional Commits and are atomic: one logical change per commit. Never
   rewrite commits that have already been pushed.
+
+## Editor
+
+- The editor is [Milkdown Crepe](https://milkdown.dev) (ProseMirror + remark). Do not hand-roll
+  Markdown parsing, rendering or live-preview decorations; configure Crepe features, extend its
+  schemas through Milkdown ctx (`editor.config`) or add ProseMirror plugins with `$prose`.
+- `features/editor/markdown-editor.tsx` owns the Crepe instance and exposes a small imperative
+  handle (`getMarkdown`, search, scrolling). Documents are serialized only when saved, and the
+  dirty state compares the serialized Markdown with the last saved version.
+- Keep Markdown output stable: serialization options live in one place (`MARKDOWN_STYLE`) and
+  schema overrides must round-trip standard Markdown without losing information.
+- Styles use cascade layers declared at the top of `app.css`:
+  `crepe` (library defaults) < `document-theme` (the active theme) < `preferences` (user font,
+  size, line height and width). Never fight specificity with `!important`; put the rule in the
+  right layer instead.

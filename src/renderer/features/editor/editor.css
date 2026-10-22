@@ -1,0 +1,104 @@
+/*
+ * Base editor styles in three layers (their order is declared at the top of app.css):
+ * - crepe: Milkdown Crepe's own component styles, plus the mapping of Crepe variables to the app's design tokens;
+ * - document-theme: the active theme's typography and colors; a theme can override anything in the crepe layer;
+ * - preferences: the font, size, line height and content width chosen in the settings, which always beat the theme,
+ *   so a badly written theme cannot make a setting stop working.
+ */
+
+@import "@milkdown/crepe/theme/common/style.css" layer(crepe);
+
+@layer crepe {
+  .milkdown {
+    --crepe-color-background: transparent;
+    --crepe-color-on-background: var(--ui-text-primary);
+    --crepe-color-surface: var(--ui-surface-0);
+    --crepe-color-surface-low: var(--ui-surface-1);
+    --crepe-color-on-surface: var(--ui-text-primary);
+    --crepe-color-on-surface-variant: var(--ui-text-secondary);
+    --crepe-color-outline: var(--ui-text-muted);
+    --crepe-color-primary: var(--ui-brand);
+    --crepe-color-secondary: var(--ui-alpha-1);
+    --crepe-color-on-secondary: var(--ui-text-primary);
+    --crepe-color-inverse: var(--ui-text-primary);
+    --crepe-color-on-inverse: var(--ui-surface-1);
+    --crepe-color-inline-code: var(--ui-brand);
+    --crepe-color-error: var(--ui-danger);
+    --crepe-color-hover: var(--ui-alpha-1);
+    --crepe-color-selected: var(--ui-alpha-2);
+    --crepe-color-inline-area: var(--ui-alpha-1);
+    --crepe-font-default: var(--font-sans);
+    --crepe-font-title: var(--font-sans);
+    --crepe-font-code: var(--font-mono);
+    --crepe-shadow-1: var(--ui-shadow-sm);
+    --crepe-shadow-2: var(--ui-shadow-popover);
+  }
+
+  /* Position list markers from the font size and line height; Crepe hard-codes 32px, which drifts from the text at other sizes */
+  .milkdown .milkdown-list-item-block li .label-wrapper,
+  .milkdown .milkdown-list-item-block li .label-wrapper .label {
+    height: calc(1em * var(--pref-line-height, 1.6));
+  }
+
+  .milkdown .mermaid-diagram {
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+  }
+
+  .milkdown .mermaid-error {
+    color: var(--ui-danger);
+    font-size: 0.85em;
+    white-space: pre-wrap;
+  }
+
+  /* Match highlighting for prosemirror-search */
+  .milkdown .ProseMirror-search-match {
+    background-color: oklch(from var(--ui-brand) l c h / 22%);
+    border-radius: 2px;
+  }
+
+  .milkdown .ProseMirror-active-search-match {
+    background-color: var(--ui-brand);
+    color: var(--brand-foreground);
+  }
+}
+
+@layer preferences {
+  .milkdown .ProseMirror {
+    box-sizing: content-box;
+    max-width: var(--pref-content-width);
+    margin-inline: auto;
+    /* Room on both sides for the block handles (drag, insert); this is app layout and not left to themes */
+    padding-inline: 4.5rem;
+    /* Without a chosen font, fall back to the theme's own font */
+    font-family: var(--pref-font-family, revert-layer);
+    font-size: var(--pref-font-size);
+    line-height: var(--pref-line-height);
+  }
+
+  .milkdown .ProseMirror :is(p, li) {
+    line-height: var(--pref-line-height);
+  }
+}
+
+@media print {
+  .milkdown .ProseMirror {
+    max-width: none;
+    padding: 0;
+  }
+
+  .milkdown
+    :is(
+      .milkdown-block-handle,
+      .milkdown-slash-menu,
+      .milkdown-toolbar,
+      .milkdown-link-preview,
+      .milkdown-link-edit,
+      .milkdown-code-block .tools,
+      .milkdown-image-block .operation,
+      .milkdown-image-block .image-resize-handle
+    ) {
+    display: none !important;
+  }
+}

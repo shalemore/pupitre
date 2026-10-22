@@ -1,6 +1,9 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { basename, dirname, extname, join } from "node:path";
+import { pathToFileURL } from "node:url";
 import { BrowserWindow, dialog, ipcMain, type IpcMainInvokeEvent, shell } from "electron";
 import {
+  type DocumentLocation,
   type InvokeChannels,
   type OpenedDocument,
   SETTINGS_GET_SYNC,
@@ -29,12 +32,30 @@ function senderWindow(event: IpcMainInvokeEvent): BrowserWindow {
   return window;
 }
 
+function locate(path: string): DocumentLocation {
+  return { path, baseUrl: pathToFileURL(join(dirname(path), "/")).href };
+}
+
+async function saveImage(
+  documentPath: string,
+  fileName: string,
+  data: Uint8Array,
+): Promise<string> {
+  const directory = join(dirname(documentPath), "assets");
+  await mkdir(directory, { recursive: true });
+  // Pasted screenshots are usually all named image.png; a timestamp keeps them from overwriting existing images
+  const extension = extname(fileName) || ".png";
+  const name = `${basename(fileName, extension).replace(/[^\p{L}\p{N}._-]+/gu, "-")}-${Date.now()}${extension}`;
+  await writeFile(join(directory, name), data, { flag: "wx" });
+  return `assets/${encodeURIComponent(name)}`;
+}
+
 async function readDocument(path: string): Promise<OpenedDocument> {
   try {
     const content = await readFile(path, "utf8");
     addRecentFile(path);
     // Strip the UTF-8 BOM; it is not written back on save either
-    return { path, content: content.replace(/^﻿/, "") };
+    return { ...locate(path), content: content.replace(/^﻿/, "") };
   } catch (error) {
     updateSettings({ recentFiles: getSettings().recentFiles.filter((p) => p !== path) });
     throw error;
@@ -72,8 +93,11 @@ export function registerIpcHandlers(): void {
     if (canceled || !filePath) return null;
     await writeFile(filePath, content, "utf8");
     addRecentFile(filePath);
-    return filePath;
+    return locate(filePath);
   });
+  handle("document:save-image", (_event, documentPath, fileName, data) =>
+    saveImage(documentPath, fileName, data),
+  );
   handle("document:export-pdf", async (event, suggestedName) => {
     const { canceled, filePath } = await dialog.showSaveDialog(senderWindow(event), {
       defaultPath: suggestedName,

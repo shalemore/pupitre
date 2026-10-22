@@ -117,12 +117,6 @@ export const SettingsWindow: Component = () => {
     ...SUPPORTED_LOCALES.map((l) => ({ value: l.code, label: l.label })),
   ];
 
-  const tabSizeOptions = (): SelectOption[] => [
-    { value: "2", label: "2 spaces" },
-    { value: "4", label: "4 spaces" },
-    { value: "8", label: "8 spaces" },
-  ];
-
   return (
     <div class="h-screen w-screen flex flex-col bg-surface-1 text-foreground select-none overflow-hidden font-sans">
       <header class="app-title-bar h-10 w-full relative flex items-center justify-between px-3 select-none bg-surface-0 border-b border-border/80 transition-colors text-xs z-30 shrink-0">
@@ -288,32 +282,6 @@ export const SettingsWindow: Component = () => {
                         })
                       }
                       class="w-32 accent-brand cursor-pointer"
-                    />
-                  </SettingRow>
-
-                  <SettingRow title={t().settings.tabSize} description={t().settings.tabSizeDesc}>
-                    <Select
-                      value={String(settings().tabSize)}
-                      onChange={(val) => handleUpdate({ tabSize: Number.parseInt(val, 10) })}
-                      options={tabSizeOptions()}
-                      size="sm"
-                    />
-                  </SettingRow>
-
-                  <SettingRow title={t().settings.wordWrap} description={t().settings.wordWrapDesc}>
-                    <Switch
-                      checked={settings().wordWrap}
-                      onChange={(checked) => handleUpdate({ wordWrap: checked })}
-                    />
-                  </SettingRow>
-
-                  <SettingRow
-                    title={t().settings.blockSpacing}
-                    description={t().settings.blockSpacingDesc}
-                  >
-                    <Switch
-                      checked={settings().blockSpacing}
-                      onChange={(checked) => handleUpdate({ blockSpacing: checked })}
                     />
                   </SettingRow>
 

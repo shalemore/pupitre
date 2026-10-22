@@ -12,13 +12,10 @@ export const settingsSchema = z.object({
   lineHeight: z.number().min(1).max(3).catch(1.75),
   fontFamily: z.string().catch("sans"),
   fallbackFont: z.string().catch(""),
-  tabSize: z.number().int().min(1).max(8).catch(2),
-  wordWrap: z.boolean().catch(true),
   editorWidth: z.enum(["compact", "normal", "wide", "full"]).catch("normal"),
   sidebarVisible: z.boolean().catch(true),
   autoSave: z.boolean().catch(false),
   animations: z.enum(["system", "on", "off"]).catch("system"),
-  blockSpacing: z.boolean().catch(true),
   recentFiles: z.array(z.string()).catch([]),
 });
 

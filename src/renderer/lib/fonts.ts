@@ -91,38 +91,16 @@ export async function getSystemFontFamilies(forceRefresh = false): Promise<strin
   return list;
 }
 
-export function resolveEditorFontFamily(primary: string, fallback?: string): string {
-  const parts: string[] = [];
-
-  const cleanPrimary = primary?.trim() ?? "";
-  if (cleanPrimary === "mono" || cleanPrimary === "System Mono") {
-    parts.push("var(--editor-font-mono)");
-  } else if (cleanPrimary === "serif" || cleanPrimary === "System Serif") {
-    parts.push("var(--editor-font-serif)");
-  } else if (cleanPrimary && cleanPrimary !== "sans" && cleanPrimary !== "System Sans") {
-    parts.push(`"${cleanPrimary}"`);
-  } else {
-    parts.push("var(--editor-font-sans)");
-  }
-
-  if (fallback && fallback.trim()) {
-    const cleanFallback = fallback.trim();
-    if (cleanFallback !== cleanPrimary) {
-      parts.push(`"${cleanFallback}"`);
-    }
-  }
-
-  // Standard safe modern fallbacks (ensuring modern CJK sans fallback instead of archaic SimSun)
-  parts.push(
-    "-apple-system",
-    "BlinkMacSystemFont",
-    "Segoe UI Variable Text",
-    "Segoe UI",
-    "Hiragino Sans GB",
-    "sans-serif",
-    "Apple Color Emoji",
-    "Segoe UI Emoji",
-    "Segoe UI Symbol",
-  );
-  return parts.join(", ");
+/** The body font the user chose; undefined leaves the font to the theme. */
+export function editorFontFamily(primary: string, fallback: string): string | undefined {
+  const families: string[] = [];
+  if (primary === "mono") families.push("var(--font-mono)");
+  else if (primary === "serif") families.push("ui-serif", "Georgia", "serif");
+  else if (primary && primary !== "sans") families.push(JSON.stringify(primary));
+  if (fallback && fallback !== primary) families.push(JSON.stringify(fallback));
+  if (families.length === 0) return undefined;
+  // With only a fallback font chosen, use the interface font first and let the fallback fill in missing glyphs
+  if (primary === "sans" || !primary) families.unshift("var(--font-sans)");
+  families.push("sans-serif");
+  return families.join(", ");
 }

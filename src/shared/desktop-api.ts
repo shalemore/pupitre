@@ -1,7 +1,12 @@
 import type { Settings } from "./settings";
 
-export interface OpenedDocument {
+export interface DocumentLocation {
   path: string;
+  /** file:// URL of the document's folder (ending in /), used to resolve relative paths in the document. */
+  baseUrl: string;
+}
+
+export interface OpenedDocument extends DocumentLocation {
   content: string;
 }
 
@@ -46,7 +51,9 @@ export interface InvokeChannels {
   "document:open": () => OpenedDocument | null;
   "document:read": (path: string) => OpenedDocument;
   "document:write": (path: string, content: string) => void;
-  "document:save-as": (suggestedName: string, content: string) => string | null;
+  "document:save-as": (suggestedName: string, content: string) => DocumentLocation | null;
+  /** Saves an image into the assets folder next to the document and returns a relative path ready for Markdown. */
+  "document:save-image": (documentPath: string, fileName: string, data: Uint8Array) => string;
   "document:export-pdf": (suggestedName: string) => string | null;
   "dialog:confirm-unsaved": (fileName: string) => UnsavedChoice;
   "dialog:show-error": (message: string, detail: string) => void;

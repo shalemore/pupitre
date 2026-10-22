@@ -13,7 +13,7 @@ export interface TitleBarProps {
 
 export const TitleBar: Component<TitleBarProps> = (props) => {
   return (
-    <header class="app-title-bar h-10 w-full relative flex items-center justify-between px-3 select-none bg-surface-0 border-b border-border/80 transition-colors text-xs z-30">
+    <header class="app-title-bar print:hidden h-10 w-full relative flex items-center justify-between px-3 select-none bg-surface-0 border-b border-border/80 transition-colors text-xs z-30">
       <div class="flex items-center gap-2">
         <div class="flex items-center gap-2 me-1 pointer-events-none">
           <img src="./logo.svg" alt="logo" class="rounded-sm shadow-sm size-4 select-none" />
