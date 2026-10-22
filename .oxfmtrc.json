@@ -5,7 +5,7 @@
     "node_modules/**",
     "out/**",
     "release/**",
-    "bun.lock",
+    "package-lock.json",
     "docs/design/app-icon.html"
   ]
 }

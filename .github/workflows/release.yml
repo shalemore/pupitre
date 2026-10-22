@@ -51,10 +51,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: ./.github/actions/setup-frontend
+      - uses: ./.github/actions/setup-node
 
-      # electron-builder finds the draft release named after the package.json version and uploads the installers and update metadata to it
-      - run: bun run build && bunx electron-builder --publish always
+      # electron-builder finds the draft release named after the package.json version and uploads
+      # the installers and update metadata to it
+      - run: npm run build && npx electron-builder --publish always
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -90,5 +91,5 @@ jobs:
             fi
           } > notes.md
 
-          # Publish the draft release created by electron-builder with the generated changelog
+          # Publish the draft release created by electron-builder with the generated notes
           gh release edit "v$VERSION" --draft=false --notes-file notes.md

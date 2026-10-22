@@ -7,12 +7,12 @@ This file is the single source of project conventions for humans and coding agen
 
 | Command             | Purpose                                       |
 | :------------------ | :-------------------------------------------- |
-| `bun run dev`       | Start Electron with the Vite dev server (HMR) |
-| `bun run build`     | Bundle main, preload and renderer into `out/` |
-| `bun run dist`      | Build and package installers into `release/`  |
-| `bun run typecheck` | Type-check every project (`tsc -b`)           |
-| `bun run lint`      | Check formatting (oxfmt) and lint (oxlint)    |
-| `bun run fix`       | Apply formatting and safe lint fixes          |
+| `npm run dev`       | Start Electron with the Vite dev server (HMR) |
+| `npm run build`     | Bundle main, preload and renderer into `out/` |
+| `npm run dist`      | Build and package installers into `release/`  |
+| `npm run typecheck` | Type-check every project (`tsc -b`)           |
+| `npm run lint`      | Check formatting (oxfmt) and lint (oxlint)    |
+| `npm run fix`       | Apply formatting and safe lint fixes          |
 
 Before considering a change done, `lint`, `typecheck` and `build` must all pass.
 
