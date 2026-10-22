@@ -10,7 +10,7 @@ export default defineConfig({
   jsPlugins: ["oxlint-tailwindcss"],
   settings: {
     tailwindcss: {
-      entryPoint: "src/app.css",
+      entryPoint: "src/renderer/app.css",
     },
   },
   rules: {
@@ -21,11 +21,5 @@ export default defineConfig({
     "tailwindcss/no-conflicting-classes": "error",
     "tailwindcss/enforce-shorthand": "warn",
   },
-  ignorePatterns: [
-    "node_modules/**",
-    "vendor/**",
-    "legacy-iced/**",
-    "src-tauri/**",
-    "dist/**",
-  ],
+  ignorePatterns: ["node_modules/**", "out/**", "release/**"],
 });

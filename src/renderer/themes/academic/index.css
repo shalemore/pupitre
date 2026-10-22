@@ -1,0 +1,168 @@
+/*
+ * Academic: serif type, warm paper and centered section titles for long-form writing.
+ * A light-only theme; pair it with another theme for dark mode in settings.
+ * See themes/pupitre/index.css for the token and selector conventions.
+ *
+ * To bundle a font, put the file in this folder and declare it:
+ *   @font-face {
+ *     font-family: "Source Serif";
+ *     src: url("./source-serif.woff2") format("woff2");
+ *   }
+ * then list it in --font-document. Make sure the font license allows redistribution.
+ */
+
+:root {
+  color-scheme: light;
+
+  --font-document:
+    "Source Serif 4", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "STSong", Georgia,
+    "Times New Roman", serif;
+  --ui-surface-0: oklch(0.955 0.012 85);
+  --ui-surface-1: oklch(0.982 0.008 85);
+  --ui-surface-2: oklch(0.99 0.005 85);
+  --ui-surface-3: oklch(0.995 0.003 85);
+  --ui-text-primary: oklch(0.26 0.015 60);
+  --ui-text-secondary: oklch(0.45 0.015 60);
+  --ui-text-muted: oklch(0.62 0.012 60);
+  --ui-brand: oklch(0.45 0.12 25);
+  --ui-brand-hover: oklch(0.38 0.13 25);
+  --ui-danger: oklch(0.55 0.2 25);
+
+  --syntax-keyword: oklch(0.45 0.12 25);
+  --syntax-string: oklch(0.45 0.09 145);
+  --syntax-special-string: oklch(0.45 0.1 250);
+  --syntax-number: oklch(0.45 0.1 250);
+  --syntax-variable: var(--ui-text-primary);
+  --syntax-definition: oklch(0.45 0.1 60);
+  --syntax-function: oklch(0.42 0.12 310);
+  --syntax-type: oklch(0.45 0.1 60);
+  --syntax-property: oklch(0.45 0.1 250);
+  --syntax-comment: var(--ui-text-muted);
+  --syntax-operator: var(--ui-text-secondary);
+  --syntax-punctuation: var(--ui-text-secondary);
+  --syntax-invalid: var(--ui-danger);
+}
+
+.milkdown .ProseMirror {
+  padding-block: 4em 40vh;
+  font-family: var(--font-document);
+  color: var(--ui-text-primary);
+  caret-color: var(--ui-brand);
+  hyphens: auto;
+}
+
+.milkdown .ProseMirror p {
+  padding: 0;
+  margin: 0;
+  text-align: justify;
+}
+
+/* Book convention: no space between paragraphs, a first-line indent instead */
+.milkdown .ProseMirror p + p {
+  text-indent: 2em;
+}
+
+.milkdown .ProseMirror :is(h1, h2, h3, h4, h5, h6) {
+  font-family: inherit;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-block: 1.6em 0.8em;
+  padding: 0;
+}
+
+.milkdown .ProseMirror h1 {
+  font-size: 1.9em;
+  text-align: center;
+  margin-block: 0.5em 1.2em;
+}
+
+.milkdown .ProseMirror h2 {
+  font-size: 1.4em;
+  text-align: center;
+}
+
+.milkdown .ProseMirror h3 {
+  font-size: 1.15em;
+}
+
+.milkdown .ProseMirror :is(h4, h5, h6) {
+  font-size: 1em;
+  font-style: italic;
+}
+
+.milkdown .ProseMirror a {
+  color: var(--ui-brand);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+.milkdown .ProseMirror :not(pre) > code {
+  display: inline;
+  color: inherit;
+  background: var(--ui-alpha-1);
+  border-radius: 3px;
+  padding: 0.05em 0.3em;
+  font-size: 0.85em;
+}
+
+.milkdown .milkdown-code-block {
+  margin-block: 1.2em;
+  padding: 0.5em 1em 1em;
+  border-block: 1px solid var(--ui-alpha-2);
+  border-radius: 0;
+  background: transparent;
+}
+
+.milkdown .milkdown-code-block .cm-content {
+  font-family: var(--font-mono);
+  font-size: 0.82em;
+}
+
+.milkdown .ProseMirror blockquote {
+  margin: 1.2em 2em;
+  padding: 0;
+  font-style: italic;
+  color: var(--ui-text-secondary);
+}
+
+.milkdown .ProseMirror blockquote::before {
+  display: none;
+}
+
+/* A horizontal rule is drawn as a centered asterism */
+.milkdown .ProseMirror hr {
+  height: auto;
+  margin-block: 1.5em;
+  padding: 0;
+  background: none;
+  text-align: center;
+}
+
+.milkdown .ProseMirror hr::after {
+  content: "* * *";
+  color: var(--ui-text-muted);
+  letter-spacing: 0.5em;
+}
+
+.milkdown .milkdown-table-block :is(th, td) {
+  border: none;
+  border-block-end: 1px solid var(--ui-alpha-2);
+  padding: 0.35em 0.8em;
+}
+
+.milkdown .milkdown-table-block :is(th, td) p {
+  margin: 0;
+  text-indent: 0;
+  text-align: start;
+}
+
+.milkdown .milkdown-table-block th {
+  border-block-end: 1.5px solid var(--ui-text-secondary);
+  font-weight: 600;
+}
+
+.milkdown .milkdown-list-item-block p {
+  margin-block: 0.15em;
+  text-indent: 0;
+}

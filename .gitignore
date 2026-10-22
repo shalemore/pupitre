@@ -1,6 +1,5 @@
-/target
-/src-tauri/target
 /node_modules
-/dist
+/out
+/release
 *.log
 .DS_Store

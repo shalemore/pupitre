@@ -1,0 +1,360 @@
+/*
+ * Style layers from lowest to highest: Tailwind theme/base, Milkdown components (crepe), Tailwind components/utilities,
+ * the active document theme (document-theme) and user preferences (preferences). Later layers win,
+ * regardless of selector specificity, so a theme can override the app defaults and user settings always override the theme.
+ */
+@layer theme, base, crepe, components, utilities, document-theme, preferences;
+
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "./features/editor/editor.css";
+
+@custom-variant dark (@media (prefers-color-scheme: dark));
+
+/*
+ * Design tokens (following the Claude Design System collected in open-claude-ui, colors in OKLCH):
+ * - Surface steps: 0 window chrome (title bar, sidebar), 1 document canvas, 2 cards, 3 popovers, told apart by small lightness steps and hairline borders;
+ * - A single accent color, terracotta;
+ * - Alpha steps, borders and shadows are derived from the primary text color, so light and dark pair up automatically.
+ * Raw values are defaults for themes to override and live in the base layer; derived tokens are evaluated at use and follow the theme.
+ * Themes are loaded at runtime, see lib/theme.ts.
+ */
+@layer base {
+  :root {
+    --ui-surface-0: oklch(0.972 0 0);
+    --ui-surface-1: oklch(0.99 0 0);
+    --ui-surface-2: oklch(1 0 0);
+    --ui-surface-3: oklch(1 0 0);
+
+    --ui-text-primary: oklch(0.185 0 0);
+    --ui-text-secondary: oklch(0.44 0 0);
+    --ui-text-muted: oklch(0.63 0 0);
+
+    --ui-brand: oklch(0.665 0.131 40.6);
+    --ui-brand-hover: oklch(0.6 0.155 39);
+    --ui-danger: oklch(0.637 0.237 25.3);
+    --ui-segmented-thumb: oklch(1 0 0);
+
+    --ui-shadow-near: oklch(0 0 0 / 5%);
+    --ui-shadow-far: oklch(0 0 0 / 8%);
+    --ui-shadow-float: oklch(0 0 0 / 12%);
+
+    --ui-ring-inner: 0px;
+    --ui-ring-outer: 1px;
+    --ui-ring-hairline: 1px;
+
+    --success: oklch(0.58 0.13 155);
+    --success-foreground: oklch(0.99 0.01 155);
+
+    /* Code colors used by the code block highlighter (features/editor/code-highlight.ts) */
+    --syntax-keyword: oklch(0.55 0.2 25);
+    --syntax-string: oklch(0.45 0.12 145);
+    --syntax-special-string: oklch(0.5 0.13 250);
+    --syntax-number: oklch(0.5 0.15 250);
+    --syntax-variable: var(--ui-text-primary);
+    --syntax-definition: oklch(0.5 0.13 55);
+    --syntax-function: oklch(0.5 0.17 300);
+    --syntax-type: oklch(0.5 0.13 55);
+    --syntax-property: oklch(0.5 0.13 250);
+    --syntax-comment: var(--ui-text-muted);
+    --syntax-operator: oklch(0.55 0.2 25);
+    --syntax-punctuation: var(--ui-text-secondary);
+    --syntax-invalid: var(--ui-danger);
+  }
+
+  @media (min-resolution: 2dppx) {
+    :root {
+      --ui-ring-hairline: 0.5px;
+    }
+  }
+
+  @media (min-resolution: 3dppx) {
+    :root {
+      --ui-ring-hairline: calc(1px / 3);
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ui-surface-0: oklch(0.145 0 0);
+      --ui-surface-1: oklch(0.185 0 0);
+      --ui-surface-2: oklch(0.205 0 0);
+      --ui-surface-3: oklch(0.23 0 0);
+
+      --ui-text-primary: oklch(0.97 0 0);
+      --ui-text-secondary: oklch(0.72 0 0);
+      --ui-text-muted: oklch(0.51 0 0);
+
+      --ui-brand-hover: oklch(0.7 0.125 40);
+      --ui-danger: oklch(0.704 0.191 22.2);
+      --ui-segmented-thumb: oklch(0.36 0 0);
+
+      --ui-shadow-near: oklch(0 0 0 / 40%);
+      --ui-shadow-far: oklch(0 0 0 / 40%);
+      --ui-shadow-float: oklch(0 0 0 / 65%);
+
+      --ui-ring-inner: 1px;
+      --ui-ring-outer: 0px;
+
+      --success: oklch(0.76 0.14 155);
+      --success-foreground: oklch(0.2 0.03 155);
+
+      --syntax-keyword: oklch(0.75 0.15 25);
+      --syntax-string: oklch(0.8 0.12 145);
+      --syntax-special-string: oklch(0.78 0.1 230);
+      --syntax-number: oklch(0.78 0.1 230);
+      --syntax-definition: oklch(0.8 0.12 65);
+      --syntax-function: oklch(0.8 0.1 300);
+      --syntax-type: oklch(0.8 0.12 65);
+      --syntax-property: oklch(0.78 0.1 230);
+      --syntax-operator: oklch(0.75 0.15 25);
+    }
+  }
+
+  :root {
+    --ui-alpha-1: oklch(from var(--ui-text-primary) l c h / 5%);
+    --ui-alpha-2: oklch(from var(--ui-text-primary) l c h / 10%);
+    --ui-alpha-3: oklch(from var(--ui-text-primary) l c h / 20%);
+    --ui-alpha-4: oklch(from var(--ui-text-primary) l c h / 35%);
+    --ui-ring-color: oklch(from var(--ui-text-primary) l c h / 10%);
+    --ui-segmented-track: oklch(from var(--ui-text-primary) l c h / 7%);
+
+    --ui-shadow-sm: 0 1px 2px var(--ui-shadow-near), 0 2px 8px var(--ui-shadow-far);
+    --ui-shadow-md: 0 2px 4px var(--ui-shadow-near), 0 6px 16px var(--ui-shadow-far);
+    --ui-shadow-lg: 0 4px 8px var(--ui-shadow-near), 0 12px 28px -2px var(--ui-shadow-far);
+    --ui-shadow-popover:
+      inset 0 0 0 var(--ui-ring-inner) var(--ui-ring-color),
+      0 0 0 var(--ui-ring-outer) var(--ui-ring-color), 0 8px 24px var(--ui-shadow-float),
+      0 2px 6px var(--ui-shadow-far);
+    --ui-panel-shadow: 0 0 0 1px var(--ui-alpha-2), var(--ui-shadow-sm);
+    --ui-panel-shadow-hover: 0 0 0 1px var(--ui-alpha-3), var(--ui-shadow-md);
+    --ui-shadow-composer: 0 4px 20px var(--ui-shadow-near), inset 0 0 0 1px var(--ui-alpha-2);
+    --ui-focus-shadow:
+      inset 0 0 0 1px var(--ui-surface-1), 0 0 0 1.5px var(--ui-brand),
+      0 0 6px 1px oklch(from var(--ui-brand) l c h / 30%);
+
+    --background: var(--ui-surface-1);
+    --foreground: var(--ui-text-primary);
+    --card: var(--ui-surface-2);
+    --card-foreground: var(--foreground);
+    --popover: var(--ui-surface-3);
+    --popover-foreground: var(--foreground);
+    --primary: var(--ui-text-primary);
+    --primary-foreground: var(--ui-surface-1);
+    --secondary: var(--ui-alpha-1);
+    --secondary-foreground: var(--ui-text-primary);
+    --muted: var(--ui-alpha-1);
+    --muted-foreground: var(--ui-text-secondary);
+    --accent: var(--ui-alpha-1);
+    --accent-foreground: var(--ui-text-primary);
+    --brand: var(--ui-brand);
+    --brand-foreground: oklch(1 0 0);
+    --destructive: var(--ui-danger);
+    --border: var(--ui-alpha-2);
+    --input: var(--ui-alpha-3);
+    --ring: oklch(from var(--ui-brand) l c h / 70%);
+  }
+}
+
+@theme {
+  --duration-snap: 120ms;
+  --duration-ui: 150ms;
+  --duration-base: 200ms;
+  --duration-sheet: 300ms;
+  --transition-theme:
+    color, background-color, border-color, outline-color, text-decoration-color, fill, stroke,
+    box-shadow;
+  --default-transition-duration: var(--duration-ui);
+  --default-transition-timing-function: var(--ease-out-expo);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-decel: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --ease-snap: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-emphasized: var(--ease-decel);
+
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  --font-mono:
+    "JetBrains Mono", "Cascadia Code", "Fira Code", Consolas, "Liberation Mono", Menlo, monospace;
+
+  --color-border: var(--border);
+  --color-border-strong: var(--ui-alpha-3);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-tertiary: var(--ui-text-muted);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-hover: var(--ui-brand-hover);
+  --color-selected: var(--ui-alpha-2);
+  --color-surface-0: var(--ui-surface-0);
+  --color-surface-1: var(--ui-surface-1);
+  --color-surface-2: var(--ui-surface-2);
+  --color-surface-3: var(--ui-surface-3);
+  --color-segmented-track: var(--ui-segmented-track);
+  --color-segmented-thumb: var(--ui-segmented-thumb);
+
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-panel: 10px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-full: 9999px;
+
+  --shadow-sm: var(--ui-shadow-sm);
+  --shadow-md: var(--ui-shadow-md);
+  --shadow-lg: var(--ui-shadow-lg);
+  --shadow-card: var(--ui-panel-shadow);
+  --shadow-card-hover: var(--ui-panel-shadow-hover);
+  --shadow-float: var(--ui-shadow-popover);
+  --shadow-focus: var(--ui-focus-shadow);
+  --shadow-segmented-thumb: inset 0 0 0 1px var(--ui-alpha-2), 0 1px 2px var(--ui-shadow-far);
+}
+
+html,
+body {
+  background-color: var(--ui-surface-1);
+  color: var(--ui-text-primary);
+  font-family: var(--pref-ui-font, var(--font-sans));
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: auto;
+  text-rendering: auto;
+  user-select: none;
+  -webkit-user-select: none;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+:root[data-platform="darwin"],
+:root[data-platform="darwin"] :is(body, input, textarea, button, select) {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+input,
+textarea,
+button,
+select {
+  font-family: inherit;
+  letter-spacing: inherit;
+  -webkit-font-smoothing: inherit;
+  -moz-osx-font-smoothing: inherit;
+}
+
+textarea {
+  field-sizing: content;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--ui-alpha-2);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ui-alpha-3);
+}
+
+html {
+  color-scheme: light dark;
+  scroll-behavior: smooth;
+}
+
+/* Animation setting: system follows the OS "reduce motion" preference, off always disables, on always enables */
+@media (prefers-reduced-motion: reduce) {
+  :root[data-motion="system"] *,
+  :root[data-motion="system"] *::before,
+  :root[data-motion="system"] *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:root[data-motion="off"] *,
+:root[data-motion="off"] *::before,
+:root[data-motion="off"] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+/*
+ * The window title bar is draggable except for interactive controls. On Windows and Linux the
+ * native caption buttons are drawn by the Window Controls Overlay; the titlebar-area variables
+ * describe the free space between them, so the padding works whichever side the buttons are on
+ * (GNOME can put them on the left). On macOS the traffic lights sit on the left.
+ * Caption buttons do not flip with the text direction, hence physical padding.
+ */
+.app-title-bar {
+  -webkit-app-region: drag;
+  padding-left: max(0.75rem, env(titlebar-area-x, 0px));
+  padding-right: max(
+    0.75rem,
+    calc(100vw - env(titlebar-area-x, 0px) - env(titlebar-area-width, 100vw))
+  );
+}
+
+:root[data-platform="darwin"] .app-title-bar {
+  padding-left: 80px;
+}
+
+/* Caption buttons drawn by the page sit flush with the window edge */
+.app-title-bar[data-caption-buttons="left"] {
+  padding-left: 0;
+}
+
+.app-title-bar[data-caption-buttons="right"] {
+  padding-right: 0;
+}
+
+/* The frame around an immersive window's content card moves the window */
+.app-drag {
+  -webkit-app-region: drag;
+}
+
+.app-no-drag {
+  -webkit-app-region: no-drag;
+}
+
+.app-title-bar :is(button, input, select, a) {
+  -webkit-app-region: no-drag;
+}
+
+/* Exporting to PDF and printing keep only the document; interface elements are hidden with Tailwind's print:hidden */
+@media print {
+  html,
+  body {
+    height: auto;
+    overflow: visible;
+  }
+}

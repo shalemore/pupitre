@@ -1,0 +1,298 @@
+/*
+ * Base editor styles in three layers (their order is declared at the top of app.css):
+ * - crepe: Milkdown Crepe's own component styles, plus the mapping of Crepe variables to the app's design tokens;
+ * - document-theme: the active theme's typography and colors; a theme can override anything in the crepe layer;
+ * - preferences: the font, size, line height and content width chosen in the settings, which always beat the theme,
+ *   so a badly written theme cannot make a setting stop working.
+ */
+
+@import "@milkdown/crepe/theme/common/style.css" layer(crepe);
+
+@layer crepe {
+  .milkdown {
+    --crepe-color-background: transparent;
+    --crepe-color-on-background: var(--ui-text-primary);
+    --crepe-color-surface: var(--ui-surface-0);
+    --crepe-color-surface-low: var(--ui-surface-1);
+    --crepe-color-on-surface: var(--ui-text-primary);
+    --crepe-color-on-surface-variant: var(--ui-text-secondary);
+    --crepe-color-outline: var(--ui-text-muted);
+    --crepe-color-primary: var(--ui-brand);
+    --crepe-color-secondary: var(--ui-alpha-1);
+    --crepe-color-on-secondary: var(--ui-text-primary);
+    --crepe-color-inverse: var(--ui-text-primary);
+    --crepe-color-on-inverse: var(--ui-surface-1);
+    --crepe-color-inline-code: var(--ui-brand);
+    --crepe-color-error: var(--ui-danger);
+    --crepe-color-hover: var(--ui-alpha-1);
+    --crepe-color-selected: var(--ui-alpha-2);
+    --crepe-color-inline-area: var(--ui-alpha-1);
+    --crepe-font-default: var(--font-sans);
+    --crepe-font-title: var(--font-sans);
+    --crepe-font-code: var(--font-mono);
+    --crepe-shadow-1: var(--ui-shadow-sm);
+    --crepe-shadow-2: var(--ui-shadow-popover);
+  }
+
+  /* Position list markers from the font size and line height; Crepe hard-codes 32px, which drifts from the text at other sizes */
+  .milkdown .milkdown-list-item-block li .label-wrapper,
+  .milkdown .milkdown-list-item-block li .label-wrapper .label {
+    height: calc(1em * var(--pref-line-height, 1.6));
+  }
+
+  .milkdown .mermaid-diagram {
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+  }
+
+  .milkdown .mermaid-error {
+    color: var(--ui-danger);
+    font-size: 0.85em;
+    white-space: pre-wrap;
+  }
+
+  /* Markdown syntax shown around the format under the cursor, see syntax-reveal.ts */
+  .milkdown .md-syntax {
+    color: var(--ui-text-muted);
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: none;
+    user-select: none;
+  }
+
+  /* Raw HTML, see raw-html.ts: complete elements show their source only while the cursor is on them */
+  .milkdown .md-html-source {
+    color: var(--ui-text-muted);
+    font-family: var(--crepe-font-code);
+    font-size: 0.875em;
+    white-space: pre-wrap;
+  }
+
+  .milkdown .md-html.is-rendered:not(.is-editing) .md-html-source,
+  .milkdown .md-html:is(.is-editing, :not(.is-rendered)) .md-html-preview {
+    display: none;
+  }
+
+  .milkdown .ProseMirror kbd {
+    padding: 0.1em 0.4em;
+    border: 1px solid var(--ui-alpha-3);
+    border-block-end-width: 2px;
+    border-radius: 4px;
+    background: var(--ui-alpha-1);
+    font-family: var(--crepe-font-code);
+    font-size: 0.85em;
+  }
+
+  .milkdown .ProseMirror mark {
+    border-radius: 2px;
+    background: oklch(from var(--ui-brand) l c h / 25%);
+    color: inherit;
+  }
+
+  /* Front matter, see front-matter.ts */
+  .milkdown .ProseMirror pre[data-type="front-matter"] {
+    margin-block: 0 1.5em;
+    padding: 0.75em 1em;
+    border-radius: 8px;
+    background: var(--ui-alpha-1);
+    color: var(--ui-text-secondary);
+    font-family: var(--crepe-font-code);
+    font-size: 0.85em;
+    white-space: pre-wrap;
+    direction: ltr;
+    text-align: left;
+  }
+
+  .milkdown .ProseMirror pre[data-type="front-matter"] > code {
+    padding: 0;
+    background: none;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  /*
+   * GitHub alerts, see alerts.ts. Themes draw the quote bar with
+   * `var(--alert-color, <their quote color>)` so alerts keep their color in every theme.
+   */
+  .milkdown .md-alert[data-alert="note"] {
+    --alert-color: oklch(0.62 0.15 255);
+  }
+
+  .milkdown .md-alert[data-alert="tip"] {
+    --alert-color: oklch(0.63 0.15 150);
+  }
+
+  .milkdown .md-alert[data-alert="important"] {
+    --alert-color: oklch(0.6 0.18 300);
+  }
+
+  .milkdown .md-alert[data-alert="warning"] {
+    --alert-color: oklch(0.72 0.15 75);
+  }
+
+  .milkdown .md-alert[data-alert="caution"] {
+    --alert-color: oklch(0.63 0.21 25);
+  }
+
+  .milkdown .md-alert > p:first-child > .md-html:first-child .md-html-source {
+    color: var(--alert-color);
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 600;
+  }
+
+  /* Footnote definitions: the label sits before the note on the same line */
+  .milkdown .ProseMirror dl[data-type="footnote_definition"] {
+    display: flex;
+    gap: 0.5em;
+    margin-block: 0.25em;
+    font-size: 0.9em;
+    color: var(--ui-text-secondary);
+  }
+
+  .milkdown .ProseMirror dl[data-type="footnote_definition"] > dt::after {
+    content: ".";
+  }
+
+  .milkdown .ProseMirror dl[data-type="footnote_definition"] > dd {
+    flex: 1;
+    margin: 0;
+  }
+
+  .milkdown .ProseMirror dl[data-type="footnote_definition"] p {
+    margin: 0;
+  }
+
+  /*
+   * Bidirectional text, see text-direction.ts. Code, math and diagrams are left-to-right and
+   * isolated, so their punctuation never flips the surrounding sentence. Inline code uses
+   * "plaintext", which isolates it and takes the direction of its own first strong character.
+   */
+  .milkdown :is(.milkdown-code-block, .katex-display, .mermaid-diagram) {
+    direction: ltr;
+    text-align: left;
+    unicode-bidi: isolate;
+  }
+
+  .milkdown .ProseMirror code {
+    unicode-bidi: plaintext;
+  }
+
+  /* KaTeX lays out its own boxes and would be mirrored by an inherited right-to-left direction */
+  .milkdown .ProseMirror .katex {
+    direction: ltr;
+    unicode-bidi: isolate;
+  }
+
+  /* Crepe positions these with physical properties; mirror them in right-to-left blocks */
+  .milkdown .ProseMirror blockquote {
+    padding-left: 0;
+    padding-inline-start: 40px;
+  }
+
+  .milkdown .ProseMirror blockquote::before {
+    left: auto;
+    inset-inline-start: 0;
+  }
+
+  .milkdown .milkdown-list-item-block li .label-wrapper .label {
+    text-align: end;
+  }
+
+  /* Match highlighting for prosemirror-search */
+  .milkdown .ProseMirror-search-match {
+    background-color: oklch(from var(--ui-brand) l c h / 22%);
+    border-radius: 2px;
+  }
+
+  .milkdown .ProseMirror-active-search-match {
+    background-color: var(--ui-brand);
+    color: var(--brand-foreground);
+  }
+}
+
+@layer preferences {
+  .milkdown .ProseMirror {
+    box-sizing: content-box;
+    max-width: var(--pref-content-width);
+    margin-inline: auto;
+    /* Room on both sides for the block handles (drag, insert); this is app layout and not left to themes */
+    padding-inline: 4.5rem;
+    /* Without a chosen font, fall back to the theme's own font */
+    font-family: var(--pref-font-family, revert-layer);
+    font-size: var(--pref-font-size);
+    line-height: var(--pref-line-height);
+  }
+
+  .milkdown .ProseMirror :is(p, li) {
+    line-height: var(--pref-line-height);
+  }
+
+  .milkdown :is(.ProseMirror code, .milkdown-code-block .cm-content) {
+    font-family: var(--pref-code-font, revert-layer);
+  }
+
+  /*
+   * Writing modes, see writing-modes.ts. Focus mode dims leaf blocks rather than containers, so
+   * nested blocks are never dimmed twice.
+   */
+  .milkdown
+    .ProseMirror.focus-mode
+    :is(p, h1, h2, h3, h4, h5, h6, hr, pre, dt, .milkdown-code-block, .milkdown-image-block):not(
+      .is-current
+    ),
+  .milkdown .ProseMirror.focus-mode blockquote:not(:has(.is-current))::before,
+  .milkdown
+    .ProseMirror.focus-mode
+    .milkdown-list-item-block:not(:has(.is-current))
+    .label-wrapper {
+    opacity: 0.3;
+  }
+
+  .milkdown .ProseMirror.typewriter-mode {
+    padding-block-end: 50vh;
+  }
+
+  /* The title bar of an immersive window overlays the document; start below it */
+  @media screen {
+    [data-window-style="immersive"] .milkdown .ProseMirror {
+      margin-block-start: 2.5rem;
+    }
+  }
+}
+
+@media print {
+  .milkdown .ProseMirror {
+    max-width: none;
+    padding: 0;
+  }
+
+  /* The page shows the finished document: no syntax markers, no source of rendered HTML, no dimming */
+  .milkdown .md-syntax,
+  .milkdown .md-html.is-rendered .md-html-source {
+    display: none;
+  }
+
+  .milkdown .md-html.is-rendered .md-html-preview {
+    display: inline;
+  }
+
+  .milkdown .ProseMirror.focus-mode * {
+    opacity: 1;
+  }
+
+  .milkdown
+    :is(
+      .milkdown-block-handle,
+      .milkdown-slash-menu,
+      .milkdown-toolbar,
+      .milkdown-link-preview,
+      .milkdown-link-edit,
+      .milkdown-code-block .tools,
+      .milkdown-image-block .operation,
+      .milkdown-image-block .image-resize-handle
+    ) {
+    display: none !important;
+  }
+}

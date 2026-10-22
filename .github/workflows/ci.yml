@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   check:
-    name: Pre-flight & Version
+    name: Pre-flight
     runs-on: ubuntu-latest
     outputs:
       skip: ${{ steps.preflight.outputs.skip }}
@@ -21,30 +21,14 @@ jobs:
       - id: preflight
         uses: ./.github/actions/preflight
 
-  frontend:
-    name: Frontend Lint & Build
+  verify:
+    name: Lint, Typecheck & Build
     needs: check
     if: needs.check.outputs.skip != 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-frontend
-      - run: bun run lint
-      - run: bun run build
-
-  rust:
-    name: Rust Backend
-    needs: check
-    if: needs.check.outputs.skip != 'true'
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          components: clippy, rustfmt
-      - uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: "src-tauri -> target"
-      - run: cargo fmt --manifest-path src-tauri/Cargo.toml --check
-      - run: cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets --locked -- -D warnings
-      - run: cargo check --manifest-path src-tauri/Cargo.toml
+      - uses: ./.github/actions/setup-node
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build

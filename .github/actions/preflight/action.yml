@@ -1,5 +1,5 @@
 name: "Pre-flight Check"
-description: "Validates commit semantics and version consistency across package.json, tauri.conf.json, and Cargo.toml"
+description: "Skips downstream jobs for docs-only commits and reports the project version"
 
 inputs:
   filter-ci:
@@ -12,8 +12,8 @@ outputs:
     description: "Whether downstream jobs should be skipped"
     value: ${{ steps.evaluate.outputs.skip }}
   version:
-    description: "The validated project version"
-    value: ${{ steps.version-check.outputs.version }}
+    description: "The project version from package.json"
+    value: ${{ steps.version.outputs.version }}
 
 runs:
   using: "composite"
@@ -41,14 +41,7 @@ runs:
 
         echo "skip=$skip" >> "$GITHUB_OUTPUT"
 
-    - id: version-check
+    - id: version
       if: steps.evaluate.outputs.skip != 'true'
       shell: bash
-      run: |
-        pkg_ver=$(jq -r .version package.json)
-        echo "Project version: $pkg_ver"
-
-        sed -i -E "s/^version = \".*\"/version = \"$pkg_ver\"/" src-tauri/Cargo.toml
-
-        echo "version=$pkg_ver" >> "$GITHUB_OUTPUT"
-
+      run: echo "version=$(jq -r .version package.json)" >> "$GITHUB_OUTPUT"

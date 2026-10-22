@@ -1,10 +1,11 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 100,
   "ignorePatterns": [
     "node_modules/**",
-    "vendor/**",
-    "legacy-iced/**",
-    "src-tauri/**",
-    "dist/**"
+    "out/**",
+    "release/**",
+    "package-lock.json",
+    "docs/design/app-icon.html"
   ]
 }

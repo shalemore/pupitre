@@ -1,0 +1,14 @@
+name: "Setup Node"
+description: "Set up Node.js and install dependencies from the lockfile"
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+        cache: npm
+
+    - name: Install dependencies
+      shell: bash
+      run: npm ci
