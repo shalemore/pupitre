@@ -45,6 +45,21 @@
 
     --success: oklch(0.58 0.13 155);
     --success-foreground: oklch(0.99 0.01 155);
+
+    /* Code colors used by the code block highlighter (features/editor/code-highlight.ts) */
+    --syntax-keyword: oklch(0.55 0.2 25);
+    --syntax-string: oklch(0.45 0.12 145);
+    --syntax-special-string: oklch(0.5 0.13 250);
+    --syntax-number: oklch(0.5 0.15 250);
+    --syntax-variable: var(--ui-text-primary);
+    --syntax-definition: oklch(0.5 0.13 55);
+    --syntax-function: oklch(0.5 0.17 300);
+    --syntax-type: oklch(0.5 0.13 55);
+    --syntax-property: oklch(0.5 0.13 250);
+    --syntax-comment: var(--ui-text-muted);
+    --syntax-operator: oklch(0.55 0.2 25);
+    --syntax-punctuation: var(--ui-text-secondary);
+    --syntax-invalid: var(--ui-danger);
   }
 
   @media (min-resolution: 2dppx) {
@@ -83,6 +98,16 @@
 
       --success: oklch(0.76 0.14 155);
       --success-foreground: oklch(0.2 0.03 155);
+
+      --syntax-keyword: oklch(0.75 0.15 25);
+      --syntax-string: oklch(0.8 0.12 145);
+      --syntax-special-string: oklch(0.78 0.1 230);
+      --syntax-number: oklch(0.78 0.1 230);
+      --syntax-definition: oklch(0.8 0.12 65);
+      --syntax-function: oklch(0.8 0.1 300);
+      --syntax-type: oklch(0.8 0.12 65);
+      --syntax-property: oklch(0.78 0.1 230);
+      --syntax-operator: oklch(0.75 0.15 25);
     }
   }
 

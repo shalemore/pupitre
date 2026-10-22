@@ -2,7 +2,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "cn";
 import { type JSX, splitProps } from "solid-js";
 
-export const badgeVariants = cva(
+const badgeVariants = cva(
   "inline-flex w-fit max-w-full shrink-0 items-center justify-center gap-1 overflow-hidden rounded-xs border border-transparent font-medium whitespace-nowrap select-none transition-colors [&>svg]:pointer-events-none [&>svg]:shrink-0",
   {
     variants: {

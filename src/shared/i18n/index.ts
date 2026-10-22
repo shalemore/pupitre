@@ -52,7 +52,7 @@ const dictionaries: Record<SupportedLocale, TranslationSchema> = {
 };
 
 /** Picks the first supported language from the system's preferred languages; the same language in another region (such as en-GB) also matches. */
-export function matchLocale(preferredLanguages: readonly string[]): SupportedLocale {
+function matchLocale(preferredLanguages: readonly string[]): SupportedLocale {
   for (const language of preferredLanguages) {
     const tag = new Intl.Locale(language).maximize();
     // Chinese is told apart by script (Simplified or Traditional), not by region

@@ -1,3 +1,5 @@
+import { DEFAULT_SETTINGS } from "@shared/settings";
+
 export type ColorScheme = "light" | "dark";
 
 export interface ThemeInfo {
@@ -18,7 +20,7 @@ const themeStyles = import.meta.glob<string>("../themes/*/index.css", {
   eager: true,
 });
 
-export const DEFAULT_THEME = "pupitre";
+const DEFAULT_THEME = DEFAULT_SETTINGS.theme;
 
 function themeName(path: string): string {
   return path.split("/").at(-2) ?? "";

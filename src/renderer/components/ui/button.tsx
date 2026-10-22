@@ -2,7 +2,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "cn";
 import { type JSX, splitProps } from "solid-js";
 
-export const buttonVariants = cva(
+const buttonVariants = cva(
   "inline-flex shrink-0 cursor-pointer items-center justify-center font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:shadow-focus active:scale-[0.98] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
