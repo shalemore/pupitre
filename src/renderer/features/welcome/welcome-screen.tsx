@@ -50,7 +50,10 @@ export const WelcomeScreen: Component<WelcomeScreenProps> = (props) => {
                 title={path}
                 class="w-full px-2.5 py-1.5 rounded-md hover:bg-muted text-start text-xs flex items-center justify-between gap-2 cursor-pointer transition-colors group"
               >
-                <span class="truncate font-medium text-foreground group-hover:text-brand">
+                <span
+                  dir="auto"
+                  class="truncate font-medium text-foreground group-hover:text-brand"
+                >
                   {fileNameOf(path)}
                 </span>
                 <span

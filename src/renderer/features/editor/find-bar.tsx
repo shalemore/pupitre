@@ -105,6 +105,7 @@ export const FindBar: Component<FindBarProps> = (props) => {
           <input
             ref={(element) => (searchInput = element)}
             type="text"
+            dir="auto"
             value={searchText()}
             onInput={(e) => setSearchText(e.currentTarget.value)}
             onKeyDown={(e) => handleKeyDown(e, props.onFindNext, props.onFindPrevious)}
@@ -187,6 +188,7 @@ export const FindBar: Component<FindBarProps> = (props) => {
           <input
             ref={(element) => (replaceInput = element)}
             type="text"
+            dir="auto"
             value={replaceText()}
             onInput={(e) => setReplaceText(e.currentTarget.value)}
             onKeyDown={(e) => handleKeyDown(e, props.onReplaceNext, props.onReplaceAll)}

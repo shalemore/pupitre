@@ -52,6 +52,36 @@
     white-space: pre-wrap;
   }
 
+  /*
+   * Bidirectional text, see text-direction.ts. Code, math and diagrams are left-to-right and
+   * isolated, so their punctuation never flips the surrounding sentence. Inline code uses
+   * "plaintext", which isolates it and takes the direction of its own first strong character.
+   */
+  .milkdown :is(.milkdown-code-block, .katex-display, .mermaid-diagram) {
+    direction: ltr;
+    text-align: left;
+    unicode-bidi: isolate;
+  }
+
+  .milkdown .ProseMirror :is(code, .katex) {
+    unicode-bidi: plaintext;
+  }
+
+  /* Crepe positions these with physical properties; mirror them in right-to-left blocks */
+  .milkdown .ProseMirror blockquote {
+    padding-left: 0;
+    padding-inline-start: 40px;
+  }
+
+  .milkdown .ProseMirror blockquote::before {
+    left: auto;
+    inset-inline-start: 0;
+  }
+
+  .milkdown .milkdown-list-item-block li .label-wrapper .label {
+    text-align: end;
+  }
+
   /* Match highlighting for prosemirror-search */
   .milkdown .ProseMirror-search-match {
     background-color: oklch(from var(--ui-brand) l c h / 22%);

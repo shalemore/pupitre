@@ -143,7 +143,7 @@ export const MainWindow: Component = () => {
         <div class="flex-1 min-w-0 px-4 text-center font-medium text-foreground truncate">
           <Show when={session.activeDocument()}>
             {session.isDirty() ? "● " : ""}
-            {session.fileName()}
+            <bdi>{session.fileName()}</bdi>
           </Show>
         </div>
 

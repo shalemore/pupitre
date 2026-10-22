@@ -36,6 +36,7 @@
     "@tailwindcss/vite": "^4.3.3",
     "@tsconfig/strictest": "^2.0.8",
     "@types/node": "^26.6.5",
+    "direction": "^2.0.1",
     "electron": "^45.0.0",
     "electron-builder": "^26.15.3",
     "electron-vite": "^6.0.0",

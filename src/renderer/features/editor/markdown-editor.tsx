@@ -30,8 +30,8 @@ import {
   documentObserverPlugin,
   findActiveHeading,
   type OutlineHeading,
-  textDirectionPlugin,
 } from "./prose-plugins";
+import { textDirectionPlugin } from "./text-direction";
 
 export interface SearchOptions {
   search: string;
