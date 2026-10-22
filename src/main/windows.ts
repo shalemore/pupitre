@@ -83,6 +83,20 @@ function titleBarOptions(frame: WindowFrame): BrowserWindowConstructorOptions {
   };
 }
 
+/**
+ * Packaged builds take the icon from the executable. An unpackaged run uses electron's own
+ * executable, so the windows (and the Windows taskbar) are given the app icon explicitly.
+ */
+function developmentIcon(): Pick<BrowserWindowConstructorOptions, "icon"> {
+  if (app.isPackaged) return {};
+  return {
+    icon: join(
+      app.getAppPath(),
+      process.platform === "win32" ? "build/icon.ico" : "build/icon.png",
+    ),
+  };
+}
+
 function createWindow(
   view: View,
   style: Settings["windowStyle"],
@@ -93,6 +107,7 @@ function createWindow(
     show: false,
     backgroundColor: windowColors().background,
     ...titleBarOptions(frame),
+    ...developmentIcon(),
     ...options,
     webPreferences: {
       preload: join(import.meta.dirname, "../preload/index.cjs"),

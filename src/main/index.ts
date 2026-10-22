@@ -1,3 +1,4 @@
+import { join } from "node:path";
 import { app, BrowserWindow, nativeTheme, session } from "electron";
 import { registerIpcHandlers } from "./ipc";
 import { allowMacTypeInjection } from "./mactype";
@@ -9,6 +10,8 @@ import { checkForUpdatesOnStartup, setupUpdater } from "./updater";
 import { createMainWindow } from "./windows";
 
 allowMacTypeInjection();
+// Groups the taskbar button and attributes notifications to the app; electron-builder uses the same id
+app.setAppUserModelId("com.shalemore.pupitre");
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
@@ -25,6 +28,8 @@ if (!app.requestSingleInstanceLock()) {
     session.defaultSession.setPermissionRequestHandler((_webContents, permission, callback) =>
       callback(permission === "local-fonts"),
     );
+
+    if (!app.isPackaged) app.dock?.setIcon(join(app.getAppPath(), "build/icon.png"));
 
     registerIpcHandlers();
     setupUpdater();
