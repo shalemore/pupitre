@@ -52,6 +52,15 @@
     white-space: pre-wrap;
   }
 
+  /* Markdown syntax shown around the format under the cursor, see syntax-reveal.ts */
+  .milkdown .md-syntax {
+    color: var(--ui-text-muted);
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: none;
+    user-select: none;
+  }
+
   /*
    * Bidirectional text, see text-direction.ts. Code, math and diagrams are left-to-right and
    * isolated, so their punctuation never flips the surrounding sentence. Inline code uses

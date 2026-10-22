@@ -8,6 +8,8 @@ import {
   shell,
 } from "electron";
 import type { DocumentState, TopMenu } from "@shared/desktop-api";
+import { INLINE_FORMAT_ACTIONS } from "@shared/format";
+import { formatItems } from "./format-menu";
 import { showAboutDialog } from "./about";
 import { t } from "./i18n";
 import { clearRecentFiles, getRecentFiles } from "./recent-files";
@@ -138,6 +140,27 @@ function buildTemplate(): MenuItemConstructorOptions[] {
       ],
     },
     {
+      id: "paragraphMenu",
+      label: labels.paragraphMenu,
+      enabled: hasDocument,
+      submenu: [
+        ...formatItems(
+          ["heading1", "heading2", "heading3", "heading4", "heading5", "heading6"],
+          dispatchToMainWindow,
+        ),
+        separator,
+        ...formatItems(["paragraph", "quote", "orderedList", "bulletList"], dispatchToMainWindow),
+        separator,
+        ...formatItems(["codeBlock", "mathBlock", "table", "divider"], dispatchToMainWindow),
+      ],
+    },
+    {
+      id: "format",
+      label: labels.format,
+      enabled: hasDocument,
+      submenu: formatItems(INLINE_FORMAT_ACTIONS, dispatchToMainWindow),
+    },
+    {
       id: "view",
       label: labels.view,
       submenu: [
@@ -154,7 +177,8 @@ function buildTemplate(): MenuItemConstructorOptions[] {
         separator,
         { label: labels.zoomIn, role: "zoomIn" },
         { label: labels.zoomOut, role: "zoomOut" },
-        { label: labels.resetZoom, role: "resetZoom" },
+        // Ctrl+0 belongs to "Paragraph", as in Typora
+        { label: labels.resetZoom, role: "resetZoom", accelerator: "CmdOrCtrl+Shift+0" },
         separator,
         { label: labels.fullScreen, role: "togglefullscreen" },
         ...(app.isPackaged

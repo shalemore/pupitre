@@ -16,6 +16,7 @@ import {
   SearchQuery,
   setSearchState,
 } from "prosemirror-search";
+import type { FormatAction } from "@shared/format";
 import type { Settings } from "@shared/settings";
 import { createEffect, getOwner, onCleanup, onMount, runWithOwner, type Component } from "solid-js";
 import { t } from "@/i18n";
@@ -23,6 +24,7 @@ import { desktop } from "@/lib/desktop";
 import { settings } from "@/lib/settings";
 import { countText, type TextStats } from "@/lib/text-stats";
 import { codeHighlight } from "./code-highlight";
+import { formatKeymap, runFormatAction } from "./format-commands";
 import { preserveImageAlt } from "./image-block-schema";
 import { renderMermaidPreview } from "./mermaid-preview";
 import {
@@ -31,6 +33,7 @@ import {
   findActiveHeading,
   type OutlineHeading,
 } from "./prose-plugins";
+import { syntaxRevealPlugin } from "./syntax-reveal";
 import { textDirectionPlugin } from "./text-direction";
 
 export interface SearchOptions {
@@ -57,6 +60,7 @@ export interface MarkdownEditorHandle {
   findPrevious: () => MatchStats;
   replaceNext: () => MatchStats;
   replaceAll: () => MatchStats;
+  format: (action: FormatAction) => void;
 }
 
 export interface MarkdownEditorProps {
@@ -75,8 +79,8 @@ export interface MarkdownEditorProps {
 }
 
 /**
- * How Markdown is written on save, as remark-stringify options. Milkdown reads them only when the editor is created,
- * so a changed setting applies to documents opened afterwards.
+ * How Markdown is written on save, as remark-stringify options. Milkdown reads them only when the
+ * editor is created, so a changed setting applies to documents opened afterwards.
  */
 function markdownStyle(preferences: Settings) {
   return {
@@ -128,7 +132,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     return new URL(url, props.baseUrl).href;
   };
 
-  // With a document path, images are saved into the assets folder next to it and inserted as relative paths; otherwise they can only be embedded as data URLs
+  // Saved documents store pasted images in a folder next to them; unsaved ones embed a data URL
   const uploadImage = async (file: File): Promise<string> => {
     if (!props.documentPath) return readAsDataUrl(file);
     const bytes = new Uint8Array(await file.arrayBuffer());
@@ -141,9 +145,13 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     const crepe = new Crepe({
       root: container,
       defaultValue: props.markdown,
+      // Typora-style editing: formatting comes from the keyboard, the Format menu and the
+      // context menu, not from floating toolbars, block handles or a slash menu
       features: {
         [Crepe.Feature.TopBar]: false,
         [Crepe.Feature.AI]: false,
+        [Crepe.Feature.Toolbar]: false,
+        [Crepe.Feature.BlockEdit]: false,
       },
       featureConfigs: {
         [Crepe.Feature.CodeMirror]: {
@@ -160,7 +168,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           // Blocks with a preview (Mermaid) show only the rendering until "Edit" is clicked
           previewOnlyByDefault: true,
         },
-        [Crepe.Feature.Placeholder]: { text: labels.placeholder, mode: "block" },
+        [Crepe.Feature.Placeholder]: { text: labels.placeholder, mode: "doc" },
         [Crepe.Feature.ImageBlock]: {
           onUpload: uploadImage,
           proxyDomURL: resolveUrl,
@@ -179,41 +187,6 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           inputPlaceholder: labels.linkPlaceholder,
         },
         [Crepe.Feature.Latex]: { inlineEditConfirm: labels.confirm },
-        [Crepe.Feature.Toolbar]: {
-          boldLabel: labels.bold,
-          italicLabel: labels.italic,
-          strikethroughLabel: labels.strikethrough,
-          codeLabel: labels.inlineCode,
-          linkLabel: labels.link,
-          latexLabel: labels.math,
-        },
-        [Crepe.Feature.BlockEdit]: {
-          textGroup: {
-            label: labels.groupText,
-            text: { label: labels.paragraph },
-            h1: { label: labels.heading(1) },
-            h2: { label: labels.heading(2) },
-            h3: { label: labels.heading(3) },
-            h4: { label: labels.heading(4) },
-            h5: { label: labels.heading(5) },
-            h6: { label: labels.heading(6) },
-            quote: { label: labels.quote },
-            divider: { label: labels.divider },
-          },
-          listGroup: {
-            label: labels.groupList,
-            bulletList: { label: labels.bulletList },
-            orderedList: { label: labels.orderedList },
-            taskList: { label: labels.taskList },
-          },
-          advancedGroup: {
-            label: labels.groupInsert,
-            image: { label: labels.image },
-            codeBlock: { label: labels.codeBlock },
-            table: { label: labels.table },
-            math: { label: labels.math },
-          },
-        },
       },
     });
 
@@ -234,6 +207,15 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         const style = markdownStyle(settings());
         ctx.update(remarkStringifyOptionsCtx, (options) => ({ ...options, ...style }));
       })
+      .use($prose(() => formatKeymap(() => crepe.editor)))
+      .use(
+        $prose(() =>
+          syntaxRevealPlugin(() => ({
+            strong: settings().strongMarker.repeat(2),
+            emphasis: settings().emphasisMarker,
+          })),
+        ),
+      )
       .use($prose(() => search()))
       .use($prose(() => textDirectionPlugin))
       .use(
@@ -297,6 +279,10 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       findPrevious: () => run(findPrev),
       replaceNext: () => run(replaceNext),
       replaceAll: () => run(replaceAll),
+      format: (action) => {
+        runFormatAction(crepe.editor, action);
+        view?.focus();
+      },
     });
 
     onCleanup(() => {

@@ -60,7 +60,7 @@ function createWindow(view: View, options: BrowserWindowConstructorOptions): Bro
 
   const { webContents } = window;
   window.once("ready-to-show", () => window.show());
-  setupContextMenu(webContents);
+  setupContextMenu(webContents, { formatting: view === "main" });
   webContents.setWindowOpenHandler(({ url }) => {
     void shell.openExternal(url);
     return { action: "deny" };

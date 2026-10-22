@@ -47,25 +47,6 @@ export interface TranslationSchema {
   };
   readonly editor: {
     readonly toggleReplace: string;
-    readonly placeholder: string;
-    readonly groupText: string;
-    readonly groupList: string;
-    readonly groupInsert: string;
-    readonly paragraph: string;
-    readonly quote: string;
-    readonly divider: string;
-    readonly bulletList: string;
-    readonly orderedList: string;
-    readonly taskList: string;
-    readonly image: string;
-    readonly codeBlock: string;
-    readonly table: string;
-    readonly math: string;
-    readonly bold: string;
-    readonly italic: string;
-    readonly strikethrough: string;
-    readonly inlineCode: string;
-    readonly link: string;
     readonly searchLanguage: string;
     readonly noLanguage: string;
     readonly preview: string;
@@ -87,7 +68,7 @@ export interface TranslationSchema {
     readonly previousMatch: string;
     readonly nextMatch: string;
     readonly closeFind: string;
-    readonly heading: (level: number) => string;
+    readonly placeholder: string;
   };
   readonly dialogs: {
     readonly copyButton: string;
@@ -142,6 +123,8 @@ export interface TranslationSchema {
     readonly pastePlain: string;
     readonly fullScreen: string;
     readonly reportIssue: string;
+    readonly format: string;
+    readonly paragraphMenu: string;
   };
   readonly settings: {
     readonly title: string;
@@ -231,5 +214,26 @@ export interface TranslationSchema {
     readonly uiFont: string;
     readonly uiFontDesc: string;
     readonly systemDefault: string;
+  };
+  readonly format: {
+    readonly bold: string;
+    readonly italic: string;
+    readonly strikethrough: string;
+    readonly inlineCode: string;
+    readonly link: string;
+    readonly paragraph: string;
+    readonly quote: string;
+    readonly orderedList: string;
+    readonly bulletList: string;
+    readonly codeBlock: string;
+    readonly mathBlock: string;
+    readonly table: string;
+    readonly divider: string;
+    readonly heading1: string;
+    readonly heading2: string;
+    readonly heading3: string;
+    readonly heading4: string;
+    readonly heading5: string;
+    readonly heading6: string;
   };
 }

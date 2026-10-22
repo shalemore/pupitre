@@ -1,3 +1,4 @@
+import type { FormatAction } from "./format";
 import type { SettingKey, Settings } from "./settings";
 
 export interface DocumentLocation {
@@ -39,11 +40,12 @@ export type AppCommand =
   | { id: "edit.replace" }
   | { id: "view.toggle-sidebar" }
   | { id: "help.sample-document" }
+  | { id: "format"; action: FormatAction }
   /** The document has unsaved changes before the window closes; the renderer should ask the user first. */
   | { id: "window.close" };
 
 /** Top-level menus of the application menu; Windows and Linux render them in the title bar and pop up the matching native submenu on click. */
-export const TOP_MENUS = ["file", "edit", "view", "help"] as const;
+export const TOP_MENUS = ["file", "edit", "paragraphMenu", "format", "view", "help"] as const;
 export type TopMenu = (typeof TOP_MENUS)[number];
 
 /** Window background and secondary text color under the current theme, used to avoid a flash before the window shows and to color the Windows title bar buttons. */

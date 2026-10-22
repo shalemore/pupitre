@@ -97,6 +97,8 @@ export const MainWindow: Component = () => {
         return void updateSettings({ sidebarVisible: !settings().sidebarVisible });
       case "help.sample-document":
         return void session.openSample();
+      case "format":
+        return editor?.format(command.action);
       case "window.close":
         return void session.confirmDiscard().then((confirmed) => {
           if (confirmed) void desktop.invoke("window:close-confirmed");
