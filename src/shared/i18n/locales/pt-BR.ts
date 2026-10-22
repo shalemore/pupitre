@@ -198,5 +198,12 @@ export const ptBR = {
     updateNotificationBody: "Abra as Preferências para baixá-lo.",
     refreshFonts: "Atualizar lista de fontes",
     resetToDefault: "Restaurar padrão",
+    darkTheme: "Tema do modo escuro",
+    darkThemeDesc: "Usado com o esquema de cores escuro",
+    sameTheme: "Igual ao tema",
+    schemeBoth: "Claro e escuro",
+    uiFont: "Fonte da interface",
+    uiFontDesc: "Menus, barra lateral e diálogos; caracteres ausentes usam a fonte alternativa",
+    systemDefault: "Padrão do sistema",
   },
 } satisfies TranslationSchema;

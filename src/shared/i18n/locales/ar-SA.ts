@@ -209,5 +209,12 @@ export const arSA = {
     updateNotificationBody: "افتح التفضيلات لتنزيله.",
     refreshFonts: "تحديث قائمة الخطوط",
     resetToDefault: "إعادة التعيين إلى الافتراضي",
+    darkTheme: "سمة الوضع الداكن",
+    darkThemeDesc: "تُستخدم عند تفعيل نظام الألوان الداكن",
+    sameTheme: "مثل السمة",
+    schemeBoth: "فاتح وداكن",
+    uiFont: "خط الواجهة",
+    uiFontDesc: "القوائم والشريط الجانبي ومربعات الحوار؛ تستخدم الأحرف الناقصة الخط الاحتياطي",
+    systemDefault: "افتراضي النظام",
   },
 } satisfies TranslationSchema;

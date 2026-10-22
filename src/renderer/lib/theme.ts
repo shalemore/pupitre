@@ -1,36 +1,66 @@
+export type ColorScheme = "light" | "dark";
+
+export interface ThemeInfo {
+  /** Folder name under src/renderer/themes, also shown in settings. */
+  name: string;
+  /** Color schemes the theme provides, read from its `color-scheme` declaration. */
+  schemes: readonly ColorScheme[];
+}
+
 /**
- * A theme is themes/<name>/index.css. It is read with ?inline and wrapped into the document-theme style layer,
- * so a theme can override the app defaults while user preferences (the preferences layer) always override the theme.
- * Vite processes url() in themes, so fonts and images in the theme folder can be referenced by relative paths.
+ * Every theme is src/renderer/themes/<name>/index.css. Vite inlines the processed CSS (relative
+ * url()s to fonts or images next to the theme keep working), and the active one is injected into
+ * the `document-theme` cascade layer: above the app defaults, below the user's preferences.
  */
-const themeLoaders = import.meta.glob<string>("../themes/*/index.css", {
+const themeStyles = import.meta.glob<string>("../themes/*/index.css", {
   query: "?inline",
   import: "default",
+  eager: true,
 });
 
 export const DEFAULT_THEME = "pupitre";
 
-const otherThemes = Object.keys(themeLoaders)
-  .map((path) => path.split("/").at(-2) ?? "")
-  .filter((name) => name !== DEFAULT_THEME)
-  .toSorted((a, b) => a.localeCompare(b));
+function themeName(path: string): string {
+  return path.split("/").at(-2) ?? "";
+}
 
-/** The default theme comes first, the rest are sorted by name. */
-export const THEME_NAMES: readonly string[] = [DEFAULT_THEME, ...otherThemes];
+/**
+ * A theme states which schemes it supports with the standard `color-scheme` property on :root,
+ * e.g. `color-scheme: light dark`. Without it the theme is treated as light only.
+ */
+function supportedSchemes(css: string): ColorScheme[] {
+  const declared = /color-scheme\s*:\s*([^;}]+)/.exec(css)?.[1] ?? "";
+  const schemes = declared
+    .trim()
+    .split(/\s+/)
+    .filter((scheme): scheme is ColorScheme => scheme === "light" || scheme === "dark");
+  return schemes.length > 0 ? schemes : ["light"];
+}
+
+const allThemes = Object.entries(themeStyles).map(([path, css]) => ({
+  name: themeName(path),
+  schemes: supportedSchemes(css),
+}));
+
+/** The default theme first, the others by name. */
+export const THEMES: readonly ThemeInfo[] = [
+  ...allThemes.filter((theme) => theme.name === DEFAULT_THEME),
+  ...allThemes
+    .filter((theme) => theme.name !== DEFAULT_THEME)
+    .toSorted((a, b) => a.name.localeCompare(b.name)),
+];
 
 let styleElement: HTMLStyleElement | undefined;
 
-export async function applyTheme(name: string): Promise<void> {
-  const load =
-    themeLoaders[`../themes/${name}/index.css`] ??
-    themeLoaders[`../themes/${DEFAULT_THEME}/index.css`];
-  if (!load) return;
-  const css = await load();
+export function applyTheme(name: string): void {
+  const css =
+    themeStyles[`../themes/${name}/index.css`] ??
+    themeStyles[`../themes/${DEFAULT_THEME}/index.css`];
   styleElement ??= document.head.appendChild(document.createElement("style"));
-  styleElement.textContent = `@layer document-theme {\n${css}\n}`;
+  styleElement.textContent = `@layer document-theme {\n${css ?? ""}\n}`;
 }
 
-/** Converts any CSS color (themes often use oklch) to the #rrggbb the Electron window API needs. */
+/** Converts any CSS color (themes mostly use oklch) to the #rrggbb Electron's window APIs need. */
 function toHex(color: string): string {
   const context = new OffscreenCanvas(1, 1).getContext("2d");
   if (!context) return "#000000";
@@ -40,7 +70,7 @@ function toHex(color: string): string {
   return `#${[r, g, b].map((value) => value.toString(16).padStart(2, "0")).join("")}`;
 }
 
-/** Reads the current theme's canvas color and secondary text color for the window background and the Windows title bar buttons. */
+/** The active theme's canvas and secondary text colors, for the window background and caption buttons. */
 export function readWindowColors(): { background: string; symbol: string } {
   const style = getComputedStyle(document.documentElement);
   return {

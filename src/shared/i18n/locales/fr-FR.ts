@@ -199,5 +199,13 @@ export const frFR = {
     updateNotificationBody: "Ouvrez les Préférences pour le télécharger.",
     refreshFonts: "Actualiser la liste des polices",
     resetToDefault: "Rétablir la valeur par défaut",
+    darkTheme: "Thème du mode sombre",
+    darkThemeDesc: "Utilisé avec le jeu de couleurs sombre",
+    sameTheme: "Comme le thème",
+    schemeBoth: "Clair et sombre",
+    uiFont: "Police de l'interface",
+    uiFontDesc:
+      "Menus, barre latérale et dialogues ; les caractères manquants utilisent la police de secours",
+    systemDefault: "Par défaut du système",
   },
 } satisfies TranslationSchema;

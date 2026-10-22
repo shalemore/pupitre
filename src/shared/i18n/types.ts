@@ -224,5 +224,12 @@ export interface TranslationSchema {
     readonly updateNotificationBody: string;
     readonly refreshFonts: string;
     readonly resetToDefault: string;
+    readonly darkTheme: string;
+    readonly darkThemeDesc: string;
+    readonly sameTheme: string;
+    readonly schemeBoth: string;
+    readonly uiFont: string;
+    readonly uiFontDesc: string;
+    readonly systemDefault: string;
   };
 }

@@ -125,7 +125,10 @@ only make code generation easier.
 - `lib/theme.ts` discovers themes with `import.meta.glob` and injects the active one into the
   `document-theme` layer at runtime. Every window (main and settings) loads the same theme.
 - Themes style the whole app through the `--ui-*` design tokens (surfaces, text, accent) and the
-  document through `.milkdown .ProseMirror` selectors and `--syntax-*` colors. Always provide
-  both light values and `@media (prefers-color-scheme: dark)` overrides.
-- Font family, body font size, line height and content width belong to the user. Themes may set
-  defaults, but sizes inside the document should use `em` so they scale with the user setting.
+  document through `.milkdown .ProseMirror` selectors and `--syntax-*` colors.
+- A theme declares the color schemes it supports with `color-scheme` on `:root`. A `light dark`
+  theme overrides its dark values in `@media (prefers-color-scheme: dark)`; a single-scheme theme
+  is applied as is and can be paired with another theme through the `darkTheme` setting.
+- Body font size, line height and content width belong to the user. Themes set the default body
+  font through `--font-document`, use `em` for sizes inside the document and logical properties
+  (`padding-inline-start`) so right-to-left documents mirror correctly.

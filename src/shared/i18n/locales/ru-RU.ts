@@ -198,5 +198,12 @@ export const ruRU = {
     updateNotificationBody: "Откройте настройки, чтобы скачать обновление.",
     refreshFonts: "Обновить список шрифтов",
     resetToDefault: "Сбросить по умолчанию",
+    darkTheme: "Тема тёмного режима",
+    darkThemeDesc: "Используется в тёмной схеме",
+    sameTheme: "Как основная тема",
+    schemeBoth: "Светлая и тёмная",
+    uiFont: "Шрифт интерфейса",
+    uiFontDesc: "Меню, боковая панель и диалоги; недостающие символы берутся из резервного шрифта",
+    systemDefault: "Системный",
   },
 } satisfies TranslationSchema;

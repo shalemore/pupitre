@@ -198,5 +198,13 @@ export const esES = {
     updateNotificationBody: "Abre Preferencias para descargarlo.",
     refreshFonts: "Actualizar lista de fuentes",
     resetToDefault: "Restablecer valor predeterminado",
+    darkTheme: "Tema del modo oscuro",
+    darkThemeDesc: "Se usa con el esquema de color oscuro",
+    sameTheme: "Igual que el tema",
+    schemeBoth: "Claro y oscuro",
+    uiFont: "Fuente de la interfaz",
+    uiFontDesc:
+      "Menús, barra lateral y diálogos; los caracteres que falten usan la fuente alternativa",
+    systemDefault: "Predeterminada del sistema",
   },
 } satisfies TranslationSchema;

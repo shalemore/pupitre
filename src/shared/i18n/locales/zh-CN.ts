@@ -197,5 +197,12 @@ export const zhCN = {
     updateNotificationBody: "打开偏好设置即可下载。",
     refreshFonts: "刷新字体列表",
     resetToDefault: "恢复默认值",
+    darkTheme: "深色模式主题",
+    darkThemeDesc: "深色配色时使用的主题",
+    sameTheme: "与主题相同",
+    schemeBoth: "浅色与深色",
+    uiFont: "界面字体",
+    uiFontDesc: "菜单、侧边栏和对话框；缺字时使用后备字体",
+    systemDefault: "系统默认",
   },
 } satisfies TranslationSchema;

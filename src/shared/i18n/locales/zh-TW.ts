@@ -197,5 +197,12 @@ export const zhTW = {
     updateNotificationBody: "開啟偏好設定即可下載。",
     refreshFonts: "重新整理字型列表",
     resetToDefault: "還原預設值",
+    darkTheme: "深色模式主題",
+    darkThemeDesc: "深色配色時使用的主題",
+    sameTheme: "與主題相同",
+    schemeBoth: "淺色與深色",
+    uiFont: "介面字型",
+    uiFontDesc: "選單、側邊欄和對話方塊；缺字時使用後備字型",
+    systemDefault: "系統預設",
   },
 } satisfies TranslationSchema;

@@ -209,7 +209,7 @@ html,
 body {
   background-color: var(--ui-surface-1);
   color: var(--ui-text-primary);
-  font-family: var(--font-sans);
+  font-family: var(--pref-ui-font, var(--font-sans));
   -webkit-font-smoothing: subpixel-antialiased;
   -moz-osx-font-smoothing: auto;
   text-rendering: auto;

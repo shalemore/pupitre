@@ -199,5 +199,12 @@ export const enUS = {
     updateNotificationBody: "Open Preferences to download it.",
     refreshFonts: "Refresh Font List",
     resetToDefault: "Reset to Default",
+    darkTheme: "Dark Mode Theme",
+    darkThemeDesc: "Used while the dark color scheme is active",
+    sameTheme: "Same as Theme",
+    schemeBoth: "Light & Dark",
+    uiFont: "Interface Font",
+    uiFontDesc: "Menus, sidebar and dialogs; missing characters use the fallback font",
+    systemDefault: "System Default",
   },
 } satisfies TranslationSchema;

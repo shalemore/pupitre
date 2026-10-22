@@ -6,10 +6,9 @@ import { type JSX, Show } from "solid-js";
 export interface SelectOption<T extends string = string> {
   value: T;
   label: string;
-  /** Secondary text next to the option, such as a font's localized name; it is searchable too. */
+  /** Secondary text next to the label, such as a localized font name; also searchable. */
   description?: string | undefined;
-  icon?: JSX.Element;
-  /** Style of the option text; the font list uses it to preview each font in itself. */
+  /** Style of the label; the font list uses it to preview each font in its own face. */
   style?: JSX.CSSProperties | undefined;
 }
 
@@ -21,7 +20,7 @@ export interface SelectProps<T extends string> {
   "aria-label"?: string;
 }
 
-/** A dropdown select built on Kobalte, which handles keyboard navigation, type-ahead and accessibility attributes. */
+/** A dropdown on top of Kobalte, which handles keyboard navigation, typeahead and ARIA. */
 export function Select<T extends string>(props: SelectProps<T>) {
   const selected = () => props.options.find((option) => option.value === props.value);
 
@@ -41,11 +40,17 @@ export function Select<T extends string>(props: SelectProps<T>) {
           item={itemProps.item}
           class="flex items-center justify-between gap-3 rounded-md px-2.5 py-1.5 text-xs text-muted-foreground outline-none cursor-pointer data-highlighted:bg-accent data-highlighted:text-foreground data-selected:text-brand data-selected:font-medium"
         >
-          <span class="flex items-center gap-2 min-w-0">
-            <Show when={itemProps.item.rawValue.icon}>{(icon) => icon()}</Show>
+          <span class="flex items-baseline gap-2 min-w-0">
             <KobalteSelect.ItemLabel class="truncate" style={itemProps.item.rawValue.style}>
               {itemProps.item.rawValue.label}
             </KobalteSelect.ItemLabel>
+            <Show when={itemProps.item.rawValue.description}>
+              {(description) => (
+                <KobalteSelect.ItemDescription class="truncate text-[10px] text-tertiary">
+                  {description()}
+                </KobalteSelect.ItemDescription>
+              )}
+            </Show>
           </span>
           <KobalteSelect.ItemIndicator>
             <Check class="size-3 shrink-0" />
@@ -62,12 +67,9 @@ export function Select<T extends string>(props: SelectProps<T>) {
       >
         <KobalteSelect.Value<SelectOption<T>> class="flex items-center gap-1.5 truncate">
           {(state) => (
-            <>
-              <Show when={state.selectedOption().icon}>{(icon) => icon()}</Show>
-              <span class="truncate" style={state.selectedOption().style}>
-                {state.selectedOption().label}
-              </span>
-            </>
+            <span class="truncate" style={state.selectedOption().style}>
+              {state.selectedOption().label}
+            </span>
           )}
         </KobalteSelect.Value>
         <KobalteSelect.Icon class="text-muted-foreground transition-transform data-expanded:rotate-180">

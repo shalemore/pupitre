@@ -197,5 +197,12 @@ export const koKR = {
     updateNotificationBody: "환경설정에서 다운로드하세요.",
     refreshFonts: "글꼴 목록 새로 고침",
     resetToDefault: "기본값으로 재설정",
+    darkTheme: "다크 모드 테마",
+    darkThemeDesc: "어두운 색 구성일 때 사용",
+    sameTheme: "테마와 동일",
+    schemeBoth: "밝게 및 어둡게",
+    uiFont: "인터페이스 글꼴",
+    uiFontDesc: "메뉴, 사이드바, 대화 상자. 없는 문자는 대체 글꼴로 표시",
+    systemDefault: "시스템 기본값",
   },
 } satisfies TranslationSchema;

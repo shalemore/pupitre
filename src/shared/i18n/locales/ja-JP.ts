@@ -197,5 +197,12 @@ export const jaJP = {
     updateNotificationBody: "環境設定を開いてダウンロードしてください。",
     refreshFonts: "フォント一覧を更新",
     resetToDefault: "既定値に戻す",
+    darkTheme: "ダークモードのテーマ",
+    darkThemeDesc: "ダーク配色のときに使用",
+    sameTheme: "テーマと同じ",
+    schemeBoth: "ライトとダーク",
+    uiFont: "インターフェースのフォント",
+    uiFontDesc: "メニュー、サイドバー、ダイアログ。足りない文字は代替フォントで表示",
+    systemDefault: "システムの既定",
   },
 } satisfies TranslationSchema;

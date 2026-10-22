@@ -198,5 +198,13 @@ export const itIT = {
     updateNotificationBody: "Apri Preferenze per scaricarlo.",
     refreshFonts: "Aggiorna elenco caratteri",
     resetToDefault: "Ripristina predefinito",
+    darkTheme: "Tema modalità scura",
+    darkThemeDesc: "Usato con lo schema colori scuro",
+    sameTheme: "Come il tema",
+    schemeBoth: "Chiaro e scuro",
+    uiFont: "Carattere interfaccia",
+    uiFontDesc:
+      "Menu, barra laterale e finestre; i caratteri mancanti usano il carattere di riserva",
+    systemDefault: "Predefinito di sistema",
   },
 } satisfies TranslationSchema;

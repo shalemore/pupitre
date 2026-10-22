@@ -1,11 +1,22 @@
 import type { Settings } from "@shared/settings";
-import { Moon, Sun, SunMoon } from "lucide-solid";
 import type { Component } from "solid-js";
 import { Select, Switch } from "@/components/ui";
 import { t } from "@/i18n";
 import { settings, updateSettings } from "@/lib/settings";
-import { THEME_NAMES } from "@/lib/theme";
+import { type ThemeInfo, THEMES } from "@/lib/theme";
+import { FontSelect } from "./font-select";
 import { SettingField, SettingsSection } from "./settings-section";
+
+function schemeLabel(theme: ThemeInfo): string {
+  if (theme.schemes.length > 1) return t().settings.schemeBoth;
+  return theme.schemes.includes("dark")
+    ? t().settings.colorSchemeDark
+    : t().settings.colorSchemeLight;
+}
+
+function themeOption(theme: ThemeInfo) {
+  return { value: theme.name, label: theme.name, description: schemeLabel(theme) };
+}
 
 export const AppearanceSection: Component = () => (
   <SettingsSection title={t().settings.appearance}>
@@ -18,13 +29,9 @@ export const AppearanceSection: Component = () => (
         value={settings().colorScheme}
         onChange={(colorScheme) => void updateSettings({ colorScheme })}
         options={[
-          {
-            value: "system",
-            label: t().settings.followSystem,
-            icon: <SunMoon class="size-3.5" />,
-          },
-          { value: "light", label: t().settings.colorSchemeLight, icon: <Sun class="size-3.5" /> },
-          { value: "dark", label: t().settings.colorSchemeDark, icon: <Moon class="size-3.5" /> },
+          { value: "system", label: t().settings.followSystem },
+          { value: "light", label: t().settings.colorSchemeLight },
+          { value: "dark", label: t().settings.colorSchemeDark },
         ]}
         aria-label={t().settings.colorScheme}
       />
@@ -34,8 +41,33 @@ export const AppearanceSection: Component = () => (
       <Select
         value={settings().theme}
         onChange={(theme) => void updateSettings({ theme })}
-        options={THEME_NAMES.map((name) => ({ value: name, label: name }))}
+        options={THEMES.map(themeOption)}
         aria-label={t().settings.theme}
+      />
+    </SettingField>
+
+    <SettingField
+      name="darkTheme"
+      title={t().settings.darkTheme}
+      description={t().settings.darkThemeDesc}
+    >
+      <Select
+        value={settings().darkTheme}
+        onChange={(darkTheme) => void updateSettings({ darkTheme })}
+        options={[
+          { value: "", label: t().settings.sameTheme },
+          ...THEMES.filter((theme) => theme.schemes.includes("dark")).map(themeOption),
+        ]}
+        aria-label={t().settings.darkTheme}
+      />
+    </SettingField>
+
+    <SettingField name="uiFont" title={t().settings.uiFont} description={t().settings.uiFontDesc}>
+      <FontSelect
+        value={settings().uiFont}
+        onChange={(uiFont) => void updateSettings({ uiFont })}
+        emptyLabel={t().settings.systemDefault}
+        aria-label={t().settings.uiFont}
       />
     </SettingField>
 

@@ -3,24 +3,33 @@
  *
  * A theme is src/renderer/themes/<name>/index.css; the folder name is the name shown in settings.
  * Fonts or images a theme needs live in the same folder and are referenced with relative url()s.
+ * This file doubles as the reference for writing themes.
+ *
+ * Color schemes
+ *   Declare the schemes the theme supports with the standard `color-scheme` property on :root.
+ *   `light dark` means the theme works in both: write the light values first and override what
+ *   differs in `@media (prefers-color-scheme: dark)`. A theme that only declares `light` or
+ *   `dark` is applied as is, and users can pair it with another theme for the other scheme.
  *
  * What a theme controls
- *   - Design tokens: colors shared by the interface (title bar, sidebar, settings window) and the document, see :root below;
- *   - Document typography: the styles of the elements inside .milkdown .ProseMirror;
- *   - Code highlighting: the --syntax-* colors.
+ *   - Design tokens (--ui-*): colors shared by the title bar, sidebar, settings and the document.
+ *   - Document typography: the elements inside `.milkdown .ProseMirror`.
+ *   - Code colors: --syntax-*.
+ *   - --font-document: the default body font (--font-mono is the code font).
  *
- * Fonts: declare the body font with --font-document (--font-sans and --font-mono are the interface and code fonts).
- * A font chosen in the settings overrides it; when only a fallback font is chosen, it follows --font-document.
- *
- * What a theme does not need to and should not decide: body font size, line height and content width are chosen by the user in the settings
- * and applied in a higher style layer. So use em for sizes in a theme (relative to the body font size)
- * rather than px, so headings and spacing grow along with a larger font size.
- *
- * Write both light and dark: override the values that differ in dark mode with @media (prefers-color-scheme: dark).
+ * What a theme should leave alone
+ *   Body font size, line height and content width belong to the user and are applied in a
+ *   higher cascade layer. Use `em` for sizes inside the document so they scale with the user's
+ *   font size, and logical properties (padding-inline-start, not padding-left) so right-to-left
+ *   documents mirror correctly.
  */
 
 :root {
-  --font-document: var(--font-sans);
+  color-scheme: light dark;
+
+  --font-document:
+    -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
 
   /* Surfaces: 0 window chrome (title bar, sidebar), 1 document canvas, 2 cards, 3 popovers */
   --ui-surface-0: oklch(0.972 0 0);
@@ -30,7 +39,7 @@
   --ui-text-primary: oklch(0.185 0 0);
   --ui-text-secondary: oklch(0.44 0 0);
   --ui-text-muted: oklch(0.63 0 0);
-  /* The only accent color, terracotta, used only where something must be noticed: caret, links, the current item */
+  /* The only accent color, used sparingly: caret, links, the current item */
   --ui-brand: oklch(0.665 0.131 40.6);
   --ui-brand-hover: oklch(0.6 0.155 39);
   --ui-danger: oklch(0.637 0.237 25.3);
@@ -83,14 +92,14 @@
   caret-color: var(--ui-brand);
 }
 
-/* Paragraphs are separated by margins, not blank lines; text-wrap: pretty avoids a single word on the last line */
+/* text-wrap: pretty avoids a single word left alone on the last line of a paragraph */
 .milkdown .ProseMirror :is(p, li, blockquote) {
   text-wrap: pretty;
 }
 
 .milkdown .ProseMirror p {
   padding: 0;
-  margin: 0.5em 0;
+  margin-block: 0.5em;
 }
 
 .milkdown .ProseMirror :is(h1, h2, h3, h4, h5, h6) {
@@ -98,19 +107,19 @@
   font-weight: 650;
   letter-spacing: -0.01em;
   line-height: 1.3;
-  margin: 1.4em 0 0.5em;
+  margin-block: 1.4em 0.5em;
   padding: 0;
 }
 
 .milkdown .ProseMirror h1 {
   font-size: 2em;
-  margin-top: 0.6em;
+  margin-block-start: 0.6em;
 }
 
 .milkdown .ProseMirror h2 {
   font-size: 1.5em;
-  padding-bottom: 0.25em;
-  border-bottom: 1px solid var(--ui-alpha-2);
+  padding-block-end: 0.25em;
+  border-block-end: 1px solid var(--ui-alpha-2);
 }
 
 .milkdown .ProseMirror h3 {
@@ -129,7 +138,7 @@
   color: var(--ui-text-secondary);
 }
 
-/* Text on a dark background looks heavier from irradiation, so heading weight is slightly reduced */
+/* Light text on a dark background looks heavier, so headings get slightly lighter */
 @media (prefers-color-scheme: dark) {
   .milkdown .ProseMirror :is(h1, h2, h3, h4, h5, h6) {
     font-weight: 600;
@@ -151,7 +160,7 @@
   color: var(--ui-text-muted);
 }
 
-/* Inline code: a light fill and a hairline border, no accent color competing with the text */
+/* Inline code: a light tint and a hairline, without the accent color competing with the text */
 .milkdown .ProseMirror :not(pre) > code {
   display: inline;
   color: inherit;
@@ -163,9 +172,9 @@
   line-height: inherit;
 }
 
-/* Code blocks: 12px radius and a hairline border; the toolbar appears only on hover */
+/* Code blocks: 12px radius and a hairline border; the toolbar only appears on hover */
 .milkdown .milkdown-code-block {
-  margin: 1em 0;
+  margin-block: 1em;
   padding: 0.5em 1em 1em;
   border: 1px solid var(--ui-alpha-2);
   border-radius: 12px;
@@ -179,8 +188,8 @@
 }
 
 .milkdown .ProseMirror blockquote {
-  margin: 1em 0;
-  padding: 0 0 0 1em;
+  margin-block: 1em;
+  padding-inline-start: 1em;
   color: var(--ui-text-secondary);
 }
 
@@ -190,14 +199,14 @@
 }
 
 .milkdown .ProseMirror hr {
-  margin: 2em 0;
+  margin-block: 2em;
   height: 1px;
   padding: 0;
   background-color: var(--ui-alpha-2);
 }
 
 .milkdown .milkdown-table-block {
-  margin: 1em 0;
+  margin-block: 1em;
 }
 
 .milkdown .milkdown-table-block :is(th, td) {
@@ -222,9 +231,9 @@
   color: var(--ui-text-muted);
 }
 
-/* Tighter paragraph spacing inside list items, otherwise every item looks like a separate paragraph */
+/* Tighter paragraphs inside list items, otherwise every item looks like a separate paragraph */
 .milkdown .milkdown-list-item-block p {
-  margin: 0.15em 0;
+  margin-block: 0.15em;
 }
 
 .milkdown .ProseMirror ::selection {

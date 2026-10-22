@@ -17,6 +17,10 @@ export const settingsSchema = z.object({
   colorScheme: z.enum(["system", "light", "dark"]).catch("system"),
   /** Theme folder name, see src/renderer/themes. */
   theme: z.string().min(1).catch("pupitre"),
+  /** Theme used while the dark color scheme is active; empty means the same as `theme`. */
+  darkTheme: z.string().catch(""),
+  /** Font of menus, sidebar and dialogs; empty means the platform's interface font. */
+  uiFont: z.string().catch(""),
   animations: z.enum(["system", "on", "off"]).catch("system"),
   sidebarVisible: z.boolean().catch(true),
   showWordCount: z.boolean().catch(true),

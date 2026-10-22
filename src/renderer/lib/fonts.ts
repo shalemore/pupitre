@@ -108,6 +108,13 @@ export function documentFontFamily(
   return families.join(", ");
 }
 
+/** The interface font; characters it lacks fall back to the editor's fallback font first. */
+export function interfaceFontFamily(uiFont: string, fallbackFont: string): string | undefined {
+  if (!uiFont) return undefined;
+  const fallback = fallbackFont ? `${quote(fallbackFont)}, ` : "";
+  return `${quote(uiFont)}, ${fallback}var(--font-sans)`;
+}
+
 export function codeFontFamily(codeFont: string): string | undefined {
   return codeFont ? `${quote(codeFont)}, var(--font-mono)` : undefined;
 }

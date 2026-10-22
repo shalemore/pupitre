@@ -198,5 +198,12 @@ export const deDE = {
     updateNotificationBody: "Öffnen Sie die Einstellungen, um es herunterzuladen.",
     refreshFonts: "Schriftliste aktualisieren",
     resetToDefault: "Auf Standard zurücksetzen",
+    darkTheme: "Design im dunklen Modus",
+    darkThemeDesc: "Wird im dunklen Farbschema verwendet",
+    sameTheme: "Wie Design",
+    schemeBoth: "Hell & Dunkel",
+    uiFont: "Oberflächenschrift",
+    uiFontDesc: "Menüs, Seitenleiste und Dialoge; fehlende Zeichen nutzen die Ersatzschrift",
+    systemDefault: "Systemstandard",
   },
 } satisfies TranslationSchema;

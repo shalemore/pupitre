@@ -4,7 +4,7 @@ import { setupAppearance } from "@/lib/appearance";
 import { MainWindow } from "@/windows/main-window";
 import { SettingsWindow } from "@/windows/settings-window";
 
-await setupAppearance();
+setupAppearance();
 
 const container = document.getElementById("root");
 if (container) {
