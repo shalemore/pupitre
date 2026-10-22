@@ -99,6 +99,7 @@ export const MainWindow: Component = () => {
   };
 
   onMount(() => {
+    session.restoreOnStartup();
     // dragover's default behavior must be prevented, otherwise drop never fires
     const handleDragOver = (e: DragEvent) => e.preventDefault();
     const handleDrop = (e: DragEvent) => {
@@ -140,7 +141,7 @@ export const MainWindow: Component = () => {
           </Show>
         </div>
 
-        <Show when={session.activeDocument()}>
+        <Show when={session.activeDocument() !== undefined && settings().showWordCount}>
           <div class="text-[11px] text-muted-foreground tabular-nums flex items-center gap-1.5 me-2">
             <span>{t().common.wordsCount(stats().words)}</span>
             <span>·</span>

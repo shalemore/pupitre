@@ -16,9 +16,11 @@ import {
   SearchQuery,
   setSearchState,
 } from "prosemirror-search";
-import { onCleanup, onMount, type Component } from "solid-js";
+import type { Settings } from "@shared/settings";
+import { createEffect, getOwner, onCleanup, onMount, runWithOwner, type Component } from "solid-js";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
+import { settings } from "@/lib/settings";
 import { countText, type TextStats } from "@/lib/text-stats";
 import { codeHighlight } from "./code-highlight";
 import { preserveImageAlt } from "./image-block-schema";
@@ -72,14 +74,21 @@ export interface MarkdownEditorProps {
   ref: (handle: MarkdownEditorHandle) => void;
 }
 
-const MARKDOWN_STYLE = {
-  bullet: "-",
-  emphasis: "*",
-  strong: "*",
-  rule: "-",
-  fence: "`",
-  listItemIndent: "one",
-} as const;
+/**
+ * How Markdown is written on save, as remark-stringify options. Milkdown reads them only when the editor is created,
+ * so a changed setting applies to documents opened afterwards.
+ */
+function markdownStyle(preferences: Settings) {
+  return {
+    bullet: preferences.bulletMarker,
+    emphasis: preferences.emphasisMarker,
+    strong: preferences.strongMarker,
+    rule: preferences.ruleMarker,
+    fence: preferences.fenceMarker,
+    incrementListMarker: preferences.incrementListMarker,
+    listItemIndent: "one",
+  } as const;
+}
 
 function matchStats(view: EditorView): MatchStats {
   const query = getSearchState(view.state)?.query;
@@ -222,8 +231,8 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     crepe.editor
       .config(preserveImageAlt)
       .config((ctx) => {
-        // Use the most common Markdown style everywhere, so saving does not rewrite the list and emphasis markers of the whole document
-        ctx.update(remarkStringifyOptionsCtx, (options) => ({ ...options, ...MARKDOWN_STYLE }));
+        const style = markdownStyle(settings());
+        ctx.update(remarkStringifyOptionsCtx, (options) => ({ ...options, ...style }));
       })
       .use($prose(() => search()))
       .use($prose(() => textDirectionPlugin))
@@ -244,10 +253,18 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       listener.markdownUpdated((_ctx, markdown) => props.onMarkdownChange(markdown));
     });
 
+    // The editor is created asynchronously; run its settings effect under the component owner so it is disposed with it
+    const owner = getOwner();
     void crepe.create().then((editor) => {
-      view = editor.ctx.get(editorViewCtx);
+      const editorView = editor.ctx.get(editorViewCtx);
+      view = editorView;
+      runWithOwner(owner, () =>
+        createEffect(() => {
+          editorView.dom.spellcheck = settings().spellcheck;
+        }),
+      );
       props.onReady(crepe.getMarkdown());
-      view.focus();
+      editorView.focus();
     });
 
     const run = (command: Command): MatchStats => {

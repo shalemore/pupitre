@@ -1,3 +1,4 @@
+import type { LineEnding } from "@shared/desktop-api";
 import { createEffect, createSignal, on } from "solid-js";
 import { getSampleDocument } from "@/features/samples/sample-document";
 import { currentLocale, t } from "@/i18n";
@@ -11,6 +12,8 @@ export interface OpenDocument {
   path: string | undefined;
   baseUrl: string | undefined;
   markdown: string;
+  /** The file's original line ending; new documents use LF. */
+  lineEnding: LineEnding;
   isSample: boolean;
 }
 
@@ -30,6 +33,12 @@ export function createDocumentSession(getMarkdown: () => string | undefined) {
   let autoSaveTimer: number | undefined;
 
   const isDirty = () => currentMarkdown() !== savedMarkdown();
+
+  // "Keep as is" keeps the file's own line endings; otherwise the setting decides
+  const lineEndingFor = (doc: OpenDocument): LineEnding => {
+    const preference = settings().lineEnding;
+    return preference === "auto" ? doc.lineEnding : preference;
+  };
 
   const fileName = () => {
     const doc = activeDocument();
@@ -58,6 +67,7 @@ export function createDocumentSession(getMarkdown: () => string | undefined) {
       "document:save-as",
       fileName(),
       withTrailingNewline(markdown),
+      lineEndingFor(doc),
     );
     if (!location) return false;
     // Only the path changes, not the document id, so the editor and its undo history stay
@@ -71,7 +81,12 @@ export function createDocumentSession(getMarkdown: () => string | undefined) {
     const markdown = getMarkdown();
     if (!doc || markdown === undefined) return false;
     if (!doc.path) return saveAs();
-    await desktop.invoke("document:write", doc.path, withTrailingNewline(markdown));
+    await desktop.invoke(
+      "document:write",
+      doc.path,
+      withTrailingNewline(markdown),
+      lineEndingFor(doc),
+    );
     markSaved(markdown);
     return true;
   };
@@ -86,7 +101,7 @@ export function createDocumentSession(getMarkdown: () => string | undefined) {
 
   const newDocument = async () => {
     if (!(await confirmDiscard())) return;
-    load({ path: undefined, baseUrl: undefined, markdown: "", isSample: false });
+    load({ path: undefined, baseUrl: undefined, markdown: "", lineEnding: "lf", isSample: false });
   };
 
   const open = async () => {
@@ -115,8 +130,17 @@ export function createDocumentSession(getMarkdown: () => string | undefined) {
       path: undefined,
       baseUrl: undefined,
       markdown: getSampleDocument(currentLocale()),
+      lineEnding: "lf",
       isSample: true,
     });
+  };
+
+  /** When the window opens, the "On startup" setting decides between the welcome page, the last file or a new document. */
+  const restoreOnStartup = () => {
+    const { startup, recentFiles } = settings();
+    const [lastFile] = recentFiles;
+    if (startup === "new-file") void newDocument();
+    else if (startup === "last-file" && lastFile !== undefined) void openPath(lastFile);
   };
 
   /** Called when the editor content changes; with auto save on and a document path, saves shortly after typing stops. */
@@ -152,6 +176,7 @@ export function createDocumentSession(getMarkdown: () => string | undefined) {
     open,
     openPath,
     openSample,
+    restoreOnStartup,
     dispose: () => clearTimeout(autoSaveTimer),
   };
 }

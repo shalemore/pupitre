@@ -5,6 +5,7 @@ import { BrowserWindow, dialog, ipcMain, type IpcMainInvokeEvent, shell } from "
 import {
   type DocumentLocation,
   type InvokeChannels,
+  type LineEnding,
   type OpenedDocument,
   SETTINGS_GET_SYNC,
   SETTINGS_PATH_SYNC,
@@ -41,25 +42,40 @@ async function saveImage(
   fileName: string,
   data: Uint8Array,
 ): Promise<string> {
-  const directory = join(dirname(documentPath), "assets");
+  const folder = getSettings().imageFolder;
+  const directory = join(dirname(documentPath), folder);
   await mkdir(directory, { recursive: true });
   // Pasted screenshots are usually all named image.png; a timestamp keeps them from overwriting existing images
   const extension = extname(fileName) || ".png";
-  const name = `${basename(fileName, extension).replace(/[^\p{L}\p{N}._-]+/gu, "-")}-${Date.now()}${extension}`;
+  const stem = basename(fileName, extension).replace(/[^\p{L}\p{N}._-]+/gu, "-");
+  const name = `${stem}-${Date.now()}${extension}`;
   await writeFile(join(directory, name), data, { flag: "wx" });
-  return `assets/${encodeURIComponent(name)}`;
+  // Paths in Markdown use / and each segment is encoded for spaces and other special characters
+  return [...folder.split(/[\\/]+/), name].map(encodeURIComponent).join("/");
 }
 
 async function readDocument(path: string): Promise<OpenedDocument> {
   try {
-    const content = await readFile(path, "utf8");
+    // Strip the UTF-8 BOM (not written back on save) and normalize line endings to \n; the original line ending is restored on save
+    const raw = (await readFile(path, "utf8")).replace(/^﻿/, "");
     addRecentFile(path);
-    // Strip the UTF-8 BOM; it is not written back on save either
-    return { ...locate(path), content: content.replace(/^﻿/, "") };
+    return {
+      ...locate(path),
+      content: raw.replaceAll("\r\n", "\n"),
+      lineEnding: raw.includes("\r\n") ? "crlf" : "lf",
+    };
   } catch (error) {
     updateSettings({ recentFiles: getSettings().recentFiles.filter((p) => p !== path) });
     throw error;
   }
+}
+
+function writeDocument(path: string, content: string, lineEnding: LineEnding): Promise<void> {
+  return writeFile(
+    path,
+    lineEnding === "crlf" ? content.replaceAll("\n", "\r\n") : content,
+    "utf8",
+  );
 }
 
 export function registerIpcHandlers(): void {
@@ -82,16 +98,16 @@ export function registerIpcHandlers(): void {
     return readDocument(path);
   });
   handle("document:read", (_event, path) => readDocument(path));
-  handle("document:write", async (_event, path, content) => {
-    await writeFile(path, content, "utf8");
-  });
-  handle("document:save-as", async (event, suggestedName, content) => {
+  handle("document:write", (_event, path, content, lineEnding) =>
+    writeDocument(path, content, lineEnding),
+  );
+  handle("document:save-as", async (event, suggestedName, content, lineEnding) => {
     const { canceled, filePath } = await dialog.showSaveDialog(senderWindow(event), {
       defaultPath: suggestedName,
       filters: [{ name: "Markdown", extensions: ["md"] }],
     });
     if (canceled || !filePath) return null;
-    await writeFile(filePath, content, "utf8");
+    await writeDocument(filePath, content, lineEnding);
     addRecentFile(filePath);
     return locate(filePath);
   });

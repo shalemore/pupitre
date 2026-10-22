@@ -80,6 +80,10 @@
   .milkdown .ProseMirror :is(p, li) {
     line-height: var(--pref-line-height);
   }
+
+  .milkdown :is(.ProseMirror code, .milkdown-code-block .cm-content) {
+    font-family: var(--pref-code-font, revert-layer);
+  }
 }
 
 @media print {

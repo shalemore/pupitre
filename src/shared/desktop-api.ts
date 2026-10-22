@@ -6,8 +6,13 @@ export interface DocumentLocation {
   baseUrl: string;
 }
 
+export type LineEnding = "lf" | "crlf";
+
 export interface OpenedDocument extends DocumentLocation {
+  /** Content with every line ending normalized to
+ LF; the file's original line ending is kept in lineEnding and restored on save. */
   content: string;
+  lineEnding: LineEnding;
 }
 
 /** The choice made when closing or replacing a document with unsaved changes. */
@@ -57,8 +62,12 @@ export interface InvokeChannels {
   "settings:reveal": () => void;
   "document:open": () => OpenedDocument | null;
   "document:read": (path: string) => OpenedDocument;
-  "document:write": (path: string, content: string) => void;
-  "document:save-as": (suggestedName: string, content: string) => DocumentLocation | null;
+  "document:write": (path: string, content: string, lineEnding: LineEnding) => void;
+  "document:save-as": (
+    suggestedName: string,
+    content: string,
+    lineEnding: LineEnding,
+  ) => DocumentLocation | null;
   /** Saves an image into the assets folder next to the document and returns a relative path ready for Markdown. */
   "document:save-image": (documentPath: string, fileName: string, data: Uint8Array) => string;
   "document:export-pdf": (suggestedName: string) => string | null;

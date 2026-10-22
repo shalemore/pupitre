@@ -1,106 +1,113 @@
-/**
- * System Local Fonts Management
- * Queries local system fonts via Window.queryLocalFonts API with rich platform fallbacks
- * and runtime refresh capability without needing app restart.
- */
-
-let cachedFontFamilies: string[] | null = null;
-
-const POPULAR_SYSTEM_FONTS: readonly string[] = [
-  // Presets
-  "System Sans",
-  "System Mono",
-  "System Serif",
-
-  // Modern Windows & Cross-platform Coding / Monospace Fonts
-  "Cascadia Code",
-  "Cascadia Mono",
-  "Consolas",
-  "Courier New",
-  "Fira Code",
-  "Hack",
-  "Inconsolata",
-  "JetBrains Mono",
-  "Liberation Mono",
-  "Menlo",
-  "Monaco",
-  "SF Mono",
-  "Source Code Pro",
-
-  // Modern UI & Sans-Serif Fonts
-  "Arial",
-  "Calibri",
-  "Helvetica Neue",
-  "Inter",
-  "Roboto",
-  "Segoe UI",
-  "Segoe UI Variable Text",
-  "Ubuntu",
-
-  // Serif Fonts
-  "Cambria",
-  "Georgia",
-  "Palatino Linotype",
-  "Times New Roman",
-];
-
+/** A single face returned by the Local Font Access API (one entry per weight and style of a family). */
 interface LocalFontData {
+  readonly family: string;
+  readonly fullName: string;
+  readonly style: string;
+}
+
+declare global {
+  interface Window {
+    queryLocalFonts?: () => Promise<LocalFontData[]>;
+  }
+}
+
+export interface FontFamily {
   family: string;
-  fullName?: string;
-  postscriptName?: string;
-  style?: string;
+  /** Name in the system language, for example "HarmonyOS Sans SC" is localized on a Chinese system; undefined when it equals the family. */
+  localizedName: string | undefined;
 }
 
-export async function getSystemFontFamilies(forceRefresh = false): Promise<string[]> {
-  if (cachedFontFamilies && !forceRefresh) {
-    return cachedFontFamilies;
+/** Chromium refuses to query fonts while the page is hidden, so wait until the window is shown. */
+function whenVisible(): Promise<void> {
+  if (document.visibilityState === "visible") return Promise.resolve();
+  return new Promise((resolve) => {
+    const handleChange = () => {
+      if (document.visibilityState !== "visible") return;
+      document.removeEventListener("visibilitychange", handleChange);
+      resolve();
+    };
+    document.addEventListener("visibilitychange", handleChange);
+  });
+}
+
+/**
+ * Reads the fonts actually installed on the system (including per-user installs) with Chromium's queryLocalFonts,
+ * merged by family. The fullName of the regular face is the display name in the system language, used for localized names and search.
+ */
+async function queryFontFamilies(): Promise<FontFamily[]> {
+  await whenVisible();
+  const faces = (await window.queryLocalFonts?.()) ?? [];
+  const families = new Map<string, FontFamily>();
+  for (const face of faces) {
+    const existing = families.get(face.family);
+    const isRegular = face.style === "Regular" || face.style === "Normal";
+    if (existing && !isRegular) continue;
+    // A localized full name is usually "name + weight"; the regular face has no weight suffix and is closest to the family name
+    const localized = face.fullName.replace(/\s+(Regular|Normal)$/i, "");
+    families.set(face.family, {
+      family: face.family,
+      localizedName: isRegular && !localized.startsWith(face.family) ? localized : undefined,
+    });
   }
-
-  const set = new Set<string>();
-
-  // 1. Try modern Chromium/WebKit queryLocalFonts API
-  if (typeof window !== "undefined" && "queryLocalFonts" in window) {
-    try {
-      const queryLocalFonts = (
-        window as unknown as { queryLocalFonts: () => Promise<LocalFontData[]> }
-      ).queryLocalFonts;
-      const fonts = await queryLocalFonts();
-      for (const f of fonts) {
-        if (f.family && typeof f.family === "string") {
-          const trimmed = f.family.trim();
-          if (trimmed) {
-            set.add(trimmed);
-          }
-        }
-      }
-    } catch (err) {
-      console.warn("Could not query local fonts via Web API:", err);
-    }
-  }
-
-  // 2. Merge with popular curated platform fonts
-  for (const font of POPULAR_SYSTEM_FONTS) {
-    set.add(font);
-  }
-
-  // Sort alphabetically case-insensitively
-  const list = Array.from(set).toSorted((a, b) =>
-    a.localeCompare(b, undefined, { sensitivity: "base" }),
+  return [...families.values()].toSorted((a, b) =>
+    a.family.localeCompare(b.family, undefined, { sensitivity: "base" }),
   );
-  cachedFontFamilies = list;
-  return list;
 }
 
-/** The body font the user chose; undefined leaves the font to the theme. */
-export function editorFontFamily(primary: string, fallback: string): string | undefined {
-  const families: string[] = [];
-  if (primary === "mono") families.push("var(--font-mono)");
-  else if (primary === "serif") families.push("ui-serif", "Georgia", "serif");
-  else if (primary && primary !== "sans") families.push(JSON.stringify(primary));
-  if (fallback && fallback !== primary) families.push(JSON.stringify(fallback));
-  if (families.length === 0) return undefined;
-  // With only a fallback font chosen, use the interface font first and let the fallback fill in missing glyphs
-  if (primary === "sans" || !primary) families.unshift("var(--font-sans)");
-  families.push("sans-serif");
+let cached: Promise<FontFamily[]> | undefined;
+
+export function listFontFamilies(refresh = false): Promise<FontFamily[]> {
+  if (refresh || !cached) cached = queryFontFamilies().catch(() => []);
+  return cached;
+}
+
+/** Font names are quoted before going into font-family; otherwise names with spaces or a leading digit are parsed wrongly. */
+function quote(family: string): string {
+  return JSON.stringify(family);
+}
+
+const GENERIC_FAMILIES = new Set([
+  "serif",
+  "sans-serif",
+  "monospace",
+  "cursive",
+  "fantasy",
+  "system-ui",
+  "ui-serif",
+  "ui-sans-serif",
+  "ui-monospace",
+  "ui-rounded",
+  "math",
+  "emoji",
+  "fangsong",
+]);
+
+/**
+ * The body font the user chose; undefined when nothing is chosen, which leaves everything to the theme.
+ * The fallback font must come before generic families (sans-serif and so on): a generic family maps to a system font,
+ * which on a Chinese system already has Chinese glyphs, so a fallback placed after it would never be reached.
+ * themeStack is the computed value of the theme's --font-document.
+ */
+export function documentFontFamily(
+  bodyFont: string,
+  fallbackFont: string,
+  themeStack: string,
+): string | undefined {
+  if (!bodyFont && !fallbackFont) return undefined;
+  const themeFamilies = themeStack
+    .split(",")
+    .map((family) => family.trim())
+    .filter((family) => family !== "");
+  const specific = themeFamilies.filter((family) => !GENERIC_FAMILIES.has(family));
+  const generic = themeFamilies.filter((family) => GENERIC_FAMILIES.has(family));
+  const families = [
+    ...(bodyFont ? [quote(bodyFont)] : specific),
+    ...(fallbackFont ? [quote(fallbackFont)] : []),
+    ...(generic.length > 0 ? generic : ["sans-serif"]),
+  ];
   return families.join(", ");
+}
+
+export function codeFontFamily(codeFont: string): string | undefined {
+  return codeFont ? `${quote(codeFont)}, var(--font-mono)` : undefined;
 }

@@ -11,6 +11,9 @@
  */
 
 :root {
+  --font-document:
+    "Source Serif 4", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "STSong", Georgia,
+    "Times New Roman", serif;
   --ui-surface-0: oklch(0.955 0.012 85);
   --ui-surface-1: oklch(0.982 0.008 85);
   --ui-surface-2: oklch(0.99 0.005 85);
@@ -60,12 +63,9 @@
   }
 }
 
-/* Body font; a font chosen in the settings overrides it */
 .milkdown .ProseMirror {
   padding-block: 4em 40vh;
-  font-family:
-    "Source Serif 4", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "STSong", Georgia,
-    "Times New Roman", serif;
+  font-family: var(--font-document);
   color: var(--ui-text-primary);
   caret-color: var(--ui-brand);
   hyphens: auto;

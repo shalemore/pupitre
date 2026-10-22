@@ -2,7 +2,7 @@ import { app, BrowserWindow, nativeTheme, session } from "electron";
 import { registerIpcHandlers } from "./ipc";
 import { rebuildApplicationMenu } from "./menu";
 import { getSettings, onSettingsChange } from "./settings-store";
-import { setupUpdater } from "./updater";
+import { checkForUpdatesOnStartup, setupUpdater } from "./updater";
 import { createMainWindow, getMainWindow } from "./windows";
 
 if (!app.requestSingleInstanceLock()) {
@@ -31,6 +31,7 @@ if (!app.requestSingleInstanceLock()) {
     rebuildApplicationMenu();
     onSettingsChange(rebuildApplicationMenu);
     createMainWindow();
+    checkForUpdatesOnStartup();
 
     app.on("activate", () => {
       if (BrowserWindow.getAllWindows().length === 0) createMainWindow();

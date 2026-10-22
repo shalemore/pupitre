@@ -9,8 +9,6 @@ export interface ComboboxProps {
   options: readonly SelectOption[];
   onChange: (value: string) => void;
   placeholder?: string;
-  /** Text shown when there are no matches. */
-  emptyText: string;
   class?: string;
   "aria-label"?: string;
 }
@@ -89,9 +87,6 @@ export function Combobox(props: ComboboxProps) {
       <KobalteCombobox.Portal>
         <KobalteCombobox.Content class="z-50 w-(--kb-popper-anchor-width) min-w-64 rounded-xl border border-border/80 bg-surface-2 p-1 shadow-float animate-in fade-in-0 zoom-in-95 duration-(--duration-ui)">
           <KobalteCombobox.Listbox class="max-h-80 overflow-y-auto outline-none" />
-          <Show when={props.options.length === 0}>
-            <div class="p-3 text-center text-[11px] text-muted-foreground">{props.emptyText}</div>
-          </Show>
         </KobalteCombobox.Content>
       </KobalteCombobox.Portal>
     </KobalteCombobox>

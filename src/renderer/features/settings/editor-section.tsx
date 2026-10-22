@@ -1,0 +1,90 @@
+import type { Settings } from "@shared/settings";
+import type { Component } from "solid-js";
+import { Select, SettingRow, Slider, Switch } from "@/components/ui";
+import { t } from "@/i18n";
+import { settings, updateSettings } from "@/lib/settings";
+import { FontSelect, RefreshFontsButton } from "./font-select";
+import { SettingsSection } from "./settings-section";
+
+export const EditorSection: Component = () => (
+  <SettingsSection title={t().settings.editor}>
+    <SettingRow
+      title={
+        <span class="flex items-center gap-1.5">
+          {t().settings.bodyFont}
+          <RefreshFontsButton />
+        </span>
+      }
+      description={t().settings.bodyFontDesc}
+    >
+      <FontSelect
+        value={settings().bodyFont}
+        onChange={(bodyFont) => void updateSettings({ bodyFont })}
+        emptyLabel={t().settings.themeDefault}
+        aria-label={t().settings.bodyFont}
+      />
+    </SettingRow>
+
+    <SettingRow title={t().settings.fallbackFont} description={t().settings.fallbackFontDesc}>
+      <FontSelect
+        value={settings().fallbackFont}
+        onChange={(fallbackFont) => void updateSettings({ fallbackFont })}
+        emptyLabel={t().settings.noFallbackFont}
+        aria-label={t().settings.fallbackFont}
+      />
+    </SettingRow>
+
+    <SettingRow title={t().settings.codeFont} description={t().settings.codeFontDesc}>
+      <FontSelect
+        value={settings().codeFont}
+        onChange={(codeFont) => void updateSettings({ codeFont })}
+        emptyLabel={t().settings.themeDefault}
+        aria-label={t().settings.codeFont}
+      />
+    </SettingRow>
+
+    <SettingRow title={t().settings.fontSize} description={`${settings().fontSize}px`}>
+      <Slider
+        value={settings().fontSize}
+        min={12}
+        max={24}
+        step={1}
+        onChange={(fontSize) => void updateSettings({ fontSize })}
+        aria-label={t().settings.fontSize}
+      />
+    </SettingRow>
+
+    <SettingRow title={t().settings.lineHeight} description={settings().lineHeight.toFixed(2)}>
+      <Slider
+        value={settings().lineHeight}
+        min={1.2}
+        max={2.4}
+        step={0.05}
+        onChange={(lineHeight) => void updateSettings({ lineHeight })}
+        aria-label={t().settings.lineHeight}
+      />
+    </SettingRow>
+
+    <SettingRow title={t().settings.contentWidth} description={t().settings.contentWidthDesc}>
+      <Select<Settings["contentWidth"]>
+        value={settings().contentWidth}
+        onChange={(contentWidth) => void updateSettings({ contentWidth })}
+        options={[
+          { value: "compact", label: t().settings.widthCompact },
+          { value: "normal", label: t().settings.widthNormal },
+          { value: "wide", label: t().settings.widthWide },
+          { value: "full", label: t().settings.widthFull },
+        ]}
+        aria-label={t().settings.contentWidth}
+      />
+    </SettingRow>
+
+    <SettingRow title={t().settings.spellcheck} description={t().settings.spellcheckDesc}>
+      <Switch
+        checked={settings().spellcheck}
+        onChange={(spellcheck) => void updateSettings({ spellcheck })}
+        aria-label={t().settings.spellcheck}
+      />
+    </SettingRow>
+  </SettingsSection>
+);

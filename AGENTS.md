@@ -110,7 +110,7 @@ only make code generation easier.
 - `features/editor/markdown-editor.tsx` owns the Crepe instance and exposes a small imperative
   handle (`getMarkdown`, search, scrolling). Documents are serialized only when saved, and the
   dirty state compares the serialized Markdown with the last saved version.
-- Keep Markdown output stable: serialization options live in one place (`MARKDOWN_STYLE`) and
+- Keep Markdown output stable: serialization options come from settings in one place (`markdownStyle`) and
   schema overrides must round-trip standard Markdown without losing information.
 - Styles use cascade layers declared at the top of `app.css`:
   `crepe` (library defaults) < `document-theme` (the active theme) < `preferences` (user font,

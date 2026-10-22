@@ -52,7 +52,7 @@ function createWindow(view: View, options: BrowserWindowConstructorOptions): Bro
       preload: join(import.meta.dirname, "../preload/index.cjs"),
       sandbox: true,
       contextIsolation: true,
-      spellcheck: false,
+      spellcheck: true,
     },
   });
 

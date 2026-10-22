@@ -9,7 +9,10 @@
  *   - Document typography: the styles of the elements inside .milkdown .ProseMirror;
  *   - Code highlighting: the --syntax-* colors.
  *
- * What a theme does not need to and should not decide: font, body font size, line height and content width are chosen by the user in the settings
+ * Fonts: declare the body font with --font-document (--font-sans and --font-mono are the interface and code fonts).
+ * A font chosen in the settings overrides it; when only a fallback font is chosen, it follows --font-document.
+ *
+ * What a theme does not need to and should not decide: body font size, line height and content width are chosen by the user in the settings
  * and applied in a higher style layer. So use em for sizes in a theme (relative to the body font size)
  * rather than px, so headings and spacing grow along with a larger font size.
  *
@@ -17,6 +20,8 @@
  */
 
 :root {
+  --font-document: var(--font-sans);
+
   /* Surfaces: 0 window chrome (title bar, sidebar), 1 document canvas, 2 cards, 3 popovers */
   --ui-surface-0: oklch(0.972 0 0);
   --ui-surface-1: oklch(0.99 0 0);
@@ -73,6 +78,7 @@
 
 .milkdown .ProseMirror {
   padding-block: 3em 40vh;
+  font-family: var(--font-document);
   color: var(--ui-text-primary);
   caret-color: var(--ui-brand);
 }

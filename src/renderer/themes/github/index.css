@@ -4,6 +4,8 @@
  */
 
 :root {
+  --font-document:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
   --ui-surface-0: #f6f8fa;
   --ui-surface-1: #ffffff;
   --ui-surface-2: #ffffff;
@@ -61,6 +63,7 @@
 
 .milkdown .ProseMirror {
   padding-block: 2.5em 40vh;
+  font-family: var(--font-document);
   color: var(--ui-text-primary);
   caret-color: var(--ui-text-primary);
 }
