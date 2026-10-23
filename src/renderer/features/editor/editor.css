@@ -7,12 +7,28 @@
  *
  * The document is CodeMirror's content element `.md-document`. Every source line is a `.cm-line`
  * that carries the `md-*` classes of the block it belongs to; inline formats are `md-*` spans.
- * Lines are spaced with padding, never margins: CodeMirror measures line boxes to scroll and
- * margins would throw it off. Indentation comes from the --md-*-indent variables, so quotes,
- * lists and code blocks nest inside each other.
+ * Lines are spaced vertically with padding, never margins: CodeMirror measures line boxes to
+ * scroll and vertical margins would throw it off. Indentation comes from the --md-*-indent
+ * variables, so quotes, lists and code blocks nest inside each other.
  */
 
 @import "katex/dist/katex.min.css" layer(editor);
+
+/*
+ * Registered as lengths, the indents are computed where they are set (in the body font size) and
+ * inherited as such, so lines in a smaller font, such as code, still line up with the text.
+ */
+@property --md-quote-indent {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
+@property --md-list-indent {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
 
 @layer editor {
   .md-document {
@@ -25,6 +41,14 @@
     padding-inline-start: calc(
       var(--md-quote-depth, 0) * var(--md-quote-indent) + var(--md-list-depth, 0) *
         var(--md-list-indent) + var(--md-block-indent)
+    );
+  }
+
+  /* A code block in a list starts at the item's text, card and all */
+  .md-document > .md-code-block {
+    margin-inline-start: calc(var(--md-list-depth, 0) * var(--md-list-indent));
+    padding-inline-start: calc(
+      var(--md-quote-depth, 0) * var(--md-quote-indent) + var(--md-block-indent)
     );
   }
 
