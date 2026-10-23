@@ -1,3 +1,4 @@
+import { isUtf8 } from "node:buffer";
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { basename, dirname, extname, join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -67,16 +68,10 @@ async function saveImage(
   return [...folder.split(/[\\/]+/), name].map(encodeURIComponent).join("/");
 }
 
-const utf8 = new TextDecoder("utf-8", { fatal: true });
-
 /** Decodes a file as UTF-8 text; binary content (NUL bytes or invalid UTF-8) is rejected instead of being shown as garbage. */
 function decodeText(buffer: Buffer): string {
-  if (buffer.includes(0)) throw new Error("Not a text file");
-  try {
-    return utf8.decode(buffer);
-  } catch {
-    throw new Error("Not a UTF-8 text file");
-  }
+  if (buffer.includes(0) || !isUtf8(buffer)) throw new Error("Not a UTF-8 text file");
+  return buffer.toString("utf8");
 }
 
 async function listFolder(path: string): Promise<FolderEntry[]> {
