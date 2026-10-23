@@ -45,9 +45,10 @@ import { formatKeymap, type MarkdownStyle, runFormatAction } from "./format-comm
 import { footnotes } from "./footnotes";
 import { frontMatter } from "./front-matter";
 import { createPendingImages, documentBaseUrl, imageInput } from "./images";
-import { livePreview } from "./live-preview";
+import { livePreview, setPrinting } from "./live-preview";
 import { pasteHtml } from "./paste-html";
-import { math } from "./math";
+import { loadMathFonts, math } from "./math";
+import { prerenderDiagrams } from "./mermaid";
 import { renderedBlocks } from "./rendered-blocks";
 import { textDirection } from "./text-direction";
 import { focusMode, typewriterMode } from "./writing-modes";
@@ -77,6 +78,11 @@ export interface MarkdownEditorHandle {
   replaceNext: () => MatchStats;
   replaceAll: () => MatchStats;
   format: (action: FormatAction) => void;
+  /**
+   * Shows the whole document rendered and waits for fonts and diagrams, so a printout is complete;
+   * the returned function goes back to editing.
+   */
+  prepareForPrint: () => Promise<() => void>;
   /** Writes images pasted before the document had a file next to it, see images.ts. */
   persistImages: (documentPath: string) => Promise<void>;
 }
@@ -295,6 +301,17 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       format: (action) => {
         runFormatAction(view, action, markdownStyle());
         view.focus();
+      },
+      prepareForPrint: async () => {
+        const hadFocus = view.hasFocus;
+        // The caret would be printed too
+        view.contentDOM.blur();
+        view.dispatch({ effects: setPrinting.of(true) });
+        await Promise.all([loadMathFonts(), prerenderDiagrams(view.state)]);
+        return () => {
+          view.dispatch({ effects: setPrinting.of(false) });
+          if (hadFocus) view.focus();
+        };
       },
       persistImages: (documentPath) => pendingImages.persist(view, documentPath),
     });

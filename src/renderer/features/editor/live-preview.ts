@@ -1,5 +1,12 @@
 import { syntaxTree } from "@codemirror/language";
-import type { EditorSelection, EditorState, Range } from "@codemirror/state";
+import {
+  type EditorState,
+  type Extension,
+  type Range,
+  type SelectionRange,
+  StateEffect,
+  StateField,
+} from "@codemirror/state";
 import {
   Decoration,
   type DecorationSet,
@@ -135,8 +142,30 @@ interface LineStyle {
   listIndent: number;
 }
 
-export function touches(selection: EditorSelection, from: number, to: number): boolean {
-  return selection.ranges.some((range) => range.from <= to && range.to >= from);
+/** Turned on while the document is printed, when every construct shows rendered. */
+export const setPrinting = StateEffect.define<boolean>();
+
+const printing = StateField.define<boolean>({
+  create: () => false,
+  update: (value, tr) =>
+    tr.effects.reduce(
+      (current, effect) => (effect.is(setPrinting) ? effect.value : current),
+      value,
+    ),
+});
+
+/** Whether printing was turned on or off by this update. */
+export function printingChanged(state: EditorState, previous: EditorState): boolean {
+  return state.field(printing, false) !== previous.field(printing, false);
+}
+
+/** The selection ranges that reveal syntax; none while printing. */
+export function revealingRanges(state: EditorState): readonly SelectionRange[] {
+  return state.field(printing, false) ? [] : state.selection.ranges;
+}
+
+export function touches(ranges: readonly SelectionRange[], from: number, to: number): boolean {
+  return ranges.some((range) => range.from <= to && range.to >= from);
 }
 
 function ancestorCount(node: SyntaxNode, name: string): number {
@@ -162,8 +191,8 @@ class DecorationBuilder {
     this.state = view.state;
   }
 
-  get selection(): EditorSelection {
-    return this.state.selection;
+  get ranges(): readonly SelectionRange[] {
+    return revealingRanges(this.state);
   }
 
   lineAt(pos: number) {
@@ -248,7 +277,7 @@ function visitCodeBlock(builder: DecorationBuilder, node: SyntaxNode): void {
   });
   if (node.name === "CodeBlock") return;
 
-  const active = touches(builder.selection, node.from, node.to);
+  const active = touches(builder.ranges, node.from, node.to);
   const info = node.getChild("CodeInfo");
   for (const fence of node.getChildren(node.name === "BlockMath" ? "MathMark" : "CodeMark")) {
     builder.marker(fence, active);
@@ -278,7 +307,7 @@ function visitListItem(builder: DecorationBuilder, node: SyntaxNode): void {
     line.listIndent = isFirst ? mark.from - markLine.from : contentColumn;
   });
 
-  const active = touches(builder.selection, markLine.from, markLine.to);
+  const active = touches(builder.ranges, markLine.from, markLine.to);
   const task = mark.nextSibling?.name === "Task" ? mark.nextSibling.getChild("TaskMarker") : null;
   const marker = mark.to + builder.spaceAfter(mark.to);
   if (task && !active) {
@@ -303,7 +332,7 @@ function visitListItem(builder: DecorationBuilder, node: SyntaxNode): void {
 function visitLink(builder: DecorationBuilder, node: SyntaxNode): void {
   const [open, close] = node.getChildren("LinkMark");
   if (!open || !close) return;
-  if (touches(builder.selection, node.from, node.to)) {
+  if (touches(builder.ranges, node.from, node.to)) {
     for (let child = node.firstChild; child; child = child.nextSibling) {
       if (/^(?:LinkMark|URL|LinkTitle|LinkLabel)$/.test(child.name)) {
         builder.mark(child.from, child.to, "md-mark");
@@ -330,7 +359,7 @@ function visitAlert(builder: DecorationBuilder, quote: SyntaxNode): void {
     style.classes.add("md-alert");
     style.attributes["data-alert"] = type;
   });
-  if (touches(builder.selection, line.from, line.to)) {
+  if (touches(builder.ranges, line.from, line.to)) {
     builder.mark(paragraph.from, line.to, "md-mark");
   } else {
     const widget = new AlertTitleWidget(titles[type]);
@@ -345,7 +374,7 @@ function visitImage(builder: DecorationBuilder, node: SyntaxNode): boolean {
   const alt = open && close ? builder.text(open.to, close.from) : "";
   const src = url ? resolveUrl(builder.state, imageSource(builder.text(url.from, url.to))) : "";
   const widget = new ImageWidget(src, alt);
-  if (touches(builder.selection, node.from, node.to)) {
+  if (touches(builder.ranges, node.from, node.to)) {
     builder.decorations.push(Decoration.widget({ widget, side: 1 }).range(node.to));
     return true;
   }
@@ -361,7 +390,7 @@ function visitFootnote(builder: DecorationBuilder, node: SyntaxNode): void {
   const reference = node.name === "FootnoteReference";
   const labelFrom = node.from + 2;
   const labelTo = node.to - (reference ? 1 : 2);
-  if (touches(builder.selection, node.from, node.to)) {
+  if (touches(builder.ranges, node.from, node.to)) {
     builder.mark(node.from, labelFrom, "md-mark");
     builder.mark(labelTo, node.to, "md-mark");
     return;
@@ -375,7 +404,7 @@ function visitFootnote(builder: DecorationBuilder, node: SyntaxNode): void {
 function visitInlineMath(builder: DecorationBuilder, node: SyntaxNode): void {
   const [open, close] = node.getChildren("MathMark");
   if (!open || !close) return;
-  if (touches(builder.selection, node.from, node.to)) {
+  if (touches(builder.ranges, node.from, node.to)) {
     builder.mark(open.from, open.to, "md-mark");
     builder.mark(open.to, close.from, "md-math-source");
     builder.mark(close.from, close.to, "md-mark");
@@ -397,7 +426,7 @@ function visitInlineHtml(builder: DecorationBuilder, node: SyntaxNode): void {
     const tag = htmlTag(builder.text(child.from, child.to));
     if (!tag) continue;
     if (tag.name === "br") {
-      if (!touches(builder.selection, child.from, child.to)) {
+      if (!touches(builder.ranges, child.from, child.to)) {
         builder.decorations.push(
           Decoration.replace({ widget: lineBreak }).range(child.from, child.to),
         );
@@ -413,7 +442,7 @@ function visitInlineHtml(builder: DecorationBuilder, node: SyntaxNode): void {
     const opening = open[index]?.tag;
     if (!opening) continue;
     open.splice(index);
-    if (touches(builder.selection, opening.from, child.to)) {
+    if (touches(builder.ranges, opening.from, child.to)) {
       builder.mark(opening.from, opening.to, "md-mark");
       builder.mark(child.from, child.to, "md-mark");
     } else {
@@ -482,7 +511,7 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
       visitListItem(builder, node);
       return true;
     case "HorizontalRule": {
-      const active = touches(builder.selection, node.from, node.to);
+      const active = touches(builder.ranges, node.from, node.to);
       builder.marker(node, active);
       return false;
     }
@@ -501,7 +530,7 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
     case "Escape":
       builder.marker(
         { from: node.from, to: node.from + 1 },
-        touches(builder.selection, node.from, node.to),
+        touches(builder.ranges, node.from, node.to),
       );
       return false;
     default:
@@ -512,7 +541,7 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
   if (!parent) return true;
   switch (name) {
     case "HeaderMark": {
-      const active = touches(builder.selection, parent.from, parent.to);
+      const active = touches(builder.ranges, parent.from, parent.to);
       // An ATX opening marker takes its space along; a setext underline is a line of its own
       const opening = node.from === parent.from;
       builder.marker(node, active, opening ? builder.spaceAfter(node.to) : 0);
@@ -525,7 +554,7 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
       const line = builder.lineAt(node.from);
       builder.marker(
         node,
-        touches(builder.selection, line.from, line.to),
+        touches(builder.ranges, line.from, line.to),
         builder.spaceAfter(node.to),
       );
       return false;
@@ -533,12 +562,12 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
     case "EmphasisMark":
     case "CodeMark":
     case "StrikethroughMark":
-      builder.marker(node, touches(builder.selection, parent.from, parent.to));
+      builder.marker(node, touches(builder.ranges, parent.from, parent.to));
       return false;
     case "LinkMark":
       // Autolinks only; Link and Image handle their own markers
       if (parent.name === "Autolink") {
-        builder.marker(node, touches(builder.selection, parent.from, parent.to));
+        builder.marker(node, touches(builder.ranges, parent.from, parent.to));
       } else if (parent.name === "Image") {
         builder.mark(node.from, node.to, "md-mark");
       }
@@ -580,7 +609,7 @@ export function openLink(href: string): boolean {
   return true;
 }
 
-export const livePreview = ViewPlugin.fromClass(
+const livePreviewPlugin = ViewPlugin.fromClass(
   class {
     decorations: DecorationSet;
 
@@ -593,6 +622,7 @@ export const livePreview = ViewPlugin.fromClass(
         update.docChanged ||
         update.selectionSet ||
         update.viewportChanged ||
+        printingChanged(update.state, update.startState) ||
         syntaxTree(update.state) !== syntaxTree(update.startState)
       ) {
         this.decorations = buildDecorations(update.view);
@@ -624,3 +654,5 @@ export const livePreview = ViewPlugin.fromClass(
     },
   },
 );
+
+export const livePreview: Extension = [printing, livePreviewPlugin];

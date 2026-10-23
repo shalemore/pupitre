@@ -5,7 +5,7 @@ import type { SyntaxNode } from "@lezer/common";
 import { detailsSection, SummaryWidget, toggledDetails, toggleDetails } from "./details";
 import { HtmlBlockWidget, isRenderableHtml } from "./html";
 import { documentBaseUrl } from "./images";
-import { touches } from "./live-preview";
+import { printingChanged, revealingRanges, touches } from "./live-preview";
 import { MATH_LANGUAGE, MathWidget } from "./math";
 import { MermaidWidget } from "./mermaid";
 import { TableWidget, tableModel } from "./table";
@@ -46,7 +46,8 @@ function blockWidget(state: EditorState, node: SyntaxNode): WidgetType | undefin
 
 function buildDecorations(state: EditorState): DecorationSet {
   const decorations: Range<Decoration>[] = [];
-  const { doc, selection } = state;
+  const { doc } = state;
+  const ranges = revealingRanges(state);
   // Block decorations cover whole lines, including the indentation of a nested block
   const hideLines = (from: number, to: number, widget?: WidgetType) =>
     decorations.push(
@@ -65,24 +66,24 @@ function buildDecorations(state: EditorState): DecorationSet {
       const details = node.name === "HTMLBlock" ? detailsSection(state, node.node) : undefined;
       if (details) {
         const { summary, open, closing } = details;
-        if (!touches(selection, node.from, node.to)) {
+        if (!touches(ranges, node.from, node.to)) {
           hideLines(node.from, node.to, new SummaryWidget(summary, open, node.from));
         }
         const contentFrom = doc.lineAt(node.to).to + 1;
         const contentTo = closing ? doc.lineAt(closing.from).from - 1 : doc.length;
         // A closed section opens while the selection is inside it, such as a search match
-        if (!open && contentTo > contentFrom && !touches(selection, contentFrom, contentTo)) {
+        if (!open && contentTo > contentFrom && !touches(ranges, contentFrom, contentTo)) {
           hideLines(contentFrom, contentTo);
           hiddenUntil = contentTo;
         }
-        if (closing && !touches(selection, closing.from, closing.to)) {
+        if (closing && !touches(ranges, closing.from, closing.to)) {
           hideLines(closing.from, closing.to);
         }
         return false;
       }
       const widget = blockWidget(state, node.node);
       if (!widget) return false;
-      if (!touches(selection, node.from, node.to)) hideLines(node.from, node.to, widget);
+      if (!touches(ranges, node.from, node.to)) hideLines(node.from, node.to, widget);
       // A table's source reads as a table already; other blocks show their rendering under it
       else if (node.name !== "Table") {
         const end = doc.lineAt(node.to).to;
@@ -100,6 +101,7 @@ const renderedBlockDecorations = StateField.define<DecorationSet>({
     tr.docChanged ||
     tr.selection ||
     tr.effects.some((effect) => effect.is(toggleDetails)) ||
+    printingChanged(tr.state, tr.startState) ||
     syntaxTree(tr.state) !== syntaxTree(tr.startState)
       ? buildDecorations(tr.state)
       : decorations,

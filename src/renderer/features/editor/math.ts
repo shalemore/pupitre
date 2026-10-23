@@ -133,3 +133,9 @@ export class MathWidget extends WidgetType {
     return false;
   }
 }
+
+/** Loads KaTeX's fonts, which the browser otherwise fetches only once a formula is on screen. */
+export async function loadMathFonts(): Promise<void> {
+  const faces = [...document.fonts].filter((face) => face.family.startsWith("KaTeX"));
+  await Promise.allSettled(faces.map((face) => face.load()));
+}

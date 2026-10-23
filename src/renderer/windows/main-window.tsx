@@ -123,7 +123,12 @@ export const MainWindow: Component = () => {
   const exportPdf = async () => {
     if (!session.activeDocument()) return;
     const pdfName = session.fileName().replace(/\.(md|markdown|mdown|txt)$/i, "") + ".pdf";
-    await desktop.invoke("document:export-pdf", pdfName);
+    const resume = await editor?.prepareForPrint();
+    try {
+      await desktop.invoke("document:export-pdf", pdfName);
+    } finally {
+      resume?.();
+    }
   };
 
   const runCommand = (command: AppCommand) => {
