@@ -44,6 +44,8 @@ import { formatKeymap, type MarkdownStyle, runFormatAction } from "./format-comm
 import { frontMatter } from "./front-matter";
 import { createPendingImages, documentBaseUrl, imageInput } from "./images";
 import { livePreview } from "./live-preview";
+import { math } from "./math";
+import { renderedBlocks } from "./rendered-blocks";
 import { textDirection } from "./text-direction";
 import { focusMode, typewriterMode } from "./writing-modes";
 
@@ -197,12 +199,13 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           ]),
           markdown({
             base: commonmarkLanguage,
-            extensions: [GFM, frontMatter],
+            extensions: [GFM, frontMatter, math],
             codeLanguages: languages,
             completeHTMLTags: false,
           }),
           codeHighlight,
           livePreview,
+          renderedBlocks,
           imageInput(uploadImage),
           baseUrlCompartment.of(documentBaseUrl.of(props.baseUrl)),
           textDirection,

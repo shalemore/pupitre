@@ -10,6 +10,7 @@ import {
 } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
 import { ImageWidget, imageSource, resolveUrl } from "./images";
+import { MathWidget } from "./math";
 
 /**
  * Typora-style live preview over plain Markdown source.
@@ -96,7 +97,7 @@ interface LineStyle {
   listIndent: number;
 }
 
-function touches(selection: EditorSelection, from: number, to: number): boolean {
+export function touches(selection: EditorSelection, from: number, to: number): boolean {
   return selection.ranges.some((range) => range.from <= to && range.to >= from);
 }
 
@@ -205,11 +206,11 @@ function visitCodeBlock(builder: DecorationBuilder, node: SyntaxNode): void {
     if (number === first) line.classes.add("md-code-block-start");
     if (number === last) line.classes.add("md-code-block-end");
   });
-  if (node.name !== "FencedCode") return;
+  if (node.name === "CodeBlock") return;
 
   const active = touches(builder.selection, node.from, node.to);
   const info = node.getChild("CodeInfo");
-  for (const fence of node.getChildren("CodeMark")) {
+  for (const fence of node.getChildren(node.name === "BlockMath" ? "MathMark" : "CodeMark")) {
     builder.marker(fence, active);
     if (!active) builder.lineClass(fence.from, fence.from, "md-syntax-line");
   }
@@ -279,6 +280,20 @@ function visitImage(builder: DecorationBuilder, node: SyntaxNode): boolean {
   return false;
 }
 
+/** Inline math is rendered in place, and shown as source while the selection touches it. */
+function visitInlineMath(builder: DecorationBuilder, node: SyntaxNode): void {
+  const [open, close] = node.getChildren("MathMark");
+  if (!open || !close) return;
+  if (touches(builder.selection, node.from, node.to)) {
+    builder.mark(open.from, open.to, "md-mark");
+    builder.mark(open.to, close.from, "md-math-source");
+    builder.mark(close.from, close.to, "md-mark");
+    return;
+  }
+  const widget = new MathWidget(builder.text(open.to, close.from), open.to - open.from === 2);
+  builder.decorations.push(Decoration.replace({ widget }).range(node.from, node.to));
+}
+
 /** The syntax markers directly inside an inline format, such as `**` or `[` and `]`. */
 function markers(node: SyntaxNode): SyntaxNode[] {
   const found: SyntaxNode[] = [];
@@ -305,7 +320,11 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
   switch (name) {
     case "FencedCode":
     case "CodeBlock":
+    case "BlockMath":
       visitCodeBlock(builder, node);
+      return false;
+    case "InlineMath":
+      visitInlineMath(builder, node);
       return false;
     case "FrontMatter":
       for (const fence of node.getChildren("FrontMatterMark")) {

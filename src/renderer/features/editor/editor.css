@@ -12,6 +12,8 @@
  * lists and code blocks nest inside each other.
  */
 
+@import "katex/dist/katex.min.css" layer(editor);
+
 @layer editor {
   .md-document {
     --md-quote-indent: 1em;
@@ -161,6 +163,33 @@
   /* A rule away from the cursor is drawn as a line; the --- shows while it is edited */
   .md-hr:not(:has(.md-mark)) {
     background: linear-gradient(var(--ui-alpha-2), var(--ui-alpha-2)) center / 100% 1px no-repeat;
+  }
+
+  /*
+   * Rendered math. It is laid out left to right and isolated, so its symbols never flip the
+   * surrounding sentence; block renderings keep no margins of their own because CodeMirror
+   * measures their boxes.
+   */
+  .md-math,
+  .md-math-block {
+    direction: ltr;
+    unicode-bidi: isolate;
+  }
+
+  .md-math-block {
+    display: flex;
+    justify-content: center;
+    padding-block: 0.5em;
+    overflow-x: auto;
+  }
+
+  .md-math-block .katex-display {
+    margin: 0;
+  }
+
+  .md-math-source {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
   }
 
   .md-table,
