@@ -1,13 +1,15 @@
 import type { TranslationSchema } from "../types";
-import { slavicPlural } from "../plural";
+import { createPlural } from "../plural";
+
+const words = createPlural("uk", { one: "слово", few: "слова", many: "слів" });
+const characters = createPlural("uk", { one: "символ", few: "символи", many: "символів" });
 
 export const ukUA = {
   common: {
     appName: "Pupitre",
     untitledFileName: "Без назви.md",
-    wordsCount: (count: number) => `${count} ${slavicPlural(count, "слово", "слова", "слів")}`,
-    charsCount: (count: number) =>
-      `${count} ${slavicPlural(count, "символ", "символи", "символів")}`,
+    wordsCount: (count: number) => `${count} ${words(count)}`,
+    charsCount: (count: number) => `${count} ${characters(count)}`,
     copy: "Копіювати",
   },
   actions: {

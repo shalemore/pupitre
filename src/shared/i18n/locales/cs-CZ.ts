@@ -1,13 +1,15 @@
 import type { TranslationSchema } from "../types";
+import { createPlural } from "../plural";
+
+const words = createPlural("cs", { one: "slovo", few: "slova", many: "slov" });
+const characters = createPlural("cs", { one: "znak", few: "znaky", many: "znaků" });
 
 export const csCZ = {
   common: {
     appName: "Pupitre",
     untitledFileName: "Bez názvu.md",
-    wordsCount: (count: number) =>
-      count === 1 ? "1 slovo" : count >= 2 && count <= 4 ? `${count} slova` : `${count} slov`,
-    charsCount: (count: number) =>
-      count === 1 ? "1 znak" : count >= 2 && count <= 4 ? `${count} znaky` : `${count} znaků`,
+    wordsCount: (count: number) => `${count} ${words(count)}`,
+    charsCount: (count: number) => `${count} ${characters(count)}`,
     copy: "Kopírovat",
   },
   actions: {

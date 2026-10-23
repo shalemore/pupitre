@@ -1,14 +1,15 @@
 import type { TranslationSchema } from "../types";
-import { slavicPlural } from "../plural";
+import { createPlural } from "../plural";
+
+const words = createPlural("pl", { one: "słowo", few: "słowa", many: "słów" });
+const characters = createPlural("pl", { one: "znak", few: "znaki", many: "znaków" });
 
 export const plPL = {
   common: {
     appName: "Pupitre",
     untitledFileName: "Bez nazwy.md",
-    wordsCount: (count: number) =>
-      `${count} ${slavicPlural(count, "słowo", "słowa", "słów", true)}`,
-    charsCount: (count: number) =>
-      `${count} ${slavicPlural(count, "znak", "znaki", "znaków", true)}`,
+    wordsCount: (count: number) => `${count} ${words(count)}`,
+    charsCount: (count: number) => `${count} ${characters(count)}`,
     copy: "Kopiuj",
   },
   actions: {

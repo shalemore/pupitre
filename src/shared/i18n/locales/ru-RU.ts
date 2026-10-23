@@ -1,13 +1,15 @@
 import type { TranslationSchema } from "../types";
-import { slavicPlural } from "../plural";
+import { createPlural } from "../plural";
+
+const words = createPlural("ru", { one: "слово", few: "слова", many: "слов" });
+const characters = createPlural("ru", { one: "символ", few: "символа", many: "символов" });
 
 export const ruRU = {
   common: {
     appName: "Pupitre",
     untitledFileName: "Без названия.md",
-    wordsCount: (count: number) => `${count} ${slavicPlural(count, "слово", "слова", "слов")}`,
-    charsCount: (count: number) =>
-      `${count} ${slavicPlural(count, "символ", "символа", "символов")}`,
+    wordsCount: (count: number) => `${count} ${words(count)}`,
+    charsCount: (count: number) => `${count} ${characters(count)}`,
     copy: "Копировать",
   },
   actions: {
