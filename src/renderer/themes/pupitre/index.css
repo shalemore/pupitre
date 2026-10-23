@@ -1,5 +1,7 @@
 /*
- * Pupitre, the default theme.
+ * Pupitre, the default theme: a writing desk. In light, blue-black ink on a white page with the
+ * red margin line of a school exercise book; in dark, chalk on a slate board under a warm lamp.
+ * Body text stays in the system face for long sessions, headings are set in a book serif.
  *
  * A theme is src/renderer/themes/<name>/index.css; the folder name is the name shown in settings.
  * Fonts or images a theme needs live in the same folder and are referenced with relative url()s.
@@ -37,10 +39,16 @@
   --font-document:
     -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif;
+  /*
+   * Heading serif; each platform ships one of the first few. Chinese falls back to a sans face
+   * before the generic serif, which maps to a thin bitmap-era Song face on Windows.
+   */
+  --pupitre-heading-font:
+    "Sitka Heading", "Sitka", "Iowan Old Style", "Charter", "Palatino Linotype", Georgia,
+    "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "Microsoft YaHei UI", serif;
 
   /*
-   * Colors come from the app's design tokens, whose defaults (app.css, base layer) are this
-   * theme's palette. Another theme overrides the ones it needs:
+   * Colors override the app's design tokens (app.css, base layer, neutral defaults):
    *   --ui-surface-0..3  0 window chrome (title bar, sidebar), 1 document canvas, 2 cards,
    *                      3 popovers
    *   --ui-text-primary, --ui-text-secondary, --ui-text-muted
@@ -50,14 +58,80 @@
    *   --syntax-*         code colors (keyword, string, number, function, comment, ...)
    *   --diagram-*        Mermaid diagram colors (fill, stroke, line, text, accent)
    * Borders, shadows and translucent fills are derived from these and follow automatically.
+   * Tokens a theme adds for itself are prefixed with its name.
    */
+  --ui-surface-0: oklch(0.948 0.008 250);
+  --ui-surface-1: oklch(0.987 0.006 95);
+  --ui-surface-2: oklch(0.993 0.004 95);
+  --ui-surface-3: oklch(0.997 0.002 95);
+  --ui-text-primary: oklch(0.24 0.03 262);
+  --ui-text-secondary: oklch(0.44 0.03 258);
+  --ui-text-muted: oklch(0.6 0.022 252);
+  --ui-brand: oklch(0.49 0.17 263);
+  --ui-brand-hover: oklch(0.43 0.17 263);
+  --ui-danger: oklch(0.55 0.2 25);
+  --ui-success: oklch(0.55 0.12 155);
+
+  /* The red margin line of the page: quote bars and rules */
+  --pupitre-margin: oklch(0.62 0.17 20);
+  /* <mark>: the yellow of a desk lamp */
+  --pupitre-highlight: oklch(0.91 0.11 92 / 75%);
+
+  --syntax-keyword: oklch(0.5 0.17 285);
+  --syntax-string: oklch(0.5 0.11 150);
+  --syntax-special-string: oklch(0.52 0.1 200);
+  --syntax-number: oklch(0.55 0.16 25);
+  --syntax-variable: var(--ui-text-primary);
+  --syntax-definition: oklch(0.47 0.15 255);
+  --syntax-function: oklch(0.47 0.15 255);
+  --syntax-type: oklch(0.55 0.12 65);
+  --syntax-property: oklch(0.5 0.09 225);
+  --syntax-comment: var(--ui-text-muted);
+  --syntax-operator: var(--ui-text-secondary);
+  --syntax-punctuation: var(--ui-text-secondary);
+  --syntax-invalid: var(--ui-danger);
 
   /* Colors of GitHub alerts (> [!NOTE] and friends): the quote bar and the title line */
-  --alert-note: oklch(0.62 0.15 255);
-  --alert-tip: oklch(0.63 0.15 150);
-  --alert-important: oklch(0.6 0.18 300);
-  --alert-warning: oklch(0.72 0.15 75);
-  --alert-caution: oklch(0.63 0.21 25);
+  --alert-note: var(--ui-brand);
+  --alert-tip: oklch(0.55 0.13 155);
+  --alert-important: oklch(0.52 0.17 300);
+  --alert-warning: oklch(0.66 0.14 70);
+  --alert-caution: oklch(0.55 0.2 25);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ui-surface-0: oklch(0.185 0.014 252);
+    --ui-surface-1: oklch(0.22 0.016 252);
+    --ui-surface-2: oklch(0.24 0.017 252);
+    --ui-surface-3: oklch(0.27 0.018 252);
+    --ui-text-primary: oklch(0.93 0.012 90);
+    --ui-text-secondary: oklch(0.76 0.016 240);
+    --ui-text-muted: oklch(0.58 0.02 245);
+    --ui-brand: oklch(0.77 0.11 245);
+    --ui-brand-hover: oklch(0.83 0.09 245);
+    --ui-danger: oklch(0.7 0.17 22);
+    --ui-success: oklch(0.76 0.12 155);
+    --ui-segmented-thumb: oklch(0.34 0.02 252);
+    --ui-knob: oklch(0.93 0.012 90);
+
+    --pupitre-margin: oklch(0.7 0.14 20);
+    --pupitre-highlight: oklch(0.82 0.13 88 / 28%);
+
+    --syntax-keyword: oklch(0.78 0.12 290);
+    --syntax-string: oklch(0.8 0.11 150);
+    --syntax-special-string: oklch(0.8 0.09 200);
+    --syntax-number: oklch(0.76 0.13 25);
+    --syntax-definition: oklch(0.8 0.1 245);
+    --syntax-function: oklch(0.8 0.1 245);
+    --syntax-type: oklch(0.83 0.11 80);
+    --syntax-property: oklch(0.8 0.07 225);
+
+    --alert-tip: oklch(0.76 0.12 155);
+    --alert-important: oklch(0.76 0.12 300);
+    --alert-warning: oklch(0.82 0.12 80);
+    --alert-caution: oklch(0.7 0.17 22);
+  }
 }
 
 /*
@@ -82,51 +156,55 @@
   caret-color: var(--ui-brand);
 }
 
-/* All headings: shared weight, line height and the space above them */
+/* All headings: the book serif, shared weight, line height and the space above them */
 .md-heading {
-  font-weight: 650;
-  letter-spacing: -0.01em;
-  line-height: 1.3;
-  padding-block: 0.6em 0.2em;
+  font-family: var(--pupitre-heading-font);
+  font-weight: 600;
+  line-height: 1.25;
+  padding-block: 0.7em 0.2em;
 }
 
-/* Heading sizes, one rule per level; h2 gets an underline */
+/* Heading sizes, one rule per level */
 .md-h1 {
-  font-size: 2em;
+  font-size: 2.1em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
+/* h2 sits on a ruled line in pale ink */
 .md-h2 {
-  font-size: 1.5em;
-  padding-block-end: 0.25em;
-  border-block-end: 1px solid var(--ui-alpha-2);
+  font-size: 1.55em;
+  padding-block-end: 0.2em;
+  border-block-end: 1px solid oklch(from var(--ui-brand) l c h / 30%);
 }
 
 .md-h3 {
-  font-size: 1.25em;
+  font-size: 1.28em;
 }
 
 .md-h4 {
   font-size: 1.1em;
 }
 
+/* The two smallest headings are written in the accent ink */
 .md-h5,
 .md-h6 {
+  color: var(--ui-brand);
   font-size: 1em;
-}
-
-/* The smallest heading is dimmed */
-.md-h6 {
-  color: var(--ui-text-secondary);
 }
 
 /* Light text on a dark background looks heavier, so headings get slightly lighter */
 @media (prefers-color-scheme: dark) {
   .md-heading {
-    font-weight: 600;
+    font-weight: 550;
+  }
+
+  .md-h1 {
+    font-weight: 650;
   }
 }
 
-/* Links: accent color with a faint underline */
+/* Links: accent ink with a faint underline */
 .md-link {
   color: var(--ui-brand);
   text-decoration: underline;
@@ -144,11 +222,11 @@
   color: var(--ui-text-muted);
 }
 
-/* `Inline code`: a light tint, without the accent color competing with the text */
+/* `Inline code`: a faint wash of the accent ink */
 .md-code {
   border-radius: 0.3em;
-  padding: 0.1em 0.2em;
-  background: var(--ui-alpha-1);
+  padding: 0.1em 0.25em;
+  background: oklch(from var(--ui-brand) l c h / 8%);
 }
 
 /* Fenced code blocks: a card with a hairline border, drawn line by line */
@@ -166,10 +244,16 @@
   border-block-end: 1px solid var(--ui-alpha-2);
 }
 
-/* > Block quotes: text color and the bar; GitHub alerts (> [!NOTE]) set --alert-color to tint it */
+/* > Block quotes: the red margin line; GitHub alerts (> [!NOTE]) set --alert-color to tint it */
 .md-quote {
   color: var(--ui-text-secondary);
-  border-inline-start: 3px solid var(--alert-color, var(--ui-alpha-3));
+  border-inline-start: 2px solid var(--alert-color, var(--pupitre-margin));
+}
+
+/* A horizontal rule away from the cursor is a red margin line laid across the page */
+.md-hr:not(:has(.md-mark)) {
+  background: linear-gradient(var(--pupitre-margin), var(--pupitre-margin)) center / 100% 1px
+    no-repeat;
 }
 
 /* Images */
@@ -177,15 +261,31 @@
   border-radius: var(--radius-lg);
 }
 
-/* Bullets and numbers of list items */
+/* Bullets and numbers of list items in the accent ink */
 .md-list-bullet,
 .md-list-mark {
-  color: var(--ui-text-muted);
+  color: var(--ui-brand);
+}
+
+/* <mark> highlights */
+.md-tag-mark {
+  background: var(--pupitre-highlight);
+}
+
+/* Tables: the header row sits on a ruled line */
+.md-table-view th {
+  border-block-end: 1.5px solid oklch(from var(--ui-brand) l c h / 45%);
+  background: var(--ui-surface-0);
+}
+
+/* Footnote references */
+.md-footnote-ref {
+  color: var(--ui-brand);
 }
 
 /* Selected text in the editor */
 .md-document ::selection {
-  background: oklch(from var(--ui-brand) l c h / 25%);
+  background: oklch(from var(--ui-brand) l c h / 22%);
 }
 
 /* The YAML front matter block at the very top of a file (--- … ---) */
