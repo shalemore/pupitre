@@ -87,6 +87,11 @@ function buildTemplate(): MenuItemConstructorOptions[] {
           accelerator: "CmdOrCtrl+O",
           click: () => dispatchToMainWindow({ id: "file.open" }),
         },
+        {
+          label: labels.openFolder,
+          accelerator: "CmdOrCtrl+Shift+O",
+          click: () => dispatchToMainWindow({ id: "file.open-folder" }),
+        },
         { label: labels.openRecent, submenu: recentMenu },
         separator,
         {

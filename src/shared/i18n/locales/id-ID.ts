@@ -72,6 +72,8 @@ export const idID = {
     help: "Bantuan",
     newFile: "Dokumen baru",
     openFile: "Buka...",
+    // TODO(i18n): unverified with native speakers
+    openFolder: "Buka folder...",
     openRecent: "Berkas terbaru",
     noRecentFiles: "Tidak ada berkas terbaru",
     save: "Simpan",

@@ -72,6 +72,7 @@ export const frFR = {
     help: "Aide",
     newFile: "Nouveau document",
     openFile: "Ouvrir...",
+    openFolder: "Ouvrir un dossier...",
     openRecent: "Ouvrir récemment",
     noRecentFiles: "Aucun fichier récent",
     save: "Enregistrer",

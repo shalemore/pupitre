@@ -71,6 +71,7 @@ export const zhTW = {
     help: "說明",
     newFile: "新增文件",
     openFile: "開啟檔案...",
+    openFolder: "開啟資料夾...",
     openRecent: "最近開啟",
     noRecentFiles: "無最近檔案",
     save: "儲存",

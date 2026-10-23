@@ -71,6 +71,7 @@ export const koKR = {
     help: "도움말",
     newFile: "새 문서",
     openFile: "파일 열기...",
+    openFolder: "폴더 열기...",
     openRecent: "최근 파일 열기",
     noRecentFiles: "최근 파일 없음",
     save: "저장",

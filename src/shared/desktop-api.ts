@@ -39,6 +39,7 @@ export type AppCommand =
   | { id: "file.new" }
   | { id: "file.open" }
   | { id: "file.open-path"; path: string }
+  | { id: "file.open-folder" }
   | { id: "file.save" }
   | { id: "file.save-as" }
   | { id: "file.export-pdf" }
@@ -87,6 +88,8 @@ export interface InvokeChannels {
   "settings:reset": (key: SettingKey) => void;
   "settings:reveal": () => void;
   "document:open": () => OpenedDocument | null;
+  /** Asks for a folder to show in the sidebar. */
+  "folder:choose": () => string | null;
   "document:read": (path: string) => OpenedDocument;
   /** Lists one level of a folder: directories first, then files, each sorted by name; hidden entries are left out. */
   "folder:list": (path: string) => FolderEntry[];

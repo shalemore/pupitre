@@ -72,6 +72,8 @@ export const hiIN = {
     help: "सहायता",
     newFile: "नया दस्तावेज़",
     openFile: "खोलें...",
+    // TODO(i18n): unverified with native speakers
+    openFolder: "फ़ोल्डर खोलें...",
     openRecent: "हाल ही में खोले गए",
     noRecentFiles: "हाल ही में खोली गई कोई फ़ाइल नहीं",
     save: "सहेजें",

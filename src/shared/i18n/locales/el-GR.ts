@@ -73,6 +73,8 @@ export const elGR = {
     help: "Βοήθεια",
     newFile: "Νέο έγγραφο",
     openFile: "Άνοιγμα…",
+    // TODO(i18n): unverified with native speakers
+    openFolder: "Άνοιγμα φακέλου…",
     openRecent: "Άνοιγμα πρόσφατων",
     noRecentFiles: "Κανένα πρόσφατο αρχείο",
     save: "Αποθήκευση",

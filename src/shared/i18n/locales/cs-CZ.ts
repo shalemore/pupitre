@@ -74,6 +74,8 @@ export const csCZ = {
     help: "Nápověda",
     newFile: "Nový dokument",
     openFile: "Otevřít…",
+    // TODO(i18n): unverified with native speakers
+    openFolder: "Otevřít složku…",
     openRecent: "Otevřít nedávné",
     noRecentFiles: "Žádné nedávné soubory",
     save: "Uložit",

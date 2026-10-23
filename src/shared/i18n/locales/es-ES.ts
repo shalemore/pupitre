@@ -71,6 +71,7 @@ export const esES = {
     help: "Ayuda",
     newFile: "Nuevo documento",
     openFile: "Abrir...",
+    openFolder: "Abrir carpeta...",
     openRecent: "Abrir recientes",
     noRecentFiles: "No hay archivos recientes",
     save: "Guardar",

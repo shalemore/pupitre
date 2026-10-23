@@ -75,6 +75,8 @@ export const thTH = {
     help: "ช่วยเหลือ",
     newFile: "เอกสารใหม่",
     openFile: "เปิด...",
+    // TODO(i18n): unverified with native speakers
+    openFolder: "เปิดโฟลเดอร์...",
     openRecent: "ไฟล์ล่าสุด",
     noRecentFiles: "ไม่มีไฟล์ล่าสุด",
     save: "บันทึก",

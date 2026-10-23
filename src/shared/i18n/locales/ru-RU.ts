@@ -74,6 +74,8 @@ export const ruRU = {
     help: "Справка",
     newFile: "Новый документ",
     openFile: "Открыть файл...",
+    // TODO(i18n): unverified with native speakers
+    openFolder: "Открыть папку...",
     openRecent: "Недавние файлы",
     noRecentFiles: "Нет недавних файлов",
     save: "Сохранить",

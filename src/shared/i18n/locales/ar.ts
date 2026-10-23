@@ -87,6 +87,8 @@ export const ar = {
     help: "مساعدة",
     newFile: "مستند جديد",
     openFile: "فتح ملف...",
+    // TODO(i18n): unverified with native speakers
+    openFolder: "فتح مجلد...",
     openRecent: "الملفات الأخيرة",
     noRecentFiles: "لا توجد ملفات أخيرة",
     save: "حفظ",

@@ -75,6 +75,8 @@ export const plPL = {
     help: "Pomoc",
     newFile: "Nowy dokument",
     openFile: "Otwórz…",
+    // TODO(i18n): unverified with native speakers
+    openFolder: "Otwórz folder…",
     openRecent: "Otwórz ostatnie",
     noRecentFiles: "Brak ostatnich plików",
     save: "Zapisz",

@@ -73,6 +73,8 @@ export const nbNO = {
     help: "Hjelp",
     newFile: "Nytt dokument",
     openFile: "Åpne…",
+    // TODO(i18n): unverified with native speakers
+    openFolder: "Åpne mappe…",
     openRecent: "Åpne nylige",
     noRecentFiles: "Ingen nylige filer",
     save: "Lagre",

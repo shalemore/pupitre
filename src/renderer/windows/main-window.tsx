@@ -40,8 +40,8 @@ export const MainWindow: Component = () => {
   const [outline, setOutline] = createSignal<OutlineHeading[]>([]);
   const [activeHeading, setActiveHeading] = createSignal(-1);
   const [stats, setStats] = createSignal<TextStats>({ words: 0, characters: 0 });
-  // A folder the user dropped in; while the open file is outside of it, the file's own folder is shown instead
-  const [droppedFolder, setDroppedFolder] = createSignal<string>();
+  // A folder the user dropped in or opened; while the open file is outside of it, the file's own folder is shown instead
+  const [openedFolder, setOpenedFolder] = createSignal<string>();
   const [preferredMode, setPreferredMode] = createSignal<SidebarMode>("outline");
   const [findMode, setFindMode] = createSignal<FindMode>("closed");
   const [initialSearch, setInitialSearch] = createSignal("");
@@ -54,7 +54,7 @@ export const MainWindow: Component = () => {
   });
 
   const folderRoot = createMemo(() => {
-    const dropped = droppedFolder();
+    const dropped = openedFolder();
     const path = session.activeDocument()?.path;
     if (dropped !== undefined && (path === undefined || isInsideFolder(dropped, path))) {
       return dropped;
@@ -108,6 +108,17 @@ export const MainWindow: Component = () => {
     if (editor) setMatchStats(action(editor));
   };
 
+  const showFolder = (path: string) => {
+    setOpenedFolder(path);
+    setPreferredMode("folder");
+    if (!settings().sidebarVisible) void updateSettings({ sidebarVisible: true });
+  };
+
+  const openFolder = async () => {
+    const path = await desktop.invoke("folder:choose");
+    if (path !== null) showFolder(path);
+  };
+
   const exportPdf = async () => {
     if (!session.activeDocument()) return;
     const pdfName = session.fileName().replace(/\.(md|markdown|mdown|txt)$/i, "") + ".pdf";
@@ -120,6 +131,8 @@ export const MainWindow: Component = () => {
         return void session.newDocument();
       case "file.open":
         return void session.open();
+      case "file.open-folder":
+        return void openFolder();
       case "file.open-path":
         return void session.openPath(command.path);
       case "file.save":
@@ -153,9 +166,7 @@ export const MainWindow: Component = () => {
       const file = e.dataTransfer?.files[0];
       if (file && e.dataTransfer?.items[0]?.webkitGetAsEntry()?.isDirectory) {
         e.preventDefault();
-        setDroppedFolder(desktop.getPathForFile(file));
-        setPreferredMode("folder");
-        if (!settings().sidebarVisible) void updateSettings({ sidebarVisible: true });
+        showFolder(desktop.getPathForFile(file));
         return;
       }
       // Images dropped into the editor are handled by the editor; this only takes over Markdown files dropped on the window

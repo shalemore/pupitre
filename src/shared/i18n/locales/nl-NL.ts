@@ -73,6 +73,8 @@ export const nlNL = {
     help: "Help",
     newFile: "Nieuw document",
     openFile: "Openen…",
+    // TODO(i18n): unverified with native speakers
+    openFolder: "Map openen…",
     openRecent: "Recent geopend",
     noRecentFiles: "Geen recente bestanden",
     save: "Opslaan",

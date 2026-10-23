@@ -71,6 +71,7 @@ export const jaJP = {
     help: "ヘルプ",
     newFile: "新規ドキュメント",
     openFile: "ファイルを開く...",
+    openFolder: "フォルダを開く...",
     openRecent: "最近使った項目",
     noRecentFiles: "最近使った項目はありません",
     save: "保存",

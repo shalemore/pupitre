@@ -71,6 +71,7 @@ export const deDE = {
     help: "Hilfe",
     newFile: "Neues Dokument",
     openFile: "Datei öffnen...",
+    openFolder: "Ordner öffnen...",
     openRecent: "Zuletzt geöffnet",
     noRecentFiles: "Keine zuletzt geöffneten Dateien",
     save: "Speichern",

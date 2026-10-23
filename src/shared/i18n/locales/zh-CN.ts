@@ -71,6 +71,7 @@ export const zhCN = {
     help: "帮助",
     newFile: "新建文档",
     openFile: "打开文件...",
+    openFolder: "打开文件夹...",
     openRecent: "最近打开",
     noRecentFiles: "无最近文件",
     save: "保存",

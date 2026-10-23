@@ -74,6 +74,8 @@ export const isIS = {
     help: "Hjálp",
     newFile: "Nýtt skjal",
     openFile: "Opna…",
+    // TODO(i18n): unverified with native speakers
+    openFolder: "Opna möppu…",
     openRecent: "Opna nýleg",
     noRecentFiles: "Engar nýlegar skrár",
     save: "Vista",

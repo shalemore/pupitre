@@ -73,6 +73,8 @@ export const huHU = {
     help: "Súgó",
     newFile: "Új dokumentum",
     openFile: "Megnyitás…",
+    // TODO(i18n): unverified with native speakers
+    openFolder: "Mappa megnyitása…",
     openRecent: "Legutóbbiak megnyitása",
     noRecentFiles: "Nincsenek legutóbbi fájlok",
     save: "Mentés",

@@ -75,6 +75,8 @@ export const ukUA = {
     help: "Довідка",
     newFile: "Новий документ",
     openFile: "Відкрити…",
+    // TODO(i18n): unverified with native speakers
+    openFolder: "Відкрити теку…",
     openRecent: "Відкрити останні",
     noRecentFiles: "Немає останніх файлів",
     save: "Зберегти",

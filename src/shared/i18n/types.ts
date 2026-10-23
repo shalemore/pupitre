@@ -128,6 +128,7 @@ export interface TranslationSchema {
     readonly help: string;
     readonly newFile: string;
     readonly openFile: string;
+    readonly openFolder: string;
     readonly openRecent: string;
     readonly noRecentFiles: string;
     readonly save: string;

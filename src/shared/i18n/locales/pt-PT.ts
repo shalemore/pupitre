@@ -72,6 +72,7 @@ export const ptPT = {
     help: "Ajuda",
     newFile: "Novo documento",
     openFile: "Abrir…",
+    openFolder: "Abrir pasta…",
     openRecent: "Abrir recentes",
     noRecentFiles: "Nenhum ficheiro recente",
     save: "Guardar",

@@ -73,6 +73,8 @@ export const trTR = {
     help: "Yardım",
     newFile: "Yeni Belge",
     openFile: "Aç…",
+    // TODO(i18n): unverified with native speakers
+    openFolder: "Klasör Aç…",
     openRecent: "Son Kullanılanları Aç",
     noRecentFiles: "Son Kullanılan Dosya Yok",
     save: "Kaydet",

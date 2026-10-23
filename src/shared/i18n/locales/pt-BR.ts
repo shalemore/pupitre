@@ -71,6 +71,7 @@ export const ptBR = {
     help: "Ajuda",
     newFile: "Novo Documento",
     openFile: "Abrir...",
+    openFolder: "Abrir pasta...",
     openRecent: "Abrir Recentes",
     noRecentFiles: "Nenhum arquivo recente",
     save: "Salvar",

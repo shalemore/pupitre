@@ -72,6 +72,7 @@ export const enUS = {
     help: "Help",
     newFile: "New Document",
     openFile: "Open...",
+    openFolder: "Open Folder...",
     openRecent: "Open Recent",
     noRecentFiles: "No Recent Files",
     save: "Save",

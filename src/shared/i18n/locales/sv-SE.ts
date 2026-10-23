@@ -73,6 +73,8 @@ export const svSE = {
     help: "Hjälp",
     newFile: "Nytt dokument",
     openFile: "Öppna…",
+    // TODO(i18n): unverified with native speakers
+    openFolder: "Öppna mapp…",
     openRecent: "Öppna senaste",
     noRecentFiles: "Inga senaste filer",
     save: "Spara",

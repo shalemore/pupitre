@@ -143,6 +143,13 @@ export function registerIpcHandlers(): void {
     return readDocument(path);
   });
   handle("document:read", (_event, path) => readDocument(path));
+  handle("folder:choose", async (event) => {
+    const { canceled, filePaths } = await dialog.showOpenDialog(senderWindow(event), {
+      properties: ["openDirectory"],
+    });
+    const [path] = filePaths;
+    return canceled || path === undefined ? null : path;
+  });
   handle("folder:list", (_event, path) => listFolder(path));
   handle("document:write", (_event, path, content, lineEnding) =>
     writeDocument(path, content, lineEnding),

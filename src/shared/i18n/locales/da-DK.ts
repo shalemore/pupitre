@@ -73,6 +73,8 @@ export const daDK = {
     help: "Hjælp",
     newFile: "Nyt dokument",
     openFile: "Åbn…",
+    // TODO(i18n): unverified with native speakers
+    openFolder: "Åbn mappe…",
     openRecent: "Åbn seneste",
     noRecentFiles: "Ingen seneste filer",
     save: "Gem",

@@ -71,6 +71,7 @@ export const itIT = {
     help: "Aiuto",
     newFile: "Nuovo documento",
     openFile: "Apri...",
+    openFolder: "Apri cartella...",
     openRecent: "Apri recenti",
     noRecentFiles: "Nessun file recente",
     save: "Salva",

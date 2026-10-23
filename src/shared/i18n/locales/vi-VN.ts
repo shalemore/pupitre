@@ -72,6 +72,8 @@ export const viVN = {
     help: "Trợ giúp",
     newFile: "Tài liệu mới",
     openFile: "Mở...",
+    // TODO(i18n): unverified with native speakers
+    openFolder: "Mở thư mục...",
     openRecent: "Tệp gần đây",
     noRecentFiles: "Không có tệp gần đây",
     save: "Lưu",

@@ -73,6 +73,8 @@ export const fiFI = {
     help: "Ohje",
     newFile: "Uusi asiakirja",
     openFile: "Avaa…",
+    // TODO(i18n): unverified with native speakers
+    openFolder: "Avaa kansio…",
     openRecent: "Avaa viimeisimmät",
     noRecentFiles: "Ei viimeisimpiä tiedostoja",
     save: "Tallenna",

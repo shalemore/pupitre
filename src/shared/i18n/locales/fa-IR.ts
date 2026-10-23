@@ -73,6 +73,8 @@ export const faIR = {
     help: "راهنما",
     newFile: "سند جدید",
     openFile: "باز کردن...",
+    // TODO(i18n): unverified with native speakers
+    openFolder: "باز کردن پوشه...",
     openRecent: "باز کردن اخیر",
     noRecentFiles: "پرونده اخیری نیست",
     save: "ذخیره",
