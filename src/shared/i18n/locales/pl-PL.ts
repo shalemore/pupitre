@@ -161,7 +161,6 @@ export const plPL = {
     bulletMarker: "Punktor listy",
     emphasisMarker: "Znacznik kursywy",
     strongMarker: "Znacznik pogrubienia",
-    // TODO(i18n): unverified with native speakers; literal translation of "fence" (fenced code block)
     fenceMarker: "Ogrodzenie bloku kodu",
     ruleMarker: "Linia pozioma",
     orderedList: "Lista numerowana",

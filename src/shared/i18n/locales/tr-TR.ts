@@ -111,8 +111,7 @@ export const trTR = {
     about: "Hakkında",
     language: "Dil",
     languageDesc: "Menülerin ve pencerelerin dili",
-    // TODO(i18n): unverified with native speakers; "izle" means "watch", "Sistemi takip et" may read better
-    followSystem: "Sistemi izle",
+    followSystem: "Sistem ayarını kullan",
     startup: "Açılışta",
     startupDesc: "Pupitre açıldığında gösterilecek ekran",
     startupWelcome: "Karşılama Ekranı",
@@ -160,8 +159,7 @@ export const trTR = {
     bulletMarker: "Madde İmi",
     emphasisMarker: "İtalik İşareti",
     strongMarker: "Kalın İşareti",
-    // TODO(i18n): unverified with native speakers; literal translation of "fence" (fenced code block)
-    fenceMarker: "Kod Çiti",
+    fenceMarker: "Çitle Çevrili Kod Bloğu",
     ruleMarker: "Yatay Çizgi",
     orderedList: "Numaralı Liste",
     orderedListIncrement: "Artan (1. 2. 3.)",

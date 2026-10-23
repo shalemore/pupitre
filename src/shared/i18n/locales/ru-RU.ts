@@ -160,8 +160,7 @@ export const ruRU = {
     bulletMarker: "Маркер списка",
     emphasisMarker: "Маркер курсива",
     strongMarker: "Маркер полужирного",
-    // TODO(i18n): unverified with native speakers; literal translation of "fence" (fenced code block)
-    fenceMarker: "Ограждение кода",
+    fenceMarker: "Ограждение блока кода",
     ruleMarker: "Горизонтальная линия",
     orderedList: "Нумерованный список",
     orderedListIncrement: "По возрастанию (1. 2. 3.)",
