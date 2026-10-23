@@ -31,8 +31,10 @@ import { zhHK } from "./locales/zh-HK";
 import { zhTW } from "./locales/zh-TW";
 import {
   DEFAULT_LOCALE,
+  LOCALE_CODES,
   type Direction,
   type LanguageSetting,
+  type LocaleEntry,
   type LocaleMeta,
   type SupportedLocale,
   type TranslationSchema,
@@ -42,73 +44,46 @@ export * from "./types";
 
 // Each language is listed under its own name, with the region it is written for. The script
 // comes first (Chinese), then the region, which tells apart what one script does not.
-export const SUPPORTED_LOCALES: readonly LocaleMeta[] = [
-  { code: "en-US", label: "English (United States)", dir: "ltr" },
-  { code: "ar", label: "العربية", dir: "rtl" },
-  { code: "cs-CZ", label: "Čeština (Česko)", dir: "ltr" },
-  { code: "da-DK", label: "Dansk (Danmark)", dir: "ltr" },
-  { code: "de-DE", label: "Deutsch (Deutschland)", dir: "ltr" },
-  { code: "el-GR", label: "Ελληνικά (Ελλάδα)", dir: "ltr" },
-  { code: "es-ES", label: "Español (España)", dir: "ltr" },
-  { code: "fa-IR", label: "فارسی (ایران)", dir: "rtl" },
-  { code: "fi-FI", label: "Suomi", dir: "ltr" },
-  { code: "fr-FR", label: "Français (France)", dir: "ltr" },
-  { code: "hi-IN", label: "हिन्दी (भारत)", dir: "ltr" },
-  { code: "hu-HU", label: "Magyar (Magyarország)", dir: "ltr" },
-  { code: "id-ID", label: "Bahasa Indonesia (Indonesia)", dir: "ltr" },
-  { code: "is-IS", label: "Íslenska (Ísland)", dir: "ltr" },
-  { code: "it-IT", label: "Italiano (Italia)", dir: "ltr" },
-  { code: "ja-JP", label: "日本語 (日本)", dir: "ltr" },
-  { code: "ko-KR", label: "한국어 (대한민국)", dir: "ltr" },
-  { code: "nb-NO", label: "Norsk bokmål (Norge)", dir: "ltr" },
-  { code: "nl-NL", label: "Nederlands (Nederland)", dir: "ltr" },
-  { code: "pl-PL", label: "Polski (Polska)", dir: "ltr" },
-  { code: "pt-BR", label: "Português (Brasil)", dir: "ltr" },
-  { code: "pt-PT", label: "Português (Portugal)", dir: "ltr" },
-  { code: "ru-RU", label: "Русский (Россия)", dir: "ltr" },
-  { code: "sv-SE", label: "Svenska (Sverige)", dir: "ltr" },
-  { code: "th-TH", label: "ไทย", dir: "ltr" },
-  { code: "tr-TR", label: "Türkçe (Türkiye)", dir: "ltr" },
-  { code: "uk-UA", label: "Українська (Україна)", dir: "ltr" },
-  { code: "vi-VN", label: "Tiếng Việt (Việt Nam)", dir: "ltr" },
-  { code: "zh-CN", label: "简体中文 (中国大陆)", dir: "ltr" },
-  { code: "zh-HK", label: "繁體中文 (香港)", dir: "ltr" },
-  { code: "zh-TW", label: "繁體中文 (台灣)", dir: "ltr" },
-];
-
-const dictionaries: Record<SupportedLocale, TranslationSchema> = {
-  "en-US": enUS,
-  ar,
-  "cs-CZ": csCZ,
-  "da-DK": daDK,
-  "de-DE": deDE,
-  "el-GR": elGR,
-  "es-ES": esES,
-  "fa-IR": faIR,
-  "fi-FI": fiFI,
-  "fr-FR": frFR,
-  "hi-IN": hiIN,
-  "hu-HU": huHU,
-  "id-ID": idID,
-  "is-IS": isIS,
-  "it-IT": itIT,
-  "ja-JP": jaJP,
-  "ko-KR": koKR,
-  "nb-NO": nbNO,
-  "nl-NL": nlNL,
-  "pl-PL": plPL,
-  "pt-BR": ptBR,
-  "pt-PT": ptPT,
-  "ru-RU": ruRU,
-  "sv-SE": svSE,
-  "th-TH": thTH,
-  "tr-TR": trTR,
-  "uk-UA": ukUA,
-  "vi-VN": viVN,
-  "zh-CN": zhCN,
-  "zh-HK": zhHK,
-  "zh-TW": zhTW,
+// Record keys are checked against LOCALE_CODES, so a locale cannot be added in only one place.
+const LOCALES: Record<SupportedLocale, LocaleEntry> = {
+  "en-US": { label: "English (United States)", dir: "ltr", dictionary: enUS },
+  ar: { label: "العربية", dir: "rtl", dictionary: ar },
+  "cs-CZ": { label: "Čeština (Česko)", dir: "ltr", dictionary: csCZ },
+  "da-DK": { label: "Dansk (Danmark)", dir: "ltr", dictionary: daDK },
+  "de-DE": { label: "Deutsch (Deutschland)", dir: "ltr", dictionary: deDE },
+  "el-GR": { label: "Ελληνικά (Ελλάδα)", dir: "ltr", dictionary: elGR },
+  "es-ES": { label: "Español (España)", dir: "ltr", dictionary: esES },
+  "fa-IR": { label: "فارسی (ایران)", dir: "rtl", dictionary: faIR },
+  "fi-FI": { label: "Suomi", dir: "ltr", dictionary: fiFI },
+  "fr-FR": { label: "Français (France)", dir: "ltr", dictionary: frFR },
+  "hi-IN": { label: "हिन्दी (भारत)", dir: "ltr", dictionary: hiIN },
+  "hu-HU": { label: "Magyar (Magyarország)", dir: "ltr", dictionary: huHU },
+  "id-ID": { label: "Bahasa Indonesia (Indonesia)", dir: "ltr", dictionary: idID },
+  "is-IS": { label: "Íslenska (Ísland)", dir: "ltr", dictionary: isIS },
+  "it-IT": { label: "Italiano (Italia)", dir: "ltr", dictionary: itIT },
+  "ja-JP": { label: "日本語 (日本)", dir: "ltr", dictionary: jaJP },
+  "ko-KR": { label: "한국어 (대한민국)", dir: "ltr", dictionary: koKR },
+  "nb-NO": { label: "Norsk bokmål (Norge)", dir: "ltr", dictionary: nbNO },
+  "nl-NL": { label: "Nederlands (Nederland)", dir: "ltr", dictionary: nlNL },
+  "pl-PL": { label: "Polski (Polska)", dir: "ltr", dictionary: plPL },
+  "pt-BR": { label: "Português (Brasil)", dir: "ltr", dictionary: ptBR },
+  "pt-PT": { label: "Português (Portugal)", dir: "ltr", dictionary: ptPT },
+  "ru-RU": { label: "Русский (Россия)", dir: "ltr", dictionary: ruRU },
+  "sv-SE": { label: "Svenska (Sverige)", dir: "ltr", dictionary: svSE },
+  "th-TH": { label: "ไทย", dir: "ltr", dictionary: thTH },
+  "tr-TR": { label: "Türkçe (Türkiye)", dir: "ltr", dictionary: trTR },
+  "uk-UA": { label: "Українська (Україна)", dir: "ltr", dictionary: ukUA },
+  "vi-VN": { label: "Tiếng Việt (Việt Nam)", dir: "ltr", dictionary: viVN },
+  "zh-CN": { label: "简体中文 (中国大陆)", dir: "ltr", dictionary: zhCN },
+  "zh-HK": { label: "繁體中文 (香港)", dir: "ltr", dictionary: zhHK },
+  "zh-TW": { label: "繁體中文 (台灣)", dir: "ltr", dictionary: zhTW },
 };
+
+export const SUPPORTED_LOCALES: readonly LocaleMeta[] = LOCALE_CODES.map((code) => ({
+  code,
+  label: LOCALES[code].label,
+  dir: LOCALES[code].dir,
+}));
 
 /**
  * Traditional Chinese is a script, not a region: the same dictionary serves Taiwan, Hong Kong
@@ -140,13 +115,12 @@ function matchLocale(preferredLanguages: readonly string[]): SupportedLocale {
     if (NORWEGIAN_TAGS.has(language)) return "nb-NO";
     const tag = new Intl.Locale(language).maximize();
     if (tag.language === "zh") return matchChinese(tag);
-    // Arabic is listed without a region, so "ar-EG" and the rest must not fall through to English
-    if (tag.language === "ar") return "ar";
     const exact = SUPPORTED_LOCALES.find(
       (locale) => locale.code === `${tag.language}-${tag.region}`,
     );
-    const sameLanguage = SUPPORTED_LOCALES.find((locale) =>
-      locale.code.startsWith(`${tag.language}-`),
+    // Compare the language subtag so region-less codes such as "ar" also match "ar-EG"
+    const sameLanguage = SUPPORTED_LOCALES.find(
+      (locale) => new Intl.Locale(locale.code).language === tag.language,
     );
     const match = exact ?? sameLanguage;
     if (match) return match.code;
@@ -162,9 +136,9 @@ export function resolveLocale(
 }
 
 export function getDictionary(locale: SupportedLocale): TranslationSchema {
-  return dictionaries[locale];
+  return LOCALES[locale].dictionary;
 }
 
 export function getDirection(locale: SupportedLocale): Direction {
-  return locale === "ar" || locale === "fa-IR" ? "rtl" : "ltr";
+  return LOCALES[locale].dir;
 }

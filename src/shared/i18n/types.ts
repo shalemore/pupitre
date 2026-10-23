@@ -53,6 +53,10 @@ export interface LocaleMeta {
   readonly dir: Direction;
 }
 
+export interface LocaleEntry extends Omit<LocaleMeta, "code"> {
+  readonly dictionary: TranslationSchema;
+}
+
 export interface TranslationSchema {
   readonly common: {
     readonly appName: string;
