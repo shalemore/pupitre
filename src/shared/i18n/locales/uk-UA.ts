@@ -162,6 +162,7 @@ export const ukUA = {
     bulletMarker: "Маркер списку",
     emphasisMarker: "Маркер курсиву",
     strongMarker: "Маркер напівжирного",
+    // TODO(i18n): unverified with native speakers; literal translation of "fence" (fenced code block)
     fenceMarker: "Огорожа блоку коду",
     ruleMarker: "Горизонтальна лінія",
     orderedList: "Нумерований список",

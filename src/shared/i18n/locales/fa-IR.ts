@@ -159,6 +159,7 @@ export const faIR = {
     bulletMarker: "نشانه فهرست گلوله‌ای",
     emphasisMarker: "نشانه مورب",
     strongMarker: "نشانه پررنگ",
+    // TODO(i18n): unverified with native speakers; literal translation of "fence" (fenced code block)
     fenceMarker: "حصار کد",
     ruleMarker: "خط افقی",
     orderedList: "فهرست شماره‌دار",

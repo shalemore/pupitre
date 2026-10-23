@@ -158,6 +158,7 @@ export const deDE = {
     bulletMarker: "Aufzählungszeichen",
     emphasisMarker: "Kursiv-Zeichen",
     strongMarker: "Fett-Zeichen",
+    // TODO(i18n): unverified with native speakers; literal translation of "fence" (fenced code block)
     fenceMarker: "Code-Zaun",
     ruleMarker: "Trennlinie",
     orderedList: "Nummerierte Liste",
