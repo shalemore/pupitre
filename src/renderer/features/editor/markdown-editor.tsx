@@ -38,6 +38,7 @@ import { codeHighlight } from "./code-highlight";
 import { formatKeymap, runFormatAction } from "./format-commands";
 import { frontMatter } from "./front-matter";
 import { preserveImageAlt } from "./image-block-schema";
+import { editableImageBlock } from "./image-block-view";
 import { renderMermaidPreview } from "./mermaid-preview";
 import { createPendingImages } from "./pending-images";
 import {
@@ -190,10 +191,6 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           inlineUploadButton: labels.upload,
           inlineConfirmButton: labels.confirm,
           inlineUploadPlaceholderText: labels.imageUrlPlaceholder,
-          blockUploadButton: labels.upload,
-          blockConfirmButton: labels.confirm,
-          blockUploadPlaceholderText: labels.imageUrlPlaceholder,
-          blockCaptionPlaceholderText: labels.captionPlaceholder,
         },
         [Crepe.Feature.LinkTooltip]: {
           editButton: labels.editSource,
@@ -223,6 +220,12 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       .use(details)
       .use(footnoteLinks)
       .use(rawHtml(resolveUrl))
+      .use(
+        editableImageBlock(resolveUrl, {
+          captionPlaceholder: labels.captionPlaceholder,
+          sourcePlaceholder: labels.imageUrlPlaceholder,
+        }),
+      )
       .use(githubAlerts(labels.alerts))
       .use($prose(() => formatKeymap(() => crepe.editor)))
       .use(
