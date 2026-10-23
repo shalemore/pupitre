@@ -120,6 +120,11 @@
   background: transparent;
 }
 
+/* Rendered math and diagrams (preview only) have no card chrome */
+.milkdown .milkdown-code-block:has(.preview-panel):not(:has(.preview-divider)) {
+  border: none;
+}
+
 .milkdown .milkdown-code-block .cm-content {
   font-family: var(--font-mono);
   font-size: 0.82em;

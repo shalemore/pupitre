@@ -144,7 +144,7 @@
   background: var(--ui-surface-0);
 }
 
-/* Rendered math and diagrams (preview only) sit directly on the page */
+/* Rendered math and diagrams (preview only) have no card chrome */
 .milkdown .milkdown-code-block:has(.preview-panel):not(:has(.preview-divider)) {
   background: transparent;
 }
