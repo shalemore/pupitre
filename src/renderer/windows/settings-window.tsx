@@ -1,5 +1,6 @@
+import { makeEventListener } from "@solid-primitives/event-listener";
 import { FileCode2, Info, Palette, Settings2, Type } from "lucide-solid";
-import { createEffect, onCleanup, onMount, type Component } from "solid-js";
+import { createEffect, onMount, type Component } from "solid-js";
 import { TitleBar } from "@/components/title-bar";
 import { Separator, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
 import { AboutSection } from "@/features/settings/about-section";
@@ -15,11 +16,9 @@ export const SettingsWindow: Component = () => {
   });
 
   onMount(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
+    makeEventListener(window, "keydown", (e) => {
       if (e.key === "Escape" && !e.defaultPrevented) window.close();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    onCleanup(() => window.removeEventListener("keydown", handleKeyDown));
+    });
   });
 
   return (

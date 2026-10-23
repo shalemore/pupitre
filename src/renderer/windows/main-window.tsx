@@ -1,4 +1,5 @@
 import type { AppCommand } from "@shared/desktop-api";
+import { makeEventListener } from "@solid-primitives/event-listener";
 import { cn } from "cn";
 import {
   createEffect,
@@ -161,8 +162,8 @@ export const MainWindow: Component = () => {
   onMount(() => {
     session.restoreOnStartup();
     // dragover's default behavior must be prevented, otherwise drop never fires
-    const handleDragOver = (e: DragEvent) => e.preventDefault();
-    const handleDrop = (e: DragEvent) => {
+    makeEventListener(window, "dragover", (e) => e.preventDefault());
+    makeEventListener(window, "drop", (e) => {
       const file = e.dataTransfer?.files[0];
       if (file && e.dataTransfer?.items[0]?.webkitGetAsEntry()?.isDirectory) {
         e.preventDefault();
@@ -173,16 +174,12 @@ export const MainWindow: Component = () => {
       if (!file || file.type.startsWith("image/")) return;
       e.preventDefault();
       void session.openPath(desktop.getPathForFile(file));
-    };
+    });
     const unlistenCommands = desktop.on("app:command", runCommand);
-    window.addEventListener("dragover", handleDragOver);
-    window.addEventListener("drop", handleDrop);
 
     onCleanup(() => {
       session.dispose();
       unlistenCommands();
-      window.removeEventListener("dragover", handleDragOver);
-      window.removeEventListener("drop", handleDrop);
     });
   });
 
