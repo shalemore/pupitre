@@ -45,6 +45,13 @@ export const zhTW = {
     nextMatch: "下一個符合項目",
     closeFind: "關閉",
     placeholder: "開始寫作…",
+    alerts: {
+      note: "註",
+      tip: "提示",
+      important: "重要",
+      warning: "警告",
+      caution: "小心",
+    },
   },
   dialogs: {
     copyButton: "複製",

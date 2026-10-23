@@ -45,6 +45,13 @@ export const enUS = {
     nextMatch: "Next Match",
     closeFind: "Close",
     placeholder: "Start writing…",
+    alerts: {
+      note: "Note",
+      tip: "Tip",
+      important: "Important",
+      warning: "Warning",
+      caution: "Caution",
+    },
   },
   dialogs: {
     copyButton: "Copy",

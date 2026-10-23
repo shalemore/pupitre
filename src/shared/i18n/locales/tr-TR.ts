@@ -46,6 +46,13 @@ export const trTR = {
     nextMatch: "Sonraki eşleşme",
     closeFind: "Kapat",
     placeholder: "Yazmaya başlayın…",
+    alerts: {
+      note: "Not",
+      tip: "İpucu",
+      important: "Önemli",
+      warning: "Uyarı",
+      caution: "Dikkat",
+    },
   },
   dialogs: {
     copyButton: "Kopyala",

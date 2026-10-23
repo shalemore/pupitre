@@ -46,6 +46,13 @@ export const svSE = {
     nextMatch: "Nästa träff",
     closeFind: "Stäng",
     placeholder: "Börja skriva…",
+    alerts: {
+      note: "Observera",
+      tip: "Tips",
+      important: "Viktigt",
+      warning: "Varning",
+      caution: "Se upp",
+    },
   },
   dialogs: {
     copyButton: "Kopiera",

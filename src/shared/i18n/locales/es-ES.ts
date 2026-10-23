@@ -45,6 +45,13 @@ export const esES = {
     nextMatch: "Coincidencia siguiente",
     closeFind: "Cerrar",
     placeholder: "Empieza a escribir…",
+    alerts: {
+      note: "Nota",
+      tip: "Consejo",
+      important: "Importante",
+      warning: "Advertencia",
+      caution: "Precaución",
+    },
   },
   dialogs: {
     copyButton: "Copiar",

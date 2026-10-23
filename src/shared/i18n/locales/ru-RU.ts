@@ -50,6 +50,13 @@ export const ruRU = {
     nextMatch: "Следующее совпадение",
     closeFind: "Закрыть",
     placeholder: "Начните писать…",
+    alerts: {
+      note: "Примечание",
+      tip: "Совет",
+      important: "Важно",
+      warning: "Предупреждение",
+      caution: "Осторожно",
+    },
   },
   dialogs: {
     copyButton: "Копировать",

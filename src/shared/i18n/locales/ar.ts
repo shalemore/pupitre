@@ -61,6 +61,13 @@ export const ar = {
     nextMatch: "التطابق التالي",
     closeFind: "إغلاق",
     placeholder: "ابدأ الكتابة…",
+    alerts: {
+      note: "ملاحظة",
+      tip: "نصيحة",
+      important: "مهم",
+      warning: "تحذير",
+      caution: "تنبيه",
+    },
   },
   dialogs: {
     copyButton: "نسخ",

@@ -45,6 +45,13 @@ export const zhCN = {
     nextMatch: "下一个匹配",
     closeFind: "关闭",
     placeholder: "开始写作…",
+    alerts: {
+      note: "注意",
+      tip: "提示",
+      important: "重要",
+      warning: "警告",
+      caution: "当心",
+    },
   },
   dialogs: {
     copyButton: "复制",

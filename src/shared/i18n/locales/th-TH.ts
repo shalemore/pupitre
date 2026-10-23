@@ -49,6 +49,13 @@ export const thTH = {
     nextMatch: "รายการที่ตรงถัดไป",
     closeFind: "ปิด",
     placeholder: "เริ่มพิมพ์…",
+    alerts: {
+      note: "หมายเหตุ",
+      tip: "เคล็ดลับ",
+      important: "สำคัญ",
+      warning: "คำเตือน",
+      caution: "ข้อควรระวัง",
+    },
   },
   dialogs: {
     copyButton: "คัดลอก",

@@ -45,6 +45,13 @@ export const itIT = {
     nextMatch: "Corrispondenza successiva",
     closeFind: "Chiudi",
     placeholder: "Inizia a scrivere…",
+    alerts: {
+      note: "Nota",
+      tip: "Suggerimento",
+      important: "Importante",
+      warning: "Avviso",
+      caution: "Attenzione",
+    },
   },
   dialogs: {
     copyButton: "Copia",

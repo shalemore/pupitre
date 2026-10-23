@@ -46,6 +46,13 @@ export const fiFI = {
     nextMatch: "Seuraava osuma",
     closeFind: "Sulje",
     placeholder: "Aloita kirjoittaminen…",
+    alerts: {
+      note: "Huomautus",
+      tip: "Vinkki",
+      important: "Tärkeää",
+      warning: "Varoitus",
+      caution: "Varo",
+    },
   },
   dialogs: {
     copyButton: "Kopioi",

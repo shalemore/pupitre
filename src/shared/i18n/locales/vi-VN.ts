@@ -46,6 +46,13 @@ export const viVN = {
     nextMatch: "Kết quả tiếp theo",
     closeFind: "Đóng",
     placeholder: "Bắt đầu viết…",
+    alerts: {
+      note: "Ghi chú",
+      tip: "Mẹo",
+      important: "Quan trọng",
+      warning: "Cảnh báo",
+      caution: "Thận trọng",
+    },
   },
   dialogs: {
     copyButton: "Sao chép",

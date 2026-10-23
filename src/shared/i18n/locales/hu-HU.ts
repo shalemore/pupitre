@@ -46,6 +46,13 @@ export const huHU = {
     nextMatch: "Következő találat",
     closeFind: "Bezárás",
     placeholder: "Kezdjen el írni…",
+    alerts: {
+      note: "Megjegyzés",
+      tip: "Tipp",
+      important: "Fontos",
+      warning: "Figyelmeztetés",
+      caution: "Vigyázat",
+    },
   },
   dialogs: {
     copyButton: "Másolás",

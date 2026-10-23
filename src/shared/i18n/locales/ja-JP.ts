@@ -45,6 +45,13 @@ export const jaJP = {
     nextMatch: "次の一致",
     closeFind: "閉じる",
     placeholder: "書き始めましょう…",
+    alerts: {
+      note: "注",
+      tip: "ヒント",
+      important: "重要",
+      warning: "警告",
+      caution: "注意",
+    },
   },
   dialogs: {
     copyButton: "コピー",

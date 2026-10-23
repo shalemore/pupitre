@@ -45,6 +45,13 @@ export const deDE = {
     nextMatch: "Nächster Treffer",
     closeFind: "Schließen",
     placeholder: "Schreiben Sie los…",
+    alerts: {
+      note: "Hinweis",
+      tip: "Tipp",
+      important: "Wichtig",
+      warning: "Warnung",
+      caution: "Vorsicht",
+    },
   },
   dialogs: {
     copyButton: "Kopieren",

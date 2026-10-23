@@ -102,6 +102,13 @@ export interface TranslationSchema {
     readonly nextMatch: string;
     readonly closeFind: string;
     readonly placeholder: string;
+    readonly alerts: {
+      readonly note: string;
+      readonly tip: string;
+      readonly important: string;
+      readonly warning: string;
+      readonly caution: string;
+    };
   };
   readonly dialogs: {
     readonly copyButton: string;

@@ -46,6 +46,13 @@ export const nlNL = {
     nextMatch: "Volgende overeenkomst",
     closeFind: "Sluiten",
     placeholder: "Begin met schrijven…",
+    alerts: {
+      note: "Opmerking",
+      tip: "Tip",
+      important: "Belangrijk",
+      warning: "Waarschuwing",
+      caution: "Let op",
+    },
   },
   dialogs: {
     copyButton: "Kopiëren",

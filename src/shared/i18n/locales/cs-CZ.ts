@@ -50,6 +50,13 @@ export const csCZ = {
     nextMatch: "Následující výskyt",
     closeFind: "Zavřít",
     placeholder: "Začněte psát…",
+    alerts: {
+      note: "Poznámka",
+      tip: "Tip",
+      important: "Důležité",
+      warning: "Varování",
+      caution: "Pozor",
+    },
   },
   dialogs: {
     copyButton: "Kopírovat",

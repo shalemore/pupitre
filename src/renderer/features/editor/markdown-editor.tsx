@@ -219,7 +219,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       })
       .use(frontMatter)
       .use(rawHtml(resolveUrl))
-      .use(githubAlerts)
+      .use(githubAlerts(labels.alerts))
       .use($prose(() => formatKeymap(() => crepe.editor)))
       .use(
         $prose(() =>

@@ -46,6 +46,13 @@ export const daDK = {
     nextMatch: "Næste match",
     closeFind: "Luk",
     placeholder: "Begynd at skrive…",
+    alerts: {
+      note: "Bemærk",
+      tip: "Tip",
+      important: "Vigtigt",
+      warning: "Advarsel",
+      caution: "Forsigtig",
+    },
   },
   dialogs: {
     copyButton: "Kopiér",

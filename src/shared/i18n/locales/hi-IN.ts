@@ -46,6 +46,13 @@ export const hiIN = {
     nextMatch: "अगला मिलान",
     closeFind: "बंद करें",
     placeholder: "लिखना शुरू करें…",
+    alerts: {
+      note: "नोट",
+      tip: "सुझाव",
+      important: "महत्वपूर्ण",
+      warning: "चेतावनी",
+      caution: "सावधानी",
+    },
   },
   dialogs: {
     copyButton: "कॉपी करें",

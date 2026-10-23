@@ -45,6 +45,13 @@ export const koKR = {
     nextMatch: "다음 일치 항목",
     closeFind: "닫기",
     placeholder: "작성을 시작하세요…",
+    alerts: {
+      note: "참고",
+      tip: "팁",
+      important: "중요",
+      warning: "경고",
+      caution: "주의",
+    },
   },
   dialogs: {
     copyButton: "복사",

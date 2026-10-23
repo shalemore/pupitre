@@ -47,6 +47,13 @@ export const isIS = {
     nextMatch: "Næsta niðurstaða",
     closeFind: "Loka",
     placeholder: "Byrjaðu að skrifa…",
+    alerts: {
+      note: "Athugasemd",
+      tip: "Ábending",
+      important: "Mikilvægt",
+      warning: "Viðvörun",
+      caution: "Varúð",
+    },
   },
   dialogs: {
     copyButton: "Afrita",

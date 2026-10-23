@@ -46,6 +46,13 @@ export const nbNO = {
     nextMatch: "Neste treff",
     closeFind: "Lukk",
     placeholder: "Begynn å skrive…",
+    alerts: {
+      note: "Merk",
+      tip: "Tips",
+      important: "Viktig",
+      warning: "Advarsel",
+      caution: "Forsiktig",
+    },
   },
   dialogs: {
     copyButton: "Kopier",

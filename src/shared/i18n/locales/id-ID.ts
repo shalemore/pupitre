@@ -46,6 +46,13 @@ export const idID = {
     nextMatch: "Kecocokan berikutnya",
     closeFind: "Tutup",
     placeholder: "Mulai menulis…",
+    alerts: {
+      note: "Catatan",
+      tip: "Tips",
+      important: "Penting",
+      warning: "Peringatan",
+      caution: "Hati-hati",
+    },
   },
   dialogs: {
     copyButton: "Salin",

@@ -50,6 +50,13 @@ export const plPL = {
     nextMatch: "Następne dopasowanie",
     closeFind: "Zamknij",
     placeholder: "Zacznij pisać…",
+    alerts: {
+      note: "Uwaga",
+      tip: "Wskazówka",
+      important: "Ważne",
+      warning: "Ostrzeżenie",
+      caution: "Ostrożnie",
+    },
   },
   dialogs: {
     copyButton: "Kopiuj",

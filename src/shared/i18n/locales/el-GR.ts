@@ -46,6 +46,13 @@ export const elGR = {
     nextMatch: "Επόμενη αντιστοιχία",
     closeFind: "Κλείσιμο",
     placeholder: "Ξεκινήστε να γράφετε…",
+    alerts: {
+      note: "Σημείωση",
+      tip: "Συμβουλή",
+      important: "Σημαντικό",
+      warning: "Προειδοποίηση",
+      caution: "Προσοχή",
+    },
   },
   dialogs: {
     copyButton: "Αντιγραφή",

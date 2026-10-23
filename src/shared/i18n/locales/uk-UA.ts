@@ -50,6 +50,13 @@ export const ukUA = {
     nextMatch: "Наступний збіг",
     closeFind: "Закрити",
     placeholder: "Почніть писати…",
+    alerts: {
+      note: "Примітка",
+      tip: "Порада",
+      important: "Важливо",
+      warning: "Попередження",
+      caution: "Обережно",
+    },
   },
   dialogs: {
     copyButton: "Копіювати",

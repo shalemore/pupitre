@@ -45,6 +45,13 @@ export const frFR = {
     nextMatch: "Résultat suivant",
     closeFind: "Fermer",
     placeholder: "Commencez à écrire…",
+    alerts: {
+      note: "Remarque",
+      tip: "Astuce",
+      important: "Important",
+      warning: "Avertissement",
+      caution: "Attention",
+    },
   },
   dialogs: {
     copyButton: "Copier",

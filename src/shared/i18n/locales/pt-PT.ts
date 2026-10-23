@@ -45,6 +45,13 @@ export const ptPT = {
     nextMatch: "Correspondência seguinte",
     closeFind: "Fechar",
     placeholder: "Comece a escrever…",
+    alerts: {
+      note: "Nota",
+      tip: "Dica",
+      important: "Importante",
+      warning: "Aviso",
+      caution: "Cuidado",
+    },
   },
   dialogs: {
     copyButton: "Copiar",

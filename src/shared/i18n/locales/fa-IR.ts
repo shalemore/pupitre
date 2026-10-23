@@ -47,6 +47,13 @@ export const faIR = {
     nextMatch: "تطابق بعدی",
     closeFind: "بستن",
     placeholder: "نوشتن را شروع کنید…",
+    alerts: {
+      note: "یادداشت",
+      tip: "نکته",
+      important: "مهم",
+      warning: "هشدار",
+      caution: "احتیاط",
+    },
   },
   dialogs: {
     copyButton: "رونوشت",
