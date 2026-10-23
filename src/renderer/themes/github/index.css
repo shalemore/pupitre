@@ -138,6 +138,11 @@
   background: var(--ui-surface-0);
 }
 
+/* Rendered math and diagrams (preview only) sit directly on the page */
+.milkdown .milkdown-code-block:has(.preview-panel):not(:has(.preview-divider)) {
+  background: transparent;
+}
+
 .milkdown .milkdown-code-block .cm-content {
   font-family: var(--font-mono);
   font-size: 85%;
