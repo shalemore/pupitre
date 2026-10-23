@@ -8,8 +8,8 @@ Pupitre es un editor de Markdown de escritorio. Los documentos son archivos `.md
 
 Mueve el cursor dentro de **texto en negrita**, un `fragmento de código` o un [enlace](https://github.com/shalemore/pupitre) y su sintaxis aparece alrededor. Los marcadores se comportan como texto:
 
-- Retroceso justo después de un marcador de apertura quita el formato.
-- Al principio de un encabezado, escribe `#` para subir su nivel y pulsa Retroceso para bajarlo.
+- Borra un marcador para quitar su formato; añade o borra un `#` delante de un encabezado para cambiar su nivel.
+- Al seleccionar texto se ve su sintaxis, y copiar copia Markdown.
 - El formato está en los menús **Párrafo** y **Formato**, en el menú contextual y en los atajos de abajo.
 
 <details>
@@ -46,7 +46,7 @@ Preferencias › Apariencia › Estilo de ventana alterna entre **Clásico** e *
 
 ## Archivos e imágenes
 
-- Pupitre conserva los saltos de línea del archivo que abrió salvo que Preferencias › Markdown indique otra cosa. Ahí también se define cómo se escriben al guardar las listas, el énfasis, las vallas de código y las reglas.
+- Pupitre conserva los saltos de línea del archivo que abrió salvo que Preferencias › Markdown indique otra cosa. Ahí también se define la sintaxis que insertan los comandos de formato.
 - Las imágenes pegadas se guardan en una carpeta junto al documento (`assets` por defecto, Preferencias › Markdown). Un documento aún sin guardar las mantiene en memoria y las escribe al guardar por primera vez.
 - Preferencias › General › Aplicación predeterminada para Markdown hace que Pupitre abra los archivos `.md` desde el administrador de archivos.
 - Las preferencias se guardan en `settings.json`; Preferencias › Acerca de muestra su carpeta. Solo se escriben los valores que difieren de los predeterminados, y un campo ilegible vuelve a su valor predeterminado sin afectar a los demás.
@@ -76,7 +76,7 @@ Los temas vienen con la aplicación: cada uno es una carpeta en `src/renderer/th
   }
 }
 
-.milkdown .ProseMirror h1 {
+.md-document .md-h1 {
   font-size: 2em;
 }
 ```

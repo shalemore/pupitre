@@ -49,7 +49,7 @@
   --alert-caution: oklch(0.5 0.14 25);
 }
 
-.milkdown .ProseMirror {
+.md-document {
   padding-block: 4em 40vh;
   font-family: var(--font-document);
   color: var(--ui-text-primary);
@@ -57,163 +57,87 @@
   hyphens: auto;
 }
 
-.milkdown .ProseMirror p {
-  padding: 0;
-  margin: 0;
+.md-document > .cm-line:not(.md-code-block, .md-table, .md-front-matter) {
   text-align: justify;
 }
 
-/* Book convention: no space between paragraphs, a first-line indent instead */
-.milkdown .ProseMirror p + p {
-  text-indent: 2em;
-}
-
-.milkdown .ProseMirror :is(h1, h2, h3, h4, h5, h6) {
-  font-family: inherit;
+.md-heading {
+  padding-block: 0.8em 0.4em;
   font-weight: 600;
   line-height: 1.3;
-  margin-block: 1.6em 0.8em;
-  padding: 0;
 }
 
-.milkdown .ProseMirror h1 {
+.md-document > .md-h1 {
   font-size: 1.9em;
   text-align: center;
-  margin-block: 0.5em 1.2em;
 }
 
-.milkdown .ProseMirror h2 {
+.md-document > .md-h2 {
   font-size: 1.4em;
   text-align: center;
 }
 
-.milkdown .ProseMirror h3 {
+.md-h3 {
   font-size: 1.15em;
 }
 
-.milkdown .ProseMirror :is(h4, h5, h6) {
+.md-h4,
+.md-h5,
+.md-h6 {
   font-size: 1em;
   font-style: italic;
 }
 
-.milkdown .ProseMirror a {
+.md-link {
   color: var(--ui-brand);
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.18em;
 }
 
-.milkdown .ProseMirror :not(pre) > code {
-  display: inline;
-  color: inherit;
-  background: var(--ui-alpha-1);
+.md-code {
   border-radius: 3px;
   padding: 0.05em 0.3em;
+  background: var(--ui-alpha-1);
   font-size: 0.85em;
 }
 
-.milkdown .milkdown-code-block {
-  margin-block: 1.2em;
-  padding: 0.5em 1em 1em;
-  border-block: 1px solid var(--ui-alpha-2);
-  border-radius: 0;
+.md-code-block {
   background: transparent;
-}
-
-/* Rendered math and diagrams (preview only) have no card chrome */
-.milkdown .milkdown-code-block:has(.preview-panel):not(:has(.preview-divider)) {
-  border: none;
-}
-
-.milkdown .milkdown-code-block .cm-content {
-  font-family: var(--font-mono);
   font-size: 0.82em;
 }
 
-.milkdown .ProseMirror blockquote {
-  margin: 1.2em 2em;
-  padding: 0;
+.md-code-block-start {
+  border-block-start: 1px solid var(--ui-alpha-2);
+}
+
+.md-code-block-end {
+  border-block-end: 1px solid var(--ui-alpha-2);
+}
+
+/* Quotes are set in from both sides in italics, without a bar */
+.md-quote {
+  --md-quote-indent: 2em;
+  padding-inline-end: 2em;
+  border-inline-start: none;
   font-style: italic;
   color: var(--ui-text-secondary);
 }
 
-.milkdown .ProseMirror blockquote::before {
-  display: none;
-}
-
 /* A horizontal rule is drawn as a centered asterism */
-.milkdown .ProseMirror hr {
-  height: auto;
-  margin-block: 1.5em;
-  padding: 0;
+.md-document > .md-hr:not(:has(.md-mark)) {
   background: none;
   text-align: center;
 }
 
-.milkdown .ProseMirror hr::after {
+.md-hr:not(:has(.md-mark))::after {
   content: "* * *";
   color: var(--ui-text-muted);
   letter-spacing: 0.5em;
 }
 
-.milkdown .milkdown-table-block :is(th, td) {
-  border: none;
-  border-block-end: 1px solid var(--ui-alpha-2);
-  padding: 0.35em 0.8em;
-}
-
-.milkdown .milkdown-table-block :is(th, td) p {
-  margin: 0;
-  text-indent: 0;
-  text-align: start;
-}
-
-.milkdown .milkdown-table-block th {
-  border-block-end: 1.5px solid var(--ui-text-secondary);
-  font-weight: 600;
-}
-
-.milkdown .milkdown-list-item-block {
-  --list-item-gap: 0.15em;
-}
-
-.milkdown .milkdown-list-item-block p {
-  text-indent: 0;
-}
-
-.milkdown .ProseMirror kbd {
-  padding: 0.1em 0.4em;
-  border: 1px solid var(--ui-alpha-3);
-  border-block-end-width: 2px;
-  border-radius: 3px;
-  background: var(--ui-alpha-1);
-  font-family: var(--font-mono);
-  font-size: 0.85em;
-}
-
-.milkdown .ProseMirror mark {
-  border-radius: 2px;
-  background: oklch(from var(--ui-brand) l c h / 25%);
-  color: inherit;
-}
-
-.milkdown .ProseMirror pre[data-type="front-matter"] {
-  margin-block: 0 1.5em;
-  padding: 0.75em 1em;
-  border-radius: 0;
+.md-front-matter {
   background: var(--ui-alpha-1);
   color: var(--ui-text-secondary);
-  font-family: var(--font-mono);
   font-size: 0.85em;
-}
-
-.milkdown .ProseMirror dl[data-type="footnote_definition"] {
-  gap: 0.5em;
-  margin-block: 0.25em;
-  font-size: 0.9em;
-  color: var(--ui-text-secondary);
-}
-
-.milkdown .ProseMirror dl[data-type="footnote_definition"] p {
-  margin: 0;
 }

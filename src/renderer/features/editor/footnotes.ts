@@ -1,54 +1,95 @@
-import type { Node } from "@milkdown/kit/prose/model";
-import { Plugin, TextSelection } from "@milkdown/kit/prose/state";
-import type { EditorView } from "@milkdown/kit/prose/view";
-import { $prose } from "@milkdown/kit/utils";
+import { syntaxTree } from "@codemirror/language";
+import type { EditorState } from "@codemirror/state";
+import type { SyntaxNode } from "@lezer/common";
+import type { MarkdownConfig } from "@lezer/markdown";
 
 /**
- * Clicking a footnote reference moves the cursor into its definition, and clicking the label of a
- * definition moves it back to the first reference, like the links GitHub renders for footnotes.
+ * Footnotes as GitHub writes them: `[^label]` refers to a definition `[^label]: text`, whose
+ * further paragraphs are indented by four spaces. Without this extension the parser would read
+ * the reference as a link and the definition as a link reference.
  */
-function findNode(doc: Node, typeName: string, label: string): number | undefined {
-  let found: number | undefined;
-  doc.descendants((node, pos) => {
-    if (found !== undefined) return false;
-    if (node.type.name === typeName && node.attrs["label"] === label) found = pos;
-    return found === undefined;
+
+const OPEN_BRACKET = 91;
+const CARET = 94;
+const CLOSE_BRACKET = 93;
+const DEFINITION = /^\[\^([^\]\s]+)\]:/;
+/** Indentation that continues a definition, like a list item's. */
+const DEFINITION_INDENT = 4;
+
+export const footnotes: MarkdownConfig = {
+  defineNodes: [
+    { name: "FootnoteReference" },
+    { name: "FootnoteMark" },
+    {
+      name: "FootnoteDefinition",
+      block: true,
+      composite: (_cx, line, value) => {
+        if (line.indent < line.baseIndent + value && line.next > -1) return false;
+        line.moveBaseColumn(line.baseIndent + value);
+        return true;
+      },
+    },
+    { name: "FootnoteLabel" },
+  ],
+  parseInline: [
+    {
+      name: "FootnoteReference",
+      before: "Link",
+      parse(cx, next, start) {
+        if (next !== OPEN_BRACKET || cx.char(start + 1) !== CARET) return -1;
+        let end = start + 2;
+        while (end < cx.end && cx.char(end) !== CLOSE_BRACKET) {
+          const char = cx.char(end);
+          if (char === OPEN_BRACKET || char === 32 || char === 10 || char === 9) return -1;
+          end++;
+        }
+        if (end === start + 2 || end >= cx.end) return -1;
+        return cx.addElement(
+          cx.elt("FootnoteReference", start, end + 1, [
+            cx.elt("FootnoteMark", start, start + 2),
+            cx.elt("FootnoteMark", end, end + 1),
+          ]),
+        );
+      },
+    },
+  ],
+  parseBlock: [
+    {
+      name: "FootnoteDefinition",
+      before: "LinkReference",
+      parse(cx, line) {
+        const match = DEFINITION.exec(line.text.slice(line.pos));
+        if (!match) return false;
+        const start = cx.lineStart + line.pos;
+        cx.startComposite("FootnoteDefinition", line.pos, DEFINITION_INDENT);
+        cx.addElement(cx.elt("FootnoteLabel", start, start + match[0].length));
+        line.moveBase(line.pos + match[0].length);
+        return null;
+      },
+    },
+  ],
+};
+
+/** The label of a footnote reference or definition label node (`[^label]` or `[^label]:`). */
+export function footnoteLabel(state: EditorState, node: SyntaxNode): string {
+  return state.sliceDoc(node.from, node.to).replace(/^\[\^|\]:?$/g, "");
+}
+
+/**
+ * Where a footnote jump lands: from a reference to the text of its definition, from a definition
+ * to just after its first reference, like the links GitHub renders.
+ */
+export function footnoteTarget(state: EditorState, node: SyntaxNode): number | undefined {
+  const label = footnoteLabel(state, node);
+  const wanted = node.name === "FootnoteReference" ? "FootnoteLabel" : "FootnoteReference";
+  let target: number | undefined;
+  syntaxTree(state).iterate({
+    enter: (other) => {
+      if (target !== undefined) return false;
+      if (other.name !== wanted || footnoteLabel(state, other.node) !== label) return true;
+      target = other.to;
+      return false;
+    },
   });
-  return found;
+  return target;
 }
-
-function moveCursor(view: EditorView, pos: number): void {
-  const { tr, doc } = view.state;
-  view.dispatch(tr.setSelection(TextSelection.near(doc.resolve(pos))).scrollIntoView());
-  view.focus();
-}
-
-function jump(view: EditorView, target: EventTarget | null): boolean {
-  if (!(target instanceof Element)) return false;
-  const { doc } = view.state;
-  const reference = target.closest('sup[data-type="footnote_reference"]');
-  if (reference) {
-    const pos = findNode(doc, "footnote_definition", reference.getAttribute("data-label") ?? "");
-    if (pos === undefined) return false;
-    moveCursor(view, pos + 1);
-    return true;
-  }
-  const label = target.closest('dl[data-type="footnote_definition"] > dt');
-  if (!label) return false;
-  const pos = findNode(
-    doc,
-    "footnote_reference",
-    label.parentElement?.getAttribute("data-label") ?? "",
-  );
-  if (pos === undefined) return false;
-  const node = doc.nodeAt(pos);
-  moveCursor(view, pos + (node?.nodeSize ?? 1));
-  return true;
-}
-
-export const footnoteLinks = $prose(
-  () =>
-    new Plugin({
-      props: { handleDOMEvents: { click: (view, event) => jump(view, event.target) } },
-    }),
-);

@@ -8,8 +8,8 @@ Pupitre is a desktop Markdown editor. Documents are plain `.md` files: what you 
 
 Move the cursor into **bold text**, a `code span` or a [link](https://github.com/shalemore/pupitre) and its syntax appears around it. The markers behave like text:
 
-- Backspace right after an opening marker removes the format.
-- At the start of a heading, type `#` to raise its level and press Backspace to lower it.
+- Delete a marker to remove its format; add or delete a `#` in front of a heading to change its level.
+- Selecting text shows the syntax in it, and copying copies Markdown.
 - Formatting is in the **Paragraph** and **Format** menus, the context menu and the shortcuts below.
 
 <details>
@@ -46,7 +46,7 @@ Preferences › Appearance › Window Style switches between **Classic** and **I
 
 ## Files and images
 
-- Pupitre keeps the line endings of the file it opened unless Preferences › Markdown says otherwise. How lists, emphasis, code fences and rules are written on save is set there too.
+- Pupitre keeps the line endings of the file it opened unless Preferences › Markdown says otherwise. The syntax that formatting commands insert is set there too.
 - Pasted images are saved in a folder next to the document (`assets` by default, Preferences › Markdown). A document that has not been saved yet keeps them in memory and writes them on the first save.
 - Preferences › General › Default Markdown App makes Pupitre open `.md` files from the file manager.
 - Preferences are stored in `settings.json`; Preferences › About shows its folder. Only values that differ from the defaults are written, and a field that cannot be read falls back to its default without affecting the others.
@@ -76,7 +76,7 @@ Themes ship with the app: each one is a folder in `src/renderer/themes/<name>/` 
   }
 }
 
-.milkdown .ProseMirror h1 {
+.md-document .md-h1 {
   font-size: 2em;
 }
 ```

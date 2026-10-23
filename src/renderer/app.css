@@ -1,9 +1,9 @@
 /*
- * Style layers from lowest to highest: Tailwind theme/base, Milkdown components (crepe), Tailwind components/utilities,
+ * Style layers from lowest to highest: Tailwind theme/base, the editor's own styles (editor), Tailwind components/utilities,
  * the active document theme (document-theme) and user preferences (preferences). Later layers win,
  * regardless of selector specificity, so a theme can override the app defaults and user settings always override the theme.
  */
-@layer theme, base, crepe, components, utilities, document-theme, preferences;
+@layer theme, base, editor, components, utilities, document-theme, preferences;
 
 @import "tailwindcss";
 @import "tw-animate-css";

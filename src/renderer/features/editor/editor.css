@@ -1,401 +1,459 @@
 /*
  * Base editor styles in three layers (their order is declared at the top of app.css):
- * - crepe: Milkdown Crepe's own component styles, plus the mapping of Crepe variables to the app's design tokens;
- * - document-theme: the active theme's typography and colors; a theme can override anything in the crepe layer;
+ * - editor: how the live preview (live-preview.ts) lays out Markdown source, with neutral defaults;
+ * - document-theme: the active theme's typography and colors; a theme can override anything in the editor layer;
  * - preferences: the font, size, line height and content width chosen in the settings, which always beat the theme,
  *   so a badly written theme cannot make a setting stop working.
+ *
+ * The document is CodeMirror's content element `.md-document`. Every source line is a `.cm-line`
+ * that carries the `md-*` classes of the block it belongs to; inline formats are `md-*` spans.
+ * Lines are spaced vertically with padding, never margins: CodeMirror measures line boxes to
+ * scroll and vertical margins would throw it off. Indentation comes from the --md-*-indent
+ * variables, so quotes, lists and code blocks nest inside each other.
  */
 
-@import "@milkdown/crepe/theme/common/style.css" layer(crepe);
+@import "katex/dist/katex.min.css" layer(editor);
 
-@layer crepe {
-  .milkdown {
-    --crepe-color-background: transparent;
-    --crepe-color-on-background: var(--ui-text-primary);
-    --crepe-color-surface: var(--ui-surface-0);
-    --crepe-color-surface-low: var(--ui-surface-1);
-    --crepe-color-on-surface: var(--ui-text-primary);
-    --crepe-color-on-surface-variant: var(--ui-text-secondary);
-    --crepe-color-outline: var(--ui-text-muted);
-    --crepe-color-primary: var(--ui-brand);
-    --crepe-color-secondary: var(--ui-alpha-1);
-    --crepe-color-on-secondary: var(--ui-text-primary);
-    --crepe-color-inverse: var(--ui-text-primary);
-    --crepe-color-on-inverse: var(--ui-surface-1);
-    --crepe-color-inline-code: var(--ui-brand);
-    --crepe-color-error: var(--ui-danger);
-    --crepe-color-hover: var(--ui-alpha-1);
-    --crepe-color-selected: var(--ui-alpha-2);
-    --crepe-color-inline-area: var(--ui-alpha-1);
-    --crepe-font-default: var(--font-sans);
-    --crepe-font-title: var(--font-sans);
-    --crepe-font-code: var(--font-mono);
-    --crepe-shadow-1: var(--ui-shadow-sm);
-    --crepe-shadow-2: var(--ui-shadow-popover);
+/*
+ * Registered as lengths, the indents are computed where they are set (in the body font size) and
+ * inherited as such, so lines in a smaller font, such as code, still line up with the text.
+ */
+@property --md-quote-indent {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
+@property --md-list-indent {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
+@layer editor {
+  .md-document {
+    --md-quote-indent: 1em;
+    --md-list-indent: 1.6em;
+    --md-block-indent: 0px;
   }
 
-  /* Position list markers from the font size and line height; Crepe hard-codes 32px, which drifts from the text at other sizes */
-  /* Paragraphs in list items have a margin set by the theme through --list-item-gap; the marker is offset by the same gap to stay level with the first line */
-  .milkdown .milkdown-list-item-block {
-    --list-item-gap: 0.15em;
+  .md-document > .cm-line {
+    padding-inline-start: calc(
+      var(--md-quote-depth, 0) * var(--md-quote-indent) + var(--md-list-depth, 0) *
+        var(--md-list-indent) + var(--md-block-indent)
+    );
   }
 
-  .milkdown .milkdown-list-item-block p {
-    margin-block: var(--list-item-gap);
+  /* A code block in a list starts at the item's text, card and all */
+  .md-document > .md-code-block {
+    margin-inline-start: calc(var(--md-list-depth, 0) * var(--md-list-indent));
+    padding-inline-start: calc(
+      var(--md-quote-depth, 0) * var(--md-quote-indent) + var(--md-block-indent)
+    );
   }
 
-  .milkdown .milkdown-list-item-block li .label-wrapper {
-    margin-block-start: var(--list-item-gap);
+  /* Markdown syntax shown as source around the construct being edited */
+  .md-mark {
+    color: var(--ui-text-muted);
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: none;
   }
 
-  .milkdown .milkdown-list-item-block li .label-wrapper,
-  .milkdown .milkdown-list-item-block li .label-wrapper .label {
-    height: calc(1em * var(--pref-line-height, 1.6));
+  .md-strong {
+    font-weight: 650;
   }
 
-  .milkdown .mermaid-diagram {
+  .md-em {
+    font-style: italic;
+  }
+
+  .md-strike {
+    text-decoration: line-through;
+  }
+
+  /* Inline code is isolated and takes the direction of its own first strong character */
+  .md-code {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    unicode-bidi: plaintext;
+  }
+
+  .md-link {
+    color: var(--ui-brand);
+  }
+
+  /* Inline HTML formatting elements, shown without their tags: <kbd>, <mark>, <sub> and so on */
+  .md-tag-kbd {
+    padding: 0.1em 0.4em;
+    border: 1px solid var(--ui-alpha-3);
+    border-block-end-width: 2px;
+    border-radius: 4px;
+    background: var(--ui-alpha-1);
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+  }
+
+  .md-tag-mark {
+    border-radius: 2px;
+    background: oklch(from var(--ui-brand) l c h / 25%);
+  }
+
+  .md-tag-sub,
+  .md-tag-sup {
+    font-size: 0.75em;
+  }
+
+  .md-tag-sub {
+    vertical-align: sub;
+  }
+
+  .md-tag-sup {
+    vertical-align: super;
+  }
+
+  :is(.md-tag-b, .md-tag-strong) {
+    font-weight: 650;
+  }
+
+  :is(.md-tag-i, .md-tag-em) {
+    font-style: italic;
+  }
+
+  :is(.md-tag-u, .md-tag-ins) {
+    text-decoration: underline;
+  }
+
+  :is(.md-tag-s, .md-tag-del) {
+    text-decoration: line-through;
+  }
+
+  .md-tag-small {
+    font-size: 0.85em;
+  }
+
+  .md-tag-code {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+  }
+
+  .md-image {
+    color: var(--ui-text-muted);
+  }
+
+  /* Footnotes: references in superscript, definitions in smaller text led by their label */
+  .md-footnote-ref {
+    color: var(--ui-brand);
+    font-size: 0.75em;
+    vertical-align: super;
+  }
+
+  .md-footnote {
+    color: var(--ui-text-secondary);
+    font-size: 0.9em;
+  }
+
+  .md-footnote-label {
+    color: var(--ui-text-muted);
+  }
+
+  .md-footnote-label::after {
+    content: ".";
+  }
+
+  /* A picture shown in place of its source, or under it while the source is edited */
+  .md-image-preview {
+    display: inline-block;
+    max-width: 100%;
+    vertical-align: bottom;
+    text-indent: 0;
+  }
+
+  .md-heading {
+    font-weight: 650;
+    line-height: 1.3;
+  }
+
+  .md-h1 {
+    font-size: 2em;
+  }
+
+  .md-h2 {
+    font-size: 1.5em;
+  }
+
+  .md-h3 {
+    font-size: 1.25em;
+  }
+
+  /* A setext underline away from the cursor takes no room */
+  .md-syntax-line:not(.md-code-block) {
+    font-size: 0;
+    line-height: 0;
+  }
+
+  .md-quote {
+    border-inline-start: 3px solid var(--alert-color, var(--ui-alpha-3));
+  }
+
+  /*
+   * GitHub alerts, see alerts.ts. Each type takes its color from a theme token (--alert-note,
+   * --alert-tip, --alert-important, --alert-warning, --alert-caution); themes draw the quote bar
+   * with `var(--alert-color, <their quote color>)`.
+   */
+  .md-alert[data-alert="note"] {
+    --alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4M12 8h.01'/%3E%3C/svg%3E");
+    --alert-color: var(--alert-note, var(--ui-brand));
+  }
+
+  .md-alert[data-alert="tip"] {
+    --alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4'/%3E%3C/svg%3E");
+    --alert-color: var(--alert-tip, var(--ui-brand));
+  }
+
+  .md-alert[data-alert="important"] {
+    --alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2zM12 7v2M12 13h.01'/%3E%3C/svg%3E");
+    --alert-color: var(--alert-important, var(--ui-brand));
+  }
+
+  .md-alert[data-alert="warning"] {
+    --alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4M12 17h.01'/%3E%3C/svg%3E");
+    --alert-color: var(--alert-warning, var(--ui-brand));
+  }
+
+  .md-alert[data-alert="caution"] {
+    --alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 16h.01M12 8v4M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z'/%3E%3C/svg%3E");
+    --alert-color: var(--alert-caution, var(--ui-brand));
+  }
+
+  .md-alert-title {
+    color: var(--alert-color);
+    font-weight: 600;
+  }
+
+  .md-alert-title::before {
+    content: "";
+    display: inline-block;
+    inline-size: 1em;
+    block-size: 1em;
+    margin-inline-end: 0.5em;
+    vertical-align: -0.125em;
+    background: currentColor;
+    mask: var(--alert-icon) center / contain no-repeat;
+  }
+
+  /* The marker hangs in the indentation in front of the item's first line */
+  .md-list-item {
+    text-indent: calc(-1 * var(--md-list-indent));
+  }
+
+  .md-list-bullet,
+  .md-list-mark {
+    display: inline-block;
+    min-width: var(--md-list-indent);
+    text-indent: 0;
+    color: var(--ui-text-muted);
+  }
+
+  .md-list-bullet::before {
+    content: "•";
+  }
+
+  [data-list-depth="2"] .md-list-bullet::before {
+    content: "◦";
+  }
+
+  [data-list-depth="3"] .md-list-bullet::before {
+    content: "▪";
+  }
+
+  /* A task's checkbox takes the place of its bullet; the space after it stays text */
+  .md-task-checkbox {
+    width: 1em;
+    height: 1em;
+    margin: 0;
+    margin-inline-end: calc(var(--md-list-indent) - 1em - 0.3em);
+    vertical-align: -0.125em;
+    text-indent: 0;
+    accent-color: var(--ui-brand);
+    cursor: default;
+  }
+
+  .md-task-checked {
+    color: var(--ui-text-muted);
+  }
+
+  /* Code blocks: one card drawn across their lines; the fences shrink to its padding when hidden */
+  .md-code-block {
+    --md-block-indent: 1em;
+    position: relative;
+    padding-inline-end: 1em;
+    background: var(--ui-surface-0);
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    unicode-bidi: isolate;
+  }
+
+  .md-code-block.md-syntax-line {
+    font-size: 0.6em;
+    line-height: 1.2;
+  }
+
+  .md-code-block-start {
+    border-start-start-radius: 8px;
+    border-start-end-radius: 8px;
+  }
+
+  .md-code-block-end {
+    border-end-start-radius: 8px;
+    border-end-end-radius: 8px;
+  }
+
+  .md-code-block-start[data-language]::after {
+    content: attr(data-language);
+    position: absolute;
+    inset-block-start: 0.4em;
+    inset-inline-end: 1em;
+    color: var(--ui-text-muted);
+    font-family: var(--font-sans);
+    font-size: 1.2em;
+    line-height: 1;
+  }
+
+  /* A rule away from the cursor is drawn as a line; the --- shows while it is edited */
+  .md-hr:not(:has(.md-mark)) {
+    background: linear-gradient(var(--ui-alpha-2), var(--ui-alpha-2)) center / 100% 1px no-repeat;
+  }
+
+  /*
+   * Rendered math and diagrams. They are laid out left to right and isolated, so their
+   * punctuation never flips the surrounding sentence; block renderings keep no margins of their
+   * own because CodeMirror measures their boxes.
+   */
+  .md-math,
+  .md-math-block,
+  .md-mermaid {
+    direction: ltr;
+    unicode-bidi: isolate;
+  }
+
+  .md-math-block,
+  .md-mermaid {
     display: flex;
     justify-content: center;
+    padding-block: 0.5em;
     overflow-x: auto;
   }
 
-  .milkdown .mermaid-error {
+  .md-math-block .katex-display {
+    margin: 0;
+  }
+
+  .md-mermaid.is-invalid {
+    justify-content: start;
     color: var(--ui-danger);
     font-size: 0.85em;
     white-space: pre-wrap;
   }
 
-  /* Image blocks, see image-block-view.ts */
-  .milkdown .milkdown-image-block img {
-    cursor: pointer;
-  }
-
-  /* A grip on the lower edge of the image; the outline keeps it visible on light and dark pictures */
-  .milkdown .milkdown-image-block .image-wrapper .image-resize-handle {
-    bottom: 8px;
-    width: 40px;
-    height: 6px;
-    background: white;
-    box-shadow: 0 0 0 1px rgb(0 0 0 / 35%);
-  }
-
-  .milkdown .milkdown-image-block .image-resize-handle::before {
-    content: "";
-    position: absolute;
-    inset: -10px -20px;
-  }
-
-  .milkdown .milkdown-image-block :is(.image-caption, .image-source) {
-    display: none;
-    width: 100%;
-    font: inherit;
-  }
-
-  .milkdown .milkdown-image-block .image-caption {
-    margin: 0.4em auto 0;
-    color: var(--ui-text-secondary);
-    font-size: 0.9em;
-    text-align: center;
-  }
-
-  .milkdown .milkdown-image-block .image-caption::placeholder {
-    color: var(--ui-text-muted);
-    font-style: italic;
-  }
-
-  .milkdown .milkdown-image-block.has-caption .image-caption,
-  .milkdown .milkdown-image-block.reveal-caption .image-caption {
-    display: block;
-  }
-
-  .milkdown .milkdown-image-block .image-source {
-    padding: 0.5em 0.75em;
-    border-radius: 8px;
-    background: var(--ui-surface-0);
+  .md-math-source {
     font-family: var(--font-mono);
-    font-size: 0.9em;
+    font-size: 0.875em;
   }
 
-  .milkdown .milkdown-image-block.is-editing-source .image-source {
-    display: block;
+  .md-html-block img {
+    max-width: 100%;
   }
 
-  .milkdown .milkdown-image-block.is-editing-source :is(.image-wrapper, .image-caption) {
-    display: none;
+  /* The summary of a <details> section, see details.ts; the triangle opens and closes it */
+  .md-details-summary {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4em;
   }
 
-  /* Collapsible sections, see details.ts */
-  .milkdown .md-details {
-    position: relative;
-    margin-block: 1em;
-    padding-inline-start: 1.5em;
-  }
-
-  .milkdown .md-details-toggle {
-    position: absolute;
-    inset-block-start: 0;
-    inset-inline-start: 0;
+  .md-details-toggle {
     display: grid;
     place-items: center;
-    width: 1.5em;
-    height: calc(1em * var(--pref-line-height, 1.6));
+    flex: none;
+    width: 1em;
+    height: 1em;
     color: var(--ui-text-muted);
     cursor: pointer;
-    user-select: none;
   }
 
-  .milkdown .md-details-toggle::before {
+  .md-details-toggle::before {
     content: "";
     width: 0.5em;
     height: 0.5em;
     background: currentColor;
     clip-path: polygon(0 0, 100% 50%, 0 100%);
-    transform: rotate(90deg);
   }
 
-  .milkdown .md-details.is-collapsed .md-details-toggle::before {
-    transform: none;
-  }
-
-  .milkdown .md-details:dir(rtl) .md-details-toggle::before {
-    transform: scaleX(-1) rotate(90deg);
-  }
-
-  .milkdown .md-details.is-collapsed:dir(rtl) .md-details-toggle::before {
+  .md-details-toggle:dir(rtl)::before {
     transform: scaleX(-1);
   }
 
-  .milkdown .md-details-summary {
-    margin-block-end: 0.5em;
+  .md-details-summary.is-open .md-details-toggle::before {
+    transform: rotate(90deg);
   }
 
-  .milkdown .md-details.is-collapsed .md-details-body > :not(.md-details-summary) {
-    display: none;
+  /* A rendered table; its cells keep the document font and scroll sideways when too wide */
+  .md-table-block {
+    padding-block: 0.25em;
+    overflow-x: auto;
   }
 
-  .milkdown .md-details.is-collapsed .md-details-summary {
-    margin-block-end: 0;
+  .md-table-view {
+    border-collapse: collapse;
+    cursor: text;
   }
 
-  /* The bullet of the list item under the cursor shows its Markdown marker, see syntax-reveal.ts */
-  .milkdown .milkdown-list-item-block.is-current-item > li > .label-wrapper .label svg {
-    display: none;
+  .md-table-view :is(th, td) {
+    padding: 0.4em 0.9em;
+    border: 1px solid var(--ui-alpha-2);
   }
 
-  /* The svg fills the 24px marker box, so its dot is centered there; the text marker has to be centered the same way */
-  .milkdown .milkdown-list-item-block.is-current-item > li > .label-wrapper .label {
-    justify-content: center;
-  }
-
-  .milkdown .milkdown-list-item-block.is-current-item > li > .label-wrapper .label::before {
-    content: var(--bullet-marker);
-  }
-
-  /* Markdown syntax shown around the format under the cursor, see syntax-reveal.ts */
-  .milkdown .md-syntax {
-    color: var(--ui-text-muted);
-    font-weight: normal;
-    font-style: normal;
-    text-decoration: none;
-    user-select: none;
-  }
-
-  /* Raw HTML, see raw-html.ts: complete elements show their source only while the cursor is on them */
-  .milkdown .md-html-source {
-    color: var(--ui-text-muted);
-    font-family: var(--crepe-font-code);
-    font-size: 0.875em;
-    white-space: pre-wrap;
-  }
-
-  .milkdown .md-html.is-rendered:not(.is-editing) .md-html-source,
-  .milkdown .md-html:is(.is-editing, :not(.is-rendered)) .md-html-preview {
-    display: none;
-  }
-
-  /* Front matter, see front-matter.ts: the source is shown verbatim and never mirrored */
-  .milkdown .ProseMirror pre[data-type="front-matter"] {
-    white-space: pre-wrap;
-    direction: ltr;
-    text-align: left;
-  }
-
-  .milkdown .ProseMirror pre[data-type="front-matter"] > code {
-    padding: 0;
-    background: none;
-    color: inherit;
-    font-size: inherit;
-  }
-
-  /*
-   * GitHub alerts, see alerts.ts. Each type takes its color from a theme token (--alert-note, --alert-tip,
-   * --alert-important, --alert-warning, --alert-caution); themes draw the quote bar with
-   * `var(--alert-color, <their quote color>)`.
-   */
-  .milkdown .md-alert[data-alert="note"] {
-    --alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4M12 8h.01'/%3E%3C/svg%3E");
-    --alert-color: var(--alert-note, var(--ui-brand));
-  }
-
-  .milkdown .md-alert[data-alert="tip"] {
-    --alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4'/%3E%3C/svg%3E");
-    --alert-color: var(--alert-tip, var(--ui-brand));
-  }
-
-  .milkdown .md-alert[data-alert="important"] {
-    --alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2zM12 7v2M12 13h.01'/%3E%3C/svg%3E");
-    --alert-color: var(--alert-important, var(--ui-brand));
-  }
-
-  .milkdown .md-alert[data-alert="warning"] {
-    --alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4M12 17h.01'/%3E%3C/svg%3E");
-    --alert-color: var(--alert-warning, var(--ui-brand));
-  }
-
-  .milkdown .md-alert[data-alert="caution"] {
-    --alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 16h.01M12 8v4M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z'/%3E%3C/svg%3E");
-    --alert-color: var(--alert-caution, var(--ui-brand));
-  }
-
-  .milkdown .md-alert > p:first-child > .md-html:first-child {
-    color: var(--alert-color);
+  .md-table-view th {
     font-weight: 600;
   }
 
-  .milkdown .md-alert > p:first-child > .md-html:first-child .md-html-source {
-    color: inherit;
-    font-family: inherit;
-    font-size: inherit;
+  /* Source shown in the code font; ligatures would turn markup such as <!-- into arrows */
+  .md-table,
+  .md-front-matter,
+  .md-html {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    font-variant-ligatures: none;
   }
 
-  /* Away from the cursor the marker reads as a title line of its own, so the line break after it is dropped */
-  .milkdown .md-alert > p:first-child > .md-html:first-child:not(.is-editing) {
-    display: block;
-
-    .md-html-source {
-      display: none;
-    }
-
-    &::before {
-      content: "";
-      display: inline-block;
-      inline-size: 1em;
-      block-size: 1em;
-      margin-inline-end: 0.5em;
-      vertical-align: -0.125em;
-      background: currentColor;
-      mask: var(--alert-icon) center / contain no-repeat;
-    }
-
-    &::after {
-      content: var(--alert-title);
-    }
-
-    + [data-type="hardbreak"] {
-      display: none;
-    }
+  .md-front-matter,
+  .md-html,
+  .md-link-reference {
+    color: var(--ui-text-secondary);
   }
 
-  /* Footnote references read as bracketed links, see footnotes.ts */
-  .milkdown .ProseMirror sup[data-type="footnote_reference"] {
-    color: var(--ui-brand);
-    cursor: pointer;
+  .cm-placeholder {
+    color: var(--ui-text-muted);
   }
 
-  .milkdown .ProseMirror sup[data-type="footnote_reference"]::before {
-    content: "[";
-  }
-
-  .milkdown .ProseMirror sup[data-type="footnote_reference"]::after {
-    content: "]";
-  }
-
-  .milkdown .ProseMirror dl[data-type="footnote_definition"] > dt {
-    cursor: pointer;
-  }
-
-  /* The first definition opens the footnote section, like a rule above GitHub's */
-  .milkdown
-    .ProseMirror
-    :not(dl[data-type="footnote_definition"])
-    + dl[data-type="footnote_definition"] {
-    margin-block-start: 2em;
-    padding-block-start: 1em;
-    border-block-start: 1px solid var(--ui-alpha-2);
-  }
-
-  /* Footnote definitions: the label sits before the note on the same line */
-  .milkdown .ProseMirror dl[data-type="footnote_definition"] {
-    display: flex;
-  }
-
-  .milkdown .ProseMirror dl[data-type="footnote_definition"] > dt::after {
-    content: ".";
-  }
-
-  .milkdown .ProseMirror dl[data-type="footnote_definition"] > dd {
-    flex: 1;
-    margin: 0;
-  }
-
-  /*
-   * Bidirectional text, see text-direction.ts. Code, math and diagrams are left-to-right and
-   * isolated, so their punctuation never flips the surrounding sentence. Inline code uses
-   * "plaintext", which isolates it and takes the direction of its own first strong character.
-   */
-  .milkdown :is(.milkdown-code-block, .katex-display, .mermaid-diagram) {
-    direction: ltr;
-    text-align: left;
-    unicode-bidi: isolate;
-  }
-
-  .milkdown .ProseMirror code {
-    unicode-bidi: plaintext;
-  }
-
-  /* KaTeX lays out its own boxes and would be mirrored by an inherited right-to-left direction */
-  .milkdown .ProseMirror .katex {
-    direction: ltr;
-    unicode-bidi: isolate;
-  }
-
-  /* Crepe positions these with physical properties; mirror them in right-to-left blocks */
-  .milkdown .ProseMirror blockquote {
-    padding-left: 0;
-    padding-inline-start: 40px;
-  }
-
-  .milkdown .ProseMirror blockquote::before {
-    left: auto;
-    inset-inline-start: 0;
-  }
-
-  /* Crepe pads the marker by 4px and leaves its svg on the text baseline, which sits the bullet off the line's center */
-  .milkdown .milkdown-list-item-block li .label-wrapper .label {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding-block: 0;
-  }
-
-  /* Match highlighting for prosemirror-search */
-  .milkdown .ProseMirror-search-match {
+  .cm-searchMatch {
     background-color: oklch(from var(--ui-brand) l c h / 22%);
     border-radius: 2px;
   }
 
-  .milkdown .ProseMirror-active-search-match {
+  .cm-searchMatch.cm-searchMatch-selected {
     background-color: var(--ui-brand);
     color: var(--brand-foreground);
   }
 }
 
 @layer preferences {
-  .milkdown .ProseMirror {
+  .md-document {
     box-sizing: content-box;
     max-width: var(--pref-content-width);
     margin-inline: auto;
-    /* Room on both sides for the block handles (drag, insert); this is app layout and not left to themes */
+    /* Room on both sides of the text; this is app layout and not left to themes */
     padding-inline: 4.5rem;
     /* Without a chosen font, fall back to the theme's own font */
     font-family: var(--pref-font-family, revert-layer);
@@ -403,66 +461,30 @@
     line-height: var(--pref-line-height);
   }
 
-  .milkdown .ProseMirror :is(p, li) {
-    line-height: var(--pref-line-height);
-  }
-
-  .milkdown :is(.ProseMirror code, .milkdown-code-block :is(.cm-content, .cm-gutters)) {
+  :is(.md-code, .md-code-block, .md-table, .md-front-matter, .md-html) {
     font-family: var(--pref-code-font, revert-layer);
   }
 
   /*
-   * Writing modes, see writing-modes.ts. Focus mode dims leaf blocks rather than containers, so
-   * nested blocks are never dimmed twice.
+   * Writing modes, see writing-modes.ts. Rendered blocks (tables, math, diagrams) are widgets
+   * rather than lines and are dimmed with the rest.
    */
-  .milkdown
-    .ProseMirror.focus-mode
-    :is(p, h1, h2, h3, h4, h5, h6, hr, pre, dt, .milkdown-code-block, .milkdown-image-block):not(
-      .is-current
-    ),
-  .milkdown .ProseMirror.focus-mode blockquote:not(:has(.is-current))::before,
-  .milkdown
-    .ProseMirror.focus-mode
-    .milkdown-list-item-block:not(:has(.is-current))
-    .label-wrapper {
+  .md-document.focus-mode > :not(.is-current) {
     opacity: 0.3;
   }
 
-  .milkdown .ProseMirror.typewriter-mode {
+  .md-document.typewriter-mode {
     padding-block-end: 50vh;
   }
 }
 
 @media print {
-  .milkdown .ProseMirror {
+  .md-document {
     max-width: none;
     padding: 0;
   }
 
-  /* The page shows the finished document: no syntax markers, no source of rendered HTML, no dimming */
-  .milkdown .md-syntax,
-  .milkdown .md-html.is-rendered .md-html-source {
-    display: none;
-  }
-
-  .milkdown .md-html.is-rendered .md-html-preview {
-    display: inline;
-  }
-
-  .milkdown .ProseMirror.focus-mode * {
+  .md-document.focus-mode > * {
     opacity: 1;
-  }
-
-  .milkdown
-    :is(
-      .milkdown-block-handle,
-      .milkdown-slash-menu,
-      .milkdown-toolbar,
-      .milkdown-link-preview,
-      .milkdown-link-edit,
-      .milkdown-code-block .tools,
-      .milkdown-image-block .image-resize-handle
-    ) {
-    display: none;
   }
 }

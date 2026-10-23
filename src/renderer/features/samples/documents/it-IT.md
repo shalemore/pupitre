@@ -8,8 +8,8 @@ Pupitre è un editor Markdown per desktop. I documenti sono semplici file `.md`:
 
 Sposta il cursore dentro un **testo in grassetto**, un `frammento di codice` o un [link](https://github.com/shalemore/pupitre) e la sua sintassi compare intorno. I marcatori si comportano come testo:
 
-- Backspace subito dopo un marcatore di apertura rimuove la formattazione.
-- All’inizio di un titolo, digita `#` per alzarne il livello e premi Backspace per abbassarlo.
+- Elimina un marcatore per togliere la formattazione; aggiungi o elimina un `#` davanti a un titolo per cambiarne il livello.
+- Selezionando il testo se ne vede la sintassi, e copiare copia Markdown.
 - La formattazione è nei menu **Paragrafo** e **Formato**, nel menu contestuale e nelle scorciatoie qui sotto.
 
 <details>
@@ -46,7 +46,7 @@ Preferenze › Aspetto › Stile finestra passa da **Classico** a **Immersivo**.
 
 ## File e immagini
 
-- Pupitre mantiene i fine riga del file aperto, salvo diversa indicazione in Preferenze › Markdown. Lì si imposta anche come vengono scritti al salvataggio elenchi, enfasi, recinti di codice e linee.
+- Pupitre mantiene i fine riga del file aperto, salvo diversa indicazione in Preferenze › Markdown. Lì si imposta anche la sintassi inserita dai comandi di formattazione.
 - Le immagini incollate vengono salvate in una cartella accanto al documento (`assets` per impostazione predefinita, Preferenze › Markdown). Un documento non ancora salvato le tiene in memoria e le scrive al primo salvataggio.
 - Preferenze › Generale › App predefinita per Markdown fa aprire i file `.md` con Pupitre dal gestore file.
 - Le preferenze sono memorizzate in `settings.json`; Preferenze › Informazioni ne mostra la cartella. Vengono scritti solo i valori diversi da quelli predefiniti, e un campo illeggibile torna al valore predefinito senza toccare gli altri.
@@ -76,7 +76,7 @@ I temi sono inclusi nell’app: ognuno è una cartella in `src/renderer/themes/<
   }
 }
 
-.milkdown .ProseMirror h1 {
+.md-document .md-h1 {
   font-size: 2em;
 }
 ```

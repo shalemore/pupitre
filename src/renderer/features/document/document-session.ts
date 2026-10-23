@@ -29,13 +29,13 @@ let nextDocumentId = 1;
 
 /**
  * The life cycle of the current document: new, open, save, save as, and the unsaved-changes prompt before replacing it.
- * The editor content is serialized only on save; the caller provides it through getMarkdown.
+ * The editor holds the Markdown text itself; the caller provides it through getMarkdown.
  */
 export function createDocumentSession(
   getEditor: () => Pick<MarkdownEditorHandle, "getMarkdown" | "persistImages"> | undefined,
 ) {
   const [activeDocument, setActiveDocument] = createSignal<OpenDocument>();
-  // The document has unsaved changes when its serialized content differs from the last saved (or opened) version; undoing back to that state clears the flag
+  // The document has unsaved changes when its content differs from the last saved (or opened) version; undoing back to that state clears the flag
   const [savedMarkdown, setSavedMarkdown] = createSignal("");
   const [currentMarkdown, setCurrentMarkdown] = createSignal("");
   // What the file on disk is known to contain, so a change notification caused by our own save is recognized

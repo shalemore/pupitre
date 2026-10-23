@@ -8,8 +8,8 @@ Pupitre ist ein Markdown-Editor für den Desktop. Dokumente sind einfache `.md`-
 
 Setzen Sie den Cursor in **fetten Text**, einen `Codeausschnitt` oder einen [Link](https://github.com/shalemore/pupitre), und die Syntax erscheint darum herum. Die Markierungen verhalten sich wie Text:
 
-- Die Rücktaste direkt nach einer öffnenden Markierung entfernt die Formatierung.
-- Am Anfang einer Überschrift erhöht `#` die Ebene, die Rücktaste senkt sie.
+- Löschen Sie eine Markierung, um die Formatierung zu entfernen; ein `#` mehr oder weniger vor einer Überschrift ändert ihre Ebene.
+- Markierter Text zeigt seine Syntax, und Kopieren kopiert Markdown.
 - Die Formatierung finden Sie in den Menüs **Absatz** und **Format**, im Kontextmenü und in den Tastenkürzeln unten.
 
 <details>
@@ -46,7 +46,7 @@ Unter Einstellungen › Darstellung › Fensterstil wechseln Sie zwischen **Klas
 
 ## Dateien und Bilder
 
-- Pupitre behält die Zeilenenden der geöffneten Datei, sofern Einstellungen › Markdown nichts anderes festlegt. Dort stellen Sie auch ein, wie Listen, Hervorhebungen, Code-Zäune und Trennlinien beim Speichern geschrieben werden.
+- Pupitre behält die Zeilenenden der geöffneten Datei, sofern Einstellungen › Markdown nichts anderes festlegt. Dort stellen Sie auch ein, welche Syntax Formatierungsbefehle einfügen.
 - Eingefügte Bilder werden in einem Ordner neben dem Dokument gespeichert (standardmäßig `assets`, Einstellungen › Markdown). Ein noch nicht gespeichertes Dokument hält sie im Speicher und schreibt sie beim ersten Speichern.
 - Mit Einstellungen › Allgemein › Standard-App für Markdown öffnet Pupitre `.md`-Dateien aus dem Dateimanager.
 - Die Einstellungen liegen in `settings.json`; Einstellungen › Über zeigt den Ordner. Es werden nur Werte geschrieben, die vom Standard abweichen, und ein nicht lesbares Feld fällt auf seinen Standard zurück, ohne die anderen zu beeinflussen.
@@ -76,7 +76,7 @@ Designs werden mit der App ausgeliefert: Jedes ist ein Ordner `src/renderer/them
   }
 }
 
-.milkdown .ProseMirror h1 {
+.md-document .md-h1 {
   font-size: 2em;
 }
 ```

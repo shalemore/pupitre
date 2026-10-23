@@ -8,8 +8,8 @@ A Pupitre egy asztali Markdown-szerkesztő. A dokumentumok egyszerű `.md` fájl
 
 Helyezze a kurzort **félkövér szövegbe**, egy `soron belüli kódba` vagy egy [hivatkozásba](https://github.com/shalemore/pupitre), és a szintaxis megjelenik körülötte. A jelölők szövegként viselkednek:
 
-- Egy nyitó jelölő után rögtön a Backspace megszünteti a formázást.
-- A címsor elején írjon `#` karaktert a szint emeléséhez, a Backspace pedig csökkenti azt.
+- Egy jelölő törlése megszünteti a formázást; egy `#` hozzáadása vagy törlése a címsor előtt megváltoztatja a szintjét.
+- A kijelölt szöveg megmutatja a szintaxisát, a másolás pedig Markdownt másol.
 - A formázás a **Bekezdés** és **Formátum** menüben, a helyi menüben és az alábbi gyorsbillentyűkben található.
 
 <details>
@@ -46,7 +46,7 @@ A Beállítások › Megjelenés › Ablakstílus a **Klasszikus** és az **Imme
 
 ## Fájlok és képek
 
-- A Pupitre megtartja a megnyitott fájl sorvégződéseit, hacsak a Beállítások › Markdown nem rendelkezik másként. Ott állítható be az is, hogyan íródjanak mentéskor a listák, kiemelések, kódkerítések és vonalak.
+- A Pupitre megtartja a megnyitott fájl sorvégződéseit, hacsak a Beállítások › Markdown nem rendelkezik másként. Ott állítható be az is, milyen szintaxist szúrnak be a formázási parancsok.
 - A beillesztett képek a dokumentum melletti mappába kerülnek (alapértelmezés szerint `assets`, Beállítások › Markdown). A még nem mentett dokumentum a memóriában tartja őket, és az első mentéskor írja ki.
 - A Beállítások › Általános › Alapértelmezett Markdown-alkalmazás hatására a Pupitre a fájlkezelőből nyitja meg a `.md` fájlokat.
 - A beállítások a `settings.json` fájlban vannak; a Beállítások › Névjegy mutatja a mappáját. Csak az alapértéktől eltérő értékek íródnak ki, és egy olvashatatlan mező visszaáll az alapértékre anélkül, hogy érintené a többit.
@@ -76,7 +76,7 @@ A témák az alkalmazással együtt érkeznek: mindegyik egy mappa a `src/render
   }
 }
 
-.milkdown .ProseMirror h1 {
+.md-document .md-h1 {
   font-size: 2em;
 }
 ```

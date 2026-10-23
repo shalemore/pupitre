@@ -8,8 +8,8 @@ Pupitre er en Markdown-editor til skrivebordet. Dokumenter er almindelige `.md`-
 
 Sæt markøren inde i **fed tekst**, et `kodeafsnit` eller et [link](https://github.com/shalemore/pupitre), og syntaksen vises omkring den. Markørerne opfører sig som tekst:
 
-- Backspace lige efter en åbnende markør fjerner formateringen.
-- Skriv `#` i starten af en overskrift for at hæve niveauet, og tryk Backspace for at sænke det.
+- Slet en markør for at fjerne formateringen; tilføj eller slet et `#` foran en overskrift for at ændre niveauet.
+- Når du markerer tekst, vises syntaksen i den, og kopiering kopierer Markdown.
 - Formatering findes i menuerne **Afsnit** og **Format**, i højrekliksmenuen og i genvejene nedenfor.
 
 <details>
@@ -46,7 +46,7 @@ Indstillinger › Udseende › Vinduesstil skifter mellem **Klassisk** og **Imme
 
 ## Filer og billeder
 
-- Pupitre beholder linjeskiftene fra den fil, der blev åbnet, medmindre Indstillinger › Markdown siger andet. Hvordan lister, fremhævning, kodehegn og linjer skrives ved gemning, indstilles også der.
+- Pupitre beholder linjeskiftene fra den fil, der blev åbnet, medmindre Indstillinger › Markdown siger andet. Den syntaks, som formateringskommandoer indsætter, indstilles også der.
 - Indsatte billeder gemmes i en mappe ved siden af dokumentet (`assets` som standard, Indstillinger › Markdown). Et dokument, der endnu ikke er gemt, holder dem i hukommelsen og skriver dem ved første gemning.
 - Indstillinger › Generelt › Standard Markdown-app får Pupitre til at åbne `.md`-filer fra filhåndteringen.
 - Indstillingerne gemmes i `settings.json`; Indstillinger › Om viser mappen. Kun værdier, der afviger fra standard, skrives, og et felt, der ikke kan læses, falder tilbage til standard uden at påvirke de andre.
@@ -76,7 +76,7 @@ Temaer følger med appen: hvert tema er en mappe i `src/renderer/themes/<navn>/`
   }
 }
 
-.milkdown .ProseMirror h1 {
+.md-document .md-h1 {
   font-size: 2em;
 }
 ```

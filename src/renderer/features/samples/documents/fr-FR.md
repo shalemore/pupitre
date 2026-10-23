@@ -8,8 +8,8 @@ Pupitre est un éditeur Markdown pour le bureau. Les documents sont de simples f
 
 Placez le curseur dans du **texte en gras**, un `extrait de code` ou un [lien](https://github.com/shalemore/pupitre) et sa syntaxe apparaît autour. Les marqueurs se comportent comme du texte :
 
-- Retour arrière juste après un marqueur ouvrant supprime la mise en forme.
-- Au début d’un titre, tapez `#` pour augmenter son niveau et Retour arrière pour le diminuer.
+- Supprimez un marqueur pour retirer sa mise en forme ; ajoutez ou supprimez un `#` devant un titre pour changer son niveau.
+- Sélectionner du texte montre sa syntaxe, et copier copie du Markdown.
 - La mise en forme se trouve dans les menus **Paragraphe** et **Format**, dans le menu contextuel et dans les raccourcis ci-dessous.
 
 <details>
@@ -46,7 +46,7 @@ Préférences › Apparence › Style de fenêtre permet de passer de **Clas
 
 ## Fichiers et images
 
-- Pupitre conserve les fins de ligne du fichier ouvert, sauf indication contraire dans Préférences › Markdown. C’est aussi là que se règle la façon dont les listes, l’emphase, les blocs de code et les lignes horizontales sont écrits à l’enregistrement.
+- Pupitre conserve les fins de ligne du fichier ouvert, sauf indication contraire dans Préférences › Markdown. C’est aussi là que se règle la syntaxe insérée par les commandes de mise en forme.
 - Les images collées sont enregistrées dans un dossier à côté du document (`assets` par défaut, Préférences › Markdown). Un document pas encore enregistré les garde en mémoire et les écrit au premier enregistrement.
 - Préférences › Général › Application Markdown par défaut fait ouvrir les fichiers `.md` avec Pupitre depuis le gestionnaire de fichiers.
 - Les préférences sont stockées dans `settings.json` ; Préférences › À propos affiche son dossier. Seules les valeurs différentes des valeurs par défaut sont écrites, et un champ illisible revient à sa valeur par défaut sans toucher aux autres.
@@ -76,7 +76,7 @@ Les thèmes sont livrés avec l’application : chacun est un dossier `src/rend
   }
 }
 
-.milkdown .ProseMirror h1 {
+.md-document .md-h1 {
   font-size: 2em;
 }
 ```

@@ -1,51 +1,65 @@
-import { Plugin } from "@milkdown/kit/prose/state";
-import { Decoration, DecorationSet, type EditorView } from "@milkdown/kit/prose/view";
+import { syntaxTree } from "@codemirror/language";
+import { EditorState, type Extension, type Range } from "@codemirror/state";
+import {
+  Decoration,
+  type DecorationSet,
+  EditorView,
+  ViewPlugin,
+  type ViewUpdate,
+} from "@codemirror/view";
 
 /**
- * Writing modes, each a self-contained ProseMirror plugin switched on by a setting. A plugin reads
- * its switch through a getter; the editor dispatches an empty transaction when the setting
- * changes so the view picks it up.
+ * Writing modes, each a self-contained extension that the editor switches with a compartment
+ * when its setting changes.
  */
 
-/**
- * Focus mode: every block except the one being written is dimmed. Only the current text block is
- * decorated; the dimming itself is CSS on text blocks (editor.css), so moving the cursor changes
- * one decoration instead of touching every block in the document.
- */
-export function focusModePlugin(enabled: () => boolean): Plugin {
-  return new Plugin({
-    props: {
-      attributes: (): Record<string, string> => (enabled() ? { class: "focus-mode" } : {}),
-      decorations: ({ doc, selection }) => {
-        const { $head } = selection;
-        if (!enabled() || $head.depth === 0) return DecorationSet.empty;
-        const block = $head.before($head.depth);
-        const current = Decoration.node(block, block + $head.parent.nodeSize, {
-          class: "is-current",
-        });
-        return DecorationSet.create(doc, [current]);
-      },
-    },
-  });
-}
+/** Blocks that focus mode treats as one unit; anything else is focused line by line. */
+const FOCUS_BLOCK =
+  /^(?:Paragraph|(?:ATX|Setext)Heading\d|FencedCode|CodeBlock|HTMLBlock|CommentBlock|Table|FrontMatter|LinkReference)$/;
 
-function scrollContainer(element: HTMLElement): HTMLElement | undefined {
-  for (let parent = element.parentElement; parent; parent = parent.parentElement) {
-    const { overflowY } = getComputedStyle(parent);
-    if (overflowY === "auto" || overflowY === "scroll") return parent;
+const currentLine = Decoration.line({ class: "is-current" });
+
+function currentBlock(view: EditorView): DecorationSet {
+  const { state } = view;
+  const head = state.selection.main.head;
+  let from = state.doc.lineAt(head).from;
+  let to = from;
+  for (let node = syntaxTree(state).resolveInner(head, -1); node.parent; node = node.parent) {
+    if (FOCUS_BLOCK.test(node.name)) {
+      ({ from, to } = node);
+      break;
+    }
   }
-  return undefined;
+  const decorations: Range<Decoration>[] = [];
+  for (let pos = from; pos <= to;) {
+    const line = state.doc.lineAt(pos);
+    decorations.push(currentLine.range(line.from));
+    pos = line.to + 1;
+  }
+  return Decoration.set(decorations);
 }
 
-/** Scrolls so the line with the cursor sits in the middle of the editor. */
-function centerCursor(view: EditorView): void {
-  const container = scrollContainer(view.dom);
-  if (!container) return;
-  const caret = view.coordsAtPos(view.state.selection.head);
-  const box = container.getBoundingClientRect();
-  const offset = (caret.top + caret.bottom) / 2 - (box.top + box.height / 2);
-  if (Math.abs(offset) > 1) container.scrollTop += offset;
-}
+/**
+ * Focus mode: every block except the one being written is dimmed. Only the lines of the current
+ * block are decorated; the dimming itself is CSS (editor.css).
+ */
+export const focusMode: Extension = [
+  EditorView.contentAttributes.of({ class: "focus-mode" }),
+  ViewPlugin.fromClass(
+    class {
+      decorations: DecorationSet;
+
+      constructor(view: EditorView) {
+        this.decorations = currentBlock(view);
+      }
+
+      update(update: ViewUpdate): void {
+        if (update.docChanged || update.selectionSet) this.decorations = currentBlock(update.view);
+      }
+    },
+    { decorations: (plugin) => plugin.decorations },
+  ),
+];
 
 /**
  * Typewriter mode: the line being written stays in the vertical middle of the window and the
@@ -53,34 +67,11 @@ function centerCursor(view: EditorView): void {
  * lines reach the middle too. Selections made with the mouse are left where they are, otherwise
  * the text would jump away from the pointer while dragging.
  */
-export function typewriterModePlugin(enabled: () => boolean): Plugin {
-  let usingPointer = false;
-  return new Plugin({
-    props: {
-      attributes: (): Record<string, string> => (enabled() ? { class: "typewriter-mode" } : {}),
-      handleDOMEvents: {
-        mousedown: () => {
-          usingPointer = true;
-          return false;
-        },
-        keydown: () => {
-          usingPointer = false;
-          return false;
-        },
-      },
-    },
-    view: () => {
-      let active = false;
-      return {
-        update: (view, previous) => {
-          const wasActive = active;
-          active = enabled() && view.hasFocus();
-          if (!active) return;
-          const typed = !view.state.doc.eq(previous.doc);
-          const moved = !usingPointer && !view.state.selection.eq(previous.selection);
-          if (!wasActive || typed || moved) centerCursor(view);
-        },
-      };
-    },
-  });
-}
+export const typewriterMode: Extension = [
+  EditorView.contentAttributes.of({ class: "typewriter-mode" }),
+  EditorState.transactionExtender.of((tr) =>
+    (tr.docChanged || tr.selection) && !tr.isUserEvent("select.pointer")
+      ? { effects: EditorView.scrollIntoView(tr.newSelection.main.head, { y: "center" }) }
+      : null,
+  ),
+];

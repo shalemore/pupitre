@@ -1,22 +1,11 @@
-import { htmlSchema } from "@milkdown/kit/preset/commonmark";
-import { InputRule } from "@milkdown/kit/prose/inputrules";
-import type { Node } from "@milkdown/kit/prose/model";
-import { Plugin, PluginKey } from "@milkdown/kit/prose/state";
-import { Decoration, DecorationSet } from "@milkdown/kit/prose/view";
-import { $inputRule, $prose, $remark } from "@milkdown/kit/utils";
-import type { Root } from "mdast";
-import { visit } from "unist-util-visit";
+import { Facet } from "@codemirror/state";
+import { WidgetType } from "@codemirror/view";
 
 /**
  * GitHub alerts: a quote whose first line is `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` or
- * `[!CAUTION]`, alone on that line.
- *
- * As plain text the marker would be saved as `\[!NOTE]`, because `[` can start a link, and the
- * quote would stop being an alert. The marker is therefore kept as an html node, which the
- * serializer writes verbatim, and the quote is styled through a decoration. While the cursor is
- * away from the marker, the stylesheet replaces it with an icon and a localized title.
+ * `[!CAUTION]`, alone on that line. The live preview tints the quote and, away from the
+ * selection, shows an icon and a localized title in place of the marker.
  */
-const ALERT_MARKER = /^\[!(note|tip|important|warning|caution)\]/i;
 
 export interface AlertTitles {
   note: string;
@@ -26,7 +15,16 @@ export interface AlertTitles {
   caution: string;
 }
 
-function isAlertType(value: string | undefined): value is keyof AlertTitles {
+export type AlertType = keyof AlertTitles;
+
+const ALERT_MARKER = /^\[!(note|tip|important|warning|caution)\]\s*$/i;
+
+/** The localized titles, provided by the editor from the interface language. */
+export const alertTitles = Facet.define<AlertTitles, AlertTitles | undefined>({
+  combine: (values) => values[0],
+});
+
+function isAlertType(value: string | undefined): value is AlertType {
   return (
     value === "note" ||
     value === "tip" ||
@@ -36,89 +34,29 @@ function isAlertType(value: string | undefined): value is keyof AlertTitles {
   );
 }
 
-/**
- * GitHub only treats a quote as an alert when the marker is alone on its line. The line break may
- * still be text or already a break node, depending on whether Milkdown's line break plugin ran.
- */
-function endsLine(rest: string, next: { type: string } | undefined): boolean {
-  return rest === "" ? next === undefined || next.type === "break" : rest.startsWith("\n");
-}
-
-function markAlerts(tree: Root): void {
-  visit(tree, "blockquote", (quote) => {
-    const paragraph = quote.children[0];
-    if (paragraph?.type !== "paragraph") return;
-    const text = paragraph.children[0];
-    const marker = text?.type === "text" ? ALERT_MARKER.exec(text.value)?.[0] : undefined;
-    if (text?.type !== "text" || marker === undefined) return;
-    const rest = text.value.slice(marker.length);
-    if (!endsLine(rest, paragraph.children[1])) return;
-    paragraph.children.splice(
-      0,
-      1,
-      { type: "html", value: marker },
-      ...(rest === "" ? [] : [{ type: "text" as const, value: rest }]),
-    );
-  });
-}
-
-const remarkAlerts = $remark("githubAlerts", () => () => markAlerts);
-
-function alertType(quote: Node): keyof AlertTitles | undefined {
-  const paragraph = quote.firstChild;
-  const marker = paragraph?.firstChild;
-  if (marker?.type.name !== "html") return undefined;
-  const next = paragraph?.maybeChild(1);
-  if (next && next.type.name !== "hardbreak" && !(next.isText && next.text?.startsWith("\n"))) {
-    return undefined;
-  }
-  const type = ALERT_MARKER.exec(marker.textContent)?.[1]?.toLowerCase();
+/** The alert type of a quote's first line of text, if it is an alert marker. */
+export function alertType(firstLine: string): AlertType | undefined {
+  const type = ALERT_MARKER.exec(firstLine)?.[1]?.toLowerCase();
   return isAlertType(type) ? type : undefined;
 }
 
-function alertDecorations(doc: Node, titles: AlertTitles): DecorationSet {
-  const decorations: Decoration[] = [];
-  doc.descendants((node, pos) => {
-    const type = node.type.name === "blockquote" ? alertType(node) : undefined;
-    if (type) {
-      decorations.push(
-        Decoration.node(pos, pos + node.nodeSize, {
-          class: "md-alert",
-          "data-alert": type,
-          // A CSS string token; JSON escaping is valid CSS escaping for quotes and backslashes
-          style: `--alert-title: ${JSON.stringify(titles[type])}`,
-        }),
-      );
-    }
-    return !node.isTextblock;
-  });
-  return DecorationSet.create(doc, decorations);
-}
+export class AlertTitleWidget extends WidgetType {
+  constructor(readonly title: string) {
+    super();
+  }
 
-function alertsPlugin(titles: AlertTitles): Plugin<DecorationSet> {
-  const key = new PluginKey<DecorationSet>("github-alerts");
-  return new Plugin<DecorationSet>({
-    key,
-    state: {
-      init: (_config, state) => alertDecorations(state.doc, titles),
-      apply: (tr, previous) => (tr.docChanged ? alertDecorations(tr.doc, titles) : previous),
-    },
-    props: { decorations: (state) => key.getState(state) },
-  });
-}
+  override eq(other: AlertTitleWidget): boolean {
+    return other.title === this.title;
+  }
 
-/** Typing a marker at the start of a quote turns it into an alert. */
-const alertInputRule = $inputRule(
-  (ctx) =>
-    new InputRule(/^\[!(note|tip|important|warning|caution)\]$/i, (state, match, start, end) => {
-      const $start = state.doc.resolve(start);
-      const quote = $start.node(-1);
-      if (quote.type.name !== "blockquote" || $start.index(-1) !== 0) return null;
-      const marker = htmlSchema.type(ctx).create(null, state.schema.text(match[0]));
-      return state.tr.replaceWith(start, end, marker);
-    }),
-);
+  toDOM(): HTMLElement {
+    const title = document.createElement("span");
+    title.className = "md-alert-title";
+    title.textContent = this.title;
+    return title;
+  }
 
-export function githubAlerts(titles: AlertTitles) {
-  return [remarkAlerts, $prose(() => alertsPlugin(titles)), alertInputRule].flat();
+  override ignoreEvent(): boolean {
+    return false;
+  }
 }

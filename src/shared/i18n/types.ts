@@ -80,17 +80,6 @@ export interface TranslationSchema {
   };
   readonly editor: {
     readonly toggleReplace: string;
-    readonly searchLanguage: string;
-    readonly noLanguage: string;
-    readonly preview: string;
-    readonly editSource: string;
-    readonly hidePreview: string;
-    readonly upload: string;
-    readonly confirm: string;
-    readonly imageUrlPlaceholder: string;
-    readonly captionPlaceholder: string;
-    readonly linkPlaceholder: string;
-    readonly remove: string;
     readonly findPlaceholder: string;
     readonly replacePlaceholder: string;
     readonly replaceOne: string;
