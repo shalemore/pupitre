@@ -16,6 +16,8 @@
  * - Surface steps: 0 window chrome (title bar, sidebar), 1 document canvas, 2 cards, 3 popovers, told apart by small lightness steps and hairline borders;
  * - A single accent color, terracotta;
  * - Alpha steps, borders and shadows are derived from the primary text color, so light and dark pair up automatically.
+ * Themes also own the shape of the interface: --ui-radius-scale, the --ui-shadow-* colors (transparent for a flat look),
+ * --font-sans and --font-mono. Layout, spacing and window structure are not theme-controlled.
  * Raw values are defaults for themes to override and live in the base layer; derived tokens are evaluated at use and follow the theme.
  * Themes are loaded at runtime, see lib/theme.ts.
  */
@@ -38,6 +40,9 @@
     --ui-shadow-near: oklch(0 0 0 / 5%);
     --ui-shadow-far: oklch(0 0 0 / 8%);
     --ui-shadow-float: oklch(0 0 0 / 12%);
+
+    /* Multiplies every corner radius: 0 gives square corners, 2 rounder ones */
+    --ui-radius-scale: 1;
 
     --ui-ring-inner: 0px;
     --ui-ring-outer: 1px;
@@ -211,13 +216,13 @@
   --color-segmented-track: var(--ui-segmented-track);
   --color-segmented-thumb: var(--ui-segmented-thumb);
 
-  --radius-xs: 2px;
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  --radius-panel: 10px;
-  --radius-xl: 12px;
-  --radius-2xl: 16px;
+  --radius-xs: calc(2px * var(--ui-radius-scale));
+  --radius-sm: calc(4px * var(--ui-radius-scale));
+  --radius-md: calc(6px * var(--ui-radius-scale));
+  --radius-lg: calc(8px * var(--ui-radius-scale));
+  --radius-panel: calc(10px * var(--ui-radius-scale));
+  --radius-xl: calc(12px * var(--ui-radius-scale));
+  --radius-2xl: calc(16px * var(--ui-radius-scale));
   --radius-full: 9999px;
 
   --shadow-sm: var(--ui-shadow-sm);

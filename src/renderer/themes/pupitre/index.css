@@ -15,6 +15,10 @@
  *   - Design tokens (--ui-*): colors shared by the title bar, sidebar, settings and the document.
  *   - Document typography: the elements inside `.milkdown .ProseMirror`.
  *   - Code colors: --syntax-*.
+ *   - Alert colors: --alert-note, --alert-tip, --alert-important, --alert-warning, --alert-caution.
+ *   - Interface shape: --ui-radius-scale (corner roundness), --ui-shadow-near/far/float
+ *     (transparent for flat), --font-sans (interface font).
+ *   - Small inline elements: kbd, mark, front matter and footnotes are styled here, not by the app.
  *   - --font-document: the default body font (--font-mono is the code font).
  *   - Quote bars: draw them with `var(--alert-color, <quote color>)` so GitHub alerts
  *     (`blockquote.md-alert`) keep their color.
@@ -29,6 +33,7 @@
 :root {
   color-scheme: light dark;
 
+  /* Body font of the document; the user can still pick another font in settings */
   --font-document:
     -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif;
@@ -44,10 +49,24 @@
    *   --syntax-*         code colors (keyword, string, number, function, comment, ...)
    * Borders, shadows and translucent fills are derived from these and follow automatically.
    */
+
+  /* Colors of GitHub alerts (> [!NOTE] and friends): the quote bar and the title line */
+  --alert-note: oklch(0.62 0.15 255);
+  --alert-tip: oklch(0.63 0.15 150);
+  --alert-important: oklch(0.6 0.18 300);
+  --alert-warning: oklch(0.72 0.15 75);
+  --alert-caution: oklch(0.63 0.21 25);
 }
 
-/* ---------- Document ---------- */
+/*
+ * ---------- Document ----------
+ *
+ * Every rule below is commented with the part of the document it styles, so a copy of this file
+ * can be edited by looking for the element you want to change. Selectors starting with
+ * `.milkdown .ProseMirror` style plain Markdown elements; `.milkdown-*` ones are Crepe's blocks.
+ */
 
+/* The page itself: top and bottom padding, body font, text color and the caret */
 .milkdown .ProseMirror {
   padding-block: 3em 40vh;
   font-family: var(--font-document);
@@ -55,16 +74,18 @@
   caret-color: var(--ui-brand);
 }
 
-/* text-wrap: pretty avoids a single word left alone on the last line of a paragraph */
+/* Paragraphs, list items and quotes; text-wrap: pretty avoids a single word left alone on the last line */
 .milkdown .ProseMirror :is(p, li, blockquote) {
   text-wrap: pretty;
 }
 
+/* Paragraph spacing */
 .milkdown .ProseMirror p {
   padding: 0;
   margin-block: 0.5em;
 }
 
+/* All headings: shared font, weight, line height and spacing */
 .milkdown .ProseMirror :is(h1, h2, h3, h4, h5, h6) {
   font-family: inherit;
   font-weight: 650;
@@ -74,6 +95,7 @@
   padding: 0;
 }
 
+/* Heading sizes, one rule per level; h1 sits closer to the top of the page, h2 gets an underline */
 .milkdown .ProseMirror h1 {
   font-size: 2em;
   margin-block-start: 0.6em;
@@ -97,6 +119,7 @@
   font-size: 1em;
 }
 
+/* The smallest heading is dimmed */
 .milkdown .ProseMirror h6 {
   color: var(--ui-text-secondary);
 }
@@ -108,6 +131,7 @@
   }
 }
 
+/* Links: accent color with a faint underline */
 .milkdown .ProseMirror a {
   color: var(--ui-brand);
   text-decoration: underline;
@@ -115,15 +139,17 @@
   text-underline-offset: 0.2em;
 }
 
+/* **Bold** text */
 .milkdown .ProseMirror :is(strong, b) {
   font-weight: 650;
 }
 
+/* ~~Strikethrough~~ text */
 .milkdown .ProseMirror del {
   color: var(--ui-text-muted);
 }
 
-/* Inline code: a light tint and a hairline, without the accent color competing with the text */
+/* `Inline code`: a light tint and a hairline, without the accent color competing with the text */
 .milkdown .ProseMirror :not(pre) > code {
   display: inline;
   color: inherit;
@@ -135,7 +161,7 @@
   line-height: inherit;
 }
 
-/* Code blocks: 12px radius and a hairline border; the toolbar only appears on hover */
+/* Fenced code blocks: card with a hairline border; the toolbar only appears on hover */
 .milkdown .milkdown-code-block {
   margin-block: 1em;
   padding: 0.5em 1em 1em;
@@ -149,23 +175,27 @@
   background: transparent;
 }
 
+/* The code inside a fenced block: font and size */
 .milkdown .milkdown-code-block .cm-content {
   font-family: var(--font-mono);
   font-size: 0.875em;
   line-height: 1.6;
 }
 
+/* > Block quotes: spacing and text color */
 .milkdown .ProseMirror blockquote {
   margin-block: 1em;
   padding-inline-start: 1em;
   color: var(--ui-text-secondary);
 }
 
+/* The bar beside a quote; GitHub alerts (> [!NOTE]) set --alert-color to tint it */
 .milkdown .ProseMirror blockquote::before {
   width: 3px;
   background: var(--alert-color, var(--ui-alpha-3));
 }
 
+/* --- Horizontal rule */
 .milkdown .ProseMirror hr {
   margin-block: 2em;
   height: 1px;
@@ -173,28 +203,34 @@
   background-color: var(--ui-alpha-2);
 }
 
+/* Tables: the block around the whole table */
 .milkdown .milkdown-table-block {
   margin-block: 1em;
 }
 
+/* Tables: every cell, header and body */
 .milkdown .milkdown-table-block :is(th, td) {
   border-color: var(--ui-alpha-2);
   padding: 0.4em 0.9em;
 }
 
+/* Tables: cell text has no paragraph margin of its own */
 .milkdown .milkdown-table-block :is(th, td) p {
   margin: 0;
 }
 
+/* Tables: header cells only */
 .milkdown .milkdown-table-block th {
   background: var(--ui-surface-0);
   font-weight: 600;
 }
 
+/* Images */
 .milkdown .ProseMirror img {
   border-radius: 8px;
 }
 
+/* Bullets and numbers of list items */
 .milkdown .milkdown-list-item-block li .label-wrapper {
   color: var(--ui-text-muted);
 }
@@ -204,6 +240,49 @@
   margin-block: 0.15em;
 }
 
+/* Selected text in the editor */
 .milkdown .ProseMirror ::selection {
   background: oklch(from var(--ui-brand) l c h / 25%);
+}
+
+/* <kbd>Keyboard keys</kbd> */
+.milkdown .ProseMirror kbd {
+  padding: 0.1em 0.4em;
+  border: 1px solid var(--ui-alpha-3);
+  border-block-end-width: 2px;
+  border-radius: 4px;
+  background: var(--ui-alpha-1);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+/* <mark>Highlighted text</mark> */
+.milkdown .ProseMirror mark {
+  border-radius: 2px;
+  background: oklch(from var(--ui-brand) l c h / 25%);
+  color: inherit;
+}
+
+/* The YAML front matter block at the very top of a file (--- … ---) */
+.milkdown .ProseMirror pre[data-type="front-matter"] {
+  margin-block: 0 1.5em;
+  padding: 0.75em 1em;
+  border-radius: 8px;
+  background: var(--ui-alpha-1);
+  color: var(--ui-text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+/* Footnote definitions at the end of a document ([^1]: …) */
+.milkdown .ProseMirror dl[data-type="footnote_definition"] {
+  gap: 0.5em;
+  margin-block: 0.25em;
+  font-size: 0.9em;
+  color: var(--ui-text-secondary);
+}
+
+/* Footnote text has no paragraph margin of its own */
+.milkdown .ProseMirror dl[data-type="footnote_definition"] p {
+  margin: 0;
 }

@@ -41,6 +41,12 @@
   --syntax-operator: var(--ui-text-secondary);
   --syntax-punctuation: var(--ui-text-secondary);
   --syntax-invalid: var(--ui-danger);
+
+  --alert-note: oklch(0.5 0.08 250);
+  --alert-tip: oklch(0.5 0.08 150);
+  --alert-important: oklch(0.45 0.1 310);
+  --alert-warning: oklch(0.55 0.1 70);
+  --alert-caution: oklch(0.5 0.14 25);
 }
 
 .milkdown .ProseMirror {
@@ -165,4 +171,41 @@
 .milkdown .milkdown-list-item-block p {
   margin-block: 0.15em;
   text-indent: 0;
+}
+
+.milkdown .ProseMirror kbd {
+  padding: 0.1em 0.4em;
+  border: 1px solid var(--ui-alpha-3);
+  border-block-end-width: 2px;
+  border-radius: 3px;
+  background: var(--ui-alpha-1);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+.milkdown .ProseMirror mark {
+  border-radius: 2px;
+  background: oklch(from var(--ui-brand) l c h / 25%);
+  color: inherit;
+}
+
+.milkdown .ProseMirror pre[data-type="front-matter"] {
+  margin-block: 0 1.5em;
+  padding: 0.75em 1em;
+  border-radius: 0;
+  background: var(--ui-alpha-1);
+  color: var(--ui-text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+.milkdown .ProseMirror dl[data-type="footnote_definition"] {
+  gap: 0.5em;
+  margin-block: 0.25em;
+  font-size: 0.9em;
+  color: var(--ui-text-secondary);
+}
+
+.milkdown .ProseMirror dl[data-type="footnote_definition"] p {
+  margin: 0;
 }

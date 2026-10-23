@@ -74,31 +74,8 @@
     display: none;
   }
 
-  .milkdown .ProseMirror kbd {
-    padding: 0.1em 0.4em;
-    border: 1px solid var(--ui-alpha-3);
-    border-block-end-width: 2px;
-    border-radius: 4px;
-    background: var(--ui-alpha-1);
-    font-family: var(--crepe-font-code);
-    font-size: 0.85em;
-  }
-
-  .milkdown .ProseMirror mark {
-    border-radius: 2px;
-    background: oklch(from var(--ui-brand) l c h / 25%);
-    color: inherit;
-  }
-
-  /* Front matter, see front-matter.ts */
+  /* Front matter, see front-matter.ts: the source is shown verbatim and never mirrored */
   .milkdown .ProseMirror pre[data-type="front-matter"] {
-    margin-block: 0 1.5em;
-    padding: 0.75em 1em;
-    border-radius: 8px;
-    background: var(--ui-alpha-1);
-    color: var(--ui-text-secondary);
-    font-family: var(--crepe-font-code);
-    font-size: 0.85em;
     white-space: pre-wrap;
     direction: ltr;
     text-align: left;
@@ -112,32 +89,33 @@
   }
 
   /*
-   * GitHub alerts, see alerts.ts. Themes draw the quote bar with
-   * `var(--alert-color, <their quote color>)` so alerts keep their color in every theme.
+   * GitHub alerts, see alerts.ts. Each type takes its color from a theme token (--alert-note, --alert-tip,
+   * --alert-important, --alert-warning, --alert-caution); themes draw the quote bar with
+   * `var(--alert-color, <their quote color>)`.
    */
   .milkdown .md-alert[data-alert="note"] {
     --alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4M12 8h.01'/%3E%3C/svg%3E");
-    --alert-color: oklch(0.62 0.15 255);
+    --alert-color: var(--alert-note, var(--ui-brand));
   }
 
   .milkdown .md-alert[data-alert="tip"] {
     --alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4'/%3E%3C/svg%3E");
-    --alert-color: oklch(0.63 0.15 150);
+    --alert-color: var(--alert-tip, var(--ui-brand));
   }
 
   .milkdown .md-alert[data-alert="important"] {
     --alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2zM12 7v2M12 13h.01'/%3E%3C/svg%3E");
-    --alert-color: oklch(0.6 0.18 300);
+    --alert-color: var(--alert-important, var(--ui-brand));
   }
 
   .milkdown .md-alert[data-alert="warning"] {
     --alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4M12 17h.01'/%3E%3C/svg%3E");
-    --alert-color: oklch(0.72 0.15 75);
+    --alert-color: var(--alert-warning, var(--ui-brand));
   }
 
   .milkdown .md-alert[data-alert="caution"] {
     --alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 16h.01M12 8v4M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z'/%3E%3C/svg%3E");
-    --alert-color: oklch(0.63 0.21 25);
+    --alert-color: var(--alert-caution, var(--ui-brand));
   }
 
   .milkdown .md-alert > p:first-child > .md-html:first-child {
@@ -182,10 +160,6 @@
   /* Footnote definitions: the label sits before the note on the same line */
   .milkdown .ProseMirror dl[data-type="footnote_definition"] {
     display: flex;
-    gap: 0.5em;
-    margin-block: 0.25em;
-    font-size: 0.9em;
-    color: var(--ui-text-secondary);
   }
 
   .milkdown .ProseMirror dl[data-type="footnote_definition"] > dt::after {
@@ -194,10 +168,6 @@
 
   .milkdown .ProseMirror dl[data-type="footnote_definition"] > dd {
     flex: 1;
-    margin: 0;
-  }
-
-  .milkdown .ProseMirror dl[data-type="footnote_definition"] p {
     margin: 0;
   }
 

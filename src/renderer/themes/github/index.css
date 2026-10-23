@@ -31,6 +31,12 @@
   --syntax-operator: #cf222e;
   --syntax-punctuation: #1f2328;
   --syntax-invalid: #82071e;
+
+  --alert-note: #0969da;
+  --alert-tip: #1a7f37;
+  --alert-important: #8250df;
+  --alert-warning: #9a6700;
+  --alert-caution: #cf222e;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -188,4 +194,41 @@
 
 .milkdown .milkdown-list-item-block p {
   margin-block: 0.25em;
+}
+
+.milkdown .ProseMirror kbd {
+  padding: 0.1em 0.4em;
+  border: 1px solid var(--ui-alpha-3);
+  border-block-end-width: 2px;
+  border-radius: 6px;
+  background: var(--ui-alpha-1);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+.milkdown .ProseMirror mark {
+  border-radius: 2px;
+  background: oklch(from var(--ui-brand) l c h / 25%);
+  color: inherit;
+}
+
+.milkdown .ProseMirror pre[data-type="front-matter"] {
+  margin-block: 0 1.5em;
+  padding: 0.75em 1em;
+  border-radius: 6px;
+  background: var(--ui-alpha-1);
+  color: var(--ui-text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+.milkdown .ProseMirror dl[data-type="footnote_definition"] {
+  gap: 0.5em;
+  margin-block: 0.25em;
+  font-size: 0.9em;
+  color: var(--ui-text-secondary);
+}
+
+.milkdown .ProseMirror dl[data-type="footnote_definition"] p {
+  margin: 0;
 }
