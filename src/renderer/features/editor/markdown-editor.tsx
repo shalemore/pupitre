@@ -1,3 +1,4 @@
+import { debounce } from "@solid-primitives/scheduled";
 import { EditorView as CodeMirrorView } from "@codemirror/view";
 import { languages } from "@codemirror/language-data";
 import { Crepe } from "@milkdown/crepe";
@@ -202,12 +203,11 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     });
 
     let headings: OutlineHeading[] = [];
-    let statsTimer: number | undefined;
-    const updateStats = (doc: Node) => {
-      // Counting walks the whole text, so coalesce it while typing in long documents
-      clearTimeout(statsTimer);
-      statsTimer = window.setTimeout(() => props.onStatsChange(countText(readableText(doc))), 200);
-    };
+    // Counting walks the whole text, so coalesce it while typing in long documents
+    const updateStats = debounce(
+      (doc: Node) => props.onStatsChange(countText(readableText(doc))),
+      200,
+    );
 
     crepe.editor
       .config(preserveImageAlt)
@@ -311,7 +311,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     });
 
     onCleanup(() => {
-      clearTimeout(statsTimer);
+      updateStats.clear();
       void crepe.destroy();
     });
   });

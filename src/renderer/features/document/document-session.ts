@@ -1,4 +1,5 @@
 import type { LineEnding, OpenedDocument } from "@shared/desktop-api";
+import { debounce } from "@solid-primitives/scheduled";
 import { createEffect, createMemo, createSignal, on, onCleanup } from "solid-js";
 import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
 import { getSampleDocument } from "@/features/samples/sample-document";
@@ -35,7 +36,6 @@ export function createDocumentSession(
   // The document has unsaved changes when its serialized content differs from the last saved (or opened) version; undoing back to that state clears the flag
   const [savedMarkdown, setSavedMarkdown] = createSignal("");
   const [currentMarkdown, setCurrentMarkdown] = createSignal("");
-  let autoSaveTimer: number | undefined;
   // What the file on disk is known to contain, so a change notification caused by our own save is recognized
   let diskContent = "";
 
@@ -55,7 +55,7 @@ export function createDocumentSession(
   };
 
   const load = (doc: Omit<OpenDocument, "id">) => {
-    clearTimeout(autoSaveTimer);
+    scheduleSave.clear();
     setSavedMarkdown(doc.markdown);
     setCurrentMarkdown(doc.markdown);
     setActiveDocument({ ...doc, id: nextDocumentId++ });
@@ -99,6 +99,8 @@ export function createDocumentSession(
     if (!doc) return false;
     return doc.path ? writeTo(doc, doc.path) : saveAs();
   };
+
+  const scheduleSave = debounce(() => void save(), AUTO_SAVE_DELAY);
 
   /** Before replacing the current document, asks to save, discard or cancel if there are unsaved changes; returns whether to continue. */
   const confirmDiscard = async (): Promise<boolean> => {
@@ -166,10 +168,8 @@ export function createDocumentSession(
   /** Called when the editor content changes; with auto save on and a document path, saves shortly after typing stops. */
   const handleMarkdownChange = (markdown: string) => {
     setCurrentMarkdown(markdown);
-    clearTimeout(autoSaveTimer);
-    if (settings().autoSave && activeDocument()?.path) {
-      autoSaveTimer = window.setTimeout(() => void save(), AUTO_SAVE_DELAY);
-    }
+    scheduleSave.clear();
+    if (settings().autoSave && activeDocument()?.path) scheduleSave();
   };
 
   /** Applies an edit made to the file elsewhere, unless the document has unsaved changes of its own. */
@@ -222,6 +222,6 @@ export function createDocumentSession(
     openSample,
     restoreOnStartup,
     confirmDiscard,
-    dispose: () => clearTimeout(autoSaveTimer),
+    dispose: scheduleSave.clear,
   };
 }

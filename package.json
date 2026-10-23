@@ -37,6 +37,7 @@
     "@milkdown/crepe": "^7.22.3",
     "@milkdown/kit": "^7.22.3",
     "@solid-primitives/event-listener": "^2.4.6",
+    "@solid-primitives/scheduled": "^1.5.3",
     "@tailwindcss/vite": "^4.3.3",
     "@tsconfig/strictest": "^2.0.8",
     "@types/mdast": "^4.0.4",
