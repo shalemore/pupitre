@@ -63,6 +63,10 @@ export const fiFI = {
       "Korvataanko se sinun versiollasi vai ladataanko se uudelleen ja hylätäänkö muutoksesi? Peruuta jatkaa muokkausta tallentamatta.",
     overwrite: "Korvaa",
     reload: "Lataa uudelleen",
+    // TODO(i18n): unverified with native speakers
+    fileDeletedMessage: (fileName: string) => `${fileName} on poistettu toisessa ohjelmassa.`,
+    fileDeletedDetail:
+      "Tallenna se uudelleen säilyttääksesi asiakirjan. Jos et tallenna, se pysyy auki tallentamattomana ja sinulta kysytään uudelleen suljettaessa.",
   },
   about: {
     windowTitle: "Tietoja Pupitresta",

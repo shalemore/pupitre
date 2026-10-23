@@ -65,6 +65,10 @@ export const thTH = {
       "ต้องการเขียนทับด้วยเวอร์ชันของคุณ หรือโหลดใหม่และละทิ้งการเปลี่ยนแปลงของคุณ? ยกเลิกเพื่อแก้ไขต่อโดยไม่บันทึก",
     overwrite: "เขียนทับ",
     reload: "โหลดใหม่",
+    // TODO(i18n): unverified with native speakers
+    fileDeletedMessage: (fileName: string) => `${fileName} ถูกลบโดยโปรแกรมอื่น`,
+    fileDeletedDetail:
+      "บันทึกอีกครั้งเพื่อเก็บเอกสารนี้ไว้ หากไม่บันทึก เอกสารจะยังเปิดอยู่ในสถานะยังไม่บันทึก และจะถามอีกครั้งเมื่อปิด",
   },
   about: {
     windowTitle: "เกี่ยวกับ Pupitre",

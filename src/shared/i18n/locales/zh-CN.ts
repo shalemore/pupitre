@@ -60,6 +60,9 @@ export const zhCN = {
       "要用当前版本覆盖它，还是重新载入并放弃你的修改？取消则继续编辑，不保存。",
     overwrite: "覆盖",
     reload: "重新载入",
+    fileDeletedMessage: (fileName: string) => `${fileName} 已被其他程序删除。`,
+    fileDeletedDetail:
+      "重新保存可保留此文档。若不保存，文档仍保持打开并视为未保存，关闭时会再次询问。",
   },
   about: {
     windowTitle: "关于 Pupitre",

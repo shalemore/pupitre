@@ -62,6 +62,10 @@ export const idID = {
       "Timpa dengan versi Anda, atau muat ulang dan buang perubahan Anda? Batal melanjutkan penyuntingan tanpa menyimpan.",
     overwrite: "Timpa",
     reload: "Muat Ulang",
+    // TODO(i18n): unverified with native speakers
+    fileDeletedMessage: (fileName: string) => `${fileName} dihapus oleh program lain.`,
+    fileDeletedDetail:
+      "Simpan lagi untuk mempertahankan dokumen ini. Jika tidak disimpan, dokumen tetap terbuka sebagai belum tersimpan dan Anda akan ditanya lagi saat menutupnya.",
   },
   about: {
     windowTitle: "Tentang Pupitre",

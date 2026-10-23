@@ -63,6 +63,10 @@ export const faIR = {
       "با نسخهٔ شما جایگزین شود یا دوباره بارگیری شود و تغییرات شما کنار گذاشته شود؟ لغو، ویرایش را بدون ذخیره ادامه می‌دهد.",
     overwrite: "جایگزینی",
     reload: "بارگیری مجدد",
+    // TODO(i18n): unverified with native speakers
+    fileDeletedMessage: (fileName: string) => `${fileName} توسط برنامهٔ دیگری حذف شد.`,
+    fileDeletedDetail:
+      "برای نگه داشتن این سند دوباره آن را ذخیره کنید. اگر ذخیره نکنید، بدون ذخیره باز می‌ماند و هنگام بستن دوباره پرسیده می‌شود.",
   },
   about: {
     windowTitle: "درباره Pupitre",

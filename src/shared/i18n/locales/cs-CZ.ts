@@ -64,6 +64,10 @@ export const csCZ = {
       "Přepsat jej vaší verzí, nebo znovu načíst a zahodit vaše změny? Zrušit pokračuje v úpravách bez uložení.",
     overwrite: "Přepsat",
     reload: "Znovu načíst",
+    // TODO(i18n): unverified with native speakers
+    fileDeletedMessage: (fileName: string) => `Soubor ${fileName} byl odstraněn jiným programem.`,
+    fileDeletedDetail:
+      "Uložte jej znovu, abyste dokument zachovali. Pokud jej neuložíte, zůstane otevřený jako neuložený a při zavření se zeptáme znovu.",
   },
   about: {
     windowTitle: "O aplikaci Pupitre",

@@ -66,6 +66,11 @@ export const plPL = {
       "Nadpisać go Twoją wersją czy wczytać ponownie i odrzucić zmiany? Anuluj kontynuuje edycję bez zapisywania.",
     overwrite: "Nadpisz",
     reload: "Wczytaj ponownie",
+    // TODO(i18n): unverified with native speakers
+    fileDeletedMessage: (fileName: string) =>
+      `Plik ${fileName} został usunięty przez inny program.`,
+    fileDeletedDetail:
+      "Zapisz go ponownie, aby zachować dokument. Jeśli nie zapiszesz, pozostanie otwarty jako niezapisany, a przy zamykaniu zapytamy ponownie.",
   },
   about: {
     windowTitle: "O programie Pupitre",

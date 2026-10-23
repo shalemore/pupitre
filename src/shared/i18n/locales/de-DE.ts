@@ -61,6 +61,10 @@ export const deDE = {
       "Mit deiner Version überschreiben oder neu laden und deine Änderungen verwerfen? Abbrechen setzt die Bearbeitung ohne Speichern fort.",
     overwrite: "Überschreiben",
     reload: "Neu laden",
+    fileDeletedMessage: (fileName: string) =>
+      `${fileName} wurde von einem anderen Programm gelöscht.`,
+    fileDeletedDetail:
+      "Speichere die Datei erneut, um das Dokument zu behalten. Ohne Speichern bleibt es ungesichert geöffnet, und beim Schließen wirst du erneut gefragt.",
   },
   about: {
     windowTitle: "Über Pupitre",

@@ -60,6 +60,9 @@ export const ptBR = {
       "Deseja substituí-lo pela sua versão ou recarregá-lo e descartar suas alterações? Cancelar continua editando sem salvar.",
     overwrite: "Substituir",
     reload: "Recarregar",
+    fileDeletedMessage: (fileName: string) => `${fileName} foi excluído por outro programa.`,
+    fileDeletedDetail:
+      "Salve novamente para manter este documento. Se não salvar, ele continua aberto sem salvar e a pergunta será repetida ao fechar.",
   },
   about: {
     windowTitle: "Sobre o Pupitre",

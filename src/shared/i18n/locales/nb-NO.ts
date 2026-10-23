@@ -62,6 +62,10 @@ export const nbNO = {
       "Vil du overskrive den med din versjon, eller laste den på nytt og forkaste endringene dine? Avbryt fortsetter redigeringen uten å lagre.",
     overwrite: "Overskriv",
     reload: "Last inn på nytt",
+    // TODO(i18n): unverified with native speakers
+    fileDeletedMessage: (fileName: string) => `${fileName} er slettet av et annet program.`,
+    fileDeletedDetail:
+      "Lagre den på nytt for å beholde dokumentet. Lagrer du ikke, blir det værende åpent som ulagret, og du blir spurt igjen når du lukker det.",
   },
   about: {
     windowTitle: "Om Pupitre",

@@ -63,6 +63,10 @@ export const isIS = {
       "Viltu skrifa yfir hana með þinni útgáfu, eða hlaða aftur og henda breytingunum þínum? Hætta við heldur áfram að breyta án þess að vista.",
     overwrite: "Skrifa yfir",
     reload: "Hlaða aftur",
+    // TODO(i18n): unverified with native speakers
+    fileDeletedMessage: (fileName: string) => `${fileName} var eytt af öðru forriti.`,
+    fileDeletedDetail:
+      "Vistaðu hana aftur til að halda skjalinu. Ef þú vistar ekki helst það opið óvistað og spurt verður aftur þegar því er lokað.",
   },
   about: {
     windowTitle: "Um Pupitre",

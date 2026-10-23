@@ -63,6 +63,10 @@ export const huHU = {
       "Felülírod a saját verziójáddal, vagy újratöltöd, és elveted a módosításaidat? A Mégse mentés nélkül folytatja a szerkesztést.",
     overwrite: "Felülírás",
     reload: "Újratöltés",
+    // TODO(i18n): unverified with native speakers
+    fileDeletedMessage: (fileName: string) => `A(z) ${fileName} fájlt egy másik program törölte.`,
+    fileDeletedDetail:
+      "Mentsd újra, hogy megtartsd a dokumentumot. Ha nem mented, mentetlenül nyitva marad, és bezáráskor újra rákérdezünk.",
   },
   about: {
     windowTitle: "A Pupitre névjegye",

@@ -39,7 +39,10 @@ export function createDocumentSession(
   // What the file on disk is known to contain, so a change notification caused by our own save is recognized
   let diskContent = "";
 
-  const isDirty = () => currentMarkdown() !== savedMarkdown();
+  // A file deleted elsewhere stays open; until it is saved again its content exists nowhere else
+  const [missingOnDisk, setMissingOnDisk] = createSignal(false);
+
+  const isDirty = () => currentMarkdown() !== savedMarkdown() || missingOnDisk();
 
   // "Keep as is" keeps the file's own line endings; otherwise the setting decides
   const lineEndingFor = (doc: OpenDocument): LineEnding => {
@@ -56,6 +59,7 @@ export function createDocumentSession(
 
   const load = (doc: Omit<OpenDocument, "id">) => {
     scheduleSave.clear();
+    setMissingOnDisk(false);
     setSavedMarkdown(doc.markdown);
     setCurrentMarkdown(doc.markdown);
     setActiveDocument({ ...doc, id: nextDocumentId++ });
@@ -67,6 +71,7 @@ export function createDocumentSession(
   };
 
   const markSaved = (markdown: string) => {
+    setMissingOnDisk(false);
     setSavedMarkdown(markdown);
     setCurrentMarkdown(markdown);
   };
@@ -179,7 +184,11 @@ export function createDocumentSession(
     if (askingAboutDisk) return;
     const opened = await desktop.invoke("document:read", path).catch(() => undefined);
     const doc = activeDocument();
-    if (!opened || doc?.path !== path || opened.content === diskContent) return;
+    if (doc?.path !== path) return;
+    if (!opened) return handleDeletion(path);
+    // The file is back, so what is on disk decides again whether there are unsaved changes
+    setMissingOnDisk(false);
+    if (opened.content === diskContent) return;
 
     const reload = () => load({ ...doc, ...opened, markdown: opened.content });
     if (!isDirty()) {
@@ -193,6 +202,18 @@ export function createDocumentSession(
       diskContent = opened.content;
       if (choice === "overwrite") await save();
       else if (choice === "reload") reload();
+    } finally {
+      askingAboutDisk = false;
+    }
+  };
+
+  const handleDeletion = async (path: string) => {
+    if (missingOnDisk() || (await desktop.invoke("document:exists", path))) return;
+    askingAboutDisk = true;
+    try {
+      const choice = await desktop.invoke("dialog:confirm-deleted", fileName());
+      if (choice === "save") await save();
+      else setMissingOnDisk(true);
     } finally {
       askingAboutDisk = false;
     }

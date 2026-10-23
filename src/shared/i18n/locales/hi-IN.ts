@@ -62,6 +62,10 @@ export const hiIN = {
       "क्या इसे आपके संस्करण से बदलें, या फिर से लोड करके आपके बदलाव छोड़ दें? रद्द करने पर बिना सहेजे संपादन जारी रहेगा।",
     overwrite: "अधिलेखित करें",
     reload: "फिर से लोड करें",
+    // TODO(i18n): unverified with native speakers
+    fileDeletedMessage: (fileName: string) => `${fileName} को किसी अन्य प्रोग्राम ने हटा दिया है।`,
+    fileDeletedDetail:
+      "इस दस्तावेज़ को रखने के लिए इसे फिर से सहेजें। न सहेजने पर यह बिना सहेजे खुला रहेगा और बंद करते समय फिर पूछा जाएगा।",
   },
   about: {
     windowTitle: "Pupitre के बारे में",

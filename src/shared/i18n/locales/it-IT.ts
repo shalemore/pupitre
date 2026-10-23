@@ -61,6 +61,10 @@ export const itIT = {
       "Vuoi sovrascriverlo con la tua versione o ricaricarlo scartando le modifiche? Annulla continua la modifica senza salvare.",
     overwrite: "Sovrascrivi",
     reload: "Ricarica",
+    fileDeletedMessage: (fileName: string) =>
+      `${fileName} è stato eliminato da un altro programma.`,
+    fileDeletedDetail:
+      "Salvalo di nuovo per conservare il documento. Altrimenti resta aperto non salvato e ti verrà chiesto di nuovo alla chiusura.",
   },
   about: {
     windowTitle: "Informazioni su Pupitre",

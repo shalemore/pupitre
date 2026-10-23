@@ -61,6 +61,9 @@ export const enUS = {
       "Overwrite it with your version, or reload it and discard your changes? Cancel keeps editing without saving.",
     overwrite: "Overwrite",
     reload: "Reload",
+    fileDeletedMessage: (fileName: string) => `${fileName} was deleted by another program.`,
+    fileDeletedDetail:
+      "Save it again to keep this document. If you don't save, it stays open as unsaved and you'll be asked again when you close it.",
   },
   about: {
     windowTitle: "About Pupitre",

@@ -60,6 +60,9 @@ export const ptPT = {
       "Pretende substituí-lo pela sua versão ou recarregá-lo e descartar as suas alterações? Cancelar continua a edição sem guardar.",
     overwrite: "Substituir",
     reload: "Recarregar",
+    fileDeletedMessage: (fileName: string) => `${fileName} foi eliminado por outro programa.`,
+    fileDeletedDetail:
+      "Guarde novamente para manter este documento. Se não guardar, continua aberto sem guardar e a pergunta será repetida ao fechar.",
   },
   about: {
     windowTitle: "Acerca do Pupitre",

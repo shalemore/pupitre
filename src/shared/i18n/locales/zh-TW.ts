@@ -60,6 +60,9 @@ export const zhTW = {
       "要以目前版本覆寫它，還是重新載入並放棄你的修改？取消則繼續編輯，不儲存。",
     overwrite: "覆寫",
     reload: "重新載入",
+    fileDeletedMessage: (fileName: string) => `${fileName} 已被其他程式刪除。`,
+    fileDeletedDetail:
+      "重新儲存即可保留此文件。若不儲存，文件仍會保持開啟並視為未儲存，關閉時會再次詢問。",
   },
   about: {
     windowTitle: "關於 Pupitre",

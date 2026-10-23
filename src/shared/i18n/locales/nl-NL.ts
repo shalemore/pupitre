@@ -63,6 +63,10 @@ export const nlNL = {
       "Overschrijven met jouw versie, of opnieuw laden en je wijzigingen weggooien? Annuleren gaat door met bewerken zonder op te slaan.",
     overwrite: "Overschrijven",
     reload: "Opnieuw laden",
+    // TODO(i18n): unverified with native speakers
+    fileDeletedMessage: (fileName: string) => `${fileName} is door een ander programma verwijderd.`,
+    fileDeletedDetail:
+      "Sla het opnieuw op om dit document te behouden. Anders blijft het ongeopgeslagen geopend en word je bij het sluiten opnieuw gevraagd.",
   },
   about: {
     windowTitle: "Over Pupitre",

@@ -62,6 +62,10 @@ export const viVN = {
       "Ghi đè bằng phiên bản của bạn, hay tải lại và bỏ các thay đổi của bạn? Hủy để tiếp tục chỉnh sửa mà không lưu.",
     overwrite: "Ghi đè",
     reload: "Tải lại",
+    // TODO(i18n): unverified with native speakers
+    fileDeletedMessage: (fileName: string) => `${fileName} đã bị chương trình khác xóa.`,
+    fileDeletedDetail:
+      "Hãy lưu lại để giữ tài liệu này. Nếu không lưu, tài liệu vẫn mở ở trạng thái chưa lưu và sẽ được hỏi lại khi đóng.",
   },
   about: {
     windowTitle: "Giới thiệu Pupitre",

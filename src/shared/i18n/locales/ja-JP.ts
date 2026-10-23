@@ -61,6 +61,10 @@ export const jaJP = {
       "現在の内容で上書きするか、再読み込みして変更を破棄しますか？キャンセルすると保存せずに編集を続けます。",
     overwrite: "上書き",
     reload: "再読み込み",
+    fileDeletedMessage: (fileName: string) =>
+      `${fileName} は他のプログラムによって削除されました。`,
+    fileDeletedDetail:
+      "もう一度保存すると、この書類を残せます。保存しない場合は未保存のまま開いた状態になり、閉じるときにもう一度確認します。",
   },
   about: {
     windowTitle: "Pupitre について",

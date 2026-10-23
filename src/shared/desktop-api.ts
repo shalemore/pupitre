@@ -27,6 +27,9 @@ export interface FolderEntry {
 /** The choice made when the file of a document with unsaved changes was modified elsewhere; "keep" continues editing without saving. */
 export type ExternalChangeChoice = "overwrite" | "reload" | "keep";
 
+/** The choice made when the file of an open document was deleted elsewhere; "keep" leaves the document open and unsaved. */
+export type DeletedFileChoice = "save" | "keep";
+
 /** The choice made when closing or replacing a document with unsaved changes. */
 export type UnsavedChoice = "save" | "discard" | "cancel";
 
@@ -104,6 +107,7 @@ export interface InvokeChannels {
   /** Starts or stops telling the window, through document:changed, when the file is modified. */
   "document:watch": (path: string) => void;
   "document:unwatch": (path: string) => void;
+  "document:exists": (path: string) => boolean;
   "document:write": (path: string, content: string, lineEnding: LineEnding) => void;
   /** Asks where to save a document; the document is written with document:write afterwards. */
   "dialog:choose-save-path": (suggestedName: string) => DocumentLocation | null;
@@ -113,6 +117,8 @@ export interface InvokeChannels {
   "dialog:confirm-unsaved": (fileName: string) => UnsavedChoice;
   /** The open file was changed on disk while the document has unsaved changes. */
   "dialog:confirm-external-change": (fileName: string) => ExternalChangeChoice;
+  /** The open file was deleted on disk. */
+  "dialog:confirm-deleted": (fileName: string) => DeletedFileChoice;
   "dialog:show-error": (message: string, detail: string) => void;
   "window:open-settings": () => void;
   "window:set-colors": (colors: WindowColors) => void;

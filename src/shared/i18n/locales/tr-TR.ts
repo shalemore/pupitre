@@ -64,6 +64,10 @@ export const trTR = {
       "Sizin sürümünüzle üzerine yazılsın mı, yoksa yeniden yüklenip değişiklikleriniz atılsın mı? İptal, kaydetmeden düzenlemeye devam eder.",
     overwrite: "Üzerine Yaz",
     reload: "Yeniden Yükle",
+    // TODO(i18n): unverified with native speakers
+    fileDeletedMessage: (fileName: string) => `${fileName} başka bir program tarafından silindi.`,
+    fileDeletedDetail:
+      "Bu belgeyi korumak için yeniden kaydedin. Kaydetmezseniz kaydedilmemiş olarak açık kalır ve kapatırken tekrar sorulur.",
   },
   about: {
     windowTitle: "Pupitre Hakkında",

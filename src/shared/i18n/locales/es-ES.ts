@@ -60,6 +60,9 @@ export const esES = {
       "¿Quieres sobrescribirlo con tu versión o recargarlo y descartar tus cambios? Cancelar sigue editando sin guardar.",
     overwrite: "Sobrescribir",
     reload: "Recargar",
+    fileDeletedMessage: (fileName: string) => `${fileName} fue eliminado por otro programa.`,
+    fileDeletedDetail:
+      "Guárdalo de nuevo para conservar este documento. Si no lo haces, seguirá abierto sin guardar y se te preguntará otra vez al cerrarlo.",
   },
   about: {
     windowTitle: "Acerca de Pupitre",

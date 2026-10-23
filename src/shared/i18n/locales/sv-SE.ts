@@ -62,6 +62,10 @@ export const svSE = {
       "Vill du skriva över den med din version, eller läsa in den igen och kasta dina ändringar? Avbryt fortsätter redigeringen utan att spara.",
     overwrite: "Skriv över",
     reload: "Läs in igen",
+    // TODO(i18n): unverified with native speakers
+    fileDeletedMessage: (fileName: string) => `${fileName} har tagits bort av ett annat program.`,
+    fileDeletedDetail:
+      "Spara den igen för att behålla dokumentet. Om du inte sparar förblir det öppet osparat och du får frågan igen när du stänger det.",
   },
   about: {
     windowTitle: "Om Pupitre",

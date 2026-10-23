@@ -77,6 +77,10 @@ export const ar = {
       "هل تريد استبداله بنسختك، أم إعادة تحميله وتجاهل تغييراتك؟ الإلغاء يتابع التحرير دون حفظ.",
     overwrite: "استبدال",
     reload: "إعادة التحميل",
+    // TODO(i18n): unverified with native speakers
+    fileDeletedMessage: (fileName: string) => `تم حذف ${fileName} بواسطة برنامج آخر.`,
+    fileDeletedDetail:
+      "احفظه مرة أخرى للاحتفاظ بهذا المستند. إذا لم تحفظه فسيبقى مفتوحًا دون حفظ وسيُطرح عليك السؤال مجددًا عند إغلاقه.",
   },
   about: {
     windowTitle: "حول Pupitre",

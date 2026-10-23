@@ -62,6 +62,10 @@ export const daDK = {
       "Vil du overskrive den med din version, eller indlæse den igen og kassere dine ændringer? Annuller fortsætter redigeringen uden at gemme.",
     overwrite: "Overskriv",
     reload: "Indlæs igen",
+    // TODO(i18n): unverified with native speakers
+    fileDeletedMessage: (fileName: string) => `${fileName} er slettet af et andet program.`,
+    fileDeletedDetail:
+      "Gem den igen for at beholde dokumentet. Gemmer du ikke, forbliver det åbent uden at være gemt, og du bliver spurgt igen, når du lukker det.",
   },
   about: {
     windowTitle: "Om Pupitre",

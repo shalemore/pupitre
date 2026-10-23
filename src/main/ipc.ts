@@ -1,5 +1,5 @@
 import { isUtf8 } from "node:buffer";
-import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { access, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { basename, dirname, extname, join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { BrowserWindow, dialog, ipcMain, type IpcMainInvokeEvent, shell } from "electron";
@@ -155,6 +155,12 @@ export function registerIpcHandlers(): void {
   handle("folder:unwatch", (event, path) => unwatchPath(event.sender, "folder:changed", path));
   handle("document:watch", (event, path) => watchPath(event.sender, "document:changed", path));
   handle("document:unwatch", (event, path) => unwatchPath(event.sender, "document:changed", path));
+  handle("document:exists", (_event, path) =>
+    access(path).then(
+      () => true,
+      () => false,
+    ),
+  );
   handle("document:write", (_event, path, content, lineEnding) =>
     writeDocument(path, content, lineEnding),
   );
@@ -206,6 +212,19 @@ export function registerIpcHandlers(): void {
       noLink: true,
     });
     return response === 0 ? "overwrite" : response === 1 ? "reload" : "keep";
+  });
+  handle("dialog:confirm-deleted", async (event, fileName) => {
+    const labels = t().dialogs;
+    const { response } = await dialog.showMessageBox(senderWindow(event), {
+      type: "warning",
+      message: labels.fileDeletedMessage(fileName),
+      detail: labels.fileDeletedDetail,
+      buttons: [labels.save, labels.dontSave],
+      defaultId: 0,
+      cancelId: 1,
+      noLink: true,
+    });
+    return response === 0 ? "save" : "keep";
   });
   handle("dialog:show-error", async (event, message, detail) => {
     await dialog.showMessageBox(senderWindow(event), {

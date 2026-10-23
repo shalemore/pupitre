@@ -61,6 +61,10 @@ export const koKR = {
       "현재 내용으로 덮어쓰거나, 다시 불러와 변경 내용을 버릴 수 있습니다. 취소하면 저장하지 않고 계속 편집합니다.",
     overwrite: "덮어쓰기",
     reload: "다시 불러오기",
+    fileDeletedMessage: (fileName: string) =>
+      `${fileName} 파일이 다른 프로그램에서 삭제되었습니다.`,
+    fileDeletedDetail:
+      "다시 저장하면 이 문서를 보존할 수 있습니다. 저장하지 않으면 저장되지 않은 상태로 열려 있으며, 닫을 때 다시 확인합니다.",
   },
   about: {
     windowTitle: "Pupitre 정보",
