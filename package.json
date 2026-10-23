@@ -2,9 +2,9 @@
   "name": "pupitre",
   "version": "0.4.0",
   "description": "A markdown editor",
+  "homepage": "https://github.com/shalemore/pupitre",
   "license": "MIT",
   "author": "shalemore <190341017+shalemore@users.noreply.github.com>",
-  "homepage": "https://github.com/shalemore/pupitre",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/shalemore/pupitre.git"
