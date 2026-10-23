@@ -173,8 +173,7 @@ export const isIS = {
     scrollbarAuto: "Fela sjálfkrafa",
     scrollbarAlways: "Alltaf sýna",
     scrollbarNever: "Alltaf fela",
-    markdownDesc:
-      "Hvernig Markdown er skrifað við vistun. Gildir um skjöl sem opnuð eru eftir breytingu.",
+    markdownDesc: "Táknmálið sem sniðskipanir og límdur texti eru skrifuð með.",
     bulletMarker: "Punktmerki",
     emphasisMarker: "Skáletursmerki",
     strongMarker: "Feitletursmerki",

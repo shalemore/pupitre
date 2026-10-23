@@ -173,8 +173,7 @@ export const huHU = {
     scrollbarAuto: "Automatikus elrejtés",
     scrollbarAlways: "Mindig látható",
     scrollbarNever: "Mindig rejtett",
-    markdownDesc:
-      "Hogyan íródik a Markdown mentéskor. A módosítás után megnyitott dokumentumokra vonatkozik.",
+    markdownDesc: "A formázási parancsok és a beillesztett szöveg által használt szintaxis.",
     bulletMarker: "Listajelölő",
     emphasisMarker: "Dőlt jelölő",
     strongMarker: "Félkövér jelölő",

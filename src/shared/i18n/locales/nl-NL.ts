@@ -173,8 +173,7 @@ export const nlNL = {
     scrollbarAuto: "Automatisch verbergen",
     scrollbarAlways: "Altijd tonen",
     scrollbarNever: "Altijd verbergen",
-    markdownDesc:
-      "Hoe Markdown wordt geschreven bij het opslaan. Geldt voor documenten die na een wijziging worden geopend.",
+    markdownDesc: "De syntaxis waarmee opmaakopdrachten en geplakte tekst worden geschreven.",
     bulletMarker: "Opsommingsteken",
     emphasisMarker: "Cursiefteken",
     strongMarker: "Vetgedrukt teken",

@@ -169,7 +169,7 @@ export const koKR = {
     scrollbarAuto: "자동 숨김",
     scrollbarAlways: "항상 표시",
     scrollbarNever: "항상 숨김",
-    markdownDesc: "저장할 때 Markdown을 쓰는 방식입니다. 변경 후 연 문서에 적용됩니다.",
+    markdownDesc: "서식 명령과 붙여넣은 텍스트에 쓰는 문법입니다.",
     bulletMarker: "글머리 기호",
     emphasisMarker: "기울임꼴 기호",
     strongMarker: "굵게 기호",

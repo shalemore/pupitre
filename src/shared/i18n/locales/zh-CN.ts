@@ -166,7 +166,7 @@ export const zhCN = {
     scrollbarAuto: "自动隐藏",
     scrollbarAlways: "始终显示",
     scrollbarNever: "始终隐藏",
-    markdownDesc: "保存时 Markdown 的写法，修改后对之后打开的文档生效。",
+    markdownDesc: "格式命令和粘贴内容所用的 Markdown 写法。",
     bulletMarker: "无序列表符号",
     emphasisMarker: "斜体符号",
     strongMarker: "加粗符号",

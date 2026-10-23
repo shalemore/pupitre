@@ -171,8 +171,7 @@ export const idID = {
     scrollbarAuto: "Sembunyikan otomatis",
     scrollbarAlways: "Selalu tampilkan",
     scrollbarNever: "Selalu sembunyikan",
-    markdownDesc:
-      "Cara Markdown ditulis saat disimpan. Berlaku untuk dokumen yang dibuka setelah perubahan.",
+    markdownDesc: "Sintaks yang dipakai perintah pemformatan dan teks yang ditempel.",
     bulletMarker: "Penanda daftar butir",
     emphasisMarker: "Penanda miring",
     strongMarker: "Penanda tebal",

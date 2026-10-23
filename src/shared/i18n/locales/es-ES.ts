@@ -167,8 +167,7 @@ export const esES = {
     scrollbarAuto: "Ocultar automáticamente",
     scrollbarAlways: "Mostrar siempre",
     scrollbarNever: "Ocultar siempre",
-    markdownDesc:
-      "Cómo se escribe Markdown al guardar. Se aplica a los documentos abiertos después del cambio.",
+    markdownDesc: "La sintaxis con la que se escriben los comandos de formato y el texto pegado.",
     bulletMarker: "Marcador de lista",
     emphasisMarker: "Marcador de cursiva",
     strongMarker: "Marcador de negrita",

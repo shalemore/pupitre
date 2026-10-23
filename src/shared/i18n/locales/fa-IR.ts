@@ -172,8 +172,7 @@ export const faIR = {
     scrollbarAuto: "پنهان‌سازی خودکار",
     scrollbarAlways: "همیشه نمایش",
     scrollbarNever: "همیشه پنهان",
-    markdownDesc:
-      "نحوه نوشتن Markdown هنگام ذخیره. روی سندهایی که پس از تغییر باز می‌شوند اعمال می‌شود.",
+    markdownDesc: "نحوی که فرمان‌های قالب‌بندی و متن چسبانده‌شده با آن نوشته می‌شوند.",
     bulletMarker: "نشانه فهرست گلوله‌ای",
     emphasisMarker: "نشانه مورب",
     strongMarker: "نشانه پررنگ",

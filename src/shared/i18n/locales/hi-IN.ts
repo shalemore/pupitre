@@ -171,7 +171,7 @@ export const hiIN = {
     scrollbarAuto: "अपने-आप छिपाएँ",
     scrollbarAlways: "हमेशा दिखाएँ",
     scrollbarNever: "हमेशा छिपाएँ",
-    markdownDesc: "सहेजते समय Markdown कैसे लिखा जाए। बदलाव के बाद खोले गए दस्तावेज़ों पर लागू होता है।",
+    markdownDesc: "वह सिंटैक्स जिससे फ़ॉर्मेटिंग कमांड और चिपकाया गया टेक्स्ट लिखा जाता है।",
     bulletMarker: "बुलेट चिह्न",
     emphasisMarker: "इटैलिक चिह्न",
     strongMarker: "बोल्ड चिह्न",

@@ -167,8 +167,7 @@ export const ptBR = {
     scrollbarAuto: "Ocultar automaticamente",
     scrollbarAlways: "Sempre mostrar",
     scrollbarNever: "Sempre ocultar",
-    markdownDesc:
-      "Como o Markdown é escrito ao salvar. Vale para documentos abertos após a alteração.",
+    markdownDesc: "A sintaxe usada pelos comandos de formatação e pelo texto colado.",
     bulletMarker: "Marcador de lista",
     emphasisMarker: "Marcador de itálico",
     strongMarker: "Marcador de negrito",

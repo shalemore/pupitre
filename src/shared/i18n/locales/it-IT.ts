@@ -169,8 +169,7 @@ export const itIT = {
     scrollbarAuto: "Nascondi automaticamente",
     scrollbarAlways: "Mostra sempre",
     scrollbarNever: "Nascondi sempre",
-    markdownDesc:
-      "Come viene scritto il Markdown al salvataggio. Vale per i documenti aperti dopo la modifica.",
+    markdownDesc: "La sintassi usata dai comandi di formattazione e dal testo incollato.",
     bulletMarker: "Simbolo elenco puntato",
     emphasisMarker: "Simbolo corsivo",
     strongMarker: "Simbolo grassetto",

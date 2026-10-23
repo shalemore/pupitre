@@ -173,7 +173,7 @@ export const thTH = {
     scrollbarAuto: "ซ่อนอัตโนมัติ",
     scrollbarAlways: "แสดงเสมอ",
     scrollbarNever: "ซ่อนเสมอ",
-    markdownDesc: "วิธีเขียน Markdown เมื่อบันทึก มีผลกับเอกสารที่เปิดหลังการเปลี่ยนแปลง",
+    markdownDesc: "ไวยากรณ์ที่คำสั่งจัดรูปแบบและข้อความที่วางใช้",
     bulletMarker: "สัญลักษณ์หัวข้อย่อย",
     emphasisMarker: "สัญลักษณ์ตัวเอียง",
     strongMarker: "สัญลักษณ์ตัวหนา",

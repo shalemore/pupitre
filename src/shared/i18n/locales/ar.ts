@@ -186,7 +186,7 @@ export const ar = {
     scrollbarAuto: "إخفاء تلقائي",
     scrollbarAlways: "إظهار دائم",
     scrollbarNever: "إخفاء دائم",
-    markdownDesc: "طريقة كتابة Markdown عند الحفظ. تُطبَّق على المستندات المفتوحة بعد التغيير.",
+    markdownDesc: "الصيغة التي تكتب بها أوامر التنسيق والنصوص الملصقة.",
     bulletMarker: "رمز القائمة النقطية",
     emphasisMarker: "رمز المائل",
     strongMarker: "رمز الغامق",

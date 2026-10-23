@@ -166,7 +166,7 @@ export const zhTW = {
     scrollbarAuto: "自動隱藏",
     scrollbarAlways: "一律顯示",
     scrollbarNever: "一律隱藏",
-    markdownDesc: "儲存時 Markdown 的寫法，修改後對之後開啟的文件生效。",
+    markdownDesc: "格式指令和貼上內容所用的 Markdown 寫法。",
     bulletMarker: "項目符號",
     emphasisMarker: "斜體符號",
     strongMarker: "粗體符號",

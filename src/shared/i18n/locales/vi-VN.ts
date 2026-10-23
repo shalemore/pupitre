@@ -171,7 +171,7 @@ export const viVN = {
     scrollbarAuto: "Tự động ẩn",
     scrollbarAlways: "Luôn hiện",
     scrollbarNever: "Luôn ẩn",
-    markdownDesc: "Cách viết Markdown khi lưu. Áp dụng cho tài liệu được mở sau khi thay đổi.",
+    markdownDesc: "Cú pháp mà các lệnh định dạng và văn bản được dán sử dụng.",
     bulletMarker: "Ký hiệu gạch đầu dòng",
     emphasisMarker: "Ký hiệu in nghiêng",
     strongMarker: "Ký hiệu in đậm",

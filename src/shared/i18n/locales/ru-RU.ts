@@ -175,8 +175,7 @@ export const ruRU = {
     scrollbarAuto: "Скрывать автоматически",
     scrollbarAlways: "Всегда показывать",
     scrollbarNever: "Всегда скрывать",
-    markdownDesc:
-      "Как записывается Markdown при сохранении. Применяется к документам, открытым после изменения.",
+    markdownDesc: "Синтаксис, которым записываются команды форматирования и вставленный текст.",
     bulletMarker: "Маркер списка",
     emphasisMarker: "Маркер курсива",
     strongMarker: "Маркер полужирного",

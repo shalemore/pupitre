@@ -169,7 +169,7 @@ export const jaJP = {
     scrollbarAuto: "自動的に隠す",
     scrollbarAlways: "常に表示",
     scrollbarNever: "常に非表示",
-    markdownDesc: "保存時の Markdown の書き方です。変更後に開いたドキュメントに適用されます。",
+    markdownDesc: "書式コマンドと貼り付けたテキストで使う記法です。",
     bulletMarker: "箇条書きの記号",
     emphasisMarker: "斜体の記号",
     strongMarker: "太字の記号",

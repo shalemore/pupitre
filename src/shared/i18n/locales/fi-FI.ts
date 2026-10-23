@@ -173,8 +173,7 @@ export const fiFI = {
     scrollbarAuto: "Piilota automaattisesti",
     scrollbarAlways: "Näytä aina",
     scrollbarNever: "Piilota aina",
-    markdownDesc:
-      "Miten Markdown kirjoitetaan tallennettaessa. Koskee asiakirjoja, jotka avataan muutoksen jälkeen.",
+    markdownDesc: "Syntaksi, jolla muotoilukomennot ja liitetty teksti kirjoitetaan.",
     bulletMarker: "Luettelomerkki",
     emphasisMarker: "Kursiivimerkki",
     strongMarker: "Lihavointimerkki",

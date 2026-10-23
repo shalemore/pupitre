@@ -169,8 +169,7 @@ export const frFR = {
     scrollbarAuto: "Masquer automatiquement",
     scrollbarAlways: "Toujours afficher",
     scrollbarNever: "Toujours masquer",
-    markdownDesc:
-      "Façon d'écrire le Markdown à l'enregistrement. S'applique aux documents ouverts après la modification.",
+    markdownDesc: "La syntaxe utilisée par les commandes de mise en forme et le texte collé.",
     bulletMarker: "Puce de liste",
     emphasisMarker: "Marqueur d'italique",
     strongMarker: "Marqueur de gras",

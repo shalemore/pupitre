@@ -177,8 +177,7 @@ export const ukUA = {
     scrollbarAuto: "Автоматично приховувати",
     scrollbarAlways: "Завжди показувати",
     scrollbarNever: "Завжди приховувати",
-    markdownDesc:
-      "Як записується Markdown під час збереження. Застосовується до документів, відкритих після зміни.",
+    markdownDesc: "Синтаксис, яким записуються команди форматування та вставлений текст.",
     bulletMarker: "Маркер списку",
     emphasisMarker: "Маркер курсиву",
     strongMarker: "Маркер напівжирного",

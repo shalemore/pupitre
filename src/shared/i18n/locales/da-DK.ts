@@ -172,8 +172,7 @@ export const daDK = {
     scrollbarAuto: "Skjul automatisk",
     scrollbarAlways: "Vis altid",
     scrollbarNever: "Skjul altid",
-    markdownDesc:
-      "Hvordan Markdown skrives, når det gemmes. Gælder dokumenter, der åbnes efter en ændring.",
+    markdownDesc: "Den syntaks, som formateringskommandoer og indsat tekst skrives med.",
     bulletMarker: "Punkttegn",
     emphasisMarker: "Kursivtegn",
     strongMarker: "Fedtegn",

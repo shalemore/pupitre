@@ -173,8 +173,7 @@ export const trTR = {
     scrollbarAuto: "Otomatik gizle",
     scrollbarAlways: "Her zaman göster",
     scrollbarNever: "Her zaman gizle",
-    markdownDesc:
-      "Kaydederken Markdown nasıl yazılır. Değişiklikten sonra açılan belgelere uygulanır.",
+    markdownDesc: "Biçimlendirme komutlarının ve yapıştırılan metnin kullandığı söz dizimi.",
     bulletMarker: "Madde İmi",
     emphasisMarker: "İtalik İşareti",
     strongMarker: "Kalın İşareti",

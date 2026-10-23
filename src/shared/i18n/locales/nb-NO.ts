@@ -172,8 +172,7 @@ export const nbNO = {
     scrollbarAuto: "Skjul automatisk",
     scrollbarAlways: "Vis alltid",
     scrollbarNever: "Skjul alltid",
-    markdownDesc:
-      "Hvordan Markdown skrives når det lagres. Gjelder dokumenter som åpnes etter en endring.",
+    markdownDesc: "Syntaksen som formateringskommandoer og innlimt tekst skrives med.",
     bulletMarker: "Punktmerke",
     emphasisMarker: "Kursivmerke",
     strongMarker: "Fetmerke",

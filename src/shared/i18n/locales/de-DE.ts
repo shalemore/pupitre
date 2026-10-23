@@ -170,7 +170,7 @@ export const deDE = {
     scrollbarAlways: "Immer anzeigen",
     scrollbarNever: "Immer ausblenden",
     markdownDesc:
-      "Wie Markdown beim Speichern geschrieben wird. Gilt für danach geöffnete Dokumente.",
+      "Die Syntax, mit der Formatierungsbefehle und eingefügter Text geschrieben werden.",
     bulletMarker: "Aufzählungszeichen",
     emphasisMarker: "Kursiv-Zeichen",
     strongMarker: "Fett-Zeichen",

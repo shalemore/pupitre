@@ -175,7 +175,7 @@ export const csCZ = {
     scrollbarAuto: "Automaticky skrýt",
     scrollbarAlways: "Vždy zobrazit",
     scrollbarNever: "Vždy skrýt",
-    markdownDesc: "Jak se Markdown zapisuje při ukládání. Platí pro dokumenty otevřené po změně.",
+    markdownDesc: "Syntaxe, kterou používají příkazy formátování a vložený text.",
     bulletMarker: "Odrážka seznamu",
     emphasisMarker: "Značka kurzívy",
     strongMarker: "Značka tučného písma",

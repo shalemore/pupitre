@@ -172,8 +172,7 @@ export const svSE = {
     scrollbarAuto: "Dölj automatiskt",
     scrollbarAlways: "Visa alltid",
     scrollbarNever: "Dölj alltid",
-    markdownDesc:
-      "Hur Markdown skrivs när det sparas. Gäller dokument som öppnas efter en ändring.",
+    markdownDesc: "Den syntax som formateringskommandon och inklistrad text skrivs med.",
     bulletMarker: "Punktmarkör",
     emphasisMarker: "Markör för kursiv",
     strongMarker: "Markör för fetstil",

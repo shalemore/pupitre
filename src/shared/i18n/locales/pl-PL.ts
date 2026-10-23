@@ -178,7 +178,7 @@ export const plPL = {
     scrollbarAuto: "Ukrywaj automatycznie",
     scrollbarAlways: "Zawsze pokazuj",
     scrollbarNever: "Zawsze ukrywaj",
-    markdownDesc: "Jak zapisywany jest Markdown. Dotyczy dokumentów otwieranych po zmianie.",
+    markdownDesc: "Składnia, którą stosują polecenia formatowania i wklejany tekst.",
     bulletMarker: "Punktor listy",
     emphasisMarker: "Znacznik kursywy",
     strongMarker: "Znacznik pogrubienia",

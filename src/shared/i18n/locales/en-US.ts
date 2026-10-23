@@ -168,8 +168,7 @@ export const enUS = {
     scrollbarAuto: "Auto-hide",
     scrollbarAlways: "Always show",
     scrollbarNever: "Always hide",
-    markdownDesc:
-      "How Markdown is written when saving. Applies to documents opened after a change.",
+    markdownDesc: "The syntax that formatting commands and pasted text are written with.",
     bulletMarker: "Bullet List Marker",
     emphasisMarker: "Italic Marker",
     strongMarker: "Bold Marker",
