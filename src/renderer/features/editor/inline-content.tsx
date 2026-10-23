@@ -3,31 +3,15 @@ import type { SyntaxNode } from "@lezer/common";
 import katex from "katex";
 import { type Component, For, Match, Switch } from "solid-js";
 import { Dynamic } from "solid-js/web";
+import { htmlTag, isFormattingTag } from "./html";
 import { imageSource, resolveUrl } from "./images";
 import { markers } from "./live-preview";
 
 /**
  * Inline Markdown rendered as elements, for widgets that replace their source (table cells).
- * It is built from the same Lezer tree as the live preview, so both read the syntax alike.
+ * It is built from the same Lezer tree as the live preview, so both read the syntax alike. Inline
+ * HTML other than formatting tags is left out and its text kept.
  */
-
-/** Inline HTML elements that format text; other tags are left out and their text kept. */
-const FORMATTING_TAGS = new Set([
-  "b",
-  "code",
-  "del",
-  "em",
-  "i",
-  "ins",
-  "kbd",
-  "mark",
-  "s",
-  "small",
-  "strong",
-  "sub",
-  "sup",
-  "u",
-]);
 
 export type InlineItem =
   | { type: "text"; text: string }
@@ -42,17 +26,6 @@ const ELEMENT_TAGS: Record<string, string> = {
   Emphasis: "em",
   Strikethrough: "del",
 };
-
-/** The opening or closing tag name of an inline HTML tag such as `<kbd>` or `</kbd>`. */
-export function htmlTag(source: string): { name: string; closing: boolean } | undefined {
-  const match = /^<(\/?)([a-z][a-z0-9]*)\b[^>]*>$/i.exec(source);
-  const name = match?.[2]?.toLowerCase();
-  return name ? { name, closing: match?.[1] === "/" } : undefined;
-}
-
-export function isFormattingTag(name: string): boolean {
-  return FORMATTING_TAGS.has(name);
-}
 
 /** The items between `from` and `to`, children of `parent`. */
 export function inlineItems(

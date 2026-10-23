@@ -10,6 +10,7 @@ import {
 } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
 import { AlertTitleWidget, alertTitles, alertType } from "./alerts";
+import { htmlTag, isFormattingTag, LineBreakWidget } from "./html";
 import { ImageWidget, imageSource, resolveUrl } from "./images";
 import { MathWidget } from "./math";
 
@@ -30,6 +31,9 @@ import { MathWidget } from "./math";
  */
 
 const HEADING = /^(?:ATX|Setext)Heading([1-6])$/;
+/** Nodes whose children are inline content, where inline HTML can occur. */
+const INLINE_CONTAINER =
+  /^(?:Paragraph|(?:ATX|Setext)Heading\d|TableCell|Emphasis|StrongEmphasis|Strikethrough|Link)$/;
 
 /** The rendered content of inline formats; their markers are handled separately. */
 function inlineClass(name: string): string | undefined {
@@ -115,6 +119,7 @@ class CheckboxWidget extends WidgetType {
 }
 
 const bullet = Decoration.replace({ widget: new BulletWidget() });
+const lineBreak = new LineBreakWidget();
 const hidden = Decoration.replace({});
 const syntax = Decoration.mark({ class: "md-mark" });
 
@@ -359,6 +364,45 @@ function visitInlineMath(builder: DecorationBuilder, node: SyntaxNode): void {
   builder.decorations.push(Decoration.replace({ widget }).range(node.from, node.to));
 }
 
+/**
+ * Formatting tags such as `<kbd>…</kbd>` among a node's children are paired like Markdown formats:
+ * away from the selection the tags are hidden and the content takes the tag's look
+ * (`md-tag-kbd`). A `<br>` breaks the line. Tags that do not pair stay source.
+ */
+function visitInlineHtml(builder: DecorationBuilder, node: SyntaxNode): void {
+  const open: { name: string; tag: SyntaxNode }[] = [];
+  for (let child = node.firstChild; child; child = child.nextSibling) {
+    if (child.name !== "HTMLTag") continue;
+    const tag = htmlTag(builder.text(child.from, child.to));
+    if (!tag) continue;
+    if (tag.name === "br") {
+      if (!touches(builder.selection, child.from, child.to)) {
+        builder.decorations.push(
+          Decoration.replace({ widget: lineBreak }).range(child.from, child.to),
+        );
+      }
+      continue;
+    }
+    if (!isFormattingTag(tag.name)) continue;
+    if (!tag.closing) {
+      open.push({ name: tag.name, tag: child });
+      continue;
+    }
+    const index = open.findLastIndex((entry) => entry.name === tag.name);
+    const opening = open[index]?.tag;
+    if (!opening) continue;
+    open.splice(index);
+    if (touches(builder.selection, opening.from, child.to)) {
+      builder.mark(opening.from, opening.to, "md-mark");
+      builder.mark(child.from, child.to, "md-mark");
+    } else {
+      builder.hide(opening.from, opening.to);
+      builder.hide(child.from, child.to);
+      builder.mark(opening.to, child.from, `md-tag md-tag-${tag.name}`);
+    }
+  }
+}
+
 /** The syntax markers directly inside an inline format, such as `**` or `[` and `]`. */
 export function markers(node: SyntaxNode): SyntaxNode[] {
   const found: SyntaxNode[] = [];
@@ -374,6 +418,7 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
   const block = blockClass(name);
   // A setext underline is not part of the heading's text; it is styled as syntax below
   if (block) builder.lineClass(node.from, name.startsWith("Setext") ? node.from : node.to, block);
+  if (INLINE_CONTAINER.test(name)) visitInlineHtml(builder, node);
   const inline = builder.alertMarkers.has(node.from) ? undefined : inlineClass(name);
   if (inline) {
     // Only the text between the opening and closing markers, so revealed syntax is not

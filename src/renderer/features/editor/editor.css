@@ -59,6 +59,60 @@
     color: var(--ui-brand);
   }
 
+  /* Inline HTML formatting elements, shown without their tags: <kbd>, <mark>, <sub> and so on */
+  .md-tag-kbd {
+    padding: 0.1em 0.4em;
+    border: 1px solid var(--ui-alpha-3);
+    border-block-end-width: 2px;
+    border-radius: 4px;
+    background: var(--ui-alpha-1);
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+  }
+
+  .md-tag-mark {
+    border-radius: 2px;
+    background: oklch(from var(--ui-brand) l c h / 25%);
+  }
+
+  .md-tag-sub,
+  .md-tag-sup {
+    font-size: 0.75em;
+  }
+
+  .md-tag-sub {
+    vertical-align: sub;
+  }
+
+  .md-tag-sup {
+    vertical-align: super;
+  }
+
+  :is(.md-tag-b, .md-tag-strong) {
+    font-weight: 650;
+  }
+
+  :is(.md-tag-i, .md-tag-em) {
+    font-style: italic;
+  }
+
+  :is(.md-tag-u, .md-tag-ins) {
+    text-decoration: underline;
+  }
+
+  :is(.md-tag-s, .md-tag-del) {
+    text-decoration: line-through;
+  }
+
+  .md-tag-small {
+    font-size: 0.85em;
+  }
+
+  .md-tag-code {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+  }
+
   .md-image {
     color: var(--ui-text-muted);
   }
