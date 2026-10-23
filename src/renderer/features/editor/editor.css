@@ -321,6 +321,39 @@
     max-width: 100%;
   }
 
+  /* The summary of a <details> section, see details.ts; the triangle opens and closes it */
+  .md-details-summary {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4em;
+  }
+
+  .md-details-toggle {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 1em;
+    height: 1em;
+    color: var(--ui-text-muted);
+    cursor: pointer;
+  }
+
+  .md-details-toggle::before {
+    content: "";
+    width: 0.5em;
+    height: 0.5em;
+    background: currentColor;
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+  }
+
+  .md-details-toggle:dir(rtl)::before {
+    transform: scaleX(-1);
+  }
+
+  .md-details-summary.is-open .md-details-toggle::before {
+    transform: rotate(90deg);
+  }
+
   /* A rendered table; its cells keep the document font and scroll sideways when too wide */
   .md-table-block {
     padding-block: 0.25em;
