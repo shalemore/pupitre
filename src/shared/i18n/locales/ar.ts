@@ -172,8 +172,7 @@ export const ar = {
     bulletMarker: "رمز القائمة النقطية",
     emphasisMarker: "رمز المائل",
     strongMarker: "رمز الغامق",
-    // TODO(i18n): unverified with native speakers; literal translation of "fence" (fenced code block)
-    fenceMarker: "سياج التعليمات البرمجية",
+    fenceMarker: "محدِّد كتلة التعليمات البرمجية",
     ruleMarker: "خط أفقي",
     orderedList: "قائمة مرقمة",
     orderedListIncrement: "تصاعدي (1. 2. 3.)",

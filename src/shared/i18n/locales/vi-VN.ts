@@ -157,8 +157,7 @@ export const viVN = {
     bulletMarker: "Ký hiệu gạch đầu dòng",
     emphasisMarker: "Ký hiệu in nghiêng",
     strongMarker: "Ký hiệu in đậm",
-    // TODO(i18n): unverified with native speakers; literal translation of "fence" (fenced code block)
-    fenceMarker: "Hàng rào khối mã",
+    fenceMarker: "Dấu phân cách khối mã",
     ruleMarker: "Đường kẻ ngang",
     orderedList: "Danh sách đánh số",
     orderedListIncrement: "Tăng dần (1. 2. 3.)",
