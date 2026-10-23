@@ -84,6 +84,35 @@ class BulletWidget extends WidgetType {
   }
 }
 
+/** A task's checkbox; clicking it edits the `[ ]` or `[x]` it stands for. */
+class CheckboxWidget extends WidgetType {
+  constructor(readonly checked: boolean) {
+    super();
+  }
+
+  override eq(other: CheckboxWidget): boolean {
+    return other.checked === this.checked;
+  }
+
+  toDOM(view: EditorView): HTMLElement {
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.className = "md-task-checkbox";
+    checkbox.checked = this.checked;
+    checkbox.addEventListener("mousedown", (event) => {
+      event.preventDefault();
+      // The widget replaces "[ ]", so the character after its start is the check mark
+      const pos = view.posAtDOM(checkbox) + 1;
+      view.dispatch({ changes: { from: pos, to: pos + 1, insert: this.checked ? " " : "x" } });
+    });
+    return checkbox;
+  }
+
+  override ignoreEvent(): boolean {
+    return true;
+  }
+}
+
 const bullet = Decoration.replace({ widget: new BulletWidget() });
 const hidden = Decoration.replace({});
 const syntax = Decoration.mark({ class: "md-mark" });
@@ -239,9 +268,21 @@ function visitListItem(builder: DecorationBuilder, node: SyntaxNode): void {
   });
 
   const active = touches(builder.selection, markLine.from, markLine.to);
-  const isTask = mark.nextSibling?.name === "Task";
+  const task = mark.nextSibling?.name === "Task" ? mark.nextSibling.getChild("TaskMarker") : null;
   const marker = mark.to + builder.spaceAfter(mark.to);
-  if (node.parent?.name === "BulletList" && !active && !isTask) {
+  if (task && !active) {
+    // A task reads as its checkbox alone, like on GitHub
+    const checked = /x/i.test(builder.text(task.from, task.to));
+    builder.hide(mark.from, task.from);
+    builder.decorations.push(
+      Decoration.replace({ widget: new CheckboxWidget(checked) }).range(task.from, task.to),
+    );
+    builder.lineClass(
+      markLine.from,
+      markLine.from,
+      checked ? "md-task md-task-checked" : "md-task",
+    );
+  } else if (node.parent?.name === "BulletList" && !active && !task) {
     builder.decorations.push(bullet.range(mark.from, marker));
   } else {
     builder.mark(mark.from, marker, "md-list-mark");

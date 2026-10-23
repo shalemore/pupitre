@@ -123,6 +123,22 @@
     content: "▪";
   }
 
+  /* A task's checkbox takes the place of its bullet; the space after it stays text */
+  .md-task-checkbox {
+    width: 1em;
+    height: 1em;
+    margin: 0;
+    margin-inline-end: calc(var(--md-list-indent) - 1em - 0.3em);
+    vertical-align: -0.125em;
+    text-indent: 0;
+    accent-color: var(--ui-brand);
+    cursor: default;
+  }
+
+  .md-task-checked {
+    color: var(--ui-text-muted);
+  }
+
   /* Code blocks: one card drawn across their lines; the fences shrink to its padding when hidden */
   .md-code-block {
     --md-block-indent: 1em;
