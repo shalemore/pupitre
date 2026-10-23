@@ -107,6 +107,8 @@ export interface InvokeChannels {
   /** Starts or stops telling the window, through document:changed, when the file is modified. */
   "document:watch": (path: string) => void;
   "document:unwatch": (path: string) => void;
+  /** The normalized text of a file, or undefined when it is missing, not text, or larger than maxBytes. */
+  "document:peek": (path: string, maxBytes: number) => string | undefined;
   "document:exists": (path: string) => boolean;
   "document:write": (path: string, content: string, lineEnding: LineEnding) => void;
   /** Asks where to save a document; the document is written with document:write afterwards. */

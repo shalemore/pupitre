@@ -1,5 +1,5 @@
 import { isUtf8 } from "node:buffer";
-import { access, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { access, mkdir, readdir, readFile, stat, writeFile } from "node:fs/promises";
 import { basename, dirname, extname, join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { BrowserWindow, dialog, ipcMain, type IpcMainInvokeEvent, shell } from "electron";
@@ -94,19 +94,33 @@ async function listFolder(path: string): Promise<FolderEntry[]> {
     );
 }
 
+/** Strips the UTF-8 BOM (not written back on save) and normalizes line endings to LF; the original line ending is restored on save. */
+function normalizeText(raw: string): string {
+  return raw.replace(/^﻿/, "").replaceAll("\r\n", "\n");
+}
+
 async function readDocument(path: string): Promise<OpenedDocument> {
   try {
-    // Strip the UTF-8 BOM (not written back on save) and normalize line endings to \n; the original line ending is restored on save
-    const raw = decodeText(await readFile(path)).replace(/^﻿/, "");
+    const raw = decodeText(await readFile(path));
     addRecentFile(path);
     return {
       ...locate(path),
-      content: raw.replaceAll("\r\n", "\n"),
+      content: normalizeText(raw),
       lineEnding: raw.includes("\r\n") ? "crlf" : "lf",
     };
   } catch (error) {
     removeRecentFile(path);
     throw error;
+  }
+}
+
+/** The text of a file as readDocument would give it, without touching the recent files; undefined when it is missing, not text, or larger than maxBytes. */
+async function peekDocument(path: string, maxBytes: number): Promise<string | undefined> {
+  try {
+    if ((await stat(path)).size > maxBytes) return undefined;
+    return normalizeText(decodeText(await readFile(path)));
+  } catch {
+    return undefined;
   }
 }
 
@@ -155,6 +169,7 @@ export function registerIpcHandlers(): void {
   handle("folder:unwatch", (event, path) => unwatchPath(event.sender, "folder:changed", path));
   handle("document:watch", (event, path) => watchPath(event.sender, "document:changed", path));
   handle("document:unwatch", (event, path) => unwatchPath(event.sender, "document:changed", path));
+  handle("document:peek", (_event, path, maxBytes) => peekDocument(path, maxBytes));
   handle("document:exists", (_event, path) =>
     access(path).then(
       () => true,

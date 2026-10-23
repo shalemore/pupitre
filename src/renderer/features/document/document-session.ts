@@ -23,6 +23,8 @@ export interface OpenDocument {
 
 const SAMPLE_FILE_NAME = "Pupitre-Guide.md";
 const AUTO_SAVE_DELAY = 1500;
+// Saving compares the file on disk with what was last read or written; bigger files skip the comparison to keep saving fast
+const MAX_CONFLICT_CHECK_BYTES = 512 * 1024;
 let nextDocumentId = 1;
 
 /**
@@ -82,8 +84,14 @@ export function createDocumentSession(
     if (!editor) return false;
     await editor.persistImages(path);
     const markdown = editor.getMarkdown();
+    const previousDiskContent = diskContent;
     diskContent = withTrailingNewline(markdown);
-    await desktop.invoke("document:write", path, withTrailingNewline(markdown), lineEndingFor(doc));
+    try {
+      await desktop.invoke("document:write", path, diskContent, lineEndingFor(doc));
+    } catch (error) {
+      diskContent = previousDiskContent;
+      throw error;
+    }
     markSaved(markdown);
     return true;
   };
@@ -99,10 +107,19 @@ export function createDocumentSession(
     return writeTo(doc, location.path);
   };
 
+  /** False when the file was changed elsewhere and the user chose not to overwrite it. */
+  const diskMatchesKnownContent = async (path: string): Promise<boolean> => {
+    const disk = await desktop.invoke("document:peek", path, MAX_CONFLICT_CHECK_BYTES);
+    if (disk === undefined || disk === diskContent) return true;
+    return resolveConflict(disk, () => void reloadFromDisk(path));
+  };
+
   const save = async (): Promise<boolean> => {
     const doc = activeDocument();
     if (!doc) return false;
-    return doc.path ? writeTo(doc, doc.path) : saveAs();
+    if (!doc.path) return saveAs();
+    if (!(await diskMatchesKnownContent(doc.path))) return false;
+    return writeTo(doc, doc.path);
   };
 
   const scheduleSave = debounce(() => void save(), AUTO_SAVE_DELAY);
@@ -179,6 +196,29 @@ export function createDocumentSession(
 
   let askingAboutDisk = false;
 
+  /** Asks which version wins when the file differs from what this document last saw; true means the caller may overwrite the file. */
+  const resolveConflict = async (disk: string, reload: () => void): Promise<boolean> => {
+    if (askingAboutDisk) return false;
+    askingAboutDisk = true;
+    try {
+      const choice = await desktop.invoke("dialog:confirm-external-change", fileName());
+      // Whatever the answer, this version of the file has been dealt with and does not ask again
+      diskContent = disk;
+      if (choice === "reload") reload();
+      return choice === "overwrite";
+    } finally {
+      askingAboutDisk = false;
+    }
+  };
+
+  const reloadFromDisk = async (path: string) => {
+    const opened = await desktop.invoke("document:read", path).catch(() => undefined);
+    const doc = activeDocument();
+    if (!opened || doc?.path !== path) return;
+    diskContent = opened.content;
+    load({ ...doc, ...opened, markdown: opened.content });
+  };
+
   /** Applies an edit made to the file elsewhere; with unsaved changes of its own, the document asks which version to keep. */
   const handleDiskChange = async (path: string) => {
     if (askingAboutDisk) return;
@@ -195,16 +235,7 @@ export function createDocumentSession(
       diskContent = opened.content;
       return reload();
     }
-    askingAboutDisk = true;
-    try {
-      const choice = await desktop.invoke("dialog:confirm-external-change", fileName());
-      // Whatever the answer, this version of the file has been dealt with and does not ask again
-      diskContent = opened.content;
-      if (choice === "overwrite") await save();
-      else if (choice === "reload") reload();
-    } finally {
-      askingAboutDisk = false;
-    }
+    if (await resolveConflict(opened.content, reload)) await save();
   };
 
   const handleDeletion = async (path: string) => {
