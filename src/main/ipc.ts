@@ -194,6 +194,19 @@ export function registerIpcHandlers(): void {
     });
     return response === 0 ? "save" : response === 1 ? "discard" : "cancel";
   });
+  handle("dialog:confirm-external-change", async (event, fileName) => {
+    const labels = t().dialogs;
+    const { response } = await dialog.showMessageBox(senderWindow(event), {
+      type: "warning",
+      message: labels.externalChangeMessage(fileName),
+      detail: labels.externalChangeDetail,
+      buttons: [labels.overwrite, labels.reload, labels.cancel],
+      defaultId: 2,
+      cancelId: 2,
+      noLink: true,
+    });
+    return response === 0 ? "overwrite" : response === 1 ? "reload" : "keep";
+  });
   handle("dialog:show-error", async (event, message, detail) => {
     await dialog.showMessageBox(senderWindow(event), {
       type: "error",

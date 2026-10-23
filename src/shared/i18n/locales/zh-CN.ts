@@ -55,6 +55,11 @@ export const zhCN = {
     dontSave: "不保存",
     cancel: "取消",
     openFailed: "无法打开该文件。",
+    externalChangeMessage: (fileName: string) => `${fileName} 已被其他程序修改。`,
+    externalChangeDetail:
+      "要用当前版本覆盖它，还是重新载入并放弃你的修改？取消则继续编辑，不保存。",
+    overwrite: "覆盖",
+    reload: "重新载入",
   },
   about: {
     windowTitle: "关于 Pupitre",

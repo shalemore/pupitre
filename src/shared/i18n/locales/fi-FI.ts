@@ -57,6 +57,12 @@ export const fiFI = {
     dontSave: "Älä tallenna",
     cancel: "Peruuta",
     openFailed: "Tiedostoa ei voitu avata.",
+    // TODO(i18n): unverified with native speakers
+    externalChangeMessage: (fileName: string) => `${fileName} on muuttunut toisessa ohjelmassa.`,
+    externalChangeDetail:
+      "Korvataanko se sinun versiollasi vai ladataanko se uudelleen ja hylätäänkö muutoksesi? Peruuta jatkaa muokkausta tallentamatta.",
+    overwrite: "Korvaa",
+    reload: "Lataa uudelleen",
   },
   about: {
     windowTitle: "Tietoja Pupitresta",

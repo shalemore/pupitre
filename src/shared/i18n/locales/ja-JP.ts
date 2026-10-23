@@ -55,6 +55,12 @@ export const jaJP = {
     dontSave: "保存しない",
     cancel: "キャンセル",
     openFailed: "ファイルを開けませんでした。",
+    externalChangeMessage: (fileName: string) =>
+      `${fileName} は他のプログラムによって変更されました。`,
+    externalChangeDetail:
+      "現在の内容で上書きするか、再読み込みして変更を破棄しますか？キャンセルすると保存せずに編集を続けます。",
+    overwrite: "上書き",
+    reload: "再読み込み",
   },
   about: {
     windowTitle: "Pupitre について",

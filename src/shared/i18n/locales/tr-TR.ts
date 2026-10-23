@@ -57,6 +57,13 @@ export const trTR = {
     dontSave: "Kaydetme",
     cancel: "İptal",
     openFailed: "Dosya açılamadı.",
+    // TODO(i18n): unverified with native speakers
+    externalChangeMessage: (fileName: string) =>
+      `${fileName} başka bir program tarafından değiştirildi.`,
+    externalChangeDetail:
+      "Sizin sürümünüzle üzerine yazılsın mı, yoksa yeniden yüklenip değişiklikleriniz atılsın mı? İptal, kaydetmeden düzenlemeye devam eder.",
+    overwrite: "Üzerine Yaz",
+    reload: "Yeniden Yükle",
   },
   about: {
     windowTitle: "Pupitre Hakkında",

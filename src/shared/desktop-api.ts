@@ -24,6 +24,9 @@ export interface FolderEntry {
   kind: "directory" | "file";
 }
 
+/** The choice made when the file of a document with unsaved changes was modified elsewhere; "keep" continues editing without saving. */
+export type ExternalChangeChoice = "overwrite" | "reload" | "keep";
+
 /** The choice made when closing or replacing a document with unsaved changes. */
 export type UnsavedChoice = "save" | "discard" | "cancel";
 
@@ -108,6 +111,8 @@ export interface InvokeChannels {
   "document:save-image": (documentPath: string, fileName: string, data: Uint8Array) => string;
   "document:export-pdf": (suggestedName: string) => string | null;
   "dialog:confirm-unsaved": (fileName: string) => UnsavedChoice;
+  /** The open file was changed on disk while the document has unsaved changes. */
+  "dialog:confirm-external-change": (fileName: string) => ExternalChangeChoice;
   "dialog:show-error": (message: string, detail: string) => void;
   "window:open-settings": () => void;
   "window:set-colors": (colors: WindowColors) => void;

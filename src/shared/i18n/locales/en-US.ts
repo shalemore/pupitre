@@ -56,6 +56,11 @@ export const enUS = {
     dontSave: "Don't Save",
     cancel: "Cancel",
     openFailed: "The file couldn't be opened.",
+    externalChangeMessage: (fileName: string) => `${fileName} was changed by another program.`,
+    externalChangeDetail:
+      "Overwrite it with your version, or reload it and discard your changes? Cancel keeps editing without saving.",
+    overwrite: "Overwrite",
+    reload: "Reload",
   },
   about: {
     windowTitle: "About Pupitre",

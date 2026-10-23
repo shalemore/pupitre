@@ -59,6 +59,13 @@ export const plPL = {
     dontSave: "Nie zapisuj",
     cancel: "Anuluj",
     openFailed: "Nie udało się otworzyć pliku.",
+    // TODO(i18n): unverified with native speakers
+    externalChangeMessage: (fileName: string) =>
+      `Plik ${fileName} został zmieniony przez inny program.`,
+    externalChangeDetail:
+      "Nadpisać go Twoją wersją czy wczytać ponownie i odrzucić zmiany? Anuluj kontynuuje edycję bez zapisywania.",
+    overwrite: "Nadpisz",
+    reload: "Wczytaj ponownie",
   },
   about: {
     windowTitle: "O programie Pupitre",

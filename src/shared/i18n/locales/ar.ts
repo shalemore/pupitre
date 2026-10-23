@@ -71,6 +71,12 @@ export const ar = {
     dontSave: "عدم الحفظ",
     cancel: "إلغاء",
     openFailed: "تعذّر فتح الملف.",
+    // TODO(i18n): unverified with native speakers
+    externalChangeMessage: (fileName: string) => `تم تغيير ${fileName} بواسطة برنامج آخر.`,
+    externalChangeDetail:
+      "هل تريد استبداله بنسختك، أم إعادة تحميله وتجاهل تغييراتك؟ الإلغاء يتابع التحرير دون حفظ.",
+    overwrite: "استبدال",
+    reload: "إعادة التحميل",
   },
   about: {
     windowTitle: "حول Pupitre",

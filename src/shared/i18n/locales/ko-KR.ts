@@ -55,6 +55,12 @@ export const koKR = {
     dontSave: "저장 안 함",
     cancel: "취소",
     openFailed: "파일을 열 수 없습니다.",
+    externalChangeMessage: (fileName: string) =>
+      `${fileName} 파일이 다른 프로그램에서 변경되었습니다.`,
+    externalChangeDetail:
+      "현재 내용으로 덮어쓰거나, 다시 불러와 변경 내용을 버릴 수 있습니다. 취소하면 저장하지 않고 계속 편집합니다.",
+    overwrite: "덮어쓰기",
+    reload: "다시 불러오기",
   },
   about: {
     windowTitle: "Pupitre 정보",

@@ -58,6 +58,12 @@ export const ruRU = {
     dontSave: "Не сохранять",
     cancel: "Отмена",
     openFailed: "Не удалось открыть файл.",
+    // TODO(i18n): unverified with native speakers
+    externalChangeMessage: (fileName: string) => `${fileName}: файл был изменён другой программой.`,
+    externalChangeDetail:
+      "Перезаписать его вашей версией или загрузить заново, отбросив ваши изменения? «Отмена» — продолжить правку без сохранения.",
+    overwrite: "Перезаписать",
+    reload: "Загрузить заново",
   },
   about: {
     windowTitle: "О программе Pupitre",

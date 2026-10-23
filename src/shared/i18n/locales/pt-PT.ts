@@ -55,6 +55,11 @@ export const ptPT = {
     dontSave: "Não guardar",
     cancel: "Cancelar",
     openFailed: "Não foi possível abrir o ficheiro.",
+    externalChangeMessage: (fileName: string) => `${fileName} foi alterado por outro programa.`,
+    externalChangeDetail:
+      "Pretende substituí-lo pela sua versão ou recarregá-lo e descartar as suas alterações? Cancelar continua a edição sem guardar.",
+    overwrite: "Substituir",
+    reload: "Recarregar",
   },
   about: {
     windowTitle: "Acerca do Pupitre",

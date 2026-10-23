@@ -56,6 +56,12 @@ export const svSE = {
     dontSave: "Spara inte",
     cancel: "Avbryt",
     openFailed: "Filen kunde inte öppnas.",
+    // TODO(i18n): unverified with native speakers
+    externalChangeMessage: (fileName: string) => `${fileName} har ändrats av ett annat program.`,
+    externalChangeDetail:
+      "Vill du skriva över den med din version, eller läsa in den igen och kasta dina ändringar? Avbryt fortsätter redigeringen utan att spara.",
+    overwrite: "Skriv över",
+    reload: "Läs in igen",
   },
   about: {
     windowTitle: "Om Pupitre",

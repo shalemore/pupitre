@@ -55,6 +55,12 @@ export const deDE = {
     dontSave: "Nicht speichern",
     cancel: "Abbrechen",
     openFailed: "Die Datei konnte nicht geöffnet werden.",
+    externalChangeMessage: (fileName: string) =>
+      `${fileName} wurde von einem anderen Programm geändert.`,
+    externalChangeDetail:
+      "Mit deiner Version überschreiben oder neu laden und deine Änderungen verwerfen? Abbrechen setzt die Bearbeitung ohne Speichern fort.",
+    overwrite: "Überschreiben",
+    reload: "Neu laden",
   },
   about: {
     windowTitle: "Über Pupitre",

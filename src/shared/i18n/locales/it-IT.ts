@@ -55,6 +55,12 @@ export const itIT = {
     dontSave: "Non salvare",
     cancel: "Annulla",
     openFailed: "Impossibile aprire il file.",
+    externalChangeMessage: (fileName: string) =>
+      `${fileName} è stato modificato da un altro programma.`,
+    externalChangeDetail:
+      "Vuoi sovrascriverlo con la tua versione o ricaricarlo scartando le modifiche? Annulla continua la modifica senza salvare.",
+    overwrite: "Sovrascrivi",
+    reload: "Ricarica",
   },
   about: {
     windowTitle: "Informazioni su Pupitre",

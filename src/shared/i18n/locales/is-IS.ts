@@ -57,6 +57,12 @@ export const isIS = {
     dontSave: "Vista ekki",
     cancel: "Hætta við",
     openFailed: "Ekki tókst að opna skrána.",
+    // TODO(i18n): unverified with native speakers
+    externalChangeMessage: (fileName: string) => `${fileName} var breytt af öðru forriti.`,
+    externalChangeDetail:
+      "Viltu skrifa yfir hana með þinni útgáfu, eða hlaða aftur og henda breytingunum þínum? Hætta við heldur áfram að breyta án þess að vista.",
+    overwrite: "Skrifa yfir",
+    reload: "Hlaða aftur",
   },
   about: {
     windowTitle: "Um Pupitre",

@@ -59,6 +59,12 @@ export const thTH = {
     dontSave: "ไม่บันทึก",
     cancel: "ยกเลิก",
     openFailed: "ไม่สามารถเปิดไฟล์ได้",
+    // TODO(i18n): unverified with native speakers
+    externalChangeMessage: (fileName: string) => `${fileName} ถูกแก้ไขโดยโปรแกรมอื่น`,
+    externalChangeDetail:
+      "ต้องการเขียนทับด้วยเวอร์ชันของคุณ หรือโหลดใหม่และละทิ้งการเปลี่ยนแปลงของคุณ? ยกเลิกเพื่อแก้ไขต่อโดยไม่บันทึก",
+    overwrite: "เขียนทับ",
+    reload: "โหลดใหม่",
   },
   about: {
     windowTitle: "เกี่ยวกับ Pupitre",

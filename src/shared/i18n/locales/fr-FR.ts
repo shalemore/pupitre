@@ -56,6 +56,12 @@ export const frFR = {
     dontSave: "Ne pas enregistrer",
     cancel: "Annuler",
     openFailed: "Impossible d'ouvrir le fichier.",
+    externalChangeMessage: (fileName: string) =>
+      `${fileName} a été modifié par un autre programme.`,
+    externalChangeDetail:
+      "Voulez-vous l'écraser avec votre version, ou le recharger en abandonnant vos modifications ? Annuler permet de continuer à modifier sans enregistrer.",
+    overwrite: "Écraser",
+    reload: "Recharger",
   },
   about: {
     windowTitle: "À propos de Pupitre",

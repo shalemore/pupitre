@@ -56,6 +56,13 @@ export const nlNL = {
     dontSave: "Niet opslaan",
     cancel: "Annuleren",
     openFailed: "Het bestand kon niet worden geopend.",
+    // TODO(i18n): unverified with native speakers
+    externalChangeMessage: (fileName: string) =>
+      `${fileName} is door een ander programma gewijzigd.`,
+    externalChangeDetail:
+      "Overschrijven met jouw versie, of opnieuw laden en je wijzigingen weggooien? Annuleren gaat door met bewerken zonder op te slaan.",
+    overwrite: "Overschrijven",
+    reload: "Opnieuw laden",
   },
   about: {
     windowTitle: "Over Pupitre",

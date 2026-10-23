@@ -56,6 +56,13 @@ export const huHU = {
     dontSave: "Mentés nélkül",
     cancel: "Mégse",
     openFailed: "A fájlt nem sikerült megnyitni.",
+    // TODO(i18n): unverified with native speakers
+    externalChangeMessage: (fileName: string) =>
+      `A(z) ${fileName} fájlt egy másik program módosította.`,
+    externalChangeDetail:
+      "Felülírod a saját verziójáddal, vagy újratöltöd, és elveted a módosításaidat? A Mégse mentés nélkül folytatja a szerkesztést.",
+    overwrite: "Felülírás",
+    reload: "Újratöltés",
   },
   about: {
     windowTitle: "A Pupitre névjegye",

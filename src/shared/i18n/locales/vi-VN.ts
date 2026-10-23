@@ -56,6 +56,12 @@ export const viVN = {
     dontSave: "Không lưu",
     cancel: "Hủy",
     openFailed: "Không thể mở tệp.",
+    // TODO(i18n): unverified with native speakers
+    externalChangeMessage: (fileName: string) => `${fileName} đã bị chương trình khác thay đổi.`,
+    externalChangeDetail:
+      "Ghi đè bằng phiên bản của bạn, hay tải lại và bỏ các thay đổi của bạn? Hủy để tiếp tục chỉnh sửa mà không lưu.",
+    overwrite: "Ghi đè",
+    reload: "Tải lại",
   },
   about: {
     windowTitle: "Giới thiệu Pupitre",

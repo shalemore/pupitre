@@ -58,6 +58,12 @@ export const ukUA = {
     dontSave: "Не зберігати",
     cancel: "Скасувати",
     openFailed: "Не вдалося відкрити файл.",
+    // TODO(i18n): unverified with native speakers
+    externalChangeMessage: (fileName: string) => `${fileName}: файл змінено іншою програмою.`,
+    externalChangeDetail:
+      "Перезаписати його вашою версією чи завантажити заново, відкинувши ваші зміни? «Скасувати» — продовжити редагування без збереження.",
+    overwrite: "Перезаписати",
+    reload: "Завантажити знову",
   },
   about: {
     windowTitle: "Про Pupitre",

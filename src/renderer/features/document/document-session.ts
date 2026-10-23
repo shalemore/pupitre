@@ -172,14 +172,30 @@ export function createDocumentSession(
     if (settings().autoSave && activeDocument()?.path) scheduleSave();
   };
 
-  /** Applies an edit made to the file elsewhere, unless the document has unsaved changes of its own. */
-  const reloadFromDisk = async (path: string) => {
-    if (isDirty()) return;
+  let askingAboutDisk = false;
+
+  /** Applies an edit made to the file elsewhere; with unsaved changes of its own, the document asks which version to keep. */
+  const handleDiskChange = async (path: string) => {
+    if (askingAboutDisk) return;
     const opened = await desktop.invoke("document:read", path).catch(() => undefined);
     const doc = activeDocument();
-    if (!opened || doc?.path !== path || isDirty() || opened.content === diskContent) return;
-    diskContent = opened.content;
-    load({ ...doc, ...opened, markdown: opened.content });
+    if (!opened || doc?.path !== path || opened.content === diskContent) return;
+
+    const reload = () => load({ ...doc, ...opened, markdown: opened.content });
+    if (!isDirty()) {
+      diskContent = opened.content;
+      return reload();
+    }
+    askingAboutDisk = true;
+    try {
+      const choice = await desktop.invoke("dialog:confirm-external-change", fileName());
+      // Whatever the answer, this version of the file has been dealt with and does not ask again
+      diskContent = opened.content;
+      if (choice === "overwrite") await save();
+      else if (choice === "reload") reload();
+    } finally {
+      askingAboutDisk = false;
+    }
   };
 
   const watchedPath = createMemo(() => activeDocument()?.path);
@@ -188,7 +204,7 @@ export function createDocumentSession(
     if (path === undefined) return;
     void desktop.invoke("document:watch", path);
     const unlisten = desktop.on("document:changed", (changed) => {
-      if (changed === path) void reloadFromDisk(path);
+      if (changed === path) void handleDiskChange(path);
     });
     onCleanup(() => {
       unlisten();

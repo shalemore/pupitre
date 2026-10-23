@@ -58,6 +58,12 @@ export const csCZ = {
     dontSave: "Neukládat",
     cancel: "Zrušit",
     openFailed: "Soubor nelze otevřít.",
+    // TODO(i18n): unverified with native speakers
+    externalChangeMessage: (fileName: string) => `Soubor ${fileName} byl změněn jiným programem.`,
+    externalChangeDetail:
+      "Přepsat jej vaší verzí, nebo znovu načíst a zahodit vaše změny? Zrušit pokračuje v úpravách bez uložení.",
+    overwrite: "Přepsat",
+    reload: "Znovu načíst",
   },
   about: {
     windowTitle: "O aplikaci Pupitre",

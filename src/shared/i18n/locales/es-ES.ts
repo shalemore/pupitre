@@ -55,6 +55,11 @@ export const esES = {
     dontSave: "No guardar",
     cancel: "Cancelar",
     openFailed: "No se pudo abrir el archivo.",
+    externalChangeMessage: (fileName: string) => `${fileName} fue modificado por otro programa.`,
+    externalChangeDetail:
+      "¿Quieres sobrescribirlo con tu versión o recargarlo y descartar tus cambios? Cancelar sigue editando sin guardar.",
+    overwrite: "Sobrescribir",
+    reload: "Recargar",
   },
   about: {
     windowTitle: "Acerca de Pupitre",

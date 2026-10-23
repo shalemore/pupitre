@@ -56,6 +56,12 @@ export const nbNO = {
     dontSave: "Ikke lagre",
     cancel: "Avbryt",
     openFailed: "Filen kunne ikke åpnes.",
+    // TODO(i18n): unverified with native speakers
+    externalChangeMessage: (fileName: string) => `${fileName} er endret av et annet program.`,
+    externalChangeDetail:
+      "Vil du overskrive den med din versjon, eller laste den på nytt og forkaste endringene dine? Avbryt fortsetter redigeringen uten å lagre.",
+    overwrite: "Overskriv",
+    reload: "Last inn på nytt",
   },
   about: {
     windowTitle: "Om Pupitre",

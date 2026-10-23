@@ -112,6 +112,10 @@ export interface TranslationSchema {
     readonly dontSave: string;
     readonly cancel: string;
     readonly openFailed: string;
+    readonly externalChangeMessage: (fileName: string) => string;
+    readonly externalChangeDetail: string;
+    readonly overwrite: string;
+    readonly reload: string;
   };
   readonly about: {
     readonly windowTitle: string;

@@ -57,6 +57,12 @@ export const faIR = {
     dontSave: "ذخیره نکن",
     cancel: "لغو",
     openFailed: "پرونده باز نشد.",
+    // TODO(i18n): unverified with native speakers
+    externalChangeMessage: (fileName: string) => `${fileName} توسط برنامهٔ دیگری تغییر کرد.`,
+    externalChangeDetail:
+      "با نسخهٔ شما جایگزین شود یا دوباره بارگیری شود و تغییرات شما کنار گذاشته شود؟ لغو، ویرایش را بدون ذخیره ادامه می‌دهد.",
+    overwrite: "جایگزینی",
+    reload: "بارگیری مجدد",
   },
   about: {
     windowTitle: "درباره Pupitre",

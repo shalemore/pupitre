@@ -55,6 +55,11 @@ export const zhHK = {
     dontSave: "不儲存",
     cancel: "取消",
     openFailed: "無法開啟該檔案。",
+    externalChangeMessage: (fileName: string) => `${fileName} 已被其他程式修改。`,
+    externalChangeDetail:
+      "要以目前版本覆寫它，還是重新載入並放棄你的修改？取消則繼續編輯，不儲存。",
+    overwrite: "覆寫",
+    reload: "重新載入",
   },
   about: {
     windowTitle: "關於 Pupitre",

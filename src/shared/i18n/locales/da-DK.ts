@@ -56,6 +56,12 @@ export const daDK = {
     dontSave: "Gem ikke",
     cancel: "Annuller",
     openFailed: "Filen kunne ikke åbnes.",
+    // TODO(i18n): unverified with native speakers
+    externalChangeMessage: (fileName: string) => `${fileName} er ændret af et andet program.`,
+    externalChangeDetail:
+      "Vil du overskrive den med din version, eller indlæse den igen og kassere dine ændringer? Annuller fortsætter redigeringen uden at gemme.",
+    overwrite: "Overskriv",
+    reload: "Indlæs igen",
   },
   about: {
     windowTitle: "Om Pupitre",

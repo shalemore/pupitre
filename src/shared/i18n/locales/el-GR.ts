@@ -56,6 +56,12 @@ export const elGR = {
     dontSave: "Χωρίς αποθήκευση",
     cancel: "Άκυρο",
     openFailed: "Δεν ήταν δυνατό το άνοιγμα του αρχείου.",
+    // TODO(i18n): unverified with native speakers
+    externalChangeMessage: (fileName: string) => `Το ${fileName} τροποποιήθηκε από άλλο πρόγραμμα.`,
+    externalChangeDetail:
+      "Να αντικατασταθεί με την έκδοσή σας ή να φορτωθεί ξανά και να απορριφθούν οι αλλαγές σας; Η Ακύρωση συνεχίζει την επεξεργασία χωρίς αποθήκευση.",
+    overwrite: "Αντικατάσταση",
+    reload: "Επαναφόρτωση",
   },
   about: {
     windowTitle: "Σχετικά με το Pupitre",

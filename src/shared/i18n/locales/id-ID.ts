@@ -56,6 +56,12 @@ export const idID = {
     dontSave: "Jangan simpan",
     cancel: "Batal",
     openFailed: "Berkas tidak dapat dibuka.",
+    // TODO(i18n): unverified with native speakers
+    externalChangeMessage: (fileName: string) => `${fileName} diubah oleh program lain.`,
+    externalChangeDetail:
+      "Timpa dengan versi Anda, atau muat ulang dan buang perubahan Anda? Batal melanjutkan penyuntingan tanpa menyimpan.",
+    overwrite: "Timpa",
+    reload: "Muat Ulang",
   },
   about: {
     windowTitle: "Tentang Pupitre",
