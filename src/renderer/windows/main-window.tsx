@@ -26,7 +26,7 @@ import { Sidebar, type SidebarMode } from "@/features/sidebar/sidebar";
 import { WelcomeScreen } from "@/features/welcome/welcome-screen";
 import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
-import { dirnameOf, fileNameOf, isInsideFolder } from "@/lib/file";
+import { fileNameOf, isInsideFolder } from "@/lib/file";
 import { createImmersiveChrome } from "@/lib/immersive-chrome";
 import { recentFiles } from "@/lib/recent-files";
 import { settings, updateSettings } from "@/lib/settings";
@@ -55,11 +55,11 @@ export const MainWindow: Component = () => {
 
   const folderRoot = createMemo(() => {
     const dropped = openedFolder();
-    const path = session.activeDocument()?.path;
-    if (dropped !== undefined && (path === undefined || isInsideFolder(dropped, path))) {
+    const doc = session.activeDocument();
+    if (dropped !== undefined && (doc?.path === undefined || isInsideFolder(dropped, doc.path))) {
       return dropped;
     }
-    return path === undefined ? dropped : dirnameOf(path);
+    return doc?.folder ?? dropped;
   });
   const sidebarMode = (): SidebarMode => {
     if (session.activeDocument() === undefined) return "folder";

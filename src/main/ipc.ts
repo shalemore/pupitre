@@ -48,7 +48,8 @@ function senderWindow(event: IpcMainInvokeEvent): BrowserWindow {
 }
 
 function locate(path: string): DocumentLocation {
-  return { path, baseUrl: pathToFileURL(join(dirname(path), "/")).href };
+  const folder = dirname(path);
+  return { path, folder, baseUrl: pathToFileURL(join(folder, "/")).href };
 }
 
 async function saveImage(

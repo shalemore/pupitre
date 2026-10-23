@@ -12,6 +12,7 @@ export interface OpenDocument {
   /** Increases on every open or new document; the editor is rebuilt from it so undo history never crosses documents. */
   id: number;
   path: string | undefined;
+  folder: string | undefined;
   baseUrl: string | undefined;
   markdown: string;
   /** The file's original line ending; new documents use LF. */
@@ -109,7 +110,14 @@ export function createDocumentSession(
 
   const newDocument = async () => {
     if (!(await confirmDiscard())) return;
-    load({ path: undefined, baseUrl: undefined, markdown: "", lineEnding: "lf", isSample: false });
+    load({
+      path: undefined,
+      folder: undefined,
+      baseUrl: undefined,
+      markdown: "",
+      lineEnding: "lf",
+      isSample: false,
+    });
   };
 
   const open = async () => {
@@ -137,6 +145,7 @@ export function createDocumentSession(
     if (!(await confirmDiscard())) return;
     load({
       path: undefined,
+      folder: undefined,
       baseUrl: undefined,
       markdown: getSampleDocument(currentLocale()),
       lineEnding: "lf",

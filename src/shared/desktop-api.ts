@@ -3,6 +3,8 @@ import type { SettingKey, Settings } from "./settings";
 
 export interface DocumentLocation {
   path: string;
+  /** The folder that contains the document. */
+  folder: string;
   /** file:// URL of the document's folder (ending in /), used to resolve relative paths in the document. */
   baseUrl: string;
 }
