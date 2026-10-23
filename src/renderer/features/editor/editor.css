@@ -465,8 +465,11 @@
     font-family: var(--pref-code-font, revert-layer);
   }
 
-  /* Writing modes, see writing-modes.ts */
-  .md-document.focus-mode > .cm-line:not(.is-current) {
+  /*
+   * Writing modes, see writing-modes.ts. Rendered blocks (tables, math, diagrams) are widgets
+   * rather than lines and are dimmed with the rest.
+   */
+  .md-document.focus-mode > :not(.is-current) {
     opacity: 0.3;
   }
 
@@ -481,7 +484,7 @@
     padding: 0;
   }
 
-  .md-document.focus-mode > .cm-line {
+  .md-document.focus-mode > * {
     opacity: 1;
   }
 }
