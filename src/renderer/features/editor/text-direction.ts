@@ -30,28 +30,25 @@ const ltrLine = Decoration.line({ attributes: { dir: "ltr" } });
 
 function lineDirections(view: EditorView): DecorationSet {
   const { doc } = view.state;
+  const { from, to } = view.viewport;
   const ltrLines = new Set<number>();
-  for (const { from, to } of view.visibleRanges) {
-    syntaxTree(view.state).iterate({
-      from,
-      to,
-      enter: (node) => {
-        if (!LTR_BLOCK.test(node.name)) return node.name !== "Paragraph";
-        const last = doc.lineAt(Math.min(node.to, to)).number;
-        for (let line = doc.lineAt(Math.max(node.from, from)).number; line <= last; line++) {
-          ltrLines.add(line);
-        }
-        return false;
-      },
-    });
-  }
+  syntaxTree(view.state).iterate({
+    from,
+    to,
+    enter: (node) => {
+      if (!LTR_BLOCK.test(node.name)) return node.name !== "Paragraph";
+      const last = doc.lineAt(Math.min(node.to, to)).number;
+      for (let line = doc.lineAt(Math.max(node.from, from)).number; line <= last; line++) {
+        ltrLines.add(line);
+      }
+      return false;
+    },
+  });
   const decorations: Range<Decoration>[] = [];
-  for (const { from, to } of view.visibleRanges) {
-    for (let pos = from; pos <= to;) {
-      const line = doc.lineAt(pos);
-      decorations.push((ltrLines.has(line.number) ? ltrLine : autoLine).range(line.from));
-      pos = line.to + 1;
-    }
+  for (let pos = from; pos <= to;) {
+    const line = doc.lineAt(pos);
+    decorations.push((ltrLines.has(line.number) ? ltrLine : autoLine).range(line.from));
+    pos = line.to + 1;
   }
   return Decoration.set(decorations);
 }

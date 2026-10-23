@@ -415,10 +415,9 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
   }
 }
 
+/** Decorates the rendered viewport, which also covers the lines a scroll brings into view. */
 function buildDecorations(view: EditorView): DecorationSet {
-  const ranges = view.visibleRanges;
-  const from = ranges[0]?.from ?? 0;
-  const to = ranges.at(-1)?.to ?? 0;
+  const { from, to } = view.viewport;
   const builder = new DecorationBuilder(view, from, to);
   syntaxTree(view.state).iterate({ from, to, enter: (node) => visit(builder, node.node) });
   return builder.finish();
