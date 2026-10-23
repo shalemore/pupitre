@@ -16,6 +16,7 @@ import { setAsDefaultMarkdownApp } from "./default-app";
 import { t } from "./i18n";
 import { popupTopMenu, setDocumentState } from "./menu";
 import { takeLaunchFile } from "./open-files";
+import { unwatchFolder, watchFolder } from "./folder-watcher";
 import { addRecentFile, getRecentFiles, removeRecentFile } from "./recent-files";
 import { getSettings, getSettingsPath, resetSetting, updateSettings } from "./settings-store";
 import { checkForUpdates, downloadUpdate, getUpdateStatus, installUpdate } from "./updater";
@@ -151,6 +152,8 @@ export function registerIpcHandlers(): void {
     return canceled || path === undefined ? null : path;
   });
   handle("folder:list", (_event, path) => listFolder(path));
+  handle("folder:watch", (event, path) => watchFolder(event.sender, path));
+  handle("folder:unwatch", (event, path) => unwatchFolder(event.sender, path));
   handle("document:write", (_event, path, content, lineEnding) =>
     writeDocument(path, content, lineEnding),
   );

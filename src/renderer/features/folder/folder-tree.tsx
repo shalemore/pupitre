@@ -1,7 +1,15 @@
 import type { FolderEntry } from "@shared/desktop-api";
 import { cn } from "cn";
 import { ChevronRight, CircleAlert, FileText, Folder } from "lucide-solid";
-import { createResource, createSignal, For, Show, type Component } from "solid-js";
+import {
+  createResource,
+  createSignal,
+  For,
+  onCleanup,
+  onMount,
+  Show,
+  type Component,
+} from "solid-js";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 
@@ -26,10 +34,22 @@ interface FolderTreeProps {
 }
 
 const FolderChildren: Component<FolderChildrenProps> = (props) => {
-  const [entries] = createResource(
+  const [entries, { refetch }] = createResource(
     () => props.path,
     (path) => desktop.invoke("folder:list", path),
   );
+
+  onMount(() => {
+    const { path } = props;
+    void desktop.invoke("folder:watch", path);
+    const unlisten = desktop.on("folder:changed", (changed) => {
+      if (changed === path) void refetch();
+    });
+    onCleanup(() => {
+      unlisten();
+      void desktop.invoke("folder:unwatch", path);
+    });
+  });
 
   return (
     <Show
