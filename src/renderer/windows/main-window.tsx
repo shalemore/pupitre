@@ -201,9 +201,9 @@ export const MainWindow: Component = () => {
       <TitleBar
         inert={!chrome.titleBarVisible()}
         class={cn(
-          "overflow-hidden transition-[height] duration-200",
+          "overflow-hidden transition-[height] duration-sheet",
           chrome.titleBarVisible() ? "h-10" : "h-0",
-          !immersive() && "border-b border-border/80",
+          !immersive() && "border-b border-border",
         )}
       >
         <div class="flex items-center gap-2 me-1 pointer-events-none">
@@ -216,15 +216,20 @@ export const MainWindow: Component = () => {
           <MenuBar />
         </Show>
 
-        <div class="flex-1 min-w-0 px-4 text-center font-medium text-foreground truncate">
+        <div class="flex-1 min-w-0 px-4 flex items-center justify-center gap-2 font-medium text-foreground">
           <Show when={session.activeDocument()}>
-            {session.isDirty() ? "● " : ""}
-            <bdi>{session.fileName()}</bdi>
+            <Show when={session.isDirty()}>
+              <span
+                aria-hidden="true"
+                class="size-1.5 shrink-0 rounded-full bg-brand animate-in fade-in-0 zoom-in-50 duration-snap"
+              />
+            </Show>
+            <bdi class="truncate">{session.fileName()}</bdi>
           </Show>
         </div>
 
         <Show when={session.activeDocument() !== undefined && settings().showWordCount}>
-          <div class="text-[11px] text-muted-foreground tabular-nums flex items-center gap-1.5 me-2">
+          <div class="text-2xs text-muted-foreground tabular-nums flex items-center gap-1.5 me-2">
             <span>{t().common.wordsCount(stats().words)}</span>
             <span>·</span>
             <span>{t().common.charsCount(stats().characters)}</span>
@@ -247,12 +252,12 @@ export const MainWindow: Component = () => {
         <div
           inert={!sidebarShown()}
           class={cn(
-            "shrink-0 overflow-hidden transition-[width] duration-200 print:hidden",
+            "shrink-0 overflow-hidden transition-[width] duration-sheet print:hidden",
             sidebarShown() ? "w-64" : "w-0",
           )}
         >
           <Sidebar
-            class={cn(!immersive() && "border-e border-border/80")}
+            class={cn(!immersive() && "border-e border-border")}
             mode={sidebarMode()}
             hasOutline={session.activeDocument() !== undefined}
             hasFolder={folderRoot() !== undefined}

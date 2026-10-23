@@ -20,7 +20,7 @@ export const MenuBar: Component = () => {
           <button
             type="button"
             onClick={(e) => popup(menu, e.currentTarget)}
-            class="px-2.5 py-1 rounded-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-colors cursor-pointer"
+            class="px-2.5 py-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors cursor-pointer"
           >
             {t().menu[menu]}
           </button>

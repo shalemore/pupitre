@@ -3,7 +3,7 @@ import { cn } from "cn";
 import { type JSX, splitProps } from "solid-js";
 
 const badgeVariants = cva(
-  "inline-flex w-fit max-w-full shrink-0 items-center justify-center gap-1 overflow-hidden rounded-xs border border-transparent font-medium whitespace-nowrap select-none transition-colors [&>svg]:pointer-events-none [&>svg]:shrink-0",
+  "inline-flex w-fit max-w-full shrink-0 items-center justify-center gap-1 overflow-hidden rounded-sm border border-transparent font-medium whitespace-nowrap select-none transition-colors [&>svg]:pointer-events-none [&>svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -16,7 +16,7 @@ const badgeVariants = cva(
         destructive: "bg-destructive/15 text-destructive",
       },
       size: {
-        sm: "h-4.5 px-1.5 text-[10px] [&>svg]:size-2.5",
+        sm: "h-4.5 px-1.5 text-2xs [&>svg]:size-2.5",
         default: "h-5 px-1.5 text-xs [&>svg]:size-3",
         lg: "h-6 px-2 text-xs [&>svg]:size-3.5",
       },

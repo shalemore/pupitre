@@ -68,6 +68,12 @@ only make code generation easier.
 - **Minimise side effects.** Derive values with plain functions or `createMemo` instead of
   syncing state with `createEffect`. Use effects only to talk to the outside world (DOM APIs,
   IPC, timers) and always clean up listeners.
+- **Use the design scales.** Sizes, radii, durations and curves come from the scales documented
+  in `app.css` (`text-2xs`…, `rounded-sm`…, `duration-fast`…`duration-slow`, `ease-*`) and
+  colors from the semantic tokens; no arbitrary values such as `text-[11px]`, `duration-200` or
+  hex colors in components. Build on the `components/ui` primitives (`Button`, `Input`,
+  `ListItem`, `SegmentedControl`, `Callout`, `Kbd`, `ScrollView`, …) before styling a raw
+  element, and keep one closed border per surface: controls inside a bordered panel use fills.
 
 ## TypeScript
 

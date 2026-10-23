@@ -18,7 +18,7 @@ export function SettingRow(props: SettingRowProps) {
       <div class="flex min-w-0 flex-col gap-0.5">
         <span class="text-xs font-medium text-foreground">{local.title}</span>
         <Show when={local.description}>
-          <span class="text-[11px] leading-relaxed text-muted-foreground">{local.description}</span>
+          <span class="text-2xs leading-relaxed text-muted-foreground">{local.description}</span>
         </Show>
       </div>
       <div class="flex shrink-0 items-center gap-2">{local.children}</div>

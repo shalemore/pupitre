@@ -1,7 +1,7 @@
 import { cn } from "cn";
 import { ListTree, Folder } from "lucide-solid";
 import { Show, type Component, type JSX } from "solid-js";
-import { ScrollView } from "@/components/ui";
+import { ScrollView, SegmentedControl } from "@/components/ui";
 import { t } from "@/i18n";
 
 export type SidebarMode = "outline" | "folder";
@@ -29,39 +29,20 @@ export const Sidebar: Component<SidebarProps> = (props) => {
       )}
     >
       <Show when={props.hasOutline && props.hasFolder}>
-        <div class="flex gap-1 p-2 pb-0">
-          <button
-            type="button"
-            class={cn(
-              "flex-1 flex items-center justify-center gap-1.5 rounded-md py-1 cursor-pointer transition-colors",
-              props.mode === "outline"
-                ? "bg-brand/10 text-brand font-medium"
-                : "text-muted-foreground hover:bg-accent",
-            )}
-            onClick={() => props.onModeChange("outline")}
-          >
-            <ListTree class="size-3.5" />
-            {t().sidebar.outline}
-          </button>
-          <button
-            type="button"
-            class={cn(
-              "flex-1 flex items-center justify-center gap-1.5 rounded-md py-1 cursor-pointer transition-colors",
-              props.mode === "folder"
-                ? "bg-brand/10 text-brand font-medium"
-                : "text-muted-foreground hover:bg-accent",
-            )}
-            onClick={() => props.onModeChange("folder")}
-          >
-            <Folder class="size-3.5" />
-            {t().sidebar.folder}
-          </button>
-        </div>
+        <SegmentedControl<SidebarMode>
+          class="m-2 mb-0"
+          value={props.mode}
+          onChange={props.onModeChange}
+          options={[
+            { value: "outline", label: t().sidebar.outline, icon: <ListTree /> },
+            { value: "folder", label: t().sidebar.folder, icon: <Folder /> },
+          ]}
+        />
       </Show>
       <Show when={props.mode === "folder"}>
         <div
           dir="auto"
-          class="truncate px-4 pt-2 text-[11px] font-medium text-muted-foreground"
+          class="truncate px-4 pt-2 text-2xs font-medium text-muted-foreground"
           title={props.folderName}
         >
           {props.folderName}

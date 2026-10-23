@@ -60,25 +60,25 @@ export function Combobox(props: ComboboxProps) {
       itemComponent={(itemProps) => (
         <KobalteCombobox.Item
           item={itemProps.item}
-          class="flex items-center justify-between gap-3 rounded-md px-2.5 py-1.5 text-xs text-muted-foreground outline-none cursor-pointer data-highlighted:bg-accent data-highlighted:text-foreground data-selected:text-brand"
+          class="group flex items-center justify-between gap-3 rounded-lg px-2.5 py-1.5 text-xs outline-none cursor-pointer data-highlighted:bg-accent"
         >
           <span class="flex items-baseline gap-2 min-w-0">
             <KobalteCombobox.ItemLabel
-              class="truncate text-sm"
+              class="truncate text-sm text-foreground group-data-selected:text-brand"
               style={itemProps.item.rawValue.style}
             >
               {itemProps.item.rawValue.label}
             </KobalteCombobox.ItemLabel>
             <Show when={itemProps.item.rawValue.description}>
               {(description) => (
-                <KobalteCombobox.ItemDescription class="truncate text-[11px] text-tertiary">
+                <KobalteCombobox.ItemDescription class="truncate text-2xs text-muted-foreground">
                   {description()}
                 </KobalteCombobox.ItemDescription>
               )}
             </Show>
           </span>
           <KobalteCombobox.ItemIndicator>
-            <Check class="size-3 shrink-0" />
+            <Check class="size-3 shrink-0 text-brand" />
           </KobalteCombobox.ItemIndicator>
         </KobalteCombobox.Item>
       )}
@@ -86,7 +86,7 @@ export function Combobox(props: ComboboxProps) {
       <KobalteCombobox.Control
         aria-label={props["aria-label"]}
         class={cn(
-          "flex h-8 w-56 items-center rounded-md border border-input bg-surface-0/60 text-xs transition-colors focus-within:shadow-focus data-expanded:border-brand",
+          "flex h-8 w-56 items-center rounded-md border border-input bg-field text-xs transition-colors focus-within:shadow-focus data-expanded:border-brand",
           props.class,
         )}
       >
@@ -98,13 +98,13 @@ export function Combobox(props: ComboboxProps) {
           style={selected()?.style}
         />
         <KobalteCombobox.Trigger class="flex h-full items-center px-2 text-muted-foreground cursor-pointer">
-          <KobalteCombobox.Icon class="transition-transform data-expanded:rotate-180">
+          <KobalteCombobox.Icon class="transition-transform duration-base data-expanded:rotate-180">
             <ChevronDown class="size-3.5" />
           </KobalteCombobox.Icon>
         </KobalteCombobox.Trigger>
       </KobalteCombobox.Control>
       <KobalteCombobox.Portal>
-        <KobalteCombobox.Content class="z-50 w-(--kb-popper-anchor-width) min-w-64 rounded-xl border border-border/80 bg-surface-2 p-1 shadow-float animate-in fade-in-0 zoom-in-95 duration-(--duration-ui)">
+        <KobalteCombobox.Content class="z-50 w-(--kb-popper-anchor-width) min-w-64 origin-(--kb-popper-content-transform-origin) rounded-xl bg-popover p-1 shadow-float animate-in fade-in-0 zoom-in-95 duration-base ease-enter data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-closed:duration-ui">
           <KobalteCombobox.Listbox
             ref={(element) => (listbox = element)}
             as={(listboxProps: ScrollViewProps) => <ScrollView as="ul" {...listboxProps} />}

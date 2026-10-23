@@ -48,15 +48,25 @@ function measure(element: HTMLDivElement): ThumbGeometry {
   };
 }
 
+/** The edges that content is hidden behind, as `data-overflow` for the `scroll-fade` mask in app.css. */
+function hiddenEdges(element: HTMLElement): string {
+  const { scrollTop, scrollHeight, clientHeight } = element;
+  return [scrollTop > 1 && "top", scrollTop + clientHeight < scrollHeight - 1 && "bottom"]
+    .filter(Boolean)
+    .join(" ");
+}
+
 /**
  * A vertically scrolling container with its own overlay scrollbar. Every scrollable area uses it,
  * so the scrollbar setting (auto-hide, always show, always hide) applies everywhere. The native
  * scrollbar cannot fade, so it is hidden and replaced by a thumb whose opacity transitions like
- * any other element, which also makes it follow the animation setting.
+ * any other element, which also makes it follow the animation setting. Content fades out
+ * towards an edge while there is more to scroll past it.
  */
 export function ScrollView(props: ScrollViewProps) {
   const [local, rest] = splitProps(props, ["as", "class", "children", "ref"]);
   const [thumb, setThumb] = createSignal(NO_THUMB);
+  const [overflow, setOverflow] = createSignal("");
   const [scrolling, setScrolling] = createSignal(false);
   const [hovering, setHovering] = createSignal(false);
   const [dragging, setDragging] = createSignal(false);
@@ -65,7 +75,9 @@ export function ScrollView(props: ScrollViewProps) {
   let dragStart = { pointerY: 0, scrollTop: 0 };
 
   const update = () => {
-    if (element) setThumb(measure(element));
+    if (!element) return;
+    setThumb(measure(element));
+    setOverflow(hiddenEdges(element));
   };
   const stopScrolling = debounce(() => setScrolling(false), IDLE_MS);
   onCleanup(stopScrolling.clear);
@@ -113,7 +125,8 @@ export function ScrollView(props: ScrollViewProps) {
         element = node;
         if (typeof local.ref === "function") local.ref(node);
       }}
-      class={cn("overflow-y-auto scrollbar-none", local.class)}
+      data-overflow={overflow() || undefined}
+      class={cn("scroll-fade overflow-y-auto scrollbar-none print:mask-none", local.class)}
       onScroll={() => {
         update();
         setScrolling(true);
@@ -142,7 +155,7 @@ export function ScrollView(props: ScrollViewProps) {
           >
             <div
               class={cn(
-                "absolute inset-e-0.5 w-1.5 rounded-full bg-(--ui-alpha-2) transition-opacity duration-(--duration-sheet) hover:bg-(--ui-alpha-3)",
+                "absolute inset-e-0.5 w-1.5 rounded-full bg-border transition-opacity duration-sheet hover:bg-border-strong",
                 visible() ? "opacity-100" : "opacity-0",
               )}
               style={{ top: `${thumb().top}px`, height: `${thumb().height}px` }}

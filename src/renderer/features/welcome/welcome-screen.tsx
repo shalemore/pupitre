@@ -1,6 +1,6 @@
 import { FilePlus, FolderOpen } from "lucide-solid";
 import { For, Show, type Component } from "solid-js";
-import { Button } from "@/components/ui";
+import { Button, Kbd, ListItem } from "@/components/ui";
 import { t } from "@/i18n";
 import { isMacOS } from "@/lib/desktop";
 import { fileNameOf } from "@/lib/file";
@@ -16,7 +16,7 @@ const modifier = isMacOS ? "⌘" : "Ctrl+";
 
 export const WelcomeScreen: Component<WelcomeScreenProps> = (props) => {
   return (
-    <div class="h-full flex flex-col items-center justify-center text-center select-none px-4 py-12 animate-in fade-in-0 duration-(--duration-ui)">
+    <div class="h-full flex flex-col items-center justify-center text-center select-none px-4 py-12 animate-in fade-in-0 slide-in-from-bottom-2 duration-sheet ease-enter">
       <img src="./logo.svg" alt="" class="size-14 select-none mb-4 opacity-90 drop-shadow-sm" />
 
       <h1 class="text-xl font-semibold tracking-tight text-foreground mb-6">
@@ -27,48 +27,44 @@ export const WelcomeScreen: Component<WelcomeScreenProps> = (props) => {
         <Button variant="brand" onClick={props.onNewDocument}>
           <FilePlus class="size-3.5" />
           <span>{t().actions.newDoc}</span>
-          <kbd class="text-[10px] opacity-70 ms-1 font-mono">{modifier}N</kbd>
+          <Kbd class="ms-1">{modifier}N</Kbd>
         </Button>
 
         <Button variant="outline" onClick={props.onOpenFile}>
           <FolderOpen class="size-3.5" />
           <span>{t().actions.openDoc}</span>
-          <kbd class="text-[10px] opacity-70 ms-1 font-mono">{modifier}O</kbd>
+          <Kbd class="ms-1">{modifier}O</Kbd>
         </Button>
       </div>
 
       <Show when={props.recentFiles.length > 0}>
-        <div class="w-full max-w-sm flex flex-col gap-1 text-start mb-6">
-          <span class="text-[11px] font-medium text-muted-foreground px-2 mb-1">
+        <div class="w-full max-w-sm flex flex-col gap-0.5 text-start mb-6">
+          <span class="text-2xs font-medium text-muted-foreground px-2.5 mb-1">
             {t().menu.openRecent}
           </span>
           <For each={props.recentFiles.slice(0, 5)}>
             {(path) => (
-              <button
-                type="button"
+              <ListItem
                 onClick={() => props.onOpenRecent(path)}
                 title={path}
-                class="w-full px-2.5 py-1.5 rounded-md hover:bg-muted text-start text-xs flex items-center justify-between gap-2 cursor-pointer transition-colors group"
+                class="group justify-between gap-2 ps-2.5"
               >
                 <span
                   dir="auto"
-                  class="truncate font-medium text-foreground group-hover:text-brand"
+                  class="min-w-0 truncate font-medium text-foreground transition-colors group-hover:text-brand"
                 >
                   {fileNameOf(path)}
                 </span>
-                <span
-                  dir="ltr"
-                  class="text-[10px] font-mono text-muted-foreground truncate max-w-40"
-                >
+                <span dir="ltr" class="text-2xs font-mono text-tertiary truncate max-w-40">
                   {path}
                 </span>
-              </button>
+              </ListItem>
             )}
           </For>
         </div>
       </Show>
 
-      <p class="text-[11px] text-muted-foreground/60">{t().welcome.dragDropHint}</p>
+      <p class="text-2xs text-tertiary">{t().welcome.dragDropHint}</p>
     </div>
   );
 };

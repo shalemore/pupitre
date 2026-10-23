@@ -23,33 +23,33 @@ export const SettingsWindow: Component = () => {
 
   return (
     <div class="h-screen w-screen flex flex-col bg-surface-1 text-foreground select-none overflow-hidden">
-      <TitleBar class="h-10 border-b border-border/80">
+      <TitleBar class="h-10 border-b border-border">
         <img src="./logo.svg" alt="" class="rounded-sm shadow-sm size-4" />
         <span class="font-semibold text-foreground tracking-wide">{t().settings.title}</span>
       </TitleBar>
 
       <Tabs orientation="vertical" defaultValue="general" class="flex flex-1 overflow-hidden">
-        <aside class="w-48 shrink-0 border-e border-border/80 bg-surface-0/60 p-3">
+        <aside class="w-48 shrink-0 border-e border-border bg-surface-0 p-3">
           <TabsList>
             <TabsTrigger value="general">
-              <Settings2 class="size-4 shrink-0" />
+              <Settings2 />
               <span>{t().settings.general}</span>
             </TabsTrigger>
             <TabsTrigger value="appearance">
-              <Palette class="size-4 shrink-0" />
+              <Palette />
               <span>{t().settings.appearance}</span>
             </TabsTrigger>
             <TabsTrigger value="editor">
-              <Type class="size-4 shrink-0" />
+              <Type />
               <span>{t().settings.editor}</span>
             </TabsTrigger>
             <TabsTrigger value="markdown">
-              <FileCode2 class="size-4 shrink-0" />
+              <FileCode2 />
               <span>{t().settings.markdown}</span>
             </TabsTrigger>
             <Separator class="my-2" />
             <TabsTrigger value="about">
-              <Info class="size-4 shrink-0" />
+              <Info />
               <span>{t().settings.about}</span>
             </TabsTrigger>
           </TabsList>

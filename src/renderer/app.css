@@ -35,7 +35,10 @@
     --ui-brand: oklch(0.665 0.131 40.6);
     --ui-brand-hover: oklch(0.6 0.155 39);
     --ui-danger: oklch(0.637 0.237 25.3);
+    --ui-success: oklch(0.58 0.13 155);
     --ui-segmented-thumb: oklch(1 0 0);
+    /* Thumbs of switches and sliders */
+    --ui-knob: oklch(1 0 0);
 
     --ui-shadow-near: oklch(0 0 0 / 5%);
     --ui-shadow-far: oklch(0 0 0 / 8%);
@@ -47,9 +50,6 @@
     --ui-ring-inner: 0px;
     --ui-ring-outer: 1px;
     --ui-ring-hairline: 1px;
-
-    --success: oklch(0.58 0.13 155);
-    --success-foreground: oklch(0.99 0.01 155);
 
     /* Code colors used by the code block highlighter (features/editor/code-highlight.ts) */
     --syntax-keyword: oklch(0.55 0.2 25);
@@ -92,7 +92,9 @@
 
       --ui-brand-hover: oklch(0.7 0.125 40);
       --ui-danger: oklch(0.704 0.191 22.2);
+      --ui-success: oklch(0.76 0.14 155);
       --ui-segmented-thumb: oklch(0.36 0 0);
+      --ui-knob: oklch(0.92 0 0);
 
       --ui-shadow-near: oklch(0 0 0 / 40%);
       --ui-shadow-far: oklch(0 0 0 / 40%);
@@ -100,9 +102,6 @@
 
       --ui-ring-inner: 1px;
       --ui-ring-outer: 0px;
-
-      --success: oklch(0.76 0.14 155);
-      --success-foreground: oklch(0.2 0.03 155);
 
       --syntax-keyword: oklch(0.75 0.15 25);
       --syntax-string: oklch(0.8 0.12 145);
@@ -120,30 +119,23 @@
     --ui-alpha-1: oklch(from var(--ui-text-primary) l c h / 5%);
     --ui-alpha-2: oklch(from var(--ui-text-primary) l c h / 10%);
     --ui-alpha-3: oklch(from var(--ui-text-primary) l c h / 20%);
-    --ui-alpha-4: oklch(from var(--ui-text-primary) l c h / 35%);
     --ui-ring-color: oklch(from var(--ui-text-primary) l c h / 10%);
     --ui-segmented-track: oklch(from var(--ui-text-primary) l c h / 7%);
+    /* Fill of text fields and dropdown triggers: a recess in whatever surface holds them */
+    --ui-field: oklch(from var(--ui-surface-0) l c h / 60%);
 
     --ui-shadow-sm: 0 1px 2px var(--ui-shadow-near), 0 2px 8px var(--ui-shadow-far);
     --ui-shadow-md: 0 2px 4px var(--ui-shadow-near), 0 6px 16px var(--ui-shadow-far);
-    --ui-shadow-lg: 0 4px 8px var(--ui-shadow-near), 0 12px 28px -2px var(--ui-shadow-far);
     --ui-shadow-popover:
       inset 0 0 0 var(--ui-ring-inner) var(--ui-ring-color),
       0 0 0 var(--ui-ring-outer) var(--ui-ring-color), 0 8px 24px var(--ui-shadow-float),
       0 2px 6px var(--ui-shadow-far);
-    --ui-panel-shadow: 0 0 0 1px var(--ui-alpha-2), var(--ui-shadow-sm);
-    --ui-panel-shadow-hover: 0 0 0 1px var(--ui-alpha-3), var(--ui-shadow-md);
-    --ui-shadow-composer: 0 4px 20px var(--ui-shadow-near), inset 0 0 0 1px var(--ui-alpha-2);
     --ui-focus-shadow:
       inset 0 0 0 1px var(--ui-surface-1), 0 0 0 1.5px var(--ui-brand),
       0 0 6px 1px oklch(from var(--ui-brand) l c h / 30%);
 
-    --background: var(--ui-surface-1);
     --foreground: var(--ui-text-primary);
-    --card: var(--ui-surface-2);
-    --card-foreground: var(--foreground);
     --popover: var(--ui-surface-3);
-    --popover-foreground: var(--foreground);
     --primary: var(--ui-text-primary);
     --primary-foreground: var(--ui-surface-1);
     --secondary: var(--ui-alpha-1);
@@ -151,31 +143,73 @@
     --muted: var(--ui-alpha-1);
     --muted-foreground: var(--ui-text-secondary);
     --accent: var(--ui-alpha-1);
-    --accent-foreground: var(--ui-text-primary);
     --brand: var(--ui-brand);
     --brand-foreground: oklch(1 0 0);
     --destructive: var(--ui-danger);
     --border: var(--ui-alpha-2);
     --input: var(--ui-alpha-3);
-    --ring: oklch(from var(--ui-brand) l c h / 70%);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ui-field: oklch(from var(--ui-surface-0) l c h / 40%);
+    }
   }
 }
 
+/*
+ * The scales below are the only values components use; a component never invents its own size,
+ * duration or curve.
+ *
+ * Type: text-2xs (11px) captions, descriptions and shortcuts; text-xs (12px) the interface body;
+ * text-sm (14px) list labels in menus; text-base and up for headings.
+ *
+ * Radii, by role, nested corners following outer = inner + gap:
+ *   xs marks and search hits, sm small icon buttons and keycaps, md controls and list rows,
+ *   lg cards and status panels (and items inside a p-1 popover), panel sub-panels,
+ *   xl popovers and floating bars, 2xl dialogs, full pills, dots and thumbs.
+ *
+ * Motion, by role:
+ *   fast (60ms) press feedback; snap (120ms) toggles and indicators; ui (150ms) hover and
+ *   color changes, the default; base (200ms) popovers and folding chrome; sheet (300ms) panels
+ *   and fades; slow (450ms) the spring back after a press.
+ *   ease-out-expo settles quickly and is the default; ease-snap for things that click into
+ *   place; ease-enter for content arriving; ease-spring overshoots slightly, for releases.
+ */
 @theme {
-  --duration-snap: 120ms;
-  --duration-ui: 150ms;
-  --duration-base: 200ms;
-  --duration-sheet: 300ms;
-  --transition-theme:
-    color, background-color, border-color, outline-color, text-decoration-color, fill, stroke,
-    box-shadow;
-  --default-transition-duration: var(--duration-ui);
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: calc(1 / 0.6875);
+
+  --transition-duration-fast: 60ms;
+  --transition-duration-snap: 120ms;
+  --transition-duration-ui: 150ms;
+  --transition-duration-base: 200ms;
+  --transition-duration-sheet: 300ms;
+  --transition-duration-slow: 450ms;
+  --default-transition-duration: var(--transition-duration-ui);
   --default-transition-timing-function: var(--ease-out-expo);
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-decel: cubic-bezier(0.165, 0.84, 0.44, 1);
   --ease-snap: cubic-bezier(0.32, 0.72, 0, 1);
-  --ease-emphasized: var(--ease-decel);
+  --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
+  /* A damped spring sampled into linear(): about 9% overshoot, settled by the end */
+  --ease-spring: linear(
+    0,
+    0.2459,
+    0.6526,
+    0.9468,
+    1.0764,
+    1.0915,
+    1.0585,
+    1.0219,
+    0.9993,
+    0.9914,
+    0.9921,
+    0.9957,
+    0.9988,
+    1.0004,
+    1
+  );
 
   --font-sans:
     -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Roboto, Helvetica,
@@ -184,10 +218,10 @@
     "JetBrains Mono", "Cascadia Code", "Fira Code", Consolas, "Liberation Mono", Menlo, monospace;
 
   --color-border: var(--border);
+  --color-border-subtle: var(--ui-alpha-1);
   --color-border-strong: var(--ui-alpha-3);
   --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-background: var(--background);
+  --color-field: var(--ui-field);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
@@ -197,14 +231,9 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-tertiary: var(--ui-text-muted);
   --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
-  --color-success: var(--success);
-  --color-success-foreground: var(--success-foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
+  --color-success: var(--ui-success);
   --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
   --color-brand-hover: var(--ui-brand-hover);
@@ -215,6 +244,9 @@
   --color-surface-3: var(--ui-surface-3);
   --color-segmented-track: var(--ui-segmented-track);
   --color-segmented-thumb: var(--ui-segmented-thumb);
+  --color-knob: var(--ui-knob);
+  /* The red of the native Windows close button, so the drawn caption buttons match the system ones */
+  --color-window-close: #c42b1c;
 
   --radius-xs: calc(2px * var(--ui-radius-scale));
   --radius-sm: calc(4px * var(--ui-radius-scale));
@@ -227,12 +259,65 @@
 
   --shadow-sm: var(--ui-shadow-sm);
   --shadow-md: var(--ui-shadow-md);
-  --shadow-lg: var(--ui-shadow-lg);
-  --shadow-card: var(--ui-panel-shadow);
-  --shadow-card-hover: var(--ui-panel-shadow-hover);
   --shadow-float: var(--ui-shadow-popover);
   --shadow-focus: var(--ui-focus-shadow);
   --shadow-segmented-thumb: inset 0 0 0 1px var(--ui-alpha-2), 0 1px 2px var(--ui-shadow-far);
+}
+
+/*
+ * Press feedback for buttons: a quick squeeze on press and a spring back on release. Colors keep
+ * the regular hover timing; only the scale uses the spring.
+ */
+@utility pressable {
+  transition-property: scale, color, background-color, border-color, box-shadow, opacity;
+  transition-duration:
+    var(--transition-duration-slow), var(--transition-duration-ui), var(--transition-duration-ui),
+    var(--transition-duration-ui), var(--transition-duration-ui), var(--transition-duration-ui);
+  transition-timing-function:
+    var(--ease-spring), var(--ease-out-expo), var(--ease-out-expo), var(--ease-out-expo),
+    var(--ease-out-expo), var(--ease-out-expo);
+
+  &:active {
+    scale: 0.97;
+    transition-duration: var(--transition-duration-fast);
+    transition-timing-function: ease-out;
+  }
+}
+
+/*
+ * Scroll edge fade, set up by ScrollView: content dissolves into the edges it can still scroll
+ * past. The edges are registered lengths so they transition when scrolling reaches an end.
+ */
+@property --scroll-fade-top {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --scroll-fade-bottom {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@utility scroll-fade {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black var(--scroll-fade-top),
+    black calc(100% - var(--scroll-fade-bottom)),
+    transparent
+  );
+  transition-property: --scroll-fade-top, --scroll-fade-bottom;
+  transition-duration: var(--transition-duration-base);
+
+  &[data-overflow~="top"] {
+    --scroll-fade-top: 1.5rem;
+  }
+
+  &[data-overflow~="bottom"] {
+    --scroll-fade-bottom: 1.5rem;
+  }
 }
 
 html,
@@ -281,7 +366,7 @@ textarea {
 }
 ::-webkit-scrollbar-thumb {
   background: var(--ui-alpha-2);
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--ui-alpha-3);

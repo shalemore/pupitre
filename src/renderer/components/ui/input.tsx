@@ -1,19 +1,34 @@
+import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "cn";
 import { type JSX, splitProps } from "solid-js";
 
-export type InputProps = JSX.InputHTMLAttributes<HTMLInputElement>;
+const inputVariants = cva(
+  "w-full min-w-0 rounded-md border border-input bg-field text-xs transition-shadow outline-none placeholder:text-muted-foreground focus-visible:shadow-focus disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
+  {
+    variants: {
+      size: {
+        default: "h-8 px-2.5",
+        sm: "h-7 px-2",
+      },
+    },
+    defaultVariants: {
+      size: "default",
+    },
+  },
+);
+
+// The native `size` attribute (width in characters) is never used; the name is taken by the variant
+export type InputProps = Omit<JSX.InputHTMLAttributes<HTMLInputElement>, "size"> &
+  VariantProps<typeof inputVariants>;
 
 export function Input(props: InputProps) {
-  const [local, rest] = splitProps(props, ["class", "type"]);
+  const [local, rest] = splitProps(props, ["class", "type", "size"]);
 
   return (
     <input
       type={local.type ?? "text"}
       data-slot="input"
-      class={cn(
-        "h-8 w-full min-w-0 rounded-md border border-input bg-surface-0/60 px-2.5 py-1 text-xs transition-all outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-xs file:font-medium placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-surface-0/40 focus-visible:shadow-focus",
-        local.class,
-      )}
+      class={cn(inputVariants({ size: local.size }), local.class)}
       {...rest}
     />
   );

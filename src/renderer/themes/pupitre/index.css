@@ -45,7 +45,8 @@
    *                      3 popovers
    *   --ui-text-primary, --ui-text-secondary, --ui-text-muted
    *   --ui-brand, --ui-brand-hover  the only accent: caret, links, the current item
-   *   --ui-danger
+   *   --ui-danger, --ui-success
+   *   --ui-knob         thumbs of switches and sliders
    *   --syntax-*         code colors (keyword, string, number, function, comment, ...)
    * Borders, shadows and translucent fills are derived from these and follow automatically.
    */
@@ -172,7 +173,7 @@
 
 /* Images */
 .md-image-preview {
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
 }
 
 /* Bullets and numbers of list items */

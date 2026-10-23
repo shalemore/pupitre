@@ -1,7 +1,7 @@
 import { cn } from "cn";
 import { RefreshCw } from "lucide-solid";
 import { createResource, createRoot, createSignal, type Component } from "solid-js";
-import { Combobox, type SelectOption } from "@/components/ui";
+import { Button, Combobox, type SelectOption } from "@/components/ui";
 import { t } from "@/i18n";
 import { listFontFamilies } from "@/lib/fonts";
 
@@ -44,13 +44,13 @@ export const FontSelect: Component<FontSelectProps> = (props) => {
 };
 
 export const RefreshFontsButton: Component = () => (
-  <button
-    type="button"
+  <Button
+    variant="ghost"
+    size="icon-2xs"
     onClick={fonts.refresh}
     title={t().settings.refreshFonts}
     aria-label={t().settings.refreshFonts}
-    class="rounded p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground cursor-pointer"
   >
-    <RefreshCw class={cn("size-3", fonts.list.loading && "animate-spin")} />
-  </button>
+    <RefreshCw class={cn(fonts.list.loading && "animate-spin")} />
+  </Button>
 );

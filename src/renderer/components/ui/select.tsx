@@ -42,7 +42,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
       itemComponent={(itemProps) => (
         <KobalteSelect.Item
           item={itemProps.item}
-          class="group flex items-center justify-between gap-4 rounded-md px-2.5 py-1.5 text-xs outline-none cursor-pointer data-highlighted:bg-accent"
+          class="group flex items-center justify-between gap-4 rounded-lg px-2.5 py-1.5 text-xs outline-none cursor-pointer data-highlighted:bg-accent"
         >
           <span class="flex min-w-0 flex-col">
             <KobalteSelect.ItemLabel
@@ -53,7 +53,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
             </KobalteSelect.ItemLabel>
             <Show when={itemProps.item.rawValue.description}>
               {(description) => (
-                <KobalteSelect.ItemDescription class="truncate text-[11px] text-muted-foreground">
+                <KobalteSelect.ItemDescription class="truncate text-2xs text-muted-foreground">
                   {description()}
                 </KobalteSelect.ItemDescription>
               )}
@@ -68,7 +68,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
       <KobalteSelect.Trigger
         aria-label={props["aria-label"]}
         class={cn(
-          "flex h-8 min-w-36 items-center justify-between gap-2 rounded-md border border-input bg-surface-0/60 px-2.5 text-xs text-foreground outline-none cursor-pointer transition-colors hover:bg-surface-0 focus-visible:shadow-focus data-expanded:border-brand",
+          "flex h-8 min-w-36 items-center justify-between gap-2 rounded-md border border-input bg-field px-2.5 text-xs text-foreground outline-none cursor-pointer transition-colors hover:bg-surface-0 focus-visible:shadow-focus data-expanded:border-brand",
           props.class,
         )}
       >
@@ -79,12 +79,12 @@ export function Select<T extends string>(props: SelectProps<T>) {
             </span>
           )}
         </KobalteSelect.Value>
-        <KobalteSelect.Icon class="text-muted-foreground transition-transform data-expanded:rotate-180">
+        <KobalteSelect.Icon class="text-muted-foreground transition-transform duration-base data-expanded:rotate-180">
           <ChevronDown class="size-3.5" />
         </KobalteSelect.Icon>
       </KobalteSelect.Trigger>
       <KobalteSelect.Portal>
-        <KobalteSelect.Content class="z-50 min-w-(--kb-popper-anchor-width) rounded-xl border border-border/80 bg-surface-2 p-1 shadow-float animate-in fade-in-0 zoom-in-95 duration-(--duration-ui)">
+        <KobalteSelect.Content class="z-50 min-w-(--kb-popper-anchor-width) origin-(--kb-popper-content-transform-origin) rounded-xl bg-popover p-1 shadow-float animate-in fade-in-0 zoom-in-95 duration-base ease-enter data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-closed:duration-ui">
           <KobalteSelect.Listbox
             as={(listboxProps: ScrollViewProps) => <ScrollView as="ul" {...listboxProps} />}
             class="max-h-72 outline-none"
