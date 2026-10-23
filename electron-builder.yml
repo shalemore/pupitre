@@ -1,6 +1,7 @@
 appId: com.shalemore.pupitre
 productName: Pupitre
 artifactName: ${productName}-${version}-${os}-${arch}.${ext}
+copyright: Copyright © ${author}
 directories:
   buildResources: build
   output: release
@@ -26,6 +27,8 @@ mac:
 linux:
   target: [AppImage, deb]
   category: Office
+  # deb packages require a maintainer with an email; the GitHub noreply address satisfies that
+  maintainer: shalemore <190341017+shalemore@users.noreply.github.com>
 # Registers Pupitre as a handler for Markdown files; the installers remove it on uninstall
 fileAssociations:
   - ext: [md, markdown, mdown, mkd]
