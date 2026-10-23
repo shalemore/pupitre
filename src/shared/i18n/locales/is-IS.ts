@@ -15,6 +15,10 @@ export const isIS = {
   },
   sidebar: {
     noHeadings: "Engir fyrirsagnir ennþá",
+    // TODO(i18n): unverified with native speakers
+    outline: "Yfirlit",
+    folder: "Mappa",
+    folderUnreadable: "Ekki tókst að lesa þessa möppu.",
   },
   welcome: {
     dragDropHint: "Þú getur einnig dregið Markdown-skrár á þennan glugga",

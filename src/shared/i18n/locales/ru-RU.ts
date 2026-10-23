@@ -16,6 +16,10 @@ export const ruRU = {
   },
   sidebar: {
     noHeadings: "Заголовков пока нет",
+    // TODO(i18n): unverified with native speakers
+    outline: "Структура",
+    folder: "Папка",
+    folderUnreadable: "Не удалось прочитать эту папку.",
   },
   welcome: {
     dragDropHint: "Или перетащите файл Markdown в это окно",

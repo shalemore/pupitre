@@ -17,6 +17,10 @@ export const thTH = {
   },
   sidebar: {
     noHeadings: "ยังไม่มีหัวข้อ",
+    // TODO(i18n): unverified with native speakers
+    outline: "โครงร่าง",
+    folder: "โฟลเดอร์",
+    folderUnreadable: "ไม่สามารถอ่านโฟลเดอร์นี้ได้",
   },
   welcome: {
     dragDropHint: "หรือลากไฟล์ Markdown มาวางในหน้าต่างนี้ได้เลย",

@@ -14,6 +14,9 @@ export const koKR = {
   },
   sidebar: {
     noHeadings: "아직 제목이 없습니다",
+    outline: "개요",
+    folder: "폴더",
+    folderUnreadable: "이 폴더를 읽을 수 없습니다.",
   },
   welcome: {
     dragDropHint: "Markdown 파일을 창으로 직접 드래그 앤 드롭할 수도 있습니다",

@@ -16,6 +16,12 @@ export interface OpenedDocument extends DocumentLocation {
   lineEnding: LineEnding;
 }
 
+export interface FolderEntry {
+  name: string;
+  path: string;
+  kind: "directory" | "file";
+}
+
 /** The choice made when closing or replacing a document with unsaved changes. */
 export type UnsavedChoice = "save" | "discard" | "cancel";
 
@@ -82,6 +88,8 @@ export interface InvokeChannels {
   "settings:reveal": () => void;
   "document:open": () => OpenedDocument | null;
   "document:read": (path: string) => OpenedDocument;
+  /** Lists one level of a folder: directories first, then files, each sorted by name; hidden entries are left out. */
+  "folder:list": (path: string) => FolderEntry[];
   "document:write": (path: string, content: string, lineEnding: LineEnding) => void;
   /** Asks where to save a document; the document is written with document:write afterwards. */
   "dialog:choose-save-path": (suggestedName: string) => DocumentLocation | null;

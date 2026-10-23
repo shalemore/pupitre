@@ -14,6 +14,9 @@ export const deDE = {
   },
   sidebar: {
     noHeadings: "Noch keine Überschriften",
+    outline: "Gliederung",
+    folder: "Ordner",
+    folderUnreadable: "Dieser Ordner kann nicht gelesen werden.",
   },
   welcome: {
     dragDropHint: "Oder Markdown-Dateien direkt in dieses Fenster ziehen",

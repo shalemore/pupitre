@@ -14,6 +14,10 @@ export const fiFI = {
   },
   sidebar: {
     noHeadings: "Ei vielä otsikoita",
+    // TODO(i18n): unverified with native speakers
+    outline: "Jäsennys",
+    folder: "Kansio",
+    folderUnreadable: "Kansiota ei voitu lukea.",
   },
   welcome: {
     dragDropHint: "Voit myös vetää Markdown-tiedostoja tähän ikkunaan",

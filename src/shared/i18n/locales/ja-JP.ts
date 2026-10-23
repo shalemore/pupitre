@@ -14,6 +14,9 @@ export const jaJP = {
   },
   sidebar: {
     noHeadings: "見出しがまだありません",
+    outline: "アウトライン",
+    folder: "フォルダ",
+    folderUnreadable: "このフォルダを読み込めませんでした。",
   },
   welcome: {
     dragDropHint: "Markdown ファイルをウィンドウに直接ドラッグ＆ドロップすることもできます",

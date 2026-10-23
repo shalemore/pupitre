@@ -14,6 +14,10 @@ export const svSE = {
   },
   sidebar: {
     noHeadings: "Inga rubriker ännu",
+    // TODO(i18n): unverified with native speakers
+    outline: "Disposition",
+    folder: "Mapp",
+    folderUnreadable: "Mappen kunde inte läsas.",
   },
   welcome: {
     dragDropHint: "Du kan också dra Markdown-filer till det här fönstret",

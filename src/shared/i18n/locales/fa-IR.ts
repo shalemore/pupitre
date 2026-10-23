@@ -15,6 +15,10 @@ export const faIR = {
   },
   sidebar: {
     noHeadings: "هنوز عنوانی نیست",
+    // TODO(i18n): unverified with native speakers
+    outline: "طرح کلی",
+    folder: "پوشه",
+    folderUnreadable: "این پوشه خوانده نشد.",
   },
   welcome: {
     dragDropHint: "یا پرونده‌های Markdown را به این پنجره بکشید و رها کنید",

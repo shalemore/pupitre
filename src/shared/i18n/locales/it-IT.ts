@@ -14,6 +14,9 @@ export const itIT = {
   },
   sidebar: {
     noHeadings: "Nessuna intestazione",
+    outline: "Struttura",
+    folder: "Cartella",
+    folderUnreadable: "Impossibile leggere questa cartella.",
   },
   welcome: {
     dragDropHint: "Oppure trascina e rilascia i file Markdown in questa finestra",

@@ -14,6 +14,9 @@ export const ptPT = {
   },
   sidebar: {
     noHeadings: "Ainda sem títulos",
+    outline: "Estrutura",
+    folder: "Pasta",
+    folderUnreadable: "Não foi possível ler esta pasta.",
   },
   welcome: {
     dragDropHint: "Ou arraste ficheiros Markdown para esta janela",

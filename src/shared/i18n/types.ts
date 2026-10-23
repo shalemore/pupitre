@@ -71,6 +71,9 @@ export interface TranslationSchema {
   };
   readonly sidebar: {
     readonly noHeadings: string;
+    readonly outline: string;
+    readonly folder: string;
+    readonly folderUnreadable: string;
   };
   readonly welcome: {
     readonly dragDropHint: string;

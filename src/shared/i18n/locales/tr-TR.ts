@@ -14,6 +14,10 @@ export const trTR = {
   },
   sidebar: {
     noHeadings: "Henüz başlık yok",
+    // TODO(i18n): unverified with native speakers
+    outline: "Ana hat",
+    folder: "Klasör",
+    folderUnreadable: "Bu klasör okunamadı.",
   },
   welcome: {
     dragDropHint: "Markdown dosyalarını bu pencereye de sürükleyebilirsiniz",

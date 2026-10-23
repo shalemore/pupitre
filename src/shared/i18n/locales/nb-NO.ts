@@ -14,6 +14,10 @@ export const nbNO = {
   },
   sidebar: {
     noHeadings: "Ingen overskrifter ennå",
+    // TODO(i18n): unverified with native speakers
+    outline: "Disposisjon",
+    folder: "Mappe",
+    folderUnreadable: "Mappen kunne ikke leses.",
   },
   welcome: {
     dragDropHint: "Du kan også dra Markdown-filer inn i dette vinduet",

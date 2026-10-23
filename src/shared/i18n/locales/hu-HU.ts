@@ -14,6 +14,10 @@ export const huHU = {
   },
   sidebar: {
     noHeadings: "Még nincsenek címsorok",
+    // TODO(i18n): unverified with native speakers
+    outline: "Vázlat",
+    folder: "Mappa",
+    folderUnreadable: "A mappa nem olvasható.",
   },
   welcome: {
     dragDropHint: "A Markdown-fájlokat erre az ablakra is húzhatja",

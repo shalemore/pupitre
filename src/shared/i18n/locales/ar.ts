@@ -29,6 +29,10 @@ export const ar = {
   },
   sidebar: {
     noHeadings: "لا توجد عناوين بعد",
+    // TODO(i18n): unverified with native speakers
+    outline: "المخطط",
+    folder: "المجلد",
+    folderUnreadable: "تعذّرت قراءة هذا المجلد.",
   },
   welcome: {
     dragDropHint: "أو اسحب ملفات ماركداون وأفلتها في هذه النافذة",

@@ -14,6 +14,9 @@ export const frFR = {
   },
   sidebar: {
     noHeadings: "Aucun titre pour le moment",
+    outline: "Plan",
+    folder: "Dossier",
+    folderUnreadable: "Impossible de lire ce dossier.",
   },
   welcome: {
     dragDropHint: "Vous pouvez aussi glisser-déposer des fichiers Markdown ici",

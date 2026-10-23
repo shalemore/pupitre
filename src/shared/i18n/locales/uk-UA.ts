@@ -16,6 +16,10 @@ export const ukUA = {
   },
   sidebar: {
     noHeadings: "Заголовків ще немає",
+    // TODO(i18n): unverified with native speakers
+    outline: "Структура",
+    folder: "Тека",
+    folderUnreadable: "Не вдалося прочитати цю теку.",
   },
   welcome: {
     dragDropHint: "Також можна перетягнути файли Markdown у це вікно",

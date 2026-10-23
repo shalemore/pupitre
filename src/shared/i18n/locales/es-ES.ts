@@ -14,6 +14,9 @@ export const esES = {
   },
   sidebar: {
     noHeadings: "Sin encabezados aún",
+    outline: "Esquema",
+    folder: "Carpeta",
+    folderUnreadable: "No se puede leer esta carpeta.",
   },
   welcome: {
     dragDropHint: "O arrastra y suelta archivos Markdown en esta ventana",

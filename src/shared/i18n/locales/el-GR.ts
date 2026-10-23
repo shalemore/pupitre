@@ -14,6 +14,10 @@ export const elGR = {
   },
   sidebar: {
     noHeadings: "Δεν υπάρχουν ακόμη επικεφαλίδες",
+    // TODO(i18n): unverified with native speakers
+    outline: "Διάρθρωση",
+    folder: "Φάκελος",
+    folderUnreadable: "Δεν ήταν δυνατή η ανάγνωση αυτού του φακέλου.",
   },
   welcome: {
     dragDropHint: "Μπορείτε επίσης να σύρετε αρχεία Markdown σε αυτό το παράθυρο",

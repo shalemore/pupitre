@@ -14,6 +14,10 @@ export const viVN = {
   },
   sidebar: {
     noHeadings: "Chưa có tiêu đề nào",
+    // TODO(i18n): unverified with native speakers
+    outline: "Dàn ý",
+    folder: "Thư mục",
+    folderUnreadable: "Không thể đọc thư mục này.",
   },
   welcome: {
     dragDropHint: "Hoặc kéo và thả tệp Markdown thẳng vào cửa sổ này",

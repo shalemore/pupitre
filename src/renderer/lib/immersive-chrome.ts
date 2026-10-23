@@ -6,7 +6,7 @@ const TOP_EDGE = 48;
 const START_EDGE = 16;
 
 /**
- * The title bar and the outline of an immersive window: they get out of the way once the user
+ * The title bar and the sidebar of an immersive window: they get out of the way once the user
  * types or scrolls in the document, and come back while the pointer is at the top or the start
  * edge of the window (or over them). Without a document, or in a classic window, they stay.
  */
@@ -19,7 +19,7 @@ export function createImmersiveChrome(options: { enabled: boolean; hasDocument: 
     !options.enabled || !options.hasDocument() || !writing() || nearEdge;
   const titleBarVisible = () => shown(nearTop());
   const sidebarVisible = () => shown(nearStart());
-  /** The outline takes up room only until writing starts; after that it overlays the text. */
+  /** The sidebar takes up room only until writing starts; after that it overlays the text. */
   const sidebarDocked = () => shown(false);
 
   if (options.enabled && isMacOS) {
@@ -38,7 +38,7 @@ export function createImmersiveChrome(options: { enabled: boolean; hasDocument: 
       if (!(event.target instanceof Element)) return;
       const fromStart = document.dir === "rtl" ? window.innerWidth - event.clientX : event.clientX;
       setNearTop(event.clientY < TOP_EDGE || event.target.closest(".app-title-bar") !== null);
-      setNearStart(fromStart < START_EDGE || event.target.closest("[data-outline]") !== null);
+      setNearStart(fromStart < START_EDGE || event.target.closest("[data-sidebar]") !== null);
     },
     onPointerLeave: () => {
       setNearTop(false);

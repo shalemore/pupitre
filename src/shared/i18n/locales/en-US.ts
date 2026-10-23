@@ -14,6 +14,9 @@ export const enUS = {
   },
   sidebar: {
     noHeadings: "No headings yet",
+    outline: "Outline",
+    folder: "Folder",
+    folderUnreadable: "This folder can't be read.",
   },
   welcome: {
     dragDropHint: "Or drag and drop Markdown files into this window",

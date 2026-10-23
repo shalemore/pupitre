@@ -14,6 +14,10 @@ export const hiIN = {
   },
   sidebar: {
     noHeadings: "अभी कोई शीर्षक नहीं",
+    // TODO(i18n): unverified with native speakers
+    outline: "रूपरेखा",
+    folder: "फ़ोल्डर",
+    folderUnreadable: "यह फ़ोल्डर पढ़ा नहीं जा सका।",
   },
   welcome: {
     dragDropHint: "या Markdown फ़ाइलों को सीधे इस विंडो में खींचकर छोड़ें",

@@ -14,6 +14,9 @@ export const zhCN = {
   },
   sidebar: {
     noHeadings: "还没有标题",
+    outline: "大纲",
+    folder: "文件夹",
+    folderUnreadable: "无法读取该文件夹。",
   },
   welcome: {
     dragDropHint: "也可以直接把 Markdown 文件拖拽到窗口中",

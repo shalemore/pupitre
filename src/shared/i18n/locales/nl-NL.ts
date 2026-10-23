@@ -14,6 +14,10 @@ export const nlNL = {
   },
   sidebar: {
     noHeadings: "Nog geen koppen",
+    // TODO(i18n): unverified with native speakers
+    outline: "Overzicht",
+    folder: "Map",
+    folderUnreadable: "Deze map kan niet worden gelezen.",
   },
   welcome: {
     dragDropHint: "Of sleep Markdown-bestanden naar dit venster",

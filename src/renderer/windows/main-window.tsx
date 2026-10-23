@@ -1,6 +1,15 @@
 import type { AppCommand } from "@shared/desktop-api";
 import { cn } from "cn";
-import { createEffect, createSignal, on, onCleanup, onMount, Show, type Component } from "solid-js";
+import {
+  createEffect,
+  createMemo,
+  createSignal,
+  on,
+  onCleanup,
+  onMount,
+  Show,
+  type Component,
+} from "solid-js";
 import { TitleBar } from "@/components/title-bar";
 import { createDocumentSession } from "@/features/document/document-session";
 import { FindBar } from "@/features/editor/find-bar";
@@ -10,11 +19,14 @@ import {
   type MatchStats,
 } from "@/features/editor/markdown-editor";
 import type { OutlineHeading } from "@/features/editor/prose-plugins";
+import { FolderTree } from "@/features/folder/folder-tree";
 import { MenuBar } from "@/features/menu/menu-bar";
-import { OutlineSidebar } from "@/features/outline/outline-sidebar";
+import { OutlineList } from "@/features/outline/outline-list";
+import { Sidebar, type SidebarMode } from "@/features/sidebar/sidebar";
 import { WelcomeScreen } from "@/features/welcome/welcome-screen";
 import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
+import { dirnameOf, fileNameOf, isInsideFolder } from "@/lib/file";
 import { createImmersiveChrome } from "@/lib/immersive-chrome";
 import { recentFiles } from "@/lib/recent-files";
 import { settings, updateSettings } from "@/lib/settings";
@@ -28,6 +40,9 @@ export const MainWindow: Component = () => {
   const [outline, setOutline] = createSignal<OutlineHeading[]>([]);
   const [activeHeading, setActiveHeading] = createSignal(-1);
   const [stats, setStats] = createSignal<TextStats>({ words: 0, characters: 0 });
+  // A folder the user dropped in; while the open file is outside of it, the file's own folder is shown instead
+  const [droppedFolder, setDroppedFolder] = createSignal<string>();
+  const [preferredMode, setPreferredMode] = createSignal<SidebarMode>("outline");
   const [findMode, setFindMode] = createSignal<FindMode>("closed");
   const [initialSearch, setInitialSearch] = createSignal("");
   const [matchStats, setMatchStats] = createSignal<MatchStats>({ current: 0, total: 0 });
@@ -37,6 +52,19 @@ export const MainWindow: Component = () => {
     enabled: immersive,
     hasDocument: () => session.activeDocument() !== undefined,
   });
+
+  const folderRoot = createMemo(() => {
+    const dropped = droppedFolder();
+    const path = session.activeDocument()?.path;
+    if (dropped !== undefined && (path === undefined || isInsideFolder(dropped, path))) {
+      return dropped;
+    }
+    return path === undefined ? dropped : dirnameOf(path);
+  });
+  const sidebarMode = (): SidebarMode => {
+    if (session.activeDocument() === undefined) return "folder";
+    return folderRoot() === undefined ? "outline" : preferredMode();
+  };
 
   createEffect(() => {
     document.title = session.activeDocument() ? `${session.fileName()} - Pupitre` : "Pupitre";
@@ -123,6 +151,13 @@ export const MainWindow: Component = () => {
     const handleDragOver = (e: DragEvent) => e.preventDefault();
     const handleDrop = (e: DragEvent) => {
       const file = e.dataTransfer?.files[0];
+      if (file && e.dataTransfer?.items[0]?.webkitGetAsEntry()?.isDirectory) {
+        e.preventDefault();
+        setDroppedFolder(desktop.getPathForFile(file));
+        setPreferredMode("folder");
+        if (!settings().sidebarVisible) void updateSettings({ sidebarVisible: true });
+        return;
+      }
       // Images dropped into the editor are handled by the editor; this only takes over Markdown files dropped on the window
       if (!file || file.type.startsWith("image/")) return;
       e.preventDefault();
@@ -197,6 +232,54 @@ export const MainWindow: Component = () => {
           class="flex-1 flex overflow-hidden print:block print:overflow-visible"
         >
           <Show
+            when={
+              settings().sidebarVisible &&
+              (session.activeDocument() !== undefined || folderRoot() !== undefined)
+            }
+          >
+            <div
+              class={cn(
+                immersive
+                  ? "relative shrink-0 transition-[width] duration-200 print:hidden"
+                  : "contents",
+                immersive && (chrome.sidebarDocked() ? "w-66" : "w-0"),
+              )}
+            >
+              <Sidebar
+                class={cn(
+                  immersive &&
+                    "absolute top-12 bottom-2 inset-s-2 z-20 h-auto rounded-lg border shadow-lg transition-[translate,opacity] duration-200",
+                  !chrome.sidebarVisible() &&
+                    "pointer-events-none -translate-x-[calc(100%+1rem)] opacity-0 rtl:translate-x-[calc(100%+1rem)]",
+                )}
+                mode={sidebarMode()}
+                hasOutline={session.activeDocument() !== undefined}
+                hasFolder={folderRoot() !== undefined}
+                folderName={fileNameOf(folderRoot() ?? "")}
+                onModeChange={setPreferredMode}
+                outline={
+                  <OutlineList
+                    headings={outline()}
+                    activeIndex={activeHeading()}
+                    onSelectHeading={(heading) => editor?.scrollTo(heading.pos)}
+                  />
+                }
+                folder={
+                  <Show when={folderRoot()} keyed>
+                    {(root) => (
+                      <FolderTree
+                        root={root}
+                        activePath={session.activeDocument()?.path}
+                        onOpenFile={(path) => session.openPath(path, false)}
+                      />
+                    )}
+                  </Show>
+                }
+              />
+            </div>
+          </Show>
+
+          <Show
             when={session.activeDocument()}
             fallback={
               <main class="flex-1">
@@ -210,65 +293,40 @@ export const MainWindow: Component = () => {
             }
           >
             {(doc) => (
-              <>
-                <Show when={settings().sidebarVisible}>
-                  <div
-                    class={cn(
-                      immersive
-                        ? "relative shrink-0 transition-[width] duration-200 print:hidden"
-                        : "contents",
-                      immersive && (chrome.sidebarDocked() ? "w-66" : "w-0"),
-                    )}
-                  >
-                    <OutlineSidebar
-                      class={cn(
-                        immersive &&
-                          "absolute top-12 bottom-2 inset-s-2 z-20 h-auto rounded-lg border shadow-lg transition-[translate,opacity] duration-200",
-                        !chrome.sidebarVisible() &&
-                          "pointer-events-none -translate-x-[calc(100%+1rem)] opacity-0 rtl:translate-x-[calc(100%+1rem)]",
-                      )}
-                      headings={outline()}
-                      activeIndex={activeHeading()}
-                      onSelectHeading={(heading) => editor?.scrollTo(heading.pos)}
-                    />
-                  </div>
+              <main class="flex-1 h-full overflow-hidden relative print:h-auto print:overflow-visible">
+                <Show when={findMode() !== "closed"}>
+                  <FindBar
+                    class={cn(immersive && "top-13")}
+                    showReplace={findMode() === "replace"}
+                    initialSearch={initialSearch()}
+                    matchStats={matchStats()}
+                    onToggleReplace={() =>
+                      setFindMode(findMode() === "replace" ? "find" : "replace")
+                    }
+                    onClose={closeFind}
+                    onSearchChange={(options) => runSearch((handle) => handle.setSearch(options))}
+                    onFindNext={() => runSearch((handle) => handle.findNext())}
+                    onFindPrevious={() => runSearch((handle) => handle.findPrevious())}
+                    onReplaceNext={() => runSearch((handle) => handle.replaceNext())}
+                    onReplaceAll={() => runSearch((handle) => handle.replaceAll())}
+                  />
                 </Show>
 
-                <main class="flex-1 h-full overflow-hidden relative print:h-auto print:overflow-visible">
-                  <Show when={findMode() !== "closed"}>
-                    <FindBar
-                      class={cn(immersive && "top-13")}
-                      showReplace={findMode() === "replace"}
-                      initialSearch={initialSearch()}
-                      matchStats={matchStats()}
-                      onToggleReplace={() =>
-                        setFindMode(findMode() === "replace" ? "find" : "replace")
-                      }
-                      onClose={closeFind}
-                      onSearchChange={(options) => runSearch((handle) => handle.setSearch(options))}
-                      onFindNext={() => runSearch((handle) => handle.findNext())}
-                      onFindPrevious={() => runSearch((handle) => handle.findPrevious())}
-                      onReplaceNext={() => runSearch((handle) => handle.replaceNext())}
-                      onReplaceAll={() => runSearch((handle) => handle.replaceAll())}
-                    />
-                  </Show>
-
-                  {/* Rebuild the editor per document id; Save As only changes the path, so the editor and its undo history stay */}
-                  <Show when={doc().id} keyed>
-                    <MarkdownEditor
-                      markdown={doc().markdown}
-                      baseUrl={doc().baseUrl}
-                      documentPath={doc().path}
-                      onReady={session.markSaved}
-                      onMarkdownChange={session.handleMarkdownChange}
-                      onOutlineChange={setOutline}
-                      onActiveHeadingChange={setActiveHeading}
-                      onStatsChange={setStats}
-                      ref={(handle) => (editor = handle)}
-                    />
-                  </Show>
-                </main>
-              </>
+                {/* Rebuild the editor per document id; Save As only changes the path, so the editor and its undo history stay */}
+                <Show when={doc().id} keyed>
+                  <MarkdownEditor
+                    markdown={doc().markdown}
+                    baseUrl={doc().baseUrl}
+                    documentPath={doc().path}
+                    onReady={session.markSaved}
+                    onMarkdownChange={session.handleMarkdownChange}
+                    onOutlineChange={setOutline}
+                    onActiveHeadingChange={setActiveHeading}
+                    onStatsChange={setStats}
+                    ref={(handle) => (editor = handle)}
+                  />
+                </Show>
+              </main>
             )}
           </Show>
         </div>

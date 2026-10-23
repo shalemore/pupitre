@@ -14,6 +14,9 @@ export const zhHK = {
   },
   sidebar: {
     noHeadings: "暫無標題",
+    outline: "大綱",
+    folder: "資料夾",
+    folderUnreadable: "無法讀取該資料夾。",
   },
   welcome: {
     dragDropHint: "亦可直接將 Markdown 檔案拖曳至視窗中",

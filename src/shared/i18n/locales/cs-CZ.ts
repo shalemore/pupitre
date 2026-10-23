@@ -16,6 +16,10 @@ export const csCZ = {
   },
   sidebar: {
     noHeadings: "Zatím žádné nadpisy",
+    // TODO(i18n): unverified with native speakers
+    outline: "Osnova",
+    folder: "Složka",
+    folderUnreadable: "Tuto složku nelze přečíst.",
   },
   welcome: {
     dragDropHint: "Markdown soubory můžete také přetáhnout do tohoto okna",

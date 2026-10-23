@@ -14,6 +14,10 @@ export const daDK = {
   },
   sidebar: {
     noHeadings: "Ingen overskrifter endnu",
+    // TODO(i18n): unverified with native speakers
+    outline: "Disposition",
+    folder: "Mappe",
+    folderUnreadable: "Mappen kunne ikke læses.",
   },
   welcome: {
     dragDropHint: "Du kan også trække Markdown-filer ind i dette vindue",

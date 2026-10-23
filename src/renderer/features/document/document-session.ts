@@ -110,17 +110,19 @@ export function createDocumentSession(
     if (opened) load({ ...opened, markdown: opened.content, isSample: false });
   };
 
-  const openPath = async (path: string) => {
-    if (!(await confirmDiscard())) return;
+  /** Returns the failure message when the file can't be opened; with `showError` the user is also told in a dialog. */
+  const openPath = async (path: string, showError = true): Promise<string | undefined> => {
+    if (!(await confirmDiscard())) return undefined;
     try {
       const opened = await desktop.invoke("document:read", path);
       load({ ...opened, markdown: opened.content, isSample: false });
+      return undefined;
     } catch (error) {
-      await desktop.invoke(
-        "dialog:show-error",
-        t().dialogs.openFailed,
-        `${path}\n\n${error instanceof Error ? error.message : String(error)}`,
-      );
+      const message = error instanceof Error ? error.message : String(error);
+      if (showError) {
+        await desktop.invoke("dialog:show-error", t().dialogs.openFailed, `${path}\n\n${message}`);
+      }
+      return message;
     }
   };
 

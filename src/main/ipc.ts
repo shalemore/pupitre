@@ -1,9 +1,10 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { basename, dirname, extname, join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { BrowserWindow, dialog, ipcMain, type IpcMainInvokeEvent, shell } from "electron";
 import {
   type DocumentLocation,
+  type FolderEntry,
   type InvokeChannels,
   type LineEnding,
   type OpenedDocument,
@@ -65,10 +66,38 @@ async function saveImage(
   return [...folder.split(/[\\/]+/), name].map(encodeURIComponent).join("/");
 }
 
+const utf8 = new TextDecoder("utf-8", { fatal: true });
+
+/** Decodes a file as UTF-8 text; binary content (NUL bytes or invalid UTF-8) is rejected instead of being shown as garbage. */
+function decodeText(buffer: Buffer): string {
+  if (buffer.includes(0)) throw new Error("Not a text file");
+  try {
+    return utf8.decode(buffer);
+  } catch {
+    throw new Error("Not a UTF-8 text file");
+  }
+}
+
+async function listFolder(path: string): Promise<FolderEntry[]> {
+  const entries = await readdir(path, { withFileTypes: true });
+  return entries
+    .filter((entry) => !entry.name.startsWith("."))
+    .map((entry): FolderEntry => ({
+      name: entry.name,
+      path: join(path, entry.name),
+      kind: entry.isDirectory() ? "directory" : "file",
+    }))
+    .toSorted(
+      (a, b) =>
+        Number(b.kind === "directory") - Number(a.kind === "directory") ||
+        a.name.localeCompare(b.name, undefined, { numeric: true }),
+    );
+}
+
 async function readDocument(path: string): Promise<OpenedDocument> {
   try {
     // Strip the UTF-8 BOM (not written back on save) and normalize line endings to \n; the original line ending is restored on save
-    const raw = (await readFile(path, "utf8")).replace(/^﻿/, "");
+    const raw = decodeText(await readFile(path)).replace(/^﻿/, "");
     addRecentFile(path);
     return {
       ...locate(path),
@@ -114,6 +143,7 @@ export function registerIpcHandlers(): void {
     return readDocument(path);
   });
   handle("document:read", (_event, path) => readDocument(path));
+  handle("folder:list", (_event, path) => listFolder(path));
   handle("document:write", (_event, path, content, lineEnding) =>
     writeDocument(path, content, lineEnding),
   );

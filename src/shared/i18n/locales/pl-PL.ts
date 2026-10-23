@@ -17,6 +17,10 @@ export const plPL = {
   },
   sidebar: {
     noHeadings: "Brak nagłówków",
+    // TODO(i18n): unverified with native speakers
+    outline: "Konspekt",
+    folder: "Folder",
+    folderUnreadable: "Nie można odczytać tego folderu.",
   },
   welcome: {
     dragDropHint: "Możesz też przeciągnąć pliki Markdown do tego okna",

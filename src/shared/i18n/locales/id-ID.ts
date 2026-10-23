@@ -14,6 +14,10 @@ export const idID = {
   },
   sidebar: {
     noHeadings: "Belum ada judul",
+    // TODO(i18n): unverified with native speakers
+    outline: "Kerangka",
+    folder: "Folder",
+    folderUnreadable: "Folder ini tidak dapat dibaca.",
   },
   welcome: {
     dragDropHint: "Atau seret dan lepas berkas Markdown langsung ke jendela ini",
