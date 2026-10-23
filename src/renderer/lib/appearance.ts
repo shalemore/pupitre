@@ -1,5 +1,6 @@
 import type { ContentWidth } from "@shared/settings";
-import { createEffect, createMemo, createRoot, createSignal } from "solid-js";
+import { createPrefersDark } from "@solid-primitives/media";
+import { createEffect, createMemo, createRoot } from "solid-js";
 import { currentDirection, currentLocale } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { codeFontFamily, documentFontFamily, interfaceFontFamily } from "@/lib/fonts";
@@ -28,9 +29,7 @@ export function setupAppearance(): void {
   root.dataset["platform"] = desktop.platform;
 
   createRoot(() => {
-    const darkQuery = matchMedia("(prefers-color-scheme: dark)");
-    const [isDark, setIsDark] = createSignal(darkQuery.matches);
-    darkQuery.addEventListener("change", (event) => setIsDark(event.matches));
+    const isDark = createPrefersDark();
 
     const activeTheme = createMemo(() => {
       const { theme, darkTheme } = settings();
