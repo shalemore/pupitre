@@ -36,7 +36,7 @@ export const settingsSchema = z.object({
   fontSize: z.number().min(10).max(32).catch(16),
   lineHeight: z.number().min(1).max(3).catch(1.75),
   contentWidth: z.enum(["compact", "normal", "wide", "full"]).catch("normal"),
-  spellcheck: z.boolean().catch(true),
+  spellcheck: z.boolean().catch(false),
   scrollbar: z.enum(["auto", "always", "never"]).catch("auto"),
 
   // How Markdown is written, matching the remark-stringify options of the same meaning
