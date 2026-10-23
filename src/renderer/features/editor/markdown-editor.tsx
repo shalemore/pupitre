@@ -47,6 +47,7 @@ import {
   type OutlineHeading,
   readableText,
 } from "./prose-plugins";
+import { details } from "./details";
 import { editableHtmlSchema, rawHtml } from "./raw-html";
 import { syntaxRevealPlugin } from "./syntax-reveal";
 import { textDirectionPlugin } from "./text-direction";
@@ -218,6 +219,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         ctx.update(remarkStringifyOptionsCtx, (options) => ({ ...options, ...style }));
       })
       .use(frontMatter)
+      .use(details)
       .use(rawHtml(resolveUrl))
       .use(githubAlerts(labels.alerts))
       .use($prose(() => formatKeymap(() => crepe.editor)))
