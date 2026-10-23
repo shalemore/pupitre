@@ -46,6 +46,7 @@ import { footnotes } from "./footnotes";
 import { frontMatter } from "./front-matter";
 import { createPendingImages, documentBaseUrl, imageInput } from "./images";
 import { livePreview } from "./live-preview";
+import { pasteHtml } from "./paste-html";
 import { math } from "./math";
 import { renderedBlocks } from "./rendered-blocks";
 import { textDirection } from "./text-direction";
@@ -209,6 +210,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           livePreview,
           renderedBlocks,
           imageInput(uploadImage),
+          pasteHtml(markdownStyle),
           baseUrlCompartment.of(documentBaseUrl.of(props.baseUrl)),
           alertTitles.of(t().editor.alerts),
           textDirection,
