@@ -74,9 +74,10 @@ export const ar = {
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `تم تغيير ${fileName} بواسطة برنامج آخر.`,
     externalChangeDetail:
-      "هل تريد استبداله بنسختك، أم إعادة تحميله وتجاهل تغييراتك؟ الإلغاء يتابع التحرير دون حفظ.",
+      "«استبدال» يستبدل الملف بنسختك. «إعادة التحميل» يتجاهل تغييراتك ويحمّل الملف.",
     overwrite: "استبدال",
     reload: "إعادة التحميل",
+    keepEditing: "متابعة التحرير",
     // TODO(i18n): unverified with native speakers
     fileDeletedMessage: (fileName: string) => `تم حذف ${fileName} بواسطة برنامج آخر.`,
     fileDeletedDetail:

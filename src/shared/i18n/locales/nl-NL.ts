@@ -60,9 +60,10 @@ export const nlNL = {
     externalChangeMessage: (fileName: string) =>
       `${fileName} is door een ander programma gewijzigd.`,
     externalChangeDetail:
-      "Overschrijven met jouw versie, of opnieuw laden en je wijzigingen weggooien? Annuleren gaat door met bewerken zonder op te slaan.",
+      "Overschrijven vervangt het bestand door jouw versie. Opnieuw laden gooit je wijzigingen weg en laadt het bestand.",
     overwrite: "Overschrijven",
     reload: "Opnieuw laden",
+    keepEditing: "Doorgaan met bewerken",
     // TODO(i18n): unverified with native speakers
     fileDeletedMessage: (fileName: string) => `${fileName} is door een ander programma verwijderd.`,
     fileDeletedDetail:

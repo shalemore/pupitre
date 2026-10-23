@@ -59,9 +59,10 @@ export const nbNO = {
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName} er endret av et annet program.`,
     externalChangeDetail:
-      "Vil du overskrive den med din versjon, eller laste den på nytt og forkaste endringene dine? Avbryt fortsetter redigeringen uten å lagre.",
+      "Overskriv erstatter filen med din versjon. Last inn på nytt forkaster endringene dine og laster inn filen.",
     overwrite: "Overskriv",
     reload: "Last inn på nytt",
+    keepEditing: "Fortsett redigeringen",
     // TODO(i18n): unverified with native speakers
     fileDeletedMessage: (fileName: string) => `${fileName} er slettet av et annet program.`,
     fileDeletedDetail:

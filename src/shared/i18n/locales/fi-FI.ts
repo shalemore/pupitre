@@ -60,9 +60,10 @@ export const fiFI = {
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName} on muuttunut toisessa ohjelmassa.`,
     externalChangeDetail:
-      "Korvataanko se sinun versiollasi vai ladataanko se uudelleen ja hylätäänkö muutoksesi? Peruuta jatkaa muokkausta tallentamatta.",
+      "Korvaa korvaa tiedoston sinun versiollasi. Lataa uudelleen hylkää muutoksesi ja lataa tiedoston.",
     overwrite: "Korvaa",
     reload: "Lataa uudelleen",
+    keepEditing: "Jatka muokkausta",
     // TODO(i18n): unverified with native speakers
     fileDeletedMessage: (fileName: string) => `${fileName} on poistettu toisessa ohjelmassa.`,
     fileDeletedDetail:

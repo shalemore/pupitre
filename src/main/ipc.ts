@@ -221,7 +221,7 @@ export function registerIpcHandlers(): void {
       type: "warning",
       message: labels.externalChangeMessage(fileName),
       detail: labels.externalChangeDetail,
-      buttons: [labels.overwrite, labels.reload, labels.cancel],
+      buttons: [labels.overwrite, labels.reload, labels.keepEditing],
       defaultId: 2,
       cancelId: 2,
       noLink: true,

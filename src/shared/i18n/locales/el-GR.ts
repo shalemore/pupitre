@@ -59,9 +59,10 @@ export const elGR = {
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `Το ${fileName} τροποποιήθηκε από άλλο πρόγραμμα.`,
     externalChangeDetail:
-      "Να αντικατασταθεί με την έκδοσή σας ή να φορτωθεί ξανά και να απορριφθούν οι αλλαγές σας; Η Ακύρωση συνεχίζει την επεξεργασία χωρίς αποθήκευση.",
+      "Η Αντικατάσταση αντικαθιστά το αρχείο με την έκδοσή σας. Η Επαναφόρτωση απορρίπτει τις αλλαγές σας και φορτώνει το αρχείο.",
     overwrite: "Αντικατάσταση",
     reload: "Επαναφόρτωση",
+    keepEditing: "Συνέχεια επεξεργασίας",
     // TODO(i18n): unverified with native speakers
     fileDeletedMessage: (fileName: string) => `Το ${fileName} διαγράφηκε από άλλο πρόγραμμα.`,
     fileDeletedDetail:

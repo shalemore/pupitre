@@ -56,10 +56,10 @@ export const zhCN = {
     cancel: "取消",
     openFailed: "无法打开该文件。",
     externalChangeMessage: (fileName: string) => `${fileName} 已被其他程序修改。`,
-    externalChangeDetail:
-      "要用当前版本覆盖它，还是重新载入并放弃你的修改？取消则继续编辑，不保存。",
+    externalChangeDetail: "“覆盖”会用你的版本替换文件；“重新载入”会放弃你的修改并载入文件。",
     overwrite: "覆盖",
     reload: "重新载入",
+    keepEditing: "继续编辑",
     fileDeletedMessage: (fileName: string) => `${fileName} 已被其他程序删除。`,
     fileDeletedDetail:
       "重新保存可保留此文档。若不保存，文档仍保持打开并视为未保存，关闭时会再次询问。",

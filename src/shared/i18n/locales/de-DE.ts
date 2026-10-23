@@ -58,9 +58,10 @@ export const deDE = {
     externalChangeMessage: (fileName: string) =>
       `${fileName} wurde von einem anderen Programm geändert.`,
     externalChangeDetail:
-      "Mit deiner Version überschreiben oder neu laden und deine Änderungen verwerfen? Abbrechen setzt die Bearbeitung ohne Speichern fort.",
+      "Überschreiben ersetzt die Datei durch deine Version. Neu laden verwirft deine Änderungen und lädt die Datei.",
     overwrite: "Überschreiben",
     reload: "Neu laden",
+    keepEditing: "Weiter bearbeiten",
     fileDeletedMessage: (fileName: string) =>
       `${fileName} wurde von einem anderen Programm gelöscht.`,
     fileDeletedDetail:

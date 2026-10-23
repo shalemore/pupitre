@@ -61,10 +61,10 @@ export const thTH = {
     openFailed: "ไม่สามารถเปิดไฟล์ได้",
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName} ถูกแก้ไขโดยโปรแกรมอื่น`,
-    externalChangeDetail:
-      "ต้องการเขียนทับด้วยเวอร์ชันของคุณ หรือโหลดใหม่และละทิ้งการเปลี่ยนแปลงของคุณ? ยกเลิกเพื่อแก้ไขต่อโดยไม่บันทึก",
+    externalChangeDetail: "เขียนทับจะแทนที่ไฟล์ด้วยเวอร์ชันของคุณ โหลดใหม่จะละทิ้งการเปลี่ยนแปลงของคุณและโหลดไฟล์",
     overwrite: "เขียนทับ",
     reload: "โหลดใหม่",
+    keepEditing: "แก้ไขต่อ",
     // TODO(i18n): unverified with native speakers
     fileDeletedMessage: (fileName: string) => `${fileName} ถูกลบโดยโปรแกรมอื่น`,
     fileDeletedDetail:

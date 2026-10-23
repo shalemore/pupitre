@@ -58,9 +58,10 @@ export const jaJP = {
     externalChangeMessage: (fileName: string) =>
       `${fileName} は他のプログラムによって変更されました。`,
     externalChangeDetail:
-      "現在の内容で上書きするか、再読み込みして変更を破棄しますか？キャンセルすると保存せずに編集を続けます。",
+      "「上書き」はファイルを現在の内容で置き換えます。「再読み込み」は変更を破棄してファイルを読み込みます。",
     overwrite: "上書き",
     reload: "再読み込み",
+    keepEditing: "編集を続ける",
     fileDeletedMessage: (fileName: string) =>
       `${fileName} は他のプログラムによって削除されました。`,
     fileDeletedDetail:

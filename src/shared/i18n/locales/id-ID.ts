@@ -59,9 +59,10 @@ export const idID = {
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName} diubah oleh program lain.`,
     externalChangeDetail:
-      "Timpa dengan versi Anda, atau muat ulang dan buang perubahan Anda? Batal melanjutkan penyuntingan tanpa menyimpan.",
+      "Timpa mengganti berkas dengan versi Anda. Muat Ulang membuang perubahan Anda dan memuat berkas.",
     overwrite: "Timpa",
     reload: "Muat Ulang",
+    keepEditing: "Lanjut Menyunting",
     // TODO(i18n): unverified with native speakers
     fileDeletedMessage: (fileName: string) => `${fileName} dihapus oleh program lain.`,
     fileDeletedDetail:

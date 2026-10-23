@@ -57,9 +57,10 @@ export const ptBR = {
     openFailed: "Não foi possível abrir o arquivo.",
     externalChangeMessage: (fileName: string) => `${fileName} foi alterado por outro programa.`,
     externalChangeDetail:
-      "Deseja substituí-lo pela sua versão ou recarregá-lo e descartar suas alterações? Cancelar continua editando sem salvar.",
+      "Substituir troca o arquivo pela sua versão. Recarregar descarta suas alterações e carrega o arquivo.",
     overwrite: "Substituir",
     reload: "Recarregar",
+    keepEditing: "Continuar editando",
     fileDeletedMessage: (fileName: string) => `${fileName} foi excluído por outro programa.`,
     fileDeletedDetail:
       "Salve novamente para manter este documento. Se não salvar, ele continua aberto sem salvar e a pergunta será repetida ao fechar.",

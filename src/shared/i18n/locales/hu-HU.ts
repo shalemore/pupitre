@@ -60,9 +60,10 @@ export const huHU = {
     externalChangeMessage: (fileName: string) =>
       `A(z) ${fileName} fájlt egy másik program módosította.`,
     externalChangeDetail:
-      "Felülírod a saját verziójáddal, vagy újratöltöd, és elveted a módosításaidat? A Mégse mentés nélkül folytatja a szerkesztést.",
+      "A Felülírás a fájlt a te verziódra cseréli. Az Újratöltés elveti a módosításaidat, és betölti a fájlt.",
     overwrite: "Felülírás",
     reload: "Újratöltés",
+    keepEditing: "Szerkesztés folytatása",
     // TODO(i18n): unverified with native speakers
     fileDeletedMessage: (fileName: string) => `A(z) ${fileName} fájlt egy másik program törölte.`,
     fileDeletedDetail:

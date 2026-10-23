@@ -61,9 +61,10 @@ export const trTR = {
     externalChangeMessage: (fileName: string) =>
       `${fileName} başka bir program tarafından değiştirildi.`,
     externalChangeDetail:
-      "Sizin sürümünüzle üzerine yazılsın mı, yoksa yeniden yüklenip değişiklikleriniz atılsın mı? İptal, kaydetmeden düzenlemeye devam eder.",
+      "Üzerine Yaz, dosyayı sizin sürümünüzle değiştirir. Yeniden Yükle, değişikliklerinizi atar ve dosyayı yükler.",
     overwrite: "Üzerine Yaz",
     reload: "Yeniden Yükle",
+    keepEditing: "Düzenlemeye Devam Et",
     // TODO(i18n): unverified with native speakers
     fileDeletedMessage: (fileName: string) => `${fileName} başka bir program tarafından silindi.`,
     fileDeletedDetail:

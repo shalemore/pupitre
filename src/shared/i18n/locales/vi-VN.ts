@@ -59,9 +59,10 @@ export const viVN = {
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName} đã bị chương trình khác thay đổi.`,
     externalChangeDetail:
-      "Ghi đè bằng phiên bản của bạn, hay tải lại và bỏ các thay đổi của bạn? Hủy để tiếp tục chỉnh sửa mà không lưu.",
+      "Ghi đè thay tệp bằng phiên bản của bạn. Tải lại bỏ các thay đổi của bạn và tải tệp.",
     overwrite: "Ghi đè",
     reload: "Tải lại",
+    keepEditing: "Tiếp tục chỉnh sửa",
     // TODO(i18n): unverified with native speakers
     fileDeletedMessage: (fileName: string) => `${fileName} đã bị chương trình khác xóa.`,
     fileDeletedDetail:

@@ -61,9 +61,10 @@ export const ruRU = {
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName}: файл был изменён другой программой.`,
     externalChangeDetail:
-      "Перезаписать его вашей версией или загрузить заново, отбросив ваши изменения? «Отмена» — продолжить правку без сохранения.",
+      "«Перезаписать» заменит файл вашей версией. «Загрузить заново» отбросит ваши изменения и загрузит файл.",
     overwrite: "Перезаписать",
     reload: "Загрузить заново",
+    keepEditing: "Продолжить правку",
     // TODO(i18n): unverified with native speakers
     fileDeletedMessage: (fileName: string) => `${fileName}: файл был удалён другой программой.`,
     fileDeletedDetail:

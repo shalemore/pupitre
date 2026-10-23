@@ -58,9 +58,10 @@ export const koKR = {
     externalChangeMessage: (fileName: string) =>
       `${fileName} 파일이 다른 프로그램에서 변경되었습니다.`,
     externalChangeDetail:
-      "현재 내용으로 덮어쓰거나, 다시 불러와 변경 내용을 버릴 수 있습니다. 취소하면 저장하지 않고 계속 편집합니다.",
+      "‘덮어쓰기’는 파일을 현재 내용으로 바꾸고, ‘다시 불러오기’는 변경 내용을 버리고 파일을 불러옵니다.",
     overwrite: "덮어쓰기",
     reload: "다시 불러오기",
+    keepEditing: "계속 편집",
     fileDeletedMessage: (fileName: string) =>
       `${fileName} 파일이 다른 프로그램에서 삭제되었습니다.`,
     fileDeletedDetail:

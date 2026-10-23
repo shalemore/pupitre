@@ -59,9 +59,10 @@ export const hiIN = {
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName} को किसी अन्य प्रोग्राम ने बदल दिया है।`,
     externalChangeDetail:
-      "क्या इसे आपके संस्करण से बदलें, या फिर से लोड करके आपके बदलाव छोड़ दें? रद्द करने पर बिना सहेजे संपादन जारी रहेगा।",
+      "अधिलेखित करें फ़ाइल को आपके संस्करण से बदल देता है। फिर से लोड करें आपके बदलाव छोड़कर फ़ाइल लोड करता है।",
     overwrite: "अधिलेखित करें",
     reload: "फिर से लोड करें",
+    keepEditing: "संपादन जारी रखें",
     // TODO(i18n): unverified with native speakers
     fileDeletedMessage: (fileName: string) => `${fileName} को किसी अन्य प्रोग्राम ने हटा दिया है।`,
     fileDeletedDetail:

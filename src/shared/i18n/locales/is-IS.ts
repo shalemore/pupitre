@@ -60,9 +60,10 @@ export const isIS = {
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName} var breytt af öðru forriti.`,
     externalChangeDetail:
-      "Viltu skrifa yfir hana með þinni útgáfu, eða hlaða aftur og henda breytingunum þínum? Hætta við heldur áfram að breyta án þess að vista.",
+      "„Skrifa yfir“ kemur skránni í stað fyrir þína útgáfu. „Hlaða aftur“ hendir breytingunum þínum og hleður skrána.",
     overwrite: "Skrifa yfir",
     reload: "Hlaða aftur",
+    keepEditing: "Halda áfram að breyta",
     // TODO(i18n): unverified with native speakers
     fileDeletedMessage: (fileName: string) => `${fileName} var eytt af öðru forriti.`,
     fileDeletedDetail:

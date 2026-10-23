@@ -60,9 +60,10 @@ export const faIR = {
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName} توسط برنامهٔ دیگری تغییر کرد.`,
     externalChangeDetail:
-      "با نسخهٔ شما جایگزین شود یا دوباره بارگیری شود و تغییرات شما کنار گذاشته شود؟ لغو، ویرایش را بدون ذخیره ادامه می‌دهد.",
+      "«جایگزینی» پرونده را با نسخهٔ شما عوض می‌کند. «بارگیری مجدد» تغییرات شما را کنار می‌گذارد و پرونده را بارگیری می‌کند.",
     overwrite: "جایگزینی",
     reload: "بارگیری مجدد",
+    keepEditing: "ادامهٔ ویرایش",
     // TODO(i18n): unverified with native speakers
     fileDeletedMessage: (fileName: string) => `${fileName} توسط برنامهٔ دیگری حذف شد.`,
     fileDeletedDetail:

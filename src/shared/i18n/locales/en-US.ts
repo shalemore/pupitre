@@ -58,9 +58,10 @@ export const enUS = {
     openFailed: "The file couldn't be opened.",
     externalChangeMessage: (fileName: string) => `${fileName} was changed by another program.`,
     externalChangeDetail:
-      "Overwrite it with your version, or reload it and discard your changes? Cancel keeps editing without saving.",
+      "Overwrite replaces the file with your version. Reload discards your changes and loads the file.",
     overwrite: "Overwrite",
     reload: "Reload",
+    keepEditing: "Keep Editing",
     fileDeletedMessage: (fileName: string) => `${fileName} was deleted by another program.`,
     fileDeletedDetail:
       "Save it again to keep this document. If you don't save, it stays open as unsaved and you'll be asked again when you close it.",

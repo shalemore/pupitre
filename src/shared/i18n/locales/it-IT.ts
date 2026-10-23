@@ -58,9 +58,10 @@ export const itIT = {
     externalChangeMessage: (fileName: string) =>
       `${fileName} è stato modificato da un altro programma.`,
     externalChangeDetail:
-      "Vuoi sovrascriverlo con la tua versione o ricaricarlo scartando le modifiche? Annulla continua la modifica senza salvare.",
+      "Sovrascrivi sostituisce il file con la tua versione. Ricarica scarta le modifiche e carica il file.",
     overwrite: "Sovrascrivi",
     reload: "Ricarica",
+    keepEditing: "Continua a modificare",
     fileDeletedMessage: (fileName: string) =>
       `${fileName} è stato eliminato da un altro programma.`,
     fileDeletedDetail:

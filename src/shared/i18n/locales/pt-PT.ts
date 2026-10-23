@@ -57,9 +57,10 @@ export const ptPT = {
     openFailed: "Não foi possível abrir o ficheiro.",
     externalChangeMessage: (fileName: string) => `${fileName} foi alterado por outro programa.`,
     externalChangeDetail:
-      "Pretende substituí-lo pela sua versão ou recarregá-lo e descartar as suas alterações? Cancelar continua a edição sem guardar.",
+      "Substituir troca o ficheiro pela sua versão. Recarregar descarta as suas alterações e carrega o ficheiro.",
     overwrite: "Substituir",
     reload: "Recarregar",
+    keepEditing: "Continuar a editar",
     fileDeletedMessage: (fileName: string) => `${fileName} foi eliminado por outro programa.`,
     fileDeletedDetail:
       "Guarde novamente para manter este documento. Se não guardar, continua aberto sem guardar e a pergunta será repetida ao fechar.",

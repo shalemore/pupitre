@@ -59,9 +59,10 @@ export const daDK = {
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName} er ændret af et andet program.`,
     externalChangeDetail:
-      "Vil du overskrive den med din version, eller indlæse den igen og kassere dine ændringer? Annuller fortsætter redigeringen uden at gemme.",
+      "Overskriv erstatter filen med din version. Indlæs igen kasserer dine ændringer og indlæser filen.",
     overwrite: "Overskriv",
     reload: "Indlæs igen",
+    keepEditing: "Fortsæt redigering",
     // TODO(i18n): unverified with native speakers
     fileDeletedMessage: (fileName: string) => `${fileName} er slettet af et andet program.`,
     fileDeletedDetail:

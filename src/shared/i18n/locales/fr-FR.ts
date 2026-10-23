@@ -59,9 +59,10 @@ export const frFR = {
     externalChangeMessage: (fileName: string) =>
       `${fileName} a été modifié par un autre programme.`,
     externalChangeDetail:
-      "Voulez-vous l'écraser avec votre version, ou le recharger en abandonnant vos modifications ? Annuler permet de continuer à modifier sans enregistrer.",
+      "« Écraser » remplace le fichier par votre version. « Recharger » abandonne vos modifications et charge le fichier.",
     overwrite: "Écraser",
     reload: "Recharger",
+    keepEditing: "Continuer à modifier",
     fileDeletedMessage: (fileName: string) => `${fileName} a été supprimé par un autre programme.`,
     fileDeletedDetail:
       "Enregistrez-le à nouveau pour conserver ce document. Sinon, il reste ouvert sans être enregistré et la question sera reposée à la fermeture.",

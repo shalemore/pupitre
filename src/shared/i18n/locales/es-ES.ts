@@ -57,9 +57,10 @@ export const esES = {
     openFailed: "No se pudo abrir el archivo.",
     externalChangeMessage: (fileName: string) => `${fileName} fue modificado por otro programa.`,
     externalChangeDetail:
-      "¿Quieres sobrescribirlo con tu versión o recargarlo y descartar tus cambios? Cancelar sigue editando sin guardar.",
+      "Sobrescribir reemplaza el archivo con tu versión. Recargar descarta tus cambios y carga el archivo.",
     overwrite: "Sobrescribir",
     reload: "Recargar",
+    keepEditing: "Seguir editando",
     fileDeletedMessage: (fileName: string) => `${fileName} fue eliminado por otro programa.`,
     fileDeletedDetail:
       "Guárdalo de nuevo para conservar este documento. Si no lo haces, seguirá abierto sin guardar y se te preguntará otra vez al cerrarlo.",

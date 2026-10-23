@@ -63,9 +63,10 @@ export const plPL = {
     externalChangeMessage: (fileName: string) =>
       `Plik ${fileName} został zmieniony przez inny program.`,
     externalChangeDetail:
-      "Nadpisać go Twoją wersją czy wczytać ponownie i odrzucić zmiany? Anuluj kontynuuje edycję bez zapisywania.",
+      "Nadpisz zastępuje plik Twoją wersją. Wczytaj ponownie odrzuca zmiany i wczytuje plik.",
     overwrite: "Nadpisz",
     reload: "Wczytaj ponownie",
+    keepEditing: "Kontynuuj edycję",
     // TODO(i18n): unverified with native speakers
     fileDeletedMessage: (fileName: string) =>
       `Plik ${fileName} został usunięty przez inny program.`,

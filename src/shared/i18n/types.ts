@@ -116,6 +116,7 @@ export interface TranslationSchema {
     readonly externalChangeDetail: string;
     readonly overwrite: string;
     readonly reload: string;
+    readonly keepEditing: string;
     readonly fileDeletedMessage: (fileName: string) => string;
     readonly fileDeletedDetail: string;
   };

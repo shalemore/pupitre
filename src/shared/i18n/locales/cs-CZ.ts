@@ -61,9 +61,10 @@ export const csCZ = {
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `Soubor ${fileName} byl změněn jiným programem.`,
     externalChangeDetail:
-      "Přepsat jej vaší verzí, nebo znovu načíst a zahodit vaše změny? Zrušit pokračuje v úpravách bez uložení.",
+      "Přepsat nahradí soubor vaší verzí. Znovu načíst zahodí vaše změny a načte soubor.",
     overwrite: "Přepsat",
     reload: "Znovu načíst",
+    keepEditing: "Pokračovat v úpravách",
     // TODO(i18n): unverified with native speakers
     fileDeletedMessage: (fileName: string) => `Soubor ${fileName} byl odstraněn jiným programem.`,
     fileDeletedDetail:

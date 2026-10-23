@@ -59,9 +59,10 @@ export const svSE = {
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName} har ändrats av ett annat program.`,
     externalChangeDetail:
-      "Vill du skriva över den med din version, eller läsa in den igen och kasta dina ändringar? Avbryt fortsätter redigeringen utan att spara.",
+      "Skriv över ersätter filen med din version. Läs in igen kastar dina ändringar och läser in filen.",
     overwrite: "Skriv över",
     reload: "Läs in igen",
+    keepEditing: "Fortsätt redigera",
     // TODO(i18n): unverified with native speakers
     fileDeletedMessage: (fileName: string) => `${fileName} har tagits bort av ett annat program.`,
     fileDeletedDetail:

@@ -61,9 +61,10 @@ export const ukUA = {
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName}: файл змінено іншою програмою.`,
     externalChangeDetail:
-      "Перезаписати його вашою версією чи завантажити заново, відкинувши ваші зміни? «Скасувати» — продовжити редагування без збереження.",
+      "«Перезаписати» замінить файл вашою версією. «Завантажити знову» відкине ваші зміни й завантажить файл.",
     overwrite: "Перезаписати",
     reload: "Завантажити знову",
+    keepEditing: "Продовжити редагування",
     // TODO(i18n): unverified with native speakers
     fileDeletedMessage: (fileName: string) => `${fileName}: файл видалено іншою програмою.`,
     fileDeletedDetail:
