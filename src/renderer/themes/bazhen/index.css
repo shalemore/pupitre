@@ -1,0 +1,259 @@
+/*
+ * Bazhen: poster typography for long-form writing. Condensed uppercase headings, brick red and
+ * ink on warm paper, square corners and heavy rules. The dark scheme keeps the same structure on
+ * warm charcoal with cream text, and softens the red so it does not glare.
+ * See themes/pupitre/index.css for the token and selector conventions.
+ */
+
+:root {
+  color-scheme: light dark;
+
+  /* Condensed display faces for headings; each platform ships one of the first three */
+  --font-display:
+    "Bahnschrift", "DIN Condensed", "Futura", "Oswald", "Roboto Condensed", "Arial Narrow",
+    "Source Han Sans SC", "Noto Sans CJK SC", "Microsoft YaHei UI", "PingFang SC", sans-serif;
+  --font-document:
+    "Segoe UI Variable Text", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica,
+    Arial, sans-serif;
+  --font-sans:
+    "Bahnschrift", "Segoe UI Variable Text", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto,
+    Helvetica, Arial, sans-serif;
+
+  --ui-radius-scale: 0;
+
+  --ui-surface-0: oklch(0.925 0.018 80);
+  --ui-surface-1: oklch(0.962 0.014 85);
+  --ui-surface-2: oklch(0.972 0.012 85);
+  --ui-surface-3: oklch(0.982 0.01 85);
+  --ui-text-primary: oklch(0.23 0.012 45);
+  --ui-text-secondary: oklch(0.42 0.016 50);
+  --ui-text-muted: oklch(0.58 0.02 60);
+  --ui-brand: oklch(0.5 0.165 28);
+  --ui-brand-hover: oklch(0.44 0.16 27);
+  --ui-danger: oklch(0.5 0.19 25);
+  --ui-success: oklch(0.5 0.1 140);
+  --ui-segmented-thumb: oklch(0.985 0.01 85);
+  --ui-knob: oklch(0.985 0.01 85);
+
+  /* Second accent: ochre, for highlights */
+  --bazhen-highlight: oklch(0.86 0.11 85 / 70%);
+
+  --syntax-keyword: oklch(0.48 0.16 28);
+  --syntax-string: oklch(0.46 0.09 135);
+  --syntax-special-string: oklch(0.46 0.07 230);
+  --syntax-number: oklch(0.54 0.12 65);
+  --syntax-variable: var(--ui-text-primary);
+  --syntax-definition: oklch(0.42 0.08 240);
+  --syntax-function: oklch(0.42 0.08 240);
+  --syntax-type: oklch(0.54 0.12 65);
+  --syntax-property: oklch(0.46 0.07 230);
+  --syntax-comment: var(--ui-text-muted);
+  --syntax-operator: var(--ui-text-secondary);
+  --syntax-punctuation: var(--ui-text-secondary);
+  --syntax-invalid: var(--ui-danger);
+
+  --alert-note: oklch(0.48 0.07 240);
+  --alert-tip: oklch(0.5 0.1 135);
+  --alert-important: var(--ui-brand);
+  --alert-warning: oklch(0.6 0.13 70);
+  --alert-caution: oklch(0.47 0.18 25);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ui-surface-0: oklch(0.17 0.008 50);
+    --ui-surface-1: oklch(0.205 0.009 50);
+    --ui-surface-2: oklch(0.225 0.01 50);
+    --ui-surface-3: oklch(0.25 0.011 50);
+    --ui-text-primary: oklch(0.9 0.022 85);
+    --ui-text-secondary: oklch(0.74 0.022 80);
+    --ui-text-muted: oklch(0.56 0.018 70);
+    --ui-brand: oklch(0.66 0.14 32);
+    --ui-brand-hover: oklch(0.72 0.13 35);
+    --ui-danger: oklch(0.68 0.16 25);
+    --ui-success: oklch(0.72 0.1 140);
+    --ui-segmented-thumb: oklch(0.32 0.012 50);
+    --ui-knob: oklch(0.9 0.022 85);
+
+    --bazhen-highlight: oklch(0.62 0.11 75 / 35%);
+
+    --syntax-keyword: oklch(0.72 0.13 32);
+    --syntax-string: oklch(0.76 0.09 135);
+    --syntax-special-string: oklch(0.76 0.06 230);
+    --syntax-number: oklch(0.78 0.11 75);
+    --syntax-definition: oklch(0.76 0.07 240);
+    --syntax-function: oklch(0.76 0.07 240);
+    --syntax-type: oklch(0.78 0.11 75);
+    --syntax-property: oklch(0.76 0.06 230);
+
+    --alert-note: oklch(0.72 0.07 240);
+    --alert-tip: oklch(0.72 0.1 135);
+    --alert-warning: oklch(0.78 0.12 75);
+    --alert-caution: oklch(0.68 0.15 25);
+  }
+}
+
+/* The page: top and bottom padding, body font, ink color and a red caret */
+.md-document {
+  padding-block: 3.5em 40vh;
+  font-family: var(--font-document);
+  color: var(--ui-text-primary);
+  caret-color: var(--ui-brand);
+}
+
+/* All headings: condensed display face, set tight */
+.md-heading {
+  padding-block: 0.7em 0.25em;
+  font-family: var(--font-display);
+  font-stretch: condensed;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+}
+
+/* h1: large uppercase title over a heavy red bar */
+.md-h1 {
+  padding-block-end: 0.2em;
+  border-block-end: 0.14em solid var(--ui-brand);
+  font-size: 2.3em;
+  text-transform: uppercase;
+}
+
+/* h2: uppercase with an ink rule */
+.md-h2 {
+  padding-block-end: 0.15em;
+  border-block-end: 2px solid var(--ui-text-primary);
+  font-size: 1.55em;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* h3: the accent color carries the level */
+.md-h3 {
+  color: var(--ui-brand);
+  font-size: 1.3em;
+}
+
+.md-h4 {
+  font-size: 1.1em;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.md-h5,
+.md-h6 {
+  color: var(--ui-text-secondary);
+  font-size: 1em;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Lighter text on a dark ground reads heavier */
+@media (prefers-color-scheme: dark) {
+  .md-heading {
+    font-weight: 600;
+  }
+
+  .md-h2 {
+    border-block-end-color: var(--ui-text-secondary);
+  }
+}
+
+/* Links: red with a solid underline */
+.md-link {
+  color: var(--ui-brand);
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.2em;
+}
+
+/* **Bold** text */
+.md-strong {
+  font-weight: 700;
+}
+
+.md-strike {
+  color: var(--ui-text-muted);
+}
+
+/* `Inline code`: a square tint */
+.md-code {
+  padding: 0.1em 0.25em;
+  background: var(--ui-alpha-1);
+}
+
+/* Fenced code blocks: a recessed slab with a red bar along the start edge */
+.md-code-block {
+  border-inline-start: 3px solid var(--ui-brand);
+  background: var(--ui-surface-0);
+  line-height: 1.6;
+}
+
+/* > Block quotes: a thick bar; GitHub alerts (> [!NOTE]) tint it with --alert-color */
+.md-quote {
+  color: var(--ui-text-secondary);
+  border-inline-start: 0.25em solid var(--alert-color, var(--ui-brand));
+}
+
+/* A horizontal rule away from the cursor is a band of diagonal stripes */
+.md-hr:not(:has(.md-mark)) {
+  background: repeating-linear-gradient(-45deg, var(--ui-brand) 0 0.2em, transparent 0.2em 0.45em)
+    center / 100% 0.4em no-repeat;
+}
+
+/* Bullets are squares in the accent color */
+.md-list-bullet,
+.md-list-mark {
+  color: var(--ui-brand);
+}
+
+.md-list-bullet::before {
+  content: "▪";
+}
+
+[data-list-depth="2"] .md-list-bullet::before {
+  content: "▫";
+}
+
+[data-list-depth="3"] .md-list-bullet::before {
+  content: "–";
+}
+
+/* Ordered list numbers in the display face */
+.md-list-mark {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+/* <mark> highlights in ochre */
+.md-tag-mark {
+  background: var(--bazhen-highlight);
+}
+
+/* Tables: header row in uppercase display type over an ink rule */
+.md-table-view th {
+  border-block-end: 2px solid var(--ui-text-secondary);
+  background: var(--ui-alpha-1);
+  font-family: var(--font-display);
+  font-stretch: condensed;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Footnote references */
+.md-footnote-ref {
+  color: var(--ui-brand);
+  font-weight: 700;
+}
+
+/* Selected text in the editor */
+.md-document ::selection {
+  background: oklch(from var(--ui-brand) l c h / 22%);
+}
+
+/* The YAML front matter block at the very top of a file */
+.md-front-matter {
+  background: var(--ui-alpha-1);
+  color: var(--ui-text-secondary);
+  font-size: 0.85em;
+}
