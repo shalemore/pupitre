@@ -3,5 +3,5 @@ import { getDictionary, resolveLocale, type TranslationSchema } from "@shared/i1
 import { getSettings } from "./settings-store";
 
 export function t(): TranslationSchema {
-  return getDictionary(resolveLocale(getSettings().locale, [app.getLocale()]));
+  return getDictionary(resolveLocale(getSettings().locale, app.getPreferredSystemLanguages()));
 }
