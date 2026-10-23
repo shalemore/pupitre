@@ -1,14 +1,11 @@
-import { foldGutter, HighlightStyle, syntaxHighlighting } from "@codemirror/language";
-import type { Extension } from "@codemirror/state";
-import { EditorView } from "@codemirror/view";
+import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { tags } from "@lezer/highlight";
-import { ChevronDown, ChevronRight } from "lucide-solid";
-import { createComponent } from "solid-js";
-import { render } from "solid-js/web";
 
 /**
- * Code block highlighting only references CSS variables; the colors come from the theme's `--syntax-*`,
- * so CodeMirror does not need rebuilding when the theme or color scheme changes.
+ * Highlighting of the languages inside code blocks. It only references CSS variables; the colors
+ * come from the theme's `--syntax-*`, so nothing needs rebuilding when the theme or color scheme
+ * changes. Markdown's own tags (headings, emphasis, links) are left out on purpose: the document
+ * itself is styled by the live preview (live-preview.ts), not by syntax highlighting.
  */
 const highlightStyle = HighlightStyle.define([
   { tag: [tags.keyword, tags.controlKeyword, tags.moduleKeyword], color: "var(--syntax-keyword)" },
@@ -23,51 +20,11 @@ const highlightStyle = HighlightStyle.define([
   { tag: [tags.propertyName, tags.attributeName], color: "var(--syntax-property)" },
   { tag: tags.tagName, color: "var(--syntax-keyword)" },
   { tag: [tags.comment, tags.meta], color: "var(--syntax-comment)", fontStyle: "italic" },
+  // Markdown markers are tagged processingInstruction, a kind of meta; the live preview styles them
+  { tag: tags.processingInstruction, color: "inherit", fontStyle: "inherit" },
   { tag: tags.operator, color: "var(--syntax-operator)" },
   { tag: tags.punctuation, color: "var(--syntax-punctuation)" },
-  { tag: tags.heading, color: "var(--syntax-keyword)", fontWeight: "600" },
-  { tag: tags.strong, fontWeight: "600" },
-  { tag: tags.emphasis, fontStyle: "italic" },
-  { tag: tags.link, color: "var(--syntax-string)", textDecoration: "underline" },
   { tag: tags.invalid, color: "var(--syntax-invalid)" },
 ]);
 
-// The fold gutter that comes with Crepe's basicSetup draws text glyphs and cannot be configured, so a second one with
-// icon markers is added and the first one is hidden (only the gutter containing `.cm-fold-icon` stays visible)
-const foldIcons = foldGutter({
-  markerDOM: (open) => {
-    const marker = document.createElement("span");
-    marker.className = "cm-fold-icon";
-    render(() => createComponent(open ? ChevronDown : ChevronRight, { size: 14 }), marker);
-    return marker;
-  },
-});
-
-// CodeMirror's built-in styles are in no style layer and would beat the theme, so the editor's appearance is declared here with CSS variables too
-const editorChrome = EditorView.theme({
-  "&": { backgroundColor: "transparent", color: "var(--syntax-variable)" },
-  // CodeMirror's `.cm-gutter` forces `display: flex !important`, so the built-in gutter is collapsed instead of hidden
-  ".cm-foldGutter:not(:has(.cm-fold-icon))": { width: 0, overflow: "hidden" },
-  ".cm-foldGutter span": {
-    display: "flex",
-    height: "100%",
-    alignItems: "center",
-    cursor: "pointer",
-  },
-  ".cm-gutters": {
-    backgroundColor: "transparent",
-    border: "none",
-    color: "var(--ui-text-muted)",
-  },
-  ".cm-activeLine, .cm-activeLineGutter": { backgroundColor: "var(--ui-alpha-1)" },
-  "&.cm-focused .cm-selectionBackground, .cm-selectionBackground": {
-    backgroundColor: "oklch(from var(--ui-brand) l c h / 25%)",
-  },
-  ".cm-cursor": { borderLeftColor: "var(--ui-brand)" },
-});
-
-export const codeHighlight: Extension = [
-  syntaxHighlighting(highlightStyle),
-  foldIcons,
-  editorChrome,
-];
+export const codeHighlight = syntaxHighlighting(highlightStyle);

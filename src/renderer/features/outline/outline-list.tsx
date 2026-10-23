@@ -1,7 +1,7 @@
 import { cn } from "cn";
 import { For, Show, type Component } from "solid-js";
 import { t } from "@/i18n";
-import type { OutlineHeading } from "@/features/editor/prose-plugins";
+import type { OutlineHeading } from "@/features/editor/document-structure";
 
 interface OutlineListProps {
   headings: readonly OutlineHeading[];

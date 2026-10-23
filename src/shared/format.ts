@@ -1,7 +1,7 @@
 /**
  * Formatting actions available from the Format menu, the context menu and the keyboard.
  * The shortcuts follow Typora's and are written as Electron accelerators; the editor turns them
- * into ProseMirror key names, so each shortcut is defined only here. The ids double as the keys
+ * into CodeMirror key names, so each shortcut is defined only here. The ids double as the keys
  * of the `format` section in the translation dictionaries.
  */
 export const FORMAT_ACTIONS = [

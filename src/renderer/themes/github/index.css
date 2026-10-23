@@ -68,167 +68,94 @@
   }
 }
 
-.milkdown .ProseMirror {
+.md-document {
   padding-block: 2.5em 40vh;
   font-family: var(--font-document);
   color: var(--ui-text-primary);
   caret-color: var(--ui-text-primary);
 }
 
-.milkdown .ProseMirror p {
-  padding: 0;
-  margin-block: 0 1em;
-}
-
-.milkdown .ProseMirror :is(h1, h2, h3, h4, h5, h6) {
-  margin-block: 1.5em 1em;
-  padding: 0;
+.md-heading {
+  padding-block: 0.6em 0.2em;
   font-weight: 600;
   line-height: 1.25;
 }
 
 /* GitHub underlines the first two heading levels */
-.milkdown .ProseMirror :is(h1, h2) {
+.md-h1,
+.md-h2 {
   padding-block-end: 0.3em;
   border-block-end: 1px solid var(--ui-alpha-2);
 }
 
-.milkdown .ProseMirror h1 {
+.md-h1 {
   font-size: 2em;
-  margin-block-start: 0.5em;
 }
 
-.milkdown .ProseMirror h2 {
+.md-h2 {
   font-size: 1.5em;
 }
 
-.milkdown .ProseMirror h3 {
+.md-h3 {
   font-size: 1.25em;
 }
 
-.milkdown .ProseMirror h4 {
+.md-h4 {
   font-size: 1em;
 }
 
-.milkdown .ProseMirror h5 {
+.md-h5 {
   font-size: 0.875em;
 }
 
-.milkdown .ProseMirror h6 {
+.md-h6 {
   font-size: 0.85em;
   color: var(--ui-text-secondary);
 }
 
-.milkdown .ProseMirror a {
+.md-link {
   color: var(--ui-brand);
   text-decoration: none;
 }
 
-.milkdown .ProseMirror a:hover {
+.md-link:hover {
   text-decoration: underline;
 }
 
-.milkdown .ProseMirror :not(pre) > code {
-  display: inline;
-  color: inherit;
-  background: var(--ui-alpha-2);
+.md-code {
   border-radius: 6px;
   padding: 0.2em 0.4em;
+  background: var(--ui-alpha-2);
   font-size: 85%;
 }
 
-.milkdown .milkdown-code-block {
-  margin-block: 0 1em;
-  padding: 0.5em 1em 1em;
-  border-radius: 6px;
+.md-code-block {
   background: var(--ui-surface-0);
-}
-
-/* Rendered math and diagrams (preview only) have no card chrome */
-.milkdown .milkdown-code-block:has(.preview-panel):not(:has(.preview-divider)) {
-  background: transparent;
-}
-
-.milkdown .milkdown-code-block .cm-content {
-  font-family: var(--font-mono);
   font-size: 85%;
   line-height: 1.45;
 }
 
-.milkdown .ProseMirror blockquote {
-  margin-block: 0 1em;
-  padding-inline-start: 1em;
+.md-code-block-start {
+  border-start-start-radius: 6px;
+  border-start-end-radius: 6px;
+}
+
+.md-code-block-end {
+  border-end-start-radius: 6px;
+  border-end-end-radius: 6px;
+}
+
+.md-quote {
   color: var(--ui-text-secondary);
+  border-inline-start: 0.25em solid var(--alert-color, var(--ui-alpha-3));
 }
 
-.milkdown .ProseMirror blockquote::before {
-  width: 0.25em;
-  inset-block: 0;
-  border-radius: 0;
-  background: var(--alert-color, var(--ui-alpha-3));
+.md-hr:not(:has(.md-mark)) {
+  background: linear-gradient(var(--ui-alpha-2), var(--ui-alpha-2)) center / 100% 0.25em no-repeat;
 }
 
-.milkdown .ProseMirror hr {
-  height: 0.25em;
-  margin-block: 1.5em;
-  padding: 0;
-  background-color: var(--ui-alpha-2);
-}
-
-.milkdown .milkdown-table-block :is(th, td) {
-  border: 1px solid var(--ui-alpha-3);
-  padding: 6px 13px;
-}
-
-.milkdown .milkdown-table-block :is(th, td) p {
-  margin: 0;
-}
-
-.milkdown .milkdown-table-block th {
-  font-weight: 600;
-}
-
-.milkdown .milkdown-table-block tr:nth-child(2n) td {
-  background: var(--ui-surface-0);
-}
-
-.milkdown .milkdown-list-item-block {
-  --list-item-gap: 0.25em;
-}
-
-.milkdown .ProseMirror kbd {
-  padding: 0.1em 0.4em;
-  border: 1px solid var(--ui-alpha-3);
-  border-block-end-width: 2px;
-  border-radius: 6px;
-  background: var(--ui-alpha-1);
-  font-family: var(--font-mono);
-  font-size: 0.85em;
-}
-
-.milkdown .ProseMirror mark {
-  border-radius: 2px;
-  background: oklch(from var(--ui-brand) l c h / 25%);
-  color: inherit;
-}
-
-.milkdown .ProseMirror pre[data-type="front-matter"] {
-  margin-block: 0 1.5em;
-  padding: 0.75em 1em;
-  border-radius: 6px;
+.md-front-matter {
   background: var(--ui-alpha-1);
   color: var(--ui-text-secondary);
-  font-family: var(--font-mono);
   font-size: 0.85em;
-}
-
-.milkdown .ProseMirror dl[data-type="footnote_definition"] {
-  gap: 0.5em;
-  margin-block: 0.25em;
-  font-size: 0.9em;
-  color: var(--ui-text-secondary);
-}
-
-.milkdown .ProseMirror dl[data-type="footnote_definition"] p {
-  margin: 0;
 }

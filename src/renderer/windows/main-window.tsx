@@ -19,7 +19,7 @@ import {
   type MarkdownEditorHandle,
   type MatchStats,
 } from "@/features/editor/markdown-editor";
-import type { OutlineHeading } from "@/features/editor/prose-plugins";
+import type { OutlineHeading } from "@/features/editor/document-structure";
 import { FolderTree } from "@/features/folder/folder-tree";
 import { MenuBar } from "@/features/menu/menu-bar";
 import { OutlineList } from "@/features/outline/outline-list";
@@ -317,8 +317,6 @@ export const MainWindow: Component = () => {
                 <Show when={doc().id} keyed>
                   <MarkdownEditor
                     markdown={doc().markdown}
-                    baseUrl={doc().baseUrl}
-                    documentPath={doc().path}
                     onReady={session.markSaved}
                     onMarkdownChange={session.handleMarkdownChange}
                     onOutlineChange={setOutline}

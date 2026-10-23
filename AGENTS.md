@@ -104,17 +104,21 @@ only make code generation easier.
 
 ## Editor
 
-- The editor is [Milkdown Crepe](https://milkdown.dev) (ProseMirror + remark). Do not hand-roll
-  Markdown parsing, rendering or live-preview decorations; configure Crepe features, extend its
-  schemas through Milkdown ctx (`editor.config`) or add ProseMirror plugins with `$prose`.
-- `features/editor/markdown-editor.tsx` owns the Crepe instance and exposes a small imperative
-  handle (`getMarkdown`, search, scrolling). Documents are serialized only when saved, and the
-  dirty state compares the serialized Markdown with the last saved version.
-- Keep Markdown output stable: serialization options come from settings in one place (`markdownStyle`) and
-  schema overrides must round-trip standard Markdown without losing information.
+- The editor is [CodeMirror 6](https://codemirror.net) with `@codemirror/lang-markdown`. The
+  document is the Markdown text itself: every marker is a real character, copying copies
+  Markdown, and files are saved exactly as they were edited. Never add a serializer.
+- All syntax comes from one Lezer tree (`@lezer/markdown` with GFM). Support a new syntax by
+  adding a Lezer `MarkdownConfig` (see `front-matter.ts`), then render it in
+  `features/editor/live-preview.ts`, which applies one rule to every construct: its markers are
+  hidden unless a selection touches it. Do not hand-roll Markdown parsing.
+- `features/editor/markdown-editor.tsx` owns the `EditorView` and exposes a small imperative
+  handle (`getMarkdown`, search, scrolling, formatting). Formatting commands edit the source text
+  (`format-commands.ts`); the Markdown style settings only decide the syntax they insert.
 - Styles use cascade layers declared at the top of `app.css`:
-  `crepe` (library defaults) < `document-theme` (the active theme) < `preferences` (user font,
-  size, line height and width). Never fight specificity with `!important`; put the rule in the
+  `editor` (editor defaults, `editor.css`) < `document-theme` (the active theme) < `preferences`
+  (user font, size, line height and width). CodeMirror's own styles are injected outside any
+  layer, so properties the layers must control are handed back with `revert-layer`
+  (`layeredStyles` in `markdown-editor.tsx`). Never fight specificity with `!important`; put the rule in the
   right layer instead. The only exception is the global motion switch in `app.css`, which must
   beat utilities, library styles and inline transitions alike.
 
@@ -126,7 +130,8 @@ only make code generation easier.
 - `lib/theme.ts` discovers themes with `import.meta.glob` and injects the active one into the
   `document-theme` layer at runtime. Every window (main and settings) loads the same theme.
 - Themes style the whole app through the `--ui-*` design tokens (surfaces, text, accent) and the
-  document through `.milkdown .ProseMirror` selectors and `--syntax-*` colors.
+  document through the `md-*` classes inside `.md-document` and `--syntax-*` colors. Document
+  lines are spaced with padding, never margins, because CodeMirror measures line boxes.
 - A theme declares the color schemes it supports with `color-scheme` on `:root`. A `light dark`
   theme overrides its dark values in `@media (prefers-color-scheme: dark)`; a single-scheme theme
   is applied as is and can be paired with another theme through the `darkTheme` setting.

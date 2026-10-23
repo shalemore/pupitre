@@ -1,60 +1,85 @@
-import type { Node } from "@milkdown/kit/prose/model";
-import { Plugin, PluginKey } from "@milkdown/kit/prose/state";
-import { Decoration, DecorationSet } from "@milkdown/kit/prose/view";
+import { syntaxTree } from "@codemirror/language";
+import type { Extension, Range } from "@codemirror/state";
+import {
+  Decoration,
+  type DecorationSet,
+  EditorView,
+  ViewPlugin,
+  type ViewUpdate,
+} from "@codemirror/view";
 import { direction } from "direction";
 
 /**
  * Bidirectional text, handled in one place.
  *
- * Every block gets the base direction of its first strong character, the rule the Unicode
- * Bidirectional Algorithm (and HTML's dir="auto") uses for paragraphs. That keeps an Arabic
- * paragraph right-aligned in an English document and a Chinese paragraph left-aligned in an
- * Arabic interface. dir="auto" itself cannot be used: it ignores descendants that carry their own
- * dir, so a list or quote would never see the text of its paragraphs. Blocks without strong
- * characters (empty lines, numbers) inherit their parent's direction, and the document root takes
- * the direction of the whole document so empty lines line up with the text around them.
- *
- * Code blocks are always left-to-right; inline code, math and diagrams are isolated in CSS
- * (features/editor/editor.css) so they never reorder the sentence around them.
+ * Every line gets dir="auto", the base direction of its first strong character, the rule the
+ * Unicode Bidirectional Algorithm uses for paragraphs. That keeps an Arabic paragraph
+ * right-aligned in an English document and a Chinese paragraph left-aligned in an Arabic
+ * interface; Markdown markers are neutral characters and do not change it. Lines without strong
+ * characters (empty lines, numbers) inherit the direction of the document, taken from its opening
+ * text so empty lines line up with the text around them. Code and front matter are always
+ * left-to-right; inline code is isolated in CSS (features/editor/editor.css).
  */
 
-/** Containers whose layout (list markers, quote bar, column order) follows their direction. */
-const CONTAINERS = new Set(["blockquote", "bullet_list", "ordered_list", "list_item", "table"]);
+const LTR_BLOCK = /^(?:FencedCode|CodeBlock|FrontMatter)$/;
+// The first strong character is almost always near the start; scanning a prefix keeps typing cheap
+const DIRECTION_SAMPLE = 4096;
 
-const textDirectionKey = new PluginKey<DecorationSet>("text-direction");
+const autoLine = Decoration.line({ attributes: { dir: "auto" } });
+const ltrLine = Decoration.line({ attributes: { dir: "ltr" } });
 
-function textDirection(node: Node): "ltr" | "rtl" | undefined {
-  const detected = direction(node.textContent);
-  return detected === "neutral" ? undefined : detected;
+function lineDirections(view: EditorView): DecorationSet {
+  const { doc } = view.state;
+  const ltrLines = new Set<number>();
+  for (const { from, to } of view.visibleRanges) {
+    syntaxTree(view.state).iterate({
+      from,
+      to,
+      enter: (node) => {
+        if (!LTR_BLOCK.test(node.name)) return node.name !== "Paragraph";
+        const last = doc.lineAt(Math.min(node.to, to)).number;
+        for (let line = doc.lineAt(Math.max(node.from, from)).number; line <= last; line++) {
+          ltrLines.add(line);
+        }
+        return false;
+      },
+    });
+  }
+  const decorations: Range<Decoration>[] = [];
+  for (const { from, to } of view.visibleRanges) {
+    for (let pos = from; pos <= to;) {
+      const line = doc.lineAt(pos);
+      decorations.push((ltrLines.has(line.number) ? ltrLine : autoLine).range(line.from));
+      pos = line.to + 1;
+    }
+  }
+  return Decoration.set(decorations);
 }
 
-function directionDecorations(doc: Node): DecorationSet {
-  const decorations: Decoration[] = [];
-  doc.descendants((node, pos) => {
-    if (node.type.spec.code) {
-      decorations.push(Decoration.node(pos, pos + node.nodeSize, { dir: "ltr" }));
-      return false;
-    }
-    if (node.isTextblock || CONTAINERS.has(node.type.name)) {
-      const dir = textDirection(node);
-      if (dir) decorations.push(Decoration.node(pos, pos + node.nodeSize, { dir }));
-    }
-    return !node.isTextblock;
-  });
-  return DecorationSet.create(doc, decorations);
-}
+export const textDirection: Extension = [
+  EditorView.perLineTextDirection.of(true),
+  EditorView.contentAttributes.compute(["doc"], (state): Record<string, string> => {
+    const dir = direction(state.sliceDoc(0, DIRECTION_SAMPLE));
+    return dir === "neutral" ? {} : { dir };
+  }),
+  ViewPlugin.fromClass(
+    class {
+      decorations: DecorationSet;
 
-export const textDirectionPlugin = new Plugin<DecorationSet>({
-  key: textDirectionKey,
-  state: {
-    init: (_config, state) => directionDecorations(state.doc),
-    apply: (tr, previous) => (tr.docChanged ? directionDecorations(tr.doc) : previous),
-  },
-  props: {
-    decorations: (state) => textDirectionKey.getState(state),
-    attributes: (state): Record<string, string> => {
-      const dir = textDirection(state.doc);
-      return dir ? { dir } : {};
+      constructor(view: EditorView) {
+        this.decorations = lineDirections(view);
+      }
+
+      update(update: ViewUpdate): void {
+        if (
+          update.docChanged ||
+          update.viewportChanged ||
+          syntaxTree(update.state) !== syntaxTree(update.startState)
+        ) {
+          this.decorations = lineDirections(update.view);
+        }
+      }
     },
-  },
-});
+    { decorations: (plugin) => plugin.decorations },
+  ),
+];

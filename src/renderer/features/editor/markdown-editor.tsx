@@ -1,59 +1,49 @@
 import { debounce } from "@solid-primitives/scheduled";
-import { EditorView as CodeMirrorView } from "@codemirror/view";
-import { languages } from "@codemirror/language-data";
-import { Crepe } from "@milkdown/crepe";
-import { editorViewCtx, remarkStringifyOptionsCtx } from "@milkdown/kit/core";
-import type { Node } from "@milkdown/kit/prose/model";
-import type { Command } from "@milkdown/kit/prose/state";
-import type { EditorView } from "@milkdown/kit/prose/view";
-import { $prose } from "@milkdown/kit/utils";
 import {
+  defaultKeymap,
+  history,
+  historyKeymap,
+  indentLess,
+  indentMore,
+} from "@codemirror/commands";
+import { commonmarkLanguage, markdown } from "@codemirror/lang-markdown";
+import { syntaxTree } from "@codemirror/language";
+import { languages } from "@codemirror/language-data";
+import {
+  closeSearchPanel,
   findNext,
-  findPrev,
-  getSearchState,
+  findPrevious,
+  getSearchQuery,
+  openSearchPanel,
   replaceAll,
   replaceNext,
   search,
   SearchQuery,
-  setSearchState,
-} from "prosemirror-search";
+  searchPanelOpen,
+  setSearchQuery,
+} from "@codemirror/search";
+import { Compartment, EditorState } from "@codemirror/state";
+import { type Command, EditorView, keymap, placeholder } from "@codemirror/view";
+import { GFM } from "@lezer/markdown";
 import type { FormatAction } from "@shared/format";
-import type { Settings } from "@shared/settings";
-import {
-  createEffect,
-  getOwner,
-  on,
-  onCleanup,
-  onMount,
-  runWithOwner,
-  type Component,
-} from "solid-js";
+import { createEffect, onCleanup, onMount, type Component } from "solid-js";
 import { ScrollView } from "@/components/ui";
 import { t } from "@/i18n";
-import { desktop } from "@/lib/desktop";
 import { settings } from "@/lib/settings";
 import { countText, type TextStats } from "@/lib/text-stats";
-import { githubAlerts } from "./alerts";
 import { codeHighlight } from "./code-highlight";
-import { formatKeymap, runFormatAction } from "./format-commands";
-import { frontMatter } from "./front-matter";
-import { preserveImageAlt } from "./image-block-schema";
-import { editableImageBlock } from "./image-block-view";
-import { renderMermaidPreview } from "./mermaid-preview";
-import { createPendingImages } from "./pending-images";
 import {
   collectHeadings,
-  documentObserverPlugin,
+  documentObserver,
   findActiveHeading,
   type OutlineHeading,
   readableText,
-} from "./prose-plugins";
-import { details } from "./details";
-import { footnoteLinks } from "./footnotes";
-import { editableHtmlSchema, rawHtml } from "./raw-html";
-import { syntaxRevealPlugin } from "./syntax-reveal";
-import { textDirectionPlugin } from "./text-direction";
-import { focusModePlugin, typewriterModePlugin } from "./writing-modes";
+} from "./document-structure";
+import { formatKeymap, type MarkdownStyle, runFormatAction } from "./format-commands";
+import { frontMatter } from "./front-matter";
+import { livePreview } from "./live-preview";
+import { textDirection } from "./text-direction";
+import { focusMode, typewriterMode } from "./writing-modes";
 
 export interface SearchOptions {
   search: string;
@@ -80,17 +70,11 @@ export interface MarkdownEditorHandle {
   replaceNext: () => MatchStats;
   replaceAll: () => MatchStats;
   format: (action: FormatAction) => void;
-  /** Writes images pasted before the document had a file next to it, see pending-images.ts. */
-  persistImages: (documentPath: string) => Promise<void>;
 }
 
 export interface MarkdownEditorProps {
   markdown: string;
-  /** file:// URL of the document folder, to resolve relative image paths; undefined if unsaved. */
-  baseUrl: string | undefined;
-  /** Path of the document; pasted images are saved next to it. */
-  documentPath: string | undefined;
-  /** Called once the editor exists, with the parsed-then-serialized document as the clean baseline. */
+  /** Called once the editor exists, with its content as the clean baseline. */
   onReady: (markdown: string) => void;
   onMarkdownChange: (markdown: string) => void;
   onOutlineChange: (headings: OutlineHeading[]) => void;
@@ -99,229 +83,184 @@ export interface MarkdownEditorProps {
   ref: (handle: MarkdownEditorHandle) => void;
 }
 
-/**
- * How Markdown is written on save, as remark-stringify options. Milkdown reads them only when the
- * editor is created, so a changed setting applies to documents opened afterwards.
- */
-function markdownStyle(preferences: Settings) {
+/** The syntax that formatting commands insert, as chosen in the settings. */
+function markdownStyle(): MarkdownStyle {
+  const {
+    bulletMarker,
+    emphasisMarker,
+    strongMarker,
+    fenceMarker,
+    ruleMarker,
+    incrementListMarker,
+  } = settings();
   return {
-    bullet: preferences.bulletMarker,
-    emphasis: preferences.emphasisMarker,
-    strong: preferences.strongMarker,
-    rule: preferences.ruleMarker,
-    fence: preferences.fenceMarker,
-    incrementListMarker: preferences.incrementListMarker,
-    listItemIndent: "one",
-  } as const;
+    bulletMarker,
+    emphasisMarker,
+    strongMarker,
+    fenceMarker,
+    ruleMarker,
+    incrementListMarker,
+  };
 }
 
+/**
+ * CodeMirror injects its base styles outside every cascade layer, where they would beat the editor
+ * layer, the theme and the preferences alike. `revert-layer` hands these properties back to the
+ * layers (app.css), so the document is styled by CSS like the rest of the app.
+ */
+const layeredStyles = EditorView.theme({
+  "&.cm-focused": { outline: "revert-layer" },
+  ".cm-scroller": { fontFamily: "revert-layer", lineHeight: "revert-layer" },
+  "&.cm-editor .cm-content": {
+    boxSizing: "revert-layer",
+    padding: "revert-layer",
+    caretColor: "revert-layer",
+  },
+  ".cm-placeholder": { color: "revert-layer" },
+  ".cm-line": { padding: "revert-layer" },
+  "&.cm-editor .cm-searchMatch, &.cm-editor .cm-searchMatch-selected": {
+    backgroundColor: "revert-layer",
+  },
+  // The search panel only switches match highlighting on; the find bar is the app's own
+  ".cm-panels": { display: "none" },
+});
+
+/** In a list, Tab and Shift+Tab nest and unnest the item; elsewhere they keep their default. */
+const inList: (command: Command) => Command = (command) => (view) => {
+  const node = syntaxTree(view.state).resolveInner(view.state.selection.main.head, -1);
+  for (let parent: typeof node | null = node; parent; parent = parent.parent) {
+    if (parent.name === "ListItem") return command(view);
+  }
+  return false;
+};
+
 function matchStats(view: EditorView): MatchStats {
-  const query = getSearchState(view.state)?.query;
-  if (!query?.valid) return { current: 0, total: 0 };
-  const { from, to } = view.state.selection;
+  const query = getSearchQuery(view.state);
+  if (!query.valid) return { current: 0, total: 0 };
+  const { from, to } = view.state.selection.main;
   let total = 0;
   let current = 0;
-  let pos = 0;
-  for (
-    let result = query.findNext(view.state, pos);
-    result;
-    result = query.findNext(view.state, pos)
-  ) {
+  const cursor = query.getCursor(view.state);
+  for (let match = cursor.next(); !match.done; match = cursor.next()) {
     total++;
-    if (result.from === from && result.to === to) current = total;
-    // Step past empty matches (such as the regexp ^) to avoid an endless loop
-    pos = result.to > result.from ? result.to : result.to + 1;
+    if (match.value.from === from && match.value.to === to) current = total;
   }
   return { current, total };
 }
 
 export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
   let container: HTMLDivElement | undefined;
-  let view: EditorView | undefined;
-
-  const resolveUrl = (url: string): string => {
-    if (!props.baseUrl || URL.canParse(url)) return url;
-    return new URL(url, props.baseUrl).href;
-  };
-
-  const saveImage = async (documentPath: string, file: File): Promise<string> => {
-    const bytes = new Uint8Array(await file.arrayBuffer());
-    return desktop.invoke("document:save-image", documentPath, file.name, bytes);
-  };
-  const pendingImages = createPendingImages(saveImage);
-  onCleanup(pendingImages.dispose);
-
-  // Saved documents store pasted images in a folder next to them; unsaved ones keep them in memory
-  const uploadImage = async (file: File): Promise<string> =>
-    props.documentPath ? saveImage(props.documentPath, file) : pendingImages.add(file);
 
   onMount(() => {
     if (!container) return;
-    const labels = t().editor;
-    const crepe = new Crepe({
-      root: container,
-      defaultValue: props.markdown,
-      // Typora-style editing: formatting comes from the keyboard, the Format menu and the
-      // context menu, not from floating toolbars, block handles or a slash menu
-      features: {
-        [Crepe.Feature.TopBar]: false,
-        [Crepe.Feature.AI]: false,
-        [Crepe.Feature.Toolbar]: false,
-        [Crepe.Feature.BlockEdit]: false,
-      },
-      featureConfigs: {
-        [Crepe.Feature.CodeMirror]: {
-          languages,
-          theme: codeHighlight,
-          extensions: [CodeMirrorView.lineWrapping],
-          searchPlaceholder: labels.searchLanguage,
-          noResultText: labels.noLanguage,
-          copyText: t().common.copy,
-          previewLabel: labels.preview,
-          previewToggleText: (previewOnly) =>
-            previewOnly ? labels.editSource : labels.hidePreview,
-          renderPreview: renderMermaidPreview,
-          // Blocks with a preview (Mermaid) show only the rendering until "Edit" is clicked
-          previewOnlyByDefault: true,
-        },
-        [Crepe.Feature.Placeholder]: { text: labels.placeholder, mode: "doc" },
-        [Crepe.Feature.ImageBlock]: {
-          onUpload: uploadImage,
-          proxyDomURL: resolveUrl,
-          inlineUploadButton: labels.upload,
-          inlineConfirmButton: labels.confirm,
-          inlineUploadPlaceholderText: labels.imageUrlPlaceholder,
-        },
-        [Crepe.Feature.LinkTooltip]: {
-          editButton: labels.editSource,
-          removeButton: labels.remove,
-          confirmButton: labels.confirm,
-          inputPlaceholder: labels.linkPlaceholder,
-        },
-        [Crepe.Feature.Latex]: { inlineEditConfirm: labels.confirm },
-      },
-    });
-
     let headings: OutlineHeading[] = [];
     // Counting walks the whole text, so coalesce it while typing in long documents
     const updateStats = debounce(
-      (doc: Node) => props.onStatsChange(countText(readableText(doc))),
+      (state: EditorState) => props.onStatsChange(countText(readableText(state))),
       200,
     );
+    const focusCompartment = new Compartment();
+    const typewriterCompartment = new Compartment();
+    const spellcheckCompartment = new Compartment();
 
-    crepe.editor
-      .config(preserveImageAlt)
-      .config(editableHtmlSchema)
-      .config((ctx) => {
-        const style = markdownStyle(settings());
-        ctx.update(remarkStringifyOptionsCtx, (options) => ({ ...options, ...style }));
-      })
-      .use(frontMatter)
-      .use(details)
-      .use(footnoteLinks)
-      .use(rawHtml(resolveUrl))
-      .use(
-        editableImageBlock(resolveUrl, {
-          captionPlaceholder: labels.captionPlaceholder,
-          sourcePlaceholder: labels.imageUrlPlaceholder,
-        }),
-      )
-      .use(githubAlerts(labels.alerts))
-      .use($prose(() => formatKeymap(() => crepe.editor)))
-      .use(
-        $prose(() =>
-          syntaxRevealPlugin(() => ({
-            bullet: settings().bulletMarker,
-            strong: settings().strongMarker.repeat(2),
-            emphasis: settings().emphasisMarker,
-          })),
-        ),
-      )
-      .use($prose(() => search()))
-      .use($prose(() => textDirectionPlugin))
-      .use($prose(() => focusModePlugin(() => settings().focusMode)))
-      .use($prose(() => typewriterModePlugin(() => settings().typewriterMode)))
-      .use(
-        $prose(() =>
-          documentObserverPlugin({
-            onDocChange: (doc) => {
-              headings = collectHeadings(doc);
+    const view = new EditorView({
+      parent: container,
+      state: EditorState.create({
+        doc: props.markdown,
+        extensions: [
+          history(),
+          keymap.of([
+            ...formatKeymap(markdownStyle),
+            { key: "Tab", run: inList(indentMore), shift: inList(indentLess) },
+            ...defaultKeymap,
+            ...historyKeymap,
+          ]),
+          markdown({
+            base: commonmarkLanguage,
+            extensions: [GFM, frontMatter],
+            codeLanguages: languages,
+            completeHTMLTags: false,
+          }),
+          codeHighlight,
+          livePreview,
+          textDirection,
+          search({ createPanel: () => ({ dom: document.createElement("div") }) }),
+          EditorView.lineWrapping,
+          EditorView.contentAttributes.of({ class: "md-document" }),
+          layeredStyles,
+          placeholder(t().editor.placeholder),
+          focusCompartment.of([]),
+          typewriterCompartment.of([]),
+          spellcheckCompartment.of([]),
+          documentObserver({
+            onDocChange: (state) => {
+              headings = collectHeadings(state);
               props.onOutlineChange(headings);
-              updateStats(doc);
+              updateStats(state);
             },
             onSelectionChange: (cursor) =>
               props.onActiveHeadingChange(findActiveHeading(headings, cursor)),
           }),
-        ),
-      );
-    crepe.on((listener) => {
-      listener.markdownUpdated((_ctx, markdown) => props.onMarkdownChange(markdown));
+          EditorView.updateListener.of((update) => {
+            if (update.docChanged) props.onMarkdownChange(update.state.doc.toString());
+          }),
+        ],
+      }),
     });
 
-    // The editor is created asynchronously; run its settings effect under the component owner so it is disposed with it
-    const owner = getOwner();
-    void crepe.create().then((editor) => {
-      const editorView = editor.ctx.get(editorViewCtx);
-      view = editorView;
-      runWithOwner(owner, () => {
-        createEffect(() => {
-          editorView.dom.spellcheck = settings().spellcheck;
-        });
-        // Writing modes read their settings while rendering; an empty transaction re-renders them
-        createEffect(
-          on(
-            () => [settings().focusMode, settings().typewriterMode],
-            () => editorView.dispatch(editorView.state.tr),
-            { defer: true },
+    createEffect(() => {
+      const { focusMode: focus, typewriterMode: typewriter, spellcheck } = settings();
+      view.dispatch({
+        effects: [
+          focusCompartment.reconfigure(focus ? focusMode : []),
+          typewriterCompartment.reconfigure(typewriter ? typewriterMode : []),
+          spellcheckCompartment.reconfigure(
+            EditorView.contentAttributes.of({ spellcheck: String(spellcheck) }),
           ),
-        );
+        ],
       });
-      props.onReady(crepe.getMarkdown());
-      editorView.focus();
     });
+
+    // CodeMirror normalizes line endings, so the baseline is the editor's text rather than the file's
+    props.onReady(view.state.doc.toString());
+    view.focus();
 
     const run = (command: Command): MatchStats => {
-      if (!view) return { current: 0, total: 0 };
-      command(view.state, view.dispatch);
+      if (getSearchQuery(view.state).valid) command(view);
       return matchStats(view);
     };
 
     props.ref({
-      getMarkdown: () => crepe.getMarkdown(),
-      focus: () => view?.focus(),
+      getMarkdown: () => view.state.doc.toString(),
+      focus: () => view.focus(),
       scrollTo: (pos) => {
-        if (!view) return;
-        const { node } = view.domAtPos(pos + 1);
-        const element = node instanceof Element ? node : node.parentElement;
-        element?.scrollIntoView({ block: "start", behavior: "smooth" });
+        view.dispatch({ effects: EditorView.scrollIntoView(pos, { y: "start" }) });
         view.focus();
       },
       getSelectedText: () => {
-        if (!view) return "";
-        const { from, to } = view.state.selection;
-        return view.state.doc.textBetween(from, to, " ");
+        const { from, to } = view.state.selection.main;
+        return view.state.sliceDoc(from, to);
       },
       setSearch: (options) => {
-        if (!view) return { current: 0, total: 0 };
-        view.dispatch(setSearchState(view.state.tr, new SearchQuery(options)));
+        // Matches are highlighted only while CodeMirror's search panel is open
+        if (options.search && !searchPanelOpen(view.state)) openSearchPanel(view);
+        view.dispatch({ effects: setSearchQuery.of(new SearchQuery(options)) });
+        if (!options.search) closeSearchPanel(view);
         return matchStats(view);
       },
       findNext: () => run(findNext),
-      findPrevious: () => run(findPrev),
+      findPrevious: () => run(findPrevious),
       replaceNext: () => run(replaceNext),
       replaceAll: () => run(replaceAll),
       format: (action) => {
-        runFormatAction(crepe.editor, action);
-        view?.focus();
-      },
-      persistImages: async (documentPath) => {
-        if (view) await pendingImages.persist(view, documentPath);
+        runFormatAction(view, action, markdownStyle());
+        view.focus();
       },
     });
 
     onCleanup(() => {
       updateStats.clear();
-      void crepe.destroy();
+      view.destroy();
     });
   });
 
