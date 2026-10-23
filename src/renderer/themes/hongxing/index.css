@@ -1,0 +1,269 @@
+/*
+ * Hongxing: a northeastern forest camp in winter, kept modern and quiet. Snow-white pages and
+ * charcoal ink like letters written on birch bark, a red star over the title, army olive as the
+ * second color, the blue rim of an enamel mug on code blocks and birch-bark marks for breaks.
+ * The dark scheme is an old army uniform: olive drab with enamel-white text and the same red.
+ * See themes/pupitre/index.css for the token and selector conventions.
+ */
+
+:root {
+  color-scheme: light dark;
+
+  /* Bold gothic for headings */
+  --hongxing-heading-font:
+    "Source Han Sans SC", "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei UI", "Segoe UI",
+    sans-serif;
+  /* A five-pointed star; background images cannot read tokens, so each scheme spells its red */
+  --hongxing-star: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-10 -10 20 20'%3E%3Cpath fill='oklch(0.55 0.2 27)' d='M0-9.5 2.24-3.09 9.03-2.94 3.62 1.18 5.59 7.69 0 3.8-5.59 7.69-3.62 1.18-9.03-2.94-2.24-3.09Z'/%3E%3C/svg%3E");
+
+  --ui-surface-0: oklch(0.94 0.005 230);
+  --ui-surface-1: oklch(0.982 0.003 230);
+  --ui-surface-2: oklch(0.988 0.002 230);
+  --ui-surface-3: oklch(0.994 0.001 230);
+  --ui-text-primary: oklch(0.22 0.006 250);
+  --ui-text-secondary: oklch(0.42 0.008 250);
+  --ui-text-muted: oklch(0.58 0.01 250);
+  --ui-brand: oklch(0.53 0.2 27);
+  --ui-brand-hover: oklch(0.47 0.19 27);
+  --ui-danger: oklch(0.52 0.2 27);
+  --ui-success: oklch(0.52 0.1 140);
+  --ui-segmented-thumb: oklch(0.995 0.001 230);
+  --ui-knob: oklch(0.995 0.001 230);
+
+  /* Army olive, the blue rim of enamelware and the band behind table headers */
+  --hongxing-olive: oklch(0.47 0.07 125);
+  --hongxing-enamel: oklch(0.5 0.13 255);
+  --hongxing-band: var(--hongxing-olive);
+  --hongxing-on-band: oklch(0.98 0.006 95);
+  /* <mark>: corn yellow */
+  --hongxing-highlight: oklch(0.9 0.12 95 / 60%);
+
+  --syntax-keyword: oklch(0.52 0.2 27);
+  --syntax-string: oklch(0.47 0.09 130);
+  --syntax-special-string: oklch(0.48 0.1 220);
+  --syntax-number: oklch(0.58 0.13 70);
+  --syntax-variable: var(--ui-text-primary);
+  --syntax-definition: oklch(0.45 0.12 255);
+  --syntax-function: oklch(0.45 0.12 255);
+  --syntax-type: oklch(0.58 0.13 70);
+  --syntax-property: oklch(0.48 0.1 220);
+  --syntax-comment: var(--ui-text-muted);
+  --syntax-operator: var(--ui-text-secondary);
+  --syntax-punctuation: var(--ui-text-secondary);
+  --syntax-invalid: var(--ui-danger);
+
+  --diagram-accent: var(--hongxing-olive);
+
+  --alert-note: var(--hongxing-enamel);
+  --alert-tip: var(--hongxing-olive);
+  --alert-important: oklch(0.5 0.15 340);
+  --alert-warning: oklch(0.64 0.14 72);
+  --alert-caution: var(--ui-brand);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --hongxing-star: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-10 -10 20 20'%3E%3Cpath fill='oklch(0.65 0.19 27)' d='M0-9.5 2.24-3.09 9.03-2.94 3.62 1.18 5.59 7.69 0 3.8-5.59 7.69-3.62 1.18-9.03-2.94-2.24-3.09Z'/%3E%3C/svg%3E");
+
+    --ui-surface-0: oklch(0.165 0.014 125);
+    --ui-surface-1: oklch(0.2 0.018 125);
+    --ui-surface-2: oklch(0.22 0.02 125);
+    --ui-surface-3: oklch(0.25 0.022 125);
+    --ui-text-primary: oklch(0.92 0.01 95);
+    --ui-text-secondary: oklch(0.76 0.014 110);
+    --ui-text-muted: oklch(0.58 0.018 120);
+    --ui-brand: oklch(0.65 0.19 27);
+    --ui-brand-hover: oklch(0.71 0.17 28);
+    --ui-danger: oklch(0.67 0.19 27);
+    --ui-success: oklch(0.74 0.1 140);
+    --ui-segmented-thumb: oklch(0.32 0.026 125);
+    --ui-knob: oklch(0.92 0.01 95);
+
+    --hongxing-olive: oklch(0.74 0.08 125);
+    --hongxing-enamel: oklch(0.76 0.09 255);
+    --hongxing-band: oklch(0.36 0.05 125);
+    --hongxing-highlight: oklch(0.82 0.12 95 / 26%);
+
+    --syntax-keyword: oklch(0.7 0.17 27);
+    --syntax-string: oklch(0.78 0.09 130);
+    --syntax-special-string: oklch(0.77 0.08 220);
+    --syntax-number: oklch(0.82 0.12 85);
+    --syntax-definition: oklch(0.77 0.09 255);
+    --syntax-function: oklch(0.77 0.09 255);
+    --syntax-type: oklch(0.82 0.12 85);
+    --syntax-property: oklch(0.77 0.08 220);
+
+    --alert-important: oklch(0.74 0.12 340);
+    --alert-warning: oklch(0.82 0.12 85);
+    --alert-caution: oklch(0.67 0.19 27);
+  }
+}
+
+.md-document {
+  padding-block: 3.5em 40vh;
+  font-family: var(--font-document);
+  color: var(--ui-text-primary);
+  caret-color: var(--ui-brand);
+}
+
+/* All headings: bold gothic */
+.md-heading {
+  padding-block: 0.7em 0.2em;
+  font-family: var(--hongxing-heading-font);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+/* h1: centered and spaced, under a red star */
+.md-h1 {
+  padding-block: 1.3em 0.3em;
+  background: var(--hongxing-star) center top 0.35em / 0.65em no-repeat;
+  font-size: 2.1em;
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: 0.08em;
+}
+
+/* h2: over an olive rule */
+.md-h2 {
+  padding-block-end: 0.2em;
+  border-block-end: 2px solid var(--hongxing-olive);
+  font-size: 1.5em;
+}
+
+.md-h3 {
+  color: var(--ui-brand);
+  font-size: 1.25em;
+}
+
+.md-h4 {
+  color: var(--hongxing-olive);
+  font-size: 1.1em;
+}
+
+.md-h5,
+.md-h6 {
+  color: var(--ui-text-secondary);
+  font-size: 1em;
+}
+
+@media (prefers-color-scheme: dark) {
+  .md-heading {
+    font-weight: 600;
+  }
+
+  .md-h1 {
+    font-weight: 700;
+  }
+}
+
+.md-link {
+  color: var(--ui-brand);
+  text-decoration: underline;
+  text-decoration-color: oklch(from var(--ui-brand) l c h / 40%);
+  text-underline-offset: 0.2em;
+}
+
+.md-strong {
+  font-weight: 700;
+}
+
+.md-strike {
+  color: var(--ui-text-muted);
+}
+
+.md-code {
+  border-radius: 0.25em;
+  padding: 0.1em 0.25em;
+  background: oklch(from var(--hongxing-olive) l c h / 12%);
+}
+
+/* Fenced code blocks: white enamel with a blue rim along the top */
+.md-code-block {
+  border-inline: 1px solid var(--ui-alpha-2);
+  background: var(--ui-surface-3);
+  line-height: 1.6;
+}
+
+.md-code-block-start {
+  border-block-start: 3px solid var(--hongxing-enamel);
+}
+
+.md-code-block-end {
+  border-block-end: 1px solid var(--ui-alpha-2);
+}
+
+@media (prefers-color-scheme: dark) {
+  .md-code-block {
+    background: var(--ui-surface-0);
+  }
+}
+
+/* > Block quotes: an olive bar on a faint olive wash, like a notice board */
+.md-quote {
+  color: var(--ui-text-secondary);
+  border-inline-start: 3px solid var(--alert-color, var(--hongxing-olive));
+  background: oklch(from var(--hongxing-olive) l c h / 6%);
+}
+
+/* A horizontal rule away from the cursor is a strip of birch bark: short, uneven dark marks */
+.md-hr:not(:has(.md-mark)) {
+  background: repeating-linear-gradient(
+      to right,
+      var(--ui-text-secondary) 0 1.4em,
+      transparent 1.4em 2em,
+      var(--ui-text-secondary) 2em 2.3em,
+      transparent 2.3em 3.4em,
+      var(--ui-text-secondary) 3.4em 4.6em,
+      transparent 4.6em 5.1em,
+      var(--ui-text-secondary) 5.1em 5.6em,
+      transparent 5.6em 6.6em
+    )
+    center / 100% 2px no-repeat;
+}
+
+/* Bullets are red stars */
+.md-list-bullet,
+.md-list-mark {
+  color: var(--ui-brand);
+}
+
+.md-list-bullet::before {
+  content: "★";
+  font-size: 0.75em;
+}
+
+[data-list-depth="2"] .md-list-bullet::before {
+  content: "☆";
+}
+
+.md-list-mark {
+  font-weight: 700;
+}
+
+.md-tag-mark {
+  background: var(--hongxing-highlight);
+}
+
+/* Tables: an olive header band */
+.md-table-view th {
+  border-color: var(--hongxing-band);
+  background: var(--hongxing-band);
+  color: var(--hongxing-on-band);
+  font-family: var(--hongxing-heading-font);
+}
+
+.md-footnote-ref {
+  color: var(--ui-brand);
+  font-weight: 700;
+}
+
+.md-document ::selection {
+  background: oklch(from var(--ui-brand) l c h / 20%);
+}
+
+.md-front-matter {
+  background: var(--ui-alpha-1);
+  color: var(--ui-text-secondary);
+  font-size: 0.85em;
+}
