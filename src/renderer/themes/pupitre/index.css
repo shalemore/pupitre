@@ -237,8 +237,8 @@
 }
 
 /* Tighter paragraphs inside list items, otherwise every item looks like a separate paragraph */
-.milkdown .milkdown-list-item-block p {
-  margin-block: 0.15em;
+.milkdown .milkdown-list-item-block {
+  --list-item-gap: 0.15em;
 }
 
 /* Selected text in the editor */

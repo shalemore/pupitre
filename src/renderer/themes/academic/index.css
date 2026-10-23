@@ -173,8 +173,11 @@
   font-weight: 600;
 }
 
+.milkdown .milkdown-list-item-block {
+  --list-item-gap: 0.15em;
+}
+
 .milkdown .milkdown-list-item-block p {
-  margin-block: 0.15em;
   text-indent: 0;
 }
 

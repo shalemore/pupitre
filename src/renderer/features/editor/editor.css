@@ -35,6 +35,19 @@
   }
 
   /* Position list markers from the font size and line height; Crepe hard-codes 32px, which drifts from the text at other sizes */
+  /* Paragraphs in list items have a margin set by the theme through --list-item-gap; the marker is offset by the same gap to stay level with the first line */
+  .milkdown .milkdown-list-item-block {
+    --list-item-gap: 0.15em;
+  }
+
+  .milkdown .milkdown-list-item-block p {
+    margin-block: var(--list-item-gap);
+  }
+
+  .milkdown .milkdown-list-item-block li .label-wrapper {
+    margin-block-start: var(--list-item-gap);
+  }
+
   .milkdown .milkdown-list-item-block li .label-wrapper,
   .milkdown .milkdown-list-item-block li .label-wrapper .label {
     height: calc(1em * var(--pref-line-height, 1.6));
@@ -343,8 +356,12 @@
     inset-inline-start: 0;
   }
 
+  /* Crepe pads the marker by 4px and leaves its svg on the text baseline, which sits the bullet off the line's center */
   .milkdown .milkdown-list-item-block li .label-wrapper .label {
-    text-align: end;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-block: 0;
   }
 
   /* Match highlighting for prosemirror-search */
