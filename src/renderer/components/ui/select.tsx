@@ -6,7 +6,7 @@ import { type JSX, Show } from "solid-js";
 export interface SelectOption<T extends string = string> {
   value: T;
   label: string;
-  /** Secondary text next to the label, such as a localized font name; also searchable. */
+  /** Secondary text shown with the label, such as a localized font name; also searchable. */
   description?: string | undefined;
   /** Style of the label; the font list uses it to preview each font in its own face. */
   style?: JSX.CSSProperties | undefined;
@@ -41,22 +41,25 @@ export function Select<T extends string>(props: SelectProps<T>) {
       itemComponent={(itemProps) => (
         <KobalteSelect.Item
           item={itemProps.item}
-          class="flex items-center justify-between gap-3 rounded-md px-2.5 py-1.5 text-xs text-muted-foreground outline-none cursor-pointer data-highlighted:bg-accent data-highlighted:text-foreground data-selected:text-brand data-selected:font-medium"
+          class="group flex items-center justify-between gap-4 rounded-md px-2.5 py-1.5 text-xs outline-none cursor-pointer data-highlighted:bg-accent"
         >
-          <span class="flex items-baseline gap-2 min-w-0">
-            <KobalteSelect.ItemLabel class="truncate" style={itemProps.item.rawValue.style}>
+          <span class="flex min-w-0 flex-col">
+            <KobalteSelect.ItemLabel
+              class="truncate font-medium text-foreground group-data-selected:text-brand"
+              style={itemProps.item.rawValue.style}
+            >
               {itemProps.item.rawValue.label}
             </KobalteSelect.ItemLabel>
             <Show when={itemProps.item.rawValue.description}>
               {(description) => (
-                <KobalteSelect.ItemDescription class="truncate text-[10px] text-tertiary">
+                <KobalteSelect.ItemDescription class="truncate text-[11px] text-muted-foreground">
                   {description()}
                 </KobalteSelect.ItemDescription>
               )}
             </Show>
           </span>
           <KobalteSelect.ItemIndicator>
-            <Check class="size-3 shrink-0" />
+            <Check class="size-3 shrink-0 text-brand" />
           </KobalteSelect.ItemIndicator>
         </KobalteSelect.Item>
       )}
