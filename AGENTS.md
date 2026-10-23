@@ -115,7 +115,8 @@ only make code generation easier.
 - Styles use cascade layers declared at the top of `app.css`:
   `crepe` (library defaults) < `document-theme` (the active theme) < `preferences` (user font,
   size, line height and width). Never fight specificity with `!important`; put the rule in the
-  right layer instead.
+  right layer instead. The only exception is the global motion switch in `app.css`, which must
+  beat utilities, library styles and inline transitions alike.
 
 ## Themes
 

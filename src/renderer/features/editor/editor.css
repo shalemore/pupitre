@@ -323,6 +323,6 @@
       .milkdown-image-block .operation,
       .milkdown-image-block .image-resize-handle
     ) {
-    display: none !important;
+    display: none;
   }
 }
