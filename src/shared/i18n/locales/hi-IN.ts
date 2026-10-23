@@ -42,6 +42,18 @@ export const hiIN = {
       warning: "चेतावनी",
       caution: "सावधानी",
     },
+    table: {
+      alignStart: "बाएँ संरेखित करें",
+      alignCenter: "केंद्र में संरेखित करें",
+      alignEnd: "दाएँ संरेखित करें",
+      insertRowAbove: "ऊपर पंक्ति डालें",
+      insertRowBelow: "नीचे पंक्ति डालें",
+      insertColumnBefore: "बाईं ओर स्तंभ डालें",
+      insertColumnAfter: "दाईं ओर स्तंभ डालें",
+      deleteRow: "पंक्ति हटाएँ",
+      deleteColumn: "स्तंभ हटाएँ",
+      deleteTable: "तालिका हटाएँ",
+    },
   },
   dialogs: {
     copyButton: "कॉपी करें",

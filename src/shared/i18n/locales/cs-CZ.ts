@@ -46,6 +46,18 @@ export const csCZ = {
       warning: "Varování",
       caution: "Pozor",
     },
+    table: {
+      alignStart: "Zarovnat vlevo",
+      alignCenter: "Zarovnat na střed",
+      alignEnd: "Zarovnat vpravo",
+      insertRowAbove: "Vložit řádek nad",
+      insertRowBelow: "Vložit řádek pod",
+      insertColumnBefore: "Vložit sloupec vlevo",
+      insertColumnAfter: "Vložit sloupec vpravo",
+      deleteRow: "Odstranit řádek",
+      deleteColumn: "Odstranit sloupec",
+      deleteTable: "Odstranit tabulku",
+    },
   },
   dialogs: {
     copyButton: "Kopírovat",

@@ -41,6 +41,18 @@ export const enUS = {
       warning: "Warning",
       caution: "Caution",
     },
+    table: {
+      alignStart: "Align Left",
+      alignCenter: "Align Center",
+      alignEnd: "Align Right",
+      insertRowAbove: "Insert Row Above",
+      insertRowBelow: "Insert Row Below",
+      insertColumnBefore: "Insert Column Left",
+      insertColumnAfter: "Insert Column Right",
+      deleteRow: "Delete Row",
+      deleteColumn: "Delete Column",
+      deleteTable: "Delete Table",
+    },
   },
   dialogs: {
     copyButton: "Copy",

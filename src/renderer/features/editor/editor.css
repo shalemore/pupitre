@@ -30,11 +30,36 @@
   initial-value: 0px;
 }
 
+@property --md-blank-gap {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
 @layer editor {
+  .cm-scroller {
+    overflow-x: auto;
+  }
+
+  /* A scroll container keeps painting its scrollbar on every printed page */
+  @media print {
+    .cm-scroller {
+      overflow: visible;
+    }
+  }
+
   .md-document {
     --md-quote-indent: 1em;
     --md-list-indent: 1.6em;
     --md-block-indent: 0px;
+    --md-blank-gap: 0.75em;
+  }
+
+  /* A blank line between blocks, away from the cursor, is only the gap between them (live-preview.ts) */
+  .md-document > .md-blank {
+    padding-block-end: var(--md-blank-gap);
+    font-size: 0;
+    line-height: 0;
   }
 
   .md-document > .cm-line {
@@ -159,6 +184,17 @@
 
   .md-footnote-label::after {
     content: ".";
+  }
+
+  /* Rendered labels jump between a reference and its definition on click */
+  :is(.md-footnote-ref, .md-footnote-label) {
+    cursor: pointer;
+  }
+
+  /* A rule above the first definition sets the footnotes apart from the text */
+  .md-document > .md-footnotes-start {
+    padding-block-start: 1em;
+    border-block-start: 1px solid var(--ui-alpha-2);
   }
 
   /* A picture shown in place of its source, or under it while the source is edited */
@@ -309,15 +345,64 @@
     border-end-end-radius: var(--radius-lg);
   }
 
-  .md-code-block-start[data-language]::after {
-    content: attr(data-language);
+  /*
+   * Language and copy button in the block's top corner (code-corner.tsx). They are interface rather
+   * than document, so they are sized in rem: the hidden fence line they sit on is shrunk.
+   */
+  .md-code-corner {
     position: absolute;
-    inset-block-start: 0.4em;
-    inset-inline-end: 1em;
+    /* Above the following code lines, which the corner overlaps while the fence line is shrunk */
+    z-index: 1;
+    inset-block-start: 0.375rem;
+    inset-inline-end: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
     color: var(--ui-text-muted);
     font-family: var(--font-sans);
-    font-size: 1.2em;
+    font-size: 0.75rem;
     line-height: 1;
+    user-select: none;
+  }
+
+  .md-code-copy {
+    display: grid;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.6;
+    transition:
+      opacity var(--transition-duration-ui),
+      background-color var(--transition-duration-ui),
+      color var(--transition-duration-ui);
+  }
+
+  .md-code-copy:hover {
+    background: var(--ui-alpha-1);
+    color: var(--ui-text-primary);
+    opacity: 1;
+  }
+
+  .md-code-copy[data-copied] {
+    color: var(--ui-success);
+    opacity: 1;
+  }
+
+  .md-code-copy svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  @media print {
+    .md-code-copy {
+      display: none;
+    }
   }
 
   /* A rule away from the cursor is drawn as a line; the --- shows while it is edited */
@@ -398,9 +483,15 @@
     transform: rotate(90deg);
   }
 
-  /* A rendered table; its cells keep the document font and scroll sideways when too wide */
+  /*
+   * A table, edited in place (table.tsx); its cells keep the document font and scroll sideways
+   * when too wide. The cell being edited holds a text field that looks like the cell's text.
+   */
   .md-table-block {
     padding-block: 0.25em;
+  }
+
+  .md-table-scroll {
     overflow-x: auto;
   }
 
@@ -418,8 +509,26 @@
     font-weight: 600;
   }
 
+  .md-table-view :is(th, td):has(.md-table-input) {
+    background: oklch(from var(--ui-brand) l c h / 6%);
+    box-shadow: inset 0 0 0 1.5px oklch(from var(--ui-brand) l c h / 55%);
+  }
+
+  .md-table-input {
+    field-sizing: content;
+    min-width: 2ch;
+    max-width: 100%;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: inherit;
+    caret-color: var(--ui-brand);
+  }
+
   /* Source shown in the code font; ligatures would turn markup such as <!-- into arrows */
-  .md-table,
   .md-front-matter,
   .md-html {
     font-family: var(--font-mono);
@@ -461,7 +570,7 @@
     line-height: var(--pref-line-height);
   }
 
-  :is(.md-code, .md-code-block, .md-table, .md-front-matter, .md-html) {
+  :is(.md-code, .md-code-block, .md-front-matter, .md-html) {
     font-family: var(--pref-code-font, revert-layer);
   }
 

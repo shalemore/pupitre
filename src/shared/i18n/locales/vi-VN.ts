@@ -42,6 +42,18 @@ export const viVN = {
       warning: "Cảnh báo",
       caution: "Thận trọng",
     },
+    table: {
+      alignStart: "Căn trái",
+      alignCenter: "Căn giữa",
+      alignEnd: "Căn phải",
+      insertRowAbove: "Chèn hàng phía trên",
+      insertRowBelow: "Chèn hàng phía dưới",
+      insertColumnBefore: "Chèn cột bên trái",
+      insertColumnAfter: "Chèn cột bên phải",
+      deleteRow: "Xóa hàng",
+      deleteColumn: "Xóa cột",
+      deleteTable: "Xóa bảng",
+    },
   },
   dialogs: {
     copyButton: "Sao chép",

@@ -57,6 +57,18 @@ export const ar = {
       warning: "تحذير",
       caution: "تنبيه",
     },
+    table: {
+      alignStart: "محاذاة لليمين",
+      alignCenter: "توسيط",
+      alignEnd: "محاذاة لليسار",
+      insertRowAbove: "إدراج صف أعلى",
+      insertRowBelow: "إدراج صف أسفل",
+      insertColumnBefore: "إدراج عمود إلى اليمين",
+      insertColumnAfter: "إدراج عمود إلى اليسار",
+      deleteRow: "حذف الصف",
+      deleteColumn: "حذف العمود",
+      deleteTable: "حذف الجدول",
+    },
   },
   dialogs: {
     copyButton: "نسخ",

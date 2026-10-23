@@ -225,8 +225,14 @@
   --font-sans:
     -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif;
+  /*
+   * Characters the code fonts lack, such as Chinese in comments, fall back to the interface font
+   * of the system language through system-ui; the generic monospace maps to a serif face (SimSun)
+   * on Chinese Windows.
+   */
   --font-mono:
-    "JetBrains Mono", "Cascadia Code", "Fira Code", Consolas, "Liberation Mono", Menlo, monospace;
+    "JetBrains Mono", "Cascadia Code", "Fira Code", Consolas, "Liberation Mono", Menlo, system-ui,
+    monospace;
 
   --color-border: var(--border);
   --color-border-subtle: var(--ui-alpha-1);

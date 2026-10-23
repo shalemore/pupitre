@@ -46,6 +46,18 @@ export const ruRU = {
       warning: "Предупреждение",
       caution: "Осторожно",
     },
+    table: {
+      alignStart: "По левому краю",
+      alignCenter: "По центру",
+      alignEnd: "По правому краю",
+      insertRowAbove: "Вставить строку выше",
+      insertRowBelow: "Вставить строку ниже",
+      insertColumnBefore: "Вставить столбец слева",
+      insertColumnAfter: "Вставить столбец справа",
+      deleteRow: "Удалить строку",
+      deleteColumn: "Удалить столбец",
+      deleteTable: "Удалить таблицу",
+    },
   },
   dialogs: {
     copyButton: "Копировать",

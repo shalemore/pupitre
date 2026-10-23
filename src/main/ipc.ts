@@ -2,7 +2,14 @@ import { isUtf8 } from "node:buffer";
 import { access, mkdir, readdir, readFile, stat, writeFile } from "node:fs/promises";
 import { basename, dirname, extname, join } from "node:path";
 import { pathToFileURL } from "node:url";
-import { BrowserWindow, dialog, ipcMain, type IpcMainInvokeEvent, shell } from "electron";
+import {
+  BrowserWindow,
+  clipboard,
+  dialog,
+  ipcMain,
+  type IpcMainInvokeEvent,
+  shell,
+} from "electron";
 import {
   type DocumentLocation,
   type FolderEntry,
@@ -255,6 +262,7 @@ export function registerIpcHandlers(): void {
   handle("app:show-about", (event) => showAboutDialog(senderWindow(event)));
   handle("app:set-default-markdown-app", () => setAsDefaultMarkdownApp());
   handle("app:dispatch", (_event, command) => dispatchToMainWindow(command));
+  handle("clipboard:write-text", (_event, text) => clipboard.writeText(text));
   handle("menu:popup", (event, menu, x, y) => popupTopMenu(senderWindow(event), menu, x, y));
   handle("window:set-document-state", (event, state) => {
     setDocumentState(state);

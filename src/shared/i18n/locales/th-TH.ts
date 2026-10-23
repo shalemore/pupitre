@@ -45,6 +45,18 @@ export const thTH = {
       warning: "คำเตือน",
       caution: "ข้อควรระวัง",
     },
+    table: {
+      alignStart: "จัดชิดซ้าย",
+      alignCenter: "จัดกึ่งกลาง",
+      alignEnd: "จัดชิดขวา",
+      insertRowAbove: "แทรกแถวด้านบน",
+      insertRowBelow: "แทรกแถวด้านล่าง",
+      insertColumnBefore: "แทรกคอลัมน์ด้านซ้าย",
+      insertColumnAfter: "แทรกคอลัมน์ด้านขวา",
+      deleteRow: "ลบแถว",
+      deleteColumn: "ลบคอลัมน์",
+      deleteTable: "ลบตาราง",
+    },
   },
   dialogs: {
     copyButton: "คัดลอก",

@@ -43,6 +43,18 @@ export const isIS = {
       warning: "Viðvörun",
       caution: "Varúð",
     },
+    table: {
+      alignStart: "Vinstrijafna",
+      alignCenter: "Miðjujafna",
+      alignEnd: "Hægrijafna",
+      insertRowAbove: "Setja inn línu fyrir ofan",
+      insertRowBelow: "Setja inn línu fyrir neðan",
+      insertColumnBefore: "Setja inn dálk vinstra megin",
+      insertColumnAfter: "Setja inn dálk hægra megin",
+      deleteRow: "Eyða línu",
+      deleteColumn: "Eyða dálki",
+      deleteTable: "Eyða töflu",
+    },
   },
   dialogs: {
     copyButton: "Afrita",

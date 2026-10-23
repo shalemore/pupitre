@@ -22,7 +22,7 @@ import {
   searchPanelOpen,
   setSearchQuery,
 } from "@codemirror/search";
-import { Compartment, EditorState } from "@codemirror/state";
+import { Compartment, EditorState, Prec } from "@codemirror/state";
 import { type Command, EditorView, keymap, placeholder } from "@codemirror/view";
 import { GFM } from "@lezer/markdown";
 import type { FormatAction } from "@shared/format";
@@ -42,7 +42,12 @@ import {
   type OutlineHeading,
   readableText,
 } from "./document-structure";
-import { formatKeymap, type MarkdownStyle, runFormatAction } from "./format-commands";
+import {
+  formatKeymap,
+  insertParagraphBreak,
+  type MarkdownStyle,
+  runFormatAction,
+} from "./format-commands";
 import { footnotes } from "./footnotes";
 import { frontMatter } from "./front-matter";
 import { createPendingImages, documentBaseUrl, imageInput } from "./images";
@@ -130,9 +135,14 @@ function markdownStyle(): MarkdownStyle {
  */
 const layeredStyles = EditorView.theme({
   "&.cm-focused": { outline: "revert-layer" },
-  ".cm-scroller": { fontFamily: "revert-layer", lineHeight: "revert-layer" },
+  ".cm-scroller": {
+    fontFamily: "revert-layer",
+    lineHeight: "revert-layer",
+    overflowX: "revert-layer",
+  },
   "&.cm-editor .cm-content": {
     boxSizing: "revert-layer",
+    margin: "revert-layer",
     padding: "revert-layer",
     caretColor: "revert-layer",
   },
@@ -202,6 +212,8 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         doc: props.markdown,
         extensions: [
           history(),
+          // Ahead of lang-markdown's Enter, which only continues lists and quotes
+          Prec.highest(keymap.of([{ key: "Enter", run: insertParagraphBreak }])),
           keymap.of([
             ...formatKeymap(markdownStyle),
             { key: "Tab", run: inList(indentMore), shift: inList(indentLess) },

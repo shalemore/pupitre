@@ -6,7 +6,7 @@ import {
   type Line,
   type SelectionRange,
 } from "@codemirror/state";
-import type { EditorView, KeyBinding } from "@codemirror/view";
+import type { Command, EditorView, KeyBinding } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
 import { FORMAT_ACTIONS, type FormatAction } from "@shared/format";
 import type { Settings } from "@shared/settings";
@@ -247,6 +247,33 @@ export function runFormatAction(
       return undefined;
   }
 }
+
+const PARAGRAPH_BLOCK = /^(?:Paragraph|ATXHeading[1-6])$/;
+
+/**
+ * Enter in a top-level paragraph or heading starts a new paragraph after a blank line, the way
+ * Markdown is usually written. Only what Enter inserts follows this; existing text is never
+ * reformatted. Lists and quotes are left to lang-markdown, which continues their markup.
+ */
+export const insertParagraphBreak: Command = ({ state, dispatch }) => {
+  const { main } = state.selection;
+  if (state.selection.ranges.length > 1 || !main.empty) return false;
+  let block = syntaxTree(state).resolveInner(main.head, -1);
+  while (block.parent && block.parent.name !== "Document") block = block.parent;
+  if (!block.parent || !PARAGRAPH_BLOCK.test(block.name) || main.head > block.to) return false;
+  // Spaces at the split would become the indentation of the new paragraph
+  const line = state.doc.lineAt(main.head);
+  const spaces = /^[ \t]*/.exec(line.text.slice(main.head - line.from))?.[0].length ?? 0;
+  dispatch(
+    state.update({
+      changes: { from: main.head, to: main.head + spaces, insert: "\n\n" },
+      selection: { anchor: main.head + 2 },
+      scrollIntoView: true,
+      userEvent: "input",
+    }),
+  );
+  return true;
+};
 
 /** Converts an Electron accelerator to a CodeMirror key name: "CmdOrCtrl+Shift+K" → "Mod-Shift-k". */
 function toKeyName(accelerator: string): string {

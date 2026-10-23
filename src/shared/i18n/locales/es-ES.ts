@@ -41,6 +41,18 @@ export const esES = {
       warning: "Advertencia",
       caution: "Precaución",
     },
+    table: {
+      alignStart: "Alinear a la izquierda",
+      alignCenter: "Centrar",
+      alignEnd: "Alinear a la derecha",
+      insertRowAbove: "Insertar fila arriba",
+      insertRowBelow: "Insertar fila abajo",
+      insertColumnBefore: "Insertar columna a la izquierda",
+      insertColumnAfter: "Insertar columna a la derecha",
+      deleteRow: "Eliminar fila",
+      deleteColumn: "Eliminar columna",
+      deleteTable: "Eliminar tabla",
+    },
   },
   dialogs: {
     copyButton: "Copiar",

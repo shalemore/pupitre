@@ -41,6 +41,18 @@ export const zhCN = {
       warning: "警告",
       caution: "当心",
     },
+    table: {
+      alignStart: "左对齐",
+      alignCenter: "居中",
+      alignEnd: "右对齐",
+      insertRowAbove: "在上方插入行",
+      insertRowBelow: "在下方插入行",
+      insertColumnBefore: "在左侧插入列",
+      insertColumnAfter: "在右侧插入列",
+      deleteRow: "删除行",
+      deleteColumn: "删除列",
+      deleteTable: "删除表格",
+    },
   },
   dialogs: {
     copyButton: "复制",

@@ -120,6 +120,8 @@ export interface InvokeChannels {
   "app:show-about": () => void;
   "app:set-default-markdown-app": () => DefaultAppResult;
   "app:dispatch": (command: AppCommand) => void;
+  /** Puts plain text on the clipboard, for copy buttons; the renderer has no clipboard permission. */
+  "clipboard:write-text": (text: string) => void;
   "menu:popup": (menu: TopMenu, x: number, y: number) => void;
   "window:set-document-state": (state: DocumentState) => void;
   /** The user has confirmed (saved or discarded changes); the window can really close. */

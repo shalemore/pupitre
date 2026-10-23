@@ -41,6 +41,18 @@ export const itIT = {
       warning: "Avviso",
       caution: "Attenzione",
     },
+    table: {
+      alignStart: "Allinea a sinistra",
+      alignCenter: "Centra",
+      alignEnd: "Allinea a destra",
+      insertRowAbove: "Inserisci riga sopra",
+      insertRowBelow: "Inserisci riga sotto",
+      insertColumnBefore: "Inserisci colonna a sinistra",
+      insertColumnAfter: "Inserisci colonna a destra",
+      deleteRow: "Elimina riga",
+      deleteColumn: "Elimina colonna",
+      deleteTable: "Elimina tabella",
+    },
   },
   dialogs: {
     copyButton: "Copia",

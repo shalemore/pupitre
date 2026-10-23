@@ -42,6 +42,18 @@ export const nbNO = {
       warning: "Advarsel",
       caution: "Forsiktig",
     },
+    table: {
+      alignStart: "Venstrejuster",
+      alignCenter: "Midtstill",
+      alignEnd: "Høyrejuster",
+      insertRowAbove: "Sett inn rad over",
+      insertRowBelow: "Sett inn rad under",
+      insertColumnBefore: "Sett inn kolonne til venstre",
+      insertColumnAfter: "Sett inn kolonne til høyre",
+      deleteRow: "Slett rad",
+      deleteColumn: "Slett kolonne",
+      deleteTable: "Slett tabell",
+    },
   },
   dialogs: {
     copyButton: "Kopier",

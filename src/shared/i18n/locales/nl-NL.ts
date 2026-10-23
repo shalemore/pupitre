@@ -42,6 +42,18 @@ export const nlNL = {
       warning: "Waarschuwing",
       caution: "Let op",
     },
+    table: {
+      alignStart: "Links uitlijnen",
+      alignCenter: "Centreren",
+      alignEnd: "Rechts uitlijnen",
+      insertRowAbove: "Rij boven invoegen",
+      insertRowBelow: "Rij onder invoegen",
+      insertColumnBefore: "Kolom links invoegen",
+      insertColumnAfter: "Kolom rechts invoegen",
+      deleteRow: "Rij verwijderen",
+      deleteColumn: "Kolom verwijderen",
+      deleteTable: "Tabel verwijderen",
+    },
   },
   dialogs: {
     copyButton: "Kopiëren",

@@ -8,7 +8,8 @@ import { documentBaseUrl } from "./images";
 import { printingChanged, revealingRanges, touches } from "./live-preview";
 import { MATH_LANGUAGE, MathWidget } from "./math";
 import { diagramTheme, MermaidWidget } from "./mermaid";
-import { TableWidget, tableModel } from "./table";
+import { TableWidget, tableCursor } from "./table";
+import { readTable } from "./table-model";
 
 /**
  * Blocks that are shown rendered (tables, display math, diagrams, HTML, `<details>`), with the same rule as the live preview:
@@ -24,7 +25,7 @@ function blockWidget(state: EditorState, node: SyntaxNode): WidgetType | undefin
   const text = (child: SyntaxNode | null | undefined) =>
     child ? state.sliceDoc(child.from, child.to) : "";
   if (node.name === "Table") {
-    return new TableWidget(state.sliceDoc(node.from, node.to), tableModel(state, node));
+    return new TableWidget(state.sliceDoc(node.from, node.to), readTable(state, node));
   }
   if (node.name === "HTMLBlock") {
     const source = text(node);
@@ -84,9 +85,10 @@ function buildDecorations(state: EditorState): DecorationSet {
       }
       const widget = blockWidget(state, node.node);
       if (!widget) return false;
-      if (!touches(ranges, node.from, node.to)) hideLines(node.from, node.to, widget);
-      // A table's source reads as a table already; other blocks show their rendering under it
-      else if (node.name !== "Table") {
+      // A table is edited in place (table.tsx), so its source never shows
+      if (node.name === "Table" || !touches(ranges, node.from, node.to)) {
+        hideLines(node.from, node.to, widget);
+      } else {
         const end = doc.lineAt(node.to).to;
         decorations.push(Decoration.widget({ widget, block: true, side: 1 }).range(end));
       }
@@ -110,4 +112,4 @@ const renderedBlockDecorations = StateField.define<DecorationSet>({
   provide: (field) => EditorView.decorations.from(field),
 });
 
-export const renderedBlocks: Extension = [toggledDetails, renderedBlockDecorations];
+export const renderedBlocks: Extension = [toggledDetails, renderedBlockDecorations, tableCursor];

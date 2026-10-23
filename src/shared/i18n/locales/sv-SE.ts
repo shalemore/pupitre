@@ -42,6 +42,18 @@ export const svSE = {
       warning: "Varning",
       caution: "Se upp",
     },
+    table: {
+      alignStart: "Vänsterjustera",
+      alignCenter: "Centrera",
+      alignEnd: "Högerjustera",
+      insertRowAbove: "Infoga rad ovanför",
+      insertRowBelow: "Infoga rad nedanför",
+      insertColumnBefore: "Infoga kolumn till vänster",
+      insertColumnAfter: "Infoga kolumn till höger",
+      deleteRow: "Ta bort rad",
+      deleteColumn: "Ta bort kolumn",
+      deleteTable: "Ta bort tabell",
+    },
   },
   dialogs: {
     copyButton: "Kopiera",

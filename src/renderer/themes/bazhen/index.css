@@ -222,9 +222,9 @@
   content: "–";
 }
 
-/* Ordered list numbers in the display face */
+/* Ordered list numbers in bold; a display face here would change the line height when the marker
+   switches to its source under the cursor */
 .md-list-mark {
-  font-family: var(--font-display);
   font-weight: 700;
 }
 

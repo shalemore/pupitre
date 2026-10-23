@@ -41,6 +41,18 @@ export const deDE = {
       warning: "Warnung",
       caution: "Vorsicht",
     },
+    table: {
+      alignStart: "Linksbündig",
+      alignCenter: "Zentriert",
+      alignEnd: "Rechtsbündig",
+      insertRowAbove: "Zeile oberhalb einfügen",
+      insertRowBelow: "Zeile unterhalb einfügen",
+      insertColumnBefore: "Spalte links einfügen",
+      insertColumnAfter: "Spalte rechts einfügen",
+      deleteRow: "Zeile löschen",
+      deleteColumn: "Spalte löschen",
+      deleteTable: "Tabelle löschen",
+    },
   },
   dialogs: {
     copyButton: "Kopieren",

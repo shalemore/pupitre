@@ -42,6 +42,18 @@ export const fiFI = {
       warning: "Varoitus",
       caution: "Varo",
     },
+    table: {
+      alignStart: "Tasaa vasemmalle",
+      alignCenter: "Keskitä",
+      alignEnd: "Tasaa oikealle",
+      insertRowAbove: "Lisää rivi yläpuolelle",
+      insertRowBelow: "Lisää rivi alapuolelle",
+      insertColumnBefore: "Lisää sarake vasemmalle",
+      insertColumnAfter: "Lisää sarake oikealle",
+      deleteRow: "Poista rivi",
+      deleteColumn: "Poista sarake",
+      deleteTable: "Poista taulukko",
+    },
   },
   dialogs: {
     copyButton: "Kopioi",
