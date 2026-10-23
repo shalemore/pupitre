@@ -86,24 +86,18 @@ export const SUPPORTED_LOCALES: readonly LocaleMeta[] = LOCALE_CODES.map((code) 
 }));
 
 /**
- * Traditional Chinese is a script, not a region: the same dictionary serves Taiwan, Hong Kong
- * and Macau, so their system locales land on it even though only two of the three are listed.
- */
-const HANT_REGIONS: Partial<Record<string, SupportedLocale>> = {
-  HK: "zh-HK",
-  TW: "zh-TW",
-};
-const HANT_DEFAULT: SupportedLocale = "zh-TW";
-
-/**
  * Browsers and systems spell Norwegian Bokmål as "nb" or "no", and Nynorsk ("nn") users read
  * Bokmål more easily than anything English.
  */
 const NORWEGIAN_TAGS: ReadonlySet<string> = new Set(["nb", "nb-NO", "nn", "nn-NO", "no", "no-NO"]);
 
+/**
+ * Chinese is told apart by script, not region: Traditional Chinese covers Taiwan, Hong Kong and
+ * Macau, so Macau and region-less "zh-Hant" land on zh-TW, and zh-Hans-HK on Simplified.
+ */
 function matchChinese(tag: Intl.Locale): SupportedLocale {
   if (tag.script !== "Hant") return "zh-CN";
-  return (tag.region && HANT_REGIONS[tag.region]) || HANT_DEFAULT;
+  return tag.region === "HK" ? "zh-HK" : "zh-TW";
 }
 
 /**
