@@ -1,7 +1,7 @@
 import { Combobox as KobalteCombobox } from "@kobalte/core/combobox";
 import { cn } from "cn";
 import { Check, ChevronDown } from "lucide-solid";
-import { Show } from "solid-js";
+import { createSignal, Show } from "solid-js";
 import type { SelectOption } from "./select";
 
 export interface ComboboxProps {
@@ -21,9 +21,16 @@ function matches(option: SelectOption, input: string): boolean {
   );
 }
 
-/** A searchable dropdown for long lists such as fonts; descriptions (such as localized font names) are searchable too. */
+/**
+ * A searchable dropdown for long lists such as fonts; descriptions (such as localized font names)
+ * are searchable too. Opening it lists everything and brings the current value into view; the
+ * list narrows only once the user types.
+ */
 export function Combobox(props: ComboboxProps) {
   const selected = () => props.options.find((option) => option.value === props.value);
+  // What the user has typed since opening. The input shows the current value's label, which must not filter the list, or the list would only ever hold the current value
+  const [query, setQuery] = createSignal("");
+  let listbox: HTMLElement | undefined;
 
   return (
     <KobalteCombobox<SelectOption>
@@ -35,7 +42,17 @@ export function Combobox(props: ComboboxProps) {
       onChange={(option) => {
         if (option) props.onChange(option.value);
       }}
-      defaultFilter={matches}
+      defaultFilter={(option) => matches(option, query())}
+      onOpenChange={(open) => {
+        if (open) {
+          // The list is mounted after the open state changes
+          requestAnimationFrame(() =>
+            listbox?.querySelector("[data-selected]")?.scrollIntoView({ block: "center" }),
+          );
+        } else {
+          setQuery("");
+        }
+      }}
       placeholder={props.placeholder}
       triggerMode="focus"
       gutter={6}
@@ -76,6 +93,7 @@ export function Combobox(props: ComboboxProps) {
           class="h-full min-w-0 flex-1 bg-transparent px-2.5 text-foreground outline-none placeholder:text-muted-foreground"
           // Select everything on focus, so typing starts a new search instead of appending to the current font name
           onFocus={(e) => e.currentTarget.select()}
+          onInput={(e) => setQuery(e.currentTarget.value)}
           style={selected()?.style}
         />
         <KobalteCombobox.Trigger class="flex h-full items-center px-2 text-muted-foreground cursor-pointer">
@@ -86,7 +104,10 @@ export function Combobox(props: ComboboxProps) {
       </KobalteCombobox.Control>
       <KobalteCombobox.Portal>
         <KobalteCombobox.Content class="z-50 w-(--kb-popper-anchor-width) min-w-64 rounded-xl border border-border/80 bg-surface-2 p-1 shadow-float animate-in fade-in-0 zoom-in-95 duration-(--duration-ui)">
-          <KobalteCombobox.Listbox class="max-h-80 overflow-y-auto outline-none" />
+          <KobalteCombobox.Listbox
+            ref={(element) => (listbox = element)}
+            class="max-h-80 overflow-y-auto outline-none"
+          />
         </KobalteCombobox.Content>
       </KobalteCombobox.Portal>
     </KobalteCombobox>
