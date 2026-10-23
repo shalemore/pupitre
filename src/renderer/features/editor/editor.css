@@ -177,6 +177,20 @@
     margin-block-end: 0;
   }
 
+  /* The bullet of the list item under the cursor shows its Markdown marker, see syntax-reveal.ts */
+  .milkdown .milkdown-list-item-block.is-current-item > li > .label-wrapper .label svg {
+    display: none;
+  }
+
+  /* The svg fills the 24px marker box, so its dot is centered there; the text marker has to be centered the same way */
+  .milkdown .milkdown-list-item-block.is-current-item > li > .label-wrapper .label {
+    justify-content: center;
+  }
+
+  .milkdown .milkdown-list-item-block.is-current-item > li > .label-wrapper .label::before {
+    content: var(--bullet-marker);
+  }
+
   /* Markdown syntax shown around the format under the cursor, see syntax-reveal.ts */
   .milkdown .md-syntax {
     color: var(--ui-text-muted);

@@ -6,13 +6,15 @@ import { Decoration, DecorationSet, type EditorView } from "@milkdown/kit/prose/
  * Typora-style editing: the Markdown syntax of the heading or inline format under the cursor is
  * shown next to the rendered text (`## `, `**`, `` ` ``, `[`…`](url)`), and it behaves as if it
  * were text. Backspace right after an opening marker removes that format, typing `#` at the start
- * of a heading raises its level, Backspace there lowers it.
+ * of a heading raises its level, Backspace there lowers it. The bullet of the list item under the
+ * cursor is replaced by its marker (`-`, `*` or `+`), styled by CSS from the decoration below.
  *
  * The markers are widgets, not document content, so the document stays clean Markdown and the
  * serializer remains the only place that decides how syntax is written.
  */
 
 export interface SyntaxStyle {
+  bullet: string;
   strong: string;
   emphasis: string;
 }
@@ -66,6 +68,21 @@ function syntaxWidget(text: string): HTMLElement {
   return element;
 }
 
+/** The innermost list item around the cursor, when it is a plain bullet (ordered numbers already read as source, tasks keep their checkbox). */
+function bulletItemDecoration(state: EditorState, style: SyntaxStyle): Decoration | undefined {
+  const { $head } = state.selection;
+  for (let depth = $head.depth; depth > 0; depth--) {
+    const item = $head.node(depth);
+    if (item.type.name !== "list_item") continue;
+    if (item.attrs["listType"] !== "bullet" || item.attrs["checked"] != null) return undefined;
+    return Decoration.node($head.before(depth), $head.after(depth), {
+      class: "is-current-item",
+      style: `--bullet-marker: "${style.bullet}"`,
+    });
+  }
+  return undefined;
+}
+
 function activeRanges(
   state: EditorState,
 ): { block: Node; start: number; ranges: MarkRange[] } | undefined {
@@ -83,6 +100,8 @@ function buildDecorations(state: EditorState, style: SyntaxStyle): DecorationSet
   const active = activeRanges(state);
   if (!active) return DecorationSet.empty;
   const decorations: Decoration[] = [];
+  const bulletItem = bulletItemDecoration(state, style);
+  if (bulletItem) decorations.push(bulletItem);
 
   if (active.block.type.name === "heading") {
     const level = Number(active.block.attrs["level"]);

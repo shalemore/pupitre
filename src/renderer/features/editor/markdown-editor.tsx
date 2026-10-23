@@ -231,6 +231,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       .use(
         $prose(() =>
           syntaxRevealPlugin(() => ({
+            bullet: settings().bulletMarker,
             strong: settings().strongMarker.repeat(2),
             emphasis: settings().emphasisMarker,
           })),
