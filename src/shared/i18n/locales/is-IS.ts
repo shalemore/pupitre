@@ -5,7 +5,8 @@ export const isIS = {
     appName: "Pupitre",
     untitledFileName: "Ónefnt.md",
     wordsCount: (count: number) => `${count} orð`,
-    charsCount: (count: number) => (count === 1 ? "1 stafur" : `${count} stafir`),
+    charsCount: (count: number) =>
+      count % 10 === 1 && count % 100 !== 11 ? `${count} stafur` : `${count} stafir`,
     copy: "Afrita",
   },
   actions: {

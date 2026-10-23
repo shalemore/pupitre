@@ -5,8 +5,10 @@ export const plPL = {
   common: {
     appName: "Pupitre",
     untitledFileName: "Bez nazwy.md",
-    wordsCount: (count: number) => `${count} ${slavicPlural(count, "słowo", "słowa", "słów")}`,
-    charsCount: (count: number) => `${count} ${slavicPlural(count, "znak", "znaki", "znaków")}`,
+    wordsCount: (count: number) =>
+      `${count} ${slavicPlural(count, "słowo", "słowa", "słów", true)}`,
+    charsCount: (count: number) =>
+      `${count} ${slavicPlural(count, "znak", "znaki", "znaków", true)}`,
     copy: "Kopiuj",
   },
   actions: {
