@@ -8,8 +8,8 @@ Pupitre to komputerowy edytor Markdown. Dokumenty to zwykłe pliki `.md`: to, co
 
 Przenieś kursor do **pogrubionego tekstu**, `kodu w tekście` lub [łącza](https://github.com/shalemore/pupitre), a wokół niego pojawi się składnia. Znaczniki zachowują się jak tekst:
 
-- Backspace zaraz po znaczniku otwierającym usuwa formatowanie.
-- Na początku nagłówka wpisz `#`, aby podnieść jego poziom, a naciśnij Backspace, aby go obniżyć.
+- Usuń znacznik, aby usunąć formatowanie; dodaj lub usuń `#` przed nagłówkiem, aby zmienić jego poziom.
+- Zaznaczony tekst pokazuje swoją składnię, a kopiowanie kopiuje Markdown.
 - Formatowanie jest w menu **Akapit** i **Format**, w menu kontekstowym oraz w skrótach poniżej.
 
 <details>
@@ -46,7 +46,7 @@ Ustawienia › Wygląd › Styl okna przełącza między **Klasycznym** a **Imme
 
 ## Pliki i obrazy
 
-- Pupitre zachowuje końce wierszy otwartego pliku, chyba że Ustawienia › Markdown mówią inaczej. Sposób zapisywania list, wyróżnień, ogrodzeń kodu i linii poziomych też ustawia się tam.
+- Pupitre zachowuje końce wierszy otwartego pliku, chyba że Ustawienia › Markdown mówią inaczej. Składnię wstawianą przez polecenia formatowania też ustawia się tam.
 - Wklejone obrazy są zapisywane w folderze obok dokumentu (domyślnie `assets`, Ustawienia › Markdown). Dokument, który nie został jeszcze zapisany, trzyma je w pamięci i zapisze przy pierwszym zapisie.
 - Ustawienia › Ogólne › Domyślna aplikacja Markdown sprawia, że Pupitre otwiera pliki `.md` z menedżera plików.
 - Ustawienia są przechowywane w `settings.json`; Ustawienia › O programie pokazuje jego folder. Zapisywane są tylko wartości różne od domyślnych, a pole, którego nie da się odczytać, wraca do wartości domyślnej bez wpływu na pozostałe.
@@ -76,7 +76,7 @@ Motywy są dostarczane z aplikacją: każdy to folder w `src/renderer/themes/<na
   }
 }
 
-.milkdown .ProseMirror h1 {
+.md-document .md-h1 {
   font-size: 2em;
 }
 ```

@@ -8,8 +8,8 @@ O Pupitre é um editor de Markdown para ambiente de trabalho. Os documentos são
 
 Coloque o cursor dentro de **texto a negrito**, de um `trecho de código` ou de uma [ligação](https://github.com/shalemore/pupitre) e a sintaxe aparece à volta. Os marcadores comportam-se como texto:
 
-- Retrocesso logo a seguir a um marcador de abertura remove a formatação.
-- No início de um título, escreva `#` para subir o nível e prima Retrocesso para o descer.
+- Apague um marcador para remover a formatação; acrescente ou apague um `#` antes de um título para mudar o nível.
+- Ao selecionar texto, a sua sintaxe fica visível, e copiar copia Markdown.
 - A formatação está nos menus **Parágrafo** e **Formato**, no menu de contexto e nos atalhos abaixo.
 
 <details>
@@ -46,7 +46,7 @@ Preferências › Aparência › Estilo da janela alterna entre **Clássico** e 
 
 ## Ficheiros e imagens
 
-- O Pupitre mantém os fins de linha do ficheiro que abriu, salvo indicação em contrário em Preferências › Markdown. A forma como listas, ênfases, delimitações de código e linhas horizontais são escritas ao guardar também se define aí.
+- O Pupitre mantém os fins de linha do ficheiro que abriu, salvo indicação em contrário em Preferências › Markdown. A sintaxe que os comandos de formatação inserem também se define aí.
 - As imagens coladas são guardadas numa pasta ao lado do documento (`assets` por predefinição, Preferências › Markdown). Um documento ainda não guardado mantém-nas em memória e escreve-as no primeiro guardar.
 - Preferências › Geral › Aplicação Markdown predefinida faz com que o Pupitre abra ficheiros `.md` a partir do gestor de ficheiros.
 - As preferências ficam em `settings.json`; Preferências › Acerca mostra a sua pasta. Só são escritos os valores diferentes dos predefinidos, e um campo ilegível volta à predefinição sem afetar os outros.
@@ -76,7 +76,7 @@ Os temas vêm com a aplicação: cada um é uma pasta em `src/renderer/themes/<n
   }
 }
 
-.milkdown .ProseMirror h1 {
+.md-document .md-h1 {
   font-size: 2em;
 }
 ```

@@ -8,8 +8,8 @@ Pupitre on työpöydän Markdown-editori. Asiakirjat ovat tavallisia `.md`-tiedo
 
 Sijoita kursori **lihavoituun tekstiin**, `rivinsisäiseen koodiin` tai [linkkiin](https://github.com/shalemore/pupitre), niin syntaksi näkyy sen ympärillä. Merkit käyttäytyvät kuin teksti:
 
-- Askelpalautin heti avaavan merkin jälkeen poistaa muotoilun.
-- Kirjoita otsikon alkuun `#` nostaaksesi tasoa ja paina askelpalautinta laskiaksesi sitä.
+- Poista merkki poistaaksesi muotoilun; lisää tai poista `#` otsikon edestä muuttaaksesi sen tasoa.
+- Valittu teksti näyttää syntaksinsa, ja kopiointi kopioi Markdownia.
 - Muotoilu on **Kappale**- ja **Muoto**-valikoissa, pikavalikossa ja alla olevissa pikanäppäimissä.
 
 <details>
@@ -46,7 +46,7 @@ Asetukset › Ulkoasu › Ikkunatyyli vaihtaa **Klassisen** ja **Immersiivisen**
 
 ## Tiedostot ja kuvat
 
-- Pupitre säilyttää avatun tiedoston rivinvaihdot, ellei Asetukset › Markdown sano toisin. Myös se, miten luettelot, korostukset, koodiaidat ja viivat kirjoitetaan tallennettaessa, asetetaan siellä.
+- Pupitre säilyttää avatun tiedoston rivinvaihdot, ellei Asetukset › Markdown sano toisin. Myös muotoilukomentojen lisäämä syntaksi asetetaan siellä.
 - Liitetyt kuvat tallennetaan asiakirjan viereen kansioon (oletuksena `assets`, Asetukset › Markdown). Tallentamaton asiakirja pitää ne muistissa ja kirjoittaa ne ensimmäisellä tallennuksella.
 - Asetukset › Yleiset › Oletus-Markdown-sovellus saa Pupitren avaamaan `.md`-tiedostot tiedostonhallinnasta.
 - Asetukset tallennetaan tiedostoon `settings.json`; Asetukset › Tietoja näyttää sen kansion. Vain oletuksista poikkeavat arvot kirjoitetaan, ja lukukelvoton kenttä palaa oletukseen vaikuttamatta muihin.
@@ -76,7 +76,7 @@ Teemat tulevat sovelluksen mukana: kukin teema on kansio polussa `src/renderer/t
   }
 }
 
-.milkdown .ProseMirror h1 {
+.md-document .md-h1 {
   font-size: 2em;
 }
 ```

@@ -8,8 +8,8 @@ Pupitre är en skrivbordsredigerare för Markdown. Dokumenten är vanliga `.md`-
 
 Sätt markören i **fet text**, ett `kodstycke` eller en [länk](https://github.com/shalemore/pupitre) och syntaxen visas runt omkring. Markeringarna beter sig som text:
 
-- Backsteg direkt efter en öppnande markering tar bort formateringen.
-- Skriv `#` i början av en rubrik för att höja nivån och tryck på Backsteg för att sänka den.
+- Ta bort en markering för att ta bort formateringen; lägg till eller ta bort ett `#` framför en rubrik för att ändra nivån.
+- Markerad text visar sin syntax, och kopiering kopierar Markdown.
 - Formatering finns i menyerna **Stycke** och **Format**, i snabbmenyn och i kortkommandona nedan.
 
 <details>
@@ -46,7 +46,7 @@ Inställningar › Utseende › Fönsterstil växlar mellan **Klassisk** och **I
 
 ## Filer och bilder
 
-- Pupitre behåller radsluten från filen den öppnade, om inte Inställningar › Markdown säger något annat. Hur listor, betoning, kodstaket och linjer skrivs vid sparande ställs in där.
+- Pupitre behåller radsluten från filen den öppnade, om inte Inställningar › Markdown säger något annat. Den syntax som formateringskommandon infogar ställs in där.
 - Inklistrade bilder sparas i en mapp bredvid dokumentet (`assets` som standard, Inställningar › Markdown). Ett dokument som ännu inte sparats behåller dem i minnet och skriver dem vid första sparningen.
 - Inställningar › Allmänt › Standardapp för Markdown gör att Pupitre öppnar `.md`-filer från filhanteraren.
 - Inställningarna sparas i `settings.json`; Inställningar › Om visar mappen. Bara värden som skiljer sig från standard skrivs, och ett fält som inte kan läsas faller tillbaka på standard utan att påverka de andra.
@@ -76,7 +76,7 @@ Teman följer med appen: varje tema är en mapp i `src/renderer/themes/<namn>/` 
   }
 }
 
-.milkdown .ProseMirror h1 {
+.md-document .md-h1 {
   font-size: 2em;
 }
 ```

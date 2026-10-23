@@ -8,8 +8,8 @@ Pupitre is een Markdown-editor voor de desktop. Documenten zijn gewone `.md`-bes
 
 Zet de cursor in **vette tekst**, in een `inline code` of in een [link](https://github.com/shalemore/pupitre) en de syntaxis verschijnt eromheen. De markeringen gedragen zich als tekst:
 
-- Backspace direct na een openingsmarkering haalt de opmaak weg.
-- Typ `#` aan het begin van een kop om het niveau te verhogen en druk op Backspace om het te verlagen.
+- Verwijder een markering om de opmaak weg te halen; voeg een `#` toe voor een kop of verwijder er een om het niveau te wijzigen.
+- Geselecteerde tekst toont zijn syntaxis, en kopiëren kopieert Markdown.
 - Opmaak staat in de menu's **Alinea** en **Opmaak**, in het contextmenu en in de sneltoetsen hieronder.
 
 <details>
@@ -46,7 +46,7 @@ Voorkeuren › Weergave › Vensterstijl schakelt tussen **Klassiek** en **Immer
 
 ## Bestanden en afbeeldingen
 
-- Pupitre houdt de regeleinden van het geopende bestand aan, tenzij Voorkeuren › Markdown anders zegt. Hoe lijsten, nadruk, codeblokken en lijnen bij het opslaan worden geschreven, stelt u daar ook in.
+- Pupitre houdt de regeleinden van het geopende bestand aan, tenzij Voorkeuren › Markdown anders zegt. De syntaxis die opmaakopdrachten invoegen, stelt u daar ook in.
 - Geplakte afbeeldingen worden opgeslagen in een map naast het document (standaard `assets`, Voorkeuren › Markdown). Een document dat nog niet is opgeslagen houdt ze in het geheugen en schrijft ze bij de eerste keer opslaan.
 - Voorkeuren › Algemeen › Standaard Markdown-app zorgt ervoor dat Pupitre `.md`-bestanden opent vanuit de bestandsbeheerder.
 - Voorkeuren staan in `settings.json`; Voorkeuren › Over toont de map. Alleen waarden die van de standaard afwijken worden opgeslagen, en een veld dat niet kan worden gelezen valt terug op de standaard zonder de andere te beïnvloeden.
@@ -76,7 +76,7 @@ Thema's worden met de app meegeleverd: elk is een map in `src/renderer/themes/<n
   }
 }
 
-.milkdown .ProseMirror h1 {
+.md-document .md-h1 {
   font-size: 2em;
 }
 ```

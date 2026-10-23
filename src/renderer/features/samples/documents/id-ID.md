@@ -8,8 +8,8 @@ Pupitre adalah editor Markdown untuk desktop. Dokumen berupa berkas `.md` biasa:
 
 Letakkan kursor di dalam **teks tebal**, sebuah `rentang kode`, atau sebuah [tautan](https://github.com/shalemore/pupitre) dan sintaksnya muncul di sekelilingnya. Penandanya berperilaku seperti teks:
 
-- Backspace tepat setelah penanda pembuka akan menghapus formatnya.
-- Di awal sebuah judul, ketik `#` untuk menaikkan tingkatnya dan tekan Backspace untuk menurunkannya.
+- Hapus penanda untuk menghapus formatnya; tambah atau hapus `#` di depan judul untuk mengubah tingkatnya.
+- Memilih teks menampilkan sintaksnya, dan menyalin akan menyalin Markdown.
 - Pemformatan tersedia di menu **Paragraf** dan **Format**, menu klik kanan, serta pintasan di bawah.
 
 <details>
@@ -46,7 +46,7 @@ Preferensi › Tampilan › Gaya jendela berganti antara **Klasik** dan **Imersi
 
 ## Berkas dan gambar
 
-- Pupitre mempertahankan akhir baris berkas yang dibuka kecuali Preferensi › Markdown menentukan lain. Cara daftar, penekanan, pagar kode, dan garis ditulis saat disimpan juga diatur di sana.
+- Pupitre mempertahankan akhir baris berkas yang dibuka kecuali Preferensi › Markdown menentukan lain. Sintaks yang disisipkan perintah pemformatan juga diatur di sana.
 - Gambar yang ditempel disimpan di folder di samping dokumen (`assets` secara bawaan, Preferensi › Markdown). Dokumen yang belum disimpan menyimpannya di memori dan menuliskannya saat pertama kali disimpan.
 - Preferensi › Umum › Aplikasi Markdown bawaan membuat Pupitre membuka berkas `.md` dari pengelola berkas.
 - Preferensi disimpan di `settings.json`; Preferensi › Tentang menampilkan foldernya. Hanya nilai yang berbeda dari bawaannya yang ditulis, dan bidang yang tidak dapat dibaca kembali ke bawaannya tanpa memengaruhi yang lain.
@@ -76,7 +76,7 @@ Tema disertakan bersama aplikasi: masing-masing berupa folder di `src/renderer/t
   }
 }
 
-.milkdown .ProseMirror h1 {
+.md-document .md-h1 {
   font-size: 2em;
 }
 ```

@@ -8,8 +8,8 @@ Pupitre je počítačový editor Markdownu. Dokumenty jsou běžné soubory `.md
 
 Umístěte kurzor do **tučného textu**, `vloženého kódu` nebo [odkazu](https://github.com/shalemore/pupitre) a kolem něj se objeví syntaxe. Značky se chovají jako text:
 
-- Backspace hned za otevírací značkou odstraní formátování.
-- Na začátku nadpisu napište `#` pro zvýšení úrovně a stiskněte Backspace pro její snížení.
+- Smazáním značky formátování odstraníte; přidáním nebo smazáním `#` před nadpisem změníte jeho úroveň.
+- Výběr textu ukáže jeho syntaxi a kopírování kopíruje Markdown.
 - Formátování je v nabídkách **Odstavec** a **Formát**, v místní nabídce a ve zkratkách níže.
 
 <details>
@@ -46,7 +46,7 @@ Předvolby › Vzhled › Styl okna přepíná mezi **Klasickým** a **Imersivn�
 
 ## Soubory a obrázky
 
-- Pupitre zachová konce řádků otevřeného souboru, pokud Předvolby › Markdown neříkají jinak. Způsob zápisu seznamů, zdůraznění, ohraničení kódu a vodorovných čar při ukládání se nastavuje tamtéž.
+- Pupitre zachová konce řádků otevřeného souboru, pokud Předvolby › Markdown neříkají jinak. Syntaxe, kterou vkládají příkazy formátování, se nastavuje tamtéž.
 - Vložené obrázky se ukládají do složky vedle dokumentu (ve výchozím nastavení `assets`, Předvolby › Markdown). Neuložený dokument je drží v paměti a zapíše je při prvním uložení.
 - Předvolby › Obecné › Výchozí aplikace pro Markdown zajistí, že Pupitre otevírá soubory `.md` ze správce souborů.
 - Předvolby se ukládají do `settings.json`; Předvolby › O aplikaci zobrazí jeho složku. Ukládají se jen hodnoty odlišné od výchozích a pole, které nelze přečíst, se vrátí na výchozí, aniž by ovlivnilo ostatní.
@@ -76,7 +76,7 @@ Motivy jsou součástí aplikace: každý je složka v `src/renderer/themes/<ná
   }
 }
 
-.milkdown .ProseMirror h1 {
+.md-document .md-h1 {
   font-size: 2em;
 }
 ```

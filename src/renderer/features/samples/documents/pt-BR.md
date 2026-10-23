@@ -8,8 +8,8 @@ O Pupitre é um editor de Markdown para desktop. Os documentos são arquivos `.m
 
 Mova o cursor para dentro de um **texto em negrito**, um `trecho de código` ou um [link](https://github.com/shalemore/pupitre) e a sintaxe aparece ao redor. Os marcadores se comportam como texto:
 
-- Backspace logo após um marcador de abertura remove a formatação.
-- No início de um título, digite `#` para subir o nível e pressione Backspace para descer.
+- Apague um marcador para remover a formatação; acrescente ou apague um `#` antes de um título para mudar o nível.
+- Ao selecionar texto, a sintaxe dele aparece, e copiar copia Markdown.
 - A formatação está nos menus **Parágrafo** e **Formatar**, no menu de contexto e nos atalhos abaixo.
 
 <details>
@@ -46,7 +46,7 @@ Preferências › Aparência › Estilo da janela alterna entre **Clássico** e 
 
 ## Arquivos e imagens
 
-- O Pupitre mantém as quebras de linha do arquivo aberto, a menos que Preferências › Markdown diga o contrário. Ali também se define como listas, ênfase, cercas de código e linhas são escritas ao salvar.
+- O Pupitre mantém as quebras de linha do arquivo aberto, a menos que Preferências › Markdown diga o contrário. Ali também se define a sintaxe que os comandos de formatação inserem.
 - As imagens coladas são salvas em uma pasta ao lado do documento (`assets` por padrão, Preferências › Markdown). Um documento ainda não salvo as mantém na memória e as grava no primeiro salvamento.
 - Preferências › Geral › App padrão para Markdown faz o Pupitre abrir arquivos `.md` a partir do gerenciador de arquivos.
 - As preferências ficam em `settings.json`; Preferências › Sobre mostra a pasta. Só são gravados os valores diferentes dos padrões, e um campo ilegível volta ao padrão sem afetar os outros.
@@ -76,7 +76,7 @@ Os temas acompanham o app: cada um é uma pasta em `src/renderer/themes/<name>/`
   }
 }
 
-.milkdown .ProseMirror h1 {
+.md-document .md-h1 {
   font-size: 2em;
 }
 ```

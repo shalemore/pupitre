@@ -8,8 +8,8 @@ Pupitre er Markdown-ritill fyrir skjáborð. Skjölin eru venjulegar `.md`-skrá
 
 Settu bendilinn inn í **feitletraðan texta**, `kóða í texta` eða [hlekk](https://github.com/shalemore/pupitre) og málfræðin birtist í kringum hann. Merkin hegða sér eins og texti:
 
-- Backspace rétt eftir opnunarmerki fjarlægir sniðið.
-- Skrifaðu `#` í byrjun fyrirsagnar til að hækka stigið og ýttu á Backspace til að lækka það.
+- Eyddu merki til að fjarlægja sniðið; bættu við eða eyddu `#` framan við fyrirsögn til að breyta stigi hennar.
+- Valinn texti sýnir táknmál sitt og afritun afritar Markdown.
 - Snið er í valmyndunum **Málsgrein** og **Snið**, í hægrismellsvalmynd og í flýtileiðunum hér fyrir neðan.
 
 <details>
@@ -46,7 +46,7 @@ Forstillingar › Útlit › Stíll glugga skiptir milli **Klassísks** og **Yfi
 
 ## Skrár og myndir
 
-- Pupitre heldur línulokum skrárinnar sem var opnuð, nema Forstillingar › Markdown segi annað. Hvernig listar, áherslur, kóðagirðingar og línur eru skrifuð við vistun er einnig stillt þar.
+- Pupitre heldur línulokum skrárinnar sem var opnuð, nema Forstillingar › Markdown segi annað. Táknmálið sem sniðskipanir setja inn er einnig stillt þar.
 - Límdar myndir eru vistaðar í möppu við skjalið (`assets` sjálfgefið, Forstillingar › Markdown). Skjal sem ekki hefur verið vistað heldur þeim í minni og skrifar þær við fyrstu vistun.
 - Forstillingar › Almennt › Sjálfgefna Markdown-forritið lætur Pupitre opna `.md`-skrár úr skráastjóranum.
 - Forstillingarnar eru geymdar í `settings.json`; Forstillingar › Um sýnir möppuna. Aðeins gildi sem víkja frá sjálfgefnum eru skrifuð, og reitur sem ekki er læsilegur fer aftur í sjálfgefið án þess að hafa áhrif á aðra.
@@ -76,7 +76,7 @@ Forstillingar › Útlit › Stíll glugga skiptir milli **Klassísks** og **Yfi
   }
 }
 
-.milkdown .ProseMirror h1 {
+.md-document .md-h1 {
   font-size: 2em;
 }
 ```

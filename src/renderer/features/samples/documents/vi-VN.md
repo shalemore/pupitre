@@ -8,8 +8,8 @@ Pupitre là trình soạn thảo Markdown trên máy tính. Tài liệu là các
 
 Đặt con trỏ vào **chữ in đậm**, một `đoạn mã` hoặc một [liên kết](https://github.com/shalemore/pupitre) và cú pháp của nó sẽ hiện ra xung quanh. Các dấu này hoạt động như văn bản:
 
-- Nhấn Backspace ngay sau dấu mở để bỏ định dạng đó.
-- Ở đầu một tiêu đề, gõ `#` để tăng cấp và nhấn Backspace để giảm cấp.
+- Xóa một dấu để bỏ định dạng của nó; thêm hoặc xóa một `#` trước tiêu đề để đổi cấp.
+- Khi chọn văn bản, cú pháp bên trong sẽ hiện ra, và sao chép sẽ sao chép Markdown.
 - Định dạng có trong menu **Đoạn văn** và **Định dạng**, menu chuột phải và các phím tắt bên dưới.
 
 <details>
@@ -46,7 +46,7 @@ Tùy chọn › Hiển thị › Kiểu cửa sổ chuyển giữa **Cổ điể
 
 ## Tệp và hình ảnh
 
-- Pupitre giữ nguyên kiểu kết thúc dòng của tệp đã mở, trừ khi Tùy chọn › Markdown quy định khác. Cách viết danh sách, nhấn mạnh, hàng rào mã và đường kẻ khi lưu cũng được đặt ở đó.
+- Pupitre giữ nguyên kiểu kết thúc dòng của tệp đã mở, trừ khi Tùy chọn › Markdown quy định khác. Cú pháp mà các lệnh định dạng chèn vào cũng được đặt ở đó.
 - Ảnh được dán sẽ được lưu vào thư mục bên cạnh tài liệu (`assets` theo mặc định, xem Tùy chọn › Markdown). Tài liệu chưa được lưu sẽ giữ ảnh trong bộ nhớ và ghi chúng khi lưu lần đầu.
 - Tùy chọn › Chung › Ứng dụng Markdown mặc định cho phép Pupitre mở tệp `.md` từ trình quản lý tệp.
 - Tùy chọn được lưu trong `settings.json`; Tùy chọn › Giới thiệu hiển thị thư mục của tệp này. Chỉ những giá trị khác mặc định mới được ghi, và trường không đọc được sẽ trở về mặc định mà không ảnh hưởng đến các trường khác.
@@ -76,7 +76,7 @@ Giao diện đi kèm ứng dụng: mỗi giao diện là một thư mục trong 
   }
 }
 
-.milkdown .ProseMirror h1 {
+.md-document .md-h1 {
   font-size: 2em;
 }
 ```

@@ -8,8 +8,8 @@ Pupitre bir masaüstü Markdown düzenleyicisidir. Belgeler sıradan `.md` dosya
 
 İmleci **kalın metnin**, bir `satır içi kodun` ya da bir [bağlantının](https://github.com/shalemore/pupitre) içine getirin, sözdizimi çevresinde görünür. İşaretçiler metin gibi davranır:
 
-- Bir açılış işaretinden hemen sonra Geri tuşuna basmak biçimi kaldırır.
-- Bir başlığın başında `#` yazmak düzeyini yükseltir, Geri tuşuna basmak düşürür.
+- Bir işareti silmek biçimi kaldırır; bir başlığın önüne `#` eklemek ya da silmek düzeyini değiştirir.
+- Metin seçildiğinde içindeki söz dizimi görünür ve kopyalamak Markdown kopyalar.
 - Biçimlendirme **Paragraf** ve **Biçim** menülerinde, sağ tık menüsünde ve aşağıdaki kısayollarda bulunur.
 
 <details>
@@ -46,7 +46,7 @@ Tercihler › Görünüm › Pencere Stili, **Klasik** ile **Sürükleyici** ara
 
 ## Dosyalar ve resimler
 
-- Pupitre, Tercihler › Markdown aksini söylemedikçe açtığı dosyanın satır sonlarını korur. Listelerin, vurguların, kod çitlerinin ve yatay çizgilerin kaydederken nasıl yazılacağı da orada ayarlanır.
+- Pupitre, Tercihler › Markdown aksini söylemedikçe açtığı dosyanın satır sonlarını korur. Biçimlendirme komutlarının eklediği söz dizimi de orada ayarlanır.
 - Yapıştırılan resimler belgenin yanındaki bir klasöre kaydedilir (varsayılan olarak `assets`, bkz. Tercihler › Markdown). Henüz kaydedilmemiş bir belge onları bellekte tutar ve ilk kaydetmede yazar.
 - Tercihler › Genel › Varsayılan Markdown Uygulaması, Pupitre'nin `.md` dosyalarını dosya yöneticisinden açmasını sağlar.
 - Tercihler `settings.json` içinde saklanır; Tercihler › Hakkında klasörünü gösterir. Yalnızca varsayılandan farklı değerler yazılır ve okunamayan bir alan diğerlerini etkilemeden varsayılana döner.
@@ -76,7 +76,7 @@ Temalar uygulamayla birlikte gelir: her biri `src/renderer/themes/<ad>/` altınd
   }
 }
 
-.milkdown .ProseMirror h1 {
+.md-document .md-h1 {
   font-size: 2em;
 }
 ```
