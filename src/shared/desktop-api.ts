@@ -96,6 +96,9 @@ export interface InvokeChannels {
   /** Starts or stops telling the window, through folder:changed, when the entries of a listed folder change. */
   "folder:watch": (path: string) => void;
   "folder:unwatch": (path: string) => void;
+  /** Starts or stops telling the window, through document:changed, when the file is modified. */
+  "document:watch": (path: string) => void;
+  "document:unwatch": (path: string) => void;
   "document:write": (path: string, content: string, lineEnding: LineEnding) => void;
   /** Asks where to save a document; the document is written with document:write afterwards. */
   "dialog:choose-save-path": (suggestedName: string) => DocumentLocation | null;
@@ -128,6 +131,8 @@ export interface InvokeChannels {
 /** Events the main process pushes to the renderer through `webContents.send`. */
 export interface RendererEvents {
   "settings:changed": Settings;
+  /** The file of an open document was modified, possibly by the document's own save. */
+  "document:changed": string;
   /** The entries of a watched folder changed. */
   "folder:changed": string;
   "recent-files:changed": readonly string[];

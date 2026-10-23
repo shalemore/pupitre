@@ -1,5 +1,5 @@
-import type { LineEnding } from "@shared/desktop-api";
-import { createEffect, createSignal, on } from "solid-js";
+import type { LineEnding, OpenedDocument } from "@shared/desktop-api";
+import { createEffect, createMemo, createSignal, on, onCleanup } from "solid-js";
 import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
 import { getSampleDocument } from "@/features/samples/sample-document";
 import { currentLocale, t } from "@/i18n";
@@ -35,6 +35,8 @@ export function createDocumentSession(
   const [savedMarkdown, setSavedMarkdown] = createSignal("");
   const [currentMarkdown, setCurrentMarkdown] = createSignal("");
   let autoSaveTimer: number | undefined;
+  // What the file on disk is known to contain, so a change notification caused by our own save is recognized
+  let diskContent = "";
 
   const isDirty = () => currentMarkdown() !== savedMarkdown();
 
@@ -58,6 +60,11 @@ export function createDocumentSession(
     setActiveDocument({ ...doc, id: nextDocumentId++ });
   };
 
+  const loadOpened = (opened: OpenedDocument) => {
+    diskContent = opened.content;
+    load({ ...opened, markdown: opened.content, isSample: false });
+  };
+
   const markSaved = (markdown: string) => {
     setSavedMarkdown(markdown);
     setCurrentMarkdown(markdown);
@@ -69,6 +76,7 @@ export function createDocumentSession(
     if (!editor) return false;
     await editor.persistImages(path);
     const markdown = editor.getMarkdown();
+    diskContent = withTrailingNewline(markdown);
     await desktop.invoke("document:write", path, withTrailingNewline(markdown), lineEndingFor(doc));
     markSaved(markdown);
     return true;
@@ -107,15 +115,14 @@ export function createDocumentSession(
   const open = async () => {
     if (!(await confirmDiscard())) return;
     const opened = await desktop.invoke("document:open");
-    if (opened) load({ ...opened, markdown: opened.content, isSample: false });
+    if (opened) loadOpened(opened);
   };
 
   /** Returns the failure message when the file can't be opened; with `showError` the user is also told in a dialog. */
   const openPath = async (path: string, showError = true): Promise<string | undefined> => {
     if (!(await confirmDiscard())) return undefined;
     try {
-      const opened = await desktop.invoke("document:read", path);
-      load({ ...opened, markdown: opened.content, isSample: false });
+      loadOpened(await desktop.invoke("document:read", path));
       return undefined;
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
@@ -155,6 +162,30 @@ export function createDocumentSession(
       autoSaveTimer = window.setTimeout(() => void save(), AUTO_SAVE_DELAY);
     }
   };
+
+  /** Applies an edit made to the file elsewhere, unless the document has unsaved changes of its own. */
+  const reloadFromDisk = async (path: string) => {
+    if (isDirty()) return;
+    const opened = await desktop.invoke("document:read", path).catch(() => undefined);
+    const doc = activeDocument();
+    if (!opened || doc?.path !== path || isDirty() || opened.content === diskContent) return;
+    diskContent = opened.content;
+    load({ ...doc, ...opened, markdown: opened.content });
+  };
+
+  const watchedPath = createMemo(() => activeDocument()?.path);
+  createEffect(() => {
+    const path = watchedPath();
+    if (path === undefined) return;
+    void desktop.invoke("document:watch", path);
+    const unlisten = desktop.on("document:changed", (changed) => {
+      if (changed === path) void reloadFromDisk(path);
+    });
+    onCleanup(() => {
+      unlisten();
+      void desktop.invoke("document:unwatch", path);
+    });
+  });
 
   // The example document follows the interface language while it is unmodified
   createEffect(

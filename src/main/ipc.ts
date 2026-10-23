@@ -16,7 +16,7 @@ import { setAsDefaultMarkdownApp } from "./default-app";
 import { t } from "./i18n";
 import { popupTopMenu, setDocumentState } from "./menu";
 import { takeLaunchFile } from "./open-files";
-import { unwatchFolder, watchFolder } from "./folder-watcher";
+import { unwatchPath, watchPath } from "./path-watcher";
 import { addRecentFile, getRecentFiles, removeRecentFile } from "./recent-files";
 import { getSettings, getSettingsPath, resetSetting, updateSettings } from "./settings-store";
 import { checkForUpdates, downloadUpdate, getUpdateStatus, installUpdate } from "./updater";
@@ -152,8 +152,10 @@ export function registerIpcHandlers(): void {
     return canceled || path === undefined ? null : path;
   });
   handle("folder:list", (_event, path) => listFolder(path));
-  handle("folder:watch", (event, path) => watchFolder(event.sender, path));
-  handle("folder:unwatch", (event, path) => unwatchFolder(event.sender, path));
+  handle("folder:watch", (event, path) => watchPath(event.sender, "folder:changed", path));
+  handle("folder:unwatch", (event, path) => unwatchPath(event.sender, "folder:changed", path));
+  handle("document:watch", (event, path) => watchPath(event.sender, "document:changed", path));
+  handle("document:unwatch", (event, path) => unwatchPath(event.sender, "document:changed", path));
   handle("document:write", (_event, path, content, lineEnding) =>
     writeDocument(path, content, lineEnding),
   );
