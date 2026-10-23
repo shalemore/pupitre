@@ -235,7 +235,7 @@ export const MainWindow: Component = () => {
         class={cn(
           "flex-1 min-h-0 flex overflow-hidden print:block print:overflow-visible",
           // The card keeps an even gap to the window edges, the title bar and the sidebar
-          immersive() && "gap-1.5 p-1.5 ps-0 print:p-0",
+          immersive() && "gap-2 p-2 ps-0 print:p-0",
         )}
       >
         {/* Collapsing animates the width, and the card takes the freed room; inert keeps the hidden sidebar out of the tab order */}
@@ -278,8 +278,7 @@ export const MainWindow: Component = () => {
         <div
           class={cn(
             "flex-1 min-w-0 flex overflow-hidden print:block print:overflow-visible",
-            immersive() &&
-              "rounded-xl border border-border/80 bg-surface-1 shadow-sm print:rounded-none print:border-0 print:shadow-none",
+            immersive() && "rounded-lg bg-surface-1 shadow-sm print:rounded-none print:shadow-none",
           )}
         >
           <Show
