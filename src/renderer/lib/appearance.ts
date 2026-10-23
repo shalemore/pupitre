@@ -53,7 +53,8 @@ export function setupAppearance(): void {
       const { fontSize, lineHeight, contentWidth, bodyFont, fallbackFont, codeFont, uiFont } =
         settings();
       activeTheme();
-      const themeFonts = getComputedStyle(root).getPropertyValue("--font-document");
+      const themeStyle = getComputedStyle(root);
+      const themeFonts = themeStyle.getPropertyValue("--font-document");
       root.style.setProperty("--pref-font-size", `${fontSize}px`);
       root.style.setProperty("--pref-line-height", String(lineHeight));
       root.style.setProperty("--pref-content-width", CONTENT_WIDTHS[contentWidth]);
@@ -61,7 +62,10 @@ export function setupAppearance(): void {
         "--pref-font-family",
         documentFontFamily(bodyFont, fallbackFont, themeFonts),
       );
-      setOptionalProperty("--pref-code-font", codeFontFamily(codeFont));
+      setOptionalProperty(
+        "--pref-code-font",
+        codeFontFamily(codeFont, fallbackFont, themeStyle.getPropertyValue("--font-mono")),
+      );
       setOptionalProperty("--pref-ui-font", interfaceFontFamily(uiFont, fallbackFont));
     });
   });

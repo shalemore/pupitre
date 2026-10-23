@@ -1,4 +1,5 @@
 import { DEFAULT_SETTINGS } from "@shared/settings";
+import { createSignal } from "solid-js";
 
 export type ColorScheme = "light" | "dark";
 
@@ -53,6 +54,13 @@ export const THEMES: readonly ThemeInfo[] = [
 ];
 
 let styleElement: HTMLStyleElement | undefined;
+const [applied, setApplied] = createSignal(undefined, { equals: false });
+
+/**
+ * Notifies every time the theme is applied, including a switch of the color scheme. Read it to
+ * redo work that copies theme colors outside CSS, such as diagrams.
+ */
+export const themeApplied = applied;
 
 export function applyTheme(name: string): void {
   const css =
@@ -60,10 +68,11 @@ export function applyTheme(name: string): void {
     themeStyles[`../themes/${DEFAULT_THEME}/index.css`];
   styleElement ??= document.head.appendChild(document.createElement("style"));
   styleElement.textContent = `@layer document-theme {\n${css ?? ""}\n}`;
+  setApplied();
 }
 
-/** Converts any CSS color (themes mostly use oklch) to the #rrggbb Electron's window APIs need. */
-function toHex(color: string): string {
+/** Converts any CSS color (themes mostly use oklch) to #rrggbb, for APIs that only take hex. */
+export function toHex(color: string): string {
   const context = new OffscreenCanvas(1, 1).getContext("2d");
   if (!context) return "#000000";
   context.fillStyle = color;

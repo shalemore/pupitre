@@ -46,6 +46,18 @@ export const ukUA = {
       warning: "Попередження",
       caution: "Обережно",
     },
+    table: {
+      alignStart: "Вирівняти ліворуч",
+      alignCenter: "Вирівняти по центру",
+      alignEnd: "Вирівняти праворуч",
+      insertRowAbove: "Вставити рядок вище",
+      insertRowBelow: "Вставити рядок нижче",
+      insertColumnBefore: "Вставити стовпець ліворуч",
+      insertColumnAfter: "Вставити стовпець праворуч",
+      deleteRow: "Видалити рядок",
+      deleteColumn: "Видалити стовпець",
+      deleteTable: "Видалити таблицю",
+    },
   },
   dialogs: {
     copyButton: "Копіювати",

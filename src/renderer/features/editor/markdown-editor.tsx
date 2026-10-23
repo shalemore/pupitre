@@ -22,7 +22,7 @@ import {
   searchPanelOpen,
   setSearchQuery,
 } from "@codemirror/search";
-import { Compartment, EditorState } from "@codemirror/state";
+import { Compartment, EditorState, Prec } from "@codemirror/state";
 import { type Command, EditorView, keymap, placeholder } from "@codemirror/view";
 import { GFM } from "@lezer/markdown";
 import type { FormatAction } from "@shared/format";
@@ -32,6 +32,7 @@ import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { settings } from "@/lib/settings";
 import { countText, type TextStats } from "@/lib/text-stats";
+import { themeApplied } from "@/lib/theme";
 import { alertTitles } from "./alerts";
 import { codeHighlight } from "./code-highlight";
 import {
@@ -41,14 +42,19 @@ import {
   type OutlineHeading,
   readableText,
 } from "./document-structure";
-import { formatKeymap, type MarkdownStyle, runFormatAction } from "./format-commands";
+import {
+  formatKeymap,
+  insertParagraphBreak,
+  type MarkdownStyle,
+  runFormatAction,
+} from "./format-commands";
 import { footnotes } from "./footnotes";
 import { frontMatter } from "./front-matter";
 import { createPendingImages, documentBaseUrl, imageInput } from "./images";
 import { livePreview, setPrinting } from "./live-preview";
 import { pasteHtml } from "./paste-html";
 import { loadMathFonts, math } from "./math";
-import { prerenderDiagrams } from "./mermaid";
+import { diagramTheme, prerenderDiagrams, readDiagramTheme } from "./mermaid";
 import { renderedBlocks } from "./rendered-blocks";
 import { textDirection } from "./text-direction";
 import { focusMode, typewriterMode } from "./writing-modes";
@@ -129,9 +135,14 @@ function markdownStyle(): MarkdownStyle {
  */
 const layeredStyles = EditorView.theme({
   "&.cm-focused": { outline: "revert-layer" },
-  ".cm-scroller": { fontFamily: "revert-layer", lineHeight: "revert-layer" },
+  ".cm-scroller": {
+    fontFamily: "revert-layer",
+    lineHeight: "revert-layer",
+    overflowX: "revert-layer",
+  },
   "&.cm-editor .cm-content": {
     boxSizing: "revert-layer",
+    margin: "revert-layer",
     padding: "revert-layer",
     caretColor: "revert-layer",
   },
@@ -193,6 +204,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     const typewriterCompartment = new Compartment();
     const spellcheckCompartment = new Compartment();
     const baseUrlCompartment = new Compartment();
+    const diagramThemeCompartment = new Compartment();
 
     const view = new EditorView({
       parent: container,
@@ -200,6 +212,8 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         doc: props.markdown,
         extensions: [
           history(),
+          // Ahead of lang-markdown's Enter, which only continues lists and quotes
+          Prec.highest(keymap.of([{ key: "Enter", run: insertParagraphBreak }])),
           keymap.of([
             ...formatKeymap(markdownStyle),
             { key: "Tab", run: inList(indentMore), shift: inList(indentLess) },
@@ -218,6 +232,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           imageInput(uploadImage),
           pasteHtml(markdownStyle),
           baseUrlCompartment.of(documentBaseUrl.of(props.baseUrl)),
+          diagramThemeCompartment.of(diagramTheme.of(readDiagramTheme())),
           alertTitles.of(t().editor.alerts),
           textDirection,
           search({ createPanel: () => ({ dom: document.createElement("div") }) }),
@@ -263,6 +278,19 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         () => props.baseUrl,
         (baseUrl) =>
           view.dispatch({ effects: baseUrlCompartment.reconfigure(documentBaseUrl.of(baseUrl)) }),
+        { defer: true },
+      ),
+    );
+
+    // Diagrams copy the theme's colors and the body font, so they are drawn again when either
+    // changes. The appearance effects that set them were created first and have run by now.
+    createEffect(
+      on(
+        [themeApplied, () => settings().bodyFont, () => settings().fallbackFont],
+        () =>
+          view.dispatch({
+            effects: diagramThemeCompartment.reconfigure(diagramTheme.of(readDiagramTheme())),
+          }),
         { defer: true },
       ),
     );

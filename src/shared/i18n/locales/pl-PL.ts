@@ -46,6 +46,18 @@ export const plPL = {
       warning: "Ostrzeżenie",
       caution: "Ostrożnie",
     },
+    table: {
+      alignStart: "Wyrównaj do lewej",
+      alignCenter: "Wyśrodkuj",
+      alignEnd: "Wyrównaj do prawej",
+      insertRowAbove: "Wstaw wiersz powyżej",
+      insertRowBelow: "Wstaw wiersz poniżej",
+      insertColumnBefore: "Wstaw kolumnę z lewej",
+      insertColumnAfter: "Wstaw kolumnę z prawej",
+      deleteRow: "Usuń wiersz",
+      deleteColumn: "Usuń kolumnę",
+      deleteTable: "Usuń tabelę",
+    },
   },
   dialogs: {
     copyButton: "Kopiuj",

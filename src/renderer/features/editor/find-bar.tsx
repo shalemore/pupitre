@@ -10,7 +10,7 @@ import {
   X,
 } from "lucide-solid";
 import { createEffect, createSignal, on, Show, type Component, type JSX } from "solid-js";
-import { Badge, Button } from "@/components/ui";
+import { Badge, Button, buttonVariants, Input } from "@/components/ui";
 import { t } from "@/i18n";
 import type { MatchStats, SearchOptions } from "./markdown-editor";
 
@@ -40,7 +40,10 @@ const FindToggle: Component<{
     onChange={props.onChange}
     title={props.title}
     aria-label={props.title}
-    class="p-0.5 rounded-sm transition-colors cursor-pointer text-muted-foreground hover:text-foreground hover:bg-muted data-pressed:bg-brand/20 data-pressed:text-brand"
+    class={cn(
+      buttonVariants({ variant: "ghost", size: "icon-2xs" }),
+      "data-pressed:bg-brand/15 data-pressed:text-brand",
+    )}
   >
     {props.children}
   </ToggleButton>
@@ -103,7 +106,7 @@ export const FindBar: Component<FindBarProps> = (props) => {
     <div
       data-slot="find-bar"
       class={cn(
-        "absolute top-3 inset-e-5 z-40 flex flex-col gap-2 rounded-xl border border-border/80 bg-surface-2/95 p-2 shadow-float backdrop-blur-md text-xs select-none animate-in fade-in-0 slide-in-from-top-2 duration-(--duration-ui) max-w-sm w-full print:hidden",
+        "absolute top-3 inset-e-5 z-40 flex flex-col gap-2 rounded-xl bg-popover/95 p-2 shadow-float backdrop-blur-md text-xs select-none animate-in fade-in-0 slide-in-from-top-2 duration-base ease-enter max-w-sm w-full print:hidden",
         props.class,
       )}
     >
@@ -113,26 +116,26 @@ export const FindBar: Component<FindBarProps> = (props) => {
           size="icon-xs"
           onClick={props.onToggleReplace}
           title={t().editor.toggleReplace}
-          class="text-muted-foreground hover:text-foreground shrink-0"
+          class="shrink-0"
         >
           <ChevronRight
             class={cn(
-              "size-3.5 transition-transform duration-(--duration-snap) rtl:-scale-x-100",
+              "size-3.5 transition-transform duration-snap ease-snap rtl:-scale-x-100",
               props.showReplace && "rotate-90",
             )}
           />
         </Button>
 
         <div class="relative flex-1 flex items-center min-w-0">
-          <input
+          <Input
             ref={(element) => (searchInput = element)}
-            type="text"
+            size="sm"
             dir="auto"
             value={searchText()}
             onInput={(e) => setSearchText(e.currentTarget.value)}
             onKeyDown={(e) => handleKeyDown(e, props.onFindNext, props.onFindPrevious)}
             placeholder={t().editor.findPlaceholder}
-            class="h-7 w-full rounded-md border border-input bg-surface-0/60 ps-2 pe-16 text-xs transition-colors outline-none focus-visible:shadow-focus placeholder:text-muted-foreground"
+            class="pe-18"
           />
 
           <div class="absolute inset-e-1 flex items-center gap-0.5">
@@ -141,18 +144,18 @@ export const FindBar: Component<FindBarProps> = (props) => {
               onChange={setCaseSensitive}
               title={t().editor.matchCase}
             >
-              <CaseSensitive class="size-3" />
+              <CaseSensitive />
             </FindToggle>
             <FindToggle pressed={wholeWord()} onChange={setWholeWord} title={t().editor.wholeWord}>
-              <WholeWord class="size-3" />
+              <WholeWord />
             </FindToggle>
             <FindToggle pressed={regexp()} onChange={setRegexp} title={t().editor.useRegex}>
-              <Regex class="size-3" />
+              <Regex />
             </FindToggle>
           </div>
         </div>
 
-        <div class="shrink-0 text-[11px] tabular-nums">
+        <div class="shrink-0 tabular-nums">
           <Show when={searchText()}>
             <Badge variant={props.matchStats.total > 0 ? "secondary" : "destructive"} size="sm">
               {props.matchStats.current}/{props.matchStats.total}
@@ -185,23 +188,23 @@ export const FindBar: Component<FindBarProps> = (props) => {
           size="icon-xs"
           onClick={props.onClose}
           title={t().editor.closeFind}
-          class="shrink-0 text-muted-foreground hover:text-foreground"
+          class="shrink-0"
         >
           <X class="size-3.5" />
         </Button>
       </div>
 
       <Show when={props.showReplace}>
-        <div class="flex items-center gap-1.5 ps-7 animate-in fade-in-0 slide-in-from-top-1 duration-(--duration-snap)">
-          <input
+        <div class="flex items-center gap-1.5 ps-7 animate-in fade-in-0 slide-in-from-top-1 duration-base ease-enter">
+          <Input
             ref={(element) => (replaceInput = element)}
-            type="text"
+            size="sm"
             dir="auto"
             value={replaceText()}
             onInput={(e) => setReplaceText(e.currentTarget.value)}
             onKeyDown={(e) => handleKeyDown(e, props.onReplaceNext, props.onReplaceAll)}
             placeholder={t().editor.replacePlaceholder}
-            class="h-7 flex-1 min-w-0 rounded-md border border-input bg-surface-0/60 px-2 text-xs transition-colors outline-none focus-visible:shadow-focus placeholder:text-muted-foreground"
+            class="flex-1"
           />
           <Button
             variant="outline"

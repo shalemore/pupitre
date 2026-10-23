@@ -57,7 +57,7 @@
   hyphens: auto;
 }
 
-.md-document > .cm-line:not(.md-code-block, .md-table, .md-front-matter) {
+.md-document > .cm-line:not(.md-code-block, .md-front-matter) {
   text-align: justify;
 }
 

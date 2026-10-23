@@ -83,17 +83,19 @@ const GENERIC_FAMILIES = new Set([
 ]);
 
 /**
- * The body font the user chose; undefined when nothing is chosen, which leaves everything to the theme.
- * The fallback font must come before generic families (sans-serif and so on): a generic family maps to a system font,
- * which on a Chinese system already has Chinese glyphs, so a fallback placed after it would never be reached.
- * themeStack is the computed value of the theme's --font-document.
+ * A font stack with the user's choices put in front of the theme's: the chosen font replaces the
+ * theme's specific families and the fallback font comes next. The fallback must come before the
+ * generic families (sans-serif and so on): a generic family maps to a system font, which on a
+ * Chinese system already has Chinese glyphs, so a fallback placed after it would never be reached.
+ * Undefined when nothing is chosen, which leaves everything to the theme.
  */
-export function documentFontFamily(
-  bodyFont: string,
+function userFontStack(
+  font: string,
   fallbackFont: string,
   themeStack: string,
+  defaultGeneric: string,
 ): string | undefined {
-  if (!bodyFont && !fallbackFont) return undefined;
+  if (!font && !fallbackFont) return undefined;
   const themeFamilies = themeStack
     .split(",")
     .map((family) => family.trim())
@@ -101,11 +103,20 @@ export function documentFontFamily(
   const specific = themeFamilies.filter((family) => !GENERIC_FAMILIES.has(family));
   const generic = themeFamilies.filter((family) => GENERIC_FAMILIES.has(family));
   const families = [
-    ...(bodyFont ? [quote(bodyFont)] : specific),
+    ...(font ? [quote(font)] : specific),
     ...(fallbackFont ? [quote(fallbackFont)] : []),
-    ...(generic.length > 0 ? generic : ["sans-serif"]),
+    ...(generic.length > 0 ? generic : [defaultGeneric]),
   ];
   return families.join(", ");
+}
+
+/** The body font stack; themeStack is the computed value of the theme's --font-document. */
+export function documentFontFamily(
+  bodyFont: string,
+  fallbackFont: string,
+  themeStack: string,
+): string | undefined {
+  return userFontStack(bodyFont, fallbackFont, themeStack, "sans-serif");
 }
 
 /** The interface font; characters it lacks fall back to the editor's fallback font first. */
@@ -115,6 +126,14 @@ export function interfaceFontFamily(uiFont: string, fallbackFont: string): strin
   return `${quote(uiFont)}, ${fallback}var(--font-sans)`;
 }
 
-export function codeFontFamily(codeFont: string): string | undefined {
-  return codeFont ? `${quote(codeFont)}, var(--font-mono)` : undefined;
+/**
+ * The code font stack; themeStack is the computed value of the theme's --font-mono. Code takes the
+ * fallback font too, so Chinese in comments matches the body text.
+ */
+export function codeFontFamily(
+  codeFont: string,
+  fallbackFont: string,
+  themeStack: string,
+): string | undefined {
+  return userFontStack(codeFont, fallbackFont, themeStack, "monospace");
 }

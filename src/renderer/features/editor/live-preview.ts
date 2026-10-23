@@ -17,6 +17,7 @@ import {
 } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
 import { AlertTitleWidget, alertTitles, alertType } from "./alerts";
+import { CodeCornerWidget } from "./code-corner";
 import { footnoteTarget } from "./footnotes";
 import { htmlTag, isFormattingTag, LineBreakWidget } from "./html";
 import { ImageWidget, imageSource, resolveUrl } from "./images";
@@ -71,8 +72,6 @@ function blockClass(name: string): string | undefined {
   switch (name) {
     case "HorizontalRule":
       return "md-hr";
-    case "Table":
-      return "md-table";
     case "FrontMatter":
       return "md-front-matter";
     case "HTMLBlock":
@@ -244,7 +243,28 @@ class DecorationBuilder {
     return this.state.sliceDoc(from, to);
   }
 
+  /**
+   * A blank line between blocks reads as the space between them, the way the blocks would be set
+   * apart once rendered; it opens up as an empty line while the selection is on it. Lines inside
+   * code, HTML and front matter keep their height, since there the blank line is content.
+   */
+  collapseBlankLines(): void {
+    const { doc } = this.state;
+    if (doc.lines === 1) return;
+    for (let pos = this.from; pos <= this.to;) {
+      const line = doc.lineAt(pos);
+      pos = line.to + 1;
+      if (line.text.trim() !== "" || touches(this.ranges, line.from, line.to)) continue;
+      const classes = this.lines.get(line.from)?.classes;
+      if (classes && ["md-code-block", "md-html", "md-front-matter"].some((c) => classes.has(c))) {
+        continue;
+      }
+      this.lineClass(line.from, line.from, "md-blank");
+    }
+  }
+
   finish(): DecorationSet {
+    this.collapseBlankLines();
     for (const [start, line] of this.lines) {
       const leading = /^[ \t]*/.exec(this.lineAt(start).text)?.[0].length ?? 0;
       this.hide(start, start + Math.min(leading, line.listIndent));
@@ -275,20 +295,31 @@ function visitCodeBlock(builder: DecorationBuilder, node: SyntaxNode): void {
     if (number === first) line.classes.add("md-code-block-start");
     if (number === last) line.classes.add("md-code-block-end");
   });
-  if (node.name === "CodeBlock") return;
-
   const active = touches(builder.ranges, node.from, node.to);
   const info = node.getChild("CodeInfo");
+  if (node.name !== "BlockMath") {
+    // Indented code keeps its indentation in the source, not in what is copied
+    const code =
+      node.name === "CodeBlock"
+        ? builder.text(node.from, node.to).replace(/^(?: {4}|\t)/gm, "")
+        : builder.text(...codeRange(node));
+    const language = info && !active ? builder.text(info.from, info.to) : undefined;
+    const widget = new CodeCornerWidget(code, language);
+    builder.decorations.push(Decoration.widget({ widget, side: -1 }).range(node.from));
+  }
+  if (node.name === "CodeBlock") return;
+
   for (const fence of node.getChildren(node.name === "BlockMath" ? "MathMark" : "CodeMark")) {
     builder.marker(fence, active);
     if (!active) builder.lineClass(fence.from, fence.from, "md-syntax-line");
   }
-  if (!info) return;
-  builder.marker(info, active);
-  if (!active) {
-    const language = builder.text(info.from, info.to);
-    builder.eachLine(info.from, info.from, (line) => (line.attributes["data-language"] = language));
-  }
+  if (info) builder.marker(info, active);
+}
+
+/** The code of a fenced block, without its fences; empty for a block with no code yet. */
+function codeRange(node: SyntaxNode): [number, number] {
+  const code = node.getChild("CodeText");
+  return code ? [code.from, code.to] : [node.from, node.from];
 }
 
 function visitListItem(builder: DecorationBuilder, node: SyntaxNode): void {
@@ -572,7 +603,6 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
         builder.mark(node.from, node.to, "md-mark");
       }
       return false;
-    case "TableDelimiter":
     case "TaskMarker":
       builder.mark(node.from, node.to, "md-mark");
       return false;
@@ -581,11 +611,21 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
   }
 }
 
+/** The footnote definitions are set off from the text by a rule above the first one. */
+function markFootnotesStart(builder: DecorationBuilder): void {
+  for (let block = syntaxTree(builder.state).topNode.firstChild; block; block = block.nextSibling) {
+    if (block.name !== "FootnoteDefinition") continue;
+    builder.lineClass(block.from, block.from, "md-footnotes-start");
+    return;
+  }
+}
+
 /** Decorates the rendered viewport, which also covers the lines a scroll brings into view. */
 function buildDecorations(view: EditorView): DecorationSet {
   const { from, to } = view.viewport;
   const builder = new DecorationBuilder(view, from, to);
   syntaxTree(view.state).iterate({ from, to, enter: (node) => visit(builder, node.node) });
+  markFootnotesStart(builder);
   return builder.finish();
 }
 
@@ -632,9 +672,15 @@ const livePreviewPlugin = ViewPlugin.fromClass(
   {
     decorations: (plugin) => plugin.decorations,
     eventHandlers: {
-      // Ctrl/Cmd+click follows a link; a plain click places the cursor to edit it
+      // Ctrl/Cmd+click follows a link; a plain click places the cursor to edit it. A rendered
+      // footnote label follows on a plain click too, since its brackets hide the source to edit.
       mousedown(event, view) {
-        if (event.button !== 0 || !(event.ctrlKey || event.metaKey)) return false;
+        const renderedFootnote =
+          event.target instanceof Element &&
+          event.target.closest(".md-footnote-ref, .md-footnote-label") !== null;
+        if (event.button !== 0 || !(event.ctrlKey || event.metaKey || renderedFootnote)) {
+          return false;
+        }
         const pos = view.posAtCoords(event);
         if (pos === null) return false;
         // A footnote jumps between its reference and its definition

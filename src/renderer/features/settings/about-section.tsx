@@ -12,7 +12,7 @@ export const AboutSection: Component = () => (
       <img src="./logo.svg" alt="" class="size-10 shrink-0 rounded-xl shadow-sm" />
       <div class="min-w-0 flex-1">
         <h2 class="text-base font-semibold text-foreground">Pupitre</h2>
-        <div class="text-[11px] text-muted-foreground tabular-nums">
+        <div class="text-2xs text-muted-foreground tabular-nums">
           {t().settings.version} {pkg.version} · Electron {desktop.versions.electron}
         </div>
       </div>
@@ -26,7 +26,7 @@ export const AboutSection: Component = () => (
     <div class="flex items-center justify-between gap-3">
       <div class="min-w-0">
         <div class="font-medium text-foreground">{t().about.sampleDocTitle}</div>
-        <div class="truncate text-[11px] text-muted-foreground">{t().about.sampleDocDesc}</div>
+        <div class="truncate text-2xs text-muted-foreground">{t().about.sampleDocDesc}</div>
       </div>
       <Button
         variant="outline"
@@ -34,7 +34,7 @@ export const AboutSection: Component = () => (
         onClick={() => void desktop.invoke("app:dispatch", { id: "help.sample-document" })}
         class="shrink-0"
       >
-        <BookOpen class="size-3.5" />
+        <BookOpen />
         <span>{t().about.openSampleDoc}</span>
       </Button>
     </div>
@@ -44,9 +44,9 @@ export const AboutSection: Component = () => (
     <div>
       <div class="mb-2 font-medium text-foreground">{t().settings.settingsFile}</div>
       <div class="flex items-center gap-2">
-        <Input readOnly value={desktop.initialState.settingsPath} class="font-mono text-[11px]" />
+        <Input readOnly value={desktop.initialState.settingsPath} class="font-mono text-2xs" />
         <Button variant="outline" size="sm" onClick={() => void desktop.invoke("settings:reveal")}>
-          <FolderOpen class="size-3.5" />
+          <FolderOpen />
           <span>{t().settings.revealSettingsFile}</span>
         </Button>
       </div>

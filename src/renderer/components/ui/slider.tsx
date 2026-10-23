@@ -22,9 +22,9 @@ export function Slider(props: SliderProps) {
       aria-label={props["aria-label"]}
       class="relative flex w-36 touch-none select-none items-center"
     >
-      <KobalteSlider.Track class="relative h-1 w-full rounded-full bg-input/70">
+      <KobalteSlider.Track class="relative h-1 w-full rounded-full bg-input">
         <KobalteSlider.Fill class="absolute h-full rounded-full bg-brand" />
-        <KobalteSlider.Thumb class="-top-1.5 block size-4 rounded-full border border-border bg-surface-2 shadow-sm outline-none cursor-grab focus-visible:shadow-focus">
+        <KobalteSlider.Thumb class="-top-1.5 block size-4 rounded-full bg-knob shadow-segmented-thumb outline-none cursor-grab active:cursor-grabbing focus-visible:shadow-focus">
           <KobalteSlider.Input />
         </KobalteSlider.Thumb>
       </KobalteSlider.Track>

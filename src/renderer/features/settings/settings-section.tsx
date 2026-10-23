@@ -1,7 +1,7 @@
 import { isModified, type SettingKey } from "@shared/settings";
 import { RotateCcw } from "lucide-solid";
 import { type JSX, type ParentComponent, Show } from "solid-js";
-import { SettingRow } from "@/components/ui";
+import { Button, SettingRow } from "@/components/ui";
 import { t } from "@/i18n";
 import { resetSetting, settings } from "@/lib/settings";
 
@@ -14,9 +14,9 @@ export const SettingsSection: ParentComponent<{ title: string; description?: str
       {props.title}
     </h2>
     <Show when={props.description}>
-      <p class="mt-1.5 text-[11px] leading-relaxed text-muted-foreground">{props.description}</p>
+      <p class="mt-1.5 text-2xs leading-relaxed text-muted-foreground">{props.description}</p>
     </Show>
-    <div class="mt-3 divide-y divide-border/40">{props.children}</div>
+    <div class="mt-3 divide-y divide-border-subtle">{props.children}</div>
   </section>
 );
 
@@ -40,20 +40,21 @@ export const SettingField: ParentComponent<SettingFieldProps> = (props) => {
           <Show when={modified()}>
             <span
               aria-hidden="true"
-              class="absolute -inset-s-3 inset-y-3 w-0.5 rounded-full bg-brand"
+              class="absolute -inset-s-3 inset-y-3 w-0.5 rounded-full bg-brand animate-in fade-in-0 duration-ui"
             />
           </Show>
           {props.title}
           <Show when={modified()}>
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="icon-2xs"
               onClick={() => void resetSetting(props.name)}
               title={t().settings.resetToDefault}
               aria-label={t().settings.resetToDefault}
-              class="rounded p-0.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground cursor-pointer"
+              class="animate-in fade-in-0 zoom-in-75 duration-snap"
             >
-              <RotateCcw class="size-3" />
-            </button>
+              <RotateCcw />
+            </Button>
           </Show>
         </span>
       }

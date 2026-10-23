@@ -41,6 +41,18 @@ export const jaJP = {
       warning: "警告",
       caution: "注意",
     },
+    table: {
+      alignStart: "左揃え",
+      alignCenter: "中央揃え",
+      alignEnd: "右揃え",
+      insertRowAbove: "上に行を挿入",
+      insertRowBelow: "下に行を挿入",
+      insertColumnBefore: "左に列を挿入",
+      insertColumnAfter: "右に列を挿入",
+      deleteRow: "行を削除",
+      deleteColumn: "列を削除",
+      deleteTable: "表を削除",
+    },
   },
   dialogs: {
     copyButton: "コピー",

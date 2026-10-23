@@ -98,6 +98,19 @@ export interface TranslationSchema {
       readonly warning: string;
       readonly caution: string;
     };
+    /** Toolbar of a rendered table; start and end follow the text direction. */
+    readonly table: {
+      readonly alignStart: string;
+      readonly alignCenter: string;
+      readonly alignEnd: string;
+      readonly insertRowAbove: string;
+      readonly insertRowBelow: string;
+      readonly insertColumnBefore: string;
+      readonly insertColumnAfter: string;
+      readonly deleteRow: string;
+      readonly deleteColumn: string;
+      readonly deleteTable: string;
+    };
   };
   readonly dialogs: {
     readonly copyButton: string;

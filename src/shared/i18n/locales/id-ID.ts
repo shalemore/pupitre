@@ -42,6 +42,18 @@ export const idID = {
       warning: "Peringatan",
       caution: "Hati-hati",
     },
+    table: {
+      alignStart: "Rata kiri",
+      alignCenter: "Rata tengah",
+      alignEnd: "Rata kanan",
+      insertRowAbove: "Sisipkan baris di atas",
+      insertRowBelow: "Sisipkan baris di bawah",
+      insertColumnBefore: "Sisipkan kolom di kiri",
+      insertColumnAfter: "Sisipkan kolom di kanan",
+      deleteRow: "Hapus baris",
+      deleteColumn: "Hapus kolom",
+      deleteTable: "Hapus tabel",
+    },
   },
   dialogs: {
     copyButton: "Salin",

@@ -19,7 +19,7 @@ export const CaptionButtons: Component<{ side: "left" | "right" }> = (props) => 
       aria-label={labels().close}
       title={labels().close}
       onClick={() => void desktop.invoke("window:close")}
-      class="flex w-11.5 items-center justify-center text-muted-foreground transition-colors hover:bg-[#c42b1c] hover:text-white"
+      class="flex w-11.5 items-center justify-center text-muted-foreground transition-colors hover:bg-window-close hover:text-white"
     >
       <X class="size-4" stroke-width={1.25} />
     </button>

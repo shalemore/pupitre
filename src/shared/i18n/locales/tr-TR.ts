@@ -42,6 +42,18 @@ export const trTR = {
       warning: "Uyarı",
       caution: "Dikkat",
     },
+    table: {
+      alignStart: "Sola hizala",
+      alignCenter: "Ortala",
+      alignEnd: "Sağa hizala",
+      insertRowAbove: "Üste satır ekle",
+      insertRowBelow: "Alta satır ekle",
+      insertColumnBefore: "Sola sütun ekle",
+      insertColumnAfter: "Sağa sütun ekle",
+      deleteRow: "Satırı sil",
+      deleteColumn: "Sütunu sil",
+      deleteTable: "Tabloyu sil",
+    },
   },
   dialogs: {
     copyButton: "Kopyala",

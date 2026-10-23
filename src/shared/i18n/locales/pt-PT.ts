@@ -41,6 +41,18 @@ export const ptPT = {
       warning: "Aviso",
       caution: "Cuidado",
     },
+    table: {
+      alignStart: "Alinhar à esquerda",
+      alignCenter: "Centrar",
+      alignEnd: "Alinhar à direita",
+      insertRowAbove: "Inserir linha acima",
+      insertRowBelow: "Inserir linha abaixo",
+      insertColumnBefore: "Inserir coluna à esquerda",
+      insertColumnAfter: "Inserir coluna à direita",
+      deleteRow: "Eliminar linha",
+      deleteColumn: "Eliminar coluna",
+      deleteTable: "Eliminar tabela",
+    },
   },
   dialogs: {
     copyButton: "Copiar",

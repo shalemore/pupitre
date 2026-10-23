@@ -42,6 +42,18 @@ export const huHU = {
       warning: "Figyelmeztetés",
       caution: "Vigyázat",
     },
+    table: {
+      alignStart: "Balra igazítás",
+      alignCenter: "Középre igazítás",
+      alignEnd: "Jobbra igazítás",
+      insertRowAbove: "Sor beszúrása fölé",
+      insertRowBelow: "Sor beszúrása alá",
+      insertColumnBefore: "Oszlop beszúrása balra",
+      insertColumnAfter: "Oszlop beszúrása jobbra",
+      deleteRow: "Sor törlése",
+      deleteColumn: "Oszlop törlése",
+      deleteTable: "Táblázat törlése",
+    },
   },
   dialogs: {
     copyButton: "Másolás",

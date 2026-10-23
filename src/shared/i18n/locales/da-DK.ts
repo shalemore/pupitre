@@ -42,6 +42,18 @@ export const daDK = {
       warning: "Advarsel",
       caution: "Forsigtig",
     },
+    table: {
+      alignStart: "Venstrejuster",
+      alignCenter: "Centrer",
+      alignEnd: "Højrejuster",
+      insertRowAbove: "Indsæt række over",
+      insertRowBelow: "Indsæt række under",
+      insertColumnBefore: "Indsæt kolonne til venstre",
+      insertColumnAfter: "Indsæt kolonne til højre",
+      deleteRow: "Slet række",
+      deleteColumn: "Slet kolonne",
+      deleteTable: "Slet tabel",
+    },
   },
   dialogs: {
     copyButton: "Kopiér",

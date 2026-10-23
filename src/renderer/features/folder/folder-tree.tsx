@@ -10,6 +10,7 @@ import {
   Show,
   type Component,
 } from "solid-js";
+import { ListItem } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 
@@ -55,7 +56,7 @@ const FolderChildren: Component<FolderChildrenProps> = (props) => {
     <Show
       when={!entries.error}
       fallback={
-        <p class="px-2.5 py-1.5 text-[11px] text-destructive">{t().sidebar.folderUnreadable}</p>
+        <p class="px-2.5 py-1.5 text-2xs text-destructive">{t().sidebar.folderUnreadable}</p>
       }
     >
       <For each={entries()}>
@@ -72,9 +73,10 @@ const FolderRow: Component<{ entry: FolderEntry; depth: number; tree: TreeContex
 
   return (
     <>
-      <button
-        type="button"
+      <ListItem
         dir="auto"
+        active={isActive()}
+        tone={failure() ? "danger" : "default"}
         onClick={() =>
           props.entry.kind === "directory"
             ? setExpanded(!expanded())
@@ -82,19 +84,12 @@ const FolderRow: Component<{ entry: FolderEntry; depth: number; tree: TreeContex
         }
         // The indent follows the nesting depth, which is data, so an inline style is the only option
         style={{ "padding-inline-start": `${6 + props.depth * 12}px` }}
-        class={cn(
-          "w-full flex items-center gap-1.5 rounded-md py-1.5 pe-2.5 text-start transition-colors cursor-pointer",
-          isActive()
-            ? "bg-brand/10 text-brand font-medium"
-            : "text-muted-foreground hover:text-foreground hover:bg-accent",
-          failure() && "text-destructive hover:text-destructive",
-        )}
         title={failure() ?? props.entry.name}
       >
         <Show when={props.entry.kind === "directory"} fallback={<span class="size-3 shrink-0" />}>
           <ChevronRight
             class={cn(
-              "size-3 shrink-0 transition-transform rtl:-scale-x-100",
+              "size-3 shrink-0 transition-transform duration-base rtl:-scale-x-100",
               expanded() && "rotate-90 rtl:rotate-90",
             )}
           />
@@ -109,10 +104,12 @@ const FolderRow: Component<{ entry: FolderEntry; depth: number; tree: TreeContex
         >
           <Folder class="size-3.5 shrink-0" />
         </Show>
-        <span class="truncate">{props.entry.name}</span>
-      </button>
+        <span class="min-w-0 truncate">{props.entry.name}</span>
+      </ListItem>
       <Show when={expanded()}>
-        <FolderChildren path={props.entry.path} depth={props.depth + 1} tree={props.tree} />
+        <div class="space-y-0.5 animate-in fade-in-0 slide-in-from-top-1 duration-base ease-enter">
+          <FolderChildren path={props.entry.path} depth={props.depth + 1} tree={props.tree} />
+        </div>
       </Show>
     </>
   );

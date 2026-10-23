@@ -42,6 +42,18 @@ export const elGR = {
       warning: "Προειδοποίηση",
       caution: "Προσοχή",
     },
+    table: {
+      alignStart: "Στοίχιση αριστερά",
+      alignCenter: "Στοίχιση στο κέντρο",
+      alignEnd: "Στοίχιση δεξιά",
+      insertRowAbove: "Εισαγωγή γραμμής επάνω",
+      insertRowBelow: "Εισαγωγή γραμμής κάτω",
+      insertColumnBefore: "Εισαγωγή στήλης αριστερά",
+      insertColumnAfter: "Εισαγωγή στήλης δεξιά",
+      deleteRow: "Διαγραφή γραμμής",
+      deleteColumn: "Διαγραφή στήλης",
+      deleteTable: "Διαγραφή πίνακα",
+    },
   },
   dialogs: {
     copyButton: "Αντιγραφή",

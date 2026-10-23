@@ -41,6 +41,18 @@ export const koKR = {
       warning: "경고",
       caution: "주의",
     },
+    table: {
+      alignStart: "왼쪽 정렬",
+      alignCenter: "가운데 정렬",
+      alignEnd: "오른쪽 정렬",
+      insertRowAbove: "위에 행 삽입",
+      insertRowBelow: "아래에 행 삽입",
+      insertColumnBefore: "왼쪽에 열 삽입",
+      insertColumnAfter: "오른쪽에 열 삽입",
+      deleteRow: "행 삭제",
+      deleteColumn: "열 삭제",
+      deleteTable: "표 삭제",
+    },
   },
   dialogs: {
     copyButton: "복사",

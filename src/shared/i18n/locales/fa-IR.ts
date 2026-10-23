@@ -43,6 +43,18 @@ export const faIR = {
       warning: "هشدار",
       caution: "احتیاط",
     },
+    table: {
+      alignStart: "تراز به راست",
+      alignCenter: "وسط‌چین",
+      alignEnd: "تراز به چپ",
+      insertRowAbove: "درج سطر در بالا",
+      insertRowBelow: "درج سطر در پایین",
+      insertColumnBefore: "درج ستون در راست",
+      insertColumnAfter: "درج ستون در چپ",
+      deleteRow: "حذف سطر",
+      deleteColumn: "حذف ستون",
+      deleteTable: "حذف جدول",
+    },
   },
   dialogs: {
     copyButton: "رونوشت",
