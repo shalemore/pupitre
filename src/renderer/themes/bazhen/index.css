@@ -52,6 +52,9 @@
   --syntax-punctuation: var(--ui-text-secondary);
   --syntax-invalid: var(--ui-danger);
 
+  /* Diagrams: ink outlines on the darker paper */
+  --diagram-stroke: var(--ui-text-secondary);
+
   --alert-note: oklch(0.48 0.07 240);
   --alert-tip: oklch(0.5 0.1 135);
   --alert-important: var(--ui-brand);

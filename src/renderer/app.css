@@ -148,6 +148,17 @@
     --destructive: var(--ui-danger);
     --border: var(--ui-alpha-2);
     --input: var(--ui-alpha-3);
+
+    /*
+     * Diagram (Mermaid) colors: node fill and outline, connecting lines, text and one accent for
+     * notes and highlights. They are converted to hex when a diagram is drawn, so they must be
+     * plain colors, not relative or translucent ones.
+     */
+    --diagram-fill: var(--ui-surface-0);
+    --diagram-stroke: var(--ui-text-muted);
+    --diagram-line: var(--ui-text-secondary);
+    --diagram-text: var(--ui-text-primary);
+    --diagram-accent: var(--ui-brand);
   }
 
   @media (prefers-color-scheme: dark) {

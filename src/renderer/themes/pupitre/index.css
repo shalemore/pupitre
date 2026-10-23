@@ -48,6 +48,7 @@
    *   --ui-danger, --ui-success
    *   --ui-knob         thumbs of switches and sliders
    *   --syntax-*         code colors (keyword, string, number, function, comment, ...)
+   *   --diagram-*        Mermaid diagram colors (fill, stroke, line, text, accent)
    * Borders, shadows and translucent fills are derived from these and follow automatically.
    */
 

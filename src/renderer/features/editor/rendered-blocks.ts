@@ -7,7 +7,7 @@ import { HtmlBlockWidget, isRenderableHtml } from "./html";
 import { documentBaseUrl } from "./images";
 import { printingChanged, revealingRanges, touches } from "./live-preview";
 import { MATH_LANGUAGE, MathWidget } from "./math";
-import { MermaidWidget } from "./mermaid";
+import { diagramTheme, MermaidWidget } from "./mermaid";
 import { TableWidget, tableModel } from "./table";
 
 /**
@@ -40,7 +40,8 @@ function blockWidget(state: EditorState, node: SyntaxNode): WidgetType | undefin
   const language = text(node.getChild("CodeInfo")).trim();
   const code = text(node.getChild("CodeText"));
   if (MATH_LANGUAGE.test(language)) return new MathWidget(code, true);
-  if (language.toLowerCase() === "mermaid") return new MermaidWidget(code);
+  if (language.toLowerCase() === "mermaid")
+    return new MermaidWidget(code, state.facet(diagramTheme));
   return undefined;
 }
 
@@ -102,6 +103,7 @@ const renderedBlockDecorations = StateField.define<DecorationSet>({
     tr.selection ||
     tr.effects.some((effect) => effect.is(toggleDetails)) ||
     printingChanged(tr.state, tr.startState) ||
+    tr.state.facet(diagramTheme) !== tr.startState.facet(diagramTheme) ||
     syntaxTree(tr.state) !== syntaxTree(tr.startState)
       ? buildDecorations(tr.state)
       : decorations,
