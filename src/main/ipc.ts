@@ -74,6 +74,9 @@ function decodeText(buffer: Buffer): string {
   return buffer.toString("utf8");
 }
 
+// One collator for every comparison: creating it per call is what makes localeCompare slow on large folders
+const nameCollator = new Intl.Collator(undefined, { numeric: true });
+
 async function listFolder(path: string): Promise<FolderEntry[]> {
   const entries = await readdir(path, { withFileTypes: true });
   return entries
@@ -86,7 +89,7 @@ async function listFolder(path: string): Promise<FolderEntry[]> {
     .toSorted(
       (a, b) =>
         Number(b.kind === "directory") - Number(a.kind === "directory") ||
-        a.name.localeCompare(b.name, undefined, { numeric: true }),
+        nameCollator.compare(a.name, b.name),
     );
 }
 
