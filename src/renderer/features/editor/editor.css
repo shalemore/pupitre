@@ -266,7 +266,7 @@
     line-height: var(--pref-line-height);
   }
 
-  .milkdown :is(.ProseMirror code, .milkdown-code-block .cm-content) {
+  .milkdown :is(.ProseMirror code, .milkdown-code-block :is(.cm-content, .cm-gutters)) {
     font-family: var(--pref-code-font, revert-layer);
   }
 

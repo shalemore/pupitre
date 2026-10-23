@@ -1,7 +1,10 @@
-import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
+import { foldGutter, HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import type { Extension } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import { tags } from "@lezer/highlight";
+import { ChevronDown, ChevronRight } from "lucide-solid";
+import { createComponent } from "solid-js";
+import { render } from "solid-js/web";
 
 /**
  * Code block highlighting only references CSS variables; the colors come from the theme's `--syntax-*`,
@@ -29,9 +32,28 @@ const highlightStyle = HighlightStyle.define([
   { tag: tags.invalid, color: "var(--syntax-invalid)" },
 ]);
 
+// The fold gutter that comes with Crepe's basicSetup draws text glyphs and cannot be configured, so a second one with
+// icon markers is added and the first one is hidden (only the gutter containing `.cm-fold-icon` stays visible)
+const foldIcons = foldGutter({
+  markerDOM: (open) => {
+    const marker = document.createElement("span");
+    marker.className = "cm-fold-icon";
+    render(() => createComponent(open ? ChevronDown : ChevronRight, { size: 14 }), marker);
+    return marker;
+  },
+});
+
 // CodeMirror's built-in styles are in no style layer and would beat the theme, so the editor's appearance is declared here with CSS variables too
 const editorChrome = EditorView.theme({
   "&": { backgroundColor: "transparent", color: "var(--syntax-variable)" },
+  // CodeMirror's `.cm-gutter` forces `display: flex !important`, so the built-in gutter is collapsed instead of hidden
+  ".cm-foldGutter:not(:has(.cm-fold-icon))": { width: 0, overflow: "hidden" },
+  ".cm-foldGutter span": {
+    display: "flex",
+    height: "100%",
+    alignItems: "center",
+    cursor: "pointer",
+  },
   ".cm-gutters": {
     backgroundColor: "transparent",
     border: "none",
@@ -44,4 +66,8 @@ const editorChrome = EditorView.theme({
   ".cm-cursor": { borderLeftColor: "var(--ui-brand)" },
 });
 
-export const codeHighlight: Extension = [syntaxHighlighting(highlightStyle), editorChrome];
+export const codeHighlight: Extension = [
+  syntaxHighlighting(highlightStyle),
+  foldIcons,
+  editorChrome,
+];
