@@ -5,9 +5,10 @@ import type { SyntaxNode } from "@lezer/common";
 import { touches } from "./live-preview";
 import { MATH_LANGUAGE, MathWidget } from "./math";
 import { MermaidWidget } from "./mermaid";
+import { TableWidget, tableModel } from "./table";
 
 /**
- * Blocks that are shown rendered (display math, diagrams), with the same rule as the live preview:
+ * Blocks that are shown rendered (tables, display math, diagrams), with the same rule as the live preview:
  * away from the selection the block is replaced by its rendering; once a selection touches it, its
  * source is shown with the rendering under it. Replacing whole lines needs block decorations,
  * which CodeMirror only takes from a state field.
@@ -19,6 +20,9 @@ const CONTAINER = /^(?:Document|Blockquote|BulletList|OrderedList|ListItem)$/;
 function blockWidget(state: EditorState, node: SyntaxNode): WidgetType | undefined {
   const text = (child: SyntaxNode | null | undefined) =>
     child ? state.sliceDoc(child.from, child.to) : "";
+  if (node.name === "Table") {
+    return new TableWidget(state.sliceDoc(node.from, node.to), tableModel(state, node));
+  }
   if (node.name === "BlockMath") {
     const [open, close] = node.getChildren("MathMark");
     return new MathWidget(state.sliceDoc(open?.to ?? node.from, close?.from ?? node.to), true);
@@ -42,7 +46,10 @@ function buildDecorations(state: EditorState): DecorationSet {
       const from = state.doc.lineAt(node.from).from;
       const to = state.doc.lineAt(node.to).to;
       if (touches(state.selection, node.from, node.to)) {
-        decorations.push(Decoration.widget({ widget, block: true, side: 1 }).range(to));
+        // A table's source reads as a table already; other blocks show their rendering under it
+        if (node.name !== "Table") {
+          decorations.push(Decoration.widget({ widget, block: true, side: 1 }).range(to));
+        }
       } else {
         decorations.push(Decoration.replace({ widget, block: true }).range(from, to));
       }

@@ -201,6 +201,26 @@
     font-size: 0.875em;
   }
 
+  /* A rendered table; its cells keep the document font and scroll sideways when too wide */
+  .md-table-block {
+    padding-block: 0.25em;
+    overflow-x: auto;
+  }
+
+  .md-table-view {
+    border-collapse: collapse;
+    cursor: text;
+  }
+
+  .md-table-view :is(th, td) {
+    padding: 0.4em 0.9em;
+    border: 1px solid var(--ui-alpha-2);
+  }
+
+  .md-table-view th {
+    font-weight: 600;
+  }
+
   .md-table,
   .md-front-matter,
   .md-html {

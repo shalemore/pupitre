@@ -295,7 +295,7 @@ function visitInlineMath(builder: DecorationBuilder, node: SyntaxNode): void {
 }
 
 /** The syntax markers directly inside an inline format, such as `**` or `[` and `]`. */
-function markers(node: SyntaxNode): SyntaxNode[] {
+export function markers(node: SyntaxNode): SyntaxNode[] {
   const found: SyntaxNode[] = [];
   for (let child = node.firstChild; child; child = child.nextSibling) {
     if (child.name.endsWith("Mark")) found.push(child);
@@ -423,7 +423,7 @@ function buildDecorations(view: EditorView): DecorationSet {
   return builder.finish();
 }
 
-/** The address of the link at `pos`, for links with an absolute URL. */
+/** The address of the link at `pos`. */
 function linkAt(state: EditorState, pos: number): string | undefined {
   for (
     let node: SyntaxNode | null = syntaxTree(state).resolveInner(pos, 1);
@@ -431,11 +431,16 @@ function linkAt(state: EditorState, pos: number): string | undefined {
     node = node.parent
   ) {
     const url = node.name === "URL" ? node : node.getChild("URL");
-    if (!url) continue;
-    const href = state.sliceDoc(url.from, url.to);
-    return /^(?:https?|mailto):/i.test(href) ? href : undefined;
+    if (url) return state.sliceDoc(url.from, url.to);
   }
   return undefined;
+}
+
+/** Opens web and mail links in the system browser; returns false for other addresses. */
+export function openLink(href: string): boolean {
+  if (!/^(?:https?|mailto):/i.test(href)) return false;
+  window.open(href);
+  return true;
 }
 
 export const livePreview = ViewPlugin.fromClass(
@@ -465,9 +470,8 @@ export const livePreview = ViewPlugin.fromClass(
         if (event.button !== 0 || !(event.ctrlKey || event.metaKey)) return false;
         const pos = view.posAtCoords(event);
         const href = pos === null ? undefined : linkAt(view.state, pos);
-        if (!href) return false;
+        if (!href || !openLink(href)) return false;
         event.preventDefault();
-        window.open(href);
         return true;
       },
     },
