@@ -215,8 +215,7 @@ export const huHU = {
     typewriterMode: "Írógép mód",
     typewriterModeDesc: "A gépelt sort az ablak közepén tartja (F9)",
     windowStyle: "Ablakstílus",
-    windowStyleDesc:
-      "Az immerzív stílus gépelés közben elrejti a címsort és a vázlatot. A később megnyitott ablakokra vonatkozik.",
+    windowStyleDesc: "Az immerzív stílus gépelés közben elrejti a címsort és a vázlatot.",
     windowStyleClassic: "Klasszikus",
     windowStyleImmersive: "Immerzív",
     defaultApp: "Alapértelmezett Markdown-alkalmazás",

@@ -26,7 +26,7 @@ import {
   closeWithoutPrompt,
   dispatchToMainWindow,
   getMainWindow,
-  getWindowFrame,
+  getCaptionSide,
   setDocumentEdited,
   showSettingsWindow,
 } from "./windows";
@@ -138,7 +138,7 @@ export function registerIpcHandlers(): void {
       settings: getSettings(),
       settingsPath: getSettingsPath(),
       recentFiles: getRecentFiles(),
-      frame: getWindowFrame(event.sender),
+      captionSide: getCaptionSide(event.sender),
       launchFile: event.sender === getMainWindow()?.webContents ? takeLaunchFile() : undefined,
     };
     event.returnValue = state;

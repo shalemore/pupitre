@@ -211,8 +211,7 @@ export const hiIN = {
     typewriterMode: "टाइपराइटर मोड",
     typewriterModeDesc: "जिस पंक्ति को आप लिख रहे हैं उसे विंडो के बीच में रखें (F9)",
     windowStyle: "विंडो शैली",
-    windowStyleDesc:
-      "इमर्सिव लिखते समय शीर्षक पट्टी और रूपरेखा छिपा देता है। बाद में खोली जाने वाली विंडो पर लागू होता है।",
+    windowStyleDesc: "इमर्सिव लिखते समय शीर्षक पट्टी और रूपरेखा छिपा देता है।",
     windowStyleClassic: "क्लासिक",
     windowStyleImmersive: "इमर्सिव",
     defaultApp: "डिफ़ॉल्ट Markdown ऐप",

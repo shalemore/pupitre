@@ -214,8 +214,7 @@ export const fiFI = {
     typewriterMode: "Kirjoituskonetila",
     typewriterModeDesc: "Pitää kirjoitettavan rivin ikkunan keskellä (F9)",
     windowStyle: "Ikkunatyyli",
-    windowStyleDesc:
-      "Immersiivinen piilottaa otsikkorivin ja sisällysluettelon kirjoittaessasi. Koskee sen jälkeen avattavia ikkunoita.",
+    windowStyleDesc: "Immersiivinen piilottaa otsikkorivin ja sisällysluettelon kirjoittaessasi.",
     windowStyleClassic: "Klassinen",
     windowStyleImmersive: "Immersiivinen",
     defaultApp: "Oletus-Markdown-sovellus",

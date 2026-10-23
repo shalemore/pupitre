@@ -206,7 +206,7 @@ export const zhTW = {
     typewriterMode: "打字機模式",
     typewriterModeDesc: "讓正在輸入的行始終保持在視窗中央 (F9)",
     windowStyle: "視窗樣式",
-    windowStyleDesc: "沉浸式會在輸入時隱藏標題列和大綱。對之後開啟的視窗生效。",
+    windowStyleDesc: "沉浸式會在輸入時隱藏標題列和大綱。",
     windowStyleClassic: "經典",
     windowStyleImmersive: "沉浸式",
     defaultApp: "預設 Markdown 應用程式",

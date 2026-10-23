@@ -6,32 +6,38 @@ const TOP_EDGE = 48;
 const START_EDGE = 16;
 
 /**
- * The title bar and the sidebar of an immersive window: they get out of the way once the user
- * types or scrolls in the document, and come back while the pointer is at the top or the start
- * edge of the window (or over them). Without a document, or in a classic window, they stay.
+ * The title bar and the sidebar of an immersive window: they fold away once the user types or
+ * scrolls in the document, so the document card takes their room, and unfold again while the
+ * pointer is at the top or the start edge of the window (or over them). `canFold` tells whether
+ * the window may fold them at all: not in a classic window, nor without a document.
+ *
+ * Leaving the page is deliberately not treated as leaving the edge: the title bar is a drag
+ * region, which the page never sees the pointer over, so a "pointer left" event fires as soon as
+ * the pointer reaches the title bar and would fold it again under the pointer.
  */
-export function createImmersiveChrome(options: { enabled: boolean; hasDocument: () => boolean }) {
+export function createImmersiveChrome(canFold: () => boolean) {
   const [writing, setWriting] = createSignal(false);
   const [nearTop, setNearTop] = createSignal(false);
   const [nearStart, setNearStart] = createSignal(false);
 
-  const shown = (nearEdge: boolean) =>
-    !options.enabled || !options.hasDocument() || !writing() || nearEdge;
+  const shown = (nearEdge: boolean) => !canFold() || !writing() || nearEdge;
   const titleBarVisible = () => shown(nearTop());
   const sidebarVisible = () => shown(nearStart());
-  /** The sidebar takes up room only until writing starts; after that it overlays the text. */
-  const sidebarDocked = () => shown(false);
 
-  if (options.enabled && isMacOS) {
+  // The traffic lights belong to the title bar
+  if (isMacOS) {
     createEffect(() => void desktop.invoke("window:set-buttons-visible", titleBarVisible()));
   }
 
   return {
     titleBarVisible,
     sidebarVisible,
-    sidebarDocked,
-    /** Typing or scrolling in the document. */
-    hide: () => setWriting(options.enabled),
+    /** Typing or scrolling in the document; the pointer has to move again to bring the chrome back. */
+    hide: () => {
+      setWriting(canFold());
+      setNearTop(false);
+      setNearStart(false);
+    },
     /** A new document starts with the chrome visible. */
     reset: () => setWriting(false),
     onPointerMove: (event: PointerEvent) => {
@@ -39,10 +45,6 @@ export function createImmersiveChrome(options: { enabled: boolean; hasDocument: 
       const fromStart = document.dir === "rtl" ? window.innerWidth - event.clientX : event.clientX;
       setNearTop(event.clientY < TOP_EDGE || event.target.closest(".app-title-bar") !== null);
       setNearStart(fromStart < START_EDGE || event.target.closest("[data-sidebar]") !== null);
-    },
-    onPointerLeave: () => {
-      setNearTop(false);
-      setNearStart(false);
     },
   };
 }

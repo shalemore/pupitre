@@ -216,8 +216,7 @@ export const ruRU = {
     typewriterMode: "Режим пишущей машинки",
     typewriterModeDesc: "Держать текущую строку в середине окна (F9)",
     windowStyle: "Стиль окна",
-    windowStyleDesc:
-      "Иммерсивный стиль скрывает заголовок окна и оглавление во время набора. Применяется к окнам, открытым после изменения.",
+    windowStyleDesc: "Иммерсивный стиль скрывает заголовок окна и оглавление во время набора.",
     windowStyleClassic: "Классический",
     windowStyleImmersive: "Иммерсивный",
     defaultApp: "Приложение по умолчанию для Markdown",

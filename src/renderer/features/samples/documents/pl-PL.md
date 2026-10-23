@@ -42,7 +42,7 @@ Oba są w menu **Widok** i w Ustawieniach › Edytor i można je łączyć.
 
 ## Styl okna
 
-Ustawienia › Wygląd › Styl okna przełącza między **Klasycznym** a **Immersyjnym**. W stylu immersyjnym dokument leży na karcie wewnątrz okna; pasek tytułu i spis treści odsuwają się, gdy tylko zaczniesz pisać lub przewijać, i wracają, gdy wskaźnik dotrze do górnej lub początkowej krawędzi okna. Styl dotyczy okien otwieranych po zmianie.
+Ustawienia › Wygląd › Styl okna przełącza między **Klasycznym** a **Immersyjnym**. W stylu immersyjnym dokument leży na karcie wewnątrz okna; pasek tytułu i spis treści odsuwają się, gdy tylko zaczniesz pisać lub przewijać, i wracają, gdy wskaźnik dotrze do górnej lub początkowej krawędzi okna.
 
 ## Pliki i obrazy
 

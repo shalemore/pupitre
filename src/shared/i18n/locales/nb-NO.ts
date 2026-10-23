@@ -213,8 +213,7 @@ export const nbNO = {
     typewriterMode: "Skrivemaskinmodus",
     typewriterModeDesc: "Holder linjen du skriver på midten av vinduet (F9)",
     windowStyle: "Vindustil",
-    windowStyleDesc:
-      "Immersiv skjuler tittellinjen og innholdsfortegnelsen mens du skriver. Gjelder vinduer som åpnes senere.",
+    windowStyleDesc: "Immersiv skjuler tittellinjen og innholdsfortegnelsen mens du skriver.",
     windowStyleClassic: "Klassisk",
     windowStyleImmersive: "Immersiv",
     defaultApp: "Standard Markdown-app",

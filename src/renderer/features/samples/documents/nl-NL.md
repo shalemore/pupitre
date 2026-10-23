@@ -42,7 +42,7 @@ Beide staan in het menu **Beeld** en in Voorkeuren › Editor, en kunnen worden 
 
 ## Vensterstijl
 
-Voorkeuren › Weergave › Vensterstijl schakelt tussen **Klassiek** en **Immersief**. In de immersieve stijl staat het document in een kaart in het venster; de titelbalk en het overzicht wijken zodra u typt of scrolt en komen terug wanneer de aanwijzer de bovenkant of de beginrand van het venster bereikt. De stijl geldt voor vensters die na de wijziging worden geopend.
+Voorkeuren › Weergave › Vensterstijl schakelt tussen **Klassiek** en **Immersief**. In de immersieve stijl staat het document in een kaart in het venster; de titelbalk en het overzicht wijken zodra u typt of scrolt en komen terug wanneer de aanwijzer de bovenkant of de beginrand van het venster bereikt.
 
 ## Bestanden en afbeeldingen
 

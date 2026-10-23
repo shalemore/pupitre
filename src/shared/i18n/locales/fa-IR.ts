@@ -213,8 +213,7 @@ export const faIR = {
     typewriterMode: "حالت ماشین تحریر",
     typewriterModeDesc: "سطری را که می‌نویسید وسط پنجره نگه می‌دارد (F9)",
     windowStyle: "سبک پنجره",
-    windowStyleDesc:
-      "حالت فراگیر هنگام نوشتن، نوار عنوان و طرح کلی را پنهان می‌کند. روی پنجره‌هایی که بعداً باز می‌شوند اعمال می‌شود.",
+    windowStyleDesc: "حالت فراگیر هنگام نوشتن، نوار عنوان و طرح کلی را پنهان می‌کند.",
     windowStyleClassic: "کلاسیک",
     windowStyleImmersive: "فراگیر",
     defaultApp: "برنامه پیش‌فرض Markdown",

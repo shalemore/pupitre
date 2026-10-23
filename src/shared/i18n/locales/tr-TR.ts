@@ -214,8 +214,7 @@ export const trTR = {
     typewriterMode: "Daktilo Modu",
     typewriterModeDesc: "Yazılan satırı pencerenin ortasında tutar (F9)",
     windowStyle: "Pencere Stili",
-    windowStyleDesc:
-      "Sürükleyici, yazarken başlık çubuğunu ve anahattı gizler. Sonradan açılan pencerelere uygulanır.",
+    windowStyleDesc: "Sürükleyici, yazarken başlık çubuğunu ve anahattı gizler.",
     windowStyleClassic: "Klasik",
     windowStyleImmersive: "Sürükleyici",
     defaultApp: "Varsayılan Markdown Uygulaması",

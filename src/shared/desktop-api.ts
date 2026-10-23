@@ -73,15 +73,8 @@ export interface WindowColors {
 /** What happened when the user asked to make Pupitre the default Markdown app. */
 export type DefaultAppResult = "done" | "opened-settings" | "manual" | "failed";
 
-/** How a window's frame was created. */
-export interface WindowFrame {
-  style: Settings["windowStyle"];
-  /**
-   * Side of the caption buttons the page draws itself (immersive windows on Windows and Linux);
-   * undefined when the system draws them.
-   */
-  captionButtons: "left" | "right" | undefined;
-}
+/** Side of the window the page draws the caption buttons on (the main window on Windows and Linux); undefined when the system draws them. */
+export type CaptionSide = "left" | "right";
 
 /** Document state the renderer reports to the main process: enables or disables menu items and decides whether closing the window must ask to save first. */
 export interface DocumentState {
@@ -161,7 +154,7 @@ export interface InitialState {
   settings: Settings;
   settingsPath: string;
   recentFiles: readonly string[];
-  frame: WindowFrame;
+  captionSide: CaptionSide | undefined;
   /** A file the system asked to open when Pupitre started; only given to the main window. */
   launchFile: string | undefined;
 }

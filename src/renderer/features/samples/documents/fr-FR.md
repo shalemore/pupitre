@@ -42,7 +42,7 @@ Les deux sont dans le menu **Affichage** et dans Préférences › Éditeur, e
 
 ## Style de fenêtre
 
-Préférences › Apparence › Style de fenêtre permet de passer de **Classique** à **Immersif**. Dans le style immersif, le document est placé dans une carte à l’intérieur de la fenêtre ; la barre de titre et le plan s’effacent dès que vous tapez ou faites défiler, et reviennent quand le pointeur atteint le haut ou le bord de début de la fenêtre. Le style s’applique aux fenêtres ouvertes après le changement.
+Préférences › Apparence › Style de fenêtre permet de passer de **Classique** à **Immersif**. Dans le style immersif, le document est placé dans une carte à l’intérieur de la fenêtre ; la barre de titre et le plan s’effacent dès que vous tapez ou faites défiler, et reviennent quand le pointeur atteint le haut ou le bord de début de la fenêtre.
 
 ## Fichiers et images
 

@@ -209,8 +209,7 @@ export const jaJP = {
     typewriterMode: "タイプライターモード",
     typewriterModeDesc: "書いている行をウィンドウの中央に保ちます (F9)",
     windowStyle: "ウィンドウスタイル",
-    windowStyleDesc:
-      "没入型では入力中にタイトルバーとアウトラインを隠します。以降に開くウィンドウに適用されます。",
+    windowStyleDesc: "没入型では入力中にタイトルバーとアウトラインを隠します。",
     windowStyleClassic: "クラシック",
     windowStyleImmersive: "没入型",
     defaultApp: "Markdown の既定のアプリ",

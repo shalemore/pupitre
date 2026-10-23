@@ -213,7 +213,7 @@ export const thTH = {
     typewriterMode: "โหมดพิมพ์ดีด",
     typewriterModeDesc: "ให้บรรทัดที่กำลังพิมพ์อยู่กลางหน้าต่างเสมอ (F9)",
     windowStyle: "รูปแบบหน้าต่าง",
-    windowStyleDesc: "แบบเต็มจอจะซ่อนแถบชื่อเรื่องและโครงร่างขณะเขียน มีผลกับหน้าต่างที่เปิดหลังจากนี้",
+    windowStyleDesc: "แบบเต็มจอจะซ่อนแถบชื่อเรื่องและโครงร่างขณะเขียน",
     windowStyleClassic: "คลาสสิก",
     windowStyleImmersive: "เต็มจอ",
     defaultApp: "แอป Markdown ค่าเริ่มต้น",

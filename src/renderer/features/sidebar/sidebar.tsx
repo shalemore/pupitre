@@ -23,7 +23,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
     <aside
       data-sidebar
       class={cn(
-        "w-64 h-full flex print:hidden flex-col bg-surface-0 border-e border-border/80 select-none shrink-0 text-xs",
+        "w-64 h-full flex print:hidden flex-col bg-surface-0 select-none shrink-0 text-xs",
         props.class,
       )}
     >

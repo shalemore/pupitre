@@ -42,7 +42,7 @@ Båda finns i menyn **Visa** och under Inställningar › Redigerare och kan kom
 
 ## Fönsterstil
 
-Inställningar › Utseende › Fönsterstil växlar mellan **Klassisk** och **Immersiv**. I den immersiva stilen ligger dokumentet på ett kort i fönstret; namnlisten och dispositionen flyttar undan så snart du skriver eller rullar och kommer tillbaka när pekaren når fönstrets överkant eller startkant. Stilen gäller fönster som öppnas efter ändringen.
+Inställningar › Utseende › Fönsterstil växlar mellan **Klassisk** och **Immersiv**. I den immersiva stilen ligger dokumentet på ett kort i fönstret; namnlisten och dispositionen flyttar undan så snart du skriver eller rullar och kommer tillbaka när pekaren når fönstrets överkant eller startkant.
 
 ## Filer och bilder
 

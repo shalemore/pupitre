@@ -226,8 +226,7 @@ export const ar = {
     typewriterMode: "وضع الآلة الكاتبة",
     typewriterModeDesc: "إبقاء السطر الجاري كتابته في منتصف النافذة (F9)",
     windowStyle: "نمط النافذة",
-    windowStyleDesc:
-      "يُخفي الوضع الغامر شريط العنوان والمخطط أثناء الكتابة. يُطبَّق على النوافذ التي تُفتح لاحقًا.",
+    windowStyleDesc: "يُخفي الوضع الغامر شريط العنوان والمخطط أثناء الكتابة.",
     windowStyleClassic: "كلاسيكي",
     windowStyleImmersive: "غامر",
     defaultApp: "تطبيق Markdown الافتراضي",

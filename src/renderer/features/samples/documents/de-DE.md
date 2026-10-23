@@ -42,7 +42,7 @@ Beide finden Sie im Menü **Ansicht** und unter Einstellungen › Editor; sie la
 
 ## Fensterstil
 
-Unter Einstellungen › Darstellung › Fensterstil wechseln Sie zwischen **Klassisch** und **Immersiv**. Im immersiven Stil liegt das Dokument in einer Karte im Fenster; Titelleiste und Gliederung weichen, sobald Sie tippen oder scrollen, und kehren zurück, wenn der Zeiger den oberen oder den vorderen Fensterrand erreicht. Der Stil gilt für Fenster, die nach der Änderung geöffnet werden.
+Unter Einstellungen › Darstellung › Fensterstil wechseln Sie zwischen **Klassisch** und **Immersiv**. Im immersiven Stil liegt das Dokument in einer Karte im Fenster; Titelleiste und Gliederung weichen, sobald Sie tippen oder scrollen, und kehren zurück, wenn der Zeiger den oberen oder den vorderen Fensterrand erreicht.
 
 ## Dateien und Bilder
 

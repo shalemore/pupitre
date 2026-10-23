@@ -208,8 +208,7 @@ export const ptBR = {
     typewriterMode: "Modo máquina de escrever",
     typewriterModeDesc: "Mantém a linha sendo escrita no meio da janela (F9)",
     windowStyle: "Estilo da janela",
-    windowStyleDesc:
-      "Imersivo oculta a barra de título e a estrutura enquanto você escreve. Aplica-se às janelas abertas depois.",
+    windowStyleDesc: "Imersivo oculta a barra de título e a estrutura enquanto você escreve.",
     windowStyleClassic: "Clássico",
     windowStyleImmersive: "Imersivo",
     defaultApp: "App padrão para Markdown",

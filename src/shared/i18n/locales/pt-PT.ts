@@ -211,8 +211,7 @@ export const ptPT = {
     typewriterMode: "Modo máquina de escrever",
     typewriterModeDesc: "Mantém a linha em escrita no centro da janela (F9)",
     windowStyle: "Estilo da janela",
-    windowStyleDesc:
-      "O imersivo oculta a barra de título e o índice enquanto escreve. Aplica-se às janelas abertas depois.",
+    windowStyleDesc: "O imersivo oculta a barra de título e o índice enquanto escreve.",
     windowStyleClassic: "Clássico",
     windowStyleImmersive: "Imersivo",
     defaultApp: "Aplicação Markdown predefinida",

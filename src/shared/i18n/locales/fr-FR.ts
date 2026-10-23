@@ -211,8 +211,7 @@ export const frFR = {
     typewriterMode: "Mode machine à écrire",
     typewriterModeDesc: "Garde la ligne en cours d’écriture au milieu de la fenêtre (F9)",
     windowStyle: "Style de fenêtre",
-    windowStyleDesc:
-      "Immersif masque la barre de titre et le plan pendant l’écriture. S’applique aux fenêtres ouvertes ensuite.",
+    windowStyleDesc: "Immersif masque la barre de titre et le plan pendant l’écriture.",
     windowStyleClassic: "Classique",
     windowStyleImmersive: "Immersif",
     defaultApp: "Application Markdown par défaut",

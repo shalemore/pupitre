@@ -214,8 +214,7 @@ export const elGR = {
     typewriterMode: "Λειτουργία γραφομηχανής",
     typewriterModeDesc: "Κρατά τη γραμμή που γράφετε στο κέντρο του παραθύρου (F9)",
     windowStyle: "Στυλ παραθύρου",
-    windowStyleDesc:
-      "Το εμβυθιστικό κρύβει τη γραμμή τίτλου και το περίγραμμα όσο γράφετε. Ισχύει για παράθυρα που ανοίγουν μετά.",
+    windowStyleDesc: "Το εμβυθιστικό κρύβει τη γραμμή τίτλου και το περίγραμμα όσο γράφετε.",
     windowStyleClassic: "Κλασικό",
     windowStyleImmersive: "Εμβυθιστικό",
     defaultApp: "Προεπιλεγμένη εφαρμογή Markdown",

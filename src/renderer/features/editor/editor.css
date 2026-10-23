@@ -253,13 +253,6 @@
   .milkdown .ProseMirror.typewriter-mode {
     padding-block-end: 50vh;
   }
-
-  /* The title bar of an immersive window overlays the document; start below it */
-  @media screen {
-    [data-window-style="immersive"] .milkdown .ProseMirror {
-      margin-block-start: 2.5rem;
-    }
-  }
 }
 
 @media print {

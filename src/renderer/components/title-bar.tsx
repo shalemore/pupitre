@@ -5,16 +5,17 @@ import { CaptionButtons } from "./caption-buttons";
 
 /**
  * The window title bar. It is draggable as a whole and leaves room for the native caption buttons
- * or traffic lights (see .app-title-bar in app.css); immersive windows on Windows and Linux get
+ * or traffic lights (see .app-title-bar in app.css); the main window on Windows and Linux gets
  * caption buttons drawn here instead.
  */
-export const TitleBar: ParentComponent<{ class?: string }> = (props) => {
-  const side = desktop.initialState.frame.captionButtons;
+export const TitleBar: ParentComponent<{ class?: string; inert?: boolean }> = (props) => {
+  const side = desktop.initialState.captionSide;
   return (
     <header
       data-caption-buttons={side}
+      inert={props.inert}
       class={cn(
-        "app-title-bar print:hidden h-10 w-full shrink-0 relative flex items-center gap-2 px-3 select-none bg-surface-0 border-b border-border/80 text-xs z-30",
+        "app-title-bar print:hidden w-full shrink-0 flex items-center gap-2 px-3 select-none bg-surface-0 text-xs",
         props.class,
       )}
     >

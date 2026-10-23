@@ -42,7 +42,7 @@ Ambos estão no menu **Ver** e em Preferências › Editor, e podem ser combinad
 
 ## Estilo da janela
 
-Preferências › Aparência › Estilo da janela alterna entre **Clássico** e **Imersivo**. No estilo imersivo o documento fica num cartão dentro da janela; a barra de título e o índice afastam-se assim que escreve ou desloca, e voltam quando o ponteiro chega ao topo ou à margem inicial da janela. O estilo aplica-se às janelas abertas depois da alteração.
+Preferências › Aparência › Estilo da janela alterna entre **Clássico** e **Imersivo**. No estilo imersivo o documento fica num cartão dentro da janela; a barra de título e o índice afastam-se assim que escreve ou desloca, e voltam quando o ponteiro chega ao topo ou à margem inicial da janela.
 
 ## Ficheiros e imagens
 

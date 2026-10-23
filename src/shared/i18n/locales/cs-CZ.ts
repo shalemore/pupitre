@@ -215,7 +215,7 @@ export const csCZ = {
     typewriterMode: "Režim psacího stroje",
     typewriterModeDesc: "Udržuje psaný řádek uprostřed okna (F9)",
     windowStyle: "Styl okna",
-    windowStyleDesc: "Imersivní při psaní skryje záhlaví a osnovu. Platí pro okna otevřená poté.",
+    windowStyleDesc: "Imersivní při psaní skryje záhlaví a osnovu.",
     windowStyleClassic: "Klasický",
     windowStyleImmersive: "Imersivní",
     defaultApp: "Výchozí aplikace pro Markdown",

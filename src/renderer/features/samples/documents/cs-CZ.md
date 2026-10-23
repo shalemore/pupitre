@@ -42,7 +42,7 @@ Oba jsou v nabídce **Zobrazení** a v Předvolby › Editor a lze je kombinovat
 
 ## Styl okna
 
-Předvolby › Vzhled › Styl okna přepíná mezi **Klasickým** a **Imersivním**. V imersivním stylu leží dokument na kartě uvnitř okna; záhlaví a osnova ustoupí, jakmile začnete psát nebo rolovat, a vrátí se, když ukazatel dosáhne horního nebo počátečního okraje okna. Styl platí pro okna otevřená po změně.
+Předvolby › Vzhled › Styl okna přepíná mezi **Klasickým** a **Imersivním**. V imersivním stylu leží dokument na kartě uvnitř okna; záhlaví a osnova ustoupí, jakmile začnete psát nebo rolovat, a vrátí se, když ukazatel dosáhne horního nebo počátečního okraje okna.
 
 ## Soubory a obrázky
 

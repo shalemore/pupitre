@@ -218,8 +218,7 @@ export const plPL = {
     typewriterMode: "Tryb maszyny do pisania",
     typewriterModeDesc: "Utrzymuje pisaną linię na środku okna (F9)",
     windowStyle: "Styl okna",
-    windowStyleDesc:
-      "Immersyjny ukrywa pasek tytułu i spis treści podczas pisania. Dotyczy okien otwieranych później.",
+    windowStyleDesc: "Immersyjny ukrywa pasek tytułu i spis treści podczas pisania.",
     windowStyleClassic: "Klasyczny",
     windowStyleImmersive: "Immersyjny",
     defaultApp: "Domyślna aplikacja Markdown",

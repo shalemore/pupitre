@@ -8,19 +8,13 @@ import {
   shell,
   type WebContents,
 } from "electron";
-import type { AppCommand, WindowColors, WindowFrame } from "@shared/desktop-api";
-import type { Settings } from "@shared/settings";
+import type { AppCommand, CaptionSide, WindowColors } from "@shared/desktop-api";
 import { setupContextMenu } from "./context-menu";
-import { getSettings } from "./settings-store";
 
 /** The renderer picks the view to show from location.hash. */
 type View = "main" | "settings";
 
 const TITLE_BAR_HEIGHT = 40;
-/** Gap between the window edge and the content card of an immersive window (p-1.5 in the page). */
-const IMMERSIVE_INSET = 6;
-
-const windowFrames = new WeakMap<WebContents, WindowFrame>();
 
 let mainWindow: BrowserWindow | undefined;
 // Windows with unsaved changes; the renderer must ask about saving before they close
@@ -55,24 +49,22 @@ function linuxCaptionSide(): "left" | "right" {
   }
 }
 
-function windowFrame(style: Settings["windowStyle"]): WindowFrame {
-  // Native caption buttons cannot hide with an immersive title bar, so the page draws its own
-  const drawsButtons = style === "immersive" && process.platform !== "darwin";
-  const side = process.platform === "linux" ? linuxCaptionSide() : "right";
-  return { style, captionButtons: drawsButtons ? side : undefined };
+/**
+ * The main window draws its caption buttons itself (Windows and Linux): the native ones could not
+ * hide with the title bar, and the frame must not depend on the window style so that the style can
+ * change while the window is open.
+ */
+export function getCaptionSide(webContents: WebContents): CaptionSide | undefined {
+  if (process.platform === "darwin" || webContents !== mainWindow?.webContents) return undefined;
+  return process.platform === "linux" ? linuxCaptionSide() : "right";
 }
 
-function titleBarOptions(frame: WindowFrame): BrowserWindowConstructorOptions {
+function titleBarOptions(view: View): BrowserWindowConstructorOptions {
   if (process.platform === "darwin") {
-    // The traffic lights are centered in the 40px title bar, which sits inside the content card
-    // of an immersive window
-    const inset = frame.style === "immersive" ? IMMERSIVE_INSET : 0;
-    return {
-      titleBarStyle: "hiddenInset",
-      trafficLightPosition: { x: 14 + inset, y: 14 + inset },
-    };
+    // The traffic lights are centered in the 40px title bar
+    return { titleBarStyle: "hiddenInset", trafficLightPosition: { x: 14, y: 14 } };
   }
-  if (frame.captionButtons) return { titleBarStyle: "hidden" };
+  if (view === "main") return { titleBarStyle: "hidden" };
   return {
     titleBarStyle: "hidden",
     titleBarOverlay: {
@@ -97,16 +89,11 @@ function developmentIcon(): Pick<BrowserWindowConstructorOptions, "icon"> {
   };
 }
 
-function createWindow(
-  view: View,
-  style: Settings["windowStyle"],
-  options: BrowserWindowConstructorOptions,
-): BrowserWindow {
-  const frame = windowFrame(style);
+function createWindow(view: View, options: BrowserWindowConstructorOptions): BrowserWindow {
   const window = new BrowserWindow({
     show: false,
     backgroundColor: windowColors().background,
-    ...titleBarOptions(frame),
+    ...titleBarOptions(view),
     ...developmentIcon(),
     ...options,
     webPreferences: {
@@ -118,7 +105,6 @@ function createWindow(
   });
 
   const { webContents } = window;
-  windowFrames.set(webContents, frame);
   window.once("ready-to-show", () => window.show());
   window.on("maximize", () => webContents.send("window:maximized-changed", true));
   window.on("unmaximize", () => webContents.send("window:maximized-changed", false));
@@ -145,7 +131,7 @@ function createWindow(
 }
 
 export function createMainWindow(): BrowserWindow {
-  mainWindow = createWindow("main", getSettings().windowStyle, {
+  mainWindow = createWindow("main", {
     width: 1180,
     height: 780,
     minWidth: 720,
@@ -171,7 +157,7 @@ export function showSettingsWindow(): void {
     settingsWindow.focus();
     return;
   }
-  settingsWindow = createWindow("settings", "classic", {
+  settingsWindow = createWindow("settings", {
     width: 720,
     height: 560,
     minWidth: 540,
@@ -182,10 +168,6 @@ export function showSettingsWindow(): void {
   settingsWindow.on("closed", () => {
     settingsWindow = undefined;
   });
-}
-
-export function getWindowFrame(webContents: WebContents): WindowFrame {
-  return windowFrames.get(webContents) ?? windowFrame("classic");
 }
 
 export function getMainWindow(): BrowserWindow | undefined {
@@ -217,7 +199,7 @@ export function applyWindowColors(window: BrowserWindow, colors: WindowColors): 
   const { background, symbol } = colors;
   knownColors[colors.dark ? "dark" : "light"] = { background, symbol };
   window.setBackgroundColor(background);
-  if (process.platform !== "darwin" && !getWindowFrame(window.webContents).captionButtons) {
+  if (process.platform !== "darwin" && !getCaptionSide(window.webContents)) {
     window.setTitleBarOverlay({
       color: "#00000000",
       symbolColor: symbol,

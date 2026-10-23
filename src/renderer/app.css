@@ -337,11 +337,6 @@ html {
   padding-right: 0;
 }
 
-/* The frame around an immersive window's content card moves the window */
-.app-drag {
-  -webkit-app-region: drag;
-}
-
 .app-no-drag {
   -webkit-app-region: no-drag;
 }

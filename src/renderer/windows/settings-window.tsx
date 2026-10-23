@@ -23,7 +23,7 @@ export const SettingsWindow: Component = () => {
 
   return (
     <div class="h-screen w-screen flex flex-col bg-surface-1 text-foreground select-none overflow-hidden">
-      <TitleBar>
+      <TitleBar class="h-10 border-b border-border/80">
         <img src="./logo.svg" alt="" class="rounded-sm shadow-sm size-4" />
         <span class="font-semibold text-foreground tracking-wide">{t().settings.title}</span>
       </TitleBar>

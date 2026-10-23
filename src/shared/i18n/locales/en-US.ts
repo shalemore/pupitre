@@ -209,8 +209,7 @@ export const enUS = {
     typewriterMode: "Typewriter Mode",
     typewriterModeDesc: "Keep the line being written in the middle of the window (F9)",
     windowStyle: "Window Style",
-    windowStyleDesc:
-      "Immersive hides the title bar and outline while you write. Applies to windows opened afterwards.",
+    windowStyleDesc: "Immersive hides the title bar and outline while you write.",
     windowStyleClassic: "Classic",
     windowStyleImmersive: "Immersive",
     defaultApp: "Default Markdown App",

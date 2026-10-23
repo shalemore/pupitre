@@ -211,8 +211,7 @@ export const itIT = {
     typewriterMode: "Modalità macchina da scrivere",
     typewriterModeDesc: "Mantiene la riga in scrittura al centro della finestra (F9)",
     windowStyle: "Stile finestra",
-    windowStyleDesc:
-      "Immersivo nasconde la barra del titolo e la struttura mentre scrivi. Si applica alle finestre aperte in seguito.",
+    windowStyleDesc: "Immersivo nasconde la barra del titolo e la struttura mentre scrivi.",
     windowStyleClassic: "Classico",
     windowStyleImmersive: "Immersivo",
     defaultApp: "App predefinita per Markdown",

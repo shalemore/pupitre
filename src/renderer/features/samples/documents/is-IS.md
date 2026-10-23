@@ -42,7 +42,7 @@ Báðir eru í valmyndinni **Sýna** og í Forstillingar › Ritill, og þá má
 
 ## Stíll glugga
 
-Forstillingar › Útlit › Stíll glugga skiptir milli **Klassísks** og **Yfirgripsmikils**. Í yfirgripsmikla stílnum stendur skjalið á spjaldi inni í glugganum; titilstikan og efnisyfirlitið víkja um leið og þú skrifar eða skrunar og koma aftur þegar bendillinn nær efri eða upphafskanti gluggans. Stíllinn gildir um glugga sem opnast eftir breytinguna.
+Forstillingar › Útlit › Stíll glugga skiptir milli **Klassísks** og **Yfirgripsmikils**. Í yfirgripsmikla stílnum stendur skjalið á spjaldi inni í glugganum; titilstikan og efnisyfirlitið víkja um leið og þú skrifar eða skrunar og koma aftur þegar bendillinn nær efri eða upphafskanti gluggans.
 
 ## Skrár og myndir
 

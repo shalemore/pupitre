@@ -216,8 +216,7 @@ export const nlNL = {
     typewriterMode: "Typemachinemodus",
     typewriterModeDesc: "Houdt de regel waarin u typt in het midden van het venster (F9)",
     windowStyle: "Vensterstijl",
-    windowStyleDesc:
-      "Immersief verbergt de titelbalk en het overzicht terwijl u schrijft. Geldt voor vensters die daarna worden geopend.",
+    windowStyleDesc: "Immersief verbergt de titelbalk en het overzicht terwijl u schrijft.",
     windowStyleClassic: "Klassiek",
     windowStyleImmersive: "Immersief",
     defaultApp: "Standaard Markdown-app",

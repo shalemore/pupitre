@@ -211,8 +211,7 @@ export const viVN = {
     typewriterMode: "Chế độ máy đánh chữ",
     typewriterModeDesc: "Giữ dòng đang viết ở giữa cửa sổ (F9)",
     windowStyle: "Kiểu cửa sổ",
-    windowStyleDesc:
-      "Kiểu toàn màn hình ẩn thanh tiêu đề và dàn ý khi viết. Áp dụng cho cửa sổ mở sau đó.",
+    windowStyleDesc: "Kiểu toàn màn hình ẩn thanh tiêu đề và dàn ý khi viết.",
     windowStyleClassic: "Cổ điển",
     windowStyleImmersive: "Toàn màn hình",
     defaultApp: "Ứng dụng Markdown mặc định",

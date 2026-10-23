@@ -209,8 +209,7 @@ export const koKR = {
     typewriterMode: "타자기 모드",
     typewriterModeDesc: "작성 중인 줄을 창 가운데에 유지합니다 (F9)",
     windowStyle: "창 스타일",
-    windowStyleDesc:
-      "몰입형은 작성 중에 제목 표시줄과 아웃라인을 숨깁니다. 이후에 여는 창에 적용됩니다.",
+    windowStyleDesc: "몰입형은 작성 중에 제목 표시줄과 아웃라인을 숨깁니다.",
     windowStyleClassic: "클래식",
     windowStyleImmersive: "몰입형",
     defaultApp: "기본 Markdown 앱",

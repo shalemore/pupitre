@@ -210,8 +210,7 @@ export const deDE = {
     typewriterMode: "Schreibmaschinenmodus",
     typewriterModeDesc: "Die aktuelle Zeile in der Fenstermitte halten (F9)",
     windowStyle: "Fensterstil",
-    windowStyleDesc:
-      "Immersiv blendet Titelleiste und Gliederung beim Schreiben aus. Gilt für danach geöffnete Fenster.",
+    windowStyleDesc: "Immersiv blendet Titelleiste und Gliederung beim Schreiben aus.",
     windowStyleClassic: "Klassisch",
     windowStyleImmersive: "Immersiv",
     defaultApp: "Standard-App für Markdown",

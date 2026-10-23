@@ -212,8 +212,7 @@ export const idID = {
     typewriterMode: "Mode mesin tik",
     typewriterModeDesc: "Jaga baris yang sedang ditulis tetap di tengah jendela (F9)",
     windowStyle: "Gaya jendela",
-    windowStyleDesc:
-      "Gaya imersif menyembunyikan bilah judul dan kerangka saat menulis. Berlaku untuk jendela yang dibuka setelahnya.",
+    windowStyleDesc: "Gaya imersif menyembunyikan bilah judul dan kerangka saat menulis.",
     windowStyleClassic: "Klasik",
     windowStyleImmersive: "Imersif",
     defaultApp: "Aplikasi Markdown bawaan",

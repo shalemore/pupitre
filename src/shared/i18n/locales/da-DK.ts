@@ -213,8 +213,7 @@ export const daDK = {
     typewriterMode: "Skrivemaskinetilstand",
     typewriterModeDesc: "Holder linjen, du skriver på, i midten af vinduet (F9)",
     windowStyle: "Vinduesstil",
-    windowStyleDesc:
-      "Immersiv skjuler titellinjen og dispositionen, mens du skriver. Gælder vinduer, der åbnes bagefter.",
+    windowStyleDesc: "Immersiv skjuler titellinjen og dispositionen, mens du skriver.",
     windowStyleClassic: "Klassisk",
     windowStyleImmersive: "Immersiv",
     defaultApp: "Standard Markdown-app",

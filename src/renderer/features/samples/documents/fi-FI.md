@@ -42,7 +42,7 @@ Molemmat ovat **Näytä**-valikossa ja kohdassa Asetukset › Editori, ja ne voi
 
 ## Ikkunatyyli
 
-Asetukset › Ulkoasu › Ikkunatyyli vaihtaa **Klassisen** ja **Immersiivisen** välillä. Immersiivisessä tyylissä asiakirja on ikkunan sisällä kortilla; otsikkorivi ja sisällysluettelo väistyvät heti, kun kirjoitat tai vierität, ja palaavat, kun osoitin saavuttaa ikkunan ylä- tai alkureunan. Tyyli koskee muutoksen jälkeen avattavia ikkunoita.
+Asetukset › Ulkoasu › Ikkunatyyli vaihtaa **Klassisen** ja **Immersiivisen** välillä. Immersiivisessä tyylissä asiakirja on ikkunan sisällä kortilla; otsikkorivi ja sisällysluettelo väistyvät heti, kun kirjoitat tai vierität, ja palaavat, kun osoitin saavuttaa ikkunan ylä- tai alkureunan.
 
 ## Tiedostot ja kuvat
 

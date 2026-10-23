@@ -42,7 +42,7 @@ Ambos están en el menú **Ver** y en Preferencias › Editor, y se pueden combi
 
 ## Estilo de ventana
 
-Preferencias › Apariencia › Estilo de ventana alterna entre **Clásico** e **Inmersivo**. En el estilo inmersivo el documento va en una tarjeta dentro de la ventana; la barra de título y el esquema se apartan al escribir o desplazarte y vuelven cuando el puntero llega al borde superior o inicial de la ventana. El estilo se aplica a las ventanas que abras después del cambio.
+Preferencias › Apariencia › Estilo de ventana alterna entre **Clásico** e **Inmersivo**. En el estilo inmersivo el documento va en una tarjeta dentro de la ventana; la barra de título y el esquema se apartan al escribir o desplazarte y vuelven cuando el puntero llega al borde superior o inicial de la ventana.
 
 ## Archivos e imágenes
 

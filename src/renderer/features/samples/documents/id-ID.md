@@ -42,7 +42,7 @@ Keduanya ada di menu **Tampilan** dan di Preferensi › Editor, serta dapat diga
 
 ## Gaya jendela
 
-Preferensi › Tampilan › Gaya jendela berganti antara **Klasik** dan **Imersif**. Pada gaya imersif dokumen berada dalam kartu di dalam jendela; bilah judul dan kerangka menyingkir begitu Anda mengetik atau menggulir, lalu kembali saat penunjuk mencapai bagian atas atau tepi awal jendela. Gaya ini berlaku untuk jendela yang dibuka setelah perubahan.
+Preferensi › Tampilan › Gaya jendela berganti antara **Klasik** dan **Imersif**. Pada gaya imersif dokumen berada dalam kartu di dalam jendela; bilah judul dan kerangka menyingkir begitu Anda mengetik atau menggulir, lalu kembali saat penunjuk mencapai bagian atas atau tepi awal jendela.
 
 ## Berkas dan gambar
 

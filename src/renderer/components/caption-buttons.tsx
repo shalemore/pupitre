@@ -4,7 +4,7 @@ import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 
 /**
- * Minimize, maximize and close, drawn by the page for immersive windows on Windows and Linux,
+ * Minimize, maximize and close, drawn by the page for the main window on Windows and Linux,
  * where the native buttons could not hide with the title bar. Close goes through the window's
  * close event, so unsaved changes are still asked about.
  */

@@ -42,7 +42,7 @@ Entrambe sono nel menu **Visualizza** e in Preferenze › Editor, e si possono c
 
 ## Stile finestra
 
-Preferenze › Aspetto › Stile finestra passa da **Classico** a **Immersivo**. Nello stile immersivo il documento sta in una scheda dentro la finestra; la barra del titolo e la struttura si spostano quando scrivi o scorri e tornano quando il puntatore raggiunge il bordo superiore o iniziale della finestra. Lo stile si applica alle finestre aperte dopo la modifica.
+Preferenze › Aspetto › Stile finestra passa da **Classico** a **Immersivo**. Nello stile immersivo il documento sta in una scheda dentro la finestra; la barra del titolo e la struttura si spostano quando scrivi o scorri e tornano quando il puntatore raggiunge il bordo superiore o iniziale della finestra.
 
 ## File e immagini
 

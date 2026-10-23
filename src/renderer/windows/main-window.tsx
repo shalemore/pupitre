@@ -27,8 +27,8 @@ import { Sidebar, type SidebarMode } from "@/features/sidebar/sidebar";
 import { WelcomeScreen } from "@/features/welcome/welcome-screen";
 import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
-import { fileNameOf, isInsideFolder } from "@/lib/file";
 import { createImmersiveChrome } from "@/lib/immersive-chrome";
+import { fileNameOf, isInsideFolder } from "@/lib/file";
 import { recentFiles } from "@/lib/recent-files";
 import { settings, updateSettings } from "@/lib/settings";
 import type { TextStats } from "@/lib/text-stats";
@@ -47,12 +47,8 @@ export const MainWindow: Component = () => {
   const [findMode, setFindMode] = createSignal<FindMode>("closed");
   const [initialSearch, setInitialSearch] = createSignal("");
   const [matchStats, setMatchStats] = createSignal<MatchStats>({ current: 0, total: 0 });
-  // The frame is fixed when the window is created, so the layout follows it rather than the setting
-  const immersive = desktop.initialState.frame.style === "immersive";
-  const chrome = createImmersiveChrome({
-    enabled: immersive,
-    hasDocument: () => session.activeDocument() !== undefined,
-  });
+  const immersive = () => settings().windowStyle === "immersive";
+  const chrome = createImmersiveChrome(() => immersive() && session.activeDocument() !== undefined);
 
   const folderRoot = createMemo(() => {
     const dropped = openedFolder();
@@ -62,6 +58,10 @@ export const MainWindow: Component = () => {
     }
     return doc?.folder ?? dropped;
   });
+  const sidebarShown = () =>
+    settings().sidebarVisible &&
+    (session.activeDocument() !== undefined || folderRoot() !== undefined) &&
+    chrome.sidebarVisible();
   const sidebarMode = (): SidebarMode => {
     if (session.activeDocument() === undefined) return "folder";
     return folderRoot() === undefined ? "outline" : preferredMode();
@@ -185,108 +185,103 @@ export const MainWindow: Component = () => {
 
   return (
     <div
-      data-window-style={desktop.initialState.frame.style}
+      data-window-style={settings().windowStyle}
       onPointerMove={(event) => chrome.onPointerMove(event)}
-      onPointerLeave={() => chrome.onPointerLeave()}
       class={cn(
-        "h-screen w-screen overflow-hidden text-foreground print:block print:h-auto print:overflow-visible",
-        immersive ? "app-drag bg-surface-0 p-1.5 print:p-0" : "bg-surface-1",
+        "h-screen w-screen flex flex-col overflow-hidden text-foreground print:block print:h-auto print:overflow-visible",
+        immersive() ? "bg-surface-0" : "bg-surface-1",
       )}
     >
-      <div
+      {/* Folding the title bar away animates its height, and the card moves up into the room */}
+      <TitleBar
+        inert={!chrome.titleBarVisible()}
         class={cn(
-          "relative flex size-full flex-col overflow-hidden print:block print:h-auto print:overflow-visible",
-          immersive &&
-            "app-no-drag rounded-xl border border-border/80 bg-surface-1 shadow-sm print:rounded-none print:border-0 print:shadow-none",
+          "overflow-hidden transition-[height] duration-200",
+          chrome.titleBarVisible() ? "h-10" : "h-0",
+          !immersive() && "border-b border-border/80",
         )}
       >
-        <TitleBar
+        <div class="flex items-center gap-2 me-1 pointer-events-none">
+          <img src="./logo.svg" alt="" class="rounded-sm shadow-sm size-4" />
+          <span class="font-semibold text-muted-foreground tracking-wide">
+            {t().common.appName}
+          </span>
+        </div>
+        <Show when={!isMacOS}>
+          <MenuBar />
+        </Show>
+
+        <div class="flex-1 min-w-0 px-4 text-center font-medium text-foreground truncate">
+          <Show when={session.activeDocument()}>
+            {session.isDirty() ? "● " : ""}
+            <bdi>{session.fileName()}</bdi>
+          </Show>
+        </div>
+
+        <Show when={session.activeDocument() !== undefined && settings().showWordCount}>
+          <div class="text-[11px] text-muted-foreground tabular-nums flex items-center gap-1.5 me-2">
+            <span>{t().common.wordsCount(stats().words)}</span>
+            <span>·</span>
+            <span>{t().common.charsCount(stats().characters)}</span>
+          </div>
+        </Show>
+      </TitleBar>
+
+      <div
+        onKeyDown={(event) => {
+          if (!event.ctrlKey && !event.metaKey && !event.altKey) chrome.hide();
+        }}
+        onWheel={() => chrome.hide()}
+        class={cn(
+          "flex-1 min-h-0 flex overflow-hidden print:block print:overflow-visible",
+          // The card keeps an even gap to the window edges, the title bar and the sidebar
+          immersive() && "gap-1.5 p-1.5 ps-0 print:p-0",
+        )}
+      >
+        {/* Collapsing animates the width, and the card takes the freed room; inert keeps the hidden sidebar out of the tab order */}
+        <div
+          inert={!sidebarShown()}
           class={cn(
-            immersive && "absolute inset-x-0 top-0 transition-[translate,opacity] duration-200",
-            !chrome.titleBarVisible() && "pointer-events-none -translate-y-full opacity-0",
+            "shrink-0 overflow-hidden transition-[width] duration-200 print:hidden",
+            sidebarShown() ? "w-64" : "w-0",
           )}
         >
-          <div class="flex items-center gap-2 me-1 pointer-events-none">
-            <img src="./logo.svg" alt="" class="rounded-sm shadow-sm size-4" />
-            <span class="font-semibold text-muted-foreground tracking-wide">
-              {t().common.appName}
-            </span>
-          </div>
-          <Show when={!isMacOS}>
-            <MenuBar />
-          </Show>
-
-          <div class="flex-1 min-w-0 px-4 text-center font-medium text-foreground truncate">
-            <Show when={session.activeDocument()}>
-              {session.isDirty() ? "● " : ""}
-              <bdi>{session.fileName()}</bdi>
-            </Show>
-          </div>
-
-          <Show when={session.activeDocument() !== undefined && settings().showWordCount}>
-            <div class="text-[11px] text-muted-foreground tabular-nums flex items-center gap-1.5 me-2">
-              <span>{t().common.wordsCount(stats().words)}</span>
-              <span>·</span>
-              <span>{t().common.charsCount(stats().characters)}</span>
-            </div>
-          </Show>
-        </TitleBar>
-
-        <div
-          onKeyDown={(event) => {
-            if (!event.ctrlKey && !event.metaKey && !event.altKey) chrome.hide();
-          }}
-          onWheel={() => chrome.hide()}
-          class="flex-1 flex overflow-hidden print:block print:overflow-visible"
-        >
-          <Show
-            when={
-              settings().sidebarVisible &&
-              (session.activeDocument() !== undefined || folderRoot() !== undefined)
-            }
-          >
-            <div
-              class={cn(
-                immersive
-                  ? "relative shrink-0 transition-[width] duration-200 print:hidden"
-                  : "contents",
-                immersive && (chrome.sidebarDocked() ? "w-66" : "w-0"),
-              )}
-            >
-              <Sidebar
-                class={cn(
-                  immersive &&
-                    "absolute top-12 bottom-2 inset-s-2 z-20 h-auto rounded-lg border shadow-lg transition-[translate,opacity] duration-200",
-                  !chrome.sidebarVisible() &&
-                    "pointer-events-none -translate-x-[calc(100%+1rem)] opacity-0 rtl:translate-x-[calc(100%+1rem)]",
-                )}
-                mode={sidebarMode()}
-                hasOutline={session.activeDocument() !== undefined}
-                hasFolder={folderRoot() !== undefined}
-                folderName={fileNameOf(folderRoot() ?? "")}
-                onModeChange={setPreferredMode}
-                outline={
-                  <OutlineList
-                    headings={outline()}
-                    activeIndex={activeHeading()}
-                    onSelectHeading={(heading) => editor?.scrollTo(heading.pos)}
-                  />
-                }
-                folder={
-                  <Show when={folderRoot()} keyed>
-                    {(root) => (
-                      <FolderTree
-                        root={root}
-                        activePath={session.activeDocument()?.path}
-                        onOpenFile={(path) => session.openPath(path, false)}
-                      />
-                    )}
-                  </Show>
-                }
+          <Sidebar
+            class={cn(!immersive() && "border-e border-border/80")}
+            mode={sidebarMode()}
+            hasOutline={session.activeDocument() !== undefined}
+            hasFolder={folderRoot() !== undefined}
+            folderName={fileNameOf(folderRoot() ?? "")}
+            onModeChange={setPreferredMode}
+            outline={
+              <OutlineList
+                headings={outline()}
+                activeIndex={activeHeading()}
+                onSelectHeading={(heading) => editor?.scrollTo(heading.pos)}
               />
-            </div>
-          </Show>
+            }
+            folder={
+              <Show when={folderRoot()} keyed>
+                {(root) => (
+                  <FolderTree
+                    root={root}
+                    activePath={session.activeDocument()?.path}
+                    onOpenFile={(path) => session.openPath(path, false)}
+                  />
+                )}
+              </Show>
+            }
+          />
+        </div>
 
+        {/* An immersive window shows the document as a card on the window background, which also holds the title bar and the sidebar */}
+        <div
+          class={cn(
+            "flex-1 min-w-0 flex overflow-hidden print:block print:overflow-visible",
+            immersive() &&
+              "rounded-xl border border-border/80 bg-surface-1 shadow-sm print:rounded-none print:border-0 print:shadow-none",
+          )}
+        >
           <Show
             when={session.activeDocument()}
             fallback={
@@ -304,7 +299,6 @@ export const MainWindow: Component = () => {
               <main class="flex-1 h-full overflow-hidden relative print:h-auto print:overflow-visible">
                 <Show when={findMode() !== "closed"}>
                   <FindBar
-                    class={cn(immersive && "top-13")}
                     showReplace={findMode() === "replace"}
                     initialSearch={initialSearch()}
                     matchStats={matchStats()}

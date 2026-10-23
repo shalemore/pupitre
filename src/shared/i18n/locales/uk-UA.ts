@@ -219,8 +219,7 @@ export const ukUA = {
     typewriterMode: "Режим друкарської машинки",
     typewriterModeDesc: "Тримає рядок, який ви пишете, посередині вікна (F9)",
     windowStyle: "Стиль вікна",
-    windowStyleDesc:
-      "Занурювальний стиль ховає рядок заголовка та структуру під час письма. Застосовується до вікон, відкритих після цього.",
+    windowStyleDesc: "Занурювальний стиль ховає рядок заголовка та структуру під час письма.",
     windowStyleClassic: "Класичний",
     windowStyleImmersive: "Занурювальний",
     defaultApp: "Стандартна програма Markdown",

@@ -209,8 +209,7 @@ export const esES = {
     typewriterMode: "Modo máquina de escribir",
     typewriterModeDesc: "Mantiene la línea que se escribe en el centro de la ventana (F9)",
     windowStyle: "Estilo de ventana",
-    windowStyleDesc:
-      "Inmersivo oculta la barra de título y el esquema mientras escribes. Se aplica a las ventanas abiertas después.",
+    windowStyleDesc: "Inmersivo oculta la barra de título y el esquema mientras escribes.",
     windowStyleClassic: "Clásico",
     windowStyleImmersive: "Inmersivo",
     defaultApp: "Aplicación predeterminada para Markdown",

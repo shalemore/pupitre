@@ -42,7 +42,7 @@ Begge finnes i menyen **Vis** og under Innstillinger › Redigerer, og kan bruke
 
 ## Vindustil
 
-Innstillinger › Utseende › Vindustil bytter mellom **Klassisk** og **Immersiv**. I immersiv stil ligger dokumentet på et kort i vinduet; tittellinjen og innholdsfortegnelsen flytter seg når du skriver eller ruller, og kommer tilbake når pekeren når toppen eller startkanten av vinduet. Stilen gjelder vinduer som åpnes etter endringen.
+Innstillinger › Utseende › Vindustil bytter mellom **Klassisk** og **Immersiv**. I immersiv stil ligger dokumentet på et kort i vinduet; tittellinjen og innholdsfortegnelsen flytter seg når du skriver eller ruller, og kommer tilbake når pekeren når toppen eller startkanten av vinduet.
 
 ## Filer og bilder
 

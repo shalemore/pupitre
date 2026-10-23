@@ -213,8 +213,7 @@ export const svSE = {
     typewriterMode: "Skrivmaskinsläge",
     typewriterModeDesc: "Håller raden du skriver i mitten av fönstret (F9)",
     windowStyle: "Fönsterstil",
-    windowStyleDesc:
-      "Immersiv döljer namnlisten och dispositionen medan du skriver. Gäller fönster som öppnas efteråt.",
+    windowStyleDesc: "Immersiv döljer namnlisten och dispositionen medan du skriver.",
     windowStyleClassic: "Klassisk",
     windowStyleImmersive: "Immersiv",
     defaultApp: "Standardapp för Markdown",

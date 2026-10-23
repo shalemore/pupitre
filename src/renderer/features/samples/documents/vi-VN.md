@@ -42,7 +42,7 @@ Cả hai đều có trong menu **Xem** và trong Tùy chọn › Trình soạn t
 
 ## Kiểu cửa sổ
 
-Tùy chọn › Hiển thị › Kiểu cửa sổ chuyển giữa **Cổ điển** và **Toàn màn hình**. Ở kiểu toàn màn hình, tài liệu nằm trong một thẻ giữa cửa sổ; thanh tiêu đề và dàn ý sẽ lùi đi khi bạn gõ hoặc cuộn, rồi trở lại khi con trỏ chạm mép trên hoặc mép đầu của cửa sổ. Kiểu này áp dụng cho cửa sổ được mở sau khi thay đổi.
+Tùy chọn › Hiển thị › Kiểu cửa sổ chuyển giữa **Cổ điển** và **Toàn màn hình**. Ở kiểu toàn màn hình, tài liệu nằm trong một thẻ giữa cửa sổ; thanh tiêu đề và dàn ý sẽ lùi đi khi bạn gõ hoặc cuộn, rồi trở lại khi con trỏ chạm mép trên hoặc mép đầu của cửa sổ.
 
 ## Tệp và hình ảnh
 

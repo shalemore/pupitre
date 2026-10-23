@@ -42,7 +42,7 @@ Mindkettő a **Nézet** menüben és a Beállítások › Szerkesztő alatt tal�
 
 ## Ablakstílus
 
-A Beállítások › Megjelenés › Ablakstílus a **Klasszikus** és az **Immerzív** között vált. Immerzív stílusban a dokumentum az ablakon belüli kártyán fekszik; a címsor és a vázlat visszahúzódik, amint gépelni vagy görgetni kezd, és visszatér, amikor a mutató eléri az ablak felső vagy kezdő szélét. A stílus a módosítás után megnyitott ablakokra érvényes.
+A Beállítások › Megjelenés › Ablakstílus a **Klasszikus** és az **Immerzív** között vált. Immerzív stílusban a dokumentum az ablakon belüli kártyán fekszik; a címsor és a vázlat visszahúzódik, amint gépelni vagy görgetni kezd, és visszatér, amikor a mutató eléri az ablak felső vagy kezdő szélét.
 
 ## Fájlok és képek
 

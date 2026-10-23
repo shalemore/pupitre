@@ -214,8 +214,7 @@ export const isIS = {
     typewriterMode: "Skrifvélarhamur",
     typewriterModeDesc: "Heldur línunni sem þú ert að skrifa í miðju gluggans (F9)",
     windowStyle: "Stíll glugga",
-    windowStyleDesc:
-      "Yfirgripsmikill felur titilstikuna og efnisyfirlitið á meðan þú skrifar. Gildir um glugga sem opnaðir eru eftir á.",
+    windowStyleDesc: "Yfirgripsmikill felur titilstikuna og efnisyfirlitið á meðan þú skrifar.",
     windowStyleClassic: "Klassískur",
     windowStyleImmersive: "Yfirgripsmikill",
     defaultApp: "Sjálfgefna Markdown-forritið",

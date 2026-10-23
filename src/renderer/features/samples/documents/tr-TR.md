@@ -42,7 +42,7 @@ Pupitre bir masaüstü Markdown düzenleyicisidir. Belgeler sıradan `.md` dosya
 
 ## Pencere stili
 
-Tercihler › Görünüm › Pencere Stili, **Klasik** ile **Sürükleyici** arasında geçiş yapar. Sürükleyici stilde belge pencerenin içindeki bir kartta durur; yazmaya veya kaydırmaya başladığınızda başlık çubuğu ve anahat çekilir, işaretçi pencerenin üstüne ya da başlangıç kenarına geldiğinde geri döner. Stil, değişiklikten sonra açılan pencerelere uygulanır.
+Tercihler › Görünüm › Pencere Stili, **Klasik** ile **Sürükleyici** arasında geçiş yapar. Sürükleyici stilde belge pencerenin içindeki bir kartta durur; yazmaya veya kaydırmaya başladığınızda başlık çubuğu ve anahat çekilir, işaretçi pencerenin üstüne ya da başlangıç kenarına geldiğinde geri döner.
 
 ## Dosyalar ve resimler
 
