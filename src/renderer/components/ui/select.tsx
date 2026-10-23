@@ -20,6 +20,9 @@ export interface SelectProps<T extends string> {
   "aria-label"?: string;
 }
 
+// Kobalte treats a selected key of "" as "nothing selected" and shows the placeholder instead of the label, so an option with an empty value needs a stand-in key
+const EMPTY_VALUE_KEY = "__empty__";
+
 /** A dropdown on top of Kobalte, which handles keyboard navigation, typeahead and ARIA. */
 export function Select<T extends string>(props: SelectProps<T>) {
   const selected = () => props.options.find((option) => option.value === props.value);
@@ -27,7 +30,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
   return (
     <KobalteSelect<SelectOption<T>>
       options={[...props.options]}
-      optionValue="value"
+      optionValue={(option) => (option.value === "" ? EMPTY_VALUE_KEY : option.value)}
       optionTextValue="label"
       value={selected() ?? null}
       onChange={(option) => {
