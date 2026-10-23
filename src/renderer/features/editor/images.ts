@@ -6,10 +6,14 @@ export const documentBaseUrl = Facet.define<string | undefined, string | undefin
   combine: (values) => values[0],
 });
 
-export function resolveUrl(state: EditorState, url: string): string {
-  const base = state.facet(documentBaseUrl);
+/** `url` made absolute against the document's folder, when it is relative and there is one. */
+export function resolveAgainst(base: string | undefined, url: string): string {
   if (!base || URL.canParse(url)) return url;
   return new URL(url, base).href;
+}
+
+export function resolveUrl(state: EditorState, url: string): string {
+  return resolveAgainst(state.facet(documentBaseUrl), url);
 }
 
 /** The address inside an image's parentheses, without the optional angle brackets. */

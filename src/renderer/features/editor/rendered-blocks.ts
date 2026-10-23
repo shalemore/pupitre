@@ -2,13 +2,15 @@ import { syntaxTree } from "@codemirror/language";
 import { type EditorState, type Range, StateField } from "@codemirror/state";
 import { Decoration, type DecorationSet, EditorView, type WidgetType } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
+import { HtmlBlockWidget, isRenderableHtml } from "./html";
+import { documentBaseUrl } from "./images";
 import { touches } from "./live-preview";
 import { MATH_LANGUAGE, MathWidget } from "./math";
 import { MermaidWidget } from "./mermaid";
 import { TableWidget, tableModel } from "./table";
 
 /**
- * Blocks that are shown rendered (tables, display math, diagrams), with the same rule as the live preview:
+ * Blocks that are shown rendered (tables, display math, diagrams, HTML), with the same rule as the live preview:
  * away from the selection the block is replaced by its rendering; once a selection touches it, its
  * source is shown with the rendering under it. Replacing whole lines needs block decorations,
  * which CodeMirror only takes from a state field.
@@ -22,6 +24,12 @@ function blockWidget(state: EditorState, node: SyntaxNode): WidgetType | undefin
     child ? state.sliceDoc(child.from, child.to) : "";
   if (node.name === "Table") {
     return new TableWidget(state.sliceDoc(node.from, node.to), tableModel(state, node));
+  }
+  if (node.name === "HTMLBlock") {
+    const source = text(node);
+    return isRenderableHtml(source)
+      ? new HtmlBlockWidget(source, state.facet(documentBaseUrl))
+      : undefined;
   }
   if (node.name === "BlockMath") {
     const [open, close] = node.getChildren("MathMark");

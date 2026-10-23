@@ -317,6 +317,10 @@
     font-size: 0.875em;
   }
 
+  .md-html-block img {
+    max-width: 100%;
+  }
+
   /* A rendered table; its cells keep the document font and scroll sideways when too wide */
   .md-table-block {
     padding-block: 0.25em;
@@ -337,11 +341,13 @@
     font-weight: 600;
   }
 
+  /* Source shown in the code font; ligatures would turn markup such as <!-- into arrows */
   .md-table,
   .md-front-matter,
   .md-html {
     font-family: var(--font-mono);
     font-size: 0.875em;
+    font-variant-ligatures: none;
   }
 
   .md-front-matter,
