@@ -170,6 +170,11 @@ export const idID = {
     widthFull: "Lebar penuh",
     spellcheck: "Pemeriksa ejaan",
     spellcheckDesc: "Garis bawahi kata yang salah eja; klik kanan untuk saran",
+    scrollbar: "Bilah gulir",
+    scrollbarDesc: "Pilih kapan bilah gulir terlihat",
+    scrollbarAuto: "Sembunyikan otomatis",
+    scrollbarAlways: "Selalu tampilkan",
+    scrollbarNever: "Selalu sembunyikan",
     markdownDesc:
       "Cara Markdown ditulis saat disimpan. Berlaku untuk dokumen yang dibuka setelah perubahan.",
     bulletMarker: "Penanda daftar butir",

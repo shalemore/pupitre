@@ -171,6 +171,11 @@ export const faIR = {
     widthFull: "تمام عرض",
     spellcheck: "بررسی املا",
     spellcheckDesc: "زیرخط کشیدن واژه‌های غلط؛ برای پیشنهادها راست‌کلیک کنید",
+    scrollbar: "نوار پیمایش",
+    scrollbarDesc: "تعیین کنید نوارهای پیمایش چه زمانی نمایش داده شوند",
+    scrollbarAuto: "پنهان‌سازی خودکار",
+    scrollbarAlways: "همیشه نمایش",
+    scrollbarNever: "همیشه پنهان",
     markdownDesc:
       "نحوه نوشتن Markdown هنگام ذخیره. روی سندهایی که پس از تغییر باز می‌شوند اعمال می‌شود.",
     bulletMarker: "نشانه فهرست گلوله‌ای",

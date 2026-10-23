@@ -171,6 +171,11 @@ export const svSE = {
     widthFull: "Full bredd",
     spellcheck: "Stavningskontroll",
     spellcheckDesc: "Understryk felstavade ord; högerklicka för förslag",
+    scrollbar: "Rullningslist",
+    scrollbarDesc: "Välj när rullningslistar visas",
+    scrollbarAuto: "Dölj automatiskt",
+    scrollbarAlways: "Visa alltid",
+    scrollbarNever: "Dölj alltid",
     markdownDesc:
       "Hur Markdown skrivs när det sparas. Gäller dokument som öppnas efter en ändring.",
     bulletMarker: "Punktmarkör",

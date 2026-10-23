@@ -172,6 +172,11 @@ export const huHU = {
     widthFull: "Teljes szélesség",
     spellcheck: "Helyesírás-ellenőrzés",
     spellcheckDesc: "Aláhúzza a helytelenül írt szavakat; javaslatokhoz kattintson jobb gombbal",
+    scrollbar: "Görgetősáv",
+    scrollbarDesc: "Válassza ki, mikor látszanak a görgetősávok",
+    scrollbarAuto: "Automatikus elrejtés",
+    scrollbarAlways: "Mindig látható",
+    scrollbarNever: "Mindig rejtett",
     markdownDesc:
       "Hogyan íródik a Markdown mentéskor. A módosítás után megnyitott dokumentumokra vonatkozik.",
     bulletMarker: "Listajelölő",

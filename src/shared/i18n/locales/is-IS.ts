@@ -172,6 +172,11 @@ export const isIS = {
     widthFull: "Full breidd",
     spellcheck: "Stafsetningarathugun",
     spellcheckDesc: "Undirstrika rangt stafsett orð; hægrismelltu til að sjá tillögur",
+    scrollbar: "Skrunstika",
+    scrollbarDesc: "Veldu hvenær skrunstikur sjást",
+    scrollbarAuto: "Fela sjálfkrafa",
+    scrollbarAlways: "Alltaf sýna",
+    scrollbarNever: "Alltaf fela",
     markdownDesc:
       "Hvernig Markdown er skrifað við vistun. Gildir um skjöl sem opnuð eru eftir breytingu.",
     bulletMarker: "Punktmerki",

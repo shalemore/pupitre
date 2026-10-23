@@ -168,6 +168,11 @@ export const ptPT = {
     spellcheck: "Verificação ortográfica",
     spellcheckDesc:
       "Sublinhar palavras mal escritas; clique com o botão direito para ver sugestões",
+    scrollbar: "Barra de deslocamento",
+    scrollbarDesc: "Escolha quando as barras de deslocamento ficam visíveis",
+    scrollbarAuto: "Ocultar automaticamente",
+    scrollbarAlways: "Mostrar sempre",
+    scrollbarNever: "Ocultar sempre",
     markdownDesc:
       "Como o Markdown é escrito ao guardar. Aplica-se aos documentos abertos depois de uma alteração.",
     bulletMarker: "Marcador de lista não ordenada",

@@ -166,6 +166,11 @@ export const ptBR = {
     widthFull: "Largura total",
     spellcheck: "Verificação ortográfica",
     spellcheckDesc: "Sublinhar palavras incorretas; clique direito para sugestões",
+    scrollbar: "Barra de rolagem",
+    scrollbarDesc: "Escolha quando as barras de rolagem ficam visíveis",
+    scrollbarAuto: "Ocultar automaticamente",
+    scrollbarAlways: "Sempre mostrar",
+    scrollbarNever: "Sempre ocultar",
     markdownDesc:
       "Como o Markdown é escrito ao salvar. Vale para documentos abertos após a alteração.",
     bulletMarker: "Marcador de lista",

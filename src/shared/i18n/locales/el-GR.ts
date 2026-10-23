@@ -171,6 +171,11 @@ export const elGR = {
     widthFull: "Πλήρες πλάτος",
     spellcheck: "Ορθογραφικός έλεγχος",
     spellcheckDesc: "Υπογραμμίζει λέξεις με λάθη· κάντε δεξί κλικ για προτάσεις",
+    scrollbar: "Γραμμή κύλισης",
+    scrollbarDesc: "Επιλέξτε πότε εμφανίζονται οι γραμμές κύλισης",
+    scrollbarAuto: "Αυτόματη απόκρυψη",
+    scrollbarAlways: "Πάντα εμφάνιση",
+    scrollbarNever: "Πάντα απόκρυψη",
     markdownDesc:
       "Πώς γράφεται το Markdown κατά την αποθήκευση. Ισχύει για έγγραφα που ανοίγουν μετά από αλλαγή.",
     bulletMarker: "Σύμβολο λίστας",

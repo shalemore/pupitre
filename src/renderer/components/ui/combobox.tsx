@@ -2,6 +2,7 @@ import { Combobox as KobalteCombobox } from "@kobalte/core/combobox";
 import { cn } from "cn";
 import { Check, ChevronDown } from "lucide-solid";
 import { createSignal, Show } from "solid-js";
+import { ScrollView, type ScrollViewProps } from "./scroll-view";
 import type { SelectOption } from "./select";
 
 export interface ComboboxProps {
@@ -106,7 +107,8 @@ export function Combobox(props: ComboboxProps) {
         <KobalteCombobox.Content class="z-50 w-(--kb-popper-anchor-width) min-w-64 rounded-xl border border-border/80 bg-surface-2 p-1 shadow-float animate-in fade-in-0 zoom-in-95 duration-(--duration-ui)">
           <KobalteCombobox.Listbox
             ref={(element) => (listbox = element)}
-            class="max-h-80 overflow-y-auto outline-none"
+            as={(listboxProps: ScrollViewProps) => <ScrollView as="ul" {...listboxProps} />}
+            class="max-h-80 outline-none"
           />
         </KobalteCombobox.Content>
       </KobalteCombobox.Portal>

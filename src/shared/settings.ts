@@ -37,6 +37,7 @@ export const settingsSchema = z.object({
   lineHeight: z.number().min(1).max(3).catch(1.75),
   contentWidth: z.enum(["compact", "normal", "wide", "full"]).catch("normal"),
   spellcheck: z.boolean().catch(true),
+  scrollbar: z.enum(["auto", "always", "never"]).catch("auto"),
 
   // How Markdown is written, matching the remark-stringify options of the same meaning
   bulletMarker: z.enum(["-", "*", "+"]).catch("-"),

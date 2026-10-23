@@ -168,6 +168,11 @@ export const frFR = {
     widthFull: "Pleine largeur",
     spellcheck: "Vérification orthographique",
     spellcheckDesc: "Souligner les fautes ; clic droit pour les suggestions",
+    scrollbar: "Barre de défilement",
+    scrollbarDesc: "Choisissez quand les barres de défilement sont visibles",
+    scrollbarAuto: "Masquer automatiquement",
+    scrollbarAlways: "Toujours afficher",
+    scrollbarNever: "Toujours masquer",
     markdownDesc:
       "Façon d'écrire le Markdown à l'enregistrement. S'applique aux documents ouverts après la modification.",
     bulletMarker: "Puce de liste",

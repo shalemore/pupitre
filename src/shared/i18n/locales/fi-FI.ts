@@ -172,6 +172,11 @@ export const fiFI = {
     spellcheck: "Oikeinkirjoituksen tarkistus",
     spellcheckDesc:
       "Alleviivaa väärin kirjoitetut sanat; napsauta hiiren oikealla painikkeella nähdäksesi ehdotukset",
+    scrollbar: "Vierityspalkki",
+    scrollbarDesc: "Valitse, milloin vierityspalkit näkyvät",
+    scrollbarAuto: "Piilota automaattisesti",
+    scrollbarAlways: "Näytä aina",
+    scrollbarNever: "Piilota aina",
     markdownDesc:
       "Miten Markdown kirjoitetaan tallennettaessa. Koskee asiakirjoja, jotka avataan muutoksen jälkeen.",
     bulletMarker: "Luettelomerkki",

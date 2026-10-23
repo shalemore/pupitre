@@ -168,6 +168,11 @@ export const itIT = {
     widthFull: "Larghezza piena",
     spellcheck: "Controllo ortografico",
     spellcheckDesc: "Sottolinea le parole errate; clic destro per i suggerimenti",
+    scrollbar: "Barra di scorrimento",
+    scrollbarDesc: "Scegli quando mostrare le barre di scorrimento",
+    scrollbarAuto: "Nascondi automaticamente",
+    scrollbarAlways: "Mostra sempre",
+    scrollbarNever: "Nascondi sempre",
     markdownDesc:
       "Come viene scritto il Markdown al salvataggio. Vale per i documenti aperti dopo la modifica.",
     bulletMarker: "Simbolo elenco puntato",

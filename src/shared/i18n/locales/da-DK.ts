@@ -171,6 +171,11 @@ export const daDK = {
     widthFull: "Fuld bredde",
     spellcheck: "Stavekontrol",
     spellcheckDesc: "Understreg stavefejl; højreklik for forslag",
+    scrollbar: "Rullepanel",
+    scrollbarDesc: "Vælg, hvornår rullepaneler vises",
+    scrollbarAuto: "Skjul automatisk",
+    scrollbarAlways: "Vis altid",
+    scrollbarNever: "Skjul altid",
     markdownDesc:
       "Hvordan Markdown skrives, når det gemmes. Gælder dokumenter, der åbnes efter en ændring.",
     bulletMarker: "Punkttegn",

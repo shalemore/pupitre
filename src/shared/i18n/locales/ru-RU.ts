@@ -174,6 +174,11 @@ export const ruRU = {
     widthFull: "Во всю ширину",
     spellcheck: "Проверка орфографии",
     spellcheckDesc: "Подчёркивать ошибки; варианты — по правому клику",
+    scrollbar: "Полоса прокрутки",
+    scrollbarDesc: "Когда показывать полосы прокрутки",
+    scrollbarAuto: "Скрывать автоматически",
+    scrollbarAlways: "Всегда показывать",
+    scrollbarNever: "Всегда скрывать",
     markdownDesc:
       "Как записывается Markdown при сохранении. Применяется к документам, открытым после изменения.",
     bulletMarker: "Маркер списка",

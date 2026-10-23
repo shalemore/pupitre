@@ -172,6 +172,11 @@ export const nlNL = {
     widthFull: "Volledige breedte",
     spellcheck: "Spellingscontrole",
     spellcheckDesc: "Fout gespelde woorden onderstrepen; klik met rechts voor suggesties",
+    scrollbar: "Schuifbalk",
+    scrollbarDesc: "Kies wanneer schuifbalken zichtbaar zijn",
+    scrollbarAuto: "Automatisch verbergen",
+    scrollbarAlways: "Altijd tonen",
+    scrollbarNever: "Altijd verbergen",
     markdownDesc:
       "Hoe Markdown wordt geschreven bij het opslaan. Geldt voor documenten die na een wijziging worden geopend.",
     bulletMarker: "Opsommingsteken",

@@ -172,6 +172,11 @@ export const trTR = {
     widthFull: "Tam Genişlik",
     spellcheck: "Yazım Denetimi",
     spellcheckDesc: "Yanlış yazılmış sözcüklerin altını çizer; öneriler için sağ tıklayın",
+    scrollbar: "Kaydırma çubuğu",
+    scrollbarDesc: "Kaydırma çubuklarının ne zaman görüneceğini seçin",
+    scrollbarAuto: "Otomatik gizle",
+    scrollbarAlways: "Her zaman göster",
+    scrollbarNever: "Her zaman gizle",
     markdownDesc:
       "Kaydederken Markdown nasıl yazılır. Değişiklikten sonra açılan belgelere uygulanır.",
     bulletMarker: "Madde İmi",

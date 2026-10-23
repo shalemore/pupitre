@@ -113,6 +113,23 @@ export const EditorSection: Component = () => (
     </SettingField>
 
     <SettingField
+      name="scrollbar"
+      title={t().settings.scrollbar}
+      description={t().settings.scrollbarDesc}
+    >
+      <Select<Settings["scrollbar"]>
+        value={settings().scrollbar}
+        onChange={(scrollbar) => void updateSettings({ scrollbar })}
+        options={[
+          { value: "auto", label: t().settings.scrollbarAuto },
+          { value: "always", label: t().settings.scrollbarAlways },
+          { value: "never", label: t().settings.scrollbarNever },
+        ]}
+        aria-label={t().settings.scrollbar}
+      />
+    </SettingField>
+
+    <SettingField
       name="focusMode"
       title={t().settings.focusMode}
       description={t().settings.focusModeDesc}

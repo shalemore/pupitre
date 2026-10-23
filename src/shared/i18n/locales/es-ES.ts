@@ -166,6 +166,11 @@ export const esES = {
     widthFull: "Ancho completo",
     spellcheck: "Revisión ortográfica",
     spellcheckDesc: "Subrayar palabras mal escritas; clic derecho para sugerencias",
+    scrollbar: "Barra de desplazamiento",
+    scrollbarDesc: "Elige cuándo se muestran las barras de desplazamiento",
+    scrollbarAuto: "Ocultar automáticamente",
+    scrollbarAlways: "Mostrar siempre",
+    scrollbarNever: "Ocultar siempre",
     markdownDesc:
       "Cómo se escribe Markdown al guardar. Se aplica a los documentos abiertos después del cambio.",
     bulletMarker: "Marcador de lista",

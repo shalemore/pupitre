@@ -2,7 +2,7 @@ import { makeEventListener } from "@solid-primitives/event-listener";
 import { FileCode2, Info, Palette, Settings2, Type } from "lucide-solid";
 import { createEffect, onMount, type Component } from "solid-js";
 import { TitleBar } from "@/components/title-bar";
-import { Separator, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
+import { ScrollView, Separator, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
 import { AboutSection } from "@/features/settings/about-section";
 import { AppearanceSection } from "@/features/settings/appearance-section";
 import { EditorSection } from "@/features/settings/editor-section";
@@ -55,7 +55,7 @@ export const SettingsWindow: Component = () => {
           </TabsList>
         </aside>
 
-        <main class="flex-1 overflow-y-auto p-6">
+        <ScrollView as="main" class="flex-1 p-6">
           <TabsContent value="general">
             <GeneralSection />
           </TabsContent>
@@ -71,7 +71,7 @@ export const SettingsWindow: Component = () => {
           <TabsContent value="about">
             <AboutSection />
           </TabsContent>
-        </main>
+        </ScrollView>
       </Tabs>
     </div>
   );

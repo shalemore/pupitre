@@ -167,6 +167,11 @@ export const enUS = {
     widthFull: "Full Width",
     spellcheck: "Spell Check",
     spellcheckDesc: "Underline misspelled words; right-click for suggestions",
+    scrollbar: "Scrollbar",
+    scrollbarDesc: "Choose when scrollbars are visible",
+    scrollbarAuto: "Auto-hide",
+    scrollbarAlways: "Always show",
+    scrollbarNever: "Always hide",
     markdownDesc:
       "How Markdown is written when saving. Applies to documents opened after a change.",
     bulletMarker: "Bullet List Marker",

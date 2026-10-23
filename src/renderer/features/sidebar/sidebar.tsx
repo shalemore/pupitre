@@ -1,6 +1,7 @@
 import { cn } from "cn";
 import { ListTree, Folder } from "lucide-solid";
 import { Show, type Component, type JSX } from "solid-js";
+import { ScrollView } from "@/components/ui";
 import { t } from "@/i18n";
 
 export type SidebarMode = "outline" | "folder";
@@ -67,12 +68,12 @@ export const Sidebar: Component<SidebarProps> = (props) => {
         </div>
       </Show>
       {/* Both stay mounted so the expanded folders survive a switch to the outline */}
-      <div class={cn("flex-1 overflow-y-auto", props.mode !== "outline" && "hidden")}>
+      <ScrollView class={cn("flex-1", props.mode !== "outline" && "hidden")}>
         {props.outline}
-      </div>
-      <div class={cn("flex-1 overflow-y-auto", props.mode !== "folder" && "hidden")}>
+      </ScrollView>
+      <ScrollView class={cn("flex-1", props.mode !== "folder" && "hidden")}>
         {props.folder}
-      </div>
+      </ScrollView>
     </aside>
   );
 };

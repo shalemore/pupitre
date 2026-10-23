@@ -168,6 +168,11 @@ export const deDE = {
     widthFull: "Volle Breite",
     spellcheck: "Rechtschreibprüfung",
     spellcheckDesc: "Falsch geschriebene Wörter unterstreichen; Rechtsklick für Vorschläge",
+    scrollbar: "Scrollleiste",
+    scrollbarDesc: "Legt fest, wann Scrollleisten sichtbar sind",
+    scrollbarAuto: "Automatisch ausblenden",
+    scrollbarAlways: "Immer anzeigen",
+    scrollbarNever: "Immer ausblenden",
     markdownDesc:
       "Wie Markdown beim Speichern geschrieben wird. Gilt für danach geöffnete Dokumente.",
     bulletMarker: "Aufzählungszeichen",

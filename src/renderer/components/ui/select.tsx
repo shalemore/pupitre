@@ -2,6 +2,7 @@ import { Select as KobalteSelect } from "@kobalte/core/select";
 import { cn } from "cn";
 import { Check, ChevronDown } from "lucide-solid";
 import { type JSX, Show } from "solid-js";
+import { ScrollView, type ScrollViewProps } from "./scroll-view";
 
 export interface SelectOption<T extends string = string> {
   value: T;
@@ -84,7 +85,10 @@ export function Select<T extends string>(props: SelectProps<T>) {
       </KobalteSelect.Trigger>
       <KobalteSelect.Portal>
         <KobalteSelect.Content class="z-50 min-w-(--kb-popper-anchor-width) rounded-xl border border-border/80 bg-surface-2 p-1 shadow-float animate-in fade-in-0 zoom-in-95 duration-(--duration-ui)">
-          <KobalteSelect.Listbox class="max-h-72 overflow-y-auto outline-none" />
+          <KobalteSelect.Listbox
+            as={(listboxProps: ScrollViewProps) => <ScrollView as="ul" {...listboxProps} />}
+            class="max-h-72 outline-none"
+          />
         </KobalteSelect.Content>
       </KobalteSelect.Portal>
     </KobalteSelect>

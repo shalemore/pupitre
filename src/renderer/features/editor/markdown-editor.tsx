@@ -28,6 +28,7 @@ import {
   runWithOwner,
   type Component,
 } from "solid-js";
+import { ScrollView } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { settings } from "@/lib/settings";
@@ -317,9 +318,9 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
   });
 
   return (
-    <div
+    <ScrollView
       ref={(element) => (container = element)}
-      class="size-full overflow-x-hidden overflow-y-auto print:h-auto print:overflow-visible"
+      class="size-full overflow-x-hidden print:h-auto print:overflow-visible"
     />
   );
 };

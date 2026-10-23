@@ -221,6 +221,11 @@ export interface TranslationSchema {
     readonly widthFull: string;
     readonly spellcheck: string;
     readonly spellcheckDesc: string;
+    readonly scrollbar: string;
+    readonly scrollbarDesc: string;
+    readonly scrollbarAuto: string;
+    readonly scrollbarAlways: string;
+    readonly scrollbarNever: string;
     readonly markdownDesc: string;
     readonly bulletMarker: string;
     readonly emphasisMarker: string;

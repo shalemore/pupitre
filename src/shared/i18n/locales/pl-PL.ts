@@ -177,6 +177,11 @@ export const plPL = {
     spellcheck: "Sprawdzanie pisowni",
     spellcheckDesc:
       "Podkreślaj błędnie zapisane słowa; kliknij prawym przyciskiem, aby zobaczyć propozycje",
+    scrollbar: "Pasek przewijania",
+    scrollbarDesc: "Wybierz, kiedy widoczne są paski przewijania",
+    scrollbarAuto: "Ukrywaj automatycznie",
+    scrollbarAlways: "Zawsze pokazuj",
+    scrollbarNever: "Zawsze ukrywaj",
     markdownDesc: "Jak zapisywany jest Markdown. Dotyczy dokumentów otwieranych po zmianie.",
     bulletMarker: "Punktor listy",
     emphasisMarker: "Znacznik kursywy",

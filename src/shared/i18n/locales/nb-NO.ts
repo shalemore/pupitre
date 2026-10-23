@@ -171,6 +171,11 @@ export const nbNO = {
     widthFull: "Full bredde",
     spellcheck: "Stavekontroll",
     spellcheckDesc: "Understrek feilstavede ord; høyreklikk for forslag",
+    scrollbar: "Rullefelt",
+    scrollbarDesc: "Velg når rullefeltene vises",
+    scrollbarAuto: "Skjul automatisk",
+    scrollbarAlways: "Vis alltid",
+    scrollbarNever: "Skjul alltid",
     markdownDesc:
       "Hvordan Markdown skrives når det lagres. Gjelder dokumenter som åpnes etter en endring.",
     bulletMarker: "Punktmerke",

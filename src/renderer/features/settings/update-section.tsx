@@ -2,7 +2,7 @@ import type { UpdateStatus } from "@shared/desktop-api";
 import { cn } from "cn";
 import { CheckCircle2, Download, RefreshCw } from "lucide-solid";
 import { createMemo, Show, type Component } from "solid-js";
-import { Button } from "@/components/ui";
+import { Button, ScrollView } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { updateStatus } from "@/lib/updater";
@@ -76,9 +76,12 @@ export const UpdateStatusPanel: Component<{ currentVersion: string }> = (props) 
               </Button>
             </div>
             <Show when={status().notes}>
-              <p class="text-[11px] text-muted-foreground whitespace-pre-wrap max-h-24 overflow-y-auto">
+              <ScrollView
+                as="p"
+                class="text-[11px] text-muted-foreground whitespace-pre-wrap max-h-24"
+              >
                 {status().notes}
-              </p>
+              </ScrollView>
             </Show>
           </div>
         )}
