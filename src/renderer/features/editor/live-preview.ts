@@ -10,6 +10,7 @@ import {
 } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
 import { AlertTitleWidget, alertTitles, alertType } from "./alerts";
+import { footnoteTarget } from "./footnotes";
 import { htmlTag, isFormattingTag, LineBreakWidget } from "./html";
 import { ImageWidget, imageSource, resolveUrl } from "./images";
 import { MathWidget } from "./math";
@@ -72,6 +73,8 @@ function blockClass(name: string): string | undefined {
       return "md-html";
     case "LinkReference":
       return "md-link-reference";
+    case "FootnoteDefinition":
+      return "md-footnote";
     default:
       return undefined;
   }
@@ -350,6 +353,24 @@ function visitImage(builder: DecorationBuilder, node: SyntaxNode): boolean {
   return false;
 }
 
+/**
+ * A footnote reference reads as its label in superscript, a definition starts with its label;
+ * the brackets show while the selection touches them.
+ */
+function visitFootnote(builder: DecorationBuilder, node: SyntaxNode): void {
+  const reference = node.name === "FootnoteReference";
+  const labelFrom = node.from + 2;
+  const labelTo = node.to - (reference ? 1 : 2);
+  if (touches(builder.selection, node.from, node.to)) {
+    builder.mark(node.from, labelFrom, "md-mark");
+    builder.mark(labelTo, node.to, "md-mark");
+    return;
+  }
+  builder.hide(node.from, labelFrom);
+  builder.hide(labelTo, node.to);
+  builder.mark(labelFrom, labelTo, reference ? "md-footnote-ref" : "md-footnote-label");
+}
+
 /** Inline math is rendered in place, and shown as source while the selection touches it. */
 function visitInlineMath(builder: DecorationBuilder, node: SyntaxNode): void {
   const [open, close] = node.getChildren("MathMark");
@@ -435,6 +456,10 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
       return false;
     case "InlineMath":
       visitInlineMath(builder, node);
+      return false;
+    case "FootnoteReference":
+    case "FootnoteLabel":
+      visitFootnote(builder, node);
       return false;
     case "FrontMatter":
       for (const fence of node.getChildren("FrontMatterMark")) {
@@ -581,8 +606,18 @@ export const livePreview = ViewPlugin.fromClass(
       mousedown(event, view) {
         if (event.button !== 0 || !(event.ctrlKey || event.metaKey)) return false;
         const pos = view.posAtCoords(event);
-        const href = pos === null ? undefined : linkAt(view.state, pos);
-        if (!href || !openLink(href)) return false;
+        if (pos === null) return false;
+        // A footnote jumps between its reference and its definition
+        const footnote = syntaxTree(view.state).resolveInner(pos, 1);
+        const target = /^Footnote(?:Reference|Label)$/.test(footnote.name)
+          ? footnoteTarget(view.state, footnote)
+          : undefined;
+        if (target !== undefined) {
+          view.dispatch({ selection: { anchor: target }, scrollIntoView: true });
+        } else {
+          const href = linkAt(view.state, pos);
+          if (!href || !openLink(href)) return false;
+        }
         event.preventDefault();
         return true;
       },

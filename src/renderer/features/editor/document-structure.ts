@@ -18,6 +18,7 @@ const UNREAD_NODES = new Set([
   "LinkTitle",
   "LinkLabel",
   "LinkReference",
+  "FootnoteLabel",
   "CodeInfo",
   "HTMLTag",
   "Comment",

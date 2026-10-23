@@ -117,6 +117,26 @@
     color: var(--ui-text-muted);
   }
 
+  /* Footnotes: references in superscript, definitions in smaller text led by their label */
+  .md-footnote-ref {
+    color: var(--ui-brand);
+    font-size: 0.75em;
+    vertical-align: super;
+  }
+
+  .md-footnote {
+    color: var(--ui-text-secondary);
+    font-size: 0.9em;
+  }
+
+  .md-footnote-label {
+    color: var(--ui-text-muted);
+  }
+
+  .md-footnote-label::after {
+    content: ".";
+  }
+
   /* A picture shown in place of its source, or under it while the source is edited */
   .md-image-preview {
     display: inline-block;

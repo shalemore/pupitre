@@ -42,6 +42,7 @@ import {
   readableText,
 } from "./document-structure";
 import { formatKeymap, type MarkdownStyle, runFormatAction } from "./format-commands";
+import { footnotes } from "./footnotes";
 import { frontMatter } from "./front-matter";
 import { createPendingImages, documentBaseUrl, imageInput } from "./images";
 import { livePreview } from "./live-preview";
@@ -200,7 +201,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           ]),
           markdown({
             base: commonmarkLanguage,
-            extensions: [GFM, frontMatter, math],
+            extensions: [GFM, frontMatter, math, footnotes],
             codeLanguages: languages,
             completeHTMLTags: false,
           }),
