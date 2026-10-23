@@ -32,6 +32,7 @@ import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { settings } from "@/lib/settings";
 import { countText, type TextStats } from "@/lib/text-stats";
+import { alertTitles } from "./alerts";
 import { codeHighlight } from "./code-highlight";
 import {
   collectHeadings,
@@ -208,6 +209,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           renderedBlocks,
           imageInput(uploadImage),
           baseUrlCompartment.of(documentBaseUrl.of(props.baseUrl)),
+          alertTitles.of(t().editor.alerts),
           textDirection,
           search({ createPanel: () => ({ dom: document.createElement("div") }) }),
           EditorView.lineWrapping,

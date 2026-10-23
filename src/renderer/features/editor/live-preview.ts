@@ -9,6 +9,7 @@ import {
   WidgetType,
 } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
+import { AlertTitleWidget, alertTitles, alertType } from "./alerts";
 import { ImageWidget, imageSource, resolveUrl } from "./images";
 import { MathWidget } from "./math";
 
@@ -140,6 +141,8 @@ function ancestorCount(node: SyntaxNode, name: string): number {
 
 class DecorationBuilder {
   readonly decorations: Range<Decoration>[] = [];
+  /** Starts of alert markers (`[!NOTE]`), which would otherwise read as links. */
+  readonly alertMarkers = new Set<number>();
   private readonly lines = new Map<number, LineStyle>();
   readonly state: EditorState;
 
@@ -306,6 +309,27 @@ function visitLink(builder: DecorationBuilder, node: SyntaxNode): void {
   }
 }
 
+/** A quote opening with `[!NOTE]` and the like is tinted, and titled away from the selection. */
+function visitAlert(builder: DecorationBuilder, quote: SyntaxNode): void {
+  const paragraph = quote.getChild("Paragraph");
+  if (!paragraph || builder.lineAt(paragraph.from).from !== builder.lineAt(quote.from).from) return;
+  const line = builder.lineAt(paragraph.from);
+  const type = alertType(builder.text(paragraph.from, line.to));
+  const titles = builder.state.facet(alertTitles);
+  if (!type || !titles) return;
+  builder.alertMarkers.add(paragraph.from);
+  builder.eachLine(quote.from, quote.to, (style) => {
+    style.classes.add("md-alert");
+    style.attributes["data-alert"] = type;
+  });
+  if (touches(builder.selection, line.from, line.to)) {
+    builder.mark(paragraph.from, line.to, "md-mark");
+  } else {
+    const widget = new AlertTitleWidget(titles[type]);
+    builder.decorations.push(Decoration.replace({ widget }).range(paragraph.from, line.to));
+  }
+}
+
 /** An image is shown in place of its source, and under it while the source is edited. */
 function visitImage(builder: DecorationBuilder, node: SyntaxNode): boolean {
   const [open, close] = markers(node);
@@ -350,7 +374,7 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
   const block = blockClass(name);
   // A setext underline is not part of the heading's text; it is styled as syntax below
   if (block) builder.lineClass(node.from, name.startsWith("Setext") ? node.from : node.to, block);
-  const inline = inlineClass(name);
+  const inline = builder.alertMarkers.has(node.from) ? undefined : inlineClass(name);
   if (inline) {
     // Only the text between the opening and closing markers, so revealed syntax is not
     // underlined or struck through along with it
@@ -381,6 +405,7 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
         line.classes.add("md-quote");
         line.quoteDepth = depth;
       });
+      visitAlert(builder, node);
       return true;
     }
     case "ListItem":
@@ -392,6 +417,7 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
       return false;
     }
     case "Link":
+      if (builder.alertMarkers.has(node.from)) return false;
       visitLink(builder, node);
       return true;
     case "Image":
