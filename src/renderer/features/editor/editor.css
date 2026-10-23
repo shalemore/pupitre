@@ -61,6 +61,14 @@
     color: var(--ui-text-muted);
   }
 
+  /* A picture shown in place of its source, or under it while the source is edited */
+  .md-image-preview {
+    display: inline-block;
+    max-width: 100%;
+    vertical-align: bottom;
+    text-indent: 0;
+  }
+
   .md-heading {
     font-weight: 650;
     line-height: 1.3;

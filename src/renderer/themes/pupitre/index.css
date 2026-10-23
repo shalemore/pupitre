@@ -170,6 +170,11 @@
   border-inline-start: 3px solid var(--alert-color, var(--ui-alpha-3));
 }
 
+/* Images */
+.md-image-preview {
+  border-radius: 8px;
+}
+
 /* Bullets and numbers of list items */
 .md-list-bullet,
 .md-list-mark {

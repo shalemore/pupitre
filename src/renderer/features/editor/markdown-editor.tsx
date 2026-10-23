@@ -26,9 +26,10 @@ import { Compartment, EditorState } from "@codemirror/state";
 import { type Command, EditorView, keymap, placeholder } from "@codemirror/view";
 import { GFM } from "@lezer/markdown";
 import type { FormatAction } from "@shared/format";
-import { createEffect, onCleanup, onMount, type Component } from "solid-js";
+import { createEffect, on, onCleanup, onMount, type Component } from "solid-js";
 import { ScrollView } from "@/components/ui";
 import { t } from "@/i18n";
+import { desktop } from "@/lib/desktop";
 import { settings } from "@/lib/settings";
 import { countText, type TextStats } from "@/lib/text-stats";
 import { codeHighlight } from "./code-highlight";
@@ -41,6 +42,7 @@ import {
 } from "./document-structure";
 import { formatKeymap, type MarkdownStyle, runFormatAction } from "./format-commands";
 import { frontMatter } from "./front-matter";
+import { createPendingImages, documentBaseUrl, imageInput } from "./images";
 import { livePreview } from "./live-preview";
 import { textDirection } from "./text-direction";
 import { focusMode, typewriterMode } from "./writing-modes";
@@ -70,10 +72,16 @@ export interface MarkdownEditorHandle {
   replaceNext: () => MatchStats;
   replaceAll: () => MatchStats;
   format: (action: FormatAction) => void;
+  /** Writes images pasted before the document had a file next to it, see images.ts. */
+  persistImages: (documentPath: string) => Promise<void>;
 }
 
 export interface MarkdownEditorProps {
   markdown: string;
+  /** file:// URL of the document folder, to resolve relative image paths; undefined if unsaved. */
+  baseUrl: string | undefined;
+  /** Path of the document; pasted images are saved next to it. */
+  documentPath: string | undefined;
   /** Called once the editor exists, with its content as the clean baseline. */
   onReady: (markdown: string) => void;
   onMarkdownChange: (markdown: string) => void;
@@ -151,6 +159,17 @@ function matchStats(view: EditorView): MatchStats {
 export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
   let container: HTMLDivElement | undefined;
 
+  const saveImage = async (documentPath: string, file: File): Promise<string> => {
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    return desktop.invoke("document:save-image", documentPath, file.name, bytes);
+  };
+  const pendingImages = createPendingImages(saveImage);
+  onCleanup(pendingImages.dispose);
+
+  // Saved documents store pasted images in a folder next to them; unsaved ones keep them in memory
+  const uploadImage = async (file: File): Promise<string> =>
+    props.documentPath ? saveImage(props.documentPath, file) : pendingImages.add(file);
+
   onMount(() => {
     if (!container) return;
     let headings: OutlineHeading[] = [];
@@ -162,6 +181,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     const focusCompartment = new Compartment();
     const typewriterCompartment = new Compartment();
     const spellcheckCompartment = new Compartment();
+    const baseUrlCompartment = new Compartment();
 
     const view = new EditorView({
       parent: container,
@@ -183,6 +203,8 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           }),
           codeHighlight,
           livePreview,
+          imageInput(uploadImage),
+          baseUrlCompartment.of(documentBaseUrl.of(props.baseUrl)),
           textDirection,
           search({ createPanel: () => ({ dom: document.createElement("div") }) }),
           EditorView.lineWrapping,
@@ -221,6 +243,16 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       });
     });
 
+    // Save As moves the document without rebuilding the editor; relative images resolve from the new folder
+    createEffect(
+      on(
+        () => props.baseUrl,
+        (baseUrl) =>
+          view.dispatch({ effects: baseUrlCompartment.reconfigure(documentBaseUrl.of(baseUrl)) }),
+        { defer: true },
+      ),
+    );
+
     // CodeMirror normalizes line endings, so the baseline is the editor's text rather than the file's
     props.onReady(view.state.doc.toString());
     view.focus();
@@ -256,6 +288,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         runFormatAction(view, action, markdownStyle());
         view.focus();
       },
+      persistImages: (documentPath) => pendingImages.persist(view, documentPath),
     });
 
     onCleanup(() => {

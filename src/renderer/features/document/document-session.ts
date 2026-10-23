@@ -32,7 +32,7 @@ let nextDocumentId = 1;
  * The editor holds the Markdown text itself; the caller provides it through getMarkdown.
  */
 export function createDocumentSession(
-  getEditor: () => Pick<MarkdownEditorHandle, "getMarkdown"> | undefined,
+  getEditor: () => Pick<MarkdownEditorHandle, "getMarkdown" | "persistImages"> | undefined,
 ) {
   const [activeDocument, setActiveDocument] = createSignal<OpenDocument>();
   // The document has unsaved changes when its content differs from the last saved (or opened) version; undoing back to that state clears the flag
@@ -78,10 +78,11 @@ export function createDocumentSession(
     setCurrentMarkdown(markdown);
   };
 
-  /** Writes the editor content to `path`. */
+  /** Writes the editor content to `path`, after the images it still keeps in memory. */
   const writeTo = async (doc: OpenDocument, path: string): Promise<boolean> => {
     const editor = getEditor();
     if (!editor) return false;
+    await editor.persistImages(path);
     const markdown = editor.getMarkdown();
     const previousDiskContent = diskContent;
     diskContent = withTrailingNewline(markdown);

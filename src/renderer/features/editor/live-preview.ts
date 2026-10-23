@@ -9,6 +9,7 @@ import {
   WidgetType,
 } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
+import { ImageWidget, imageSource, resolveUrl } from "./images";
 
 /**
  * Typora-style live preview over plain Markdown source.
@@ -110,7 +111,7 @@ function ancestorCount(node: SyntaxNode, name: string): number {
 class DecorationBuilder {
   readonly decorations: Range<Decoration>[] = [];
   private readonly lines = new Map<number, LineStyle>();
-  private readonly state: EditorState;
+  readonly state: EditorState;
 
   constructor(
     view: EditorView,
@@ -263,6 +264,21 @@ function visitLink(builder: DecorationBuilder, node: SyntaxNode): void {
   }
 }
 
+/** An image is shown in place of its source, and under it while the source is edited. */
+function visitImage(builder: DecorationBuilder, node: SyntaxNode): boolean {
+  const [open, close] = markers(node);
+  const url = node.getChild("URL");
+  const alt = open && close ? builder.text(open.to, close.from) : "";
+  const src = url ? resolveUrl(builder.state, imageSource(builder.text(url.from, url.to))) : "";
+  const widget = new ImageWidget(src, alt);
+  if (touches(builder.selection, node.from, node.to)) {
+    builder.decorations.push(Decoration.widget({ widget, side: 1 }).range(node.to));
+    return true;
+  }
+  builder.decorations.push(Decoration.replace({ widget }).range(node.from, node.to));
+  return false;
+}
+
 /** The syntax markers directly inside an inline format, such as `**` or `[` and `]`. */
 function markers(node: SyntaxNode): SyntaxNode[] {
   const found: SyntaxNode[] = [];
@@ -318,6 +334,8 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
     case "Link":
       visitLink(builder, node);
       return true;
+    case "Image":
+      return visitImage(builder, node);
     case "URL":
       // A bare URL (GFM autolink) reads as a link; inside links it is part of the link syntax
       if (node.parent?.name !== "Link" && node.parent?.name !== "Image") {

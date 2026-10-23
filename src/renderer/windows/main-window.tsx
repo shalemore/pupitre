@@ -317,6 +317,8 @@ export const MainWindow: Component = () => {
                 <Show when={doc().id} keyed>
                   <MarkdownEditor
                     markdown={doc().markdown}
+                    baseUrl={doc().baseUrl}
+                    documentPath={doc().path}
                     onReady={session.markSaved}
                     onMarkdownChange={session.handleMarkdownChange}
                     onOutlineChange={setOutline}
