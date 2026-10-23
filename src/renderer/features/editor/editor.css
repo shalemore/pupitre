@@ -210,6 +210,34 @@
     }
   }
 
+  /* Footnote references read as bracketed links, see footnotes.ts */
+  .milkdown .ProseMirror sup[data-type="footnote_reference"] {
+    color: var(--ui-brand);
+    cursor: pointer;
+  }
+
+  .milkdown .ProseMirror sup[data-type="footnote_reference"]::before {
+    content: "[";
+  }
+
+  .milkdown .ProseMirror sup[data-type="footnote_reference"]::after {
+    content: "]";
+  }
+
+  .milkdown .ProseMirror dl[data-type="footnote_definition"] > dt {
+    cursor: pointer;
+  }
+
+  /* The first definition opens the footnote section, like a rule above GitHub's */
+  .milkdown
+    .ProseMirror
+    :not(dl[data-type="footnote_definition"])
+    + dl[data-type="footnote_definition"] {
+    margin-block-start: 2em;
+    padding-block-start: 1em;
+    border-block-start: 1px solid var(--ui-alpha-2);
+  }
+
   /* Footnote definitions: the label sits before the note on the same line */
   .milkdown .ProseMirror dl[data-type="footnote_definition"] {
     display: flex;

@@ -48,6 +48,7 @@ import {
   readableText,
 } from "./prose-plugins";
 import { details } from "./details";
+import { footnoteLinks } from "./footnotes";
 import { editableHtmlSchema, rawHtml } from "./raw-html";
 import { syntaxRevealPlugin } from "./syntax-reveal";
 import { textDirectionPlugin } from "./text-direction";
@@ -220,6 +221,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       })
       .use(frontMatter)
       .use(details)
+      .use(footnoteLinks)
       .use(rawHtml(resolveUrl))
       .use(githubAlerts(labels.alerts))
       .use($prose(() => formatKeymap(() => crepe.editor)))
