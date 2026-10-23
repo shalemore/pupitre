@@ -4,9 +4,10 @@ import { Decoration, type DecorationSet, EditorView, type WidgetType } from "@co
 import type { SyntaxNode } from "@lezer/common";
 import { touches } from "./live-preview";
 import { MATH_LANGUAGE, MathWidget } from "./math";
+import { MermaidWidget } from "./mermaid";
 
 /**
- * Blocks that are shown rendered (display math), with the same rule as the live preview:
+ * Blocks that are shown rendered (display math, diagrams), with the same rule as the live preview:
  * away from the selection the block is replaced by its rendering; once a selection touches it, its
  * source is shown with the rendering under it. Replacing whole lines needs block decorations,
  * which CodeMirror only takes from a state field.
@@ -26,6 +27,7 @@ function blockWidget(state: EditorState, node: SyntaxNode): WidgetType | undefin
   const language = text(node.getChild("CodeInfo")).trim();
   const code = text(node.getChild("CodeText"));
   if (MATH_LANGUAGE.test(language)) return new MathWidget(code, true);
+  if (language.toLowerCase() === "mermaid") return new MermaidWidget(code);
   return undefined;
 }
 

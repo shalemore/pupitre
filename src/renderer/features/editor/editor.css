@@ -166,17 +166,19 @@
   }
 
   /*
-   * Rendered math. It is laid out left to right and isolated, so its symbols never flip the
-   * surrounding sentence; block renderings keep no margins of their own because CodeMirror
-   * measures their boxes.
+   * Rendered math and diagrams. They are laid out left to right and isolated, so their
+   * punctuation never flips the surrounding sentence; block renderings keep no margins of their
+   * own because CodeMirror measures their boxes.
    */
   .md-math,
-  .md-math-block {
+  .md-math-block,
+  .md-mermaid {
     direction: ltr;
     unicode-bidi: isolate;
   }
 
-  .md-math-block {
+  .md-math-block,
+  .md-mermaid {
     display: flex;
     justify-content: center;
     padding-block: 0.5em;
@@ -185,6 +187,13 @@
 
   .md-math-block .katex-display {
     margin: 0;
+  }
+
+  .md-mermaid.is-invalid {
+    justify-content: start;
+    color: var(--ui-danger);
+    font-size: 0.85em;
+    white-space: pre-wrap;
   }
 
   .md-math-source {
