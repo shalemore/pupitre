@@ -107,10 +107,13 @@ only make code generation easier.
 - The editor is [CodeMirror 6](https://codemirror.net) with `@codemirror/lang-markdown`. The
   document is the Markdown text itself: every marker is a real character, copying copies
   Markdown, and files are saved exactly as they were edited. Never add a serializer.
-- All syntax comes from one Lezer tree (`@lezer/markdown` with GFM). Support a new syntax by
-  adding a Lezer `MarkdownConfig` (see `front-matter.ts`), then render it in
-  `features/editor/live-preview.ts`, which applies one rule to every construct: its markers are
-  hidden unless a selection touches it. Do not hand-roll Markdown parsing.
+- All syntax comes from one Lezer tree (`@lezer/markdown` with GFM, plus the extensions in
+  `front-matter.ts`, `math.ts` and `footnotes.ts`). Support a new syntax by adding a Lezer
+  `MarkdownConfig`, then render it with the one rule every construct follows: its markers (or,
+  for a rendered block, its source) are hidden unless a selection touches it. Inline syntax and
+  line styles live in `features/editor/live-preview.ts`; blocks that replace whole lines (tables,
+  math, diagrams, HTML, `<details>`) in `rendered-blocks.ts`, because CodeMirror only takes block
+  decorations from a state field. Do not hand-roll Markdown parsing.
 - `features/editor/markdown-editor.tsx` owns the `EditorView` and exposes a small imperative
   handle (`getMarkdown`, search, scrolling, formatting). Formatting commands edit the source text
   (`format-commands.ts`); the Markdown style settings only decide the syntax they insert.
