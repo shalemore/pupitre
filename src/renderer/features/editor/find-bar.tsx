@@ -1,3 +1,4 @@
+import { ToggleButton } from "@kobalte/core/toggle-button";
 import { cn } from "cn";
 import {
   CaseSensitive,
@@ -8,7 +9,7 @@ import {
   WholeWord,
   X,
 } from "lucide-solid";
-import { createEffect, createSignal, on, Show, type Component } from "solid-js";
+import { createEffect, createSignal, on, Show, type Component, type JSX } from "solid-js";
 import { Badge, Button } from "@/components/ui";
 import { t } from "@/i18n";
 import type { MatchStats, SearchOptions } from "./markdown-editor";
@@ -27,6 +28,23 @@ export interface FindBarProps {
   onReplaceAll: () => void;
   class?: string;
 }
+
+const FindToggle: Component<{
+  pressed: boolean;
+  onChange: (pressed: boolean) => void;
+  title: string;
+  children: JSX.Element;
+}> = (props) => (
+  <ToggleButton
+    pressed={props.pressed}
+    onChange={props.onChange}
+    title={props.title}
+    aria-label={props.title}
+    class="p-0.5 rounded-sm transition-colors cursor-pointer text-muted-foreground hover:text-foreground hover:bg-muted data-pressed:bg-brand/20 data-pressed:text-brand"
+  >
+    {props.children}
+  </ToggleButton>
+);
 
 export const FindBar: Component<FindBarProps> = (props) => {
   const [searchText, setSearchText] = createSignal(props.initialSearch);
@@ -118,33 +136,19 @@ export const FindBar: Component<FindBarProps> = (props) => {
           />
 
           <div class="absolute inset-e-1 flex items-center gap-0.5">
-            <button
-              type="button"
-              aria-pressed={caseSensitive()}
-              onClick={() => setCaseSensitive(!caseSensitive())}
+            <FindToggle
+              pressed={caseSensitive()}
+              onChange={setCaseSensitive}
               title={t().editor.matchCase}
-              class="p-0.5 rounded-sm transition-colors cursor-pointer text-muted-foreground hover:text-foreground hover:bg-muted aria-pressed:bg-brand/20 aria-pressed:text-brand"
             >
               <CaseSensitive class="size-3" />
-            </button>
-            <button
-              type="button"
-              aria-pressed={wholeWord()}
-              onClick={() => setWholeWord(!wholeWord())}
-              title={t().editor.wholeWord}
-              class="p-0.5 rounded-sm transition-colors cursor-pointer text-muted-foreground hover:text-foreground hover:bg-muted aria-pressed:bg-brand/20 aria-pressed:text-brand"
-            >
+            </FindToggle>
+            <FindToggle pressed={wholeWord()} onChange={setWholeWord} title={t().editor.wholeWord}>
               <WholeWord class="size-3" />
-            </button>
-            <button
-              type="button"
-              aria-pressed={regexp()}
-              onClick={() => setRegexp(!regexp())}
-              title={t().editor.useRegex}
-              class="p-0.5 rounded-sm transition-colors cursor-pointer text-muted-foreground hover:text-foreground hover:bg-muted aria-pressed:bg-brand/20 aria-pressed:text-brand"
-            >
+            </FindToggle>
+            <FindToggle pressed={regexp()} onChange={setRegexp} title={t().editor.useRegex}>
               <Regex class="size-3" />
-            </button>
+            </FindToggle>
           </div>
         </div>
 
