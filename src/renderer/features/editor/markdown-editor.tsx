@@ -36,6 +36,7 @@ import { countText, type TextStats } from "@/lib/text-stats";
 import { themeApplied } from "@/lib/theme";
 import { alertTitles } from "./alerts";
 import { codeHighlight } from "./code-highlight";
+import { cursorStyle, restartCursorBlink } from "./cursor";
 import {
   collectHeadings,
   documentObserver,
@@ -206,6 +207,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     const focusCompartment = new Compartment();
     const typewriterCompartment = new Compartment();
     const spellcheckCompartment = new Compartment();
+    const cursorCompartment = new Compartment();
     const baseUrlCompartment = new Compartment();
     const diagramThemeCompartment = new Compartment();
 
@@ -261,6 +263,8 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           focusCompartment.of([]),
           typewriterCompartment.of([]),
           spellcheckCompartment.of([]),
+          cursorCompartment.of([]),
+          restartCursorBlink,
           documentObserver({
             onDocChange: (state) => {
               headings = collectHeadings(state);
@@ -278,7 +282,13 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     });
 
     createEffect(() => {
-      const { focusMode: focus, typewriterMode: typewriter, spellcheck } = settings();
+      const {
+        focusMode: focus,
+        typewriterMode: typewriter,
+        spellcheck,
+        cursorShape,
+        cursorBlink,
+      } = settings();
       view.dispatch({
         effects: [
           focusCompartment.reconfigure(focus ? focusMode : []),
@@ -286,6 +296,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           spellcheckCompartment.reconfigure(
             EditorView.contentAttributes.of({ spellcheck: String(spellcheck) }),
           ),
+          cursorCompartment.reconfigure(cursorStyle(cursorShape, cursorBlink)),
         ],
       });
     });

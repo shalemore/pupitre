@@ -108,6 +108,30 @@
     color: var(--ui-brand);
   }
 
+  /* The caret's shape and blinking, set by the cursor settings (cursor.ts); its color is the theme's caret-color */
+  .md-document[data-cursor-shape="block"] {
+    caret-shape: block;
+  }
+
+  .md-document[data-cursor-shape="underline"] {
+    caret-shape: underscore;
+  }
+
+  .md-document[data-cursor-blink="smooth"] {
+    caret-animation: manual;
+    animation: md-caret-fade 1.1s ease-in-out infinite;
+  }
+
+  .md-document[data-cursor-blink="off"] {
+    caret-animation: manual;
+  }
+
+  @keyframes md-caret-fade {
+    50% {
+      caret-color: transparent;
+    }
+  }
+
   /* Inline formats without their markers: <kbd>, <mark>, <sub> and so on, and ==highlight==, ~sub~ and ^sup^ */
   .md-tag-kbd {
     padding: 0.1em 0.4em;

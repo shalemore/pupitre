@@ -180,6 +180,13 @@ export const ptPT = {
     spellcheck: "Verificação ortográfica",
     spellcheckDesc:
       "Sublinhar palavras mal escritas; clique com o botão direito para ver sugestões",
+    cursorShape: "Estilo do cursor",
+    cursorShapeBar: "Barra",
+    cursorShapeBlock: "Bloco",
+    cursorShapeUnderline: "Sublinhado",
+    cursorBlink: "Intermitência do cursor",
+    cursorBlinkSmooth: "Suave",
+    cursorBlinkOff: "Desligada",
     scrollbar: "Barra de deslocamento",
     scrollbarDesc: "Escolha quando as barras de deslocamento ficam visíveis",
     scrollbarAuto: "Ocultar automaticamente",

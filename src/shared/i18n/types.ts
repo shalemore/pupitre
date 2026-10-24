@@ -234,6 +234,13 @@ export interface TranslationSchema {
     readonly widthFull: string;
     readonly spellcheck: string;
     readonly spellcheckDesc: string;
+    readonly cursorShape: string;
+    readonly cursorShapeBar: string;
+    readonly cursorShapeBlock: string;
+    readonly cursorShapeUnderline: string;
+    readonly cursorBlink: string;
+    readonly cursorBlinkSmooth: string;
+    readonly cursorBlinkOff: string;
     readonly scrollbar: string;
     readonly scrollbarDesc: string;
     readonly scrollbarAuto: string;

@@ -189,6 +189,13 @@ export const plPL = {
     spellcheck: "Sprawdzanie pisowni",
     spellcheckDesc:
       "Podkreślaj błędnie zapisane słowa; kliknij prawym przyciskiem, aby zobaczyć propozycje",
+    cursorShape: "Styl kursora",
+    cursorShapeBar: "Kreska",
+    cursorShapeBlock: "Blok",
+    cursorShapeUnderline: "Podkreślenie",
+    cursorBlink: "Miganie kursora",
+    cursorBlinkSmooth: "Płynne",
+    cursorBlinkOff: "Wyłączone",
     scrollbar: "Pasek przewijania",
     scrollbarDesc: "Wybierz, kiedy widoczne są paski przewijania",
     scrollbarAuto: "Ukrywaj automatycznie",

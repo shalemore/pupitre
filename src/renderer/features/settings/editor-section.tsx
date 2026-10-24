@@ -112,6 +112,32 @@ export const EditorSection: Component = () => (
       />
     </SettingField>
 
+    <SettingField name="cursorShape" title={t().settings.cursorShape}>
+      <Select<Settings["cursorShape"]>
+        value={settings().cursorShape}
+        onChange={(cursorShape) => void updateSettings({ cursorShape })}
+        options={[
+          { value: "bar", label: t().settings.cursorShapeBar },
+          { value: "block", label: t().settings.cursorShapeBlock },
+          { value: "underline", label: t().settings.cursorShapeUnderline },
+        ]}
+        aria-label={t().settings.cursorShape}
+      />
+    </SettingField>
+
+    <SettingField name="cursorBlink" title={t().settings.cursorBlink}>
+      <Select<Settings["cursorBlink"]>
+        value={settings().cursorBlink}
+        onChange={(cursorBlink) => void updateSettings({ cursorBlink })}
+        options={[
+          { value: "system", label: t().settings.followSystem },
+          { value: "smooth", label: t().settings.cursorBlinkSmooth },
+          { value: "off", label: t().settings.cursorBlinkOff },
+        ]}
+        aria-label={t().settings.cursorBlink}
+      />
+    </SettingField>
+
     <SettingField
       name="scrollbar"
       title={t().settings.scrollbar}

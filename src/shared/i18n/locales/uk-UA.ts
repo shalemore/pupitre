@@ -188,6 +188,13 @@ export const ukUA = {
     spellcheck: "Перевірка орфографії",
     spellcheckDesc:
       "Підкреслює слова з помилками; клацніть правою кнопкою, щоб побачити пропозиції",
+    cursorShape: "Стиль курсора",
+    cursorShapeBar: "Лінія",
+    cursorShapeBlock: "Блок",
+    cursorShapeUnderline: "Підкреслення",
+    cursorBlink: "Блимання курсора",
+    cursorBlinkSmooth: "Плавне",
+    cursorBlinkOff: "Вимк.",
     scrollbar: "Смуга прокручування",
     scrollbarDesc: "Коли показувати смуги прокручування",
     scrollbarAuto: "Автоматично приховувати",

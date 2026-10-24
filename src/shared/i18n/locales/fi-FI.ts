@@ -184,6 +184,13 @@ export const fiFI = {
     spellcheck: "Oikeinkirjoituksen tarkistus",
     spellcheckDesc:
       "Alleviivaa väärin kirjoitetut sanat; napsauta hiiren oikealla painikkeella nähdäksesi ehdotukset",
+    cursorShape: "Kohdistimen tyyli",
+    cursorShapeBar: "Viiva",
+    cursorShapeBlock: "Lohko",
+    cursorShapeUnderline: "Alaviiva",
+    cursorBlink: "Kohdistimen vilkkuminen",
+    cursorBlinkSmooth: "Pehmeä",
+    cursorBlinkOff: "Pois",
     scrollbar: "Vierityspalkki",
     scrollbarDesc: "Valitse, milloin vierityspalkit näkyvät",
     scrollbarAuto: "Piilota automaattisesti",

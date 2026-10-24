@@ -39,6 +39,9 @@ export const settingsSchema = z.object({
   lineHeight: z.number().min(1).max(3).catch(1.75),
   contentWidth: z.enum(["compact", "normal", "wide", "full"]).catch("normal"),
   spellcheck: z.boolean().catch(false),
+  cursorShape: z.enum(["bar", "block", "underline"]).catch("bar"),
+  /** `system` keeps the platform's own caret blinking. */
+  cursorBlink: z.enum(["system", "smooth", "off"]).catch("system"),
   scrollbar: z.enum(["auto", "always", "never"]).catch("auto"),
   scrollFade: z.boolean().catch(false),
 
