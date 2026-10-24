@@ -10,7 +10,7 @@
 
 ![Pupitre editing a French, a Russian and an Arabic document](docs/banner.png)
 
-A cross-platform Markdown editor. Formatting is rendered while typing, and the syntax under the cursor stays visible and editable.
+A cross-platform Markdown editor. Formatting is rendered while typing, and the syntax under the cursor stays visible and editable. [Try it in your browser](https://shalemore.github.io/pupitre/).
 
 - **Everything renders.** GFM, front matter, GitHub alerts, math and chemistry formulas, Mermaid diagrams, footnotes, emoji, highlights, sub- and superscripts, and inline HTML.
 - **Themes are CSS.** Each has a light and a dark side, and any two can be paired.
