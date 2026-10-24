@@ -108,7 +108,7 @@
     color: var(--ui-brand);
   }
 
-  /* Inline HTML formatting elements, shown without their tags: <kbd>, <mark>, <sub> and so on */
+  /* Inline formats without their markers: <kbd>, <mark>, <sub> and so on, and ==highlight==, ~sub~ and ^sup^ */
   .md-tag-kbd {
     padding: 0.1em 0.4em;
     border: 1px solid var(--ui-alpha-3);

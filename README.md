@@ -8,7 +8,7 @@
 
 A cross-platform Markdown editor. Formatting is rendered while typing, and the syntax under the cursor stays visible and editable.
 
-- **Everything renders.** GFM, front matter, GitHub alerts, math, Mermaid diagrams, footnotes and inline HTML.
+- **Everything renders.** GFM, front matter, GitHub alerts, math and chemistry formulas, Mermaid diagrams, footnotes, emoji, highlights, sub- and superscripts, and inline HTML.
 - **Themes are CSS.** Each has a light and a dark side, and any two can be paired.
 
 ## Install

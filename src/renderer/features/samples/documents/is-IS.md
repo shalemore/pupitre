@@ -89,7 +89,7 @@ Forstillingar › Útlit › Stíll glugga skiptir milli **Klassísks** og **Yfi
 
 ### Texti
 
-**Feitletrað**, _skáletrað_, ~~yfirstrikað~~, `kóði í texta`, [hlekkir](https://commonmark.org), H<sub>2</sub>O, x<sup>2</sup>, <kbd>Esc</kbd> og <mark>markanir</mark>. HTML í texta er birt þegar það er heil eining og birt sem frumkóði annars.
+**Feitletrað**, _skáletrað_, ~~yfirstrikað~~, `kóði í texta`, [hlekkir](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> og <mark>markanir</mark>. HTML í texta er birt þegar það er heil eining og birt sem frumkóði annars.
 
 > Tilvitnun.
 >

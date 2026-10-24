@@ -89,7 +89,7 @@ Teman följer med appen: varje tema är en mapp i `src/renderer/themes/<namn>/` 
 
 ### Text
 
-**Fet**, _kursiv_, ~~genomstruken~~, `infogad kod`, [länkar](https://commonmark.org), H<sub>2</sub>O, x<sup>2</sup>, <kbd>Esc</kbd> och <mark>markeringar</mark>. Infogad HTML renderas när det är ett komplett element och visas som källkod annars.
+**Fet**, _kursiv_, ~~genomstruken~~, `infogad kod`, [länkar](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> och <mark>markeringar</mark>. Infogad HTML renderas när det är ett komplett element och visas som källkod annars.
 
 > Ett citat.
 >

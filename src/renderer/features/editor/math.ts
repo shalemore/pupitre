@@ -7,6 +7,7 @@ import type {
   MarkdownConfig,
 } from "@lezer/markdown";
 import katex from "katex";
+import "katex/contrib/mhchem";
 
 const DOLLAR = 36;
 const BACKSLASH = 92;

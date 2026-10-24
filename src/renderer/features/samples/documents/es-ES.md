@@ -89,7 +89,7 @@ Los temas vienen con la aplicación: cada uno es una carpeta en `src/renderer/th
 
 ### Texto
 
-**Negrita**, _cursiva_, ~~tachado~~, `código en línea`, [enlaces](https://commonmark.org), H<sub>2</sub>O, x<sup>2</sup>, <kbd>Esc</kbd> y <mark>resaltados</mark>. El HTML en línea se renderiza cuando es un elemento completo y se muestra como código fuente en otro caso.
+**Negrita**, _cursiva_, ~~tachado~~, `código en línea`, [enlaces](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> y <mark>resaltados</mark>. El HTML en línea se renderiza cuando es un elemento completo y se muestra como código fuente en otro caso.
 
 > Una cita.
 >

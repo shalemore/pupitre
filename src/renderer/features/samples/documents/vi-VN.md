@@ -89,7 +89,7 @@ Giao diện đi kèm ứng dụng: mỗi giao diện là một thư mục trong 
 
 ### Văn bản
 
-**In đậm**, _in nghiêng_, ~~gạch ngang~~, `mã trong dòng`, [liên kết](https://commonmark.org), H<sub>2</sub>O, x<sup>2</sup>, <kbd>Esc</kbd> và <mark>đánh dấu</mark>. HTML trong dòng được hiển thị khi là một phần tử hoàn chỉnh, nếu không sẽ hiện dưới dạng mã nguồn.
+**In đậm**, _in nghiêng_, ~~gạch ngang~~, `mã trong dòng`, [liên kết](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> và <mark>đánh dấu</mark>. HTML trong dòng được hiển thị khi là một phần tử hoàn chỉnh, nếu không sẽ hiện dưới dạng mã nguồn.
 
 > Một đoạn trích dẫn.
 >

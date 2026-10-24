@@ -18,6 +18,7 @@ import {
 import type { SyntaxNode } from "@lezer/common";
 import { AlertTitleWidget, alertTitles, alertType } from "./alerts";
 import { CodeCornerWidget } from "./code-corner";
+import { EmojiWidget, emojiFor } from "./emoji";
 import { footnoteTarget } from "./footnotes";
 import { htmlTag, isFormattingTag, LineBreakWidget } from "./html";
 import { ImageWidget, imageSource, resolveUrl } from "./images";
@@ -53,6 +54,12 @@ function inlineClass(name: string): string | undefined {
       return "md-em";
     case "Strikethrough":
       return "md-strike";
+    case "Highlight":
+      return "md-tag md-tag-mark";
+    case "Subscript":
+      return "md-tag md-tag-sub";
+    case "Superscript":
+      return "md-tag md-tag-sup";
     case "InlineCode":
       return "md-code";
     case "Link":
@@ -431,6 +438,15 @@ function visitFootnote(builder: DecorationBuilder, node: SyntaxNode): void {
   builder.mark(labelFrom, labelTo, reference ? "md-footnote-ref" : "md-footnote-label");
 }
 
+/** A `:name:` shortcode shows as its emoji away from the selection; names that are not emoji stay text. */
+function visitEmoji(builder: DecorationBuilder, node: SyntaxNode): void {
+  const emoji = emojiFor(builder.text(node.from, node.to));
+  if (!emoji || touches(builder.ranges, node.from, node.to)) return;
+  builder.decorations.push(
+    Decoration.replace({ widget: new EmojiWidget(emoji) }).range(node.from, node.to),
+  );
+}
+
 /** Inline math is rendered in place, and shown as source while the selection touches it. */
 function visitInlineMath(builder: DecorationBuilder, node: SyntaxNode): void {
   const [open, close] = node.getChildren("MathMark");
@@ -521,6 +537,9 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
     case "FootnoteLabel":
       visitFootnote(builder, node);
       return false;
+    case "Emoji":
+      visitEmoji(builder, node);
+      return false;
     case "FrontMatter":
       for (const fence of node.getChildren("FrontMatterMark")) {
         builder.mark(fence.from, fence.to, "md-mark");
@@ -593,6 +612,9 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
     case "EmphasisMark":
     case "CodeMark":
     case "StrikethroughMark":
+    case "HighlightMark":
+    case "SubscriptMark":
+    case "SuperscriptMark":
       builder.marker(node, touches(builder.ranges, parent.from, parent.to));
       return false;
     case "LinkMark":

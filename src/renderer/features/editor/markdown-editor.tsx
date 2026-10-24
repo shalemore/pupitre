@@ -24,7 +24,7 @@ import {
 } from "@codemirror/search";
 import { Compartment, EditorState, Prec } from "@codemirror/state";
 import { type Command, EditorView, keymap, placeholder } from "@codemirror/view";
-import { GFM } from "@lezer/markdown";
+import { GFM, Subscript, Superscript } from "@lezer/markdown";
 import type { FormatAction } from "@shared/format";
 import { createEffect, on, onCleanup, onMount, type Component } from "solid-js";
 import { ScrollView } from "@/components/ui";
@@ -49,7 +49,9 @@ import {
   runFormatAction,
 } from "./format-commands";
 import { footnotes } from "./footnotes";
+import { emojiSyntax } from "./emoji";
 import { frontMatter } from "./front-matter";
+import { highlight } from "./highlight";
 import { createPendingImages, documentBaseUrl, imageInput } from "./images";
 import { livePreview, setPrinting } from "./live-preview";
 import { pasteHtml } from "./paste-html";
@@ -222,7 +224,16 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           ]),
           markdown({
             base: commonmarkLanguage,
-            extensions: [GFM, frontMatter, math, footnotes],
+            extensions: [
+              GFM,
+              Subscript,
+              Superscript,
+              emojiSyntax,
+              highlight,
+              frontMatter,
+              math,
+              footnotes,
+            ],
             codeLanguages: languages,
             completeHTMLTags: false,
           }),

@@ -89,7 +89,7 @@ Os temas vêm com a aplicação: cada um é uma pasta em `src/renderer/themes/<n
 
 ### Texto
 
-**Negrito**, _itálico_, ~~rasurado~~, `código em linha`, [ligações](https://commonmark.org), H<sub>2</sub>O, x<sup>2</sup>, <kbd>Esc</kbd> e <mark>destaques</mark>. O HTML em linha é renderizado quando é um elemento completo e mostrado como código caso contrário.
+**Negrito**, _itálico_, ~~rasurado~~, `código em linha`, [ligações](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> e <mark>destaques</mark>. O HTML em linha é renderizado quando é um elemento completo e mostrado como código caso contrário.
 
 > Uma citação.
 >

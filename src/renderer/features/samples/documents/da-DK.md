@@ -89,7 +89,7 @@ Temaer følger med appen: hvert tema er en mappe i `src/renderer/themes/<navn>/`
 
 ### Tekst
 
-**Fed**, _kursiv_, ~~gennemstreget~~, `inline-kode`, [links](https://commonmark.org), H<sub>2</sub>O, x<sup>2</sup>, <kbd>Esc</kbd> og <mark>markeringer</mark>. Inline-HTML gengives, når det er et komplet element, og vises ellers som kildekode.
+**Fed**, _kursiv_, ~~gennemstreget~~, `inline-kode`, [links](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> og <mark>markeringer</mark>. Inline-HTML gengives, når det er et komplet element, og vises ellers som kildekode.
 
 > Et citat.
 >

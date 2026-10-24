@@ -89,7 +89,7 @@ Tema disertakan bersama aplikasi: masing-masing berupa folder di `src/renderer/t
 
 ### Teks
 
-**Tebal**, _miring_, ~~coret~~, `kode sebaris`, [tautan](https://commonmark.org), H<sub>2</sub>O, x<sup>2</sup>, <kbd>Esc</kbd>, dan <mark>sorotan</mark>. HTML sebaris dirender bila merupakan elemen yang utuh dan ditampilkan sebagai sumber bila tidak.
+**Tebal**, _miring_, ~~coret~~, `kode sebaris`, [tautan](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd>, dan <mark>sorotan</mark>. HTML sebaris dirender bila merupakan elemen yang utuh dan ditampilkan sebagai sumber bila tidak.
 
 > Sebuah kutipan.
 >

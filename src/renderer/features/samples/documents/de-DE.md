@@ -89,7 +89,7 @@ Designs werden mit der App ausgeliefert: Jedes ist ein Ordner `src/renderer/them
 
 ### Text
 
-**Fett**, _kursiv_, ~~durchgestrichen~~, `Inline-Code`, [Links](https://commonmark.org), H<sub>2</sub>O, x<sup>2</sup>, <kbd>Esc</kbd> und <mark>Hervorhebungen</mark>. Inline-HTML wird dargestellt, wenn es ein vollständiges Element ist, sonst als Quelltext angezeigt.
+**Fett**, _kursiv_, ~~durchgestrichen~~, `Inline-Code`, [Links](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> und <mark>Hervorhebungen</mark>. Inline-HTML wird dargestellt, wenn es ein vollständiges Element ist, sonst als Quelltext angezeigt.
 
 > Ein Zitat.
 >

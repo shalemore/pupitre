@@ -89,7 +89,7 @@ Pupitre는 데스크톱용 Markdown 편집기입니다. 문서는 일반 `.md` �
 
 ### 텍스트
 
-**굵게**, _기울임_, ~~취소선~~, `인라인 코드`, [링크](https://commonmark.org), H<sub>2</sub>O, x<sup>2</sup>, <kbd>Esc</kbd>, <mark>강조 표시</mark>. 인라인 HTML은 완전한 요소일 때 렌더링되고, 그렇지 않으면 소스로 표시됩니다.
+**굵게**, _기울임_, ~~취소선~~, `인라인 코드`, [링크](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd>, <mark>강조 표시</mark>. 인라인 HTML은 완전한 요소일 때 렌더링되고, 그렇지 않으면 소스로 표시됩니다.
 
 > 인용.
 >

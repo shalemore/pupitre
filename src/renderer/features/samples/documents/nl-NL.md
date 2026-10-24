@@ -89,7 +89,7 @@ Thema's worden met de app meegeleverd: elk is een map in `src/renderer/themes/<n
 
 ### Tekst
 
-**Vet**, _cursief_, ~~doorhalen~~, `inline code`, [links](https://commonmark.org), H<sub>2</sub>O, x<sup>2</sup>, <kbd>Esc</kbd> en <mark>markeringen</mark>. Inline HTML wordt weergegeven als het een compleet element is en anders als broncode getoond.
+**Vet**, _cursief_, ~~doorhalen~~, `inline code`, [links](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> en <mark>markeringen</mark>. Inline HTML wordt weergegeven als het een compleet element is en anders als broncode getoond.
 
 > Een citaat.
 >

@@ -89,7 +89,7 @@ Motywy są dostarczane z aplikacją: każdy to folder w `src/renderer/themes/<na
 
 ### Tekst
 
-**Pogrubienie**, _kursywa_, ~~przekreślenie~~, `kod w tekście`, [łącza](https://commonmark.org), H<sub>2</sub>O, x<sup>2</sup>, <kbd>Esc</kbd> i <mark>podświetlenia</mark>. Wbudowany HTML jest renderowany, gdy tworzy kompletny element, a w przeciwnym razie pokazywany jako źródło.
+**Pogrubienie**, _kursywa_, ~~przekreślenie~~, `kod w tekście`, [łącza](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> i <mark>podświetlenia</mark>. Wbudowany HTML jest renderowany, gdy tworzy kompletny element, a w przeciwnym razie pokazywany jako źródło.
 
 > Cytat.
 >

@@ -89,7 +89,7 @@ Temaer følger med appen: hvert tema er en mappe i `src/renderer/themes/<navn>/`
 
 ### Tekst
 
-**Fet**, _kursiv_, ~~gjennomstreket~~, `innebygd kode`, [lenker](https://commonmark.org), H<sub>2</sub>O, x<sup>2</sup>, <kbd>Esc</kbd> og <mark>markeringer</mark>. Innebygd HTML gjengis når det er et komplett element, og vises som kildekode ellers.
+**Fet**, _kursiv_, ~~gjennomstreket~~, `innebygd kode`, [lenker](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> og <mark>markeringer</mark>. Innebygd HTML gjengis når det er et komplett element, og vises som kildekode ellers.
 
 > Et sitat.
 >

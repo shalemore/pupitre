@@ -89,7 +89,7 @@ I temi sono inclusi nell’app: ognuno è una cartella in `src/renderer/themes/<
 
 ### Testo
 
-**Grassetto**, _corsivo_, ~~barrato~~, `codice in linea`, [link](https://commonmark.org), H<sub>2</sub>O, x<sup>2</sup>, <kbd>Esc</kbd> ed <mark>evidenziazioni</mark>. L’HTML in linea viene reso quando è un elemento completo, altrimenti è mostrato come sorgente.
+**Grassetto**, _corsivo_, ~~barrato~~, `codice in linea`, [link](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> ed <mark>evidenziazioni</mark>. L’HTML in linea viene reso quando è un elemento completo, altrimenti è mostrato come sorgente.
 
 > Una citazione.
 >

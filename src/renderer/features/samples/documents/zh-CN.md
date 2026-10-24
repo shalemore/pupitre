@@ -89,7 +89,7 @@ Pupitre 是一款桌面 Markdown 编辑器。文档就是普通的 `.md` 文件�
 
 ### 文本
 
-**粗体**、_斜体_、~~删除线~~、`行内代码`、[链接](https://commonmark.org)、H<sub>2</sub>O、x<sup>2</sup>、<kbd>Esc</kbd> 和 <mark>高亮</mark>。行内 HTML 是完整元素时会被渲染，否则显示为源码。
+**粗体**、_斜体_、~~删除线~~、`行内代码`、[链接](https://commonmark.org)、H~2~O、x^2^、==高亮==、:tada: 和 <kbd>Esc</kbd>。行内 HTML 是完整元素时会被渲染，否则显示为源码。
 
 > 一段引用。
 >
@@ -136,6 +136,8 @@ function countWords(text: string): number {
 $$
 \int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
 $$
+
+化学方程式用 `\ce`：$\ce{2H2 + O2 -> 2H2O}$。
 
 ### 图表
 

@@ -89,7 +89,7 @@ A témák az alkalmazással együtt érkeznek: mindegyik egy mappa a `src/render
 
 ### Szöveg
 
-**Félkövér**, _dőlt_, ~~áthúzott~~, `soron belüli kód`, [hivatkozások](https://commonmark.org), H<sub>2</sub>O, x<sup>2</sup>, <kbd>Esc</kbd> és <mark>kiemelések</mark>. A soron belüli HTML akkor jelenik meg, ha teljes elemet alkot, máskülönben forráskódként látszik.
+**Félkövér**, _dőlt_, ~~áthúzott~~, `soron belüli kód`, [hivatkozások](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> és <mark>kiemelések</mark>. A soron belüli HTML akkor jelenik meg, ha teljes elemet alkot, máskülönben forráskódként látszik.
 
 > Egy idézet.
 >

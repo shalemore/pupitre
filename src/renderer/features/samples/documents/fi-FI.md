@@ -89,7 +89,7 @@ Teemat tulevat sovelluksen mukana: kukin teema on kansio polussa `src/renderer/t
 
 ### Teksti
 
-**Lihavointi**, _kursiivi_, ~~yliviivaus~~, `rivinsisäinen koodi`, [linkit](https://commonmark.org), H<sub>2</sub>O, x<sup>2</sup>, <kbd>Esc</kbd> ja <mark>korostukset</mark>. Rivinsisäinen HTML renderöidään, kun se on täydellinen elementti, ja näytetään muuten lähdekoodina.
+**Lihavointi**, _kursiivi_, ~~yliviivaus~~, `rivinsisäinen koodi`, [linkit](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> ja <mark>korostukset</mark>. Rivinsisäinen HTML renderöidään, kun se on täydellinen elementti, ja näytetään muuten lähdekoodina.
 
 > Lainaus.
 >

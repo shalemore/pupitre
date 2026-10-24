@@ -89,7 +89,7 @@ Pupitre 是一款桌面 Markdown 編輯器。文件就是一般的 `.md` 檔案�
 
 ### 文字
 
-**粗體**、_斜體_、~~刪除線~~、`行內程式碼`、[連結](https://commonmark.org)、H<sub>2</sub>O、x<sup>2</sup>、<kbd>Esc</kbd> 和 <mark>醒目提示</mark>。行內 HTML 是完整元素時會被呈現，否則顯示為原始碼。
+**粗體**、_斜體_、~~刪除線~~、`行內程式碼`、[連結](https://commonmark.org)、H~2~O、x^2^、<kbd>Esc</kbd> 和 <mark>醒目提示</mark>。行內 HTML 是完整元素時會被呈現，否則顯示為原始碼。
 
 > 一段引用。
 >

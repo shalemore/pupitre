@@ -89,7 +89,7 @@ Os temas acompanham o app: cada um é uma pasta em `src/renderer/themes/<name>/`
 
 ### Texto
 
-**Negrito**, _itálico_, ~~tachado~~, `código embutido`, [links](https://commonmark.org), H<sub>2</sub>O, x<sup>2</sup>, <kbd>Esc</kbd> e <mark>destaques</mark>. O HTML embutido é renderizado quando é um elemento completo e exibido como código-fonte caso contrário.
+**Negrito**, _itálico_, ~~tachado~~, `código embutido`, [links](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> e <mark>destaques</mark>. O HTML embutido é renderizado quando é um elemento completo e exibido como código-fonte caso contrário.
 
 > Uma citação.
 >

@@ -89,7 +89,7 @@ Themes ship with the app: each one is a folder in `src/renderer/themes/<name>/` 
 
 ### Text
 
-**Bold**, _italic_, ~~strikethrough~~, `inline code`, [links](https://commonmark.org), H<sub>2</sub>O, x<sup>2</sup>, <kbd>Esc</kbd> and <mark>highlights</mark>. Inline HTML is rendered when it is a complete element and shown as source otherwise.
+**Bold**, _italic_, ~~strikethrough~~, `inline code`, [links](https://commonmark.org), H~2~O, x^2^, ==highlights==, :tada: and <kbd>Esc</kbd>. Inline HTML is rendered when it is a complete element and shown as source otherwise.
 
 > A quote.
 >
@@ -136,6 +136,8 @@ Inline $e^{i\pi} + 1 = 0$ and display:
 $$
 \int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
 $$
+
+Chemical equations use `\ce`: $\ce{2H2 + O2 -> 2H2O}$.
 
 ### Diagrams
 

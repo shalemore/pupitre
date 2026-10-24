@@ -89,7 +89,7 @@ Les thèmes sont livrés avec l’application : chacun est un dossier `src/rend
 
 ### Texte
 
-**Gras**, _italique_, ~~barré~~, `code en ligne`, [liens](https://commonmark.org), H<sub>2</sub>O, x<sup>2</sup>, <kbd>Échap</kbd> et <mark>surlignages</mark>. Le HTML en ligne est rendu lorsqu’il s’agit d’un élément complet, et affiché comme source sinon.
+**Gras**, _italique_, ~~barré~~, `code en ligne`, [liens](https://commonmark.org), H~2~O, x^2^, <kbd>Échap</kbd> et <mark>surlignages</mark>. Le HTML en ligne est rendu lorsqu’il s’agit d’un élément complet, et affiché comme source sinon.
 
 > Une citation.
 >

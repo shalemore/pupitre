@@ -89,7 +89,7 @@ Temalar uygulamayla birlikte gelir: her biri `src/renderer/themes/<ad>/` altınd
 
 ### Metin
 
-**Kalın**, _italik_, ~~üstü çizili~~, `satır içi kod`, [bağlantılar](https://commonmark.org), H<sub>2</sub>O, x<sup>2</sup>, <kbd>Esc</kbd> ve <mark>vurgular</mark>. Satır içi HTML tam bir öğe olduğunda işlenir, aksi halde kaynak olarak gösterilir.
+**Kalın**, _italik_, ~~üstü çizili~~, `satır içi kod`, [bağlantılar](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> ve <mark>vurgular</mark>. Satır içi HTML tam bir öğe olduğunda işlenir, aksi halde kaynak olarak gösterilir.
 
 > Bir alıntı.
 >

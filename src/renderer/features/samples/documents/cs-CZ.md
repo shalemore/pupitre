@@ -89,7 +89,7 @@ Motivy jsou součástí aplikace: každý je složka v `src/renderer/themes/<ná
 
 ### Text
 
-**Tučné**, _kurzíva_, ~~přeškrtnutí~~, `vložený kód`, [odkazy](https://commonmark.org), H<sub>2</sub>O, x<sup>2</sup>, <kbd>Esc</kbd> a <mark>zvýraznění</mark>. Vložené HTML se vykreslí, když tvoří kompletní prvek, jinak se zobrazí jako zdrojový kód.
+**Tučné**, _kurzíva_, ~~přeškrtnutí~~, `vložený kód`, [odkazy](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> a <mark>zvýraznění</mark>. Vložené HTML se vykreslí, když tvoří kompletní prvek, jinak se zobrazí jako zdrojový kód.
 
 > Citace.
 >
