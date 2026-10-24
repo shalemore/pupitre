@@ -214,6 +214,8 @@ export const ptBR = {
     updateErrorGeneric: "Não foi possível verificar atualizações. Tente novamente mais tarde.",
     settingsFile: "Arquivo de configurações",
     revealSettingsFile: "Mostrar na pasta",
+    scopeGlobal: "Global",
+    scopeFolder: "Esta pasta",
     updateNotificationTitle: (version: string) => `O Pupitre ${version} está disponível`,
     updateNotificationBody: "Abra as Preferências para baixá-lo.",
     refreshFonts: "Atualizar lista de fontes",

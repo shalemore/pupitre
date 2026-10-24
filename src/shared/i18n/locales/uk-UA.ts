@@ -223,6 +223,8 @@ export const ukUA = {
     updateErrorGeneric: "Не вдалося перевірити оновлення. Спробуйте пізніше.",
     settingsFile: "Файл налаштувань",
     revealSettingsFile: "Показати в теці",
+    scopeGlobal: "Загальні",
+    scopeFolder: "Ця тека",
     updateNotificationTitle: (version: string) => `Доступна версія Pupitre ${version}`,
     updateNotificationBody: "Відкрийте параметри, щоб завантажити її.",
     refreshFonts: "Оновити список шрифтів",

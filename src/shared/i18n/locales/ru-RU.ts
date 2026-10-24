@@ -221,6 +221,8 @@ export const ruRU = {
     updateErrorGeneric: "Не удалось проверить обновления. Повторите попытку позже.",
     settingsFile: "Файл настроек",
     revealSettingsFile: "Показать в папке",
+    scopeGlobal: "Общие",
+    scopeFolder: "Эта папка",
     updateNotificationTitle: (version: string) => `Доступен Pupitre ${version}`,
     updateNotificationBody: "Откройте настройки, чтобы скачать обновление.",
     refreshFonts: "Обновить список шрифтов",

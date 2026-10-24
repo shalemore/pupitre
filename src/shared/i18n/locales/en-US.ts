@@ -214,6 +214,8 @@ export const enUS = {
     updateErrorGeneric: "Couldn't check for updates. Please try again later.",
     settingsFile: "Settings File",
     revealSettingsFile: "Show in Folder",
+    scopeGlobal: "Global",
+    scopeFolder: "This Folder",
     updateNotificationTitle: (version: string) => `Pupitre ${version} is available`,
     updateNotificationBody: "Open Preferences to download it.",
     refreshFonts: "Refresh Font List",

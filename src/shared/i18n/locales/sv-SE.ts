@@ -218,6 +218,8 @@ export const svSE = {
     updateErrorGeneric: "Det gick inte att söka efter uppdateringar. Försök igen senare.",
     settingsFile: "Inställningsfil",
     revealSettingsFile: "Visa i mapp",
+    scopeGlobal: "Globalt",
+    scopeFolder: "Den här mappen",
     updateNotificationTitle: (version: string) => `Pupitre ${version} finns tillgängligt`,
     updateNotificationBody: "Öppna inställningarna för att hämta det.",
     refreshFonts: "Uppdatera teckensnittslistan",

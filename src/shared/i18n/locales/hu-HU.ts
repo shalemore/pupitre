@@ -219,6 +219,8 @@ export const huHU = {
     updateErrorGeneric: "Nem sikerült ellenőrizni a frissítéseket. Próbálja később.",
     settingsFile: "Beállításfájl",
     revealSettingsFile: "Megjelenítés mappában",
+    scopeGlobal: "Globális",
+    scopeFolder: "Ez a mappa",
     updateNotificationTitle: (version: string) => `Elérhető a Pupitre ${version}`,
     updateNotificationBody: "A letöltéshez nyissa meg a beállításokat.",
     refreshFonts: "Betűtípuslista frissítése",

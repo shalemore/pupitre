@@ -215,6 +215,8 @@ export const ptPT = {
     updateErrorGeneric: "Não foi possível procurar atualizações. Tente novamente mais tarde.",
     settingsFile: "Ficheiro de definições",
     revealSettingsFile: "Mostrar na pasta",
+    scopeGlobal: "Global",
+    scopeFolder: "Esta pasta",
     updateNotificationTitle: (version: string) => `Pupitre ${version} está disponível`,
     updateNotificationBody: "Abra as preferências para a transferir.",
     refreshFonts: "Atualizar lista de tipos de letra",

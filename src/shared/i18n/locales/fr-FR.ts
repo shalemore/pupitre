@@ -215,6 +215,8 @@ export const frFR = {
     updateErrorGeneric: "Impossible de rechercher les mises à jour. Réessayez plus tard.",
     settingsFile: "Fichier de réglages",
     revealSettingsFile: "Afficher dans le dossier",
+    scopeGlobal: "Global",
+    scopeFolder: "Ce dossier",
     updateNotificationTitle: (version: string) => `Pupitre ${version} est disponible`,
     updateNotificationBody: "Ouvrez les Préférences pour le télécharger.",
     refreshFonts: "Actualiser la liste des polices",

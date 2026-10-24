@@ -1,12 +1,16 @@
+import { statSync } from "node:fs";
 import { join } from "node:path";
-import { app, BrowserWindow, nativeTheme } from "electron";
+import { app, BrowserWindow, nativeTheme, shell } from "electron";
 import { z } from "zod";
+import type { WorkspaceState } from "@shared/desktop-api";
 import {
   DEFAULT_SETTINGS,
+  isWorkspaceKey,
   resolveSettings,
   SETTING_KEYS,
   type SettingKey,
   type Settings,
+  WORKSPACE_FILE,
 } from "@shared/settings";
 import { readJsonFile, writeJsonFile } from "./json-file";
 
@@ -20,6 +24,20 @@ const listeners = new Set<(settings: Settings) => void>();
 let file: Record<string, unknown> | undefined;
 let current: Settings | undefined;
 let firstRun = false;
+
+/**
+ * The open folder and its own settings file. While `workspaceActive`, its values are laid over the
+ * global ones, key by key, and what the user changes goes to it instead of the global file. The
+ * file is created by the first change, never by switching to it.
+ */
+interface Workspace {
+  root: string;
+  path: string;
+  file: Record<string, unknown>;
+  exists: boolean;
+}
+let workspace: Workspace | undefined;
+let workspaceActive = false;
 
 export function getSettingsPath(): string {
   return join(app.getPath("userData"), "settings.json");
@@ -40,38 +58,134 @@ export function isFirstRun(): boolean {
   return firstRun;
 }
 
+/** What the settings are read from: the global file, with the folder's values laid over it. */
+function effectiveFile(): Record<string, unknown> {
+  if (!workspace || !workspaceActive) return settingsFile();
+  const merged = { ...settingsFile() };
+  for (const [key, value] of Object.entries(workspace.file)) {
+    if (isWorkspaceKey(key)) merged[key] = value;
+  }
+  return merged;
+}
+
 export function getSettings(): Settings {
-  current ??= resolveSettings(settingsFile());
+  current ??= resolveSettings(effectiveFile());
   return current;
 }
 
-function save(next: Record<string, unknown>): void {
-  file = next;
-  writeJsonFile(getSettingsPath(), next);
-  current = resolveSettings(next);
+export function getWorkspaceState(): WorkspaceState {
+  return {
+    root: workspace?.root ?? null,
+    active: workspaceActive,
+    exists: workspace?.exists ?? false,
+    overrides: SETTING_KEYS.filter(
+      (key) => isWorkspaceKey(key) && workspace !== undefined && key in workspace.file,
+    ),
+  };
+}
+
+/** Recomputes the settings from the files and tells every window and listener. */
+function publish(): void {
+  current = resolveSettings(effectiveFile());
   nativeTheme.themeSource = current.colorScheme;
   for (const window of BrowserWindow.getAllWindows()) {
     window.webContents.send("settings:changed", current);
+    window.webContents.send("workspace:changed", getWorkspaceState());
   }
   for (const listener of listeners) listener(current);
 }
 
-/** Values equal to the default are removed from the file instead of being written. */
-export function updateSettings(patch: Partial<Settings>): void {
-  const next = { ...settingsFile() };
-  for (const key of SETTING_KEYS) {
-    if (!(key in patch)) continue;
-    const value = patch[key];
-    if (value === undefined || Object.is(value, DEFAULT_SETTINGS[key])) delete next[key];
-    else next[key] = value;
-  }
-  save(next);
+function saveGlobal(next: Record<string, unknown>): void {
+  file = next;
+  writeJsonFile(getSettingsPath(), next);
 }
 
+function saveWorkspace(next: Record<string, unknown>): void {
+  if (!workspace) return;
+  const changed = JSON.stringify(next) !== JSON.stringify(workspace.file);
+  workspace.file = next;
+  // The file appears with the first real change and stays, even if later values match the others
+  if (!changed) return;
+  writeJsonFile(workspace.path, next);
+  workspace.exists = true;
+}
+
+/**
+ * Values equal to what they would be without the entry are removed instead of written: the
+ * default for the global file, the global value for the folder's.
+ */
+export function updateSettings(patch: Partial<Settings>): void {
+  const toWorkspace = workspace !== undefined && workspaceActive;
+  const inherited = resolveSettings(settingsFile());
+  const nextGlobal = { ...settingsFile() };
+  const nextWorkspace = { ...workspace?.file };
+  let globalTouched = false;
+  for (const key of SETTING_KEYS) {
+    if (!(key in patch)) continue;
+    const forWorkspace = toWorkspace && isWorkspaceKey(key);
+    const target = forWorkspace ? nextWorkspace : nextGlobal;
+    const unset = forWorkspace ? inherited[key] : DEFAULT_SETTINGS[key];
+    const value = patch[key];
+    if (value === undefined || Object.is(value, unset)) delete target[key];
+    else target[key] = value;
+    globalTouched ||= !forWorkspace;
+  }
+  if (globalTouched) saveGlobal(nextGlobal);
+  if (toWorkspace) saveWorkspace(nextWorkspace);
+  publish();
+}
+
+/** In the folder's settings this gives the key back to the global value. */
 export function resetSetting(key: SettingKey): void {
-  const next = { ...settingsFile() };
-  delete next[key];
-  save(next);
+  if (workspace && workspaceActive && isWorkspaceKey(key)) {
+    const next = { ...workspace.file };
+    delete next[key];
+    saveWorkspace(next);
+  } else {
+    const next = { ...settingsFile() };
+    delete next[key];
+    saveGlobal(next);
+  }
+  publish();
+}
+
+function isDirectory(path: string): boolean {
+  try {
+    return statSync(path).isDirectory();
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Tells which folder is open. A folder with a settings file uses it right away; one without
+ * keeps using the global settings until the user chooses its own.
+ */
+export function setWorkspace(root: string | null): void {
+  if (root === null || !isDirectory(root)) {
+    if (workspace === undefined) return;
+    workspace = undefined;
+    workspaceActive = false;
+  } else if (workspace?.root !== root) {
+    const path = join(root, WORKSPACE_FILE);
+    const raw = readJsonFile(path);
+    workspace = { root, path, exists: raw !== undefined, file: fileObjectSchema.parse(raw) };
+    workspaceActive = workspace.exists;
+  } else {
+    return;
+  }
+  publish();
+}
+
+/** Chooses between the settings of the open folder and the global ones. */
+export function useWorkspace(active: boolean): void {
+  if (!workspace || workspaceActive === active) return;
+  workspaceActive = active;
+  publish();
+}
+
+export function revealWorkspaceFile(): void {
+  if (workspace?.exists) shell.showItemInFolder(workspace.path);
 }
 
 export function onSettingsChange(listener: (settings: Settings) => void): () => void {

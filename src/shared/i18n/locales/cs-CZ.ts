@@ -221,6 +221,8 @@ export const csCZ = {
     updateErrorGeneric: "Aktualizace nelze zkontrolovat. Zkuste to později.",
     settingsFile: "Soubor nastavení",
     revealSettingsFile: "Zobrazit ve složce",
+    scopeGlobal: "Globální",
+    scopeFolder: "Tato složka",
     updateNotificationTitle: (version: string) => `Je k dispozici Pupitre ${version}`,
     updateNotificationBody: "Otevřete předvolby a stáhněte je.",
     refreshFonts: "Obnovit seznam písem",

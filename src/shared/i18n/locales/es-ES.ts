@@ -214,6 +214,8 @@ export const esES = {
     updateErrorGeneric: "No se pudieron buscar actualizaciones. Inténtalo más tarde.",
     settingsFile: "Archivo de configuración",
     revealSettingsFile: "Mostrar en la carpeta",
+    scopeGlobal: "Global",
+    scopeFolder: "Esta carpeta",
     updateNotificationTitle: (version: string) => `Pupitre ${version} está disponible`,
     updateNotificationBody: "Abre Preferencias para descargarlo.",
     refreshFonts: "Actualizar lista de fuentes",

@@ -1,9 +1,10 @@
-import { isModified, type SettingKey } from "@shared/settings";
+import { isModified, isWorkspaceKey, type SettingKey } from "@shared/settings";
 import { cn } from "cn";
 import { RotateCcw } from "lucide-solid";
 import { type JSX, type ParentComponent, Show } from "solid-js";
 import { Button, SettingRow } from "@/components/ui";
 import { t } from "@/i18n";
+import { workspace } from "@/lib/workspace";
 import { resetSetting, settings } from "@/lib/settings";
 
 /** A titled page of settings; its children are groups. */
@@ -35,11 +36,15 @@ export interface SettingFieldProps {
 }
 
 /**
- * A row bound to one setting. When the value differs from the default the row gets an accent
- * marker and a reset button that removes the key from the settings file again.
+ * A row bound to one setting. When the value differs from the default (from the global value, in
+ * a folder's settings) the row gets an accent marker and a reset button that removes the key from
+ * the settings file again.
  */
 export const SettingField: ParentComponent<SettingFieldProps> = (props) => {
-  const modified = () => isModified(settings(), props.name);
+  // A folder's settings are compared with the global values, and the file is the folder's; what a folder cannot set stays global
+  const inFolder = () => workspace().active && isWorkspaceKey(props.name);
+  const modified = () =>
+    inFolder() ? workspace().overrides.includes(props.name) : isModified(settings(), props.name);
   return (
     <SettingRow
       class={cn("relative", props.nested && "ps-4")}

@@ -269,6 +269,8 @@ export interface TranslationSchema {
     readonly updateErrorGeneric: string;
     readonly settingsFile: string;
     readonly revealSettingsFile: string;
+    readonly scopeGlobal: string;
+    readonly scopeFolder: string;
     readonly updateNotificationTitle: (version: string) => string;
     readonly updateNotificationBody: string;
     readonly refreshFonts: string;

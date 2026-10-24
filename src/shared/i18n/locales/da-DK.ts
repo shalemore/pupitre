@@ -218,6 +218,8 @@ export const daDK = {
     updateErrorGeneric: "Kunne ikke søge efter opdateringer. Prøv igen senere.",
     settingsFile: "Indstillingsfil",
     revealSettingsFile: "Vis i mappe",
+    scopeGlobal: "Globalt",
+    scopeFolder: "Denne mappe",
     updateNotificationTitle: (version: string) => `Pupitre ${version} er tilgængelig`,
     updateNotificationBody: "Åbn indstillingerne for at downloade den.",
     refreshFonts: "Opdatér skrifttypelisten",

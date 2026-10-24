@@ -224,6 +224,8 @@ export const plPL = {
     updateErrorGeneric: "Nie udało się sprawdzić aktualizacji. Spróbuj ponownie później.",
     settingsFile: "Plik ustawień",
     revealSettingsFile: "Pokaż w folderze",
+    scopeGlobal: "Globalne",
+    scopeFolder: "Ten folder",
     updateNotificationTitle: (version: string) => `Dostępne jest Pupitre ${version}`,
     updateNotificationBody: "Otwórz ustawienia, aby je pobrać.",
     refreshFonts: "Odśwież listę czcionek",

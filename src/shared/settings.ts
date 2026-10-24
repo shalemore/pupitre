@@ -65,6 +65,19 @@ export type SettingKey = keyof Settings;
 export type ContentWidth = Settings["contentWidth"];
 
 export const SETTING_KEYS = settingsSchema.keyof().options;
+
+/** Where a folder keeps its own settings, relative to the folder; the format is that of the global file. */
+export const WORKSPACE_FILE = ".pupitre/settings.json";
+
+/**
+ * What belongs to the app and not to a folder: both are read before any folder is open, or have
+ * nothing to do with one. Every other setting can be given a value of its own for a folder.
+ */
+const APP_KEYS: readonly SettingKey[] = ["startup", "autoCheckUpdates"];
+
+export function isWorkspaceKey(key: string): boolean {
+  return !APP_KEYS.some((appKey) => appKey === key);
+}
 export const DEFAULT_SETTINGS: Settings = settingsSchema.parse({});
 
 /** Reads a parsed settings file; anything that is not an object counts as "nothing changed". */

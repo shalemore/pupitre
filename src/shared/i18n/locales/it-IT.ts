@@ -216,6 +216,8 @@ export const itIT = {
     updateErrorGeneric: "Impossibile controllare gli aggiornamenti. Riprova più tardi.",
     settingsFile: "File delle impostazioni",
     revealSettingsFile: "Mostra nella cartella",
+    scopeGlobal: "Globale",
+    scopeFolder: "Questa cartella",
     updateNotificationTitle: (version: string) => `Pupitre ${version} è disponibile`,
     updateNotificationBody: "Apri Preferenze per scaricarlo.",
     refreshFonts: "Aggiorna elenco caratteri",

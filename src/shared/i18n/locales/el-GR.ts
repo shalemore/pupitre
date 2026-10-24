@@ -220,6 +220,8 @@ export const elGR = {
     updateErrorGeneric: "Δεν ήταν δυνατός ο έλεγχος ενημερώσεων. Δοκιμάστε αργότερα.",
     settingsFile: "Αρχείο ρυθμίσεων",
     revealSettingsFile: "Εμφάνιση στον φάκελο",
+    scopeGlobal: "Καθολικά",
+    scopeFolder: "Αυτός ο φάκελος",
     updateNotificationTitle: (version: string) => `Το Pupitre ${version} είναι διαθέσιμο`,
     updateNotificationBody: "Ανοίξτε τις προτιμήσεις για να το κατεβάσετε.",
     refreshFonts: "Ανανέωση λίστας γραμματοσειρών",

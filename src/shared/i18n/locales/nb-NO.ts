@@ -218,6 +218,8 @@ export const nbNO = {
     updateErrorGeneric: "Kunne ikke se etter oppdateringer. Prøv igjen senere.",
     settingsFile: "Innstillingsfil",
     revealSettingsFile: "Vis i mappe",
+    scopeGlobal: "Globalt",
+    scopeFolder: "Denne mappen",
     updateNotificationTitle: (version: string) => `Pupitre ${version} er tilgjengelig`,
     updateNotificationBody: "Åpne innstillingene for å laste det ned.",
     refreshFonts: "Oppdater skrifttypelisten",

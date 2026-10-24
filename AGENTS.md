@@ -87,6 +87,12 @@ docs/         design notes and mockups
 - Settings live in the main process (`settings.json` in `userData`) and are validated with the zod
   schema in `src/shared/settings.ts`. Every window receives the same snapshot through the
   `settings:changed` broadcast, including the window that made the change.
+- A folder can have its own settings in `.pupitre/settings.json` (`WORKSPACE_FILE`), in the format
+  of the global file. Its values are laid over the global ones key by key, and resetting one in a
+  folder gives it back to the global value. Every setting can be given one except `APP_KEYS`,
+  which are read before a folder is open or have nothing to do with one. The file is created by the
+  first change made while it is in use, never by switching to it. Whatever else a folder gets later,
+  such as its own themes, belongs under `.pupitre/` too.
 
 ## Code Style
 

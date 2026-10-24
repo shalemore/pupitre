@@ -215,6 +215,8 @@ export const koKR = {
     updateErrorGeneric: "업데이트를 확인할 수 없습니다. 나중에 다시 시도하세요.",
     settingsFile: "설정 파일",
     revealSettingsFile: "폴더에서 보기",
+    scopeGlobal: "전체",
+    scopeFolder: "이 폴더",
     updateNotificationTitle: (version: string) => `Pupitre ${version} 버전을 사용할 수 있습니다`,
     updateNotificationBody: "환경설정에서 다운로드하세요.",
     refreshFonts: "글꼴 목록 새로 고침",

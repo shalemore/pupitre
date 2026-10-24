@@ -29,9 +29,13 @@ import { addRecentFile, getRecentFiles, removeRecentFile } from "./recent-files"
 import {
   getSettings,
   getSettingsPath,
+  getWorkspaceState,
   isFirstRun,
   resetSetting,
+  revealWorkspaceFile,
+  setWorkspace,
   updateSettings,
+  useWorkspace,
 } from "./settings-store";
 import {
   canSelfUpdate,
@@ -167,6 +171,10 @@ export function registerIpcHandlers(): void {
   handle("settings:update", (_event, patch) => updateSettings(patch));
   handle("settings:reset", (_event, key) => resetSetting(key));
   handle("settings:reveal", () => shell.showItemInFolder(getSettingsPath()));
+  handle("workspace:set", (_event, root) => setWorkspace(root));
+  handle("workspace:get", () => getWorkspaceState());
+  handle("workspace:use", (_event, active) => useWorkspace(active));
+  handle("workspace:reveal", () => revealWorkspaceFile());
 
   handle("document:open", async (event) => {
     const { canceled, filePaths } = await dialog.showOpenDialog(senderWindow(event), {

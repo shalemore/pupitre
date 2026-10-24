@@ -220,6 +220,8 @@ export const nlNL = {
     updateErrorGeneric: "Kon niet controleren op updates. Probeer het later opnieuw.",
     settingsFile: "Instellingenbestand",
     revealSettingsFile: "Toon in map",
+    scopeGlobal: "Globaal",
+    scopeFolder: "Deze map",
     updateNotificationTitle: (version: string) => `Pupitre ${version} is beschikbaar`,
     updateNotificationBody: "Open de voorkeuren om deze te downloaden.",
     refreshFonts: "Lettertypelijst vernieuwen",

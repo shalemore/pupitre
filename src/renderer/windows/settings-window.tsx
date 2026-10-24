@@ -1,8 +1,17 @@
 import { makeEventListener } from "@solid-primitives/event-listener";
-import { FileCode2, Info, Palette, Settings2, Type } from "lucide-solid";
-import { createEffect, onMount, type Component } from "solid-js";
+import { FileCode2, FolderOpen, Info, Palette, Settings2, Type } from "lucide-solid";
+import { createEffect, onMount, Show, type Component } from "solid-js";
 import { TitleBar } from "@/components/title-bar";
-import { ScrollView, Separator, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
+import {
+  Button,
+  ScrollView,
+  SegmentedControl,
+  Separator,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui";
 import { AboutSection } from "@/features/settings/about-section";
 import { AppearanceSection } from "@/features/settings/appearance-section";
 import { EditorSection } from "@/features/settings/editor-section";
@@ -10,7 +19,10 @@ import { GeneralSection } from "@/features/settings/general-section";
 import { MarkdownSection } from "@/features/settings/markdown-section";
 import { cn } from "cn";
 import { t } from "@/i18n";
+import { desktop } from "@/lib/desktop";
+import { fileNameOf } from "@/lib/file";
 import { settings } from "@/lib/settings";
+import { workspace } from "@/lib/workspace";
 
 export const SettingsWindow: Component = () => {
   const immersive = () => settings().windowStyle === "immersive";
@@ -45,6 +57,40 @@ export const SettingsWindow: Component = () => {
         <aside
           class={cn("w-48 shrink-0 p-3", !immersive() && "border-e border-border bg-surface-0")}
         >
+          <Show when={workspace().root}>
+            {(root) => (
+              <div class="mb-3 space-y-1">
+                <SegmentedControl<"global" | "folder">
+                  value={workspace().active ? "folder" : "global"}
+                  onChange={(scope) => void desktop.invoke("workspace:use", scope === "folder")}
+                  options={[
+                    { value: "global", label: t().settings.scopeGlobal },
+                    { value: "folder", label: t().settings.scopeFolder },
+                  ]}
+                />
+                <div class="flex items-center gap-1 ps-2">
+                  <span
+                    dir="auto"
+                    class="min-w-0 flex-1 truncate text-2xs text-muted-foreground"
+                    title={root()}
+                  >
+                    {fileNameOf(root())}
+                  </span>
+                  <Show when={workspace().exists}>
+                    <Button
+                      variant="ghost"
+                      size="icon-2xs"
+                      title={t().settings.revealSettingsFile}
+                      aria-label={t().settings.revealSettingsFile}
+                      onClick={() => void desktop.invoke("workspace:reveal")}
+                    >
+                      <FolderOpen />
+                    </Button>
+                  </Show>
+                </div>
+              </div>
+            )}
+          </Show>
           <TabsList>
             <TabsTrigger value="general">
               <Settings2 />

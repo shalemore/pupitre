@@ -217,6 +217,8 @@ export const deDE = {
     updateErrorGeneric: "Updates konnten nicht geprüft werden. Bitte später erneut versuchen.",
     settingsFile: "Einstellungsdatei",
     revealSettingsFile: "Im Ordner zeigen",
+    scopeGlobal: "Global",
+    scopeFolder: "Dieser Ordner",
     updateNotificationTitle: (version: string) => `Pupitre ${version} ist verfügbar`,
     updateNotificationBody: "Öffnen Sie die Einstellungen, um es herunterzuladen.",
     refreshFonts: "Schriftliste aktualisieren",

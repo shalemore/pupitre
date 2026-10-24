@@ -218,6 +218,8 @@ export const faIR = {
     updateErrorGeneric: "بررسی به‌روزرسانی ممکن نشد. لطفاً بعداً دوباره امتحان کنید.",
     settingsFile: "پرونده تنظیمات",
     revealSettingsFile: "نمایش در پوشه",
+    scopeGlobal: "سراسری",
+    scopeFolder: "این پوشه",
     updateNotificationTitle: (version: string) => `Pupitre ${version} موجود است`,
     updateNotificationBody: "برای دانلود، تنظیمات را باز کنید.",
     refreshFonts: "به‌روزرسانی فهرست قلم‌ها",

@@ -33,6 +33,18 @@ export type DeletedFileChoice = "save" | "keep";
 /** The choice made when closing or replacing a document with unsaved changes. */
 export type UnsavedChoice = "save" | "discard" | "cancel";
 
+/** The open folder and whether its own settings are in use. */
+export interface WorkspaceState {
+  /** The folder whose settings can be used, or null while none is open. */
+  root: string | null;
+  /** Whether the folder's settings are laid over the global ones. */
+  active: boolean;
+  /** Whether the folder has a settings file yet; the first change made while it is active creates it. */
+  exists: boolean;
+  /** The settings that have a value of their own in the folder. */
+  overrides: readonly SettingKey[];
+}
+
 export type UpdateStatus =
   | { kind: "idle" }
   | { kind: "checking" }
@@ -116,6 +128,12 @@ export interface InvokeChannels {
   "dialog:confirm-deleted": (fileName: string) => DeletedFileChoice;
   "dialog:show-error": (message: string, detail: string) => void;
   "window:open-settings": () => void;
+  /** Tells which folder is open, so that its settings file is found; null when none is. */
+  "workspace:set": (root: string | null) => void;
+  "workspace:get": () => WorkspaceState;
+  /** Chooses between the open folder's settings and the global ones. */
+  "workspace:use": (active: boolean) => void;
+  "workspace:reveal": () => void;
   "window:set-colors": (colors: WindowColors) => void;
   "app:show-about": () => void;
   "app:set-default-markdown-app": () => DefaultAppResult;
@@ -141,6 +159,7 @@ export interface InvokeChannels {
 /** Events the main process pushes to the renderer through `webContents.send`. */
 export interface RendererEvents {
   "settings:changed": Settings;
+  "workspace:changed": WorkspaceState;
   /** The file of an open document was modified, possibly by the document's own save. */
   "document:changed": string;
   /** The entries of a watched folder changed. */

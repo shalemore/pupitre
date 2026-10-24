@@ -212,6 +212,8 @@ export const zhHK = {
     updateErrorGeneric: "無法檢查更新，請稍後再試。",
     settingsFile: "設定檔",
     revealSettingsFile: "在資料夾中顯示",
+    scopeGlobal: "全局",
+    scopeFolder: "此資料夾",
     updateNotificationTitle: (version: string) => `Pupitre ${version} 已發布`,
     updateNotificationBody: "開啟偏好設定即可下載。",
     refreshFonts: "重新整理字體列表",

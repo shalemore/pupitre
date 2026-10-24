@@ -67,6 +67,8 @@ export const MainWindow: Component = () => {
     }
     return doc?.folder ?? dropped;
   });
+  // The folder in the sidebar is the one whose own settings file, if it has one, applies
+  createEffect(() => void desktop.invoke("workspace:set", folderRoot() ?? null));
   const split = () => settings().sidebarLayout === "split";
   // Dragging a sidebar's edge sets its width for this window only
   const [startWidth, setStartWidth] = createSignal(SIDEBAR_WIDTH.initial);

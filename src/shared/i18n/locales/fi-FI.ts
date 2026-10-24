@@ -219,6 +219,8 @@ export const fiFI = {
     updateErrorGeneric: "Päivitysten tarkistus epäonnistui. Yritä myöhemmin uudelleen.",
     settingsFile: "Asetustiedosto",
     revealSettingsFile: "Näytä kansiossa",
+    scopeGlobal: "Yleinen",
+    scopeFolder: "Tämä kansio",
     updateNotificationTitle: (version: string) => `Pupitre ${version} on saatavilla`,
     updateNotificationBody: "Avaa asetukset ladataksesi sen.",
     refreshFonts: "Päivitä kirjasinluettelo",

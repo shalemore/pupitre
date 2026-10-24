@@ -219,6 +219,8 @@ export const isIS = {
     updateErrorGeneric: "Ekki tókst að athuga uppfærslur. Reyndu aftur síðar.",
     settingsFile: "Stillingaskrá",
     revealSettingsFile: "Sýna í möppu",
+    scopeGlobal: "Almennt",
+    scopeFolder: "Þessi mappa",
     updateNotificationTitle: (version: string) => `Pupitre ${version} er í boði`,
     updateNotificationBody: "Opnaðu forstillingar til að sækja það.",
     refreshFonts: "Endurnýja leturgerðalista",

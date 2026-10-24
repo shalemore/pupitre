@@ -217,6 +217,8 @@ export const viVN = {
     updateErrorGeneric: "Không kiểm tra được cập nhật. Vui lòng thử lại sau.",
     settingsFile: "Tệp cài đặt",
     revealSettingsFile: "Hiện trong thư mục",
+    scopeGlobal: "Chung",
+    scopeFolder: "Thư mục này",
     updateNotificationTitle: (version: string) => `Đã có Pupitre ${version}`,
     updateNotificationBody: "Mở Tùy chọn để tải xuống.",
     refreshFonts: "Tải lại danh sách phông chữ",

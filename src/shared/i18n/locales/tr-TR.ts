@@ -220,6 +220,8 @@ export const trTR = {
     updateErrorGeneric: "Güncellemeler denetlenemedi. Lütfen daha sonra tekrar deneyin.",
     settingsFile: "Ayarlar Dosyası",
     revealSettingsFile: "Klasörde Göster",
+    scopeGlobal: "Genel",
+    scopeFolder: "Bu Klasör",
     updateNotificationTitle: (version: string) => `Pupitre ${version} kullanılabilir`,
     updateNotificationBody: "İndirmek için Tercihleri açın.",
     refreshFonts: "Yazı Tipi Listesini Yenile",

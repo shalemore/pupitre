@@ -51,6 +51,7 @@ Preferences › Appearance › Window Style switches between **Classic** and **I
 - Pasted images are saved in a folder next to the document (`assets` by default, Preferences › Markdown). A document that has not been saved yet keeps them in memory and writes them on the first save.
 - Preferences › General › Default Markdown App makes Pupitre open `.md` files from the file manager.
 - Preferences are stored in `settings.json`; Preferences › About shows its folder. Only values that differ from the defaults are written, and a field that cannot be read falls back to its default without affecting the others.
+- A folder can have settings of its own: with a folder open, Preferences shows a switch between **Global** and **This Folder**. What you change under **This Folder** goes to `.pupitre/settings.json` in it, which is created by the first change, and is laid over the global settings whenever that folder is open. Resetting a setting there gives it back to the global value.
 
 ## Themes
 

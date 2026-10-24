@@ -218,6 +218,8 @@ export const idID = {
     updateErrorGeneric: "Pembaruan tidak dapat diperiksa. Silakan coba lagi nanti.",
     settingsFile: "Berkas pengaturan",
     revealSettingsFile: "Tampilkan di folder",
+    scopeGlobal: "Global",
+    scopeFolder: "Folder Ini",
     updateNotificationTitle: (version: string) => `Pupitre ${version} tersedia`,
     updateNotificationBody: "Buka Preferensi untuk mengunduhnya.",
     refreshFonts: "Muat ulang daftar font",

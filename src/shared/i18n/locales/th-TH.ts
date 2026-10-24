@@ -219,6 +219,8 @@ export const thTH = {
     updateErrorGeneric: "ตรวจหาการอัปเดตไม่ได้ โปรดลองใหม่ภายหลัง",
     settingsFile: "ไฟล์การตั้งค่า",
     revealSettingsFile: "แสดงในโฟลเดอร์",
+    scopeGlobal: "ทั้งหมด",
+    scopeFolder: "โฟลเดอร์นี้",
     updateNotificationTitle: (version: string) => `มี Pupitre ${version} ให้ใช้งาน`,
     updateNotificationBody: "เปิดการตั้งค่าเพื่อดาวน์โหลด",
     refreshFonts: "โหลดรายการแบบอักษรใหม่",

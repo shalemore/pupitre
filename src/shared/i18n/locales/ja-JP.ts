@@ -215,6 +215,8 @@ export const jaJP = {
     updateErrorGeneric: "アップデートを確認できませんでした。後でもう一度お試しください。",
     settingsFile: "設定ファイル",
     revealSettingsFile: "フォルダーで表示",
+    scopeGlobal: "グローバル",
+    scopeFolder: "このフォルダ",
     updateNotificationTitle: (version: string) => `Pupitre ${version} が利用可能です`,
     updateNotificationBody: "環境設定を開いてダウンロードしてください。",
     refreshFonts: "フォント一覧を更新",

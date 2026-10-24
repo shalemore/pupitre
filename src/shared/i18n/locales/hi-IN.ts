@@ -217,6 +217,8 @@ export const hiIN = {
     updateErrorGeneric: "अपडेट जाँचे नहीं जा सके। कृपया बाद में पुनः प्रयास करें।",
     settingsFile: "सेटिंग्स फ़ाइल",
     revealSettingsFile: "फ़ोल्डर में दिखाएँ",
+    scopeGlobal: "वैश्विक",
+    scopeFolder: "यह फ़ोल्डर",
     updateNotificationTitle: (version: string) => `Pupitre ${version} उपलब्ध है`,
     updateNotificationBody: "डाउनलोड करने के लिए प्राथमिकताएँ खोलें।",
     refreshFonts: "फ़ॉन्ट सूची ताज़ा करें",

@@ -232,6 +232,8 @@ export const ar = {
     updateErrorGeneric: "تعذّر التحقق من التحديثات. يُرجى المحاولة لاحقًا.",
     settingsFile: "ملف الإعدادات",
     revealSettingsFile: "إظهار في المجلد",
+    scopeGlobal: "عام",
+    scopeFolder: "هذا المجلد",
     updateNotificationTitle: (version: string) => `يتوفر Pupitre ${version}`,
     updateNotificationBody: "افتح التفضيلات لتنزيله.",
     refreshFonts: "تحديث قائمة الخطوط",

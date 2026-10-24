@@ -212,6 +212,8 @@ export const zhCN = {
     updateErrorGeneric: "无法检查更新，请稍后再试。",
     settingsFile: "设置文件",
     revealSettingsFile: "在文件夹中显示",
+    scopeGlobal: "全局",
+    scopeFolder: "此文件夹",
     updateNotificationTitle: (version: string) => `Pupitre ${version} 已发布`,
     updateNotificationBody: "打开偏好设置即可下载。",
     refreshFonts: "刷新字体列表",
