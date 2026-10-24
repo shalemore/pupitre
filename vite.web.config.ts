@@ -12,4 +12,7 @@ export default defineConfig({
   resolve: { alias: { "@shared": resolve("src/shared"), "@": resolve("src/renderer") } },
   plugins: [solid(), tailwindcss()],
   build: { outDir: resolve("out/web"), emptyOutDir: true },
+  // Vite binds "localhost" to ::1 only on some machines, and the browser then gets a refused connection
+  server: { host: "127.0.0.1" },
+  preview: { host: "127.0.0.1" },
 });
