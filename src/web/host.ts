@@ -124,11 +124,13 @@ function dispatch(command: AppCommand): void {
 }
 
 // Files: a small folder in memory
-const locale = resolveLocale(settings.locale, navigator.languages);
+// The language follows the setting, so it is read when it is needed
+const currentLocale = () => resolveLocale(settings.locale, navigator.languages);
+const labels = () => getDictionary(currentLocale());
 const ABOUT_PATH = `${DEMO_FOLDER}/About this demo.md`;
 const files = new Map([
   [ABOUT_PATH, about],
-  [`${DEMO_FOLDER}/Pupitre Guide.md`, getSampleDocument(locale)],
+  [`${DEMO_FOLDER}/Pupitre Guide.md`, getSampleDocument(currentLocale())],
 ]);
 // Files dropped on the page are read after the page asked for their path
 const dropped = new Map<string, Promise<string>>();
@@ -179,8 +181,7 @@ type MenuItem = { label: string; shortcut?: string | undefined; run: () => void 
 const divider: MenuItem = "separator";
 
 function menuItems(menu: TopMenu): MenuItem[] {
-  const labels = getDictionary(resolveLocale(settings.locale, navigator.languages));
-  const { menu: m, format } = labels;
+  const { menu: m, format } = labels();
   const send = (command: AppCommand) => () => dispatch(command);
   const formatItems = (actions: readonly FormatAction[]): MenuItem[] =>
     actions.map((action) => ({
@@ -319,7 +320,7 @@ const handlers: Handlers = {
   "document:exists": (path) => files.has(path),
   "document:write": (path, content) => void files.set(path, content),
   "dialog:choose-save-path": (suggestedName) => {
-    const name = prompt(getDictionary(locale).menu.saveAs, suggestedName)?.trim();
+    const name = prompt(labels().menu.saveAs, suggestedName)?.trim();
     if (!name) return null;
     return opened(
       `${DEMO_FOLDER}/${/\.(md|markdown|mdown|txt)$/i.test(name) ? name : `${name}.md`}`,
@@ -331,7 +332,7 @@ const handlers: Handlers = {
     return null;
   },
   "dialog:confirm-unsaved": (fileName) => {
-    const { dialogs } = getDictionary(locale);
+    const { dialogs } = labels();
     if (confirm(`${dialogs.unsavedMessage(fileName)}\n\n${dialogs.save}?`)) return "save";
     return confirm(`${dialogs.dontSave}?`) ? "discard" : "cancel";
   },
