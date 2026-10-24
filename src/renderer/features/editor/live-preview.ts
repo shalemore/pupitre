@@ -10,7 +10,7 @@ import {
 import {
   Decoration,
   type DecorationSet,
-  type EditorView,
+  EditorView,
   ViewPlugin,
   type ViewUpdate,
   WidgetType,
@@ -18,11 +18,13 @@ import {
 import type { SyntaxNode } from "@lezer/common";
 import { AlertTitleWidget, alertTitles, alertType } from "./alerts";
 import { CodeCornerWidget } from "./code-corner";
+import { collectHeadings, findHeadingByAnchor } from "./document-structure";
 import { EmojiWidget, emojiFor } from "./emoji";
 import { footnoteTarget } from "./footnotes";
 import { htmlTag, isFormattingTag, LineBreakWidget } from "./html";
-import { ImageWidget, imageSource, resolveUrl } from "./images";
+import { documentBaseUrl, ImageWidget, imageSource, resolveUrl } from "./images";
 import { MathWidget } from "./math";
+import { desktop } from "@/lib/desktop";
 
 /**
  * Typora-style live preview over plain Markdown source.
@@ -671,6 +673,31 @@ export function openLink(href: string): boolean {
   return true;
 }
 
+const MARKDOWN_FILE = /^[^:]+\.(?:md|markdown|mdown)(?:#.*)?$/i;
+
+/**
+ * Follows a link: web addresses open in the browser, `#anchors` scroll to their heading and
+ * Markdown files next to the document open in the window.
+ */
+function followLink(view: EditorView, href: string): boolean {
+  if (openLink(href)) return true;
+  if (href.startsWith("#")) {
+    const heading = findHeadingByAnchor(collectHeadings(view.state), href.slice(1));
+    if (!heading) return false;
+    view.dispatch({
+      selection: { anchor: heading.pos },
+      effects: EditorView.scrollIntoView(heading.pos, { y: "start" }),
+    });
+    return true;
+  }
+  const base = view.state.facet(documentBaseUrl);
+  if (!base || !MARKDOWN_FILE.test(href)) return false;
+  // A file URL's path starts with a slash before a Windows drive letter
+  const path = decodeURIComponent(new URL(href, base).pathname).replace(/^\/(?=[A-Za-z]:)/, "");
+  void desktop.invoke("app:dispatch", { id: "file.open-path", path });
+  return true;
+}
+
 const livePreviewPlugin = ViewPlugin.fromClass(
   class {
     decorations: DecorationSet;
@@ -714,7 +741,7 @@ const livePreviewPlugin = ViewPlugin.fromClass(
           view.dispatch({ selection: { anchor: target }, scrollIntoView: true });
         } else {
           const href = linkAt(view.state, pos);
-          if (!href || !openLink(href)) return false;
+          if (!href || !followLink(view, href)) return false;
         }
         event.preventDefault();
         return true;

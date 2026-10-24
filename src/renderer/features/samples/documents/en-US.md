@@ -10,6 +10,7 @@ Move the cursor into **bold text**, a `code span` or a [link](https://github.com
 
 - Delete a marker to remove its format; add or delete a `#` in front of a heading to change its level.
 - Selecting text shows the syntax in it, and copying copies Markdown.
+- <kbd>Ctrl</kbd>+click follows a link: web addresses open in the browser, `#heading` links scroll to the heading and links to a Markdown file next to the document open it.
 - Formatting is in the **Paragraph** and **Format** menus, the context menu and the shortcuts below.
 
 <details>

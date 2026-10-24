@@ -83,6 +83,34 @@ export function collectHeadings(state: EditorState): OutlineHeading[] {
   return headings;
 }
 
+/** The anchor a heading gets, written like GitHub does: lowercase, punctuation dropped, spaces as hyphens. */
+function headingAnchor(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\p{L}\p{M}\p{N}\s_-]/gu, "")
+    .replaceAll(/\s/g, "-");
+}
+
+/** The heading a `#anchor` link points to; repeated headings are told apart by -1, -2… as on GitHub. */
+export function findHeadingByAnchor(
+  headings: readonly OutlineHeading[],
+  anchor: string,
+): OutlineHeading | undefined {
+  let wanted: string;
+  try {
+    wanted = decodeURIComponent(anchor).toLowerCase();
+  } catch {
+    return undefined;
+  }
+  const seen = new Map<string, number>();
+  return headings.find(({ text }) => {
+    const base = headingAnchor(text);
+    const count = seen.get(base) ?? 0;
+    seen.set(base, count + 1);
+    return (count === 0 ? base : `${base}-${count}`) === wanted;
+  });
+}
+
 /** The section the cursor is in: the last heading at or before the cursor. */
 export function findActiveHeading(headings: readonly OutlineHeading[], cursor: number): number {
   return headings.findLastIndex((heading) => heading.pos <= cursor);
