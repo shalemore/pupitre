@@ -160,6 +160,8 @@ export const itIT = {
       "Cartella e struttura su lati opposti, oppure insieme in un'unica barra laterale",
     sidebarLayoutSplit: "Separato",
     sidebarLayoutCombined: "Combinato",
+    pinSidebars: "Blocca le barre laterali",
+    pinSidebarsDesc: "Una finestra immersiva tiene aperte le barre laterali mentre scrivi",
     showWordCount: "Mostra conteggio parole",
     showWordCountDesc: "Parole e caratteri nella barra del titolo",
     bodyFont: "Carattere",

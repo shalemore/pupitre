@@ -165,6 +165,8 @@ export const csCZ = {
     sidebarLayoutDesc: "Složka a osnova na protilehlých stranách, nebo společně v jednom panelu",
     sidebarLayoutSplit: "Rozdělený",
     sidebarLayoutCombined: "Sloučený",
+    pinSidebars: "Připnout postranní panely",
+    pinSidebarsDesc: "Pohlcující okno nechává postranní panely při psaní otevřené",
     showWordCount: "Zobrazit počet slov",
     showWordCountDesc: "Počet slov a znaků v záhlaví",
     bodyFont: "Písmo",

@@ -163,6 +163,8 @@ export const nlNL = {
     sidebarLayoutDesc: "Map en overzicht aan weerszijden, of samen in één zijbalk",
     sidebarLayoutSplit: "Gesplitst",
     sidebarLayoutCombined: "Gecombineerd",
+    pinSidebars: "Zijbalken vastzetten",
+    pinSidebarsDesc: "Een meeslepend venster houdt de zijbalken open terwijl je schrijft",
     showWordCount: "Woordaantal tonen",
     showWordCountDesc: "Woorden en tekens in de titelbalk",
     bodyFont: "Lettertype",

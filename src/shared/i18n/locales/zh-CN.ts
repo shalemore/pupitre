@@ -156,6 +156,8 @@ export const zhCN = {
     sidebarLayoutDesc: "文件夹和大纲分列两侧，或合并在同一个侧边栏里",
     sidebarLayoutSplit: "分开",
     sidebarLayoutCombined: "合并",
+    pinSidebars: "钉住侧边栏",
+    pinSidebarsDesc: "沉浸式窗口在书写时保持侧边栏展开",
     showWordCount: "显示字数",
     showWordCountDesc: "在标题栏显示词数和字符数",
     bodyFont: "正文字体",

@@ -157,6 +157,8 @@ export const ptBR = {
     sidebarLayoutDesc: "Pasta e estrutura em lados opostos, ou juntas em uma única barra lateral",
     sidebarLayoutSplit: "Dividido",
     sidebarLayoutCombined: "Combinado",
+    pinSidebars: "Fixar barras laterais",
+    pinSidebarsDesc: "Uma janela imersiva mantém as barras laterais abertas enquanto você escreve",
     showWordCount: "Mostrar contagem de palavras",
     showWordCountDesc: "Palavras e caracteres na barra de título",
     bodyFont: "Fonte",

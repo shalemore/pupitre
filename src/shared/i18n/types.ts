@@ -213,6 +213,8 @@ export interface TranslationSchema {
     readonly sidebarLayoutDesc: string;
     readonly sidebarLayoutSplit: string;
     readonly sidebarLayoutCombined: string;
+    readonly pinSidebars: string;
+    readonly pinSidebarsDesc: string;
     readonly showWordCount: string;
     readonly showWordCountDesc: string;
     readonly bodyFont: string;

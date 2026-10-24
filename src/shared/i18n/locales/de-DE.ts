@@ -160,6 +160,8 @@ export const deDE = {
       "Ordner und Gliederung auf gegenüberliegenden Seiten oder zusammen in einer Seitenleiste",
     sidebarLayoutSplit: "Getrennt",
     sidebarLayoutCombined: "Zusammen",
+    pinSidebars: "Seitenleisten fixieren",
+    pinSidebarsDesc: "Ein immersives Fenster lässt die Seitenleisten beim Schreiben geöffnet",
     showWordCount: "Wortanzahl anzeigen",
     showWordCountDesc: "Wörter und Zeichen in der Titelleiste",
     bodyFont: "Schriftart",

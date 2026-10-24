@@ -156,6 +156,8 @@ export const zhTW = {
     sidebarLayoutDesc: "資料夾和大綱分列兩側，或合併在同一個側邊欄裡",
     sidebarLayoutSplit: "分開",
     sidebarLayoutCombined: "合併",
+    pinSidebars: "釘選側邊欄",
+    pinSidebarsDesc: "沉浸式視窗在書寫時保持側邊欄展開",
     showWordCount: "顯示字數",
     showWordCountDesc: "在標題列顯示詞數和字元數",
     bodyFont: "內文字型",

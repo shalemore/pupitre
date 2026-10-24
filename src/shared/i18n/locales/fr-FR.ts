@@ -159,6 +159,8 @@ export const frFR = {
     sidebarLayoutDesc: "Dossier et plan de chaque côté, ou réunis dans une seule barre latérale",
     sidebarLayoutSplit: "Séparé",
     sidebarLayoutCombined: "Combiné",
+    pinSidebars: "Épingler les barres latérales",
+    pinSidebarsDesc: "Une fenêtre immersive garde ses barres latérales ouvertes pendant l'écriture",
     showWordCount: "Afficher le nombre de mots",
     showWordCountDesc: "Mots et caractères dans la barre de titre",
     bodyFont: "Police",

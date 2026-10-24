@@ -162,6 +162,8 @@ export const nbNO = {
     sidebarLayoutDesc: "Mappe og disposisjon på hver sin side, eller samlet i ett sidefelt",
     sidebarLayoutSplit: "Delt",
     sidebarLayoutCombined: "Samlet",
+    pinSidebars: "Fest sidefelt",
+    pinSidebarsDesc: "Et oppslukende vindu holder sidefeltene åpne mens du skriver",
     showWordCount: "Vis ordantall",
     showWordCountDesc: "Antall ord og tegn i tittellinjen",
     bodyFont: "Skrifttype",

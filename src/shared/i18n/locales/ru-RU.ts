@@ -165,6 +165,8 @@ export const ruRU = {
     sidebarLayoutDesc: "Папка и структура с противоположных сторон или вместе в одной панели",
     sidebarLayoutSplit: "Раздельно",
     sidebarLayoutCombined: "Вместе",
+    pinSidebars: "Закрепить боковые панели",
+    pinSidebarsDesc: "Погружающее окно не скрывает боковые панели во время набора",
     showWordCount: "Показывать число слов",
     showWordCountDesc: "Слова и символы в заголовке окна",
     bodyFont: "Шрифт",

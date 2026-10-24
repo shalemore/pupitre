@@ -162,6 +162,8 @@ export const idID = {
       "Folder dan kerangka di sisi berlawanan, atau bersama dalam satu bilah samping",
     sidebarLayoutSplit: "Terpisah",
     sidebarLayoutCombined: "Gabungan",
+    pinSidebars: "Sematkan Bilah Samping",
+    pinSidebarsDesc: "Jendela imersif menjaga bilah samping tetap terbuka saat Anda menulis",
     showWordCount: "Tampilkan jumlah kata",
     showWordCountDesc: "Jumlah kata dan karakter di bilah judul",
     bodyFont: "Font",

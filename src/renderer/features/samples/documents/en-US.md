@@ -43,7 +43,7 @@ Both are in the **View** menu and in Preferences › Editor, and they can be com
 
 ## Window style
 
-Preferences › Appearance › Window Style switches between **Classic** and **Immersive**. In the immersive style the document sits in a card inside the window; the title bar and the outline step aside once you type or scroll and come back when the pointer reaches the top or the start edge of the window.
+Preferences › Appearance › Window Style switches between **Classic** and **Immersive**. In the immersive style the document sits in a card inside the window; the title bar and the sidebars step aside once you type or scroll and come back when the pointer reaches the top or a side edge of the window. The pin in a sidebar keeps the sidebars open, and dragging a sidebar's edge resizes it.
 
 ## Files and images
 

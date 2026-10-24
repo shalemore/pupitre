@@ -158,6 +158,8 @@ export const ptPT = {
     sidebarLayoutDesc: "Pasta e estrutura em lados opostos, ou juntas numa única barra lateral",
     sidebarLayoutSplit: "Dividido",
     sidebarLayoutCombined: "Combinado",
+    pinSidebars: "Fixar barras laterais",
+    pinSidebarsDesc: "Uma janela imersiva mantém as barras laterais abertas enquanto escreve",
     showWordCount: "Mostrar contagem de palavras",
     showWordCountDesc: "Número de palavras e de caracteres na barra de título",
     bodyFont: "Tipo de letra",

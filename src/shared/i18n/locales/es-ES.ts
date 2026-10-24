@@ -157,6 +157,9 @@ export const esES = {
     sidebarLayoutDesc: "Carpeta y esquema en lados opuestos, o juntos en una sola barra lateral",
     sidebarLayoutSplit: "Dividido",
     sidebarLayoutCombined: "Combinado",
+    pinSidebars: "Fijar las barras laterales",
+    pinSidebarsDesc:
+      "Una ventana inmersiva mantiene abiertas las barras laterales mientras escribes",
     showWordCount: "Mostrar recuento de palabras",
     showWordCountDesc: "Palabras y caracteres en la barra de título",
     bodyFont: "Fuente",

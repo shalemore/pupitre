@@ -162,6 +162,8 @@ export const elGR = {
     sidebarLayoutDesc: "Φάκελος και διάρθρωση σε αντίθετες πλευρές ή μαζί σε μία πλαϊνή γραμμή",
     sidebarLayoutSplit: "Χωριστά",
     sidebarLayoutCombined: "Μαζί",
+    pinSidebars: "Καρφίτσωμα πλαϊνών γραμμών",
+    pinSidebarsDesc: "Ένα καθηλωτικό παράθυρο κρατά τις πλαϊνές γραμμές ανοιχτές ενώ γράφετε",
     showWordCount: "Εμφάνιση πλήθους λέξεων",
     showWordCountDesc: "Λέξεις και χαρακτήρες στη γραμμή τίτλου",
     bodyFont: "Γραμματοσειρά",

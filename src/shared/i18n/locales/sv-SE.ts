@@ -162,6 +162,8 @@ export const svSE = {
     sidebarLayoutDesc: "Mapp och disposition på varsin sida, eller samlade i ett sidofält",
     sidebarLayoutSplit: "Delad",
     sidebarLayoutCombined: "Samlad",
+    pinSidebars: "Fäst sidofält",
+    pinSidebarsDesc: "Ett uppslukande fönster håller sidofälten öppna medan du skriver",
     showWordCount: "Visa ordantal",
     showWordCountDesc: "Antal ord och tecken i namnlisten",
     bodyFont: "Teckensnitt",

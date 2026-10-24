@@ -163,6 +163,8 @@ export const thTH = {
     sidebarLayoutDesc: "แสดงโฟลเดอร์และโครงร่างคนละฝั่ง หรือรวมไว้ในแถบด้านข้างเดียว",
     sidebarLayoutSplit: "แยก",
     sidebarLayoutCombined: "รวม",
+    pinSidebars: "ปักหมุดแถบด้านข้าง",
+    pinSidebarsDesc: "หน้าต่างแบบดื่มด่ำจะเปิดแถบด้านข้างค้างไว้ขณะที่คุณเขียน",
     showWordCount: "แสดงจำนวนคำ",
     showWordCountDesc: "จำนวนคำและตัวอักษรในแถบชื่อเรื่อง",
     bodyFont: "แบบอักษร",

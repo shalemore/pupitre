@@ -161,6 +161,8 @@ export const hiIN = {
     sidebarLayoutDesc: "फ़ोल्डर और रूपरेखा आमने-सामने के किनारों पर, या एक साइडबार में साथ-साथ",
     sidebarLayoutSplit: "अलग-अलग",
     sidebarLayoutCombined: "संयुक्त",
+    pinSidebars: "साइडबार पिन करें",
+    pinSidebarsDesc: "इमर्सिव विंडो लिखते समय साइडबार को खुला रखती है",
     showWordCount: "शब्द संख्या दिखाएँ",
     showWordCountDesc: "शीर्षक पट्टी में शब्द और अक्षर की संख्या",
     bodyFont: "फ़ॉन्ट",

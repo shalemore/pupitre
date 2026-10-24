@@ -158,6 +158,8 @@ export const enUS = {
     sidebarLayoutDesc: "Folder and outline on opposite sides, or together in one sidebar",
     sidebarLayoutSplit: "Split",
     sidebarLayoutCombined: "Combined",
+    pinSidebars: "Pin Sidebars",
+    pinSidebarsDesc: "An immersive window keeps its sidebars open while you write",
     showWordCount: "Show Word Count",
     showWordCountDesc: "Word and character counts in the title bar",
     bodyFont: "Font",

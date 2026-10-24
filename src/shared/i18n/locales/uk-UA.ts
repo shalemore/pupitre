@@ -166,6 +166,8 @@ export const ukUA = {
     sidebarLayoutDesc: "Тека й структура з протилежних боків або разом в одній панелі",
     sidebarLayoutSplit: "Окремо",
     sidebarLayoutCombined: "Разом",
+    pinSidebars: "Закріпити бічні панелі",
+    pinSidebarsDesc: "Занурювальне вікно не приховує бічні панелі під час набору",
     showWordCount: "Показувати кількість слів",
     showWordCountDesc: "Кількість слів і символів у рядку заголовка",
     bodyFont: "Шрифт",

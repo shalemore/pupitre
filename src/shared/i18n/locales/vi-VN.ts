@@ -161,6 +161,8 @@ export const viVN = {
     sidebarLayoutDesc: "Thư mục và dàn ý ở hai bên đối diện, hoặc gộp chung trong một thanh bên",
     sidebarLayoutSplit: "Tách riêng",
     sidebarLayoutCombined: "Gộp chung",
+    pinSidebars: "Ghim thanh bên",
+    pinSidebarsDesc: "Cửa sổ đắm chìm giữ các thanh bên mở khi bạn viết",
     showWordCount: "Hiện số từ",
     showWordCountDesc: "Số từ và số ký tự trên thanh tiêu đề",
     bodyFont: "Phông chữ",

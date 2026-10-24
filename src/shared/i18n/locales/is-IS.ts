@@ -163,6 +163,8 @@ export const isIS = {
     sidebarLayoutDesc: "Mappa og yfirlit sitt hvorum megin, eða saman í einni hliðarstiku",
     sidebarLayoutSplit: "Skipt",
     sidebarLayoutCombined: "Sameinað",
+    pinSidebars: "Festa hliðarstikur",
+    pinSidebarsDesc: "Sökkvandi gluggi heldur hliðarstikum opnum meðan þú skrifar",
     showWordCount: "Sýna orðafjölda",
     showWordCountDesc: "Fjöldi orða og stafa í titilstikunni",
     bodyFont: "Leturgerð",

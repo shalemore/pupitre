@@ -167,6 +167,8 @@ export const plPL = {
     sidebarLayoutDesc: "Folder i konspekt po przeciwnych stronach lub razem w jednym pasku bocznym",
     sidebarLayoutSplit: "Rozdzielony",
     sidebarLayoutCombined: "Połączony",
+    pinSidebars: "Przypnij paski boczne",
+    pinSidebarsDesc: "Okno immersyjne zostawia paski boczne otwarte podczas pisania",
     showWordCount: "Pokaż liczbę słów",
     showWordCountDesc: "Liczba słów i znaków na pasku tytułu",
     bodyFont: "Czcionka",

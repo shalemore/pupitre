@@ -133,6 +133,18 @@ export const AppearanceSection: Component = () => (
     </SettingField>
 
     <SettingField
+      name="sidebarPinned"
+      title={t().settings.pinSidebars}
+      description={t().settings.pinSidebarsDesc}
+    >
+      <Switch
+        checked={settings().sidebarPinned}
+        onChange={(sidebarPinned) => void updateSettings({ sidebarPinned })}
+        aria-label={t().settings.pinSidebars}
+      />
+    </SettingField>
+
+    <SettingField
       name="showWordCount"
       title={t().settings.showWordCount}
       description={t().settings.showWordCountDesc}

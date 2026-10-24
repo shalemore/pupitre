@@ -159,6 +159,8 @@ export const koKR = {
     sidebarLayoutDesc: "폴더와 개요를 양쪽에 나누거나 하나의 사이드바에 함께 표시합니다",
     sidebarLayoutSplit: "분리",
     sidebarLayoutCombined: "통합",
+    pinSidebars: "사이드바 고정",
+    pinSidebarsDesc: "몰입형 창에서 글을 쓰는 동안에도 사이드바를 열어 둡니다",
     showWordCount: "단어 수 표시",
     showWordCountDesc: "제목 표시줄에 단어 수와 글자 수 표시",
     bodyFont: "글꼴",

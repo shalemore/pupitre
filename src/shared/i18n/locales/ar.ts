@@ -176,6 +176,8 @@ export const ar = {
     sidebarLayoutDesc: "المجلد والمخطط على جانبين متقابلين، أو معًا في شريط جانبي واحد",
     sidebarLayoutSplit: "منفصل",
     sidebarLayoutCombined: "مدمج",
+    pinSidebars: "تثبيت الأشرطة الجانبية",
+    pinSidebarsDesc: "تُبقي النافذة الغامرة الأشرطة الجانبية مفتوحة أثناء الكتابة",
     showWordCount: "إظهار عدد الكلمات",
     showWordCountDesc: "عدد الكلمات والأحرف في شريط العنوان",
     bodyFont: "الخط",

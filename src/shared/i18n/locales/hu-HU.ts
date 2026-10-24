@@ -163,6 +163,8 @@ export const huHU = {
     sidebarLayoutDesc: "A mappa és a vázlat átellenes oldalakon, vagy együtt egyetlen oldalsávban",
     sidebarLayoutSplit: "Szétválasztott",
     sidebarLayoutCombined: "Egyesített",
+    pinSidebars: "Oldalsávok rögzítése",
+    pinSidebarsDesc: "A magával ragadó ablak írás közben nyitva tartja az oldalsávokat",
     showWordCount: "Szószám megjelenítése",
     showWordCountDesc: "Szavak és karakterek száma a címsorban",
     bodyFont: "Betűtípus",

@@ -162,6 +162,8 @@ export const daDK = {
     sidebarLayoutDesc: "Mappe og disposition på hver sin side, eller samlet i én sidebjælke",
     sidebarLayoutSplit: "Delt",
     sidebarLayoutCombined: "Samlet",
+    pinSidebars: "Fastgør sidebjælker",
+    pinSidebarsDesc: "Et fordybende vindue holder sidebjælkerne åbne, mens du skriver",
     showWordCount: "Vis ordantal",
     showWordCountDesc: "Antal ord og tegn i titellinjen",
     bodyFont: "Skrifttype",

@@ -162,6 +162,8 @@ export const fiFI = {
     sidebarLayoutDesc: "Kansio ja jäsennys vastakkaisilla puolilla tai yhdessä sivupalkissa",
     sidebarLayoutSplit: "Jaettu",
     sidebarLayoutCombined: "Yhdistetty",
+    pinSidebars: "Kiinnitä sivupalkit",
+    pinSidebarsDesc: "Immersiivinen ikkuna pitää sivupalkit auki kirjoittaessasi",
     showWordCount: "Näytä sanamäärä",
     showWordCountDesc: "Sanojen ja merkkien määrä otsikkorivillä",
     bodyFont: "Kirjasin",

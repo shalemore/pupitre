@@ -164,6 +164,8 @@ export const trTR = {
       "Klasör ve ana hat karşılıklı kenarlarda ya da tek bir kenar çubuğunda birlikte",
     sidebarLayoutSplit: "Ayrı",
     sidebarLayoutCombined: "Birleşik",
+    pinSidebars: "Kenar Çubuklarını Sabitle",
+    pinSidebarsDesc: "Sürükleyici bir pencere, siz yazarken kenar çubuklarını açık tutar",
     showWordCount: "Sözcük Sayısını Göster",
     showWordCountDesc: "Başlık çubuğunda sözcük ve karakter sayısı",
     bodyFont: "Yazı Tipi",
