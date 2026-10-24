@@ -3,6 +3,8 @@ import { desktop, isMacOS } from "@/lib/desktop";
 
 /** Distance from the top and the side edges of the window at which hidden chrome comes back. */
 const TOP_EDGE = 48;
+/** Over a sidebar only this thin strip brings the title bar back, which would push the sidebar's own controls away from the pointer. */
+const TOP_EDGE_OVER_SIDEBAR = 6;
 const SIDE_EDGE = 16;
 
 /**
@@ -49,7 +51,11 @@ export function createImmersiveChrome(canFold: () => boolean, sidebarsPinned: ()
       if (!(event.target instanceof Element)) return;
       const fromStart = document.dir === "rtl" ? window.innerWidth - event.clientX : event.clientX;
       const fromEnd = window.innerWidth - fromStart;
-      setNearTop(event.clientY < TOP_EDGE || event.target.closest(".app-title-bar") !== null);
+      const overSidebar = event.target.closest("[data-sidebar]") !== null;
+      setNearTop(
+        event.clientY < (overSidebar ? TOP_EDGE_OVER_SIDEBAR : TOP_EDGE) ||
+          event.target.closest(".app-title-bar") !== null,
+      );
       setNearStart(
         fromStart < SIDE_EDGE || event.target.closest('[data-sidebar="start"]') !== null,
       );

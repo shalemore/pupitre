@@ -37,6 +37,8 @@ export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
 
   return (
     <div
+      // The resize handle belongs to the sidebar as far as the immersive window's hover goes
+      data-sidebar={props.side}
       inert={!props.shown}
       style={{ width: props.shown ? `${props.width}px` : "0px" }}
       class={cn(
@@ -81,12 +83,10 @@ export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
 };
 
 const SidebarFrame: Component<{
-  side: SidebarSide;
   class?: string | undefined;
   children: JSX.Element;
 }> = (props) => (
   <aside
-    data-sidebar={props.side}
     class={cn(
       "flex print:hidden flex-col bg-surface-0 select-none shrink-0 text-xs size-full",
       props.class,
@@ -144,7 +144,7 @@ export const SidebarPanel: Component<
     children: JSX.Element;
   } & PinProps
 > = (props) => (
-  <SidebarFrame side={props.side} class={props.class}>
+  <SidebarFrame class={props.class}>
     <SidebarTitle title={props.title} pinned={props.pinned} onPinnedChange={props.onPinnedChange} />
     <ScrollView class="flex-1">{props.children}</ScrollView>
   </SidebarFrame>
@@ -167,7 +167,7 @@ interface SidebarProps extends PinProps {
 export const Sidebar: Component<SidebarProps> = (props) => {
   const both = () => props.hasOutline && props.hasFolder;
   return (
-    <SidebarFrame side="start" class={props.class}>
+    <SidebarFrame class={props.class}>
       <Show when={both() || props.onPinnedChange}>
         <div class="m-2 mb-0 flex items-center justify-end gap-1">
           <Show when={both()}>
