@@ -4,12 +4,20 @@
 
 <h1 align="center">Pupitre</h1>
 
+<p align="center"><em>pupitre, French: the sloped desk where a professor lays out their notes before speaking.</em></p>
+
 [![CI](https://github.com/shalemore/pupitre/actions/workflows/ci.yml/badge.svg)](https://github.com/shalemore/pupitre/actions/workflows/ci.yml) [![License](https://img.shields.io/github/license/shalemore/pupitre)](LICENSE)
+
+![Pupitre editing a French, a Russian and an Arabic document](docs/banner.png)
 
 A cross-platform Markdown editor. Formatting is rendered while typing, and the syntax under the cursor stays visible and editable.
 
 - **Everything renders.** GFM, front matter, GitHub alerts, math and chemistry formulas, Mermaid diagrams, footnotes, emoji, highlights, sub- and superscripts, and inline HTML.
 - **Themes are CSS.** Each has a light and a dark side, and any two can be paired.
+
+<p align="center">
+  <img src="docs/preferences.png" width="450" alt="Preferences in dark mode" />
+</p>
 
 ## Install
 
