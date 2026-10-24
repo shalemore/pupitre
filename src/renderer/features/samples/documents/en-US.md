@@ -90,7 +90,7 @@ Themes ship with the app: each one is a folder in `src/renderer/themes/<name>/` 
 
 ### Text
 
-**Bold**, _italic_, ~~strikethrough~~, `inline code`, [links](https://commonmark.org), H~2~O, x^2^, ==highlights==, :tada: and <kbd>Esc</kbd>. Inline HTML is rendered when it is a complete element and shown as source otherwise.
+**Bold**, _italic_, ~~strikethrough~~, `inline code`, [links](https://commonmark.org), H~2~O, x^2^, ==highlights==, :tada: and <kbd>Esc</kbd>. Inline HTML is rendered when it is a complete element and shown as source otherwise. A paragraph that only says `[TOC]` becomes a list of the document's headings.
 
 > A quote.
 >

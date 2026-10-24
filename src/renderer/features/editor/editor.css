@@ -441,6 +441,16 @@
     white-space: pre-wrap;
   }
 
+  .md-toc {
+    margin: 0;
+    padding-block: 0.5em;
+    list-style: none;
+
+    .md-link {
+      cursor: pointer;
+    }
+  }
+
   .md-math-source {
     font-family: var(--font-mono);
     font-size: 0.875em;

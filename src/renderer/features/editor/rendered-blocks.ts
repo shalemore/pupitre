@@ -2,6 +2,7 @@ import { syntaxTree } from "@codemirror/language";
 import { type EditorState, type Extension, type Range, StateField } from "@codemirror/state";
 import { Decoration, type DecorationSet, EditorView, type WidgetType } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
+import { collectHeadings } from "./document-structure";
 import { detailsSection, SummaryWidget, toggledDetails, toggleDetails } from "./details";
 import { HtmlBlockWidget, isRenderableHtml } from "./html";
 import { documentBaseUrl } from "./images";
@@ -10,9 +11,10 @@ import { MATH_LANGUAGE, MathWidget } from "./math";
 import { diagramTheme, MermaidWidget } from "./mermaid";
 import { TableWidget, tableCursor } from "./table";
 import { readTable } from "./table-model";
+import { TOC_MARKER, TocWidget } from "./toc";
 
 /**
- * Blocks that are shown rendered (tables, display math, diagrams, HTML, `<details>`), with the same rule as the live preview:
+ * Blocks that are shown rendered (tables, display math, diagrams, HTML, `<details>`, `[TOC]`), with the same rule as the live preview:
  * away from the selection the block is replaced by its rendering; once a selection touches it, its
  * source is shown with the rendering under it. Replacing whole lines needs block decorations,
  * which CodeMirror only takes from a state field.
@@ -26,6 +28,9 @@ function blockWidget(state: EditorState, node: SyntaxNode): WidgetType | undefin
     child ? state.sliceDoc(child.from, child.to) : "";
   if (node.name === "Table") {
     return new TableWidget(state.sliceDoc(node.from, node.to), readTable(state, node));
+  }
+  if (node.name === "Paragraph") {
+    return TOC_MARKER.test(text(node)) ? new TocWidget(collectHeadings(state)) : undefined;
   }
   if (node.name === "HTMLBlock") {
     const source = text(node);
