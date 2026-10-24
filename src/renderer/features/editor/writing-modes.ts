@@ -20,17 +20,26 @@ const FOCUS_BLOCK =
 
 const currentLine = Decoration.line({ class: "is-current" });
 
+/** The block that focus mode treats as one unit around `pos`, or just its line. */
+function blockAt(state: EditorState, pos: number, side: -1 | 1): { from: number; to: number } {
+  for (let node = syntaxTree(state).resolveInner(pos, side); node.parent; node = node.parent) {
+    if (FOCUS_BLOCK.test(node.name)) return { from: node.from, to: node.to };
+  }
+  const { from } = state.doc.lineAt(pos);
+  return { from, to: from };
+}
+
+/** The blocks the selection touches stay in focus, not just the one at its head. */
 function currentBlock(view: EditorView): DecorationSet {
   const { state } = view;
-  const head = state.selection.main.head;
-  let from = state.doc.lineAt(head).from;
-  let to = from;
-  for (let node = syntaxTree(state).resolveInner(head, -1); node.parent; node = node.parent) {
-    if (FOCUS_BLOCK.test(node.name)) {
-      ({ from, to } = node);
-      break;
-    }
-  }
+  const { from: start, to: end, empty } = state.selection.main;
+  const first = blockAt(state, start, empty ? -1 : 1);
+  // A selection that ends at the start of a line, as a triple-click leaves it, stops short of that line
+  const last = empty
+    ? first
+    : blockAt(state, state.doc.lineAt(end).from === end ? end - 1 : end, -1);
+  const from = first.from;
+  const to = Math.max(first.to, last.to);
   const decorations: Range<Decoration>[] = [];
   for (let pos = from; pos <= to;) {
     const line = state.doc.lineAt(pos);
