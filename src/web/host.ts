@@ -115,12 +115,9 @@ window.addEventListener("storage", (event) => {
   settingsFile = readSettingsFile();
   publishSettings();
 });
-const commands = new BroadcastChannel("pupitre");
-commands.addEventListener("message", (event) => emit("app:command", event.data));
+// The preferences window has nothing to ask of the page it was opened from
 function dispatch(command: AppCommand): void {
-  // oxlint-disable-next-line unicorn/require-post-message-target-origin -- a BroadcastChannel has no target origin
-  if (isSettingsWindow) commands.postMessage(command);
-  else emit("app:command", command);
+  if (!isSettingsWindow) emit("app:command", command);
 }
 
 // Files: a small folder in memory
