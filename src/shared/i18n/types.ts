@@ -209,6 +209,10 @@ export interface TranslationSchema {
     readonly animationsOff: string;
     readonly showOutline: string;
     readonly showOutlineDesc: string;
+    readonly sidebarLayout: string;
+    readonly sidebarLayoutDesc: string;
+    readonly sidebarLayoutSplit: string;
+    readonly sidebarLayoutCombined: string;
     readonly showWordCount: string;
     readonly showWordCountDesc: string;
     readonly bodyFont: string;

@@ -25,6 +25,8 @@ export const settingsSchema = z.object({
   /** Read when a window is created, so a change applies to windows opened afterwards. */
   windowStyle: z.enum(["classic", "immersive"]).catch("classic"),
   sidebarVisible: z.boolean().catch(true),
+  /** Folder and outline in two sidebars, one at each edge, or as tabs of one sidebar. */
+  sidebarLayout: z.enum(["split", "combined"]).catch("split"),
   showWordCount: z.boolean().catch(true),
   focusMode: z.boolean().catch(false),
   typewriterMode: z.boolean().catch(false),

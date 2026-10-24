@@ -155,6 +155,11 @@ export const itIT = {
     animationsOff: "Disattivate",
     showOutline: "Mostra struttura",
     showOutlineDesc: "Titoli del documento in una barra laterale",
+    sidebarLayout: "Layout della barra laterale",
+    sidebarLayoutDesc:
+      "Cartella e struttura su lati opposti, oppure insieme in un'unica barra laterale",
+    sidebarLayoutSplit: "Separato",
+    sidebarLayoutCombined: "Combinato",
     showWordCount: "Mostra conteggio parole",
     showWordCountDesc: "Parole e caratteri nella barra del titolo",
     bodyFont: "Carattere",

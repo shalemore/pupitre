@@ -117,6 +117,22 @@ export const AppearanceSection: Component = () => (
     </SettingField>
 
     <SettingField
+      name="sidebarLayout"
+      title={t().settings.sidebarLayout}
+      description={t().settings.sidebarLayoutDesc}
+    >
+      <Select<Settings["sidebarLayout"]>
+        value={settings().sidebarLayout}
+        onChange={(sidebarLayout) => void updateSettings({ sidebarLayout })}
+        options={[
+          { value: "split", label: t().settings.sidebarLayoutSplit },
+          { value: "combined", label: t().settings.sidebarLayoutCombined },
+        ]}
+        aria-label={t().settings.sidebarLayout}
+      />
+    </SettingField>
+
+    <SettingField
       name="showWordCount"
       title={t().settings.showWordCount}
       description={t().settings.showWordCountDesc}

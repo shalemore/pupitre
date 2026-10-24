@@ -23,7 +23,7 @@ import type { OutlineHeading } from "@/features/editor/document-structure";
 import { FolderTree } from "@/features/folder/folder-tree";
 import { MenuBar } from "@/features/menu/menu-bar";
 import { OutlineList } from "@/features/outline/outline-list";
-import { Sidebar, type SidebarMode } from "@/features/sidebar/sidebar";
+import { Sidebar, SidebarPanel, SidebarSlot, type SidebarMode } from "@/features/sidebar/sidebar";
 import { WelcomeScreen } from "@/features/welcome/welcome-screen";
 import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
@@ -58,14 +58,37 @@ export const MainWindow: Component = () => {
     }
     return doc?.folder ?? dropped;
   });
-  const sidebarShown = () =>
+  const split = () => settings().sidebarLayout === "split";
+  // Split, the folder has its own sidebar at the start edge and the outline one at the end edge; combined, one sidebar shows either
+  const startSidebarShown = () =>
     settings().sidebarVisible &&
-    (session.activeDocument() !== undefined || folderRoot() !== undefined) &&
+    (split()
+      ? folderRoot() !== undefined
+      : session.activeDocument() !== undefined || folderRoot() !== undefined) &&
     chrome.sidebarVisible();
+  const endSidebarShown = () =>
+    settings().sidebarVisible &&
+    session.activeDocument() !== undefined &&
+    chrome.endSidebarVisible();
   const sidebarMode = (): SidebarMode => {
     if (session.activeDocument() === undefined) return "folder";
     return folderRoot() === undefined ? "outline" : preferredMode();
   };
+
+  const outlineList = () => (
+    <OutlineList
+      headings={outline()}
+      activeIndex={activeHeading()}
+      onSelectHeading={(heading) => editor?.scrollTo(heading.pos)}
+    />
+  );
+  const folderTree = (root: string) => (
+    <FolderTree
+      root={root}
+      activePath={session.activeDocument()?.path}
+      onOpenFile={(path) => session.openPath(path, false)}
+    />
+  );
 
   createEffect(() => {
     document.title = session.activeDocument() ? `${session.fileName()} - Pupitre` : "Pupitre";
@@ -244,45 +267,43 @@ export const MainWindow: Component = () => {
         onWheel={() => chrome.hide()}
         class={cn(
           "flex-1 min-h-0 flex overflow-hidden print:block print:overflow-visible",
-          // The card keeps an even gap to the window edges, the title bar and the sidebar
-          immersive() && "gap-2 p-2 ps-0 print:p-0",
+          // The card keeps an even gap to the window edges, the title bar and the sidebars
+          immersive() && cn("gap-2 py-2 ps-0 print:p-0", split() ? "pe-0" : "pe-2"),
         )}
       >
-        {/* Collapsing animates the width, and the card takes the freed room; inert keeps the hidden sidebar out of the tab order */}
-        <div
-          inert={!sidebarShown()}
-          class={cn(
-            "shrink-0 overflow-hidden transition-[width] duration-sheet print:hidden",
-            sidebarShown() ? "w-64" : "w-0",
-          )}
-        >
-          <Sidebar
-            class={cn(!immersive() && "border-e border-border")}
-            mode={sidebarMode()}
-            hasOutline={session.activeDocument() !== undefined}
-            hasFolder={folderRoot() !== undefined}
-            folderName={fileNameOf(folderRoot() ?? "")}
-            onModeChange={setPreferredMode}
-            outline={
-              <OutlineList
-                headings={outline()}
-                activeIndex={activeHeading()}
-                onSelectHeading={(heading) => editor?.scrollTo(heading.pos)}
+        <SidebarSlot shown={startSidebarShown()}>
+          <Show
+            when={split()}
+            fallback={
+              <Sidebar
+                class={cn(!immersive() && "border-e border-border")}
+                mode={sidebarMode()}
+                hasOutline={session.activeDocument() !== undefined}
+                hasFolder={folderRoot() !== undefined}
+                folderName={fileNameOf(folderRoot() ?? "")}
+                onModeChange={setPreferredMode}
+                outline={outlineList()}
+                folder={
+                  <Show when={folderRoot()} keyed>
+                    {folderTree}
+                  </Show>
+                }
               />
             }
-            folder={
-              <Show when={folderRoot()} keyed>
-                {(root) => (
-                  <FolderTree
-                    root={root}
-                    activePath={session.activeDocument()?.path}
-                    onOpenFile={(path) => session.openPath(path, false)}
-                  />
-                )}
-              </Show>
-            }
-          />
-        </div>
+          >
+            <Show when={folderRoot()} keyed>
+              {(root) => (
+                <SidebarPanel
+                  side="start"
+                  title={fileNameOf(root)}
+                  class={cn(!immersive() && "border-e border-border")}
+                >
+                  {folderTree(root)}
+                </SidebarPanel>
+              )}
+            </Show>
+          </Show>
+        </SidebarSlot>
 
         {/* An immersive window shows the document as a card on the window background, which also holds the title bar and the sidebar */}
         <div
@@ -341,6 +362,18 @@ export const MainWindow: Component = () => {
             )}
           </Show>
         </div>
+
+        <Show when={split()}>
+          <SidebarSlot shown={endSidebarShown()}>
+            <SidebarPanel
+              side="end"
+              title={t().sidebar.outline}
+              class={cn(!immersive() && "border-s border-border")}
+            >
+              {outlineList()}
+            </SidebarPanel>
+          </SidebarSlot>
+        </Show>
       </div>
     </div>
   );

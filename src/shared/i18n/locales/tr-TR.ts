@@ -159,6 +159,11 @@ export const trTR = {
     animationsOff: "Kapalı",
     showOutline: "Anahattı Göster",
     showOutlineDesc: "Belgenin başlıklarını yan çubukta göster",
+    sidebarLayout: "Kenar Çubuğu Düzeni",
+    sidebarLayoutDesc:
+      "Klasör ve ana hat karşılıklı kenarlarda ya da tek bir kenar çubuğunda birlikte",
+    sidebarLayoutSplit: "Ayrı",
+    sidebarLayoutCombined: "Birleşik",
     showWordCount: "Sözcük Sayısını Göster",
     showWordCountDesc: "Başlık çubuğunda sözcük ve karakter sayısı",
     bodyFont: "Yazı Tipi",

@@ -157,6 +157,11 @@ export const idID = {
     animationsOff: "Nonaktif",
     showOutline: "Tampilkan kerangka",
     showOutlineDesc: "Judul dokumen di bilah sisi",
+    sidebarLayout: "Tata Letak Bilah Samping",
+    sidebarLayoutDesc:
+      "Folder dan kerangka di sisi berlawanan, atau bersama dalam satu bilah samping",
+    sidebarLayoutSplit: "Terpisah",
+    sidebarLayoutCombined: "Gabungan",
     showWordCount: "Tampilkan jumlah kata",
     showWordCountDesc: "Jumlah kata dan karakter di bilah judul",
     bodyFont: "Font",

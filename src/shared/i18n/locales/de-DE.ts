@@ -155,6 +155,11 @@ export const deDE = {
     animationsOff: "Aus",
     showOutline: "Gliederung anzeigen",
     showOutlineDesc: "Überschriften des Dokuments in einer Seitenleiste",
+    sidebarLayout: "Seitenleisten-Layout",
+    sidebarLayoutDesc:
+      "Ordner und Gliederung auf gegenüberliegenden Seiten oder zusammen in einer Seitenleiste",
+    sidebarLayoutSplit: "Getrennt",
+    sidebarLayoutCombined: "Zusammen",
     showWordCount: "Wortanzahl anzeigen",
     showWordCountDesc: "Wörter und Zeichen in der Titelleiste",
     bodyFont: "Schriftart",
