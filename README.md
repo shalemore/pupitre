@@ -13,7 +13,12 @@ A cross-platform Markdown editor. Formatting is rendered while typing, and the s
 
 ## Install
 
-Download it from [Releases](https://github.com/shalemore/pupitre/releases).
+Download it from [Releases](https://github.com/shalemore/pupitre/releases), or on Windows install it with [Scoop](https://scoop.sh):
+
+```sh
+scoop bucket add shalemore https://github.com/shalemore/scoop-bucket
+scoop install pupitre
+```
 
 ## Features
 

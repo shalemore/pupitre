@@ -93,3 +93,38 @@ jobs:
 
           # Publish the draft release created by electron-builder with the generated notes
           gh release edit "v$VERSION" --draft=false --notes-file notes.md
+
+  # Scoop unpacks the released installer instead of running it, see scripts/scoop-manifest.mjs. The
+  # bucket needs the secret SCOOP_BUCKET_TOKEN, see CONTRIBUTING.md; without it the release is still
+  # published.
+  scoop:
+    needs: [check, publish-release]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      VERSION: ${{ needs.check.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Add the Scoop manifest to the release
+        run: |
+          gh release download "v$VERSION" --pattern '*-win-x64.exe' --dir dist
+          node scripts/scoop-manifest.mjs dist/*-win-x64.exe dist
+          gh release upload "v$VERSION" dist/*.scoop.json dist/*.sha256
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      # The workflow token cannot reach another repository, so this uses its own token. The bucket
+      # is the repository called scoop-bucket of the same owner, unless the repository variable
+      # SCOOP_BUCKET names another one.
+      - name: Ask the Scoop bucket to import the manifest
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::notice::SCOOP_BUCKET_TOKEN is not set, so the Scoop bucket was not updated"
+            exit 0
+          fi
+          gh workflow run import-manifest.yml --repo "$BUCKET" -f repo="$GITHUB_REPOSITORY" -f tag="v$VERSION"
+        env:
+          GH_TOKEN: ${{ secrets.SCOOP_BUCKET_TOKEN }}
+          BUCKET: ${{ vars.SCOOP_BUCKET || format('{0}/scoop-bucket', github.repository_owner) }}

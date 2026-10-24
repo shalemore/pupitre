@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { app, BrowserWindow, Notification } from "electron";
 import electronUpdater from "electron-updater";
 import type { UpdateStatus } from "@shared/desktop-api";
@@ -24,6 +26,14 @@ function releaseNotes(
   if (typeof notes === "string") return notes;
   return (notes ?? []).flatMap(({ note }) => (note === null ? [] : [note])).join("\n\n");
 }
+
+// Only the Windows installer writes an uninstaller next to the executable. A copy without one was
+// unpacked by a package manager such as Scoop, and the installer an update would run is not what
+// that package manager installed.
+export const canSelfUpdate =
+  !app.isPackaged ||
+  process.platform !== "win32" ||
+  existsSync(join(dirname(app.getPath("exe")), `Uninstall ${app.getName()}.exe`));
 
 export function setupUpdater(): void {
   autoUpdater.autoDownload = false;
@@ -68,7 +78,7 @@ export async function checkForUpdates(): Promise<void> {
 
 /** Checks for updates once in the background at startup if the setting allows it; failures stay silent. */
 export function checkForUpdatesOnStartup(): void {
-  if (!app.isPackaged || !getSettings().autoCheckUpdates) return;
+  if (!app.isPackaged || !canSelfUpdate || !getSettings().autoCheckUpdates) return;
   notifyWhenAvailable = true;
   autoUpdater.checkForUpdates().catch(() => {
     notifyWhenAvailable = false;

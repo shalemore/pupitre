@@ -1,6 +1,6 @@
 import type { DefaultAppResult } from "@shared/desktop-api";
 import type { Settings } from "@shared/settings";
-import { createSignal, type Component } from "solid-js";
+import { createSignal, Show, type Component } from "solid-js";
 import { Button, Select, SettingRow, Switch } from "@/components/ui";
 import { type LanguageSetting, SUPPORTED_LOCALES, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
@@ -85,17 +85,19 @@ export const GeneralSection: Component = () => (
       />
     </SettingField>
 
-    <SettingField
-      name="autoCheckUpdates"
-      title={t().settings.autoCheckUpdates}
-      description={t().settings.autoCheckUpdatesDesc}
-    >
-      <Switch
-        checked={settings().autoCheckUpdates}
-        onChange={(autoCheckUpdates) => void updateSettings({ autoCheckUpdates })}
-        aria-label={t().settings.autoCheckUpdates}
-      />
-    </SettingField>
+    <Show when={desktop.initialState.canSelfUpdate}>
+      <SettingField
+        name="autoCheckUpdates"
+        title={t().settings.autoCheckUpdates}
+        description={t().settings.autoCheckUpdatesDesc}
+      >
+        <Switch
+          checked={settings().autoCheckUpdates}
+          onChange={(autoCheckUpdates) => void updateSettings({ autoCheckUpdates })}
+          aria-label={t().settings.autoCheckUpdates}
+        />
+      </SettingField>
+    </Show>
 
     <DefaultAppRow />
   </SettingsSection>

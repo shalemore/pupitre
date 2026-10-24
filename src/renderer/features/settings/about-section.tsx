@@ -1,5 +1,5 @@
 import { BookOpen, FolderOpen } from "lucide-solid";
-import type { Component } from "solid-js";
+import { Show, type Component } from "solid-js";
 import { Button, Input, Separator } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
@@ -16,7 +16,9 @@ export const AboutSection: Component = () => (
           {t().settings.version} {pkg.version} · Electron {desktop.versions.electron}
         </div>
       </div>
-      <UpdateButton />
+      <Show when={desktop.initialState.canSelfUpdate}>
+        <UpdateButton />
+      </Show>
     </div>
 
     <UpdateStatusPanel currentVersion={pkg.version} />

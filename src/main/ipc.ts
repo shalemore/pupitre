@@ -27,7 +27,13 @@ import { takeLaunchFile } from "./open-files";
 import { unwatchPath, watchPath } from "./path-watcher";
 import { addRecentFile, getRecentFiles, removeRecentFile } from "./recent-files";
 import { getSettings, getSettingsPath, resetSetting, updateSettings } from "./settings-store";
-import { checkForUpdates, downloadUpdate, getUpdateStatus, installUpdate } from "./updater";
+import {
+  canSelfUpdate,
+  checkForUpdates,
+  downloadUpdate,
+  getUpdateStatus,
+  installUpdate,
+} from "./updater";
 import {
   applyWindowColors,
   closeWithoutPrompt,
@@ -144,6 +150,7 @@ export function registerIpcHandlers(): void {
     const state: InitialState = {
       settings: getSettings(),
       settingsPath: getSettingsPath(),
+      canSelfUpdate,
       recentFiles: getRecentFiles(),
       captionSide: getCaptionSide(event.sender),
       launchFile: event.sender === getMainWindow()?.webContents ? takeLaunchFile() : undefined,

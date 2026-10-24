@@ -155,6 +155,8 @@ export interface RendererEvents {
 export interface InitialState {
   settings: Settings;
   settingsPath: string;
+  /** False for a copy that a package manager owns, which must not replace itself with the installer. */
+  canSelfUpdate: boolean;
   recentFiles: readonly string[];
   captionSide: CaptionSide | undefined;
   /** A file the system asked to open when Pupitre started; only given to the main window. */
