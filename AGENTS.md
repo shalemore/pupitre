@@ -166,6 +166,18 @@ only make code generation easier.
 - Commits follow Conventional Commits and are atomic: one logical change per commit. Never
   rewrite commits that have already been pushed.
 
+## Window Chrome
+
+- An immersive window folds its title bar and its sidebars away once the user types or scrolls, and
+  unfolds them while the pointer is near the top or near the edge they belong to
+  (`lib/immersive-chrome.ts`). Only that module decides this, from the pointer position and from
+  what is pinned; a control does not measure the pointer for it.
+- A control that hangs below the title bar and is used with the pointer below the top — the menu
+  bar today, a dropdown or a popover on the bar later — has to keep the bar out through
+  `titleBarPinned`, and anything hanging out of a sidebar through that sidebar's pin. Such a panel
+  sits past the 48 px that count as being near the top, so without the pin the bar folds away under
+  the pointer and leaves the panel floating, detached from the button it belongs to.
+
 ## Editor
 
 - The editor is [CodeMirror 6](https://codemirror.net) with `@codemirror/lang-markdown`. The
