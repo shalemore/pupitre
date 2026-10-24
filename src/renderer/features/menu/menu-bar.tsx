@@ -16,7 +16,7 @@ interface OpenMenu {
 
 interface MenuBarProps {
   /** Told whether a menu is open, so an immersive title bar can stay unfolded under it. */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange: (open: boolean) => void;
 }
 
 /**
@@ -53,14 +53,14 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
     const menus: Menus = await desktop.invoke("menu:items");
     if (request !== asked) return;
     setOpen({ menu, entries: menus[menu], anchor: button.getBoundingClientRect() });
-    props.onOpenChange?.(true);
+    props.onOpenChange(true);
   };
 
   const close = () => {
     cancelLeave();
     asked++;
     setOpen(undefined);
-    props.onOpenChange?.(false);
+    props.onOpenChange(false);
     previousFocus?.focus();
     previousFocus = undefined;
   };
