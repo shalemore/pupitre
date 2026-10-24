@@ -116,7 +116,7 @@ export const trTR = {
     zoomIn: "Yakınlaştır",
     zoomOut: "Uzaklaştır",
     resetZoom: "Yakınlaştırmayı Sıfırla",
-    toggleSidebar: "Anahattı Aç/Kapat",
+    toggleSidebar: "Kenar Çubuklarını Aç/Kapat",
     toggleTheme: "Temayı Değiştir",
     preferences: "Tercihler…",
     sampleDocument: "Örnek Markdown Belgesi",
@@ -156,7 +156,7 @@ export const trTR = {
     animationsDesc: "Geçişler ve yumuşak kaydırma",
     animationsOn: "Açık",
     animationsOff: "Kapalı",
-    showOutline: "Anahattı Göster",
+    showOutline: "Kenar Çubuklarını Göster",
     sidebarLayout: "Kenar Çubuğu Düzeni",
     sidebarLayoutDesc:
       "Klasör ve ana hat karşılıklı kenarlarda ya da tek bir kenar çubuğunda birlikte",

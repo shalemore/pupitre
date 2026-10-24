@@ -114,7 +114,7 @@ export const idID = {
     zoomIn: "Perbesar",
     zoomOut: "Perkecil",
     resetZoom: "Atur ulang perbesaran",
-    toggleSidebar: "Tampilkan/sembunyikan kerangka",
+    toggleSidebar: "Tampilkan/sembunyikan bilah samping",
     toggleTheme: "Ganti tema",
     preferences: "Preferensi...",
     sampleDocument: "Dokumen contoh Markdown",
@@ -154,7 +154,7 @@ export const idID = {
     animationsDesc: "Transisi dan gulir yang halus",
     animationsOn: "Aktif",
     animationsOff: "Nonaktif",
-    showOutline: "Tampilkan kerangka",
+    showOutline: "Tampilkan bilah samping",
     sidebarLayout: "Tata Letak Bilah Samping",
     sidebarLayoutDesc:
       "Folder dan kerangka di sisi berlawanan, atau bersama dalam satu bilah samping",

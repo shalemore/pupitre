@@ -27,7 +27,7 @@ Move the cursor into **bold text**, a `code span` or a [link](https://github.com
 | Code block / Math block      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | Table                        | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Find / Replace               | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
-| Outline                      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Sidebars                     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Focus mode / Typewriter mode | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Reset zoom                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | Preferences                  | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |

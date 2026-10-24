@@ -112,7 +112,7 @@ export const deDE = {
     zoomIn: "Vergrößern",
     zoomOut: "Verkleinern",
     resetZoom: "Zoom zurücksetzen",
-    toggleSidebar: "Gliederung ein-/ausblenden",
+    toggleSidebar: "Seitenleisten ein-/ausblenden",
     toggleTheme: "Design wechseln",
     preferences: "Einstellungen...",
     sampleDocument: "Markdown-Beispieldokument",
@@ -152,7 +152,7 @@ export const deDE = {
     animationsDesc: "Übergänge und weiches Scrollen",
     animationsOn: "An",
     animationsOff: "Aus",
-    showOutline: "Gliederung anzeigen",
+    showOutline: "Seitenleisten anzeigen",
     sidebarLayout: "Seitenleisten-Layout",
     sidebarLayoutDesc:
       "Ordner und Gliederung auf gegenüberliegenden Seiten oder zusammen in einer Seitenleiste",

@@ -112,7 +112,7 @@ export const itIT = {
     zoomIn: "Ingrandisci",
     zoomOut: "Riduci",
     resetZoom: "Reimposta zoom",
-    toggleSidebar: "Mostra/Nascondi struttura",
+    toggleSidebar: "Mostra/Nascondi le barre laterali",
     toggleTheme: "Cambia tema",
     preferences: "Preferenze...",
     sampleDocument: "Documento Markdown di esempio",
@@ -152,7 +152,7 @@ export const itIT = {
     animationsDesc: "Transizioni e scorrimento fluido",
     animationsOn: "Attive",
     animationsOff: "Disattivate",
-    showOutline: "Mostra struttura",
+    showOutline: "Mostra le barre laterali",
     sidebarLayout: "Layout della barra laterale",
     sidebarLayoutDesc:
       "Cartella e struttura su lati opposti, oppure insieme in un'unica barra laterale",
