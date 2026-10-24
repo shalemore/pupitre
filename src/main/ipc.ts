@@ -1,4 +1,3 @@
-import { isUtf8 } from "node:buffer";
 import { access, mkdir, readdir, readFile, stat, writeFile } from "node:fs/promises";
 import { basename, dirname, extname, join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -16,10 +15,12 @@ import {
   type InvokeChannels,
   type LineEnding,
   type OpenedDocument,
+  type TextEncoding,
   INITIAL_STATE_SYNC,
   type InitialState,
 } from "@shared/desktop-api";
 import { showAboutDialog } from "./about";
+import { decodeDocument, decodeWith, encodeDocument } from "./encoding";
 import { setAsDefaultMarkdownApp } from "./default-app";
 import { t } from "./i18n";
 import { clickMenuItem, menuSnapshot, setDocumentState } from "./menu";
@@ -92,12 +93,6 @@ async function saveImage(
   return [...folder.split(/[\\/]+/), name].map(encodeURIComponent).join("/");
 }
 
-/** Decodes a file as UTF-8 text; binary content (NUL bytes or invalid UTF-8) is rejected instead of being shown as garbage. */
-function decodeText(buffer: Buffer): string {
-  if (buffer.includes(0) || !isUtf8(buffer)) throw new Error("Not a UTF-8 text file");
-  return buffer.toString("utf8");
-}
-
 // One collator for every comparison: creating it per call is what makes localeCompare slow on large folders
 const nameCollator = new Intl.Collator(undefined, { numeric: true });
 
@@ -117,19 +112,22 @@ async function listFolder(path: string): Promise<FolderEntry[]> {
     );
 }
 
-/** Strips the UTF-8 BOM (not written back on save) and normalizes line endings to LF; the original line ending is restored on save. */
+/** Strips the BOM of a file (its encoding keeps it on save) and normalizes line endings to LF; the original line ending is restored on save. */
 function normalizeText(raw: string): string {
-  return raw.replace(/^﻿/, "").replaceAll("\r\n", "\n");
+  return raw.replace(/^\uFEFF/, "").replaceAll("\r\n", "\n");
 }
 
-async function readDocument(path: string): Promise<OpenedDocument> {
+/** Null when the user gave up on the encoding of a file that is not UTF-8. */
+async function readDocument(path: string, window: BrowserWindow): Promise<OpenedDocument | null> {
   try {
-    const raw = decodeText(await readFile(path));
+    const decoded = await decodeDocument(await readFile(path), path, window);
+    if (decoded === undefined) return null;
     addRecentFile(path);
     return {
       ...locate(path),
-      content: normalizeText(raw),
-      lineEnding: raw.includes("\r\n") ? "crlf" : "lf",
+      content: normalizeText(decoded.text),
+      lineEnding: decoded.text.includes("\r\n") ? "crlf" : "lf",
+      encoding: decoded.encoding,
     };
   } catch (error) {
     removeRecentFile(path);
@@ -138,21 +136,27 @@ async function readDocument(path: string): Promise<OpenedDocument> {
 }
 
 /** The text of a file as readDocument would give it, without touching the recent files; undefined when it is missing, not text, or larger than maxBytes. */
-async function peekDocument(path: string, maxBytes: number): Promise<string | undefined> {
+async function peekDocument(
+  path: string,
+  maxBytes: number,
+  encoding: TextEncoding,
+): Promise<string | undefined> {
   try {
     if ((await stat(path)).size > maxBytes) return undefined;
-    return normalizeText(decodeText(await readFile(path)));
+    return normalizeText(decodeWith(await readFile(path), encoding));
   } catch {
     return undefined;
   }
 }
 
-function writeDocument(path: string, content: string, lineEnding: LineEnding): Promise<void> {
-  return writeFile(
-    path,
-    lineEnding === "crlf" ? content.replaceAll("\n", "\r\n") : content,
-    "utf8",
-  );
+function writeDocument(
+  path: string,
+  content: string,
+  lineEnding: LineEnding,
+  encoding: TextEncoding,
+): Promise<void> {
+  const text = lineEnding === "crlf" ? content.replaceAll("\n", "\r\n") : content;
+  return writeFile(path, encodeDocument(text, encoding));
 }
 
 export function registerIpcHandlers(): void {
@@ -183,9 +187,9 @@ export function registerIpcHandlers(): void {
     });
     const [path] = filePaths;
     if (canceled || path === undefined) return null;
-    return readDocument(path);
+    return readDocument(path, senderWindow(event));
   });
-  handle("document:read", (_event, path) => readDocument(path));
+  handle("document:read", (event, path) => readDocument(path, senderWindow(event)));
   handle("folder:choose", async (event) => {
     const { canceled, filePaths } = await dialog.showOpenDialog(senderWindow(event), {
       properties: ["openDirectory"],
@@ -198,15 +202,17 @@ export function registerIpcHandlers(): void {
   handle("folder:unwatch", (event, path) => unwatchPath(event.sender, "folder:changed", path));
   handle("document:watch", (event, path) => watchPath(event.sender, "document:changed", path));
   handle("document:unwatch", (event, path) => unwatchPath(event.sender, "document:changed", path));
-  handle("document:peek", (_event, path, maxBytes) => peekDocument(path, maxBytes));
+  handle("document:peek", (_event, path, maxBytes, encoding) =>
+    peekDocument(path, maxBytes, encoding),
+  );
   handle("document:exists", (_event, path) =>
     access(path).then(
       () => true,
       () => false,
     ),
   );
-  handle("document:write", (_event, path, content, lineEnding) =>
-    writeDocument(path, content, lineEnding),
+  handle("document:write", (_event, path, content, lineEnding, encoding) =>
+    writeDocument(path, content, lineEnding, encoding),
   );
   handle("dialog:choose-save-path", async (event, suggestedName) => {
     const { canceled, filePath } = await dialog.showSaveDialog(senderWindow(event), {

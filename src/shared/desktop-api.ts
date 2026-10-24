@@ -15,11 +15,26 @@ export interface DocumentLocation {
 
 export type LineEnding = "lf" | "crlf";
 
+/**
+ * How a document is encoded on disk. Anything but UTF-8 comes back the same way it was read, so a
+ * file written by another editor is not converted behind the user's back.
+ */
+export type TextEncoding =
+  | "utf-8"
+  | "utf-8-bom"
+  | "utf-16le"
+  | "utf-16be"
+  | "gb18030"
+  | "big5"
+  | "shift_jis"
+  | "windows-1252";
+
 export interface OpenedDocument extends DocumentLocation {
   /** Content with every line ending normalized to
  LF; the file's original line ending is kept in lineEnding and restored on save. */
   content: string;
   lineEnding: LineEnding;
+  encoding: TextEncoding;
 }
 
 export interface FolderEntry {
@@ -103,7 +118,8 @@ export interface InvokeChannels {
   "document:open": () => OpenedDocument | null;
   /** Asks for a folder to show in the sidebar. */
   "folder:choose": () => string | null;
-  "document:read": (path: string) => OpenedDocument;
+  /** Null when the user gave up on choosing the encoding of a file that is not UTF-8. */
+  "document:read": (path: string) => OpenedDocument | null;
   /** Lists one level of a folder: directories first, then files, each sorted by name; hidden entries are left out. */
   "folder:list": (path: string) => FolderEntry[];
   /** Starts or stops telling the window, through folder:changed, when the entries of a listed folder change. */
@@ -112,10 +128,15 @@ export interface InvokeChannels {
   /** Starts or stops telling the window, through document:changed, when the file is modified. */
   "document:watch": (path: string) => void;
   "document:unwatch": (path: string) => void;
-  /** The normalized text of a file, or undefined when it is missing, not text, or larger than maxBytes. */
-  "document:peek": (path: string, maxBytes: number) => string | undefined;
+  /** The text of a file as the document with this encoding reads it, or undefined when it is missing, not text, or larger than maxBytes. */
+  "document:peek": (path: string, maxBytes: number, encoding: TextEncoding) => string | undefined;
   "document:exists": (path: string) => boolean;
-  "document:write": (path: string, content: string, lineEnding: LineEnding) => void;
+  "document:write": (
+    path: string,
+    content: string,
+    lineEnding: LineEnding,
+    encoding: TextEncoding,
+  ) => void;
   /** Asks where to save a document; the document is written with document:write afterwards. */
   "dialog:choose-save-path": (suggestedName: string) => DocumentLocation | null;
   /** Saves an image into the assets folder next to the document and returns a relative path ready for Markdown. */

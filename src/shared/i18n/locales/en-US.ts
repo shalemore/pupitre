@@ -68,6 +68,10 @@ export const enUS = {
     dontSave: "Don't Save",
     cancel: "Cancel",
     openFailed: "The file couldn't be opened.",
+    saveFailed: "The document couldn't be saved.",
+    encodingMessage: "This file is not UTF-8. Which encoding was it saved in?",
+    encodingCannotStore: (encoding: string) =>
+      `The text has characters that ${encoding} cannot store.`,
     externalChangeMessage: (fileName: string) => `${fileName} was changed by another program.`,
     externalChangeDetail:
       "Overwrite replaces the file with your version. Reload discards your changes and loads the file.",

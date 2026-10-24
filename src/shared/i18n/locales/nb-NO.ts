@@ -68,6 +68,10 @@ export const nbNO = {
     dontSave: "Ikke lagre",
     cancel: "Avbryt",
     openFailed: "Filen kunne ikke åpnes.",
+    saveFailed: "Dokumentet kunne ikke lagres.",
+    encodingMessage: "Filen er ikke UTF-8. Hvilken koding er den lagret med?",
+    encodingCannotStore: (encoding: string) =>
+      `Teksten inneholder tegn som ${encoding} ikke kan lagre.`,
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName} er endret av et annet program.`,
     externalChangeDetail:

@@ -137,7 +137,15 @@ const dropped = new Map<string, Promise<string>>();
 
 function opened(path: string): OpenedDocument {
   const folder = path.slice(0, path.lastIndexOf("/"));
-  return { path, folder, baseUrl: siteUrl, content: files.get(path) ?? "", lineEnding: "lf" };
+  return {
+    path,
+    folder,
+    baseUrl: siteUrl,
+    content: files.get(path) ?? "",
+    lineEnding: "lf",
+    // A browser hands over text that is already decoded, so the demo writes UTF-8
+    encoding: "utf-8",
+  };
 }
 
 function listFolder(path: string): FolderEntry[] {

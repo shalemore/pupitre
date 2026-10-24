@@ -72,6 +72,10 @@ export const ukUA = {
     dontSave: "Не зберігати",
     cancel: "Скасувати",
     openFailed: "Не вдалося відкрити файл.",
+    saveFailed: "Не вдалося зберегти документ.",
+    encodingMessage: "Цей файл не в UTF-8. У якому кодуванні його збережено?",
+    encodingCannotStore: (encoding: string) =>
+      `У тексті є символи, які ${encoding} не може зберегти.`,
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName}: файл змінено іншою програмою.`,
     externalChangeDetail:

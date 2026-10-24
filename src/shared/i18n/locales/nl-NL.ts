@@ -68,6 +68,10 @@ export const nlNL = {
     dontSave: "Niet opslaan",
     cancel: "Annuleren",
     openFailed: "Het bestand kon niet worden geopend.",
+    saveFailed: "Het document kon niet worden opgeslagen.",
+    encodingMessage: "Dit bestand is niet UTF-8. In welke codering is het opgeslagen?",
+    encodingCannotStore: (encoding: string) =>
+      `De tekst bevat tekens die ${encoding} niet kan opslaan.`,
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) =>
       `${fileName} is door een ander programma gewijzigd.`,

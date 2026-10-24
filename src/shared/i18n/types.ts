@@ -125,6 +125,10 @@ export interface TranslationSchema {
     readonly dontSave: string;
     readonly cancel: string;
     readonly openFailed: string;
+    readonly saveFailed: string;
+    /** Asked for a file that is neither UTF-8 nor UTF-16, which declares no encoding of its own. */
+    readonly encodingMessage: string;
+    readonly encodingCannotStore: (encoding: string) => string;
     readonly externalChangeMessage: (fileName: string) => string;
     readonly externalChangeDetail: string;
     readonly overwrite: string;

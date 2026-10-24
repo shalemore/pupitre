@@ -83,6 +83,9 @@ export const ar = {
     dontSave: "عدم الحفظ",
     cancel: "إلغاء",
     openFailed: "تعذّر فتح الملف.",
+    saveFailed: "تعذّر حفظ المستند.",
+    encodingMessage: "هذا الملف ليس بترميز UTF-8. ما الترميز الذي حُفظ به؟",
+    encodingCannotStore: (encoding: string) => `يحتوي النص على أحرف لا يستطيع ${encoding} حفظها.`,
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `تم تغيير ${fileName} بواسطة برنامج آخر.`,
     externalChangeDetail:

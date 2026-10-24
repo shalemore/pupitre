@@ -72,6 +72,10 @@ export const ruRU = {
     dontSave: "Не сохранять",
     cancel: "Отмена",
     openFailed: "Не удалось открыть файл.",
+    saveFailed: "Не удалось сохранить документ.",
+    encodingMessage: "Этот файл не в UTF-8. В какой кодировке он сохранён?",
+    encodingCannotStore: (encoding: string) =>
+      `В тексте есть символы, которые ${encoding} не может сохранить.`,
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName}: файл был изменён другой программой.`,
     externalChangeDetail:

@@ -68,6 +68,9 @@ export const hiIN = {
     dontSave: "सहेजें नहीं",
     cancel: "रद्द करें",
     openFailed: "फ़ाइल खोली नहीं जा सकी।",
+    saveFailed: "दस्तावेज़ सहेजा नहीं जा सका।",
+    encodingMessage: "यह फ़ाइल UTF-8 नहीं है। इसे किस एन्कोडिंग में सहेजा गया था?",
+    encodingCannotStore: (encoding: string) => `पाठ में ऐसे अक्षर हैं जिन्हें ${encoding} सहेज नहीं सकता।`,
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName} को किसी अन्य प्रोग्राम ने बदल दिया है।`,
     externalChangeDetail:

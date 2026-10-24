@@ -68,6 +68,10 @@ export const frFR = {
     dontSave: "Ne pas enregistrer",
     cancel: "Annuler",
     openFailed: "Impossible d'ouvrir le fichier.",
+    saveFailed: "Le document n'a pas pu être enregistré.",
+    encodingMessage: "Ce fichier n'est pas en UTF-8. Dans quel encodage a-t-il été enregistré ?",
+    encodingCannotStore: (encoding: string) =>
+      `Le texte contient des caractères que ${encoding} ne peut pas enregistrer.`,
     externalChangeMessage: (fileName: string) =>
       `${fileName} a été modifié par un autre programme.`,
     externalChangeDetail:

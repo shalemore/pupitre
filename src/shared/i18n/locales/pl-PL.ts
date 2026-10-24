@@ -72,6 +72,10 @@ export const plPL = {
     dontSave: "Nie zapisuj",
     cancel: "Anuluj",
     openFailed: "Nie udało się otworzyć pliku.",
+    saveFailed: "Nie udało się zapisać dokumentu.",
+    encodingMessage: "Ten plik nie jest w UTF-8. W jakim kodowaniu został zapisany?",
+    encodingCannotStore: (encoding: string) =>
+      `Tekst zawiera znaki, których ${encoding} nie może zapisać.`,
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) =>
       `Plik ${fileName} został zmieniony przez inny program.`,

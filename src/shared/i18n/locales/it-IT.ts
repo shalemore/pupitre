@@ -67,6 +67,10 @@ export const itIT = {
     dontSave: "Non salvare",
     cancel: "Annulla",
     openFailed: "Impossibile aprire il file.",
+    saveFailed: "Impossibile salvare il documento.",
+    encodingMessage: "Questo file non è UTF-8. Con quale codifica è stato salvato?",
+    encodingCannotStore: (encoding: string) =>
+      `Il testo contiene caratteri che ${encoding} non può salvare.`,
     externalChangeMessage: (fileName: string) =>
       `${fileName} è stato modificato da un altro programma.`,
     externalChangeDetail:

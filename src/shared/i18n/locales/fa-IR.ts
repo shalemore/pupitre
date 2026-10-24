@@ -69,6 +69,10 @@ export const faIR = {
     dontSave: "ذخیره نکن",
     cancel: "لغو",
     openFailed: "پرونده باز نشد.",
+    saveFailed: "سند ذخیره نشد.",
+    encodingMessage: "این پرونده UTF-8 نیست. با چه رمزگذاری‌ای ذخیره شده است؟",
+    encodingCannotStore: (encoding: string) =>
+      `متن نویسه‌هایی دارد که ${encoding} نمی‌تواند ذخیره کند.`,
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName} توسط برنامهٔ دیگری تغییر کرد.`,
     externalChangeDetail:

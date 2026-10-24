@@ -72,6 +72,10 @@ export const csCZ = {
     dontSave: "Neukládat",
     cancel: "Zrušit",
     openFailed: "Soubor nelze otevřít.",
+    saveFailed: "Dokument se nepodařilo uložit.",
+    encodingMessage: "Tento soubor není v UTF-8. V jakém kódování je uložen?",
+    encodingCannotStore: (encoding: string) =>
+      `Text obsahuje znaky, které ${encoding} neumí uložit.`,
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `Soubor ${fileName} byl změněn jiným programem.`,
     externalChangeDetail:

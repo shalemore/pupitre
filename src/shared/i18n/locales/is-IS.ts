@@ -69,6 +69,10 @@ export const isIS = {
     dontSave: "Vista ekki",
     cancel: "Hætta við",
     openFailed: "Ekki tókst að opna skrána.",
+    saveFailed: "Ekki tókst að vista skjalið.",
+    encodingMessage: "Þessi skrá er ekki UTF-8. Með hvaða stafatöflu var hún vistuð?",
+    encodingCannotStore: (encoding: string) =>
+      `Textinn inniheldur stafi sem ${encoding} getur ekki vistað.`,
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName} var breytt af öðru forriti.`,
     externalChangeDetail:

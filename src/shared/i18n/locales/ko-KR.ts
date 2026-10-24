@@ -67,6 +67,10 @@ export const koKR = {
     dontSave: "저장 안 함",
     cancel: "취소",
     openFailed: "파일을 열 수 없습니다.",
+    saveFailed: "문서를 저장할 수 없습니다.",
+    encodingMessage: "이 파일은 UTF-8이 아닙니다. 어떤 인코딩으로 저장되었나요?",
+    encodingCannotStore: (encoding: string) =>
+      `텍스트에 ${encoding}(으)로 저장할 수 없는 문자가 있습니다.`,
     externalChangeMessage: (fileName: string) =>
       `${fileName} 파일이 다른 프로그램에서 변경되었습니다.`,
     externalChangeDetail:

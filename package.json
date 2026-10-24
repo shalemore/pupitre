@@ -59,6 +59,7 @@
     "electron-builder": "^26.15.3",
     "electron-vite": "^6.0.0",
     "gemoji": "^8.1.0",
+    "iconv-lite": "^0.7.3",
     "lucide-solid": "^1.16.0",
     "mathjax-full": "^3.2.2",
     "mermaid": "^12.2.0",

@@ -1,4 +1,4 @@
-import type { LineEnding, OpenedDocument } from "@shared/desktop-api";
+import type { LineEnding, OpenedDocument, TextEncoding } from "@shared/desktop-api";
 import { debounce } from "@solid-primitives/scheduled";
 import { createEffect, createMemo, createSignal, on, onCleanup } from "solid-js";
 import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
@@ -18,6 +18,8 @@ export interface OpenDocument {
   markdown: string;
   /** The file's original line ending; new documents use LF. */
   lineEnding: LineEnding;
+  /** The file's encoding, which a save keeps; new documents use UTF-8. */
+  encoding: TextEncoding;
   isSample: boolean;
 }
 
@@ -87,10 +89,18 @@ export function createDocumentSession(
     const previousDiskContent = diskContent;
     diskContent = withTrailingNewline(markdown);
     try {
-      await desktop.invoke("document:write", path, diskContent, lineEndingFor(doc));
+      await desktop.invoke("document:write", path, diskContent, lineEndingFor(doc), doc.encoding);
     } catch (error) {
       diskContent = previousDiskContent;
-      throw error;
+      const message = error instanceof Error ? error.message : String(error);
+      await desktop.invoke(
+        "dialog:show-error",
+        t().dialogs.saveFailed,
+        `${path}
+
+${message}`,
+      );
+      return false;
     }
     markSaved(markdown);
     return true;
@@ -108,8 +118,14 @@ export function createDocumentSession(
   };
 
   /** False when the file was changed elsewhere and the user chose not to overwrite it. */
-  const diskMatchesKnownContent = async (path: string): Promise<boolean> => {
-    const disk = await desktop.invoke("document:peek", path, MAX_CONFLICT_CHECK_BYTES);
+  const diskMatchesKnownContent = async (doc: OpenDocument): Promise<boolean> => {
+    const path = doc.path ?? "";
+    const disk = await desktop.invoke(
+      "document:peek",
+      path,
+      MAX_CONFLICT_CHECK_BYTES,
+      doc.encoding,
+    );
     if (disk === undefined || disk === diskContent) return true;
     return resolveConflict(disk, () => void reloadFromDisk(path));
   };
@@ -118,7 +134,7 @@ export function createDocumentSession(
     const doc = activeDocument();
     if (!doc) return false;
     if (!doc.path) return saveAs();
-    if (!(await diskMatchesKnownContent(doc.path))) return false;
+    if (!(await diskMatchesKnownContent(doc))) return false;
     return writeTo(doc, doc.path);
   };
 
@@ -140,6 +156,7 @@ export function createDocumentSession(
       baseUrl: undefined,
       markdown: "",
       lineEnding: "lf",
+      encoding: "utf-8",
       isSample: false,
     });
   };
@@ -154,7 +171,9 @@ export function createDocumentSession(
   const openPath = async (path: string, showError = true): Promise<string | undefined> => {
     if (!(await confirmDiscard())) return undefined;
     try {
-      loadOpened(await desktop.invoke("document:read", path));
+      const opened = await desktop.invoke("document:read", path);
+      // Null: the user gave up on the encoding of a file that is not UTF-8
+      if (opened !== null) loadOpened(opened);
       return undefined;
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
@@ -173,6 +192,7 @@ export function createDocumentSession(
       baseUrl: undefined,
       markdown: getSampleDocument(currentLocale()),
       lineEnding: "lf",
+      encoding: "utf-8",
       isSample: true,
     });
   };

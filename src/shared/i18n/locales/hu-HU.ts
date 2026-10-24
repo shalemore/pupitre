@@ -68,6 +68,10 @@ export const huHU = {
     dontSave: "Mentés nélkül",
     cancel: "Mégse",
     openFailed: "A fájlt nem sikerült megnyitni.",
+    saveFailed: "A dokumentum mentése nem sikerült.",
+    encodingMessage: "Ez a fájl nem UTF-8. Milyen kódolással mentették?",
+    encodingCannotStore: (encoding: string) =>
+      `A szöveg olyan karaktereket tartalmaz, amelyeket a(z) ${encoding} nem tud menteni.`,
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) =>
       `A(z) ${fileName} fájlt egy másik program módosította.`,

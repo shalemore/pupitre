@@ -68,6 +68,10 @@ export const idID = {
     dontSave: "Jangan simpan",
     cancel: "Batal",
     openFailed: "Berkas tidak dapat dibuka.",
+    saveFailed: "Dokumen tidak dapat disimpan.",
+    encodingMessage: "Berkas ini bukan UTF-8. Dengan pengodean apa berkas ini disimpan?",
+    encodingCannotStore: (encoding: string) =>
+      `Teks memuat karakter yang tidak dapat disimpan oleh ${encoding}.`,
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName} diubah oleh program lain.`,
     externalChangeDetail:

@@ -71,6 +71,9 @@ export const thTH = {
     dontSave: "ไม่บันทึก",
     cancel: "ยกเลิก",
     openFailed: "ไม่สามารถเปิดไฟล์ได้",
+    saveFailed: "บันทึกเอกสารไม่สำเร็จ",
+    encodingMessage: "ไฟล์นี้ไม่ใช่ UTF-8 บันทึกด้วยการเข้ารหัสใด?",
+    encodingCannotStore: (encoding: string) => `ข้อความมีการเข้ารหัส ${encoding} ที่บันทึกไม่ได้`,
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName} ถูกแก้ไขโดยโปรแกรมอื่น`,
     externalChangeDetail: "เขียนทับจะแทนที่ไฟล์ด้วยเวอร์ชันของคุณ โหลดใหม่จะละทิ้งการเปลี่ยนแปลงของคุณและโหลดไฟล์",

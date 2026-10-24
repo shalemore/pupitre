@@ -67,6 +67,10 @@ export const ptPT = {
     dontSave: "Não guardar",
     cancel: "Cancelar",
     openFailed: "Não foi possível abrir o ficheiro.",
+    saveFailed: "Não foi possível guardar o documento.",
+    encodingMessage: "Este ficheiro não está em UTF-8. Em que codificação foi guardado?",
+    encodingCannotStore: (encoding: string) =>
+      `O texto tem caracteres que ${encoding} não consegue guardar.`,
     externalChangeMessage: (fileName: string) => `${fileName} foi alterado por outro programa.`,
     externalChangeDetail:
       "Substituir troca o ficheiro pela sua versão. Recarregar descarta as suas alterações e carrega o ficheiro.",

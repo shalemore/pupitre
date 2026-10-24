@@ -69,6 +69,10 @@ export const fiFI = {
     dontSave: "Älä tallenna",
     cancel: "Peruuta",
     openFailed: "Tiedostoa ei voitu avata.",
+    saveFailed: "Asiakirjan tallentaminen epäonnistui.",
+    encodingMessage: "Tämä tiedosto ei ole UTF-8. Millä merkistökoodauksella se on tallennettu?",
+    encodingCannotStore: (encoding: string) =>
+      `Tekstissä on merkkejä, joita ${encoding} ei voi tallentaa.`,
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName} on muuttunut toisessa ohjelmassa.`,
     externalChangeDetail:

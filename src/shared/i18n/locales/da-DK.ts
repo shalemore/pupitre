@@ -68,6 +68,10 @@ export const daDK = {
     dontSave: "Gem ikke",
     cancel: "Annuller",
     openFailed: "Filen kunne ikke åbnes.",
+    saveFailed: "Dokumentet kunne ikke gemmes.",
+    encodingMessage: "Filen er ikke UTF-8. Hvilken kodning er den gemt i?",
+    encodingCannotStore: (encoding: string) =>
+      `Teksten indeholder tegn, som ${encoding} ikke kan gemme.`,
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName} er ændret af et andet program.`,
     externalChangeDetail:

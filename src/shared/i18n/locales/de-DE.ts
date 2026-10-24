@@ -67,6 +67,10 @@ export const deDE = {
     dontSave: "Nicht speichern",
     cancel: "Abbrechen",
     openFailed: "Die Datei konnte nicht geöffnet werden.",
+    saveFailed: "Das Dokument konnte nicht gespeichert werden.",
+    encodingMessage: "Diese Datei ist nicht UTF-8. In welcher Kodierung wurde sie gespeichert?",
+    encodingCannotStore: (encoding: string) =>
+      `Der Text enthält Zeichen, die ${encoding} nicht speichern kann.`,
     externalChangeMessage: (fileName: string) =>
       `${fileName} wurde von einem anderen Programm geändert.`,
     externalChangeDetail:

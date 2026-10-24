@@ -67,6 +67,10 @@ export const esES = {
     dontSave: "No guardar",
     cancel: "Cancelar",
     openFailed: "No se pudo abrir el archivo.",
+    saveFailed: "No se pudo guardar el documento.",
+    encodingMessage: "Este archivo no está en UTF-8. ¿Con qué codificación se guardó?",
+    encodingCannotStore: (encoding: string) =>
+      `El texto contiene caracteres que ${encoding} no puede guardar.`,
     externalChangeMessage: (fileName: string) => `${fileName} fue modificado por otro programa.`,
     externalChangeDetail:
       "Sobrescribir reemplaza el archivo con tu versión. Recargar descarta tus cambios y carga el archivo.",

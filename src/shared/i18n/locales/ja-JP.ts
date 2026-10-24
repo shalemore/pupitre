@@ -67,6 +67,10 @@ export const jaJP = {
     dontSave: "保存しない",
     cancel: "キャンセル",
     openFailed: "ファイルを開けませんでした。",
+    saveFailed: "文書を保存できませんでした。",
+    encodingMessage: "このファイルは UTF-8 ではありません。どの文字コードで保存されていますか？",
+    encodingCannotStore: (encoding: string) =>
+      `テキストに ${encoding} で保存できない文字が含まれています。`,
     externalChangeMessage: (fileName: string) =>
       `${fileName} は他のプログラムによって変更されました。`,
     externalChangeDetail:

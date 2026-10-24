@@ -69,6 +69,10 @@ export const trTR = {
     dontSave: "Kaydetme",
     cancel: "İptal",
     openFailed: "Dosya açılamadı.",
+    saveFailed: "Belge kaydedilemedi.",
+    encodingMessage: "Bu dosya UTF-8 değil. Hangi kodlamayla kaydedildi?",
+    encodingCannotStore: (encoding: string) =>
+      `Metinde ${encoding} ile kaydedilemeyen karakterler var.`,
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) =>
       `${fileName} başka bir program tarafından değiştirildi.`,

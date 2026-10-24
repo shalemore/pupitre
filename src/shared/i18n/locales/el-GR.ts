@@ -68,6 +68,10 @@ export const elGR = {
     dontSave: "Χωρίς αποθήκευση",
     cancel: "Άκυρο",
     openFailed: "Δεν ήταν δυνατό το άνοιγμα του αρχείου.",
+    saveFailed: "Δεν ήταν δυνατή η αποθήκευση του εγγράφου.",
+    encodingMessage: "Αυτό το αρχείο δεν είναι UTF-8. Με ποια κωδικοποίηση αποθηκεύτηκε;",
+    encodingCannotStore: (encoding: string) =>
+      `Το κείμενο περιέχει χαρακτήρες που δεν μπορεί να αποθηκεύσει το ${encoding}.`,
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `Το ${fileName} τροποποιήθηκε από άλλο πρόγραμμα.`,
     externalChangeDetail:

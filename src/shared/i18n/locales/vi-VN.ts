@@ -68,6 +68,9 @@ export const viVN = {
     dontSave: "Không lưu",
     cancel: "Hủy",
     openFailed: "Không thể mở tệp.",
+    saveFailed: "Không thể lưu tài liệu.",
+    encodingMessage: "Tệp này không phải UTF-8. Nó được lưu bằng bảng mã nào?",
+    encodingCannotStore: (encoding: string) => `Văn bản có ký tự mà ${encoding} không lưu được.`,
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName} đã bị chương trình khác thay đổi.`,
     externalChangeDetail:

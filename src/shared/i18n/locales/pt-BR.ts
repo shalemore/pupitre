@@ -68,6 +68,10 @@ export const ptBR = {
     dontSave: "Não salvar",
     cancel: "Cancelar",
     openFailed: "Não foi possível abrir o arquivo.",
+    saveFailed: "Não foi possível salvar o documento.",
+    encodingMessage: "Este arquivo não está em UTF-8. Em que codificação ele foi salvo?",
+    encodingCannotStore: (encoding: string) =>
+      `O texto tem caracteres que ${encoding} não consegue salvar.`,
     externalChangeMessage: (fileName: string) => `${fileName} foi alterado por outro programa.`,
     externalChangeDetail:
       "Substituir troca o arquivo pela sua versão. Recarregar descarta suas alterações e carrega o arquivo.",

@@ -68,6 +68,10 @@ export const svSE = {
     dontSave: "Spara inte",
     cancel: "Avbryt",
     openFailed: "Filen kunde inte öppnas.",
+    saveFailed: "Dokumentet kunde inte sparas.",
+    encodingMessage: "Filen är inte UTF-8. Vilken kodning är den sparad i?",
+    encodingCannotStore: (encoding: string) =>
+      `Texten innehåller tecken som ${encoding} inte kan spara.`,
     // TODO(i18n): unverified with native speakers
     externalChangeMessage: (fileName: string) => `${fileName} har ändrats av ett annat program.`,
     externalChangeDetail:
