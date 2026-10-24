@@ -16,6 +16,49 @@ This file is the single source of project conventions for humans and coding agen
 
 Before considering a change done, `lint`, `typecheck` and `build` must all pass.
 
+## Testing the running app
+
+Check UI changes in the real app instead of reasoning about them. `playwright-core` is a dev
+dependency (it downloads no browsers) and drives Electron over the Chrome DevTools Protocol, so
+nothing touches the system mouse or keyboard. Write throwaway scripts outside the repository, in
+the scratchpad, and import `playwright-core` by absolute path or run them from the repository root.
+
+```js
+import { _electron as electron } from "playwright-core";
+
+// Run `npm run build` first. A separate user data dir avoids the single-instance lock, so this
+// works while the user's own `npm run dev` is open; the last argument is the file to open.
+const app = await electron.launch({
+  args: ["out/main/index.js", "--user-data-dir=<temp dir>", "README.md"],
+});
+const page = await app.firstWindow();
+await page.locator(".cm-content").waitFor();
+await page.screenshot({ path: "<temp dir>/shot.png" }); // then look at the image
+await app.close();
+```
+
+- To attach to a running dev server with HMR instead, start `npm run dev:debug` (port 9222) and
+  use `chromium.connectOverCDP("http://127.0.0.1:9222")`; it needs the user's own dev app closed.
+- Main-process state is reachable with `app.evaluate`, the page with `page.evaluate`/locators.
+- Native menu shortcuts (`Ctrl+S`, `Ctrl+,`) do not fire from CDP key events. Send the command the
+  menu would: `page.evaluate(() => window.desktop.invoke("app:dispatch", { id: "file.save" }))`
+  (the ids are `AppCommand` in `shared/desktop-api.ts`).
+- Native message boxes block the app and cannot be clicked, so a test would hang. Replace
+  `dialog.showMessageBox` in the main process before the step that opens one: record the call and
+  return the button to press. File pickers (`showOpenDialog`, `showSaveDialog`) can be stubbed the
+  same way.
+
+```js
+await app.evaluate(({ dialog }) => {
+  globalThis.__dialogs = [];
+  dialog.showMessageBox = async (...args) => {
+    globalThis.__dialogs.push(args.at(-1).message);
+    return { response: 1, checkboxChecked: false }; // index of the button to press
+  };
+});
+// ...later: await app.evaluate(() => globalThis.__dialogs)
+```
+
 ## Process Layout
 
 ```

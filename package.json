@@ -16,6 +16,7 @@
   "main": "out/main/index.js",
   "scripts": {
     "dev": "electron-vite dev",
+    "dev:debug": "electron-vite dev --remoteDebuggingPort 9222",
     "build": "electron-vite build",
     "preview": "electron-vite preview",
     "dist": "electron-vite build && electron-builder",
@@ -60,6 +61,7 @@
     "oxfmt": "^0.74.0",
     "oxlint": "^1.89.0",
     "oxlint-tailwindcss": "^1.16.0",
+    "playwright-core": "^1.64.1",
     "solid-js": "^1.9.5",
     "tailwindcss": "^4.3.3",
     "turndown": "^7.2.4",
