@@ -11,12 +11,13 @@ import { FORMAT_ACTIONS, INLINE_FORMAT_ACTIONS, type FormatAction } from "@share
 import { getDictionary, resolveLocale } from "@shared/i18n";
 import {
   DEFAULT_SETTINGS,
+  patchSettingsFile,
   resolveSettings,
-  SETTING_KEYS,
   type SettingKey,
   type Settings,
+  settingsFileSchema,
+  withoutSetting,
 } from "@shared/settings";
-import { z } from "zod";
 import { getSampleDocument } from "@/features/samples/sample-document";
 import about from "./demo/about.md?raw";
 
@@ -32,10 +33,9 @@ const isSettingsWindow = location.hash === "#settings";
 const siteUrl = new URL("./", location.href).href;
 
 // Settings, kept the way the desktop app keeps them: only what differs from the defaults
-const fileSchema = z.record(z.string(), z.unknown()).catch({});
 function readSettingsFile(): Record<string, unknown> {
   try {
-    return fileSchema.parse(JSON.parse(localStorage.getItem(SETTINGS_KEY) ?? "{}"));
+    return settingsFileSchema.parse(JSON.parse(localStorage.getItem(SETTINGS_KEY) ?? "{}"));
   } catch {
     return {};
   }
@@ -95,20 +95,12 @@ function saveSettings(): void {
 }
 
 function updateSettings(patch: Partial<Settings>): void {
-  const next = { ...settingsFile };
-  for (const key of SETTING_KEYS) {
-    if (!(key in patch)) continue;
-    const value = patch[key];
-    if (value === undefined || Object.is(value, DEFAULT_SETTINGS[key])) delete next[key];
-    else next[key] = value;
-  }
-  settingsFile = next;
+  settingsFile = patchSettingsFile(settingsFile, patch, DEFAULT_SETTINGS);
   saveSettings();
 }
 
 function resetSetting(key: SettingKey): void {
-  const { [key]: _removed, ...rest } = settingsFile;
-  settingsFile = rest;
+  settingsFile = withoutSetting(settingsFile, key);
   saveSettings();
 }
 

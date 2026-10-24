@@ -1,20 +1,21 @@
 import { statSync } from "node:fs";
 import { join } from "node:path";
 import { app, BrowserWindow, nativeTheme, shell } from "electron";
-import { z } from "zod";
 import type { WorkspaceState } from "@shared/desktop-api";
 import {
   DEFAULT_SETTINGS,
   isWorkspaceKey,
+  patchSettingsFile,
   resolveSettings,
   SETTING_KEYS,
   type SettingKey,
   type Settings,
+  settingsFileSchema,
+  withoutSetting,
   WORKSPACE_FILE,
 } from "@shared/settings";
 import { readJsonFile, writeJsonFile } from "./json-file";
 
-const fileObjectSchema = z.record(z.string(), z.unknown()).catch({});
 const listeners = new Set<(settings: Settings) => void>();
 
 /**
@@ -47,7 +48,7 @@ function settingsFile(): Record<string, unknown> {
   if (file === undefined) {
     const raw = readJsonFile(getSettingsPath());
     firstRun = raw === undefined;
-    file = fileObjectSchema.parse(raw);
+    file = settingsFileSchema.parse(raw);
   }
   return file;
 }
@@ -115,36 +116,24 @@ function saveWorkspace(next: Record<string, unknown>): void {
  * default for the global file, the global value for the folder's.
  */
 export function updateSettings(patch: Partial<Settings>): void {
-  const toWorkspace = workspace !== undefined && workspaceActive;
+  const folder = workspaceActive ? workspace : undefined;
+  const global = (key: SettingKey) => folder === undefined || !isWorkspaceKey(key);
   const inherited = resolveSettings(settingsFile());
-  const nextGlobal = { ...settingsFile() };
-  const nextWorkspace = { ...workspace?.file };
-  let globalTouched = false;
-  for (const key of SETTING_KEYS) {
-    if (!(key in patch)) continue;
-    const forWorkspace = toWorkspace && isWorkspaceKey(key);
-    const target = forWorkspace ? nextWorkspace : nextGlobal;
-    const unset = forWorkspace ? inherited[key] : DEFAULT_SETTINGS[key];
-    const value = patch[key];
-    if (value === undefined || Object.is(value, unset)) delete target[key];
-    else target[key] = value;
-    globalTouched ||= !forWorkspace;
+  if (SETTING_KEYS.some((key) => key in patch && global(key))) {
+    saveGlobal(patchSettingsFile(settingsFile(), patch, DEFAULT_SETTINGS, global));
   }
-  if (globalTouched) saveGlobal(nextGlobal);
-  if (toWorkspace) saveWorkspace(nextWorkspace);
+  if (folder) {
+    saveWorkspace(patchSettingsFile(folder.file, patch, inherited, (key) => !global(key)));
+  }
   publish();
 }
 
 /** In the folder's settings this gives the key back to the global value. */
 export function resetSetting(key: SettingKey): void {
   if (workspace && workspaceActive && isWorkspaceKey(key)) {
-    const next = { ...workspace.file };
-    delete next[key];
-    saveWorkspace(next);
+    saveWorkspace(withoutSetting(workspace.file, key));
   } else {
-    const next = { ...settingsFile() };
-    delete next[key];
-    saveGlobal(next);
+    saveGlobal(withoutSetting(settingsFile(), key));
   }
   publish();
 }
@@ -169,7 +158,7 @@ export function setWorkspace(root: string | null): void {
   } else if (workspace?.root !== root) {
     const path = join(root, WORKSPACE_FILE);
     const raw = readJsonFile(path);
-    workspace = { root, path, exists: raw !== undefined, file: fileObjectSchema.parse(raw) };
+    workspace = { root, path, exists: raw !== undefined, file: settingsFileSchema.parse(raw) };
     workspaceActive = workspace.exists;
   } else {
     return;

@@ -87,6 +87,37 @@ export function resolveSettings(file: unknown): Settings {
   return settingsSchema.catch(DEFAULT_SETTINGS).parse(file);
 }
 
+/** A settings file: an object that holds the settings that differ from what they would be without it. */
+export const settingsFileSchema = z.record(z.string(), z.unknown()).catch({});
+
+/**
+ * The file after a patch. A value equal to `unset`, what the setting is without an entry in the
+ * file, is removed instead of written. `applies` limits the patch to the keys that belong in it.
+ */
+export function patchSettingsFile(
+  file: Record<string, unknown>,
+  patch: Partial<Settings>,
+  unset: Settings,
+  applies: (key: SettingKey) => boolean = () => true,
+): Record<string, unknown> {
+  const next = { ...file };
+  for (const key of SETTING_KEYS) {
+    if (!(key in patch) || !applies(key)) continue;
+    const value = patch[key];
+    if (value === undefined || Object.is(value, unset[key])) delete next[key];
+    else next[key] = value;
+  }
+  return next;
+}
+
+export function withoutSetting(
+  file: Record<string, unknown>,
+  key: SettingKey,
+): Record<string, unknown> {
+  const { [key]: _removed, ...rest } = file;
+  return rest;
+}
+
 export function isModified(settings: Settings, key: SettingKey): boolean {
   return !Object.is(settings[key], DEFAULT_SETTINGS[key]);
 }
