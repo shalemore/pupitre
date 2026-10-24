@@ -1,11 +1,12 @@
 import { isModified, type SettingKey } from "@shared/settings";
+import { cn } from "cn";
 import { RotateCcw } from "lucide-solid";
 import { type JSX, type ParentComponent, Show } from "solid-js";
 import { Button, SettingRow } from "@/components/ui";
 import { t } from "@/i18n";
 import { resetSetting, settings } from "@/lib/settings";
 
-/** A titled group of settings rows. */
+/** A titled page of settings; its children are groups. */
 export const SettingsSection: ParentComponent<{ title: string; description?: string }> = (
   props,
 ) => (
@@ -16,14 +17,21 @@ export const SettingsSection: ParentComponent<{ title: string; description?: str
     <Show when={props.description}>
       <p class="mt-1.5 text-2xs leading-relaxed text-muted-foreground">{props.description}</p>
     </Show>
-    <div class="mt-3 divide-y divide-border-subtle">{props.children}</div>
+    <div class="mt-3 space-y-6">{props.children}</div>
   </section>
+);
+
+/** Settings that belong together: hairlines between the rows, more space between groups. */
+export const SettingGroup: ParentComponent = (props) => (
+  <div class="divide-y divide-border-subtle">{props.children}</div>
 );
 
 export interface SettingFieldProps {
   name: SettingKey;
   title: JSX.Element;
   description?: string;
+  /** The row depends on the one above it and is indented under it. */
+  nested?: boolean;
 }
 
 /**
@@ -34,7 +42,7 @@ export const SettingField: ParentComponent<SettingFieldProps> = (props) => {
   const modified = () => isModified(settings(), props.name);
   return (
     <SettingRow
-      class="relative"
+      class={cn("relative", props.nested && "ps-4")}
       title={
         <span class="flex items-center gap-1.5">
           <Show when={modified()}>
