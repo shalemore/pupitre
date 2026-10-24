@@ -282,7 +282,7 @@ export const MainWindow: Component = () => {
         onKeyDown={(event) => {
           if (!event.ctrlKey && !event.metaKey && !event.altKey) chrome.hide();
         }}
-        onWheel={() => chrome.hide()}
+        onWheel={(event) => chrome.onWheel(event)}
         class={cn(
           "flex-1 min-h-0 flex overflow-hidden print:block print:overflow-visible",
           // The card keeps an even gap to the window edges, the title bar and the sidebars

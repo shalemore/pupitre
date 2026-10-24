@@ -5,6 +5,13 @@ import { desktop, isMacOS } from "@/lib/desktop";
 const TOP_EDGE = 48;
 /** Over a sidebar only this thin strip brings the title bar back, which would push the sidebar's own controls away from the pointer. */
 const TOP_EDGE_OVER_SIDEBAR = 6;
+/**
+ * Scrolling the document folds the chrome; it comes back when the user pulls: pushes up again at
+ * the top of the document, in a new gesture and not as the tail of the scroll that arrived there.
+ * A gesture is new after this long without wheel events, and the pull is this many wheel pixels.
+ */
+const GESTURE_GAP = 300;
+const PULL_DISTANCE = 80;
 const SIDE_EDGE = 16;
 
 /**
@@ -23,6 +30,9 @@ export function createImmersiveChrome(canFold: () => boolean, sidebarsPinned: ()
   const [nearTop, setNearTop] = createSignal(false);
   const [nearStart, setNearStart] = createSignal(false);
   const [nearEnd, setNearEnd] = createSignal(false);
+  let lastWheelAt = 0;
+  let pulling = false;
+  let pulled = 0;
 
   const shown = (nearEdge: boolean) => !canFold() || !writing() || nearEdge;
   const titleBarVisible = () => shown(nearTop());
@@ -34,19 +44,37 @@ export function createImmersiveChrome(canFold: () => boolean, sidebarsPinned: ()
     createEffect(() => void desktop.invoke("window:set-buttons-visible", titleBarVisible()));
   }
 
+  const hide = () => {
+    setWriting(canFold());
+    setNearTop(false);
+    setNearStart(false);
+    setNearEnd(false);
+  };
+
   return {
     titleBarVisible,
     sidebarVisible,
     endSidebarVisible,
     /** Typing or scrolling in the document; the pointer has to move again to bring the chrome back. */
-    hide: () => {
-      setWriting(canFold());
-      setNearTop(false);
-      setNearStart(false);
-      setNearEnd(false);
-    },
+    hide,
     /** A new document starts with the chrome visible. */
     reset: () => setWriting(false),
+    /** Scrolling the document folds the chrome, unless it is a pull at the top, which brings it back. */
+    onWheel: (event: WheelEvent) => {
+      if (!(event.target instanceof Element) || event.target.closest("[data-sidebar]")) return;
+      const atTop = (event.target.closest(".overflow-y-auto")?.scrollTop ?? 0) <= 0;
+      const up = event.deltaY < 0;
+      if (event.timeStamp - lastWheelAt > GESTURE_GAP) {
+        pulling = atTop && up;
+        pulled = 0;
+      } else if (!atTop || !up) {
+        pulling = false;
+      }
+      lastWheelAt = event.timeStamp;
+      if (!pulling) return hide();
+      pulled -= event.deltaY;
+      if (pulled >= PULL_DISTANCE) setWriting(false);
+    },
     onPointerMove: (event: PointerEvent) => {
       if (!(event.target instanceof Element)) return;
       const fromStart = document.dir === "rtl" ? window.innerWidth - event.clientX : event.clientX;
