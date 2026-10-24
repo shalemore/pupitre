@@ -14,6 +14,8 @@ jobs:
   check:
     name: Pre-flight & Version
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     outputs:
       publish: ${{ steps.check.outputs.publish }}
       version: ${{ steps.preflight.outputs.version }}
@@ -36,6 +38,15 @@ jobs:
           else
             echo "publish=true" >> "$GITHUB_OUTPUT"
           fi
+
+      # The builds run in parallel and electron-builder creates the draft release when it finds
+      # none, so without this one each build could create a draft of its own and split the files.
+      - name: Create the draft release the builds upload to
+        if: steps.check.outputs.publish == 'true'
+        run: gh release create "v$VERSION" --draft --title "$VERSION" --target "$GITHUB_SHA"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.preflight.outputs.version }}
 
   build-artifacts:
     needs: check
