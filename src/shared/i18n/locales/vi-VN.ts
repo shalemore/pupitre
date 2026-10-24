@@ -183,6 +183,8 @@ export const viVN = {
     scrollbarAuto: "Tự động ẩn",
     scrollbarAlways: "Luôn hiện",
     scrollbarNever: "Luôn ẩn",
+    scrollFade: "Mờ dần ở mép",
+    scrollFadeDesc: "Làm mờ dần nội dung ở đầu và cuối vùng cuộn",
     markdownDesc: "Cú pháp mà các lệnh định dạng và văn bản được dán sử dụng.",
     bulletMarker: "Ký hiệu gạch đầu dòng",
     emphasisMarker: "Ký hiệu in nghiêng",

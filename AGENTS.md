@@ -184,6 +184,11 @@ only make code generation easier.
 - Themes style the whole app through the `--ui-*` design tokens (surfaces, text, accent) and the
   document through the `md-*` classes inside `.md-document` and `--syntax-*` colors. Document
   lines are spaced with padding, never margins, because CodeMirror measures line boxes.
+- Scrolling areas get the `.scroll-fade` class when the Edge Fade setting is on (`app.css` has the
+  default look). A theme restyles it with a plain rule: its CSS sits in the `document-theme` layer,
+  so it wins over the default without `!important`. Keep the `[data-overflow~="top"]` and
+  `[data-overflow~="bottom"]` selectors when setting `--scroll-fade-top` or `--scroll-fade-bottom`,
+  so the fade only shows on an edge that has more content.
 - A theme declares the color schemes it supports with `color-scheme` on `:root`. A `light dark`
   theme overrides its dark values in `@media (prefers-color-scheme: dark)`; a single-scheme theme
   is applied as is and can be paired with another theme through the `darkTheme` setting.

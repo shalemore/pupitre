@@ -198,6 +198,8 @@ export const ar = {
     scrollbarAuto: "إخفاء تلقائي",
     scrollbarAlways: "إظهار دائم",
     scrollbarNever: "إخفاء دائم",
+    scrollFade: "تلاشي الحواف",
+    scrollFadeDesc: "إخفاء المحتوى تدريجيًا عند أعلى وأسفل منطقة التمرير",
     markdownDesc: "الصيغة التي تكتب بها أوامر التنسيق والنصوص الملصقة.",
     bulletMarker: "رمز القائمة النقطية",
     emphasisMarker: "رمز المائل",

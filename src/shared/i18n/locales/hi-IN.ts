@@ -183,6 +183,8 @@ export const hiIN = {
     scrollbarAuto: "अपने-आप छिपाएँ",
     scrollbarAlways: "हमेशा दिखाएँ",
     scrollbarNever: "हमेशा छिपाएँ",
+    scrollFade: "किनारों का फीका होना",
+    scrollFadeDesc: "स्क्रॉल क्षेत्र के ऊपर और नीचे सामग्री को धीरे-धीरे फीका करें",
     markdownDesc: "वह सिंटैक्स जिससे फ़ॉर्मेटिंग कमांड और चिपकाया गया टेक्स्ट लिखा जाता है।",
     bulletMarker: "बुलेट चिह्न",
     emphasisMarker: "इटैलिक चिह्न",

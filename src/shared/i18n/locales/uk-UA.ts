@@ -189,6 +189,8 @@ export const ukUA = {
     scrollbarAuto: "Автоматично приховувати",
     scrollbarAlways: "Завжди показувати",
     scrollbarNever: "Завжди приховувати",
+    scrollFade: "Згасання країв",
+    scrollFadeDesc: "Плавно приховувати вміст біля верхньої та нижньої меж області прокручування",
     markdownDesc: "Синтаксис, яким записуються команди форматування та вставлений текст.",
     bulletMarker: "Маркер списку",
     emphasisMarker: "Маркер курсиву",

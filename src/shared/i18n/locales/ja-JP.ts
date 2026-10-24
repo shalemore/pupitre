@@ -181,6 +181,8 @@ export const jaJP = {
     scrollbarAuto: "自動的に隠す",
     scrollbarAlways: "常に表示",
     scrollbarNever: "常に非表示",
+    scrollFade: "端のフェード",
+    scrollFadeDesc: "スクロール領域の上端と下端で内容をフェードアウトします",
     markdownDesc: "書式コマンドと貼り付けたテキストで使う記法です。",
     bulletMarker: "箇条書きの記号",
     emphasisMarker: "斜体の記号",

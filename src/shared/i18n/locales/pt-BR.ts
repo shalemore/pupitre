@@ -179,6 +179,8 @@ export const ptBR = {
     scrollbarAuto: "Ocultar automaticamente",
     scrollbarAlways: "Sempre mostrar",
     scrollbarNever: "Sempre ocultar",
+    scrollFade: "Esmaecer bordas",
+    scrollFadeDesc: "Esmaece o conteúdo na parte superior e inferior de uma área rolável",
     markdownDesc: "A sintaxe usada pelos comandos de formatação e pelo texto colado.",
     bulletMarker: "Marcador de lista",
     emphasisMarker: "Marcador de itálico",

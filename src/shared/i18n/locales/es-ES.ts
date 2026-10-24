@@ -179,6 +179,8 @@ export const esES = {
     scrollbarAuto: "Ocultar automáticamente",
     scrollbarAlways: "Mostrar siempre",
     scrollbarNever: "Ocultar siempre",
+    scrollFade: "Difuminado de bordes",
+    scrollFadeDesc: "Desvanece el contenido en la parte superior e inferior de un área desplazable",
     markdownDesc: "La sintaxis con la que se escriben los comandos de formato y el texto pegado.",
     bulletMarker: "Marcador de lista",
     emphasisMarker: "Marcador de cursiva",

@@ -184,6 +184,8 @@ export const daDK = {
     scrollbarAuto: "Skjul automatisk",
     scrollbarAlways: "Vis altid",
     scrollbarNever: "Skjul altid",
+    scrollFade: "Udtoning af kanter",
+    scrollFadeDesc: "Tone indholdet ud i top og bund af et rulleområde",
     markdownDesc: "Den syntaks, som formateringskommandoer og indsat tekst skrives med.",
     bulletMarker: "Punkttegn",
     emphasisMarker: "Kursivtegn",

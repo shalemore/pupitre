@@ -187,6 +187,8 @@ export const csCZ = {
     scrollbarAuto: "Automaticky skrýt",
     scrollbarAlways: "Vždy zobrazit",
     scrollbarNever: "Vždy skrýt",
+    scrollFade: "Slábnutí okrajů",
+    scrollFadeDesc: "Obsah na horním a dolním okraji posouvané oblasti postupně mizí",
     markdownDesc: "Syntaxe, kterou používají příkazy formátování a vložený text.",
     bulletMarker: "Odrážka seznamu",
     emphasisMarker: "Značka kurzívy",

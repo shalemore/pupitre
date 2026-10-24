@@ -185,6 +185,8 @@ export const isIS = {
     scrollbarAuto: "Fela sjálfkrafa",
     scrollbarAlways: "Alltaf sýna",
     scrollbarNever: "Alltaf fela",
+    scrollFade: "Dofnun jaðra",
+    scrollFadeDesc: "Dofna efni efst og neðst á skrunsvæði",
     markdownDesc: "Táknmálið sem sniðskipanir og límdur texti eru skrifuð með.",
     bulletMarker: "Punktmerki",
     emphasisMarker: "Skáletursmerki",

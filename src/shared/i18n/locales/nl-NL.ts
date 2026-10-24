@@ -185,6 +185,8 @@ export const nlNL = {
     scrollbarAuto: "Automatisch verbergen",
     scrollbarAlways: "Altijd tonen",
     scrollbarNever: "Altijd verbergen",
+    scrollFade: "Vervagende randen",
+    scrollFadeDesc: "Laat inhoud vervagen boven- en onderaan een scrollgebied",
     markdownDesc: "De syntaxis waarmee opmaakopdrachten en geplakte tekst worden geschreven.",
     bulletMarker: "Opsommingsteken",
     emphasisMarker: "Cursiefteken",

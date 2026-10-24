@@ -180,6 +180,8 @@ export const enUS = {
     scrollbarAuto: "Auto-hide",
     scrollbarAlways: "Always show",
     scrollbarNever: "Always hide",
+    scrollFade: "Edge Fade",
+    scrollFadeDesc: "Fade content out at the top and bottom of a scrolling area",
     markdownDesc: "The syntax that formatting commands and pasted text are written with.",
     bulletMarker: "Bullet List Marker",
     emphasisMarker: "Italic Marker",

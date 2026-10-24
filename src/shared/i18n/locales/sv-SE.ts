@@ -184,6 +184,8 @@ export const svSE = {
     scrollbarAuto: "Dölj automatiskt",
     scrollbarAlways: "Visa alltid",
     scrollbarNever: "Dölj alltid",
+    scrollFade: "Toning av kanter",
+    scrollFadeDesc: "Tona ut innehåll överst och nederst i ett rullningsområde",
     markdownDesc: "Den syntax som formateringskommandon och inklistrad text skrivs med.",
     bulletMarker: "Punktmarkör",
     emphasisMarker: "Markör för kursiv",

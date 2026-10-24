@@ -190,6 +190,8 @@ export const plPL = {
     scrollbarAuto: "Ukrywaj automatycznie",
     scrollbarAlways: "Zawsze pokazuj",
     scrollbarNever: "Zawsze ukrywaj",
+    scrollFade: "Zanikanie krawędzi",
+    scrollFadeDesc: "Zanikanie zawartości przy górnej i dolnej krawędzi przewijanego obszaru",
     markdownDesc: "Składnia, którą stosują polecenia formatowania i wklejany tekst.",
     bulletMarker: "Punktor listy",
     emphasisMarker: "Znacznik kursywy",

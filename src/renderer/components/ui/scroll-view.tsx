@@ -126,7 +126,11 @@ export function ScrollView(props: ScrollViewProps) {
         if (typeof local.ref === "function") local.ref(node);
       }}
       data-overflow={overflow() || undefined}
-      class={cn("scroll-fade overflow-y-auto scrollbar-none print:mask-none", local.class)}
+      class={cn(
+        "overflow-y-auto scrollbar-none print:mask-none",
+        settings().scrollFade && "scroll-fade",
+        local.class,
+      )}
       onScroll={() => {
         update();
         setScrolling(true);

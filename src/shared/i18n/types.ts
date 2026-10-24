@@ -235,6 +235,8 @@ export interface TranslationSchema {
     readonly scrollbarAuto: string;
     readonly scrollbarAlways: string;
     readonly scrollbarNever: string;
+    readonly scrollFade: string;
+    readonly scrollFadeDesc: string;
     readonly markdownDesc: string;
     readonly bulletMarker: string;
     readonly emphasisMarker: string;

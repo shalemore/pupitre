@@ -130,6 +130,18 @@ export const EditorSection: Component = () => (
     </SettingField>
 
     <SettingField
+      name="scrollFade"
+      title={t().settings.scrollFade}
+      description={t().settings.scrollFadeDesc}
+    >
+      <Switch
+        checked={settings().scrollFade}
+        onChange={(scrollFade) => void updateSettings({ scrollFade })}
+        aria-label={t().settings.scrollFade}
+      />
+    </SettingField>
+
+    <SettingField
       name="focusMode"
       title={t().settings.focusMode}
       description={t().settings.focusModeDesc}

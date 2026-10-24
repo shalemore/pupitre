@@ -181,6 +181,8 @@ export const deDE = {
     scrollbarAuto: "Automatisch ausblenden",
     scrollbarAlways: "Immer anzeigen",
     scrollbarNever: "Immer ausblenden",
+    scrollFade: "Verblassende Ränder",
+    scrollFadeDesc: "Inhalt am oberen und unteren Rand eines Scrollbereichs ausblenden",
     markdownDesc:
       "Die Syntax, mit der Formatierungsbefehle und eingefügter Text geschrieben werden.",
     bulletMarker: "Aufzählungszeichen",

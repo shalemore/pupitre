@@ -178,6 +178,8 @@ export const zhHK = {
     scrollbarAuto: "自動隱藏",
     scrollbarAlways: "一律顯示",
     scrollbarNever: "一律隱藏",
+    scrollFade: "邊緣漸隱",
+    scrollFadeDesc: "在捲動區域的頂部和底部讓內容漸隱",
     markdownDesc: "格式指令和貼上內容所用的 Markdown 寫法。",
     bulletMarker: "項目符號",
     emphasisMarker: "斜體符號",

@@ -185,6 +185,8 @@ export const huHU = {
     scrollbarAuto: "Automatikus elrejtés",
     scrollbarAlways: "Mindig látható",
     scrollbarNever: "Mindig rejtett",
+    scrollFade: "Szélek elhalványítása",
+    scrollFadeDesc: "A tartalom elhalványítása a görgethető terület tetején és alján",
     markdownDesc: "A formázási parancsok és a beillesztett szöveg által használt szintaxis.",
     bulletMarker: "Listajelölő",
     emphasisMarker: "Dőlt jelölő",

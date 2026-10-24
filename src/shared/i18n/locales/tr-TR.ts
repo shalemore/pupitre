@@ -185,6 +185,8 @@ export const trTR = {
     scrollbarAuto: "Otomatik gizle",
     scrollbarAlways: "Her zaman göster",
     scrollbarNever: "Her zaman gizle",
+    scrollFade: "Kenar Solması",
+    scrollFadeDesc: "Kaydırma alanının üst ve alt kenarında içeriği solarak gizle",
     markdownDesc: "Biçimlendirme komutlarının ve yapıştırılan metnin kullandığı söz dizimi.",
     bulletMarker: "Madde İmi",
     emphasisMarker: "İtalik İşareti",

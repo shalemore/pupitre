@@ -302,8 +302,11 @@
 }
 
 /*
- * Scroll edge fade, set up by ScrollView: content dissolves into the edges it can still scroll
- * past. The edges are registered lengths so they transition when scrolling reaches an end.
+ * Scroll edge fade, set up by ScrollView when the Edge Fade setting is on: content dissolves into
+ * the edges it can still scroll past. The setting only adds the .scroll-fade class; how it looks
+ * is up to this rule, which a theme can replace. ScrollView sets data-overflow to the edges
+ * with more content, and the edge lengths are registered so they transition when scrolling
+ * reaches an end.
  */
 @property --scroll-fade-top {
   syntax: "<length>";
@@ -317,23 +320,25 @@
   initial-value: 0px;
 }
 
-@utility scroll-fade {
-  mask-image: linear-gradient(
-    to bottom,
-    transparent,
-    black var(--scroll-fade-top),
-    black calc(100% - var(--scroll-fade-bottom)),
-    transparent
-  );
-  transition-property: --scroll-fade-top, --scroll-fade-bottom;
-  transition-duration: var(--transition-duration-base);
+@layer components {
+  .scroll-fade {
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      black var(--scroll-fade-top),
+      black calc(100% - var(--scroll-fade-bottom)),
+      transparent
+    );
+    transition-property: --scroll-fade-top, --scroll-fade-bottom;
+    transition-duration: var(--transition-duration-base);
 
-  &[data-overflow~="top"] {
-    --scroll-fade-top: 1.5rem;
-  }
+    &[data-overflow~="top"] {
+      --scroll-fade-top: 1.5rem;
+    }
 
-  &[data-overflow~="bottom"] {
-    --scroll-fade-bottom: 1.5rem;
+    &[data-overflow~="bottom"] {
+      --scroll-fade-bottom: 1.5rem;
+    }
   }
 }
 

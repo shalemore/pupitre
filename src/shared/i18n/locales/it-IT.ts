@@ -181,6 +181,8 @@ export const itIT = {
     scrollbarAuto: "Nascondi automaticamente",
     scrollbarAlways: "Mostra sempre",
     scrollbarNever: "Nascondi sempre",
+    scrollFade: "Dissolvenza dei bordi",
+    scrollFadeDesc: "Sfuma il contenuto nella parte superiore e inferiore di un'area scorrevole",
     markdownDesc: "La sintassi usata dai comandi di formattazione e dal testo incollato.",
     bulletMarker: "Simbolo elenco puntato",
     emphasisMarker: "Simbolo corsivo",
