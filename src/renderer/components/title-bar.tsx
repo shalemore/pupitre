@@ -12,6 +12,8 @@ export const TitleBar: ParentComponent<{ class?: string; inert?: boolean }> = (p
   const side = desktop.initialState.captionSide;
   return (
     <header
+      // The caption buttons stay on the window's physical side in every language, so the bar keeps one order; its texts follow their own script
+      dir="ltr"
       data-caption-buttons={side}
       inert={props.inert}
       class={cn(
