@@ -5,14 +5,16 @@ This file is the single source of project conventions for humans and coding agen
 
 ## Commands
 
-| Command             | Purpose                                       |
-| :------------------ | :-------------------------------------------- |
-| `npm run dev`       | Start Electron with the Vite dev server (HMR) |
-| `npm run build`     | Bundle main, preload and renderer into `out/` |
-| `npm run dist`      | Build and package installers into `release/`  |
-| `npm run typecheck` | Type-check every project (`tsc -b`)           |
-| `npm run lint`      | Check formatting (oxfmt) and lint (oxlint)    |
-| `npm run fix`       | Apply formatting and safe lint fixes          |
+| Command             | Purpose                                           |
+| :------------------ | :------------------------------------------------ |
+| `npm run dev`       | Start Electron with the Vite dev server (HMR)     |
+| `npm run build`     | Bundle main, preload and renderer into `out/`     |
+| `npm run dev:web`   | Serve the web demo (renderer on the browser host) |
+| `npm run build:web` | Build the web demo into `out/web`                 |
+| `npm run dist`      | Build and package installers into `release/`      |
+| `npm run typecheck` | Type-check every project (`tsc -b`)               |
+| `npm run lint`      | Check formatting (oxfmt) and lint (oxlint)        |
+| `npm run fix`       | Apply formatting and safe lint fixes              |
 
 Before considering a change done, `lint`, `typecheck` and `build` must all pass.
 
@@ -73,6 +75,7 @@ src/
     components/     components shared by several features; components/ui holds primitives
     lib/            cross-feature helpers (desktop API, settings, theme, fonts, text stats)
     themes/<name>/  theme folders, see "Themes"
+web/          the web demo: an index.html and `host.ts`, a browser `window.desktop` (GitHub Pages)
 build/        icons and other electron-builder resources
 docs/         design notes and mockups
 ```
@@ -80,6 +83,9 @@ docs/         design notes and mockups
 - `src/shared/desktop-api.ts` is the IPC contract. Every channel is declared there once and both
   `ipcMain.handle` and `window.desktop.invoke` are typed from it. Never call `ipcRenderer` or
   Node APIs from the renderer.
+- The renderer only talks to its host through `window.desktop`, so another host can run it. The web
+  demo (`src/web/host.ts`) keeps files in memory and settings in localStorage; a new channel in
+  `InvokeChannels` has to be given a handler there too, which the compiler enforces.
 - The main process owns all privileged work: file system access, native dialogs, menus, the
   settings file and auto updates. The renderer asks for it through IPC.
 - Windows run with `sandbox: true` and `contextIsolation: true`. External URLs open in the system

@@ -192,7 +192,7 @@ export interface DesktopApi {
   invoke<K extends keyof InvokeChannels>(
     channel: K,
     ...args: Parameters<InvokeChannels[K]>
-  ): Promise<Awaited<ReturnType<InvokeChannels[K]>>>;
+  ): Promise<ReturnType<InvokeChannels[K]>>;
   on<K extends keyof RendererEvents>(
     channel: K,
     listener: (payload: RendererEvents[K]) => void,

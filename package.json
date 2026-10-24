@@ -17,8 +17,10 @@
   "scripts": {
     "dev": "electron-vite dev",
     "dev:debug": "electron-vite dev --remoteDebuggingPort 9222",
+    "dev:web": "vite --config vite.web.config.ts",
     "build": "electron-vite build",
     "preview": "electron-vite preview",
+    "build:web": "vite build --config vite.web.config.ts",
     "dist": "electron-vite build && electron-builder",
     "typecheck": "tsc -b",
     "lint": "oxfmt --check . && oxlint .",
