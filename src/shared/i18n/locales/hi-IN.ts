@@ -21,6 +21,10 @@ export const hiIN = {
   },
   welcome: {
     dragDropHint: "या Markdown फ़ाइलों को सीधे इस विंडो में खींचकर छोड़ें",
+    chooseLook: "दिखावट चुनें",
+    lookImmersiveDesc: "लिखते समय शीर्षक पट्टी और साइडबार किनारे हो जाते हैं",
+    lookClassicDesc: "शीर्षक पट्टी और साइडबार हमेशा दिखते रहते हैं",
+    lookHint: "बाद में प्राथमिकताएँ › दिखावट में बदला जा सकता है",
   },
   editor: {
     toggleReplace: "बदलाव दिखाएँ/छिपाएँ",

@@ -21,6 +21,10 @@ export const huHU = {
   },
   welcome: {
     dragDropHint: "A Markdown-fájlokat erre az ablakra is húzhatja",
+    chooseLook: "Válasszon megjelenést",
+    lookImmersiveDesc: "Írás közben a címsor és az oldalsávok félreállnak",
+    lookClassicDesc: "A címsor és az oldalsávok mindig látszanak",
+    lookHint: "Később a Beállítások › Megjelenés részben módosíthatja",
   },
   editor: {
     toggleReplace: "Csere megjelenítése",

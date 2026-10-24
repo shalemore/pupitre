@@ -26,7 +26,13 @@ import { popupTopMenu, setDocumentState } from "./menu";
 import { takeLaunchFile } from "./open-files";
 import { unwatchPath, watchPath } from "./path-watcher";
 import { addRecentFile, getRecentFiles, removeRecentFile } from "./recent-files";
-import { getSettings, getSettingsPath, resetSetting, updateSettings } from "./settings-store";
+import {
+  getSettings,
+  getSettingsPath,
+  isFirstRun,
+  resetSetting,
+  updateSettings,
+} from "./settings-store";
 import {
   canSelfUpdate,
   checkForUpdates,
@@ -150,6 +156,7 @@ export function registerIpcHandlers(): void {
     const state: InitialState = {
       settings: getSettings(),
       settingsPath: getSettingsPath(),
+      firstRun: isFirstRun(),
       canSelfUpdate,
       recentFiles: getRecentFiles(),
       captionSide: getCaptionSide(event.sender),

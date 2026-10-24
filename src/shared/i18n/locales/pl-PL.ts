@@ -25,6 +25,10 @@ export const plPL = {
   },
   welcome: {
     dragDropHint: "Możesz też przeciągnąć pliki Markdown do tego okna",
+    chooseLook: "Wybierz wygląd",
+    lookImmersiveDesc: "Pasek tytułu i paski boczne ustępują miejsca, gdy piszesz",
+    lookClassicDesc: "Pasek tytułu i paski boczne są zawsze widoczne",
+    lookHint: "Możesz to zmienić później w Ustawienia › Wygląd",
   },
   editor: {
     toggleReplace: "Pokaż/ukryj zamianę",

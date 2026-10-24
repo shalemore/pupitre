@@ -20,6 +20,10 @@ export const esES = {
   },
   welcome: {
     dragDropHint: "O arrastra y suelta archivos Markdown en esta ventana",
+    chooseLook: "Elige una apariencia",
+    lookImmersiveDesc: "La barra de título y las barras laterales se apartan mientras escribes",
+    lookClassicDesc: "La barra de título y las barras laterales siempre visibles",
+    lookHint: "Puedes cambiarlo luego en Preferencias › Apariencia",
   },
   editor: {
     toggleReplace: "Mostrar u ocultar reemplazar",

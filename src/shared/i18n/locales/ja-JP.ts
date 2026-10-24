@@ -20,6 +20,10 @@ export const jaJP = {
   },
   welcome: {
     dragDropHint: "Markdown ファイルをウィンドウに直接ドラッグ＆ドロップすることもできます",
+    chooseLook: "外観を選択",
+    lookImmersiveDesc: "書いている間はタイトルバーとサイドバーが脇に退きます",
+    lookClassicDesc: "タイトルバーとサイドバーを常に表示します",
+    lookHint: "あとから「環境設定 › 外観」で変更できます",
   },
   editor: {
     toggleReplace: "置換の表示切り替え",

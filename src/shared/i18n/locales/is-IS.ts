@@ -22,6 +22,10 @@ export const isIS = {
   },
   welcome: {
     dragDropHint: "Þú getur einnig dregið Markdown-skrár á þennan glugga",
+    chooseLook: "Veldu útlit",
+    lookImmersiveDesc: "Titilstikan og hliðarstikurnar víkja á meðan þú skrifar",
+    lookClassicDesc: "Titilstikan og hliðarstikurnar eru alltaf sýnilegar",
+    lookHint: "Þú getur breytt þessu síðar í Forstillingar › Útlit",
   },
   editor: {
     toggleReplace: "Sýna/fela skipti",

@@ -2,8 +2,9 @@ import { FilePlus, FolderOpen } from "lucide-solid";
 import { For, Show, type Component } from "solid-js";
 import { Button, Kbd, ListItem } from "@/components/ui";
 import { t } from "@/i18n";
-import { isMacOS } from "@/lib/desktop";
+import { desktop, isMacOS } from "@/lib/desktop";
 import { fileNameOf } from "@/lib/file";
+import { LookChooser } from "./look-chooser";
 
 interface WelcomeScreenProps {
   recentFiles: readonly string[];
@@ -22,6 +23,10 @@ export const WelcomeScreen: Component<WelcomeScreenProps> = (props) => {
       <h1 class="text-xl font-semibold tracking-tight text-foreground mb-6">
         {t().common.appName}
       </h1>
+
+      <Show when={desktop.initialState.firstRun}>
+        <LookChooser />
+      </Show>
 
       <div class="flex items-center gap-3 mb-8">
         <Button variant="brand" onClick={props.onNewDocument}>

@@ -20,6 +20,10 @@ export const enUS = {
   },
   welcome: {
     dragDropHint: "Or drag and drop Markdown files into this window",
+    chooseLook: "Choose a look",
+    lookImmersiveDesc: "The title bar and sidebars step aside while you write",
+    lookClassicDesc: "The title bar and sidebars always stay in view",
+    lookHint: "Change it later in Preferences › Appearance",
   },
   editor: {
     toggleReplace: "Toggle Replace",

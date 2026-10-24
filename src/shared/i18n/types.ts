@@ -77,6 +77,10 @@ export interface TranslationSchema {
   };
   readonly welcome: {
     readonly dragDropHint: string;
+    readonly chooseLook: string;
+    readonly lookImmersiveDesc: string;
+    readonly lookClassicDesc: string;
+    readonly lookHint: string;
   };
   readonly editor: {
     readonly toggleReplace: string;

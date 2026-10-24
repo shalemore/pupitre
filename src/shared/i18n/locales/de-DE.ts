@@ -20,6 +20,10 @@ export const deDE = {
   },
   welcome: {
     dragDropHint: "Oder Markdown-Dateien direkt in dieses Fenster ziehen",
+    chooseLook: "Darstellung wählen",
+    lookImmersiveDesc: "Titelleiste und Seitenleisten weichen beim Schreiben zur Seite",
+    lookClassicDesc: "Titelleiste und Seitenleisten bleiben immer sichtbar",
+    lookHint: "Später unter Einstellungen › Darstellung änderbar",
   },
   editor: {
     toggleReplace: "Ersetzen ein-/ausblenden",

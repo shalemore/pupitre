@@ -22,6 +22,10 @@ export const faIR = {
   },
   welcome: {
     dragDropHint: "یا پرونده‌های Markdown را به این پنجره بکشید و رها کنید",
+    chooseLook: "یک ظاهر انتخاب کنید",
+    lookImmersiveDesc: "نوار عنوان و نوارهای کناری هنگام نوشتن کنار می‌روند",
+    lookClassicDesc: "نوار عنوان و نوارهای کناری همیشه دیده می‌شوند",
+    lookHint: "بعداً می‌توانید آن را در تنظیمات › ظاهر تغییر دهید",
   },
   editor: {
     toggleReplace: "نمایش یا پنهان کردن جایگزینی",

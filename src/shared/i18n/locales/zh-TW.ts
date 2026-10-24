@@ -20,6 +20,10 @@ export const zhTW = {
   },
   welcome: {
     dragDropHint: "亦可直接將 Markdown 檔案拖曳至視窗中",
+    chooseLook: "選擇外觀",
+    lookImmersiveDesc: "書寫時標題列和側邊欄自動讓開",
+    lookClassicDesc: "標題列和側邊欄始終顯示",
+    lookHint: "之後可在「偏好設定 › 外觀」中變更",
   },
   editor: {
     toggleReplace: "切換取代",

@@ -20,6 +20,10 @@ export const itIT = {
   },
   welcome: {
     dragDropHint: "Oppure trascina e rilascia i file Markdown in questa finestra",
+    chooseLook: "Scegli un aspetto",
+    lookImmersiveDesc: "La barra del titolo e le barre laterali si fanno da parte mentre scrivi",
+    lookClassicDesc: "La barra del titolo e le barre laterali restano sempre visibili",
+    lookHint: "Puoi cambiarlo in seguito in Preferenze › Aspetto",
   },
   editor: {
     toggleReplace: "Mostra/nascondi sostituzione",

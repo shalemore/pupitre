@@ -20,6 +20,10 @@ export const frFR = {
   },
   welcome: {
     dragDropHint: "Vous pouvez aussi glisser-déposer des fichiers Markdown ici",
+    chooseLook: "Choisir une apparence",
+    lookImmersiveDesc: "La barre de titre et les barres latérales s'effacent pendant l'écriture",
+    lookClassicDesc: "La barre de titre et les barres latérales restent toujours visibles",
+    lookHint: "Modifiable plus tard dans Préférences › Apparence",
   },
   editor: {
     toggleReplace: "Afficher/masquer le remplacement",

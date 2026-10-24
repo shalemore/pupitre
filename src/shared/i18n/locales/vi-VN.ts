@@ -21,6 +21,10 @@ export const viVN = {
   },
   welcome: {
     dragDropHint: "Hoặc kéo và thả tệp Markdown thẳng vào cửa sổ này",
+    chooseLook: "Chọn giao diện",
+    lookImmersiveDesc: "Thanh tiêu đề và các thanh bên nhường chỗ khi bạn viết",
+    lookClassicDesc: "Thanh tiêu đề và các thanh bên luôn hiển thị",
+    lookHint: "Bạn có thể đổi sau trong Tùy chọn › Hiển thị",
   },
   editor: {
     toggleReplace: "Hiện/ẩn thay thế",

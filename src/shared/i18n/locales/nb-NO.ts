@@ -21,6 +21,10 @@ export const nbNO = {
   },
   welcome: {
     dragDropHint: "Du kan også dra Markdown-filer inn i dette vinduet",
+    chooseLook: "Velg et utseende",
+    lookImmersiveDesc: "Tittellinjen og sidefeltene viker unna mens du skriver",
+    lookClassicDesc: "Tittellinjen og sidefeltene er alltid synlige",
+    lookHint: "Du kan endre det senere under Innstillinger › Utseende",
   },
   editor: {
     toggleReplace: "Vis/skjul erstatt",

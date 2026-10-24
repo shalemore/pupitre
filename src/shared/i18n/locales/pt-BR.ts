@@ -20,6 +20,11 @@ export const ptBR = {
   },
   welcome: {
     dragDropHint: "Ou arraste e solte arquivos Markdown nesta janela",
+    chooseLook: "Escolha uma aparência",
+    lookImmersiveDesc:
+      "A barra de título e as barras laterais saem do caminho enquanto você escreve",
+    lookClassicDesc: "A barra de título e as barras laterais ficam sempre visíveis",
+    lookHint: "Você pode mudar depois em Preferências › Aparência",
   },
   editor: {
     toggleReplace: "Mostrar/ocultar substituição",

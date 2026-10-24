@@ -20,6 +20,10 @@ export const koKR = {
   },
   welcome: {
     dragDropHint: "Markdown 파일을 창으로 직접 드래그 앤 드롭할 수도 있습니다",
+    chooseLook: "모양 선택",
+    lookImmersiveDesc: "글을 쓰는 동안 제목 표시줄과 사이드바가 비켜 줍니다",
+    lookClassicDesc: "제목 표시줄과 사이드바를 항상 표시합니다",
+    lookHint: "나중에 환경설정 › 모양에서 바꿀 수 있습니다",
   },
   editor: {
     toggleReplace: "바꾸기 표시 전환",

@@ -21,6 +21,10 @@ export const svSE = {
   },
   welcome: {
     dragDropHint: "Du kan också dra Markdown-filer till det här fönstret",
+    chooseLook: "Välj ett utseende",
+    lookImmersiveDesc: "Namnlisten och sidofälten viker undan medan du skriver",
+    lookClassicDesc: "Namnlisten och sidofälten är alltid synliga",
+    lookHint: "Du kan ändra det senare under Inställningar › Utseende",
   },
   editor: {
     toggleReplace: "Växla Ersätt",

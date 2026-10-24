@@ -20,6 +20,10 @@ export const zhCN = {
   },
   welcome: {
     dragDropHint: "也可以直接把 Markdown 文件拖拽到窗口中",
+    chooseLook: "选择外观",
+    lookImmersiveDesc: "书写时标题栏和侧边栏自动让开",
+    lookClassicDesc: "标题栏和侧边栏始终显示",
+    lookHint: "之后可在 偏好设置 › 外观 中更改",
   },
   editor: {
     toggleReplace: "切换替换",

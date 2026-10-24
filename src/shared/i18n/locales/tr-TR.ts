@@ -21,6 +21,10 @@ export const trTR = {
   },
   welcome: {
     dragDropHint: "Markdown dosyalarını bu pencereye de sürükleyebilirsiniz",
+    chooseLook: "Bir görünüm seçin",
+    lookImmersiveDesc: "Siz yazarken başlık çubuğu ve kenar çubukları kenara çekilir",
+    lookClassicDesc: "Başlık çubuğu ve kenar çubukları her zaman görünür kalır",
+    lookHint: "Bunu daha sonra Tercihler › Görünüm bölümünden değiştirebilirsiniz",
   },
   editor: {
     toggleReplace: "Değiştirmeyi aç/kapat",

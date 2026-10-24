@@ -155,6 +155,8 @@ export interface RendererEvents {
 export interface InitialState {
   settings: Settings;
   settingsPath: string;
+  /** True until a settings file exists; the welcome screen then lets the user pick a window style. */
+  firstRun: boolean;
   /** False for a copy that a package manager owns, which must not replace itself with the installer. */
   canSelfUpdate: boolean;
   recentFiles: readonly string[];

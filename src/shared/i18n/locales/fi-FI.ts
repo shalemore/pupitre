@@ -21,6 +21,10 @@ export const fiFI = {
   },
   welcome: {
     dragDropHint: "Voit myös vetää Markdown-tiedostoja tähän ikkunaan",
+    chooseLook: "Valitse ulkoasu",
+    lookImmersiveDesc: "Otsikkopalkki ja sivupalkit väistyvät kirjoittaessasi",
+    lookClassicDesc: "Otsikkopalkki ja sivupalkit pysyvät aina näkyvissä",
+    lookHint: "Voit muuttaa tämän myöhemmin kohdassa Asetukset › Ulkoasu",
   },
   editor: {
     toggleReplace: "Näytä/piilota korvaaminen",

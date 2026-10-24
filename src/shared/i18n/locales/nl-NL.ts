@@ -21,6 +21,10 @@ export const nlNL = {
   },
   welcome: {
     dragDropHint: "Of sleep Markdown-bestanden naar dit venster",
+    chooseLook: "Kies een weergave",
+    lookImmersiveDesc: "De titelbalk en zijbalken wijken terwijl je schrijft",
+    lookClassicDesc: "De titelbalk en zijbalken blijven altijd zichtbaar",
+    lookHint: "Je kunt dit later wijzigen in Voorkeuren › Weergave",
   },
   editor: {
     toggleReplace: "Zoeken en vervangen",

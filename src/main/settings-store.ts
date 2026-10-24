@@ -19,14 +19,25 @@ const listeners = new Set<(settings: Settings) => void>();
  */
 let file: Record<string, unknown> | undefined;
 let current: Settings | undefined;
+let firstRun = false;
 
 export function getSettingsPath(): string {
   return join(app.getPath("userData"), "settings.json");
 }
 
 function settingsFile(): Record<string, unknown> {
-  file ??= fileObjectSchema.parse(readJsonFile(getSettingsPath()));
+  if (file === undefined) {
+    const raw = readJsonFile(getSettingsPath());
+    firstRun = raw === undefined;
+    file = fileObjectSchema.parse(raw);
+  }
   return file;
+}
+
+/** Whether there was no settings file when the app started, so nothing has been chosen yet. */
+export function isFirstRun(): boolean {
+  settingsFile();
+  return firstRun;
 }
 
 export function getSettings(): Settings {

@@ -20,6 +20,10 @@ export const ptPT = {
   },
   welcome: {
     dragDropHint: "Ou arraste ficheiros Markdown para esta janela",
+    chooseLook: "Escolha uma aparência",
+    lookImmersiveDesc: "A barra de título e as barras laterais afastam-se enquanto escreve",
+    lookClassicDesc: "A barra de título e as barras laterais ficam sempre visíveis",
+    lookHint: "Pode alterar mais tarde em Preferências › Aparência",
   },
   editor: {
     toggleReplace: "Mostrar substituição",

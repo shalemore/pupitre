@@ -21,6 +21,10 @@ export const daDK = {
   },
   welcome: {
     dragDropHint: "Du kan også trække Markdown-filer ind i dette vindue",
+    chooseLook: "Vælg et udseende",
+    lookImmersiveDesc: "Titellinjen og sidebjælkerne viger, mens du skriver",
+    lookClassicDesc: "Titellinjen og sidebjælkerne er altid synlige",
+    lookHint: "Du kan ændre det senere under Indstillinger › Udseende",
   },
   editor: {
     toggleReplace: "Vis/skjul erstat",

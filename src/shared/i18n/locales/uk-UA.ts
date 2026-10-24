@@ -25,6 +25,10 @@ export const ukUA = {
   },
   welcome: {
     dragDropHint: "Також можна перетягнути файли Markdown у це вікно",
+    chooseLook: "Оберіть вигляд",
+    lookImmersiveDesc: "Заголовок вікна й бічні панелі відступають, поки ви пишете",
+    lookClassicDesc: "Заголовок вікна й бічні панелі завжди на виду",
+    lookHint: "Пізніше це можна змінити в Параметри › Вигляд",
   },
   editor: {
     toggleReplace: "Показати/сховати заміну",

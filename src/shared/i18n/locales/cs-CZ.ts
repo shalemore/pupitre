@@ -25,6 +25,10 @@ export const csCZ = {
   },
   welcome: {
     dragDropHint: "Markdown soubory můžete také přetáhnout do tohoto okna",
+    chooseLook: "Vyberte vzhled",
+    lookImmersiveDesc: "Záhlaví okna a postranní panely při psaní ustoupí",
+    lookClassicDesc: "Záhlaví okna a postranní panely jsou stále vidět",
+    lookHint: "Později to lze změnit v Předvolby › Vzhled",
   },
   editor: {
     toggleReplace: "Zobrazit/skrýt nahrazení",

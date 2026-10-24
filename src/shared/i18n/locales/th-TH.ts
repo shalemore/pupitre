@@ -24,6 +24,10 @@ export const thTH = {
   },
   welcome: {
     dragDropHint: "หรือลากไฟล์ Markdown มาวางในหน้าต่างนี้ได้เลย",
+    chooseLook: "เลือกรูปลักษณ์",
+    lookImmersiveDesc: "แถบชื่อเรื่องและแถบด้านข้างหลบให้ขณะที่คุณเขียน",
+    lookClassicDesc: "แถบชื่อเรื่องและแถบด้านข้างแสดงอยู่เสมอ",
+    lookHint: "เปลี่ยนได้ภายหลังที่ การตั้งค่า › รูปลักษณ์",
   },
   editor: {
     toggleReplace: "แสดง/ซ่อนการแทนที่",

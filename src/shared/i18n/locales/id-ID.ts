@@ -21,6 +21,10 @@ export const idID = {
   },
   welcome: {
     dragDropHint: "Atau seret dan lepas berkas Markdown langsung ke jendela ini",
+    chooseLook: "Pilih tampilan",
+    lookImmersiveDesc: "Bilah judul dan bilah samping menyingkir saat Anda menulis",
+    lookClassicDesc: "Bilah judul dan bilah samping selalu terlihat",
+    lookHint: "Dapat diubah nanti di Preferensi › Tampilan",
   },
   editor: {
     toggleReplace: "Tampilkan/sembunyikan ganti",
