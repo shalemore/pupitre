@@ -53,10 +53,12 @@ export const MainWindow: Component = () => {
   const [findMode, setFindMode] = createSignal<FindMode>("closed");
   const [initialSearch, setInitialSearch] = createSignal("");
   const [matchStats, setMatchStats] = createSignal<MatchStats>({ current: 0, total: 0 });
+  const [menuOpen, setMenuOpen] = createSignal(false);
   const immersive = () => settings().windowStyle === "immersive";
   const chrome = createImmersiveChrome(
     () => immersive() && session.activeDocument() !== undefined,
     () => settings().sidebarPinned,
+    menuOpen,
   );
 
   // A folder the user opened shows at once, whatever document is open; opening a document from
@@ -269,7 +271,7 @@ export const MainWindow: Component = () => {
           </span>
         </div>
         <Show when={!isMacOS}>
-          <MenuBar />
+          <MenuBar onOpenChange={setMenuOpen} />
         </Show>
 
         <div class="flex-1 min-w-0 px-4 flex items-center justify-center gap-2 font-medium text-foreground">

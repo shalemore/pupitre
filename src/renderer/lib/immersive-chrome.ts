@@ -24,8 +24,16 @@ const SIDE_EDGE = 16;
  * Leaving the page is deliberately not treated as leaving the edge: the title bar is a drag
  * region, which the page never sees the pointer over, so a "pointer left" event fires as soon as
  * the pointer reaches the title bar and would fold it again under the pointer.
+ *
+ * `titleBarPinned` keeps the title bar out while something in it is in use past the top of the
+ * window, such as an open menu: its panel hangs below the bar, where the pointer is already too far
+ * down to count as near the top, so the bar would fold away under it.
  */
-export function createImmersiveChrome(canFold: () => boolean, sidebarsPinned: () => boolean) {
+export function createImmersiveChrome(
+  canFold: () => boolean,
+  sidebarsPinned: () => boolean,
+  titleBarPinned: () => boolean,
+) {
   const [writing, setWriting] = createSignal(false);
   const [nearTop, setNearTop] = createSignal(false);
   const [nearStart, setNearStart] = createSignal(false);
@@ -35,7 +43,7 @@ export function createImmersiveChrome(canFold: () => boolean, sidebarsPinned: ()
   let pulled = 0;
 
   const shown = (nearEdge: boolean) => !canFold() || !writing() || nearEdge;
-  const titleBarVisible = () => shown(nearTop());
+  const titleBarVisible = () => titleBarPinned() || shown(nearTop());
   const sidebarVisible = () => sidebarsPinned() || shown(nearStart());
   const endSidebarVisible = () => sidebarsPinned() || shown(nearEnd());
 

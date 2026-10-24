@@ -14,12 +14,17 @@ interface OpenMenu {
   anchor: DOMRect;
 }
 
+interface MenuBarProps {
+  /** Told whether a menu is open, so an immersive title bar can stay unfolded under it. */
+  onOpenChange?: (open: boolean) => void;
+}
+
 /**
  * The menu bar Windows and Linux show in their title bar; macOS keeps the system one. The entries
  * follow the settings, the recent files and the open document, so they are asked for each time a
  * menu opens instead of being kept in sync.
  */
-export const MenuBar: Component = () => {
+export const MenuBar: Component<MenuBarProps> = (props) => {
   const [open, setOpen] = createSignal<OpenMenu>();
   // Answers to earlier asks must not reopen a menu that was switched or closed in the meantime
   let asked = 0;
@@ -48,12 +53,14 @@ export const MenuBar: Component = () => {
     const menus: Menus = await desktop.invoke("menu:items");
     if (request !== asked) return;
     setOpen({ menu, entries: menus[menu], anchor: button.getBoundingClientRect() });
+    props.onOpenChange?.(true);
   };
 
   const close = () => {
     cancelLeave();
     asked++;
     setOpen(undefined);
+    props.onOpenChange?.(false);
     previousFocus?.focus();
     previousFocus = undefined;
   };
