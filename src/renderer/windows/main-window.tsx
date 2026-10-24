@@ -59,14 +59,22 @@ export const MainWindow: Component = () => {
     () => settings().sidebarPinned,
   );
 
-  const folderRoot = createMemo(() => {
-    const dropped = openedFolder();
-    const doc = session.activeDocument();
-    if (dropped !== undefined && (doc?.path === undefined || isInsideFolder(dropped, doc.path))) {
-      return dropped;
-    }
-    return doc?.folder ?? dropped;
-  });
+  // A folder the user opened shows at once, whatever document is open; opening a document from
+  // outside it hands the sidebar back to the document's own folder
+  const folderRoot = createMemo(() => openedFolder() ?? session.activeDocument()?.folder);
+  createEffect(
+    on(
+      () => session.activeDocument()?.id,
+      () => {
+        const folder = openedFolder();
+        const path = session.activeDocument()?.path;
+        if (folder !== undefined && path !== undefined && !isInsideFolder(folder, path)) {
+          setOpenedFolder(undefined);
+        }
+      },
+      { defer: true },
+    ),
+  );
   // The folder in the sidebar is the one whose own settings file, if it has one, applies
   createEffect(() => void desktop.invoke("workspace:set", folderRoot() ?? null));
   const split = () => settings().sidebarLayout === "split";
