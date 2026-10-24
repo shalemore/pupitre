@@ -149,6 +149,7 @@ export const ptPT = {
     theme: "Tema",
     animations: "Animações",
     animationsDesc: "Transições e deslocamento suave",
+    zoom: "Zoom",
     animationsOn: "Ligadas",
     animationsOff: "Desligadas",
     showOutline: "Mostrar barras laterais",

@@ -147,6 +147,7 @@ export const zhTW = {
     theme: "主題",
     animations: "動畫",
     animationsDesc: "轉場動畫與平滑捲動",
+    zoom: "縮放",
     animationsOn: "開啟",
     animationsOff: "關閉",
     showOutline: "顯示側邊欄",

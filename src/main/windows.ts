@@ -10,6 +10,8 @@ import {
 } from "electron";
 import type { AppCommand, CaptionSide, WindowColors } from "@shared/desktop-api";
 import { setupContextMenu } from "./context-menu";
+import { onSettingsChange } from "./settings-store";
+import { applyZoom, stepZoom } from "./zoom";
 
 /** The renderer picks the view to show from location.hash. */
 type View = "main" | "settings";
@@ -118,10 +120,13 @@ function createWindow(view: View, options: BrowserWindowConstructorOptions): Bro
   });
   // Windows only show the app's own page; a dropped file or a clicked link must never navigate it away
   webContents.on("will-navigate", (event) => event.preventDefault());
-  // Electron does not handle Ctrl+wheel zoom by itself; use the same step as the menu
-  webContents.on("zoom-changed", (_event, direction) => {
-    webContents.setZoomLevel(webContents.getZoomLevel() + (direction === "in" ? 0.5 : -0.5));
-  });
+  if (view === "main") {
+    // Electron does not handle Ctrl+wheel zoom by itself; it steps the setting like the menu does
+    webContents.on("zoom-changed", (_event, direction) => stepZoom(direction));
+    webContents.on("did-finish-load", () => applyZoom(webContents));
+    const unsubscribe = onSettingsChange(() => applyZoom(webContents));
+    window.on("closed", unsubscribe);
+  }
 
   const hash = view === "main" ? "" : view;
   const devServerUrl = process.env["ELECTRON_RENDERER_URL"];

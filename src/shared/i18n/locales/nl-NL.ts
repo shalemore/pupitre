@@ -154,6 +154,7 @@ export const nlNL = {
     theme: "Thema",
     animations: "Animaties",
     animationsDesc: "Overgangen en vloeiend scrollen",
+    zoom: "Zoom",
     animationsOn: "Aan",
     animationsOff: "Uit",
     showOutline: "Zijbalken tonen",

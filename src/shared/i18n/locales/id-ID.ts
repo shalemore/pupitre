@@ -152,6 +152,7 @@ export const idID = {
     theme: "Tema",
     animations: "Animasi",
     animationsDesc: "Transisi dan gulir yang halus",
+    zoom: "Zoom",
     animationsOn: "Aktif",
     animationsOff: "Nonaktif",
     showOutline: "Tampilkan bilah samping",

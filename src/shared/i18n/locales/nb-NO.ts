@@ -153,6 +153,7 @@ export const nbNO = {
     theme: "Tema",
     animations: "Animasjoner",
     animationsDesc: "Overganger og jevn rulling",
+    zoom: "Zoom",
     animationsOn: "På",
     animationsOff: "Av",
     showOutline: "Vis sidefelt",

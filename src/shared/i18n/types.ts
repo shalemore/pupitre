@@ -204,6 +204,7 @@ export interface TranslationSchema {
     readonly theme: string;
     readonly animations: string;
     readonly animationsDesc: string;
+    readonly zoom: string;
     readonly animationsOn: string;
     readonly animationsOff: string;
     readonly showOutline: string;

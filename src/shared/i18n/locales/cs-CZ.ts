@@ -156,6 +156,7 @@ export const csCZ = {
     theme: "Motiv",
     animations: "Animace",
     animationsDesc: "Přechody a plynulé posouvání",
+    zoom: "Přiblížení",
     animationsOn: "Zapnuto",
     animationsOff: "Vypnuto",
     showOutline: "Zobrazit postranní panely",

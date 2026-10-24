@@ -154,6 +154,7 @@ export const huHU = {
     theme: "Téma",
     animations: "Animációk",
     animationsDesc: "Átmenetek és sima görgetés",
+    zoom: "Nagyítás",
     animationsOn: "Be",
     animationsOff: "Ki",
     showOutline: "Oldalsávok megjelenítése",

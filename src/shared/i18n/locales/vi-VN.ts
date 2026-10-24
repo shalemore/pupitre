@@ -152,6 +152,7 @@ export const viVN = {
     theme: "Giao diện",
     animations: "Hiệu ứng động",
     animationsDesc: "Chuyển cảnh và cuộn mượt",
+    zoom: "Thu phóng",
     animationsOn: "Bật",
     animationsOff: "Tắt",
     showOutline: "Hiện thanh bên",

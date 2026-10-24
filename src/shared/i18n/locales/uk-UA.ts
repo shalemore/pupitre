@@ -157,6 +157,7 @@ export const ukUA = {
     theme: "Тема",
     animations: "Анімації",
     animationsDesc: "Переходи та плавне прокручування",
+    zoom: "Масштаб",
     animationsOn: "Увімкнено",
     animationsOff: "Вимкнено",
     showOutline: "Показувати бічні панелі",

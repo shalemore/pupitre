@@ -156,6 +156,7 @@ export const ruRU = {
     theme: "Тема",
     animations: "Анимации",
     animationsDesc: "Переходы и плавная прокрутка",
+    zoom: "Масштаб",
     animationsOn: "Включены",
     animationsOff: "Выключены",
     showOutline: "Показывать боковые панели",

@@ -149,6 +149,7 @@ export const enUS = {
     theme: "Theme",
     animations: "Animations",
     animationsDesc: "Transitions and smooth scrolling",
+    zoom: "Zoom",
     animationsOn: "On",
     animationsOff: "Off",
     showOutline: "Show Sidebars",

@@ -150,6 +150,7 @@ export const itIT = {
     theme: "Tema",
     animations: "Animazioni",
     animationsDesc: "Transizioni e scorrimento fluido",
+    zoom: "Zoom",
     animationsOn: "Attive",
     animationsOff: "Disattivate",
     showOutline: "Mostra le barre laterali",

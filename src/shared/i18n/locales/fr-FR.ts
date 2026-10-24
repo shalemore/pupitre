@@ -150,6 +150,7 @@ export const frFR = {
     theme: "Thème",
     animations: "Animations",
     animationsDesc: "Transitions et défilement fluide",
+    zoom: "Zoom",
     animationsOn: "Activées",
     animationsOff: "Désactivées",
     showOutline: "Afficher les barres latérales",

@@ -153,6 +153,7 @@ export const svSE = {
     theme: "Tema",
     animations: "Animationer",
     animationsDesc: "Övergångar och mjuk rullning",
+    zoom: "Zoom",
     animationsOn: "På",
     animationsOff: "Av",
     showOutline: "Visa sidofält",

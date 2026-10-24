@@ -153,6 +153,7 @@ export const elGR = {
     theme: "Θέμα",
     animations: "Κινούμενα σχέδια",
     animationsDesc: "Μεταβάσεις και ομαλή κύλιση",
+    zoom: "Μεγέθυνση",
     animationsOn: "Ενεργά",
     animationsOff: "Ανενεργά",
     showOutline: "Εμφάνιση πλαϊνών γραμμών",

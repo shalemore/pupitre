@@ -154,6 +154,7 @@ export const trTR = {
     theme: "Tema",
     animations: "Animasyonlar",
     animationsDesc: "Geçişler ve yumuşak kaydırma",
+    zoom: "Yakınlaştırma",
     animationsOn: "Açık",
     animationsOff: "Kapalı",
     showOutline: "Kenar Çubuklarını Göster",

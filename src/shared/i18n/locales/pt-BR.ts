@@ -149,6 +149,7 @@ export const ptBR = {
     theme: "Tema",
     animations: "Animações",
     animationsDesc: "Transições e rolagem suave",
+    zoom: "Zoom",
     animationsOn: "Ativadas",
     animationsOff: "Desativadas",
     showOutline: "Mostrar barras laterais",

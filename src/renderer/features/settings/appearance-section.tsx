@@ -1,6 +1,6 @@
 import type { Settings } from "@shared/settings";
 import { Show, type Component } from "solid-js";
-import { Select, Switch } from "@/components/ui";
+import { Select, Slider, Switch } from "@/components/ui";
 import { t } from "@/i18n";
 import { settings, updateSettings } from "@/lib/settings";
 import { type ThemeInfo, THEMES } from "@/lib/theme";
@@ -67,6 +67,17 @@ export const AppearanceSection: Component = () => (
           onChange={(uiFont) => void updateSettings({ uiFont })}
           emptyLabel={t().settings.systemDefault}
           aria-label={t().settings.uiFont}
+        />
+      </SettingField>
+
+      <SettingField name="zoom" title={t().settings.zoom} description={`${settings().zoom}%`}>
+        <Slider
+          value={settings().zoom}
+          min={50}
+          max={300}
+          step={10}
+          onChange={(zoom) => void updateSettings({ zoom })}
+          aria-label={t().settings.zoom}
         />
       </SettingField>
 

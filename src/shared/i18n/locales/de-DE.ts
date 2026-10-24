@@ -150,6 +150,7 @@ export const deDE = {
     theme: "Design",
     animations: "Animationen",
     animationsDesc: "Übergänge und weiches Scrollen",
+    zoom: "Zoom",
     animationsOn: "An",
     animationsOff: "Aus",
     showOutline: "Seitenleisten anzeigen",

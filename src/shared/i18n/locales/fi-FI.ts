@@ -153,6 +153,7 @@ export const fiFI = {
     theme: "Teema",
     animations: "Animaatiot",
     animationsDesc: "Siirtymät ja pehmeä vieritys",
+    zoom: "Zoomaus",
     animationsOn: "Päällä",
     animationsOff: "Pois",
     showOutline: "Näytä sivupalkit",

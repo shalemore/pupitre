@@ -154,6 +154,7 @@ export const isIS = {
     theme: "Þema",
     animations: "Hreyfingar",
     animationsDesc: "Skil og mjúk skrun",
+    zoom: "Aðdráttur",
     animationsOn: "Á",
     animationsOff: "Af",
     showOutline: "Sýna hliðarstikur",

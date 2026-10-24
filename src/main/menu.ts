@@ -15,6 +15,7 @@ import { t } from "./i18n";
 import { clearRecentFiles, getRecentFiles } from "./recent-files";
 import { getSettings, updateSettings } from "./settings-store";
 import { dispatchToMainWindow, getMainWindow, showSettingsWindow } from "./windows";
+import { resetZoom, stepZoom } from "./zoom";
 
 const REPOSITORY_URL = "https://github.com/shalemore/pupitre";
 const separator: MenuItemConstructorOptions = { type: "separator" };
@@ -195,10 +196,17 @@ function buildTemplate(): MenuItemConstructorOptions[] {
           click: () => updateSettings({ typewriterMode: !getSettings().typewriterMode }),
         },
         separator,
-        { label: labels.zoomIn, role: "zoomIn" },
-        { label: labels.zoomOut, role: "zoomOut" },
+        { label: labels.zoomIn, accelerator: "CmdOrCtrl+Plus", click: () => stepZoom("in") },
+        // The same shortcut without Shift, which is what the key is on most keyboards
+        {
+          label: labels.zoomIn,
+          accelerator: "CmdOrCtrl+=",
+          visible: false,
+          click: () => stepZoom("in"),
+        },
+        { label: labels.zoomOut, accelerator: "CmdOrCtrl+-", click: () => stepZoom("out") },
         // Ctrl+0 belongs to "Paragraph", as in Typora
-        { label: labels.resetZoom, role: "resetZoom", accelerator: "CmdOrCtrl+Shift+0" },
+        { label: labels.resetZoom, accelerator: "CmdOrCtrl+Shift+0", click: resetZoom },
         separator,
         { label: labels.fullScreen, role: "togglefullscreen" },
         ...(app.isPackaged

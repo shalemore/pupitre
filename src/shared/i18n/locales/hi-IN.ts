@@ -152,6 +152,7 @@ export const hiIN = {
     theme: "थीम",
     animations: "एनिमेशन",
     animationsDesc: "बदलाव के प्रभाव और सहज स्क्रॉल",
+    zoom: "ज़ूम",
     animationsOn: "चालू",
     animationsOff: "बंद",
     showOutline: "साइडबार दिखाएँ",

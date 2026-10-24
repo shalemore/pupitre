@@ -158,6 +158,7 @@ export const plPL = {
     theme: "Motyw",
     animations: "Animacje",
     animationsDesc: "Przejścia i płynne przewijanie",
+    zoom: "Powiększenie",
     animationsOn: "Włączone",
     animationsOff: "Wyłączone",
     showOutline: "Pokaż paski boczne",

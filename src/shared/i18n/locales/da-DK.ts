@@ -153,6 +153,7 @@ export const daDK = {
     theme: "Tema",
     animations: "Animationer",
     animationsDesc: "Overgange og jævn rulning",
+    zoom: "Zoom",
     animationsOn: "Til",
     animationsOff: "Fra",
     showOutline: "Vis sidebjælker",

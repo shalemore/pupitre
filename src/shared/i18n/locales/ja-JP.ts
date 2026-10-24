@@ -150,6 +150,7 @@ export const jaJP = {
     theme: "テーマ",
     animations: "アニメーション",
     animationsDesc: "トランジションとスムーズスクロール",
+    zoom: "拡大率",
     animationsOn: "オン",
     animationsOff: "オフ",
     showOutline: "サイドバーを表示",

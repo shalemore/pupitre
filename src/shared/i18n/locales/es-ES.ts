@@ -148,6 +148,7 @@ export const esES = {
     theme: "Tema",
     animations: "Animaciones",
     animationsDesc: "Transiciones y desplazamiento suave",
+    zoom: "Zoom",
     animationsOn: "Activadas",
     animationsOff: "Desactivadas",
     showOutline: "Mostrar barras laterales",

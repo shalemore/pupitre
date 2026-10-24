@@ -154,6 +154,7 @@ export const thTH = {
     theme: "ธีม",
     animations: "แอนิเมชัน",
     animationsDesc: "การเปลี่ยนผ่านและเลื่อนอย่างนุ่มนวล",
+    zoom: "ซูม",
     animationsOn: "เปิด",
     animationsOff: "ปิด",
     showOutline: "แสดงแถบด้านข้าง",

@@ -153,6 +153,7 @@ export const faIR = {
     theme: "قالب",
     animations: "انیمیشن‌ها",
     animationsDesc: "گذارها و پیمایش نرم",
+    zoom: "بزرگ‌نمایی",
     animationsOn: "روشن",
     animationsOff: "خاموش",
     showOutline: "نمایش نوارهای کناری",

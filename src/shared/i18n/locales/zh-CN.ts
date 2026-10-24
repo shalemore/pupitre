@@ -147,6 +147,7 @@ export const zhCN = {
     theme: "主题",
     animations: "动画",
     animationsDesc: "过渡动画与平滑滚动",
+    zoom: "缩放",
     animationsOn: "开启",
     animationsOff: "关闭",
     showOutline: "显示侧边栏",

@@ -167,6 +167,7 @@ export const ar = {
     theme: "السمة",
     animations: "الحركات",
     animationsDesc: "الانتقالات والتمرير السلس",
+    zoom: "التكبير",
     animationsOn: "تشغيل",
     animationsOff: "إيقاف",
     showOutline: "إظهار الأشرطة الجانبية",

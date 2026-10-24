@@ -150,6 +150,7 @@ export const koKR = {
     theme: "테마",
     animations: "애니메이션",
     animationsDesc: "전환 효과와 부드러운 스크롤",
+    zoom: "확대/축소",
     animationsOn: "켜기",
     animationsOff: "끄기",
     showOutline: "사이드바 표시",
