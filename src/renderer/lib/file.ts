@@ -2,6 +2,16 @@ export function fileNameOf(path: string): string {
   return path.split(/[\\/]/).pop() ?? path;
 }
 
+// Unicode's left-to-right isolate and the mark that ends it, written as code points because
+// the characters themselves are invisible
+const LEFT_TO_RIGHT_ISOLATE = String.fromCodePoint(0x2066);
+const POP_ISOLATE = String.fromCodePoint(0x2069);
+
+/** A file name that reads left to right inside a longer text, without a right-to-left name reordering the text around it. */
+export function isolateFileName(name: string): string {
+  return `${LEFT_TO_RIGHT_ISOLATE}${name}${POP_ISOLATE}`;
+}
+
 export function isInsideFolder(folder: string, path: string): boolean {
   const normalize = (value: string) => value.replaceAll("\\", "/").replace(/\/+$/, "");
   return normalize(path).startsWith(`${normalize(folder)}/`);

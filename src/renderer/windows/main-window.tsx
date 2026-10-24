@@ -34,7 +34,7 @@ import { WelcomeScreen } from "@/features/welcome/welcome-screen";
 import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
 import { createImmersiveChrome } from "@/lib/immersive-chrome";
-import { fileNameOf, isInsideFolder } from "@/lib/file";
+import { fileNameOf, isInsideFolder, isolateFileName } from "@/lib/file";
 import { recentFiles } from "@/lib/recent-files";
 import { settings, updateSettings } from "@/lib/settings";
 import type { TextStats } from "@/lib/text-stats";
@@ -117,7 +117,9 @@ export const MainWindow: Component = () => {
   );
 
   createEffect(() => {
-    document.title = session.activeDocument() ? `${session.fileName()} - Pupitre` : "Pupitre";
+    document.title = session.activeDocument()
+      ? `${isolateFileName(session.fileName())} - Pupitre`
+      : "Pupitre";
   });
   createEffect(() => {
     void desktop.invoke("window:set-document-state", {
