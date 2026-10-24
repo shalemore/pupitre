@@ -104,7 +104,9 @@ const FolderRow: Component<{ entry: FolderEntry; depth: number; tree: TreeContex
         >
           <Folder class="size-3.5 shrink-0" />
         </Show>
-        <span class="min-w-0 truncate">{props.entry.name}</span>
+        <span class="min-w-0 truncate">
+          <bdi dir="ltr">{props.entry.name}</bdi>
+        </span>
       </ListItem>
       <Show when={expanded()}>
         <div class="space-y-0.5 animate-in fade-in-0 slide-in-from-top-1 duration-base ease-enter">

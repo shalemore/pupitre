@@ -273,7 +273,9 @@ export const MainWindow: Component = () => {
                 class="size-1.5 shrink-0 rounded-full bg-brand animate-in fade-in-0 zoom-in-50 duration-snap"
               />
             </Show>
-            <bdi class="truncate">{session.fileName()}</bdi>
+            <bdi dir="ltr" class="truncate">
+              {session.fileName()}
+            </bdi>
           </Show>
         </div>
 

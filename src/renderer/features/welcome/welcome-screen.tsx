@@ -54,11 +54,8 @@ export const WelcomeScreen: Component<WelcomeScreenProps> = (props) => {
                 title={path}
                 class="group justify-between gap-2 ps-2.5"
               >
-                <span
-                  dir="auto"
-                  class="min-w-0 truncate font-medium text-foreground transition-colors group-hover:text-brand"
-                >
-                  {fileNameOf(path)}
+                <span class="min-w-0 truncate font-medium text-foreground transition-colors group-hover:text-brand">
+                  <bdi dir="ltr">{fileNameOf(path)}</bdi>
                 </span>
                 <span dir="ltr" class="text-2xs font-mono text-tertiary truncate max-w-40">
                   {path}
