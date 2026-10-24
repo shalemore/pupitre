@@ -6,6 +6,7 @@ import {
   indentLess,
   indentMore,
 } from "@codemirror/commands";
+import { closeBrackets, closeBracketsKeymap } from "@codemirror/autocomplete";
 import { commonmarkLanguage, markdown } from "@codemirror/lang-markdown";
 import { syntaxTree } from "@codemirror/language";
 import { languages } from "@codemirror/language-data";
@@ -214,11 +215,17 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         doc: props.markdown,
         extensions: [
           history(),
+          closeBrackets(),
+          // Backticks pair as well, which the default brackets leave out
+          EditorState.languageData.of(() => [
+            { closeBrackets: { brackets: ["(", "[", "{", "'", '"', "`"] } },
+          ]),
           // Ahead of lang-markdown's Enter, which only continues lists and quotes
           Prec.highest(keymap.of([{ key: "Enter", run: insertParagraphBreak }])),
           keymap.of([
             ...formatKeymap(markdownStyle),
             { key: "Tab", run: inList(indentMore), shift: inList(indentLess) },
+            ...closeBracketsKeymap,
             ...defaultKeymap,
             ...historyKeymap,
           ]),
