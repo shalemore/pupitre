@@ -8,6 +8,12 @@ directories:
 files:
   - out/**
   - package.json
+# The licenses that travel with the app: Pupitre's own, and those of the packages bundled in it
+extraResources:
+  - from: LICENSE
+    to: LICENSE.txt
+  - from: out/renderer/THIRD-PARTY-NOTICES.txt
+    to: THIRD-PARTY-NOTICES.txt
 publish:
   provider: github
   owner: shalemore

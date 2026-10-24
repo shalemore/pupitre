@@ -86,6 +86,9 @@ docs/         design notes and mockups
 - The renderer only talks to its host through `window.desktop`, so another host can run it. The web
   demo (`src/web/host.ts`) keeps files in memory and settings in localStorage; a new channel in
   `InvokeChannels` has to be given a handler there too, which the compiler enforces.
+- The renderer builds write `THIRD-PARTY-NOTICES.txt` with the license of every package that was
+  bundled (`scripts/third-party-notices.ts`); electron-builder ships it in `resources/` and the web
+  demo serves it. A license that asks for more than its text gets a note in `NOTES` there.
 - The main process owns all privileged work: file system access, native dialogs, menus, the
   settings file and auto updates. The renderer asks for it through IPC.
 - Windows run with `sandbox: true` and `contextIsolation: true`. External URLs open in the system
