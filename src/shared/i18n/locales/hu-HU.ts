@@ -18,6 +18,9 @@ export const huHU = {
     outline: "Vázlat",
     folder: "Mappa",
     folderUnreadable: "A mappa nem olvasható.",
+    newFolder: "Új mappa",
+    rename: "Átnevezés",
+    moveToTrash: "Áthelyezés a kukába",
   },
   welcome: {
     dragDropHint: "A Markdown-fájlokat erre az ablakra is húzhatja",
@@ -84,6 +87,7 @@ export const huHU = {
     fileDeletedMessage: (fileName: string) => `A(z) ${fileName} fájlt egy másik program törölte.`,
     fileDeletedDetail:
       "Mentsd újra, hogy megtartsd a dokumentumot. Ha nem mented, mentetlenül nyitva marad, és bezáráskor újra rákérdezünk.",
+    fileActionFailed: "A módosítást nem sikerült végrehajtani.",
   },
   about: {
     windowTitle: "A Pupitre névjegye",

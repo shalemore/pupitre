@@ -19,6 +19,9 @@ export const faIR = {
     outline: "طرح کلی",
     folder: "پوشه",
     folderUnreadable: "این پوشه خوانده نشد.",
+    newFolder: "پوشهٔ جدید",
+    rename: "تغییر نام",
+    moveToTrash: "انتقال به سطل زباله",
   },
   welcome: {
     dragDropHint: "یا پرونده‌های Markdown را به این پنجره بکشید و رها کنید",
@@ -84,6 +87,7 @@ export const faIR = {
     fileDeletedMessage: (fileName: string) => `${fileName} توسط برنامهٔ دیگری حذف شد.`,
     fileDeletedDetail:
       "برای نگه داشتن این سند دوباره آن را ذخیره کنید. اگر ذخیره نکنید، بدون ذخیره باز می‌ماند و هنگام بستن دوباره پرسیده می‌شود.",
+    fileActionFailed: "تغییر انجام نشد.",
   },
   about: {
     windowTitle: "درباره Pupitre",

@@ -18,6 +18,9 @@ export const trTR = {
     outline: "Ana hat",
     folder: "Klasör",
     folderUnreadable: "Bu klasör okunamadı.",
+    newFolder: "Yeni Klasör",
+    rename: "Yeniden Adlandır",
+    moveToTrash: "Çöp Kutusuna Taşı",
   },
   welcome: {
     dragDropHint: "Markdown dosyalarını bu pencereye de sürükleyebilirsiniz",
@@ -85,6 +88,7 @@ export const trTR = {
     fileDeletedMessage: (fileName: string) => `${fileName} başka bir program tarafından silindi.`,
     fileDeletedDetail:
       "Bu belgeyi korumak için yeniden kaydedin. Kaydetmezseniz kaydedilmemiş olarak açık kalır ve kapatırken tekrar sorulur.",
+    fileActionFailed: "Değişiklik yapılamadı.",
   },
   about: {
     windowTitle: "Pupitre Hakkında",

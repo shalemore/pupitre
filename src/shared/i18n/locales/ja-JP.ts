@@ -17,6 +17,9 @@ export const jaJP = {
     outline: "アウトライン",
     folder: "フォルダ",
     folderUnreadable: "このフォルダを読み込めませんでした。",
+    newFolder: "新規フォルダー",
+    rename: "名前を変更",
+    moveToTrash: "ゴミ箱へ移動",
   },
   welcome: {
     dragDropHint: "Markdown ファイルをウィンドウに直接ドラッグ＆ドロップすることもできます",
@@ -82,6 +85,7 @@ export const jaJP = {
       `${fileName} は他のプログラムによって削除されました。`,
     fileDeletedDetail:
       "もう一度保存すると、この書類を残せます。保存しない場合は未保存のまま開いた状態になり、閉じるときにもう一度確認します。",
+    fileActionFailed: "変更できませんでした。",
   },
   about: {
     windowTitle: "Pupitre について",

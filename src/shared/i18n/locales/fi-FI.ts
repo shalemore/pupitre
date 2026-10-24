@@ -18,6 +18,9 @@ export const fiFI = {
     outline: "Jäsennys",
     folder: "Kansio",
     folderUnreadable: "Kansiota ei voitu lukea.",
+    newFolder: "Uusi kansio",
+    rename: "Nimeä uudelleen",
+    moveToTrash: "Siirrä roskakoriin",
   },
   welcome: {
     dragDropHint: "Voit myös vetää Markdown-tiedostoja tähän ikkunaan",
@@ -84,6 +87,7 @@ export const fiFI = {
     fileDeletedMessage: (fileName: string) => `${fileName} on poistettu toisessa ohjelmassa.`,
     fileDeletedDetail:
       "Tallenna se uudelleen säilyttääksesi asiakirjan. Jos et tallenna, se pysyy auki tallentamattomana ja sinulta kysytään uudelleen suljettaessa.",
+    fileActionFailed: "Muutosta ei voitu tehdä.",
   },
   about: {
     windowTitle: "Tietoja Pupitresta",

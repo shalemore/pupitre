@@ -74,6 +74,9 @@ export interface TranslationSchema {
     readonly outline: string;
     readonly folder: string;
     readonly folderUnreadable: string;
+    readonly newFolder: string;
+    readonly rename: string;
+    readonly moveToTrash: string;
   };
   readonly welcome: {
     readonly dragDropHint: string;
@@ -129,6 +132,7 @@ export interface TranslationSchema {
     /** Asked for a file that is neither UTF-8 nor UTF-16, which declares no encoding of its own. */
     readonly encodingMessage: string;
     readonly encodingCannotStore: (encoding: string) => string;
+    readonly fileActionFailed: string;
     readonly externalChangeMessage: (fileName: string) => string;
     readonly externalChangeDetail: string;
     readonly overwrite: string;

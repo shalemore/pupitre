@@ -17,6 +17,9 @@ export const itIT = {
     outline: "Struttura",
     folder: "Cartella",
     folderUnreadable: "Impossibile leggere questa cartella.",
+    newFolder: "Nuova cartella",
+    rename: "Rinomina",
+    moveToTrash: "Sposta nel cestino",
   },
   welcome: {
     dragDropHint: "Oppure trascina e rilascia i file Markdown in questa finestra",
@@ -82,6 +85,7 @@ export const itIT = {
       `${fileName} è stato eliminato da un altro programma.`,
     fileDeletedDetail:
       "Salvalo di nuovo per conservare il documento. Altrimenti resta aperto non salvato e ti verrà chiesto di nuovo alla chiusura.",
+    fileActionFailed: "Non è stato possibile apportare la modifica.",
   },
   about: {
     windowTitle: "Informazioni su Pupitre",

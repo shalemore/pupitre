@@ -314,6 +314,21 @@ const handlers: Handlers = {
     return opened(path);
   },
   "folder:list": listFolder,
+  // The demo folder lives in memory, so its files can be created, renamed and deleted like any other
+  "folder:create": (parent, name, kind) => {
+    const path = `${parent}/${name}`;
+    if (kind === "file") files.set(path, "");
+    return path;
+  },
+  "path:rename": (path, name) => {
+    const target = `${path.slice(0, path.lastIndexOf("/"))}/${name}`;
+    const content = files.get(path) ?? "";
+    files.delete(path);
+    files.set(target, content);
+    return target;
+  },
+  "path:trash": (path) => void files.delete(path),
+  "path:locate": (path) => opened(path),
   "folder:watch": nothing,
   "folder:unwatch": nothing,
   "document:watch": nothing,

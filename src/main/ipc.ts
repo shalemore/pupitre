@@ -21,6 +21,7 @@ import {
 } from "@shared/desktop-api";
 import { showAboutDialog } from "./about";
 import { decodeDocument, decodeWith, encodeDocument } from "./encoding";
+import { createEntry, renameEntry, trashEntry } from "./file-actions";
 import { setAsDefaultMarkdownApp } from "./default-app";
 import { t } from "./i18n";
 import { clickMenuItem, menuSnapshot, setDocumentState } from "./menu";
@@ -198,6 +199,10 @@ export function registerIpcHandlers(): void {
     return canceled || path === undefined ? null : path;
   });
   handle("folder:list", (_event, path) => listFolder(path));
+  handle("folder:create", (_event, parent, name, kind) => createEntry(parent, name, kind));
+  handle("path:rename", (_event, path, name) => renameEntry(path, name));
+  handle("path:trash", (_event, path) => trashEntry(path));
+  handle("path:locate", (_event, path) => locate(path));
   handle("folder:watch", (event, path) => watchPath(event.sender, "folder:changed", path));
   handle("folder:unwatch", (event, path) => unwatchPath(event.sender, "folder:changed", path));
   handle("document:watch", (event, path) => watchPath(event.sender, "document:changed", path));

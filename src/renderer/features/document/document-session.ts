@@ -270,6 +270,13 @@ ${message}`,
     }
   };
 
+  /** Follows a document that was renamed in the folder tree: its text and history stay, only where it lives changes. */
+  const handleRename = async (oldPath: string, newPath: string) => {
+    const doc = activeDocument();
+    if (doc?.path !== oldPath) return;
+    setActiveDocument({ ...doc, ...(await desktop.invoke("path:locate", newPath)) });
+  };
+
   const watchedPath = createMemo(() => activeDocument()?.path);
   createEffect(() => {
     const path = watchedPath();
@@ -308,6 +315,7 @@ ${message}`,
     open,
     openPath,
     openSample,
+    handleRename,
     restoreOnStartup,
     confirmDiscard,
     dispose: scheduleSave.clear,

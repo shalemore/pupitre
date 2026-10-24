@@ -17,6 +17,9 @@ export const deDE = {
     outline: "Gliederung",
     folder: "Ordner",
     folderUnreadable: "Dieser Ordner kann nicht gelesen werden.",
+    newFolder: "Neuer Ordner",
+    rename: "Umbenennen",
+    moveToTrash: "In den Papierkorb",
   },
   welcome: {
     dragDropHint: "Oder Markdown-Dateien direkt in dieses Fenster ziehen",
@@ -82,6 +85,7 @@ export const deDE = {
       `${fileName} wurde von einem anderen Programm gelöscht.`,
     fileDeletedDetail:
       "Speichere die Datei erneut, um das Dokument zu behalten. Ohne Speichern bleibt es ungesichert geöffnet, und beim Schließen wirst du erneut gefragt.",
+    fileActionFailed: "Die Änderung konnte nicht vorgenommen werden.",
   },
   about: {
     windowTitle: "Über Pupitre",

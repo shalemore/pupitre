@@ -18,6 +18,9 @@ export const idID = {
     outline: "Kerangka",
     folder: "Folder",
     folderUnreadable: "Folder ini tidak dapat dibaca.",
+    newFolder: "Folder Baru",
+    rename: "Ganti Nama",
+    moveToTrash: "Pindahkan ke Sampah",
   },
   welcome: {
     dragDropHint: "Atau seret dan lepas berkas Markdown langsung ke jendela ini",
@@ -83,6 +86,7 @@ export const idID = {
     fileDeletedMessage: (fileName: string) => `${fileName} dihapus oleh program lain.`,
     fileDeletedDetail:
       "Simpan lagi untuk mempertahankan dokumen ini. Jika tidak disimpan, dokumen tetap terbuka sebagai belum tersimpan dan Anda akan ditanya lagi saat menutupnya.",
+    fileActionFailed: "Perubahan tidak dapat dilakukan.",
   },
   about: {
     windowTitle: "Tentang Pupitre",

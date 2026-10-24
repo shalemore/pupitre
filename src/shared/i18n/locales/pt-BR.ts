@@ -17,6 +17,9 @@ export const ptBR = {
     outline: "Estrutura",
     folder: "Pasta",
     folderUnreadable: "Não foi possível ler esta pasta.",
+    newFolder: "Nova pasta",
+    rename: "Renomear",
+    moveToTrash: "Mover para a lixeira",
   },
   welcome: {
     dragDropHint: "Ou arraste e solte arquivos Markdown nesta janela",
@@ -81,6 +84,7 @@ export const ptBR = {
     fileDeletedMessage: (fileName: string) => `${fileName} foi excluído por outro programa.`,
     fileDeletedDetail:
       "Salve novamente para manter este documento. Se não salvar, ele continua aberto sem salvar e a pergunta será repetida ao fechar.",
+    fileActionFailed: "Não foi possível fazer a alteração.",
   },
   about: {
     windowTitle: "Sobre o Pupitre",

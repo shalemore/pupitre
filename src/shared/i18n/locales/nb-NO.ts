@@ -18,6 +18,9 @@ export const nbNO = {
     outline: "Disposisjon",
     folder: "Mappe",
     folderUnreadable: "Mappen kunne ikke leses.",
+    newFolder: "Ny mappe",
+    rename: "Gi nytt navn",
+    moveToTrash: "Flytt til papirkurven",
   },
   welcome: {
     dragDropHint: "Du kan også dra Markdown-filer inn i dette vinduet",
@@ -83,6 +86,7 @@ export const nbNO = {
     fileDeletedMessage: (fileName: string) => `${fileName} er slettet av et annet program.`,
     fileDeletedDetail:
       "Lagre den på nytt for å beholde dokumentet. Lagrer du ikke, blir det værende åpent som ulagret, og du blir spurt igjen når du lukker det.",
+    fileActionFailed: "Endringen kunne ikke gjøres.",
   },
   about: {
     windowTitle: "Om Pupitre",

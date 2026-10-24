@@ -17,6 +17,9 @@ export const koKR = {
     outline: "개요",
     folder: "폴더",
     folderUnreadable: "이 폴더를 읽을 수 없습니다.",
+    newFolder: "새 폴더",
+    rename: "이름 바꾸기",
+    moveToTrash: "휴지통으로 이동",
   },
   welcome: {
     dragDropHint: "Markdown 파일을 창으로 직접 드래그 앤 드롭할 수도 있습니다",
@@ -82,6 +85,7 @@ export const koKR = {
       `${fileName} 파일이 다른 프로그램에서 삭제되었습니다.`,
     fileDeletedDetail:
       "다시 저장하면 이 문서를 보존할 수 있습니다. 저장하지 않으면 저장되지 않은 상태로 열려 있으며, 닫을 때 다시 확인합니다.",
+    fileActionFailed: "변경할 수 없습니다.",
   },
   about: {
     windowTitle: "Pupitre 정보",

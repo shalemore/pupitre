@@ -21,6 +21,9 @@ export const thTH = {
     outline: "โครงร่าง",
     folder: "โฟลเดอร์",
     folderUnreadable: "ไม่สามารถอ่านโฟลเดอร์นี้ได้",
+    newFolder: "โฟลเดอร์ใหม่",
+    rename: "เปลี่ยนชื่อ",
+    moveToTrash: "ย้ายไปถังขยะ",
   },
   welcome: {
     dragDropHint: "หรือลากไฟล์ Markdown มาวางในหน้าต่างนี้ได้เลย",
@@ -84,6 +87,7 @@ export const thTH = {
     fileDeletedMessage: (fileName: string) => `${fileName} ถูกลบโดยโปรแกรมอื่น`,
     fileDeletedDetail:
       "บันทึกอีกครั้งเพื่อเก็บเอกสารนี้ไว้ หากไม่บันทึก เอกสารจะยังเปิดอยู่ในสถานะยังไม่บันทึก และจะถามอีกครั้งเมื่อปิด",
+    fileActionFailed: "ดำเนินการเปลี่ยนแปลงไม่สำเร็จ",
   },
   about: {
     windowTitle: "เกี่ยวกับ Pupitre",

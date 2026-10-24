@@ -113,6 +113,11 @@ export const MainWindow: Component = () => {
       root={root}
       activePath={session.activeDocument()?.path}
       onOpenFile={(path) => session.openPath(path, false)}
+      onPathChanged={(oldPath, newPath) => {
+        // A renamed folder keeps the sidebar showing it, and a renamed document keeps its editor
+        if (openedFolder() === oldPath) setOpenedFolder(newPath);
+        void session.handleRename(oldPath, newPath);
+      }}
     />
   );
 

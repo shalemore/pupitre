@@ -22,6 +22,9 @@ export const ukUA = {
     outline: "Структура",
     folder: "Тека",
     folderUnreadable: "Не вдалося прочитати цю теку.",
+    newFolder: "Нова папка",
+    rename: "Перейменувати",
+    moveToTrash: "Перемістити до кошика",
   },
   welcome: {
     dragDropHint: "Також можна перетягнути файли Markdown у це вікно",
@@ -87,6 +90,7 @@ export const ukUA = {
     fileDeletedMessage: (fileName: string) => `${fileName}: файл видалено іншою програмою.`,
     fileDeletedDetail:
       "Збережіть його знову, щоб зберегти документ. Якщо не зберігати, він залишиться відкритим як незбережений, і під час закриття запитання повториться.",
+    fileActionFailed: "Не вдалося виконати зміну.",
   },
   about: {
     windowTitle: "Про Pupitre",

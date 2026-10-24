@@ -18,6 +18,9 @@ export const viVN = {
     outline: "Dàn ý",
     folder: "Thư mục",
     folderUnreadable: "Không thể đọc thư mục này.",
+    newFolder: "Thư mục mới",
+    rename: "Đổi tên",
+    moveToTrash: "Chuyển vào thùng rác",
   },
   welcome: {
     dragDropHint: "Hoặc kéo và thả tệp Markdown thẳng vào cửa sổ này",
@@ -82,6 +85,7 @@ export const viVN = {
     fileDeletedMessage: (fileName: string) => `${fileName} đã bị chương trình khác xóa.`,
     fileDeletedDetail:
       "Hãy lưu lại để giữ tài liệu này. Nếu không lưu, tài liệu vẫn mở ở trạng thái chưa lưu và sẽ được hỏi lại khi đóng.",
+    fileActionFailed: "Không thể thực hiện thay đổi.",
   },
   about: {
     windowTitle: "Giới thiệu Pupitre",

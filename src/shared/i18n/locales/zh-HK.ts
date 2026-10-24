@@ -17,6 +17,9 @@ export const zhHK = {
     outline: "大綱",
     folder: "資料夾",
     folderUnreadable: "無法讀取該資料夾。",
+    newFolder: "新增資料夾",
+    rename: "重新命名",
+    moveToTrash: "移到回收站",
   },
   welcome: {
     dragDropHint: "亦可直接將 Markdown 檔案拖曳至視窗中",
@@ -78,6 +81,7 @@ export const zhHK = {
     fileDeletedMessage: (fileName: string) => `${fileName} 已被其他程式刪除。`,
     fileDeletedDetail:
       "重新儲存即可保留此文件。若不儲存，文件仍會保持開啟並視為未儲存，關閉時會再次詢問。",
+    fileActionFailed: "無法完成此變更。",
   },
   about: {
     windowTitle: "關於 Pupitre",

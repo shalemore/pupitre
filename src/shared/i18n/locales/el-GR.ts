@@ -18,6 +18,9 @@ export const elGR = {
     outline: "Διάρθρωση",
     folder: "Φάκελος",
     folderUnreadable: "Δεν ήταν δυνατή η ανάγνωση αυτού του φακέλου.",
+    newFolder: "Νέος φάκελος",
+    rename: "Μετονομασία",
+    moveToTrash: "Μετακίνηση στον κάδο",
   },
   welcome: {
     dragDropHint: "Μπορείτε επίσης να σύρετε αρχεία Markdown σε αυτό το παράθυρο",
@@ -83,6 +86,7 @@ export const elGR = {
     fileDeletedMessage: (fileName: string) => `Το ${fileName} διαγράφηκε από άλλο πρόγραμμα.`,
     fileDeletedDetail:
       "Αποθηκεύστε το ξανά για να διατηρήσετε το έγγραφο. Αν δεν το αποθηκεύσετε, θα παραμείνει ανοιχτό ως μη αποθηκευμένο και θα ερωτηθείτε ξανά κατά το κλείσιμο.",
+    fileActionFailed: "Δεν ήταν δυνατή η αλλαγή.",
   },
   about: {
     windowTitle: "Σχετικά με το Pupitre",

@@ -18,6 +18,9 @@ export const nlNL = {
     outline: "Overzicht",
     folder: "Map",
     folderUnreadable: "Deze map kan niet worden gelezen.",
+    newFolder: "Nieuwe map",
+    rename: "Naam wijzigen",
+    moveToTrash: "Naar de prullenbak",
   },
   welcome: {
     dragDropHint: "Of sleep Markdown-bestanden naar dit venster",
@@ -84,6 +87,7 @@ export const nlNL = {
     fileDeletedMessage: (fileName: string) => `${fileName} is door een ander programma verwijderd.`,
     fileDeletedDetail:
       "Sla het opnieuw op om dit document te behouden. Anders blijft het ongeopgeslagen geopend en word je bij het sluiten opnieuw gevraagd.",
+    fileActionFailed: "De wijziging kon niet worden doorgevoerd.",
   },
   about: {
     windowTitle: "Over Pupitre",

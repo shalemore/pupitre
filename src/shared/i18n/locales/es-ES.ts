@@ -17,6 +17,9 @@ export const esES = {
     outline: "Esquema",
     folder: "Carpeta",
     folderUnreadable: "No se puede leer esta carpeta.",
+    newFolder: "Nueva carpeta",
+    rename: "Cambiar nombre",
+    moveToTrash: "Mover a la papelera",
   },
   welcome: {
     dragDropHint: "O arrastra y suelta archivos Markdown en esta ventana",
@@ -80,6 +83,7 @@ export const esES = {
     fileDeletedMessage: (fileName: string) => `${fileName} fue eliminado por otro programa.`,
     fileDeletedDetail:
       "Guárdalo de nuevo para conservar este documento. Si no lo haces, seguirá abierto sin guardar y se te preguntará otra vez al cerrarlo.",
+    fileActionFailed: "No se pudo hacer el cambio.",
   },
   about: {
     windowTitle: "Acerca de Pupitre",

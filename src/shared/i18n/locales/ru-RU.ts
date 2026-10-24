@@ -22,6 +22,9 @@ export const ruRU = {
     outline: "Структура",
     folder: "Папка",
     folderUnreadable: "Не удалось прочитать эту папку.",
+    newFolder: "Новая папка",
+    rename: "Переименовать",
+    moveToTrash: "Переместить в корзину",
   },
   welcome: {
     dragDropHint: "Или перетащите файл Markdown в это окно",
@@ -87,6 +90,7 @@ export const ruRU = {
     fileDeletedMessage: (fileName: string) => `${fileName}: файл был удалён другой программой.`,
     fileDeletedDetail:
       "Сохраните его снова, чтобы сохранить документ. Если не сохранять, он останется открытым как несохранённый, и при закрытии вопрос повторится.",
+    fileActionFailed: "Не удалось выполнить изменение.",
   },
   about: {
     windowTitle: "О программе Pupitre",

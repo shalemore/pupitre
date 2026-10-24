@@ -17,6 +17,9 @@ export const zhCN = {
     outline: "大纲",
     folder: "文件夹",
     folderUnreadable: "无法读取该文件夹。",
+    newFolder: "新建文件夹",
+    rename: "重命名",
+    moveToTrash: "移到回收站",
   },
   welcome: {
     dragDropHint: "也可以直接把 Markdown 文件拖拽到窗口中",
@@ -78,6 +81,7 @@ export const zhCN = {
     fileDeletedMessage: (fileName: string) => `${fileName} 已被其他程序删除。`,
     fileDeletedDetail:
       "重新保存可保留此文档。若不保存，文档仍保持打开并视为未保存，关闭时会再次询问。",
+    fileActionFailed: "无法完成此更改。",
   },
   about: {
     windowTitle: "关于 Pupitre",

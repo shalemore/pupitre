@@ -17,6 +17,9 @@ export const enUS = {
     outline: "Outline",
     folder: "Folder",
     folderUnreadable: "This folder can't be read.",
+    newFolder: "New Folder",
+    rename: "Rename",
+    moveToTrash: "Move to Trash",
   },
   welcome: {
     dragDropHint: "Or drag and drop Markdown files into this window",
@@ -81,6 +84,7 @@ export const enUS = {
     fileDeletedMessage: (fileName: string) => `${fileName} was deleted by another program.`,
     fileDeletedDetail:
       "Save it again to keep this document. If you don't save, it stays open as unsaved and you'll be asked again when you close it.",
+    fileActionFailed: "The change couldn't be made.",
   },
   about: {
     windowTitle: "About Pupitre",

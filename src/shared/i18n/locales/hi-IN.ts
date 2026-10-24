@@ -18,6 +18,9 @@ export const hiIN = {
     outline: "रूपरेखा",
     folder: "फ़ोल्डर",
     folderUnreadable: "यह फ़ोल्डर पढ़ा नहीं जा सका।",
+    newFolder: "नया फ़ोल्डर",
+    rename: "नाम बदलें",
+    moveToTrash: "रीसायकल बिन में भेजें",
   },
   welcome: {
     dragDropHint: "या Markdown फ़ाइलों को सीधे इस विंडो में खींचकर छोड़ें",
@@ -82,6 +85,7 @@ export const hiIN = {
     fileDeletedMessage: (fileName: string) => `${fileName} को किसी अन्य प्रोग्राम ने हटा दिया है।`,
     fileDeletedDetail:
       "इस दस्तावेज़ को रखने के लिए इसे फिर से सहेजें। न सहेजने पर यह बिना सहेजे खुला रहेगा और बंद करते समय फिर पूछा जाएगा।",
+    fileActionFailed: "बदलाव नहीं किया जा सका।",
   },
   about: {
     windowTitle: "Pupitre के बारे में",

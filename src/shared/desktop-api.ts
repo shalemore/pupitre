@@ -122,6 +122,14 @@ export interface InvokeChannels {
   "document:read": (path: string) => OpenedDocument | null;
   /** Lists one level of a folder: directories first, then files, each sorted by name; hidden entries are left out. */
   "folder:list": (path: string) => FolderEntry[];
+  /** Creates an empty file or a folder inside `parent` and returns its path. */
+  "folder:create": (parent: string, name: string, kind: FolderEntry["kind"]) => string;
+  /** Renames a file or folder inside its own folder and returns its new path. */
+  "path:rename": (path: string, name: string) => string;
+  /** Moves a file or folder to the recycle bin of the system. */
+  "path:trash": (path: string) => void;
+  /** Where a path lives, so a renamed document keeps resolving its relative addresses. */
+  "path:locate": (path: string) => DocumentLocation;
   /** Starts or stops telling the window, through folder:changed, when the entries of a listed folder change. */
   "folder:watch": (path: string) => void;
   "folder:unwatch": (path: string) => void;

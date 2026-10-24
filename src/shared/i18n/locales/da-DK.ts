@@ -18,6 +18,9 @@ export const daDK = {
     outline: "Disposition",
     folder: "Mappe",
     folderUnreadable: "Mappen kunne ikke læses.",
+    newFolder: "Ny mappe",
+    rename: "Omdøb",
+    moveToTrash: "Flyt til papirkurv",
   },
   welcome: {
     dragDropHint: "Du kan også trække Markdown-filer ind i dette vindue",
@@ -83,6 +86,7 @@ export const daDK = {
     fileDeletedMessage: (fileName: string) => `${fileName} er slettet af et andet program.`,
     fileDeletedDetail:
       "Gem den igen for at beholde dokumentet. Gemmer du ikke, forbliver det åbent uden at være gemt, og du bliver spurgt igen, når du lukker det.",
+    fileActionFailed: "Ændringen kunne ikke udføres.",
   },
   about: {
     windowTitle: "Om Pupitre",

@@ -22,6 +22,9 @@ export const csCZ = {
     outline: "Osnova",
     folder: "Složka",
     folderUnreadable: "Tuto složku nelze přečíst.",
+    newFolder: "Nová složka",
+    rename: "Přejmenovat",
+    moveToTrash: "Přesunout do koše",
   },
   welcome: {
     dragDropHint: "Markdown soubory můžete také přetáhnout do tohoto okna",
@@ -87,6 +90,7 @@ export const csCZ = {
     fileDeletedMessage: (fileName: string) => `Soubor ${fileName} byl odstraněn jiným programem.`,
     fileDeletedDetail:
       "Uložte jej znovu, abyste dokument zachovali. Pokud jej neuložíte, zůstane otevřený jako neuložený a při zavření se zeptáme znovu.",
+    fileActionFailed: "Změnu se nepodařilo provést.",
   },
   about: {
     windowTitle: "O aplikaci Pupitre",

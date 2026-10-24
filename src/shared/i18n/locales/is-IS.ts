@@ -19,6 +19,9 @@ export const isIS = {
     outline: "Yfirlit",
     folder: "Mappa",
     folderUnreadable: "Ekki tókst að lesa þessa möppu.",
+    newFolder: "Ný mappa",
+    rename: "Endurnefna",
+    moveToTrash: "Færa í ruslatunnu",
   },
   welcome: {
     dragDropHint: "Þú getur einnig dregið Markdown-skrár á þennan glugga",
@@ -84,6 +87,7 @@ export const isIS = {
     fileDeletedMessage: (fileName: string) => `${fileName} var eytt af öðru forriti.`,
     fileDeletedDetail:
       "Vistaðu hana aftur til að halda skjalinu. Ef þú vistar ekki helst það opið óvistað og spurt verður aftur þegar því er lokað.",
+    fileActionFailed: "Ekki tókst að gera breytinguna.",
   },
   about: {
     windowTitle: "Um Pupitre",

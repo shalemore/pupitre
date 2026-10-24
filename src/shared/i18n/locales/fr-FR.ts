@@ -17,6 +17,9 @@ export const frFR = {
     outline: "Plan",
     folder: "Dossier",
     folderUnreadable: "Impossible de lire ce dossier.",
+    newFolder: "Nouveau dossier",
+    rename: "Renommer",
+    moveToTrash: "Mettre à la corbeille",
   },
   welcome: {
     dragDropHint: "Vous pouvez aussi glisser-déposer des fichiers Markdown ici",
@@ -82,6 +85,7 @@ export const frFR = {
     fileDeletedMessage: (fileName: string) => `${fileName} a été supprimé par un autre programme.`,
     fileDeletedDetail:
       "Enregistrez-le à nouveau pour conserver ce document. Sinon, il reste ouvert sans être enregistré et la question sera reposée à la fermeture.",
+    fileActionFailed: "La modification n'a pas pu être faite.",
   },
   about: {
     windowTitle: "À propos de Pupitre",

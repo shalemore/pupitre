@@ -18,6 +18,9 @@ export const svSE = {
     outline: "Disposition",
     folder: "Mapp",
     folderUnreadable: "Mappen kunde inte läsas.",
+    newFolder: "Ny mapp",
+    rename: "Byt namn",
+    moveToTrash: "Flytta till papperskorgen",
   },
   welcome: {
     dragDropHint: "Du kan också dra Markdown-filer till det här fönstret",
@@ -83,6 +86,7 @@ export const svSE = {
     fileDeletedMessage: (fileName: string) => `${fileName} har tagits bort av ett annat program.`,
     fileDeletedDetail:
       "Spara den igen för att behålla dokumentet. Om du inte sparar förblir det öppet osparat och du får frågan igen när du stänger det.",
+    fileActionFailed: "Ändringen kunde inte göras.",
   },
   about: {
     windowTitle: "Om Pupitre",

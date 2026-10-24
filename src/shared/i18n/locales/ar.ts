@@ -33,6 +33,9 @@ export const ar = {
     outline: "المخطط",
     folder: "المجلد",
     folderUnreadable: "تعذّرت قراءة هذا المجلد.",
+    newFolder: "مجلد جديد",
+    rename: "إعادة التسمية",
+    moveToTrash: "نقل إلى سلة المحذوفات",
   },
   welcome: {
     dragDropHint: "أو اسحب ملفات ماركداون وأفلتها في هذه النافذة",
@@ -97,6 +100,7 @@ export const ar = {
     fileDeletedMessage: (fileName: string) => `تم حذف ${fileName} بواسطة برنامج آخر.`,
     fileDeletedDetail:
       "احفظه مرة أخرى للاحتفاظ بهذا المستند. إذا لم تحفظه فسيبقى مفتوحًا دون حفظ وسيُطرح عليك السؤال مجددًا عند إغلاقه.",
+    fileActionFailed: "تعذّر إجراء التغيير.",
   },
   about: {
     windowTitle: "حول Pupitre",

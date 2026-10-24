@@ -22,6 +22,9 @@ export const plPL = {
     outline: "Konspekt",
     folder: "Folder",
     folderUnreadable: "Nie można odczytać tego folderu.",
+    newFolder: "Nowy folder",
+    rename: "Zmień nazwę",
+    moveToTrash: "Przenieś do kosza",
   },
   welcome: {
     dragDropHint: "Możesz też przeciągnąć pliki Markdown do tego okna",
@@ -89,6 +92,7 @@ export const plPL = {
       `Plik ${fileName} został usunięty przez inny program.`,
     fileDeletedDetail:
       "Zapisz go ponownie, aby zachować dokument. Jeśli nie zapiszesz, pozostanie otwarty jako niezapisany, a przy zamykaniu zapytamy ponownie.",
+    fileActionFailed: "Nie udało się wykonać zmiany.",
   },
   about: {
     windowTitle: "O programie Pupitre",

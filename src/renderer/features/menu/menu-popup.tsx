@@ -18,9 +18,9 @@ interface PanelProps {
   /** Closes this panel only, for a submenu that gives the focus back to its parent. */
   onCloseSelf?: () => void;
   /** Tells the bar that the pointer is over the menu, who keeps it open while it is. */
-  onPointerOver: () => void;
+  onPointerOver?: (() => void) | undefined;
   /** Tells the bar that the pointer left the menu, which folds it up after a moment. */
-  onPointerLeave: () => void;
+  onPointerLeave?: (() => void) | undefined;
 }
 
 const PANEL_GAP = 2;
@@ -266,9 +266,9 @@ export interface MenuPopupProps {
   onSelect: (entry: MenuItemEntry) => void;
   onClose: () => void;
   /** Tells the bar that the pointer is over the menu, who keeps it open while it is. */
-  onPointerOver: () => void;
+  onPointerOver?: (() => void) | undefined;
   /** Tells the bar that the pointer left the menu, which folds it up after a moment. */
-  onPointerLeave: () => void;
+  onPointerLeave?: (() => void) | undefined;
 }
 
 /** The menu under a title bar button, drawn by the window: Windows and Linux have no system menu bar to show. */
