@@ -30,6 +30,8 @@ export const settingsSchema = z.object({
   showWordCount: z.boolean().catch(true),
   focusMode: z.boolean().catch(false),
   typewriterMode: z.boolean().catch(false),
+  /** Where typewriter mode holds the line being written. */
+  typewriterPosition: z.enum(["center", "top", "bottom"]).catch("center"),
 
   // Editor; an empty font name means "use the theme's font"
   bodyFont: z.string().catch(""),

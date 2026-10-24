@@ -285,6 +285,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       const {
         focusMode: focus,
         typewriterMode: typewriter,
+        typewriterPosition,
         spellcheck,
         cursorShape,
         cursorBlink,
@@ -292,7 +293,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       view.dispatch({
         effects: [
           focusCompartment.reconfigure(focus ? focusMode : []),
-          typewriterCompartment.reconfigure(typewriter ? typewriterMode : []),
+          typewriterCompartment.reconfigure(typewriter ? typewriterMode(typewriterPosition) : []),
           spellcheckCompartment.reconfigure(
             EditorView.contentAttributes.of({ spellcheck: String(spellcheck) }),
           ),

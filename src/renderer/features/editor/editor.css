@@ -616,8 +616,13 @@
     opacity: 0.3;
   }
 
-  .md-document.typewriter-mode {
+  /* Room below the document for its last lines to reach the place the line is held at */
+  .md-document.typewriter-mode[data-typewriter="center"] {
     padding-block-end: 50vh;
+  }
+
+  .md-document.typewriter-mode[data-typewriter="top"] {
+    padding-block-end: 100vh;
   }
 }
 

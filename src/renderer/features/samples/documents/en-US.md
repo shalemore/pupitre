@@ -37,7 +37,7 @@ Move the cursor into **bold text**, a `code span` or a [link](https://github.com
 ## Writing modes
 
 - **Focus mode** dims everything except the paragraph you are writing.
-- **Typewriter mode** keeps the line you are writing in the middle of the window.
+- **Typewriter mode** keeps the line you are writing in the middle of the window, or near its top or bottom, as Preferences › Editor says.
 
 Both are in the **View** menu and in Preferences › Editor, and they can be combined.
 

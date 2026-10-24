@@ -288,6 +288,10 @@ export interface TranslationSchema {
     readonly focusModeDesc: string;
     readonly typewriterMode: string;
     readonly typewriterModeDesc: string;
+    readonly typewriterPosition: string;
+    readonly typewriterPositionCenter: string;
+    readonly typewriterPositionTop: string;
+    readonly typewriterPositionBottom: string;
     readonly windowStyle: string;
     readonly windowStyleDesc: string;
     readonly windowStyleClassic: string;

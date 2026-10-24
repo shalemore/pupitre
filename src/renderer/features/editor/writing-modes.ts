@@ -7,6 +7,7 @@ import {
   ViewPlugin,
   type ViewUpdate,
 } from "@codemirror/view";
+import type { Settings } from "@shared/settings";
 
 /**
  * Writing modes, each a self-contained extension that the editor switches with a compartment
@@ -61,17 +62,32 @@ export const focusMode: Extension = [
   ),
 ];
 
+/** Where typewriter mode holds the line, and how far from the window edge for the top and bottom. */
+const TYPEWRITER_ALIGN: Record<Settings["typewriterPosition"], "center" | "start" | "end"> = {
+  center: "center",
+  top: "start",
+  bottom: "end",
+};
+const TYPEWRITER_EDGE_MARGIN = 64;
+
 /**
- * Typewriter mode: the line being written stays in the vertical middle of the window and the
- * text moves instead of the cursor. Extra space below the document (editor.css) lets the last
- * lines reach the middle too. Selections made with the mouse are left where they are, otherwise
- * the text would jump away from the pointer while dragging.
+ * Typewriter mode: the line being written stays at one place in the window, the middle, near the
+ * top or near the bottom, and the text moves instead of the cursor. Extra space below the
+ * document (editor.css) lets the last lines reach that place too. Selections made with the mouse
+ * are left where they are, otherwise the text would jump away from the pointer while dragging.
  */
-export const typewriterMode: Extension = [
-  EditorView.contentAttributes.of({ class: "typewriter-mode" }),
-  EditorState.transactionExtender.of((tr) =>
-    (tr.docChanged || tr.selection) && !tr.isUserEvent("select.pointer")
-      ? { effects: EditorView.scrollIntoView(tr.newSelection.main.head, { y: "center" }) }
-      : null,
-  ),
-];
+export function typewriterMode(position: Settings["typewriterPosition"]): Extension {
+  return [
+    EditorView.contentAttributes.of({ class: "typewriter-mode", "data-typewriter": position }),
+    EditorState.transactionExtender.of((tr) =>
+      (tr.docChanged || tr.selection) && !tr.isUserEvent("select.pointer")
+        ? {
+            effects: EditorView.scrollIntoView(tr.newSelection.main.head, {
+              y: TYPEWRITER_ALIGN[position],
+              yMargin: position === "center" ? 5 : TYPEWRITER_EDGE_MARGIN,
+            }),
+          }
+        : null,
+    ),
+  ];
+}

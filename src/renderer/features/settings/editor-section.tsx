@@ -1,5 +1,5 @@
 import type { Settings } from "@shared/settings";
-import type { Component } from "solid-js";
+import { Show, type Component } from "solid-js";
 import { Select, Slider, Switch } from "@/components/ui";
 import { t } from "@/i18n";
 import { settings, updateSettings } from "@/lib/settings";
@@ -190,5 +190,20 @@ export const EditorSection: Component = () => (
         aria-label={t().settings.typewriterMode}
       />
     </SettingField>
+
+    <Show when={settings().typewriterMode}>
+      <SettingField name="typewriterPosition" title={t().settings.typewriterPosition}>
+        <Select<Settings["typewriterPosition"]>
+          value={settings().typewriterPosition}
+          onChange={(typewriterPosition) => void updateSettings({ typewriterPosition })}
+          options={[
+            { value: "center", label: t().settings.typewriterPositionCenter },
+            { value: "top", label: t().settings.typewriterPositionTop },
+            { value: "bottom", label: t().settings.typewriterPositionBottom },
+          ]}
+          aria-label={t().settings.typewriterPosition}
+        />
+      </SettingField>
+    </Show>
   </SettingsSection>
 );
