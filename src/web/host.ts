@@ -1,11 +1,11 @@
 import type {
   AppCommand,
   DesktopApi,
+  DesktopPlatform,
   FolderEntry,
   InvokeChannels,
   OpenedDocument,
   RendererEvents,
-  TopMenu,
 } from "@shared/desktop-api";
 import {
   FORMAT_ACTIONS,
@@ -13,6 +13,7 @@ import {
   PARAGRAPH_MENU_GROUPS,
   type FormatAction,
 } from "@shared/format";
+import { formatShortcut, type MenuEntry, type Menus, menusOf, type TopMenu } from "@shared/menu";
 import { getDictionary, resolveLocale } from "@shared/i18n";
 import {
   DEFAULT_SETTINGS,
@@ -29,10 +30,12 @@ import about from "./demo/about.md?raw";
 /**
  * The window.desktop of the demo in a browser: what the desktop app gets from its main process,
  * kept in the page. Settings live in localStorage, the files are a few in memory, and what a
- * browser cannot do (updates, folder settings, window controls, native menus) does nothing.
+ * browser cannot do (updates, folder settings, window controls) does nothing.
  */
 
 const SETTINGS_KEY = "pupitre:settings";
+/** A browser is closest to Linux: shortcuts are written with Ctrl and windows have no system menu bar. */
+const platform: DesktopPlatform = "linux";
 const DEMO_FOLDER = "/demo";
 const isSettingsWindow = location.hash === "#settings";
 const siteUrl = new URL("./", location.href).href;
@@ -172,34 +175,46 @@ function pickFile(): Promise<OpenedDocument | null> {
   });
 }
 
-// Menus: the desktop app pops up native ones, so the demo draws a plain list
-type MenuItem = { label: string; shortcut?: string | undefined; run: () => void } | "separator";
+// Menus: the window draws the menu bar itself, so the demo describes its entries the way the app's
+// main process does and keeps what each of them runs
+type DemoMenuEntry =
+  | "separator"
+  | {
+      label: string;
+      /** An Electron accelerator; it is written the way the platform shows it. */
+      shortcut?: string;
+      checked?: boolean;
+      run?: () => void;
+      submenu?: readonly DemoMenuEntry[];
+    };
 
-const divider: MenuItem = "separator";
+const divider: DemoMenuEntry = "separator";
+// The drawn menu reports the id of the entry that was picked; only one menu is open at a time
+let menuRuns = new Map<string, () => void>();
 
-function menuItems(menu: TopMenu): MenuItem[] {
+function menuItems(menu: TopMenu): DemoMenuEntry[] {
   const { menu: m, format } = labels();
   const send = (command: AppCommand) => () => dispatch(command);
-  const formatItems = (actions: readonly FormatAction[]): MenuItem[] =>
-    actions.map((action) => ({
-      label: format[action],
-      shortcut: FORMAT_ACTIONS.find(({ id }) => id === action)?.shortcut?.replace(
-        "CmdOrCtrl",
-        "Ctrl",
-      ),
-      run: send({ id: "format", action }),
-    }));
+  const formatItems = (actions: readonly FormatAction[]): DemoMenuEntry[] =>
+    actions.map((action) => {
+      const shortcut = FORMAT_ACTIONS.find(({ id }) => id === action)?.shortcut;
+      return {
+        label: format[action],
+        run: send({ id: "format", action }),
+        ...(shortcut === undefined ? {} : { shortcut }),
+      };
+    });
   switch (menu) {
     case "file":
       return [
         { label: m.newFile, run: send({ id: "file.new" }) },
         { label: m.openFile, run: send({ id: "file.open" }) },
         { label: m.openFolder, run: send({ id: "file.open-folder" }) },
-        "separator",
+        divider,
         { label: m.save, run: send({ id: "file.save" }) },
         { label: m.saveAs, run: send({ id: "file.save-as" }) },
         { label: m.exportPdf, run: send({ id: "file.export-pdf" }) },
-        "separator",
+        divider,
         { label: m.preferences, run: () => void handlers["window:open-settings"]() },
       ];
     case "edit":
@@ -220,11 +235,13 @@ function menuItems(menu: TopMenu): MenuItem[] {
         {
           label: m.focusMode,
           shortcut: "F8",
+          checked: settings.focusMode,
           run: () => updateSettings({ focusMode: !settings.focusMode }),
         },
         {
           label: m.typewriterMode,
           shortcut: "F9",
+          checked: settings.typewriterMode,
           run: () => updateSettings({ typewriterMode: !settings.typewriterMode }),
         },
       ];
@@ -239,45 +256,25 @@ function menuItems(menu: TopMenu): MenuItem[] {
   }
 }
 
-function popupMenu(menu: TopMenu, x: number, y: number): void {
-  const list = document.createElement("div");
-  list.className =
-    "fixed z-50 min-w-52 rounded-xl bg-popover p-1 text-xs text-foreground shadow-float select-none";
-  list.style.cssText = `left:${x}px;top:${y}px`;
-  const close = () => {
-    list.remove();
-    document.removeEventListener("pointerdown", onOutside, true);
-    document.removeEventListener("keydown", onKey, true);
-  };
-  const onOutside = (event: PointerEvent) =>
-    event.target instanceof Node && !list.contains(event.target) && close();
-  const onKey = (event: KeyboardEvent) => event.key === "Escape" && close();
-  for (const item of menuItems(menu)) {
-    if (item === "separator") {
-      list.append(
-        Object.assign(document.createElement("div"), { className: "my-1 h-px bg-border-subtle" }),
-      );
-      continue;
-    }
-    const button = document.createElement("button");
-    button.className =
-      "flex w-full cursor-pointer items-center justify-between gap-6 rounded-md px-2.5 py-1.5 text-start hover:bg-accent";
-    button.append(
-      item.label,
-      Object.assign(document.createElement("span"), {
-        className: "text-2xs text-muted-foreground",
-        textContent: item.shortcut ?? "",
-      }),
-    );
-    button.addEventListener("click", () => {
-      close();
-      item.run();
-    });
-    list.append(button);
-  }
-  document.body.append(list);
-  document.addEventListener("pointerdown", onOutside, true);
-  document.addEventListener("keydown", onKey, true);
+function menuEntries(entries: readonly DemoMenuEntry[], parentId: string): MenuEntry[] {
+  return entries.map((entry, index): MenuEntry => {
+    if (entry === "separator") return { type: "separator" };
+    const id = `${parentId}.${index}`;
+    if (entry.run !== undefined) menuRuns.set(id, entry.run);
+    return {
+      type: "item",
+      id,
+      label: entry.label,
+      ...(entry.shortcut === undefined ? {} : { shortcut: formatShortcut(entry.shortcut) }),
+      ...(entry.checked === undefined ? {} : { checked: entry.checked }),
+      ...(entry.submenu === undefined ? {} : { submenu: menuEntries(entry.submenu, id) }),
+    };
+  });
+}
+
+function menuSnapshot(): Menus {
+  menuRuns = new Map();
+  return menusOf((menu) => menuEntries(menuItems(menu), menu));
 }
 
 let dirty = false;
@@ -348,7 +345,8 @@ const handlers: Handlers = {
   "app:set-default-markdown-app": () => "failed",
   "app:dispatch": dispatch,
   "clipboard:write-text": (text) => void navigator.clipboard.writeText(text),
-  "menu:popup": popupMenu,
+  "menu:items": menuSnapshot,
+  "menu:click": (itemId) => menuRuns.get(itemId)?.(),
   "window:set-document-state": (state) => void (dirty = state.isDirty),
   "window:close-confirmed": nothing,
   "window:minimize": nothing,
@@ -362,7 +360,7 @@ const handlers: Handlers = {
 };
 
 const desktop: DesktopApi = {
-  platform: "linux",
+  platform,
   versions: { electron: "web", chrome: "" },
   invoke: async <K extends keyof InvokeChannels>(
     channel: K,

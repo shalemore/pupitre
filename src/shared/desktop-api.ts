@@ -1,5 +1,9 @@
 import type { FormatAction } from "./format";
+import type { Menus } from "./menu";
 import type { SettingKey, Settings } from "./settings";
+
+/** The platforms the app is built for; the web demo reports the one it looks most like. */
+export type DesktopPlatform = "darwin" | "win32" | "linux";
 
 export interface DocumentLocation {
   path: string;
@@ -71,10 +75,6 @@ export type AppCommand =
   /** The document has unsaved changes before the window closes; the renderer should ask the user first. */
   | { id: "window.close" };
 
-/** Top-level menus of the application menu; Windows and Linux render them in the title bar and pop up the matching native submenu on click. */
-export const TOP_MENUS = ["file", "edit", "paragraphMenu", "format", "view", "help"] as const;
-export type TopMenu = (typeof TOP_MENUS)[number];
-
 /** Window background and secondary text color under the current theme, used to avoid a flash before the window shows and to color the Windows title bar buttons. */
 export interface WindowColors {
   background: string;
@@ -140,7 +140,10 @@ export interface InvokeChannels {
   "app:dispatch": (command: AppCommand) => void;
   /** Puts plain text on the clipboard, for copy buttons; the renderer has no clipboard permission. */
   "clipboard:write-text": (text: string) => void;
-  "menu:popup": (menu: TopMenu, x: number, y: number) => void;
+  /** The entries of every top-level menu; Windows and Linux draw them in the title bar, and the contents are asked for each time a menu opens because they follow the settings, the recent files and the document. */
+  "menu:items": () => Menus;
+  /** Runs the menu entry the window drew; the id is the one menu:items gave that entry. */
+  "menu:click": (itemId: string) => void;
   "window:set-document-state": (state: DocumentState) => void;
   /** The user has confirmed (saved or discarded changes); the window can really close. */
   "window:close-confirmed": () => void;
@@ -187,7 +190,7 @@ export interface InitialState {
 export const INITIAL_STATE_SYNC = "app:initial-state";
 
 export interface DesktopApi {
-  readonly platform: "darwin" | "win32" | "linux";
+  readonly platform: DesktopPlatform;
   readonly versions: { electron: string; chrome: string };
   invoke<K extends keyof InvokeChannels>(
     channel: K,

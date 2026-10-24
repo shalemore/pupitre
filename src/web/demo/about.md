@@ -30,6 +30,6 @@ flowchart LR
 
 ## About this demo
 
-Files here live in memory and are gone when you close the tab; the real app works on your own files and folders, with a folder-level settings file and automatic updates. The demo leaves out font choice and the native menus.
+Files here live in memory and are gone when you close the tab; the real app works on your own files and folders, with a folder-level settings file. The demo leaves out font choice and automatic updates.
 
 **Get Pupitre:** [download the app](https://github.com/shalemore/pupitre/releases), or on Windows run `scoop bucket add shalemore https://github.com/shalemore/scoop-bucket` and `scoop install pupitre`. The source is on [GitHub](https://github.com/shalemore/pupitre), and the licenses of the packages it is built from are [listed here](https://shalemore.github.io/pupitre/THIRD-PARTY-NOTICES.txt).

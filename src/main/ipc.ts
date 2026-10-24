@@ -22,7 +22,7 @@ import {
 import { showAboutDialog } from "./about";
 import { setAsDefaultMarkdownApp } from "./default-app";
 import { t } from "./i18n";
-import { popupTopMenu, setDocumentState } from "./menu";
+import { clickMenuItem, menuSnapshot, setDocumentState } from "./menu";
 import { takeLaunchFile } from "./open-files";
 import { unwatchPath, watchPath } from "./path-watcher";
 import { addRecentFile, getRecentFiles, removeRecentFile } from "./recent-files";
@@ -285,7 +285,8 @@ export function registerIpcHandlers(): void {
   handle("app:set-default-markdown-app", () => setAsDefaultMarkdownApp());
   handle("app:dispatch", (_event, command) => dispatchToMainWindow(command));
   handle("clipboard:write-text", (_event, text) => clipboard.writeText(text));
-  handle("menu:popup", (event, menu, x, y) => popupTopMenu(senderWindow(event), menu, x, y));
+  handle("menu:items", () => menuSnapshot());
+  handle("menu:click", (_event, itemId) => clickMenuItem(itemId));
   handle("window:set-document-state", (event, state) => {
     setDocumentState(state);
     setDocumentEdited(senderWindow(event), state.isDirty);
