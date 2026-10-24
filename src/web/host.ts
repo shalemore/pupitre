@@ -52,9 +52,40 @@ function emit<K extends keyof RendererEvents>(channel: K, payload: RendererEvent
   events.dispatchEvent(new CustomEvent(channel, { detail: payload }));
 }
 
+// The desktop app makes the system theme follow the Color Scheme setting, and the stylesheets follow
+// the system through prefers-color-scheme. A page cannot change that, so the queries in its
+// stylesheets are switched to match the setting instead.
+const originalQueries = new WeakMap<CSSMediaRule, string>();
+function followColorScheme(): void {
+  const visit = (rules: CSSRuleList): void => {
+    for (const rule of rules) {
+      if (rule instanceof CSSMediaRule) {
+        const original = originalQueries.get(rule) ?? rule.media.mediaText;
+        originalQueries.set(rule, original);
+        const scheme = /prefers-color-scheme:\s*(dark|light)/.exec(original)?.[1];
+        if (scheme !== undefined) {
+          const matches = (scheme === "dark") === (settings.colorScheme === "dark");
+          rule.media.mediaText =
+            settings.colorScheme === "system" ? original : matches ? "all" : "not all";
+        }
+      }
+      if (rule instanceof CSSGroupingRule) visit(rule.cssRules);
+    }
+  };
+  for (const sheet of document.styleSheets) visit(sheet.cssRules);
+}
+// Themes and libraries add stylesheets while the page runs
+new MutationObserver(followColorScheme).observe(document.head, {
+  childList: true,
+  subtree: true,
+  characterData: true,
+});
+window.addEventListener("load", followColorScheme);
+
 function publishSettings(): void {
   settings = resolveSettings(settingsFile);
   document.documentElement.style.zoom = String(settings.zoom / 100);
+  followColorScheme();
   emit("settings:changed", settings);
 }
 
