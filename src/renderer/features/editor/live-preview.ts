@@ -23,7 +23,7 @@ import { EmojiWidget, emojiFor } from "./emoji";
 import { footnoteTarget } from "./footnotes";
 import { htmlTag, isFormattingTag, LineBreakWidget } from "./html";
 import { documentBaseUrl, ImageWidget, imageSource, resolveUrl } from "./images";
-import { MathWidget } from "./math";
+import { mathOf, MathWidget } from "./math";
 import { desktop } from "@/lib/desktop";
 
 /**
@@ -459,7 +459,8 @@ function visitInlineMath(builder: DecorationBuilder, node: SyntaxNode): void {
     builder.mark(close.from, close.to, "md-mark");
     return;
   }
-  const widget = new MathWidget(builder.text(open.to, close.from), open.to - open.from === 2);
+  const { tex, display } = mathOf(builder.state, node);
+  const widget = new MathWidget(tex, display);
   builder.decorations.push(Decoration.replace({ widget }).range(node.from, node.to));
 }
 

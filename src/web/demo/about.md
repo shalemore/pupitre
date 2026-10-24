@@ -20,7 +20,7 @@ Inline math like $e^{i\pi} + 1 = 0$, chemistry like $\ce{2H2 + O2 -> 2H2O}$, ==h
 | Feature  | Where                  |
 | :------- | :--------------------- |
 | Diagrams | Mermaid, in your theme |
-| Math     | KaTeX                  |
+| Math     | MathJax                |
 | Code     | 100+ languages         |
 
 ```mermaid

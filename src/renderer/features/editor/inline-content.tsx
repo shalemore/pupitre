@@ -1,11 +1,11 @@
 import type { EditorState } from "@codemirror/state";
 import type { SyntaxNode } from "@lezer/common";
-import katex from "katex";
-import { type Component, For, Match, Switch } from "solid-js";
+import { type Component, createResource, For, Match, Switch } from "solid-js";
 import { Dynamic } from "solid-js/web";
 import { htmlTag, isFormattingTag } from "./html";
 import { imageSource, resolveUrl } from "./images";
 import { markers } from "./live-preview";
+import { renderMath } from "./mathjax";
 
 /**
  * Inline Markdown rendered as elements, for widgets that replace their source (table cells).
@@ -113,15 +113,13 @@ export function inlineItems(
   return stack[0]?.items ?? [];
 }
 
-const MathItem: Component<{ tex: string; display: boolean }> = (props) => (
-  <span
-    class="md-math"
-    innerHTML={katex.renderToString(props.tex, {
-      displayMode: props.display,
-      throwOnError: false,
-    })}
-  />
-);
+const MathItem: Component<{ tex: string; display: boolean }> = (props) => {
+  const [svg] = createResource(
+    () => ({ tex: props.tex, display: props.display }),
+    (formula) => renderMath(formula.tex, formula.display),
+  );
+  return <span class="md-math" innerHTML={svg() ?? ""} />;
+};
 
 export const InlineContent: Component<{ items: InlineItem[] }> = (props) => (
   <For each={props.items}>

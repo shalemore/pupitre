@@ -1,4 +1,7 @@
-import { WidgetType } from "@codemirror/view";
+import { syntaxTree } from "@codemirror/language";
+import type { EditorState } from "@codemirror/state";
+import { type EditorView, WidgetType } from "@codemirror/view";
+import type { SyntaxNode } from "@lezer/common";
 import type {
   BlockContext,
   LeafBlock,
@@ -6,8 +9,7 @@ import type {
   Line,
   MarkdownConfig,
 } from "@lezer/markdown";
-import katex from "katex";
-import "katex/contrib/mhchem";
+import { renderMath } from "./mathjax";
 
 const DOLLAR = 36;
 const BACKSLASH = 92;
@@ -109,7 +111,27 @@ class BlockMathParser implements LeafBlockParser {
 }
 
 /** Fenced code blocks in these languages are rendered as display math too. */
-export const MATH_LANGUAGE = /^(?:math|latex|tex|katex)$/i;
+const MATH_LANGUAGE = /^(?:math|latex|tex|katex)$/i;
+
+/** The TeX of a fenced code block that names math as its language, if it does. */
+export function mathFence(state: EditorState, node: SyntaxNode): string | undefined {
+  const info = node.getChild("CodeInfo");
+  const code = node.getChild("CodeText");
+  if (!info || !code || !MATH_LANGUAGE.test(state.sliceDoc(info.from, info.to).trim())) return;
+  return state.sliceDoc(code.from, code.to);
+}
+
+/** The TeX of an InlineMath or BlockMath node, and whether it is typeset in display style. */
+export function mathOf(state: EditorState, node: SyntaxNode): { tex: string; display: boolean } {
+  const marks = node.getChildren("MathMark");
+  const open = marks[0];
+  const close = marks.at(-1);
+  return {
+    tex: state.sliceDoc(open?.to ?? node.from, close?.from ?? node.to),
+    // `$$…$$` written inline is typeset in display style, as Pandoc does; a fence always is
+    display: node.name !== "InlineMath" || (open !== undefined && open.to - open.from === 2),
+  };
+}
 
 export class MathWidget extends WidgetType {
   constructor(
@@ -123,20 +145,38 @@ export class MathWidget extends WidgetType {
     return other.tex === this.tex && other.display === this.display;
   }
 
-  toDOM(): HTMLElement {
+  toDOM(view: EditorView): HTMLElement {
     const element = document.createElement(this.display ? "div" : "span");
     element.className = this.display ? "md-math-block" : "md-math";
-    katex.render(this.tex, element, { displayMode: this.display, throwOnError: false });
+    void renderMath(this.tex, this.display).then((svg) => {
+      element.innerHTML = svg;
+      view.requestMeasure();
+    });
     return element;
   }
 
-  override ignoreEvent(): boolean {
-    return false;
+  // Dragging the scrollbar of a formula wider than the line must scroll it, not start a selection;
+  // a click on the formula itself places the cursor there, which reveals its source
+  override ignoreEvent(event: Event): boolean {
+    return event.target instanceof Element && event.target.classList.contains("md-math-block");
   }
 }
 
-/** Loads KaTeX's fonts, which the browser otherwise fetches only once a formula is on screen. */
-export async function loadMathFonts(): Promise<void> {
-  const faces = [...document.fonts].filter((face) => face.family.startsWith("KaTeX"));
-  await Promise.allSettled(faces.map((face) => face.load()));
+/**
+ * Renders every formula of the document ahead of printing: the page is laid out at once, before
+ * a formula that is still loading could arrive.
+ */
+export async function prerenderMath(state: EditorState): Promise<void> {
+  const formulas: { tex: string; display: boolean }[] = [];
+  syntaxTree(state).iterate({
+    enter: (node) => {
+      if (node.name === "InlineMath" || node.name === "BlockMath") {
+        formulas.push(mathOf(state, node.node));
+        return;
+      }
+      const fence = node.name === "FencedCode" ? mathFence(state, node.node) : undefined;
+      if (fence !== undefined) formulas.push({ tex: fence, display: true });
+    },
+  });
+  await Promise.all(formulas.map(({ tex, display }) => renderMath(tex, display)));
 }

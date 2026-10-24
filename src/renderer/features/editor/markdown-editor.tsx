@@ -57,7 +57,7 @@ import { highlight } from "./highlight";
 import { createPendingImages, documentBaseUrl, imageInput } from "./images";
 import { livePreview, setPrinting } from "./live-preview";
 import { pasteHtml } from "./paste-html";
-import { loadMathFonts, math } from "./math";
+import { math, prerenderMath } from "./math";
 import { diagramTheme, prerenderDiagrams, readDiagramTheme } from "./mermaid";
 import { renderedBlocks } from "./rendered-blocks";
 import { textDirection } from "./text-direction";
@@ -365,7 +365,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         // The caret would be printed too
         view.contentDOM.blur();
         view.dispatch({ effects: setPrinting.of(true) });
-        await Promise.all([loadMathFonts(), prerenderDiagrams(view.state)]);
+        await Promise.all([prerenderMath(view.state), prerenderDiagrams(view.state)]);
         return () => {
           view.dispatch({ effects: setPrinting.of(false) });
           if (hadFocus) view.focus();

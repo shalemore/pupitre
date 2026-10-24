@@ -7,7 +7,7 @@ import { detailsSection, SummaryWidget, toggledDetails, toggleDetails } from "./
 import { HtmlBlockWidget, isRenderableHtml } from "./html";
 import { documentBaseUrl } from "./images";
 import { printingChanged, revealingRanges, touches } from "./live-preview";
-import { MATH_LANGUAGE, MathWidget } from "./math";
+import { mathFence, mathOf, MathWidget } from "./math";
 import { diagramTheme, MermaidWidget } from "./mermaid";
 import { TableWidget, tableCursor } from "./table";
 import { readTable } from "./table-model";
@@ -38,14 +38,12 @@ function blockWidget(state: EditorState, node: SyntaxNode): WidgetType | undefin
       ? new HtmlBlockWidget(source, state.facet(documentBaseUrl))
       : undefined;
   }
-  if (node.name === "BlockMath") {
-    const [open, close] = node.getChildren("MathMark");
-    return new MathWidget(state.sliceDoc(open?.to ?? node.from, close?.from ?? node.to), true);
-  }
+  if (node.name === "BlockMath") return new MathWidget(mathOf(state, node).tex, true);
   if (node.name !== "FencedCode") return undefined;
+  const formula = mathFence(state, node);
+  if (formula !== undefined) return new MathWidget(formula, true);
   const language = text(node.getChild("CodeInfo")).trim();
   const code = text(node.getChild("CodeText"));
-  if (MATH_LANGUAGE.test(language)) return new MathWidget(code, true);
   if (language.toLowerCase() === "mermaid")
     return new MermaidWidget(code, state.facet(diagramTheme));
   return undefined;

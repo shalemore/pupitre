@@ -135,7 +135,8 @@ export class MermaidWidget extends WidgetType {
     return element;
   }
 
-  override ignoreEvent(): boolean {
-    return false;
+  // As with math, the scrollbar of a diagram wider than the line must scroll it, not select text
+  override ignoreEvent(event: Event): boolean {
+    return event.target instanceof Element && event.target.classList.contains("md-mermaid");
   }
 }

@@ -12,8 +12,6 @@
  * variables, so quotes, lists and code blocks nest inside each other.
  */
 
-@import "katex/dist/katex.min.css" layer(editor);
-
 /*
  * Registered as lengths, the indents are computed where they are set (in the body font size) and
  * inherited as such, so lines in a smaller font, such as code, still line up with the text.
@@ -446,16 +444,39 @@
     unicode-bidi: isolate;
   }
 
+  /* Preflight makes every svg a block; a formula in a line has to stay in it, and MathJax sets
+     the vertical alignment it needs, which only holds on an inline box */
+  .md-math > svg {
+    display: inline;
+  }
+
+  /* A formula keeps the size MathJax gave it instead of being scaled down as a flex item */
+  .md-math-block > svg {
+    flex-shrink: 0;
+  }
+
+  /* MathJax draws a formula it cannot read as its source over a background box; without a fill the
+     box would be a solid block of the text color, hiding the message */
+  :is(.md-math, .md-math-block) [data-mml-node="merror"] > g {
+    fill: var(--ui-danger);
+    stroke: var(--ui-danger);
+  }
+
+  :is(.md-math, .md-math-block) [data-mml-node="merror"] > rect[data-background] {
+    fill: var(--ui-danger);
+    fill-opacity: 0.12;
+    stroke: none;
+  }
+
   .md-math-block,
   .md-mermaid {
     display: flex;
-    justify-content: center;
+    /* A formula or diagram wider than the line scrolls inside it: sized by its content, it would
+       widen the whole document and give the editor a horizontal scrollbar instead */
+    contain: inline-size;
+    justify-content: safe center;
     padding-block: 0.5em;
     overflow-x: auto;
-  }
-
-  .md-math-block .katex-display {
-    margin: 0;
   }
 
   .md-mermaid.is-invalid {
@@ -475,9 +496,14 @@
     }
   }
 
-  .md-math-source {
+  .md-math-source,
+  .md-math-error {
     font-family: var(--font-mono);
     font-size: 0.875em;
+  }
+
+  .md-math-error {
+    color: var(--ui-danger);
   }
 
   .md-html-block img {
