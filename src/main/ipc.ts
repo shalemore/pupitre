@@ -237,7 +237,12 @@ export function registerIpcHandlers(): void {
       filters: [{ name: "PDF", extensions: ["pdf"] }],
     });
     if (canceled || !filePath) return null;
-    const pdf = await event.sender.printToPDF({ printBackground: true, pageSize: "A4" });
+    const pdf = await event.sender.printToPDF({
+      printBackground: true,
+      // The stylesheet decides the sheet the document is printed on, so a theme can change it
+      preferCSSPageSize: true,
+      pageSize: "A4",
+    });
     await writeFile(filePath, pdf);
     return filePath;
   });

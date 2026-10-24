@@ -44,6 +44,12 @@
     .cm-scroller {
       overflow: visible;
     }
+
+    /* The sheet a printed document is laid out on, which the theme can set to its own size */
+    @page {
+      size: A4;
+      margin: 20mm 18mm;
+    }
   }
 
   .md-document {
