@@ -166,6 +166,7 @@ export const ptBR = {
     sidebarLayoutSplit: "Dividido",
     sidebarLayoutCombined: "Combinado",
     pinSidebars: "Fixar barras laterais",
+    pinSidebar: (name) => `Fixar a barra lateral de ${name}`,
     pinSidebarsDesc: "Uma janela imersiva mantém as barras laterais abertas enquanto você escreve",
     showWordCount: "Mostrar contagem de palavras",
     showWordCountDesc: "Palavras e caracteres na barra de título",

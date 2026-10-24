@@ -167,6 +167,7 @@ export const enUS = {
     sidebarLayoutCombined: "Combined",
     pinSidebars: "Pin Sidebars",
     pinSidebarsDesc: "An immersive window keeps its sidebars open while you write",
+    pinSidebar: (name) => `Pin the ${name} Sidebar`,
     showWordCount: "Show Word Count",
     showWordCountDesc: "Word and character counts in the title bar",
     bodyFont: "Font",

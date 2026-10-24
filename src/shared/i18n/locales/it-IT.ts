@@ -168,6 +168,7 @@ export const itIT = {
     sidebarLayoutSplit: "Separato",
     sidebarLayoutCombined: "Combinato",
     pinSidebars: "Blocca le barre laterali",
+    pinSidebar: (name) => `Blocca la barra laterale ${name}`,
     pinSidebarsDesc: "Una finestra immersiva tiene aperte le barre laterali mentre scrivi",
     showWordCount: "Mostra conteggio parole",
     showWordCountDesc: "Parole e caratteri nella barra del titolo",

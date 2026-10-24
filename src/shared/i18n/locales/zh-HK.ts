@@ -163,6 +163,7 @@ export const zhHK = {
     sidebarLayoutSplit: "分開",
     sidebarLayoutCombined: "合併",
     pinSidebars: "釘選側邊欄",
+    pinSidebar: (name) => `釘選${name}側邊欄`,
     pinSidebarsDesc: "沉浸式視窗在書寫時保持側邊欄展開",
     showWordCount: "顯示字數",
     showWordCountDesc: "在標題列顯示詞數和字元數",

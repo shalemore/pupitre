@@ -155,16 +155,33 @@ export const AppearanceSection: Component = () => (
         <Show when={settings().sidebarVisible && settings().windowStyle === "immersive"}>
           <SettingField
             nested
-            name="sidebarPinned"
-            title={t().settings.pinSidebars}
+            name="sidebarPinnedStart"
+            title={
+              settings().sidebarLayout === "split"
+                ? t().settings.pinSidebar(t().sidebar.folder)
+                : t().settings.pinSidebars
+            }
             description={t().settings.pinSidebarsDesc}
           >
             <Switch
-              checked={settings().sidebarPinned}
-              onChange={(sidebarPinned) => void updateSettings({ sidebarPinned })}
+              checked={settings().sidebarPinnedStart}
+              onChange={(sidebarPinnedStart) => void updateSettings({ sidebarPinnedStart })}
               aria-label={t().settings.pinSidebars}
             />
           </SettingField>
+          <Show when={settings().sidebarLayout === "split"}>
+            <SettingField
+              nested
+              name="sidebarPinnedEnd"
+              title={t().settings.pinSidebar(t().sidebar.outline)}
+            >
+              <Switch
+                checked={settings().sidebarPinnedEnd}
+                onChange={(sidebarPinnedEnd) => void updateSettings({ sidebarPinnedEnd })}
+                aria-label={t().settings.pinSidebars}
+              />
+            </SettingField>
+          </Show>
         </Show>
       </div>
     </SettingGroup>

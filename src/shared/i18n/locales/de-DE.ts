@@ -169,6 +169,7 @@ export const deDE = {
     sidebarLayoutCombined: "Zusammen",
     pinSidebars: "Seitenleisten fixieren",
     pinSidebarsDesc: "Ein immersives Fenster lässt die Seitenleisten beim Schreiben geöffnet",
+    pinSidebar: (name) => `${name}-Seitenleiste fixieren`,
     showWordCount: "Wortanzahl anzeigen",
     showWordCountDesc: "Wörter und Zeichen in der Titelleiste",
     bodyFont: "Schriftart",

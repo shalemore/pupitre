@@ -163,6 +163,7 @@ export const zhCN = {
     sidebarLayoutSplit: "分开",
     sidebarLayoutCombined: "合并",
     pinSidebars: "钉住侧边栏",
+    pinSidebar: (name) => `钉住${name}侧边栏`,
     pinSidebarsDesc: "沉浸式窗口在书写时保持侧边栏展开",
     showWordCount: "显示字数",
     showWordCountDesc: "在标题栏显示词数和字符数",

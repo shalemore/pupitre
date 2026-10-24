@@ -171,6 +171,7 @@ export const isIS = {
     sidebarLayoutSplit: "Skipt",
     sidebarLayoutCombined: "Sameinað",
     pinSidebars: "Festa hliðarstikur",
+    pinSidebar: (name) => `Festa ${name} hliðarstiku`,
     pinSidebarsDesc: "Sökkvandi gluggi heldur hliðarstikum opnum meðan þú skrifar",
     showWordCount: "Sýna orðafjölda",
     showWordCountDesc: "Fjöldi orða og stafa í titilstikunni",

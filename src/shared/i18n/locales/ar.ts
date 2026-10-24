@@ -184,6 +184,7 @@ export const ar = {
     sidebarLayoutCombined: "مدمج",
     pinSidebars: "تثبيت الأشرطة الجانبية",
     pinSidebarsDesc: "تُبقي النافذة الغامرة الأشرطة الجانبية مفتوحة أثناء الكتابة",
+    pinSidebar: (name) => `تثبيت شريط ${name} الجانبي`,
     showWordCount: "إظهار عدد الكلمات",
     showWordCountDesc: "عدد الكلمات والأحرف في شريط العنوان",
     bodyFont: "الخط",

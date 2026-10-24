@@ -173,6 +173,7 @@ export const ruRU = {
     sidebarLayoutSplit: "Раздельно",
     sidebarLayoutCombined: "Вместе",
     pinSidebars: "Закрепить боковые панели",
+    pinSidebar: (name) => `Закрепить боковую панель: ${name}`,
     pinSidebarsDesc: "Погружающее окно не скрывает боковые панели во время набора",
     showWordCount: "Показывать число слов",
     showWordCountDesc: "Слова и символы в заголовке окна",

@@ -171,6 +171,7 @@ export const daDK = {
     sidebarLayoutCombined: "Samlet",
     pinSidebars: "Fastgør sidebjælker",
     pinSidebarsDesc: "Et fordybende vindue holder sidebjælkerne åbne, mens du skriver",
+    pinSidebar: (name) => `Fastgør ${name} sidebjælke`,
     showWordCount: "Vis ordantal",
     showWordCountDesc: "Antal ord og tegn i titellinjen",
     bodyFont: "Skrifttype",

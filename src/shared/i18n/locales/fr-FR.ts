@@ -167,6 +167,7 @@ export const frFR = {
     sidebarLayoutSplit: "Séparé",
     sidebarLayoutCombined: "Combiné",
     pinSidebars: "Épingler les barres latérales",
+    pinSidebar: (name) => `Épingler la barre latérale ${name}`,
     pinSidebarsDesc: "Une fenêtre immersive garde ses barres latérales ouvertes pendant l'écriture",
     showWordCount: "Afficher le nombre de mots",
     showWordCountDesc: "Mots et caractères dans la barre de titre",

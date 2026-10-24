@@ -170,6 +170,7 @@ export const fiFI = {
     sidebarLayoutSplit: "Jaettu",
     sidebarLayoutCombined: "Yhdistetty",
     pinSidebars: "Kiinnitä sivupalkit",
+    pinSidebar: (name) => `Kiinnitä ${name}-sivupalkki`,
     pinSidebarsDesc: "Immersiivinen ikkuna pitää sivupalkit auki kirjoittaessasi",
     showWordCount: "Näytä sanamäärä",
     showWordCountDesc: "Sanojen ja merkkien määrä otsikkorivillä",

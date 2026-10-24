@@ -165,6 +165,7 @@ export const esES = {
     sidebarLayoutSplit: "Dividido",
     sidebarLayoutCombined: "Combinado",
     pinSidebars: "Fijar las barras laterales",
+    pinSidebar: (name) => `Fijar la barra lateral de ${name}`,
     pinSidebarsDesc:
       "Una ventana inmersiva mantiene abiertas las barras laterales mientras escribes",
     showWordCount: "Mostrar recuento de palabras",

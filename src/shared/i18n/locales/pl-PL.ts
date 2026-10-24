@@ -175,6 +175,7 @@ export const plPL = {
     sidebarLayoutSplit: "Rozdzielony",
     sidebarLayoutCombined: "Połączony",
     pinSidebars: "Przypnij paski boczne",
+    pinSidebar: (name) => `Przypnij pasek boczny: ${name}`,
     pinSidebarsDesc: "Okno immersyjne zostawia paski boczne otwarte podczas pisania",
     showWordCount: "Pokaż liczbę słów",
     showWordCountDesc: "Liczba słów i znaków na pasku tytułu",

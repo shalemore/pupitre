@@ -172,6 +172,7 @@ export const trTR = {
     sidebarLayoutSplit: "Ayrı",
     sidebarLayoutCombined: "Birleşik",
     pinSidebars: "Kenar Çubuklarını Sabitle",
+    pinSidebar: (name) => `${name} Kenar Çubuğunu Sabitle`,
     pinSidebarsDesc: "Sürükleyici bir pencere, siz yazarken kenar çubuklarını açık tutar",
     showWordCount: "Sözcük Sayısını Göster",
     showWordCountDesc: "Başlık çubuğunda sözcük ve karakter sayısı",

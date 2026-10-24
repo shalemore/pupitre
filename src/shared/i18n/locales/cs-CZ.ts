@@ -174,6 +174,7 @@ export const csCZ = {
     sidebarLayoutCombined: "Sloučený",
     pinSidebars: "Připnout postranní panely",
     pinSidebarsDesc: "Pohlcující okno nechává postranní panely při psaní otevřené",
+    pinSidebar: (name) => `Připnout panel ${name}`,
     showWordCount: "Zobrazit počet slov",
     showWordCountDesc: "Počet slov a znaků v záhlaví",
     bodyFont: "Písmo",

@@ -170,6 +170,7 @@ export const svSE = {
     sidebarLayoutSplit: "Delad",
     sidebarLayoutCombined: "Samlad",
     pinSidebars: "Fäst sidofält",
+    pinSidebar: (name) => `Fäst ${name}-sidofältet`,
     pinSidebarsDesc: "Ett uppslukande fönster håller sidofälten öppna medan du skriver",
     showWordCount: "Visa ordantal",
     showWordCountDesc: "Antal ord och tecken i namnlisten",

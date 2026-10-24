@@ -170,6 +170,7 @@ export const nbNO = {
     sidebarLayoutSplit: "Delt",
     sidebarLayoutCombined: "Samlet",
     pinSidebars: "Fest sidefelt",
+    pinSidebar: (name) => `Fest ${name}-sidefeltet`,
     pinSidebarsDesc: "Et oppslukende vindu holder sidefeltene åpne mens du skriver",
     showWordCount: "Vis ordantall",
     showWordCountDesc: "Antall ord og tegn i tittellinjen",

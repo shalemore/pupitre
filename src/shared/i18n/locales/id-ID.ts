@@ -170,6 +170,7 @@ export const idID = {
     sidebarLayoutSplit: "Terpisah",
     sidebarLayoutCombined: "Gabungan",
     pinSidebars: "Sematkan Bilah Samping",
+    pinSidebar: (name) => `Sematkan Bilah Samping ${name}`,
     pinSidebarsDesc: "Jendela imersif menjaga bilah samping tetap terbuka saat Anda menulis",
     showWordCount: "Tampilkan jumlah kata",
     showWordCountDesc: "Jumlah kata dan karakter di bilah judul",

@@ -171,6 +171,7 @@ export const elGR = {
     sidebarLayoutCombined: "Μαζί",
     pinSidebars: "Καρφίτσωμα πλαϊνών γραμμών",
     pinSidebarsDesc: "Ένα καθηλωτικό παράθυρο κρατά τις πλαϊνές γραμμές ανοιχτές ενώ γράφετε",
+    pinSidebar: (name) => `Καρφίτσωμα πλαϊνής γραμμής ${name}`,
     showWordCount: "Εμφάνιση πλήθους λέξεων",
     showWordCountDesc: "Λέξεις και χαρακτήρες στη γραμμή τίτλου",
     bodyFont: "Γραμματοσειρά",

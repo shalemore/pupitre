@@ -171,6 +171,7 @@ export const huHU = {
     sidebarLayoutSplit: "Szétválasztott",
     sidebarLayoutCombined: "Egyesített",
     pinSidebars: "Oldalsávok rögzítése",
+    pinSidebar: (name) => `${name} oldalsáv rögzítése`,
     pinSidebarsDesc: "A magával ragadó ablak írás közben nyitva tartja az oldalsávokat",
     showWordCount: "Szószám megjelenítése",
     showWordCountDesc: "Szavak és karakterek száma a címsorban",

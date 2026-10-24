@@ -174,6 +174,7 @@ export const ukUA = {
     sidebarLayoutSplit: "Окремо",
     sidebarLayoutCombined: "Разом",
     pinSidebars: "Закріпити бічні панелі",
+    pinSidebar: (name) => `Закріпити бічну панель: ${name}`,
     pinSidebarsDesc: "Занурювальне вікно не приховує бічні панелі під час набору",
     showWordCount: "Показувати кількість слів",
     showWordCountDesc: "Кількість слів і символів у рядку заголовка",

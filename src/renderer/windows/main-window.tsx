@@ -55,11 +55,12 @@ export const MainWindow: Component = () => {
   const [matchStats, setMatchStats] = createSignal<MatchStats>({ current: 0, total: 0 });
   const [menuOpen, setMenuOpen] = createSignal(false);
   const immersive = () => settings().windowStyle === "immersive";
-  const chrome = createImmersiveChrome(
-    () => immersive() && session.activeDocument() !== undefined,
-    () => settings().sidebarPinned,
-    menuOpen,
-  );
+  const chrome = createImmersiveChrome({
+    canFold: () => immersive() && session.activeDocument() !== undefined,
+    startPinned: () => settings().sidebarPinnedStart,
+    endPinned: () => settings().sidebarPinnedEnd,
+    titleBarPinned: menuOpen,
+  });
 
   // A folder the user opened shows at once, whatever document is open; opening a document from
   // outside it hands the sidebar back to the document's own folder
@@ -83,10 +84,15 @@ export const MainWindow: Component = () => {
   // Dragging a sidebar's edge sets its width for this window only
   const [startWidth, setStartWidth] = createSignal(SIDEBAR_WIDTH.initial);
   const [endWidth, setEndWidth] = createSignal(SIDEBAR_WIDTH.initial);
-  const pinned = () => settings().sidebarPinned;
   // Only an immersive window folds its sidebars, so only there can they be pinned
-  const onPinnedChange = () =>
-    immersive() ? (sidebarPinned: boolean) => void updateSettings({ sidebarPinned }) : undefined;
+  const onStartPinnedChange = () =>
+    immersive()
+      ? (sidebarPinnedStart: boolean) => void updateSettings({ sidebarPinnedStart })
+      : undefined;
+  const onEndPinnedChange = () =>
+    immersive()
+      ? (sidebarPinnedEnd: boolean) => void updateSettings({ sidebarPinnedEnd })
+      : undefined;
   // Split, the folder has its own sidebar at the start edge and the outline one at the end edge; combined, one sidebar shows either
   const startSidebarShown = () =>
     settings().sidebarVisible &&
@@ -320,8 +326,8 @@ export const MainWindow: Component = () => {
               <Sidebar
                 class={cn(!immersive() && "border-e border-border")}
                 mode={sidebarMode()}
-                pinned={pinned()}
-                onPinnedChange={onPinnedChange()}
+                pinned={settings().sidebarPinnedStart}
+                onPinnedChange={onStartPinnedChange()}
                 hasOutline={session.activeDocument() !== undefined}
                 hasFolder={folderRoot() !== undefined}
                 folderName={fileNameOf(folderRoot() ?? "")}
@@ -340,8 +346,8 @@ export const MainWindow: Component = () => {
                 <SidebarPanel
                   side="start"
                   title={fileNameOf(root)}
-                  pinned={pinned()}
-                  onPinnedChange={onPinnedChange()}
+                  pinned={settings().sidebarPinnedStart}
+                  onPinnedChange={onStartPinnedChange()}
                   class={cn(!immersive() && "border-e border-border")}
                 >
                   {folderTree(root)}
@@ -419,8 +425,8 @@ export const MainWindow: Component = () => {
             <SidebarPanel
               side="end"
               title={t().sidebar.outline}
-              pinned={pinned()}
-              onPinnedChange={onPinnedChange()}
+              pinned={settings().sidebarPinnedEnd}
+              onPinnedChange={onEndPinnedChange()}
               class={cn(!immersive() && "border-s border-border")}
             >
               {outlineList()}

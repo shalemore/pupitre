@@ -221,6 +221,8 @@ export interface TranslationSchema {
     readonly sidebarLayoutSplit: string;
     readonly sidebarLayoutCombined: string;
     readonly pinSidebars: string;
+    /** Pin the sidebar that holds `name`, as the layout names it. */
+    readonly pinSidebar: (name: string) => string;
     readonly pinSidebarsDesc: string;
     readonly showWordCount: string;
     readonly showWordCountDesc: string;

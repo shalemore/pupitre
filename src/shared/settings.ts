@@ -29,8 +29,13 @@ export const settingsSchema = z.object({
   sidebarVisible: z.boolean().catch(true),
   /** Folder and outline in two sidebars, one at each edge, or as tabs of one sidebar. */
   sidebarLayout: z.enum(["split", "combined"]).catch("split"),
-  /** An immersive window folds its sidebars away while the user writes, unless they are pinned. */
-  sidebarPinned: z.boolean().catch(false),
+  /**
+   * An immersive window folds its sidebars away while the user writes, unless they are pinned. Each
+   * edge has its own pin, so in the split layout the folder and the outline fold independently; a
+   * combined layout only has the start one.
+   */
+  sidebarPinnedStart: z.boolean().catch(false),
+  sidebarPinnedEnd: z.boolean().catch(false),
   showWordCount: z.boolean().catch(true),
   focusMode: z.boolean().catch(false),
   typewriterMode: z.boolean().catch(false),

@@ -170,6 +170,7 @@ export const faIR = {
     sidebarLayoutSplit: "جدا",
     sidebarLayoutCombined: "ترکیبی",
     pinSidebars: "سنجاق کردن نوارهای کناری",
+    pinSidebar: (name) => `سنجاق کردن نوار کناری ${name}`,
     pinSidebarsDesc: "پنجرهٔ فراگیر هنگام نوشتن نوارهای کناری را باز نگه می‌دارد",
     showWordCount: "نمایش شمار واژه‌ها",
     showWordCountDesc: "شمار واژه‌ها و نویسه‌ها در نوار عنوان",

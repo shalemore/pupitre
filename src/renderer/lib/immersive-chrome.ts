@@ -29,11 +29,16 @@ const SIDE_EDGE = 16;
  * window, such as an open menu: its panel hangs below the bar, where the pointer is already too far
  * down to count as near the top, so the bar would fold away under it.
  */
-export function createImmersiveChrome(
-  canFold: () => boolean,
-  sidebarsPinned: () => boolean,
-  titleBarPinned: () => boolean,
-) {
+export interface ChromeOptions {
+  /** Whether the window may fold the chrome at all: not in a classic window, nor without a document. */
+  canFold: () => boolean;
+  /** Each sidebar is pinned on its own, since the split layout folds the two independently. */
+  startPinned: () => boolean;
+  endPinned: () => boolean;
+  titleBarPinned: () => boolean;
+}
+
+export function createImmersiveChrome(options: ChromeOptions) {
   const [writing, setWriting] = createSignal(false);
   const [nearTop, setNearTop] = createSignal(false);
   const [nearStart, setNearStart] = createSignal(false);
@@ -42,10 +47,10 @@ export function createImmersiveChrome(
   let pulling = false;
   let pulled = 0;
 
-  const shown = (nearEdge: boolean) => !canFold() || !writing() || nearEdge;
-  const titleBarVisible = () => titleBarPinned() || shown(nearTop());
-  const sidebarVisible = () => sidebarsPinned() || shown(nearStart());
-  const endSidebarVisible = () => sidebarsPinned() || shown(nearEnd());
+  const shown = (nearEdge: boolean) => !options.canFold() || !writing() || nearEdge;
+  const titleBarVisible = () => options.titleBarPinned() || shown(nearTop());
+  const sidebarVisible = () => options.startPinned() || shown(nearStart());
+  const endSidebarVisible = () => options.endPinned() || shown(nearEnd());
 
   // The traffic lights belong to the title bar
   if (isMacOS) {
@@ -53,7 +58,7 @@ export function createImmersiveChrome(
   }
 
   const hide = () => {
-    setWriting(canFold());
+    setWriting(options.canFold());
     setNearTop(false);
     setNearStart(false);
     setNearEnd(false);

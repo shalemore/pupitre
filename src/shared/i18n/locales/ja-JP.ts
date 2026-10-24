@@ -167,6 +167,7 @@ export const jaJP = {
     sidebarLayoutSplit: "分割",
     sidebarLayoutCombined: "統合",
     pinSidebars: "サイドバーを固定",
+    pinSidebar: (name) => `${name}サイドバーを固定`,
     pinSidebarsDesc: "没入型ウィンドウで、書いている間もサイドバーを開いたままにします",
     showWordCount: "語数を表示",
     showWordCountDesc: "タイトルバーに語数と文字数を表示",

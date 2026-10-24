@@ -171,6 +171,7 @@ export const nlNL = {
     sidebarLayoutSplit: "Gesplitst",
     sidebarLayoutCombined: "Gecombineerd",
     pinSidebars: "Zijbalken vastzetten",
+    pinSidebar: (name) => `${name}-zijbalk vastzetten`,
     pinSidebarsDesc: "Een meeslepend venster houdt de zijbalken open terwijl je schrijft",
     showWordCount: "Woordaantal tonen",
     showWordCountDesc: "Woorden en tekens in de titelbalk",

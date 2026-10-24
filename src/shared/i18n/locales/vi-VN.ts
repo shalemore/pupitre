@@ -168,6 +168,7 @@ export const viVN = {
     sidebarLayoutSplit: "Tách riêng",
     sidebarLayoutCombined: "Gộp chung",
     pinSidebars: "Ghim thanh bên",
+    pinSidebar: (name) => `Ghim thanh bên ${name}`,
     pinSidebarsDesc: "Cửa sổ đắm chìm giữ các thanh bên mở khi bạn viết",
     showWordCount: "Hiện số từ",
     showWordCountDesc: "Số từ và số ký tự trên thanh tiêu đề",
