@@ -28,6 +28,13 @@ export const FORMAT_ACTIONS = [
 
 export type FormatAction = (typeof FORMAT_ACTIONS)[number]["id"];
 
+/** The Paragraph menu: groups of actions, a separator between them. */
+export const PARAGRAPH_MENU_GROUPS: readonly (readonly FormatAction[])[] = [
+  ["heading1", "heading2", "heading3", "heading4", "heading5", "heading6"],
+  ["paragraph", "quote", "orderedList", "bulletList"],
+  ["codeBlock", "mathBlock", "table", "divider"],
+];
+
 /** Inline formats offered first in the context menu. */
 export const INLINE_FORMAT_ACTIONS = [
   "bold",

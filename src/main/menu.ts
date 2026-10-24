@@ -8,7 +8,7 @@ import {
   shell,
 } from "electron";
 import type { DocumentState, TopMenu } from "@shared/desktop-api";
-import { INLINE_FORMAT_ACTIONS } from "@shared/format";
+import { INLINE_FORMAT_ACTIONS, PARAGRAPH_MENU_GROUPS } from "@shared/format";
 import { formatItems } from "./format-menu";
 import { showAboutDialog } from "./about";
 import { t } from "./i18n";
@@ -149,16 +149,10 @@ function buildTemplate(): MenuItemConstructorOptions[] {
       id: "paragraphMenu",
       label: labels.paragraphMenu,
       enabled: hasDocument,
-      submenu: [
-        ...formatItems(
-          ["heading1", "heading2", "heading3", "heading4", "heading5", "heading6"],
-          dispatchToMainWindow,
-        ),
-        separator,
-        ...formatItems(["paragraph", "quote", "orderedList", "bulletList"], dispatchToMainWindow),
-        separator,
-        ...formatItems(["codeBlock", "mathBlock", "table", "divider"], dispatchToMainWindow),
-      ],
+      submenu: PARAGRAPH_MENU_GROUPS.flatMap((group, index) => {
+        const items = formatItems(group, dispatchToMainWindow);
+        return index === 0 ? items : [separator].concat(items);
+      }),
     },
     {
       id: "format",

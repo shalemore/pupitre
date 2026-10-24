@@ -7,7 +7,12 @@ import type {
   RendererEvents,
   TopMenu,
 } from "@shared/desktop-api";
-import { FORMAT_ACTIONS, INLINE_FORMAT_ACTIONS, type FormatAction } from "@shared/format";
+import {
+  FORMAT_ACTIONS,
+  INLINE_FORMAT_ACTIONS,
+  PARAGRAPH_MENU_GROUPS,
+  type FormatAction,
+} from "@shared/format";
 import { getDictionary, resolveLocale } from "@shared/i18n";
 import {
   DEFAULT_SETTINGS,
@@ -171,6 +176,8 @@ function pickFile(): Promise<OpenedDocument | null> {
 // Menus: the desktop app pops up native ones, so the demo draws a plain list
 type MenuItem = { label: string; shortcut?: string | undefined; run: () => void } | "separator";
 
+const divider: MenuItem = "separator";
+
 function menuItems(menu: TopMenu): MenuItem[] {
   const labels = getDictionary(resolveLocale(settings.locale, navigator.languages));
   const { menu: m, format } = labels;
@@ -203,13 +210,10 @@ function menuItems(menu: TopMenu): MenuItem[] {
         { label: m.replace, run: send({ id: "edit.replace" }) },
       ];
     case "paragraphMenu":
-      return [
-        ...formatItems(["heading1", "heading2", "heading3", "heading4", "heading5", "heading6"]),
-        "separator",
-        ...formatItems(["paragraph", "quote", "orderedList", "bulletList"]),
-        "separator",
-        ...formatItems(["codeBlock", "mathBlock", "table", "divider"]),
-      ];
+      return PARAGRAPH_MENU_GROUPS.flatMap((group, index) => {
+        const items = formatItems(group);
+        return index === 0 ? items : [divider].concat(items);
+      });
     case "format":
       return formatItems(INLINE_FORMAT_ACTIONS);
     case "view":
