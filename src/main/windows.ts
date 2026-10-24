@@ -101,6 +101,9 @@ function createWindow(view: View, options: BrowserWindowConstructorOptions): Bro
       sandbox: true,
       contextIsolation: true,
       spellcheck: true,
+      // The dev server page is http://, which Chromium forbids to load the file:// images that sit
+      // next to a document. The packaged app loads from file:// and keeps the protection.
+      webSecurity: app.isPackaged,
     },
   });
 
