@@ -385,7 +385,7 @@ const handlers: Handlers = {
 
 const desktop: DesktopApi = {
   platform,
-  versions: { electron: "web", chrome: "" },
+  versions: { electron: "", chrome: "" },
   invoke: async <K extends keyof InvokeChannels>(
     channel: K,
     ...args: Parameters<InvokeChannels[K]>
@@ -402,7 +402,12 @@ const desktop: DesktopApi = {
     settings,
     settingsPath: "localStorage",
     firstRun,
-    canSelfUpdate: false,
+    capabilities: {
+      selfUpdate: false,
+      revealFiles: false,
+      setDefaultApp: false,
+      systemFonts: false,
+    },
     recentFiles: [],
     captionSide: undefined,
     launchFile: isSettingsWindow ? undefined : ABOUT_PATH,

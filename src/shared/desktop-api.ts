@@ -203,13 +203,27 @@ export interface RendererEvents {
 }
 
 /** State a window needs before its first paint; fetched synchronously by the preload script. */
+/**
+ * What a host can do besides editing text: the browser demo has no file manager, no installed
+ * fonts to read, no installer to hand an update to and no way to register itself for .md files.
+ */
+export interface HostCapabilities {
+  /** Replace the app with a downloaded installer. */
+  selfUpdate: boolean;
+  /** Show a file or folder in the system file manager. */
+  revealFiles: boolean;
+  /** Register the app as the handler of Markdown files. */
+  setDefaultApp: boolean;
+  /** Read the fonts installed on the system. */
+  systemFonts: boolean;
+}
+
 export interface InitialState {
   settings: Settings;
   settingsPath: string;
   /** True until a settings file exists; the welcome screen then lets the user pick a window style. */
   firstRun: boolean;
-  /** False for a copy that a package manager owns, which must not replace itself with the installer. */
-  canSelfUpdate: boolean;
+  capabilities: HostCapabilities;
   recentFiles: readonly string[];
   captionSide: CaptionSide | undefined;
   /** A file the system asked to open when Pupitre started; only given to the main window. */

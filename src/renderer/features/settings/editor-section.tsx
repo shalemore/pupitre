@@ -2,52 +2,55 @@ import { Show, type Component } from "solid-js";
 import { SETTING_RANGES, type Settings } from "@shared/settings";
 import { Select, Slider, Switch } from "@/components/ui";
 import { t } from "@/i18n";
+import { desktop } from "@/lib/desktop";
 import { settings, updateSettings } from "@/lib/settings";
 import { FontSelect, RefreshFontsButton } from "./font-select";
 import { SettingField, SettingGroup, SettingsSection } from "./settings-section";
 
 export const EditorSection: Component = () => (
   <SettingsSection title={t().settings.editor}>
-    <SettingGroup>
-      <SettingField
-        name="bodyFont"
-        title={
-          <span class="flex items-center gap-1.5">
-            {t().settings.bodyFont}
-            <RefreshFontsButton />
-          </span>
-        }
-      >
-        <FontSelect
-          value={settings().bodyFont}
-          onChange={(bodyFont) => void updateSettings({ bodyFont })}
-          emptyLabel={t().settings.themeDefault}
-          aria-label={t().settings.bodyFont}
-        />
-      </SettingField>
+    <Show when={desktop.initialState.capabilities.systemFonts}>
+      <SettingGroup>
+        <SettingField
+          name="bodyFont"
+          title={
+            <span class="flex items-center gap-1.5">
+              {t().settings.bodyFont}
+              <RefreshFontsButton />
+            </span>
+          }
+        >
+          <FontSelect
+            value={settings().bodyFont}
+            onChange={(bodyFont) => void updateSettings({ bodyFont })}
+            emptyLabel={t().settings.themeDefault}
+            aria-label={t().settings.bodyFont}
+          />
+        </SettingField>
 
-      <SettingField
-        name="fallbackFont"
-        title={t().settings.fallbackFont}
-        description={t().settings.fallbackFontDesc}
-      >
-        <FontSelect
-          value={settings().fallbackFont}
-          onChange={(fallbackFont) => void updateSettings({ fallbackFont })}
-          emptyLabel={t().settings.noFallbackFont}
-          aria-label={t().settings.fallbackFont}
-        />
-      </SettingField>
+        <SettingField
+          name="fallbackFont"
+          title={t().settings.fallbackFont}
+          description={t().settings.fallbackFontDesc}
+        >
+          <FontSelect
+            value={settings().fallbackFont}
+            onChange={(fallbackFont) => void updateSettings({ fallbackFont })}
+            emptyLabel={t().settings.noFallbackFont}
+            aria-label={t().settings.fallbackFont}
+          />
+        </SettingField>
 
-      <SettingField name="codeFont" title={t().settings.codeFont}>
-        <FontSelect
-          value={settings().codeFont}
-          onChange={(codeFont) => void updateSettings({ codeFont })}
-          emptyLabel={t().settings.themeDefault}
-          aria-label={t().settings.codeFont}
-        />
-      </SettingField>
-    </SettingGroup>
+        <SettingField name="codeFont" title={t().settings.codeFont}>
+          <FontSelect
+            value={settings().codeFont}
+            onChange={(codeFont) => void updateSettings({ codeFont })}
+            emptyLabel={t().settings.themeDefault}
+            aria-label={t().settings.codeFont}
+          />
+        </SettingField>
+      </SettingGroup>
+    </Show>
 
     <SettingGroup>
       <SettingField

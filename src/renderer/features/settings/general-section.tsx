@@ -80,7 +80,7 @@ export const GeneralSection: Component = () => (
         />
       </SettingField>
 
-      <Show when={desktop.initialState.canSelfUpdate}>
+      <Show when={desktop.initialState.capabilities.selfUpdate}>
         <SettingField name="autoCheckUpdates" title={t().settings.autoCheckUpdates}>
           <Switch
             checked={settings().autoCheckUpdates}
@@ -91,8 +91,10 @@ export const GeneralSection: Component = () => (
       </Show>
     </SettingGroup>
 
-    <SettingGroup>
-      <DefaultAppRow />
-    </SettingGroup>
+    <Show when={desktop.initialState.capabilities.setDefaultApp}>
+      <SettingGroup>
+        <DefaultAppRow />
+      </SettingGroup>
+    </Show>
   </SettingsSection>
 );

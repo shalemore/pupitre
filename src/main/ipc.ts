@@ -181,7 +181,12 @@ export function registerIpcHandlers(): void {
       settings: getSettings(),
       settingsPath: getSettingsPath(),
       firstRun: isFirstRun(),
-      canSelfUpdate,
+      capabilities: {
+        selfUpdate: canSelfUpdate,
+        revealFiles: true,
+        setDefaultApp: true,
+        systemFonts: true,
+      },
       recentFiles: getRecentFiles(),
       captionSide: getCaptionSide(event.sender),
       launchFile: event.sender === getMainWindow()?.webContents ? takeLaunchFile() : undefined,

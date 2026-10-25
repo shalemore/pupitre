@@ -13,10 +13,13 @@ export const AboutSection: Component = () => (
       <div class="min-w-0 flex-1">
         <h2 class="text-base font-semibold text-foreground">Pupitre</h2>
         <div class="text-2xs text-muted-foreground tabular-nums">
-          {t().settings.version} {pkg.version} · Electron {desktop.versions.electron}
+          {t().settings.version} {pkg.version}
+          <Show when={desktop.versions.electron}>
+            {(electron) => <> · Electron {electron()}</>}
+          </Show>
         </div>
       </div>
-      <Show when={desktop.initialState.canSelfUpdate}>
+      <Show when={desktop.initialState.capabilities.selfUpdate}>
         <UpdateButton />
       </Show>
     </div>
@@ -41,17 +44,23 @@ export const AboutSection: Component = () => (
       </Button>
     </div>
 
-    <Separator />
+    <Show when={desktop.initialState.capabilities.revealFiles}>
+      <Separator />
 
-    <div>
-      <div class="mb-2 font-medium text-foreground">{t().settings.settingsFile}</div>
-      <div class="flex items-center gap-2">
-        <Input readOnly value={desktop.initialState.settingsPath} class="font-mono text-2xs" />
-        <Button variant="outline" size="sm" onClick={() => void desktop.invoke("settings:reveal")}>
-          <FolderOpen />
-          <span>{t().settings.revealSettingsFile}</span>
-        </Button>
+      <div>
+        <div class="mb-2 font-medium text-foreground">{t().settings.settingsFile}</div>
+        <div class="flex items-center gap-2">
+          <Input readOnly value={desktop.initialState.settingsPath} class="font-mono text-2xs" />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => void desktop.invoke("settings:reveal")}
+          >
+            <FolderOpen />
+            <span>{t().settings.revealSettingsFile}</span>
+          </Button>
+        </div>
       </div>
-    </div>
+    </Show>
   </section>
 );
