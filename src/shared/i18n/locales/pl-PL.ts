@@ -1,5 +1,5 @@
-import type { TranslationSchema } from "../types";
 import { createPlural } from "../plural";
+import type { TranslationSchema } from "../types";
 
 const words = createPlural("pl", { one: "słowo", few: "słowa", many: "słów" });
 const characters = createPlural("pl", { one: "znak", few: "znaki", many: "znaków" });

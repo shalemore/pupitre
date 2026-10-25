@@ -1,8 +1,8 @@
-import { Check, ChevronRight } from "lucide-solid";
 import { cn } from "cn";
+import { Check, ChevronRight } from "lucide-solid";
 import { createSignal, For, onCleanup, onMount, Show, type Component } from "solid-js";
-import type { MenuEntry } from "@shared/menu";
 import { Portal } from "solid-js/web";
+import type { MenuEntry } from "@shared/menu";
 
 type MenuItemEntry = Extract<MenuEntry, { type: "item" }>;
 

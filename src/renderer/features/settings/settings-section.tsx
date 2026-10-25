@@ -1,11 +1,11 @@
-import { isModified, isWorkspaceKey, type SettingKey } from "@shared/settings";
 import { cn } from "cn";
 import { RotateCcw } from "lucide-solid";
 import { type JSX, type ParentComponent, Show } from "solid-js";
+import { isModified, isWorkspaceKey, type SettingKey } from "@shared/settings";
 import { Button, SettingRow } from "@/components/ui";
 import { t } from "@/i18n";
-import { workspace } from "@/lib/workspace";
 import { resetSetting, settings } from "@/lib/settings";
+import { workspace } from "@/lib/workspace";
 
 /** A titled page of settings; its children are groups. */
 export const SettingsSection: ParentComponent<{ title: string; description?: string }> = (

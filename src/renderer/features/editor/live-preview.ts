@@ -16,6 +16,7 @@ import {
   WidgetType,
 } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
+import { desktop } from "@/lib/desktop";
 import { AlertTitleWidget, alertTitles, alertType } from "./alerts";
 import { fencedText } from "./block-text";
 import { CodeCornerWidget } from "./code-corner";
@@ -25,7 +26,6 @@ import { footnoteTarget } from "./footnotes";
 import { htmlTag, isFormattingTag, LineBreakWidget } from "./html";
 import { documentBaseUrl, ImageWidget, imageSource, resolveUrl } from "./images";
 import { mathOf, MathWidget } from "./math";
-import { desktop } from "@/lib/desktop";
 
 /**
  * Typora-style live preview over plain Markdown source.

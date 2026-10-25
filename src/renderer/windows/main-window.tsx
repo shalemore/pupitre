@@ -1,4 +1,3 @@
-import type { AppCommand } from "@shared/desktop-api";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { cn } from "cn";
 import {
@@ -11,17 +10,18 @@ import {
   Show,
   type Component,
 } from "solid-js";
+import type { AppCommand } from "@shared/desktop-api";
 import { TitleBar } from "@/components/title-bar";
 import { createDocumentSession } from "@/features/document/document-session";
+import type { OutlineHeading } from "@/features/editor/document-structure";
 import { FindBar } from "@/features/editor/find-bar";
 import {
   MarkdownEditor,
   type MarkdownEditorHandle,
   type MatchStats,
 } from "@/features/editor/markdown-editor";
-import type { OutlineHeading } from "@/features/editor/document-structure";
-import { FolderTree } from "@/features/sidebar/folder-tree";
 import { MenuBar } from "@/features/menu/menu-bar";
+import { FolderTree } from "@/features/sidebar/folder-tree";
 import { OutlineList } from "@/features/sidebar/outline-list";
 import {
   SIDEBAR_WIDTH,
@@ -33,8 +33,8 @@ import {
 import { WelcomeScreen } from "@/features/welcome/welcome-screen";
 import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
-import { createImmersiveChrome } from "@/lib/immersive-chrome";
 import { fileNameOf, isInsideFolder, isolateFileName } from "@/lib/file";
+import { createImmersiveChrome } from "@/lib/immersive-chrome";
 import { recentFiles } from "@/lib/recent-files";
 import { settings, updateSettings } from "@/lib/settings";
 import type { TextStats } from "@/lib/text-stats";

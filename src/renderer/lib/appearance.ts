@@ -1,6 +1,6 @@
-import type { ContentWidth } from "@shared/settings";
 import { createPrefersDark } from "@solid-primitives/media";
 import { createEffect, createMemo, createRoot } from "solid-js";
+import type { ContentWidth } from "@shared/settings";
 import { currentDirection, currentLocale } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { codeFontFamily, documentFontFamily, interfaceFontFamily } from "@/lib/fonts";

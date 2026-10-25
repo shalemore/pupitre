@@ -1,6 +1,6 @@
+import { createSignal, Show, type Component } from "solid-js";
 import type { DefaultAppResult } from "@shared/desktop-api";
 import type { Settings } from "@shared/settings";
-import { createSignal, Show, type Component } from "solid-js";
 import { Button, Select, SettingRow, Switch } from "@/components/ui";
 import { type LanguageSetting, SUPPORTED_LOCALES, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";

@@ -1,6 +1,6 @@
 import { WidgetType } from "@codemirror/view";
-import { nameToEmoji } from "gemoji";
 import { Emoji, type MarkdownConfig } from "@lezer/markdown";
+import { nameToEmoji } from "gemoji";
 
 /** The parser of `:name:` shortcodes, without the syntax color that Lezer gives its nodes: text such as 12:30:45 holds some. */
 export const emojiSyntax: MarkdownConfig = { ...Emoji, defineNodes: ["Emoji"] };

@@ -1,5 +1,5 @@
-import { TOP_MENUS, type MenuEntry, type Menus, type TopMenu } from "@shared/menu";
 import { createSignal, For, onCleanup, Show, type Component } from "solid-js";
+import { TOP_MENUS, type MenuEntry, type Menus, type TopMenu } from "@shared/menu";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { MenuPopup } from "./menu-popup";

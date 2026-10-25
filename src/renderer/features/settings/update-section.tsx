@@ -1,7 +1,7 @@
-import type { UpdateStatus } from "@shared/desktop-api";
 import { cn } from "cn";
 import { CheckCircle2, Download, RefreshCw } from "lucide-solid";
 import { createMemo, Show, type Component } from "solid-js";
+import type { UpdateStatus } from "@shared/desktop-api";
 import { Button, Callout, ScrollView } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";

@@ -1,7 +1,7 @@
 import { Menu, type MenuItemConstructorOptions, type WebContents } from "electron";
 import { INLINE_FORMAT_ACTIONS } from "@shared/format";
-import { t } from "./i18n";
 import { formatItems } from "./format-menu";
+import { t } from "./i18n";
 
 export interface ContextMenuOptions {
   /** Offer inline formatting for editable content (only the document window has an editor). */

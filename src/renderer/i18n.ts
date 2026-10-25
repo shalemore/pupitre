@@ -1,5 +1,5 @@
-import { getDictionary, getDirection, resolveLocale } from "@shared/i18n";
 import { createMemo, createRoot } from "solid-js";
+import { getDictionary, getDirection, resolveLocale } from "@shared/i18n";
 import { settings } from "@/lib/settings";
 
 export * from "@shared/i18n";

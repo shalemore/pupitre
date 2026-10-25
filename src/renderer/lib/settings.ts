@@ -1,5 +1,5 @@
-import type { SettingKey, Settings } from "@shared/settings";
 import { createSignal } from "solid-js";
+import type { SettingKey, Settings } from "@shared/settings";
 import { desktop } from "@/lib/desktop";
 
 // The main process owns the settings and broadcasts every change, including changes made by this

@@ -1,5 +1,5 @@
-import type { UpdateStatus } from "@shared/desktop-api";
 import { createSignal } from "solid-js";
+import type { UpdateStatus } from "@shared/desktop-api";
 import { desktop } from "@/lib/desktop";
 
 const [updateStatus, setUpdateStatus] = createSignal<UpdateStatus>({ kind: "idle" });

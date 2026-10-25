@@ -1,4 +1,5 @@
 import { makeEventListener } from "@solid-primitives/event-listener";
+import { cn } from "cn";
 import { FileCode2, FolderOpen, Info, Palette, Settings2, Type } from "lucide-solid";
 import { createEffect, onMount, Show, type Component } from "solid-js";
 import { TitleBar } from "@/components/title-bar";
@@ -17,7 +18,6 @@ import { AppearanceSection } from "@/features/settings/appearance-section";
 import { EditorSection } from "@/features/settings/editor-section";
 import { GeneralSection } from "@/features/settings/general-section";
 import { MarkdownSection } from "@/features/settings/markdown-section";
-import { cn } from "cn";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { fileNameOf } from "@/lib/file";

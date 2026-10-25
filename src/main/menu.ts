@@ -11,8 +11,8 @@ import {
 import type { DocumentState } from "@shared/desktop-api";
 import { INLINE_FORMAT_ACTIONS, PARAGRAPH_MENU_GROUPS } from "@shared/format";
 import { formatShortcut, type MenuEntry, type Menus, menusOf } from "@shared/menu";
-import { formatItems } from "./format-menu";
 import { showAboutDialog } from "./about";
+import { formatItems } from "./format-menu";
 import { t } from "./i18n";
 import { clearRecentFiles, getRecentFiles } from "./recent-files";
 import { getSettings, updateSettings } from "./settings-store";

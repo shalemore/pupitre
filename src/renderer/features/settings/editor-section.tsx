@@ -1,5 +1,5 @@
-import type { Settings } from "@shared/settings";
 import { Show, type Component } from "solid-js";
+import type { Settings } from "@shared/settings";
 import { Select, Slider, Switch } from "@/components/ui";
 import { t } from "@/i18n";
 import { settings, updateSettings } from "@/lib/settings";

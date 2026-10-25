@@ -1,5 +1,3 @@
-import type { FolderEntry } from "@shared/desktop-api";
-import type { MenuEntry } from "@shared/menu";
 import { cn } from "cn";
 import { ChevronRight, CircleAlert, FileText, Folder } from "lucide-solid";
 import {
@@ -11,10 +9,12 @@ import {
   Show,
   type Component,
 } from "solid-js";
+import type { FolderEntry } from "@shared/desktop-api";
+import type { MenuEntry } from "@shared/menu";
 import { ListItem, rowIndent } from "@/components/ui";
+import { MenuPopup } from "@/features/menu/menu-popup";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
-import { MenuPopup } from "@/features/menu/menu-popup";
 
 interface TreeContext {
   activePath: () => string | undefined;

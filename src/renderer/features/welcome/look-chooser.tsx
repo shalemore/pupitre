@@ -1,8 +1,8 @@
 import { cn } from "cn";
 import type { JSX } from "solid-js";
+import type { Settings } from "@shared/settings";
 import { t } from "@/i18n";
 import { settings, updateSettings } from "@/lib/settings";
-import type { Settings } from "@shared/settings";
 
 interface LookOptionProps {
   value: Settings["windowStyle"];

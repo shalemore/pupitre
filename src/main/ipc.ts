@@ -20,9 +20,9 @@ import {
   type InitialState,
 } from "@shared/desktop-api";
 import { showAboutDialog } from "./about";
+import { setAsDefaultMarkdownApp } from "./default-app";
 import { decodeDocument, decodeWith, encodeDocument } from "./encoding";
 import { createEntry, renameEntry, trashEntry } from "./file-actions";
-import { setAsDefaultMarkdownApp } from "./default-app";
 import { t } from "./i18n";
 import { clickMenuItem, menuSnapshot, setDocumentState } from "./menu";
 import { takeLaunchFile } from "./open-files";

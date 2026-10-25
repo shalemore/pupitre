@@ -1,6 +1,6 @@
-import type { LineEnding, OpenedDocument, TextEncoding } from "@shared/desktop-api";
 import { debounce } from "@solid-primitives/scheduled";
 import { createEffect, createMemo, createSignal, on, onCleanup } from "solid-js";
+import type { LineEnding, OpenedDocument, TextEncoding } from "@shared/desktop-api";
 import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
 import { getSampleDocument } from "@/features/samples/sample-document";
 import { currentLocale, t } from "@/i18n";

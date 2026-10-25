@@ -3,8 +3,8 @@ import { type EditorState, type Extension, type Range, StateField } from "@codem
 import { Decoration, type DecorationSet, EditorView, type WidgetType } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
 import { fencedText } from "./block-text";
-import { collectHeadings } from "./document-structure";
 import { detailsSection, SummaryWidget, toggledDetails, toggleDetails } from "./details";
+import { collectHeadings } from "./document-structure";
 import { HtmlBlockWidget, isRenderableHtml } from "./html";
 import { documentBaseUrl } from "./images";
 import { printingChanged, revealingRanges, touches, lineRange } from "./live-preview";

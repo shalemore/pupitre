@@ -1,5 +1,5 @@
-import { render } from "solid-js/web";
 import "@/app.css";
+import { render } from "solid-js/web";
 import { setupAppearance } from "@/lib/appearance";
 import { MainWindow } from "@/windows/main-window";
 import { SettingsWindow } from "@/windows/settings-window";

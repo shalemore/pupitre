@@ -13,8 +13,8 @@ import {
   PARAGRAPH_MENU_GROUPS,
   type FormatAction,
 } from "@shared/format";
-import { formatShortcut, type MenuEntry, type Menus, menusOf, type TopMenu } from "@shared/menu";
 import { getDictionary, resolveLocale } from "@shared/i18n";
+import { formatShortcut, type MenuEntry, type Menus, menusOf, type TopMenu } from "@shared/menu";
 import {
   DEFAULT_SETTINGS,
   patchSettingsFile,

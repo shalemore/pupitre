@@ -1,8 +1,8 @@
 import { cn } from "cn";
 import { For, Show, type Component } from "solid-js";
 import { ListItem, rowIndent } from "@/components/ui";
-import { t } from "@/i18n";
 import type { OutlineHeading } from "@/features/editor/document-structure";
+import { t } from "@/i18n";
 
 interface OutlineListProps {
   headings: readonly OutlineHeading[];

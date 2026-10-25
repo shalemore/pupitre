@@ -1,4 +1,4 @@
-import { debounce } from "@solid-primitives/scheduled";
+import { closeBrackets, closeBracketsKeymap } from "@codemirror/autocomplete";
 import {
   defaultKeymap,
   history,
@@ -6,7 +6,6 @@ import {
   indentLess,
   indentMore,
 } from "@codemirror/commands";
-import { closeBrackets, closeBracketsKeymap } from "@codemirror/autocomplete";
 import { commonmarkLanguage, markdown } from "@codemirror/lang-markdown";
 import { syntaxTree } from "@codemirror/language";
 import { languages } from "@codemirror/language-data";
@@ -26,8 +25,9 @@ import {
 import { Compartment, EditorState, Prec } from "@codemirror/state";
 import { type Command, EditorView, keymap, placeholder } from "@codemirror/view";
 import { GFM, Subscript, Superscript } from "@lezer/markdown";
-import type { FormatAction } from "@shared/format";
+import { debounce } from "@solid-primitives/scheduled";
 import { createEffect, on, onCleanup, onMount, type Component } from "solid-js";
+import type { FormatAction } from "@shared/format";
 import { ScrollView } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
@@ -44,21 +44,21 @@ import {
   type OutlineHeading,
   readableText,
 } from "./document-structure";
+import { emojiSyntax } from "./emoji";
+import { footnotes } from "./footnotes";
 import {
   formatKeymap,
   insertParagraphBreak,
   type MarkdownStyle,
   runFormatAction,
 } from "./format-commands";
-import { footnotes } from "./footnotes";
-import { emojiSyntax } from "./emoji";
 import { frontMatter } from "./front-matter";
 import { highlight } from "./highlight";
 import { createPendingImages, documentBaseUrl, imageInput } from "./images";
 import { livePreview, setPrinting } from "./live-preview";
-import { pasteHtml } from "./paste-html";
 import { math, prerenderMath } from "./math";
 import { diagramTheme, prerenderDiagrams, readDiagramTheme } from "./mermaid";
+import { pasteHtml } from "./paste-html";
 import { renderedBlocks } from "./rendered-blocks";
 import { textDirection } from "./text-direction";
 import { focusMode, typewriterMode } from "./writing-modes";

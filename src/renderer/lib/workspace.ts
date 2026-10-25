@@ -1,5 +1,5 @@
-import type { WorkspaceState } from "@shared/desktop-api";
 import { createSignal } from "solid-js";
+import type { WorkspaceState } from "@shared/desktop-api";
 import { desktop } from "@/lib/desktop";
 
 // The main process keeps the open folder and which settings are in use, and announces changes

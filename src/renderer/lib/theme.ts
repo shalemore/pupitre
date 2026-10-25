@@ -1,5 +1,5 @@
-import { DEFAULT_SETTINGS } from "@shared/settings";
 import { createSignal } from "solid-js";
+import { DEFAULT_SETTINGS } from "@shared/settings";
 
 export type ColorScheme = "light" | "dark";
 
