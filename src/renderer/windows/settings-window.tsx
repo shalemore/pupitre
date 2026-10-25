@@ -43,7 +43,7 @@ export const SettingsWindow: Component = () => {
         immersive() ? "bg-surface-0" : "bg-surface-1",
       )}
     >
-      <TitleBar class={cn("h-10", !immersive() && "border-b border-border")}>
+      <TitleBar class={cn(!immersive() && "border-b border-border")}>
         <img src="./logo.svg" alt="" class="rounded-sm shadow-sm size-4" />
         <span class="font-semibold text-foreground tracking-wide">{t().settings.title}</span>
       </TitleBar>

@@ -266,7 +266,7 @@ export const MainWindow: Component = () => {
         inert={!chrome.titleBarVisible()}
         class={cn(
           "overflow-hidden transition-[height] duration-sheet",
-          chrome.titleBarVisible() ? "h-10" : "h-0",
+          !chrome.titleBarVisible() && "h-0",
           !immersive() && "border-b border-border",
         )}
       >
