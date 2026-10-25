@@ -272,6 +272,16 @@
 }
 
 /*
+ * The surface of a panel that floats over the window, such as a dropdown or a menu: every one of
+ * them is the same card around the p-1 its items sit in.
+ */
+@utility floating-panel {
+  border-radius: var(--radius-xl);
+  background-color: var(--popover);
+  box-shadow: var(--ui-shadow-popover);
+}
+
+/*
  * Press feedback for buttons: a quick squeeze on press and a spring back on release. Colors keep
  * the regular hover timing; only the scale uses the spring.
  */

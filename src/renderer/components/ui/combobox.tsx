@@ -104,7 +104,7 @@ export function Combobox(props: ComboboxProps) {
         </KobalteCombobox.Trigger>
       </KobalteCombobox.Control>
       <KobalteCombobox.Portal>
-        <KobalteCombobox.Content class="z-50 w-(--kb-popper-anchor-width) min-w-64 origin-(--kb-popper-content-transform-origin) rounded-xl bg-popover p-1 shadow-float animate-in fade-in-0 zoom-in-95 duration-base ease-enter data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-closed:duration-ui">
+        <KobalteCombobox.Content class="floating-panel z-50 w-(--kb-popper-anchor-width) min-w-64 origin-(--kb-popper-content-transform-origin) p-1 animate-in fade-in-0 zoom-in-95 duration-base ease-enter data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-closed:duration-ui">
           <KobalteCombobox.Listbox
             ref={(element) => (listbox = element)}
             as={(listboxProps: ScrollViewProps) => <ScrollView as="ul" {...listboxProps} />}

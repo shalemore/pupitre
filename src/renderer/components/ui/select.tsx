@@ -84,7 +84,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
         </KobalteSelect.Icon>
       </KobalteSelect.Trigger>
       <KobalteSelect.Portal>
-        <KobalteSelect.Content class="z-50 min-w-(--kb-popper-anchor-width) origin-(--kb-popper-content-transform-origin) rounded-xl bg-popover p-1 shadow-float animate-in fade-in-0 zoom-in-95 duration-base ease-enter data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-closed:duration-ui">
+        <KobalteSelect.Content class="floating-panel z-50 min-w-(--kb-popper-anchor-width) origin-(--kb-popper-content-transform-origin) p-1 animate-in fade-in-0 zoom-in-95 duration-base ease-enter data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-closed:duration-ui">
           <KobalteSelect.Listbox
             as={(listboxProps: ScrollViewProps) => <ScrollView as="ul" {...listboxProps} />}
             class="max-h-72 outline-none"

@@ -185,7 +185,7 @@ const MenuPanel: Component<PanelProps> = (props) => {
       onPointerOver={props.onPointerOver}
       onPointerLeave={props.onPointerLeave}
       style={{ left: `${offset().left}px`, top: `${offset().top}px` }}
-      class="fixed z-50 flex min-w-52 flex-col rounded-xl bg-popover p-1 text-xs text-foreground shadow-float outline-none select-none animate-in fade-in-0 zoom-in-95 duration-fast ease-enter"
+      class="floating-panel fixed z-50 flex min-w-52 flex-col p-1 text-xs text-foreground outline-none select-none animate-in fade-in-0 zoom-in-95 duration-fast ease-enter"
     >
       <For each={props.entries}>
         {(entry, index) => (
