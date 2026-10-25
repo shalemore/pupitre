@@ -14,6 +14,7 @@ import {
   TextAlignCenter,
   TextAlignEnd,
   TextAlignStart,
+  X,
 } from "lucide-solid";
 import {
   type Accessor,
@@ -79,6 +80,14 @@ const ToolButton: Component<{
   >
     {props.children}
   </Button>
+);
+
+/** A row or column with a cross on it, the way `Grid2x2X` marks a table that is deleted whole. */
+const Deleted = (props: { children: JSX.Element }) => (
+  <span class="relative inline-flex">
+    {props.children}
+    <X class="absolute -inset-e-0.5 -inset-be-0.5 size-2" stroke-width={2} />
+  </span>
 );
 
 /** Floats above the table while a cell is edited; acts on that cell's row and column. */
@@ -154,7 +163,9 @@ const TableToolbar: Component<{
             })
           }
         >
-          <Rows2 />
+          <Deleted>
+            <Rows2 />
+          </Deleted>
         </ToolButton>
       </Show>
       <ToolButton
@@ -167,7 +178,9 @@ const TableToolbar: Component<{
           })
         }
       >
-        <Columns2 />
+        <Deleted>
+          <Columns2 />
+        </Deleted>
       </ToolButton>
       <ToolButton
         label={labels().deleteTable}
