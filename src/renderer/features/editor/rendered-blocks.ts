@@ -24,6 +24,19 @@ import { TOC_MARKER, TocWidget } from "./toc";
 /** Containers whose children can be rendered blocks; other blocks are never entered. */
 const CONTAINER = /^(?:Document|Blockquote|BulletList|OrderedList|ListItem)$/;
 
+/**
+ * The end of the source of a rendered block, which is where a click on its rendering puts the
+ * cursor: the last line of a fence, the last character of a formula.
+ */
+function sourceEnd(state: EditorState, node: SyntaxNode): number {
+  const marks = node.getChildren(node.name === "BlockMath" ? "MathMark" : "CodeMark");
+  const close = marks.length > 1 ? marks.at(-1) : undefined;
+  if (!close) return node.to;
+  // A closing fence or `$$` takes a line of its own, so the source ends on the line before it
+  const line = state.doc.lineAt(close.from);
+  return line.from > node.from ? line.from - 1 : close.from;
+}
+
 function blockWidget(state: EditorState, node: SyntaxNode): WidgetType | undefined {
   const text = (child: SyntaxNode | null | undefined) =>
     child ? state.sliceDoc(child.from, child.to) : "";
@@ -39,14 +52,17 @@ function blockWidget(state: EditorState, node: SyntaxNode): WidgetType | undefin
       ? new HtmlBlockWidget(source, state.facet(documentBaseUrl))
       : undefined;
   }
-  if (node.name === "BlockMath") return new MathWidget(mathOf(state, node).tex, true);
+  if (node.name === "BlockMath") {
+    return new MathWidget(mathOf(state, node).tex, true, sourceEnd(state, node));
+  }
   if (node.name !== "FencedCode") return undefined;
   const formula = mathFence(state, node);
-  if (formula !== undefined) return new MathWidget(formula, true);
+  if (formula !== undefined) return new MathWidget(formula, true, sourceEnd(state, node));
   const language = text(node.getChild("CodeInfo")).trim();
   const code = fencedText(state, node);
-  if (language.toLowerCase() === "mermaid")
-    return new MermaidWidget(code, state.facet(diagramTheme));
+  if (language.toLowerCase() === "mermaid") {
+    return new MermaidWidget(code, state.facet(diagramTheme), sourceEnd(state, node));
+  }
   return undefined;
 }
 

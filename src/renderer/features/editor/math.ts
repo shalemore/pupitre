@@ -11,7 +11,7 @@ import type {
 } from "@lezer/markdown";
 import { blockText, fencedText } from "./block-text";
 import { renderMath } from "./mathjax";
-import { onScrollbar } from "./scrollbar";
+import { onReveal, onScrollbar } from "./widget-events";
 
 const DOLLAR = 36;
 const BACKSLASH = 92;
@@ -139,17 +139,20 @@ export class MathWidget extends WidgetType {
   constructor(
     readonly tex: string,
     readonly display: boolean,
+    /** End of the source this formula stands for, where a click on it puts the cursor. */
+    readonly end?: number,
   ) {
     super();
   }
 
   override eq(other: MathWidget): boolean {
-    return other.tex === this.tex && other.display === this.display;
+    return other.tex === this.tex && other.display === this.display && other.end === this.end;
   }
 
   toDOM(view: EditorView): HTMLElement {
     const element = document.createElement(this.display ? "div" : "span");
     element.className = this.display ? "md-math-block" : "md-math";
+    onReveal(element, view, this.end);
     void renderMath(this.tex, this.display).then((svg) => {
       element.innerHTML = svg;
       view.requestMeasure();

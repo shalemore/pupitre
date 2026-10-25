@@ -3,7 +3,7 @@ import { type EditorState, Facet } from "@codemirror/state";
 import { type EditorView, WidgetType } from "@codemirror/view";
 import { toHex } from "@/lib/theme";
 import { fencedText } from "./block-text";
-import { onScrollbar } from "./scrollbar";
+import { onReveal, onScrollbar } from "./widget-events";
 
 /** Mermaid's theme variables; only hex colors work, since Mermaid derives shades from them. */
 export type DiagramTheme = Readonly<Record<string, string | boolean>>;
@@ -124,17 +124,20 @@ export class MermaidWidget extends WidgetType {
   constructor(
     readonly source: string,
     readonly theme: DiagramTheme,
+    /** End of the source this diagram stands for, where a click on it puts the cursor. */
+    readonly end?: number,
   ) {
     super();
   }
 
   override eq(other: MermaidWidget): boolean {
-    return other.source === this.source && other.theme === this.theme;
+    return other.source === this.source && other.theme === this.theme && other.end === this.end;
   }
 
   toDOM(view: EditorView): HTMLElement {
     const element = document.createElement("div");
     element.className = "md-mermaid";
+    onReveal(element, view, this.end);
     renderDiagram(this.source, this.theme).then(
       (svg) => {
         // Mermaid's default strict security level sanitizes the diagram source it renders
