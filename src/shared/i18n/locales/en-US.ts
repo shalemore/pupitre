@@ -92,7 +92,7 @@ export const enUS = {
     osLabel: "OS:",
     openSampleDoc: "Open Example Document",
     sampleDocTitle: "Example Document",
-    sampleDocDesc: "Explore Pupitre feature demo and full Markdown syntax guide",
+    sampleDocDesc: "Explore the Pupitre feature demo and the full Markdown syntax guide",
   },
   menu: {
     file: "File",
