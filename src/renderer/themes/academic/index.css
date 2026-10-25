@@ -104,6 +104,8 @@
 
 .md-code-block {
   background: transparent;
+  /* Code has no fill here, so a diagram takes the page itself */
+  --md-diagram-label: var(--ui-surface-1);
   font-size: 0.82em;
 }
 

@@ -57,6 +57,8 @@
     --md-list-indent: 1.6em;
     --md-block-indent: 0px;
     --md-blank-gap: 0.75em;
+    /* The surface a diagram stands on, which an edge label is masked with: the page itself */
+    --md-diagram-label: var(--ui-surface-1);
   }
 
   /* A blank line between blocks, away from the cursor, is only the gap between them (live-preview.ts) */
@@ -350,6 +352,8 @@
   /* Code blocks: one card drawn across their lines; the fences shrink to its padding when hidden */
   .md-code-block {
     --md-block-indent: 1em;
+    /* A diagram inside the block stands on the card, not on the page */
+    --md-diagram-label: var(--ui-surface-0);
     position: relative;
     padding-inline-end: 1em;
     background: var(--ui-surface-0);

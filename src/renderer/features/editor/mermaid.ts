@@ -77,7 +77,21 @@ function renderDiagram(source: string, theme: DiagramTheme): Promise<string> {
   if (!svg) {
     svg = (async () => {
       const { default: mermaid } = await import("mermaid");
-      mermaid.initialize({ startOnLoad: false, theme: "base", themeVariables: theme });
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: "base",
+        themeVariables: theme,
+        // Mermaid fades the box behind an edge label to half of a color it parses itself, so the
+        // box is colored in CSS, after the styles Mermaid writes: it takes the surface the diagram
+        // stands on (--md-diagram-label, see editor.css) and hides the edge it names
+        themeCSS: `.edgeLabel, .edgeLabel p, .labelBkg {
+            background-color: var(--md-diagram-label, transparent);
+          }
+          .edgeLabel rect {
+            fill: var(--md-diagram-label, transparent);
+            opacity: 1;
+          }`,
+      });
       const result = await mermaid.render(`md-mermaid-${renderCount++}`, source);
       return result.svg;
     })();

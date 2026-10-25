@@ -182,6 +182,8 @@
 .md-code-block {
   border-inline: 1px solid var(--ui-alpha-2);
   background: var(--ui-surface-3);
+  /* The card is the third surface here, so a diagram inside it stands on that */
+  --md-diagram-label: var(--ui-surface-3);
   line-height: 1.6;
 }
 
