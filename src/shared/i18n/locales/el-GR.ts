@@ -255,6 +255,7 @@ export const elGR = {
     windowStyle: "Στυλ παραθύρου",
     windowStyleClassic: "Κλασικό",
     windowStyleImmersive: "Εμβυθιστικό",
+    immersiveGap: "Κενό",
     defaultApp: "Προεπιλεγμένη εφαρμογή Markdown",
     defaultAppDesc: "Άνοιγμα αρχείων .md με το Pupitre με διπλό κλικ",
     setAsDefault: "Ορισμός ως προεπιλογή",

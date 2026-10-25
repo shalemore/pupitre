@@ -252,6 +252,7 @@ export const daDK = {
     windowStyle: "Vinduesstil",
     windowStyleClassic: "Klassisk",
     windowStyleImmersive: "Immersiv",
+    immersiveGap: "Mellemrum",
     defaultApp: "Standard Markdown-app",
     defaultAppDesc: "Åbn .md-filer med Pupitre, når du dobbeltklikker på dem",
     setAsDefault: "Angiv som standard",

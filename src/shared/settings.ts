@@ -9,6 +9,7 @@ export const SETTING_RANGES = {
   fontSize: { min: 10, max: 32, step: 1 },
   lineHeight: { min: 1, max: 3, step: 0.05 },
   zoom: { min: 50, max: 300, step: 10 },
+  immersiveGap: { min: 0, max: 24, step: 1 },
 } as const;
 
 /** What Ctrl+plus, Ctrl+minus and Ctrl+wheel step through, the way a browser does. */
@@ -58,6 +59,12 @@ export const settingsSchema = z.object({
   zoom: z.number().min(SETTING_RANGES.zoom.min).max(SETTING_RANGES.zoom.max).catch(100),
   /** Read when a window is created, so a change applies to windows opened afterwards. */
   windowStyle: z.enum(["classic", "immersive"]).catch("classic"),
+  /** Gap the document card keeps to the window edges, its title bar and its sidebars, in px. */
+  immersiveGap: z
+    .number()
+    .min(SETTING_RANGES.immersiveGap.min)
+    .max(SETTING_RANGES.immersiveGap.max)
+    .catch(8),
   sidebarVisible: z.boolean().catch(true),
   /** Folder and outline in two sidebars, one at each edge, or as tabs of one sidebar. */
   sidebarLayout: z.enum(["split", "combined"]).catch("split"),

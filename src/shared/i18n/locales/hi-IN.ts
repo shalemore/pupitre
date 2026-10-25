@@ -250,6 +250,7 @@ export const hiIN = {
     windowStyle: "विंडो शैली",
     windowStyleClassic: "क्लासिक",
     windowStyleImmersive: "इमर्सिव",
+    immersiveGap: "अंतराल",
     defaultApp: "डिफ़ॉल्ट Markdown ऐप",
     defaultAppDesc: ".md फ़ाइलों को डबल-क्लिक करने पर Pupitre में खोलें",
     setAsDefault: "डिफ़ॉल्ट बनाएँ",

@@ -48,10 +48,18 @@ export function setupAppearance(): void {
     createEffect(() => {
       root.dataset["motion"] = settings().animations;
     });
-    // Typography preferences become CSS variables used by the `preferences` layer
+    // Layout and typography preferences become CSS variables, read by the stylesheet
     createEffect(() => {
-      const { fontSize, lineHeight, contentWidth, bodyFont, fallbackFont, codeFont, uiFont } =
-        settings();
+      const {
+        fontSize,
+        lineHeight,
+        contentWidth,
+        immersiveGap,
+        bodyFont,
+        fallbackFont,
+        codeFont,
+        uiFont,
+      } = settings();
       // The theme brings the fonts the stacks below fall back to, so a change of theme rebuilds them
       activeTheme();
       const themeStyle = getComputedStyle(root);
@@ -59,6 +67,7 @@ export function setupAppearance(): void {
       root.style.setProperty("--pref-font-size", `${fontSize}px`);
       root.style.setProperty("--pref-line-height", String(lineHeight));
       root.style.setProperty("--pref-content-width", CONTENT_WIDTHS[contentWidth]);
+      root.style.setProperty("--pref-immersive-gap", `${immersiveGap}px`);
       setOptionalProperty(
         "--pref-font-family",
         documentFontFamily(bodyFont, fallbackFont, themeFonts),

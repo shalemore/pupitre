@@ -252,6 +252,7 @@ export const thTH = {
     windowStyle: "รูปแบบหน้าต่าง",
     windowStyleClassic: "คลาสสิก",
     windowStyleImmersive: "เต็มจอ",
+    immersiveGap: "ช่องว่าง",
     defaultApp: "แอป Markdown ค่าเริ่มต้น",
     defaultAppDesc: "เปิดไฟล์ .md ด้วย Pupitre เมื่อดับเบิลคลิก",
     setAsDefault: "ตั้งเป็นค่าเริ่มต้น",

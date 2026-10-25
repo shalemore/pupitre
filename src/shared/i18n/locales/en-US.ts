@@ -249,6 +249,7 @@ export const enUS = {
     windowStyle: "Window Style",
     windowStyleClassic: "Classic",
     windowStyleImmersive: "Immersive",
+    immersiveGap: "Gap",
     defaultApp: "Default Markdown App",
     defaultAppDesc: "Open .md files with Pupitre when you double-click them",
     setAsDefault: "Set as Default",

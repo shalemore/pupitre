@@ -255,6 +255,7 @@ export const ruRU = {
     windowStyle: "Стиль окна",
     windowStyleClassic: "Классический",
     windowStyleImmersive: "Иммерсивный",
+    immersiveGap: "Отступ",
     defaultApp: "Приложение по умолчанию для Markdown",
     defaultAppDesc: "Открывать файлы .md в Pupitre двойным щелчком",
     setAsDefault: "Сделать по умолчанию",

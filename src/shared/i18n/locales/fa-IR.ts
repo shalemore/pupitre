@@ -252,6 +252,7 @@ export const faIR = {
     windowStyle: "سبک پنجره",
     windowStyleClassic: "کلاسیک",
     windowStyleImmersive: "فراگیر",
+    immersiveGap: "فاصله",
     defaultApp: "برنامه پیش‌فرض Markdown",
     defaultAppDesc: "پرونده‌های ‎.md را با دوبار کلیک با Pupitre باز کن",
     setAsDefault: "تنظیم به‌عنوان پیش‌فرض",

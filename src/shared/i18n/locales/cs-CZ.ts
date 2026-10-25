@@ -255,6 +255,7 @@ export const csCZ = {
     windowStyle: "Styl okna",
     windowStyleClassic: "Klasický",
     windowStyleImmersive: "Imersivní",
+    immersiveGap: "Mezera",
     defaultApp: "Výchozí aplikace pro Markdown",
     defaultAppDesc: "Otevřít soubory .md v aplikaci Pupitre po dvojkliku",
     setAsDefault: "Nastavit jako výchozí",

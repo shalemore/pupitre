@@ -250,6 +250,7 @@ export const frFR = {
     windowStyle: "Style de fenêtre",
     windowStyleClassic: "Classique",
     windowStyleImmersive: "Immersif",
+    immersiveGap: "Marge",
     defaultApp: "Application Markdown par défaut",
     defaultAppDesc: "Ouvrir les fichiers .md avec Pupitre par double-clic",
     setAsDefault: "Définir par défaut",

@@ -250,6 +250,7 @@ export const viVN = {
     windowStyle: "Kiểu cửa sổ",
     windowStyleClassic: "Cổ điển",
     windowStyleImmersive: "Toàn màn hình",
+    immersiveGap: "Khoảng cách",
     defaultApp: "Ứng dụng Markdown mặc định",
     defaultAppDesc: "Mở tệp .md bằng Pupitre khi nhấp đúp",
     setAsDefault: "Đặt làm mặc định",

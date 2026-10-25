@@ -112,6 +112,24 @@ export const AppearanceSection: Component = () => (
         />
       </SettingField>
 
+      <Show when={settings().windowStyle === "immersive"}>
+        <SettingField
+          nested
+          name="immersiveGap"
+          title={t().settings.immersiveGap}
+          description={`${settings().immersiveGap}px`}
+        >
+          <Slider
+            value={settings().immersiveGap}
+            min={SETTING_RANGES.immersiveGap.min}
+            max={SETTING_RANGES.immersiveGap.max}
+            step={SETTING_RANGES.immersiveGap.step}
+            onChange={(immersiveGap) => void updateSettings({ immersiveGap })}
+            aria-label={t().settings.immersiveGap}
+          />
+        </SettingField>
+      </Show>
+
       <SettingField
         name="showWordCount"
         title={t().settings.showWordCount}

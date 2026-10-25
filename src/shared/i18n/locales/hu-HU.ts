@@ -254,6 +254,7 @@ export const huHU = {
     windowStyle: "Ablakstílus",
     windowStyleClassic: "Klasszikus",
     windowStyleImmersive: "Immerzív",
+    immersiveGap: "Rés",
     defaultApp: "Alapértelmezett Markdown-alkalmazás",
     defaultAppDesc: "A .md fájlok megnyitása a Pupitre-ben dupla kattintásra",
     setAsDefault: "Beállítás alapértelmezettként",

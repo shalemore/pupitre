@@ -258,6 +258,7 @@ export const ukUA = {
     windowStyle: "Стиль вікна",
     windowStyleClassic: "Класичний",
     windowStyleImmersive: "Занурювальний",
+    immersiveGap: "Відступ",
     defaultApp: "Стандартна програма Markdown",
     defaultAppDesc: "Відкривати файли .md у Pupitre після подвійного клацання",
     setAsDefault: "Встановити за замовчуванням",

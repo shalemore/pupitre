@@ -252,6 +252,7 @@ export const idID = {
     windowStyle: "Gaya jendela",
     windowStyleClassic: "Klasik",
     windowStyleImmersive: "Imersif",
+    immersiveGap: "Celah",
     defaultApp: "Aplikasi Markdown bawaan",
     defaultAppDesc: "Buka berkas .md dengan Pupitre saat diklik dua kali",
     setAsDefault: "Jadikan bawaan",

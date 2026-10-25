@@ -255,6 +255,7 @@ export const nlNL = {
     windowStyle: "Vensterstijl",
     windowStyleClassic: "Klassiek",
     windowStyleImmersive: "Immersief",
+    immersiveGap: "Tussenruimte",
     defaultApp: "Standaard Markdown-app",
     defaultAppDesc: "Open .md-bestanden met Pupitre wanneer u erop dubbelklikt",
     setAsDefault: "Als standaard instellen",

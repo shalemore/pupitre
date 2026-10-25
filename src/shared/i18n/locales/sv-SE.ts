@@ -252,6 +252,7 @@ export const svSE = {
     windowStyle: "Fönsterstil",
     windowStyleClassic: "Klassisk",
     windowStyleImmersive: "Immersiv",
+    immersiveGap: "Marginal",
     defaultApp: "Standardapp för Markdown",
     defaultAppDesc: "Öppna .md-filer med Pupitre när du dubbelklickar på dem",
     setAsDefault: "Ange som standard",

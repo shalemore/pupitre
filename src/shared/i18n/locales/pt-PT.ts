@@ -250,6 +250,7 @@ export const ptPT = {
     windowStyle: "Estilo da janela",
     windowStyleClassic: "Clássico",
     windowStyleImmersive: "Imersivo",
+    immersiveGap: "Espaçamento",
     defaultApp: "Aplicação Markdown predefinida",
     defaultAppDesc: "Abrir ficheiros .md com o Pupitre ao fazer duplo clique",
     setAsDefault: "Definir como predefinição",

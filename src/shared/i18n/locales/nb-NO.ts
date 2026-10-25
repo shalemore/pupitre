@@ -252,6 +252,7 @@ export const nbNO = {
     windowStyle: "Vindustil",
     windowStyleClassic: "Klassisk",
     windowStyleImmersive: "Immersiv",
+    immersiveGap: "Mellomrom",
     defaultApp: "Standard Markdown-app",
     defaultAppDesc: "Åpne .md-filer med Pupitre når du dobbeltklikker på dem",
     setAsDefault: "Angi som standard",

@@ -249,6 +249,7 @@ export const esES = {
     windowStyle: "Estilo de ventana",
     windowStyleClassic: "Clásico",
     windowStyleImmersive: "Inmersivo",
+    immersiveGap: "Espacio",
     defaultApp: "Aplicación predeterminada para Markdown",
     defaultAppDesc: "Abrir los archivos .md con Pupitre al hacer doble clic",
     setAsDefault: "Establecer como predeterminada",

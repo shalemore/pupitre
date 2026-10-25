@@ -249,6 +249,7 @@ export const jaJP = {
     windowStyle: "ウィンドウスタイル",
     windowStyleClassic: "クラシック",
     windowStyleImmersive: "没入型",
+    immersiveGap: "余白",
     defaultApp: "Markdown の既定のアプリ",
     defaultAppDesc: ".md ファイルをダブルクリックで Pupitre で開きます",
     setAsDefault: "既定に設定",

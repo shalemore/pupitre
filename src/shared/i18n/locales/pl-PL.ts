@@ -258,6 +258,7 @@ export const plPL = {
     windowStyle: "Styl okna",
     windowStyleClassic: "Klasyczny",
     windowStyleImmersive: "Immersyjny",
+    immersiveGap: "Odstęp",
     defaultApp: "Domyślna aplikacja Markdown",
     defaultAppDesc: "Otwieraj pliki .md w Pupitre po dwukrotnym kliknięciu",
     setAsDefault: "Ustaw jako domyślną",

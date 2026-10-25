@@ -251,6 +251,7 @@ export const deDE = {
     windowStyle: "Fensterstil",
     windowStyleClassic: "Klassisch",
     windowStyleImmersive: "Immersiv",
+    immersiveGap: "Abstand",
     defaultApp: "Standard-App für Markdown",
     defaultAppDesc: ".md-Dateien per Doppelklick mit Pupitre öffnen",
     setAsDefault: "Als Standard festlegen",

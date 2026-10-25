@@ -313,7 +313,11 @@ export const MainWindow: Component = () => {
         class={cn(
           "flex-1 min-h-0 flex overflow-hidden print:block print:overflow-visible",
           // The card keeps an even gap to the window edges, the title bar and the sidebars
-          immersive() && cn("gap-2 py-2 ps-0 print:p-0", split() ? "pe-0" : "pe-2"),
+          immersive() &&
+            cn(
+              "gap-(--pref-immersive-gap) py-(--pref-immersive-gap) ps-0 print:p-0",
+              split() ? "pe-0" : "pe-(--pref-immersive-gap)",
+            ),
         )}
       >
         <SidebarSlot

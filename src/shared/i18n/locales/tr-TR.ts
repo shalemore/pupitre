@@ -254,6 +254,7 @@ export const trTR = {
     windowStyle: "Pencere Stili",
     windowStyleClassic: "Klasik",
     windowStyleImmersive: "Sürükleyici",
+    immersiveGap: "Boşluk",
     defaultApp: "Varsayılan Markdown Uygulaması",
     defaultAppDesc: ".md dosyalarını çift tıkladığınızda Pupitre ile aç",
     setAsDefault: "Varsayılan Yap",

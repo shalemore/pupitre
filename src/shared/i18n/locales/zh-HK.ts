@@ -245,6 +245,7 @@ export const zhHK = {
     windowStyle: "視窗樣式",
     windowStyleClassic: "經典",
     windowStyleImmersive: "沉浸式",
+    immersiveGap: "縫隙",
     defaultApp: "預設 Markdown 應用程式",
     defaultAppDesc: "按兩下 .md 檔案時以 Pupitre 開啟",
     setAsDefault: "設為預設",

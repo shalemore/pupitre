@@ -251,6 +251,7 @@ export const itIT = {
     windowStyle: "Stile finestra",
     windowStyleClassic: "Classico",
     windowStyleImmersive: "Immersivo",
+    immersiveGap: "Spazio",
     defaultApp: "App predefinita per Markdown",
     defaultAppDesc: "Apri i file .md con Pupitre facendo doppio clic",
     setAsDefault: "Imposta come predefinita",

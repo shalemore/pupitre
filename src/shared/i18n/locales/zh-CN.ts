@@ -245,6 +245,7 @@ export const zhCN = {
     windowStyle: "窗口样式",
     windowStyleClassic: "经典",
     windowStyleImmersive: "沉浸式",
+    immersiveGap: "缝隙",
     defaultApp: "默认 Markdown 应用",
     defaultAppDesc: "双击 .md 文件时用 Pupitre 打开",
     setAsDefault: "设为默认",

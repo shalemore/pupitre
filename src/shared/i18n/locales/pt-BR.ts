@@ -248,6 +248,7 @@ export const ptBR = {
     windowStyle: "Estilo da janela",
     windowStyleClassic: "Clássico",
     windowStyleImmersive: "Imersivo",
+    immersiveGap: "Espaço",
     defaultApp: "App padrão para Markdown",
     defaultAppDesc: "Abrir arquivos .md com o Pupitre ao clicar duas vezes",
     setAsDefault: "Definir como padrão",

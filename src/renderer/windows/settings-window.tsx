@@ -52,7 +52,11 @@ export const SettingsWindow: Component = () => {
       <Tabs
         orientation="vertical"
         defaultValue="general"
-        class={cn("flex flex-1 overflow-hidden", immersive() && "gap-2 pb-2 pe-2")}
+        class={cn(
+          "flex flex-1 overflow-hidden",
+          immersive() &&
+            "gap-(--pref-immersive-gap) pb-(--pref-immersive-gap) pe-(--pref-immersive-gap)",
+        )}
       >
         <aside
           class={cn("w-48 shrink-0 p-3", !immersive() && "border-e border-border bg-surface-0")}

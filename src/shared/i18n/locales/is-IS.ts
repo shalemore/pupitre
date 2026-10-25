@@ -253,6 +253,7 @@ export const isIS = {
     windowStyle: "Stíll glugga",
     windowStyleClassic: "Klassískur",
     windowStyleImmersive: "Yfirgripsmikill",
+    immersiveGap: "Bil",
     defaultApp: "Sjálfgefna Markdown-forritið",
     defaultAppDesc: "Opna .md-skrár með Pupitre þegar þú tvísmellir á þær",
     setAsDefault: "Gera að sjálfgefnu",

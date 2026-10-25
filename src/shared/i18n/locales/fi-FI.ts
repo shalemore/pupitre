@@ -253,6 +253,7 @@ export const fiFI = {
     windowStyle: "Ikkunatyyli",
     windowStyleClassic: "Klassinen",
     windowStyleImmersive: "Immersiivinen",
+    immersiveGap: "Väli",
     defaultApp: "Oletus-Markdown-sovellus",
     defaultAppDesc: "Avaa .md-tiedostot Pupitressa, kun kaksoisnapsautat niitä",
     setAsDefault: "Aseta oletukseksi",

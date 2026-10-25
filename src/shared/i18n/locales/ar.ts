@@ -265,6 +265,7 @@ export const ar = {
     windowStyle: "نمط النافذة",
     windowStyleClassic: "كلاسيكي",
     windowStyleImmersive: "غامر",
+    immersiveGap: "الفراغ",
     defaultApp: "تطبيق Markdown الافتراضي",
     defaultAppDesc: "فتح ملفات ‎.md باستخدام Pupitre عند النقر عليها نقرًا مزدوجًا",
     setAsDefault: "تعيين كافتراضي",

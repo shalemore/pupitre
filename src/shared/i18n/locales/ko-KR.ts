@@ -249,6 +249,7 @@ export const koKR = {
     windowStyle: "창 스타일",
     windowStyleClassic: "클래식",
     windowStyleImmersive: "몰입형",
+    immersiveGap: "여백",
     defaultApp: "기본 Markdown 앱",
     defaultAppDesc: ".md 파일을 두 번 클릭하면 Pupitre로 엽니다",
     setAsDefault: "기본값으로 설정",
