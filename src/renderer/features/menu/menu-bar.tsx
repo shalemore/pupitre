@@ -77,7 +77,7 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
       data-menu-bar
       onPointerOver={cancelLeave}
       onPointerLeave={leave}
-      class="flex items-center text-xs select-none"
+      class="flex shrink-0 items-center text-xs select-none"
     >
       <For each={TOP_MENUS}>
         {(menu) => (
@@ -87,7 +87,7 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
             onPointerDown={(event) => event.preventDefault()}
             onClick={(event) => openMenu(menu, event.currentTarget)}
             onPointerEnter={(event) => openMenu(menu, event.currentTarget)}
-            class="px-2.5 py-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent aria-expanded:text-foreground aria-expanded:bg-accent transition-colors cursor-pointer"
+            class="shrink-0 whitespace-nowrap px-2.5 py-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent aria-expanded:text-foreground aria-expanded:bg-accent transition-colors cursor-pointer"
             aria-haspopup="menu"
             aria-expanded={open()?.menu === menu}
           >

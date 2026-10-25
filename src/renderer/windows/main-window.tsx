@@ -272,7 +272,7 @@ export const MainWindow: Component = () => {
           !immersive() && "border-b border-border",
         )}
       >
-        <div class="flex items-center gap-2 me-1 pointer-events-none">
+        <div data-bar-part="name" class="flex items-center gap-2 me-1 pointer-events-none">
           <img src="./logo.svg" alt="" class="rounded-sm shadow-sm size-4" />
           <span class="font-semibold text-muted-foreground tracking-wide">
             {t().common.appName}
@@ -297,7 +297,10 @@ export const MainWindow: Component = () => {
         </div>
 
         <Show when={session.activeDocument() !== undefined && settings().showWordCount}>
-          <div class="text-2xs text-muted-foreground tabular-nums flex items-center gap-1.5 me-2">
+          <div
+            data-bar-part="count"
+            class="text-2xs text-muted-foreground tabular-nums flex shrink-0 items-center gap-1.5 whitespace-nowrap me-2"
+          >
             <span>{t().common.wordsCount(stats().words)}</span>
             <span>·</span>
             <span>{t().common.charsCount(stats().characters)}</span>

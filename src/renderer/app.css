@@ -458,6 +458,21 @@ html {
   padding-left: 80px;
 }
 
+/*
+ * The title bar hides the parts it can do without as it narrows, and the menu bar clips its own
+ * items once nothing is left to hide (see GIVE_WAY in title-bar.tsx).
+ */
+.app-title-bar[data-compact~="count"] [data-bar-part="count"],
+.app-title-bar[data-compact~="name"] [data-bar-part="name"] {
+  display: none;
+}
+
+.app-title-bar[data-compact~="name"] [data-menu-bar] {
+  min-width: 0;
+  flex-shrink: 1;
+  overflow: hidden;
+}
+
 /* Caption buttons drawn by the page sit flush with the window edge */
 .app-title-bar[data-caption-buttons="left"] {
   padding-left: 0;

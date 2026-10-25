@@ -190,6 +190,10 @@ only make code generation easier.
   well, the outline before the folder, and gives them back when it widens; a pinned sidebar keeps
   its place. Only that module decides this, from the pointer position, the window width and what is
   pinned; a control does not measure the pointer for it.
+- The title bar drops its parts as the window narrows rather than letting them wrap: the word
+  counts, then the app name, then the menu bar's own items clip. `GIVE_WAY` in
+  `components/title-bar.tsx` sets the order and the windows mark those parts with `data-bar-part`;
+  a part added to the bar without a mark never gives way.
 - A control that hangs below the title bar and is used with the pointer below the top — the menu
   bar today, a dropdown or a popover on the bar later — has to keep the bar out through
   `titleBarPinned`, and anything hanging out of a sidebar through that sidebar's pin. Such a panel

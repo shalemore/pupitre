@@ -1,7 +1,14 @@
 import { cn } from "cn";
-import { Show, type ParentComponent } from "solid-js";
+import { onCleanup, onMount, Show, type ParentComponent } from "solid-js";
 import { desktop } from "@/lib/desktop";
 import { CaptionButtons } from "./caption-buttons";
+
+/**
+ * What the title bar gives up as it narrows, most disposable first. The windows mark those parts
+ * with data-bar-part; the menu bar and the document name stay, the name truncating and the menu
+ * clipping only when there is nothing left to hide.
+ */
+const GIVE_WAY = ["count", "name"];
 
 /**
  * The window title bar. It is draggable as a whole and leaves room for the native caption buttons
@@ -11,8 +18,37 @@ import { CaptionButtons } from "./caption-buttons";
  */
 export const TitleBar: ParentComponent<{ class?: string; inert?: boolean }> = (props) => {
   const side = desktop.initialState.captionSide;
+  let bar: HTMLElement | undefined;
+
+  /**
+   * Hides the parts that no longer fit, in GIVE_WAY order, and gives them back when they do. It
+   * unhides everything first, so the answer does not depend on what is hidden now; the observer
+   * sees one settled layout, since the width is the same at the end as at the start of a pass.
+   */
+  const fit = () => {
+    if (!bar) return;
+    const hidden: string[] = [];
+    bar.removeAttribute("data-compact");
+    for (const part of GIVE_WAY) {
+      if (bar.scrollWidth <= bar.clientWidth) break;
+      hidden.push(part);
+      bar.setAttribute("data-compact", hidden.join(" "));
+    }
+  };
+
+  onMount(() => {
+    if (!bar) return;
+    fit();
+    // The bar resizes with the window, its parts with their text: a language change widens the menus
+    const observer = new ResizeObserver(fit);
+    observer.observe(bar);
+    for (const child of bar.children) observer.observe(child);
+    onCleanup(() => observer.disconnect());
+  });
+
   return (
     <header
+      ref={(element) => (bar = element)}
       // The caption buttons stay on the window's physical side in every language, so the bar keeps one order; its texts follow their own script
       dir="ltr"
       data-caption-buttons={side}
