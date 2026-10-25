@@ -1,8 +1,8 @@
 import { resolve } from "node:path";
 import tailwindcss from "@tailwindcss/vite";
 import solid from "vite-plugin-solid";
-import pkg from "./package.json";
-import { thirdPartyNotices } from "./scripts/third-party-notices";
+import pkg from "./package.json" with { type: "json" };
+import { thirdPartyNotices } from "./scripts/third-party-notices.js";
 
 /**
  * The settings of the renderer, which both the app and the web demo build: the same bundle, with

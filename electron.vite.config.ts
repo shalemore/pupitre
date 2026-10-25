@@ -1,6 +1,6 @@
 import { resolve } from "node:path";
 import { defineConfig } from "electron-vite";
-import { rendererConfig } from "./vite.shared";
+import { rendererConfig } from "./vite.shared.js";
 
 const shared = { "@shared": resolve("src/shared") };
 
