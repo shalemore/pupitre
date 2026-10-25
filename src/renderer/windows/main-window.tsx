@@ -12,7 +12,6 @@ import {
 } from "solid-js";
 import type { AppCommand } from "@shared/desktop-api";
 import { TitleBar } from "@/components/title-bar";
-import { createDocumentSession } from "@/features/document/document-session";
 import type { OutlineHeading } from "@/features/editor/document-structure";
 import { FindBar } from "@/features/editor/find-bar";
 import {
@@ -33,6 +32,7 @@ import {
 import { WelcomeScreen } from "@/features/welcome/welcome-screen";
 import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
+import { createDocumentSession } from "@/lib/document-session";
 import { fileNameOf, isInsideFolder, isolateFileName } from "@/lib/file";
 import { createImmersiveChrome } from "@/lib/immersive-chrome";
 import { recentFiles } from "@/lib/recent-files";

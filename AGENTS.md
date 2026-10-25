@@ -79,7 +79,8 @@ src/
     windows/        one top-level component per window (main window, settings window)
     features/<x>/   components, state and helpers used by one feature (editor, outline, …)
     components/     components shared by several features; components/ui holds primitives
-    lib/            cross-feature helpers (desktop API, settings, theme, fonts, text stats)
+    lib/            helpers and state shared across features (desktop API, settings, theme,
+                    fonts, text stats, the document session)
     themes/<name>/  theme folders, see "Themes"
 web/          the web demo: an index.html and `host.ts`, a browser `window.desktop` (GitHub Pages)
 build/        icons and other electron-builder resources
