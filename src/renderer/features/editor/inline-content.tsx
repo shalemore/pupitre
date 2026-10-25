@@ -16,15 +16,15 @@ import { renderMath } from "./mathjax";
 export type InlineItem =
   | { type: "text"; text: string }
   | { type: "break" }
-  | { type: "element"; tag: string; children: InlineItem[] }
+  | { type: "element"; tag: string; class?: string; children: InlineItem[] }
   | { type: "link"; href: string; children: InlineItem[] }
   | { type: "image"; src: string; alt: string }
   | { type: "math"; tex: string; display: boolean };
 
-const ELEMENT_TAGS: Record<string, string> = {
-  StrongEmphasis: "strong",
-  Emphasis: "em",
-  Strikethrough: "del",
+const ELEMENT_TAGS: Record<string, { tag: string; class: string }> = {
+  StrongEmphasis: { tag: "strong", class: "md-strong" },
+  Emphasis: { tag: "em", class: "md-em" },
+  Strikethrough: { tag: "del", class: "md-strike" },
 };
 
 /** The items between `from` and `to`, children of `parent`. */
@@ -52,13 +52,16 @@ export function inlineItems(
     switch (child.name) {
       case "StrongEmphasis":
       case "Emphasis":
-      case "Strikethrough":
-        push({ type: "element", tag: ELEMENT_TAGS[child.name] ?? "span", children: inner() });
+      case "Strikethrough": {
+        const element = ELEMENT_TAGS[child.name] ?? { tag: "span", class: "" };
+        push({ type: "element", ...element, children: inner() });
         break;
+      }
       case "InlineCode":
         push({
           type: "element",
           tag: "code",
+          class: "md-code",
           children: [{ type: "text", text: text(start, end) }],
         });
         break;
@@ -96,7 +99,14 @@ export function inlineItems(
           stack.push({ tag: tag.name, items: [] });
         else if (tag?.closing && stack.length > 1 && stack.at(-1)?.tag === tag.name) {
           const element = stack.pop();
-          if (element) push({ type: "element", tag: element.tag, children: element.items });
+          if (element) {
+            push({
+              type: "element",
+              tag: element.tag,
+              class: `md-tag md-tag-${element.tag}`,
+              children: element.items,
+            });
+          }
         }
         break;
       }
@@ -131,7 +141,7 @@ export const InlineContent: Component<{ items: InlineItem[] }> = (props) => (
         </Match>
         <Match when={item.type === "element" && item}>
           {(element) => (
-            <Dynamic component={element().tag}>
+            <Dynamic component={element().tag} class={element().class}>
               <InlineContent items={element().children} />
             </Dynamic>
           )}

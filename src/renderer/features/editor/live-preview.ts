@@ -46,7 +46,7 @@ import { mathOf, MathWidget } from "./math";
 const HEADING = /^(?:ATX|Setext)Heading([1-6])$/;
 /** Nodes whose children are inline content, where inline HTML can occur. */
 const INLINE_CONTAINER =
-  /^(?:Paragraph|(?:ATX|Setext)Heading\d|TableCell|Emphasis|StrongEmphasis|Strikethrough|Link)$/;
+  /^(?:Paragraph|Task|(?:ATX|Setext)Heading\d|TableCell|Emphasis|StrongEmphasis|Strikethrough|Highlight|Superscript|Subscript|Link)$/;
 
 /** The rendered content of inline formats; their markers are handled separately. */
 function inlineClass(name: string): string | undefined {
