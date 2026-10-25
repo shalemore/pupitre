@@ -547,11 +547,15 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
     case "Emoji":
       visitEmoji(builder, node);
       return false;
-    case "FrontMatter":
+    case "FrontMatter": {
+      // The fences read as the block's top and bottom edge; they open up with the selection in it
+      const active = touches(builder.ranges, node.from, node.to);
       for (const fence of node.getChildren("FrontMatterMark")) {
-        builder.mark(fence.from, fence.to, "md-mark");
+        builder.marker(fence, active);
+        if (!active) builder.lineClass(fence.from, fence.from, "md-syntax-line");
       }
       return false;
+    }
     case "HTMLBlock":
     case "CommentBlock":
       return false;
