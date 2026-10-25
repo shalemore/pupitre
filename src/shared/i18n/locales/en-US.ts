@@ -1,5 +1,3 @@
-import type { TranslationSchema } from "../types";
-
 export const enUS = {
   common: {
     appName: "Pupitre",
@@ -48,6 +46,7 @@ export const enUS = {
       warning: "Warning",
       caution: "Caution",
     },
+    /** Toolbar of a rendered table; start and end follow the text direction. */
     table: {
       alignStart: "Align Left",
       alignCenter: "Align Center",
@@ -72,6 +71,7 @@ export const enUS = {
     cancel: "Cancel",
     openFailed: "The file couldn't be opened.",
     saveFailed: "The document couldn't be saved.",
+    /** Asked for a file that is neither UTF-8 nor UTF-16, which declares no encoding of its own. */
     encodingMessage: "This file is not UTF-8. Which encoding was it saved in?",
     encodingCannotStore: (encoding: string) =>
       `The text has characters that ${encoding} cannot store.`,
@@ -167,7 +167,8 @@ export const enUS = {
     sidebarLayoutCombined: "Combined",
     pinSidebars: "Pin Sidebars",
     pinSidebarsDesc: "An immersive window keeps its sidebars open while you write",
-    pinSidebar: (name) => `Pin the ${name} Sidebar`,
+    /** Pin the sidebar that holds `name`, as the layout names it. */
+    pinSidebar: (name: string) => `Pin the ${name} Sidebar`,
     showWordCount: "Show Word Count",
     showWordCountDesc: "Word and character counts in the title bar",
     bodyFont: "Font",
@@ -284,4 +285,4 @@ export const enUS = {
     restore: "Restore",
     close: "Close",
   },
-} satisfies TranslationSchema;
+};
