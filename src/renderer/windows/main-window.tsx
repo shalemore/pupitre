@@ -55,12 +55,11 @@ export const MainWindow: Component = () => {
   const [matchStats, setMatchStats] = createSignal<MatchStats>({ current: 0, total: 0 });
   const [menuOpen, setMenuOpen] = createSignal(false);
   const immersive = () => settings().windowStyle === "immersive";
-  const chrome = createImmersiveChrome({
-    canFold: () => immersive() && session.activeDocument() !== undefined,
-    startPinned: () => settings().sidebarPinnedStart,
-    endPinned: () => settings().sidebarPinnedEnd,
-    titleBarPinned: menuOpen,
-  });
+  // Split, the folder has its own sidebar at the start edge and the outline one at the end edge; combined, one sidebar shows either
+  const split = () => settings().sidebarLayout === "split";
+  // Dragging a sidebar's edge sets its width for this window only
+  const [startWidth, setStartWidth] = createSignal(SIDEBAR_WIDTH.initial);
+  const [endWidth, setEndWidth] = createSignal(SIDEBAR_WIDTH.initial);
 
   // A folder the user opened shows at once, whatever document is open; opening a document from
   // outside it hands the sidebar back to the document's own folder
@@ -80,10 +79,22 @@ export const MainWindow: Component = () => {
   );
   // The folder in the sidebar is the one whose own settings file, if it has one, applies
   createEffect(() => void desktop.invoke("workspace:set", folderRoot() ?? null));
-  const split = () => settings().sidebarLayout === "split";
-  // Dragging a sidebar's edge sets its width for this window only
-  const [startWidth, setStartWidth] = createSignal(SIDEBAR_WIDTH.initial);
-  const [endWidth, setEndWidth] = createSignal(SIDEBAR_WIDTH.initial);
+  // What the layout has to show at all; an immersive window folds a sidebar on top of that
+  const startSidebarWanted = () =>
+    settings().sidebarVisible &&
+    (split()
+      ? folderRoot() !== undefined
+      : session.activeDocument() !== undefined || folderRoot() !== undefined);
+  const endSidebarWanted = () =>
+    split() && settings().sidebarVisible && session.activeDocument() !== undefined;
+  const chrome = createImmersiveChrome({
+    canFold: () => immersive() && session.activeDocument() !== undefined,
+    startPinned: () => settings().sidebarPinnedStart,
+    endPinned: () => settings().sidebarPinnedEnd,
+    titleBarPinned: menuOpen,
+    startRoom: () => (startSidebarWanted() ? startWidth() : 0),
+    endRoom: () => (endSidebarWanted() ? endWidth() : 0),
+  });
   // Only an immersive window folds its sidebars, so only there can they be pinned
   const onStartPinnedChange = () =>
     immersive()
@@ -93,17 +104,8 @@ export const MainWindow: Component = () => {
     immersive()
       ? (sidebarPinnedEnd: boolean) => void updateSettings({ sidebarPinnedEnd })
       : undefined;
-  // Split, the folder has its own sidebar at the start edge and the outline one at the end edge; combined, one sidebar shows either
-  const startSidebarShown = () =>
-    settings().sidebarVisible &&
-    (split()
-      ? folderRoot() !== undefined
-      : session.activeDocument() !== undefined || folderRoot() !== undefined) &&
-    chrome.sidebarVisible();
-  const endSidebarShown = () =>
-    settings().sidebarVisible &&
-    session.activeDocument() !== undefined &&
-    chrome.endSidebarVisible();
+  const startSidebarShown = () => startSidebarWanted() && chrome.sidebarVisible();
+  const endSidebarShown = () => endSidebarWanted() && chrome.endSidebarVisible();
   const sidebarMode = (): SidebarMode => {
     if (session.activeDocument() === undefined) return "folder";
     return folderRoot() === undefined ? "outline" : preferredMode();

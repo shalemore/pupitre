@@ -1,3 +1,4 @@
+import { makeEventListener } from "@solid-primitives/event-listener";
 import { createEffect, createSignal } from "solid-js";
 import { desktop, isMacOS } from "@/lib/desktop";
 
@@ -13,6 +14,11 @@ const TOP_EDGE_OVER_SIDEBAR = 6;
 const GESTURE_GAP = 300;
 const PULL_DISTANCE = 80;
 const SIDE_EDGE = 16;
+/**
+ * Room the document keeps beside the sidebars: a narrower one wraps so hard it stops reading.
+ * A window that cannot give it this much folds the sidebars instead.
+ */
+const DOCUMENT_MIN_WIDTH = 560;
 
 /**
  * The title bar and the sidebars of an immersive window: they fold away once the user types or
@@ -28,6 +34,11 @@ const SIDE_EDGE = 16;
  * `titleBarPinned` keeps the title bar out while something in it is in use past the top of the
  * window, such as an open menu: its panel hangs below the bar, where the pointer is already too far
  * down to count as near the top, so the bar would fold away under it.
+ *
+ * A narrow window folds the sidebars as well, so that the document keeps DOCUMENT_MIN_WIDTH: the
+ * outline gives way first, the folder after it, and a pinned sidebar keeps its room. Folding is read
+ * from the window width rather than remembered, so widening the window gives back the sidebars that
+ * were open.
  */
 export interface ChromeOptions {
   /** Whether the window may fold the chrome at all: not in a classic window, nor without a document. */
@@ -36,6 +47,9 @@ export interface ChromeOptions {
   startPinned: () => boolean;
   endPinned: () => boolean;
   titleBarPinned: () => boolean;
+  /** Inline width a sidebar takes beside the document; 0 when the layout has none to show. */
+  startRoom: () => number;
+  endRoom: () => number;
 }
 
 export function createImmersiveChrome(options: ChromeOptions) {
@@ -43,14 +57,23 @@ export function createImmersiveChrome(options: ChromeOptions) {
   const [nearTop, setNearTop] = createSignal(false);
   const [nearStart, setNearStart] = createSignal(false);
   const [nearEnd, setNearEnd] = createSignal(false);
+  const [viewport, setViewport] = createSignal(window.innerWidth);
+  makeEventListener(window, "resize", () => setViewport(window.innerWidth));
   let lastWheelAt = 0;
   let pulling = false;
   let pulled = 0;
 
-  const shown = (nearEdge: boolean) => !options.canFold() || !writing() || nearEdge;
-  const titleBarVisible = () => options.titleBarPinned() || shown(nearTop());
-  const sidebarVisible = () => options.startPinned() || shown(nearStart());
-  const endSidebarVisible = () => options.endPinned() || shown(nearEnd());
+  /** Whether the document would have to make do with less than DOCUMENT_MIN_WIDTH. */
+  const cramped = (room: number) => viewport() < room + DOCUMENT_MIN_WIDTH;
+  const endFolded = () => !options.endPinned() && cramped(options.endRoom() + options.startRoom());
+  const startFolded = () =>
+    !options.startPinned() && cramped((endFolded() ? 0 : options.endRoom()) + options.startRoom());
+
+  const shown = (nearEdge: boolean, folded: boolean) =>
+    !options.canFold() || nearEdge || (!writing() && !folded);
+  const titleBarVisible = () => options.titleBarPinned() || shown(nearTop(), false);
+  const sidebarVisible = () => options.startPinned() || shown(nearStart(), startFolded());
+  const endSidebarVisible = () => options.endPinned() || shown(nearEnd(), endFolded());
 
   // The traffic lights belong to the title bar
   if (isMacOS) {
