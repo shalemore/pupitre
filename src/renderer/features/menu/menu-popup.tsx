@@ -3,6 +3,7 @@ import { Check, ChevronRight } from "lucide-solid";
 import { createSignal, For, onCleanup, onMount, Show, type Component } from "solid-js";
 import { Portal } from "solid-js/web";
 import type { MenuEntry } from "@shared/menu";
+import { Separator } from "@/components/ui";
 
 type MenuItemEntry = Extract<MenuEntry, { type: "item" }>;
 
@@ -190,7 +191,7 @@ const MenuPanel: Component<PanelProps> = (props) => {
         {(entry, index) => (
           <Show
             when={entry.type === "item" ? entry : undefined}
-            fallback={<div class="my-1 h-px bg-border-subtle" />}
+            fallback={<Separator class="my-1 bg-border-subtle" />}
           >
             {(item) => (
               <button
