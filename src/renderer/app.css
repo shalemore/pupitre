@@ -52,7 +52,6 @@
 
     --ui-ring-inner: 0px;
     --ui-ring-outer: 1px;
-    --ui-ring-hairline: 1px;
 
     /* Code colors used by the code block highlighter (features/editor/code-highlight.ts) */
     --syntax-keyword: oklch(0.55 0.2 25);
@@ -68,18 +67,6 @@
     --syntax-operator: oklch(0.55 0.2 25);
     --syntax-punctuation: var(--ui-text-secondary);
     --syntax-invalid: var(--ui-danger);
-  }
-
-  @media (min-resolution: 2dppx) {
-    :root {
-      --ui-ring-hairline: 0.5px;
-    }
-  }
-
-  @media (min-resolution: 3dppx) {
-    :root {
-      --ui-ring-hairline: calc(1px / 3);
-    }
   }
 
   @media (prefers-color-scheme: dark) {
@@ -180,7 +167,7 @@
  *
  * Radii, by role, nested corners following outer = inner + gap:
  *   xs marks and search hits, sm small icon buttons and keycaps, md controls and list rows,
- *   lg cards and status panels (and items inside a p-1 popover), panel sub-panels,
+ *   lg cards and status panels (and items inside a p-1 popover),
  *   xl popovers and floating bars, 2xl dialogs, full pills, dots and thumbs.
  *
  * Motion, by role:
@@ -273,7 +260,6 @@
   --radius-sm: calc(4px * var(--ui-radius-scale));
   --radius-md: calc(6px * var(--ui-radius-scale));
   --radius-lg: calc(8px * var(--ui-radius-scale));
-  --radius-panel: calc(10px * var(--ui-radius-scale));
   --radius-xl: calc(12px * var(--ui-radius-scale));
   --radius-2xl: calc(16px * var(--ui-radius-scale));
   --radius-full: 9999px;
