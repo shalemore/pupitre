@@ -25,6 +25,12 @@ dependency (it downloads no browsers) and drives Electron over the Chrome DevToo
 nothing touches the system mouse or keyboard. Write throwaway scripts outside the repository, in
 the scratchpad, and import `playwright-core` by absolute path or run them from the repository root.
 
+A full `npm run build` for every tweak is slow and rarely needed. For renderer work, `npm run
+dev:web` serves the same renderer with HMR, and the installed Chrome can be driven against it with
+`chromium.launch({ channel: "chrome" })`; `npm run typecheck` and `npm run lint` are the quick
+checks in between. Build when the main process, the IPC contract or the packaged app is what
+changed, and once at the end.
+
 ```js
 import { _electron as electron } from "playwright-core";
 
