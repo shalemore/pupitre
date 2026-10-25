@@ -217,7 +217,7 @@ function menuItems(menu: TopMenu): DemoMenuEntry[] {
       return [
         { label: m.newFile, run: send({ id: "file.new" }) },
         { label: m.openFile, run: send({ id: "file.open" }) },
-        { label: m.openFolder, run: send({ id: "file.open-folder" }) },
+        // No entry for opening a folder: the demo has one folder and it is open already
         divider,
         { label: m.save, run: send({ id: "file.save" }) },
         { label: m.saveAs, run: send({ id: "file.save-as" }) },
