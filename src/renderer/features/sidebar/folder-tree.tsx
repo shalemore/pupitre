@@ -121,7 +121,6 @@ const FolderRow: Component<{ entry: FolderEntry; depth: number; tree: TreeContex
   const expanded = () => props.tree.isExpanded(props.entry.path);
   const failure = () => props.tree.failures()[props.entry.path];
   const isActive = () => props.tree.activePath() === props.entry.path;
-  const indent = () => rowIndent(props.depth, 6);
 
   return (
     <>
@@ -142,7 +141,7 @@ const FolderRow: Component<{ entry: FolderEntry; depth: number; tree: TreeContex
               event.stopPropagation();
               props.tree.onMenu(props.entry, event);
             }}
-            style={indent()}
+            style={rowIndent(props.depth, 6)}
             title={failure() ?? props.entry.name}
           >
             <Show
