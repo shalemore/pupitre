@@ -2,11 +2,12 @@ import { syntaxTree } from "@codemirror/language";
 import { type EditorState, type Extension, type Range, StateField } from "@codemirror/state";
 import { Decoration, type DecorationSet, EditorView, type WidgetType } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
+import { fencedText } from "./block-text";
 import { collectHeadings } from "./document-structure";
 import { detailsSection, SummaryWidget, toggledDetails, toggleDetails } from "./details";
 import { HtmlBlockWidget, isRenderableHtml } from "./html";
 import { documentBaseUrl } from "./images";
-import { printingChanged, revealingRanges, touches } from "./live-preview";
+import { printingChanged, revealingRanges, touches, lineRange } from "./live-preview";
 import { mathFence, mathOf, MathWidget } from "./math";
 import { diagramTheme, MermaidWidget } from "./mermaid";
 import { TableWidget, tableCursor } from "./table";
@@ -43,7 +44,7 @@ function blockWidget(state: EditorState, node: SyntaxNode): WidgetType | undefin
   const formula = mathFence(state, node);
   if (formula !== undefined) return new MathWidget(formula, true);
   const language = text(node.getChild("CodeInfo")).trim();
-  const code = text(node.getChild("CodeText"));
+  const code = fencedText(state, node);
   if (language.toLowerCase() === "mermaid")
     return new MermaidWidget(code, state.facet(diagramTheme));
   return undefined;
@@ -88,12 +89,14 @@ function buildDecorations(state: EditorState): DecorationSet {
       }
       const widget = blockWidget(state, node.node);
       if (!widget) return false;
+      // The block takes whole lines, the markers of a quote or a list around it included, so a
+      // cursor anywhere on them reveals its source; a click on the rendering puts it on the first
+      const [from, to] = lineRange(state, node.node);
       // A table is edited in place (table.tsx), so its source never shows
-      if (node.name === "Table" || !touches(ranges, node.from, node.to)) {
+      if (node.name === "Table" || !touches(ranges, from, to)) {
         hideLines(node.from, node.to, widget);
       } else {
-        const end = doc.lineAt(node.to).to;
-        decorations.push(Decoration.widget({ widget, block: true, side: 1 }).range(end));
+        decorations.push(Decoration.widget({ widget, block: true, side: 1 }).range(to));
       }
       return false;
     },

@@ -9,6 +9,7 @@ import type {
   Line,
   MarkdownConfig,
 } from "@lezer/markdown";
+import { blockText, fencedText } from "./block-text";
 import { renderMath } from "./mathjax";
 
 const DOLLAR = 36;
@@ -116,9 +117,8 @@ const MATH_LANGUAGE = /^(?:math|latex|tex|katex)$/i;
 /** The TeX of a fenced code block that names math as its language, if it does. */
 export function mathFence(state: EditorState, node: SyntaxNode): string | undefined {
   const info = node.getChild("CodeInfo");
-  const code = node.getChild("CodeText");
-  if (!info || !code || !MATH_LANGUAGE.test(state.sliceDoc(info.from, info.to).trim())) return;
-  return state.sliceDoc(code.from, code.to);
+  if (!info || !MATH_LANGUAGE.test(state.sliceDoc(info.from, info.to).trim())) return;
+  return fencedText(state, node);
 }
 
 /** The TeX of an InlineMath or BlockMath node, and whether it is typeset in display style. */
@@ -127,7 +127,8 @@ export function mathOf(state: EditorState, node: SyntaxNode): { tex: string; dis
   const open = marks[0];
   const close = marks.at(-1);
   return {
-    tex: state.sliceDoc(open?.to ?? node.from, close?.from ?? node.to),
+    // A block inside a quote or a list has the markers of its container in front of every line
+    tex: blockText(state, node, open?.to ?? node.from, close?.from ?? node.to),
     // `$$…$$` written inline is typeset in display style, as Pandoc does; a fence always is
     display: node.name !== "InlineMath" || (open !== undefined && open.to - open.from === 2),
   };

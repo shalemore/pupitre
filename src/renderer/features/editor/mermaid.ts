@@ -2,6 +2,7 @@ import { syntaxTree } from "@codemirror/language";
 import { type EditorState, Facet } from "@codemirror/state";
 import { type EditorView, WidgetType } from "@codemirror/view";
 import { toHex } from "@/lib/theme";
+import { fencedText } from "./block-text";
 
 /** Mermaid's theme variables; only hex colors work, since Mermaid derives shades from them. */
 export type DiagramTheme = Readonly<Record<string, string | boolean>>;
@@ -94,9 +95,8 @@ export async function prerenderDiagrams(state: EditorState): Promise<void> {
     enter: (node) => {
       if (node.name !== "FencedCode") return true;
       const info = node.node.getChild("CodeInfo");
-      const code = node.node.getChild("CodeText");
-      if (info && code && state.sliceDoc(info.from, info.to).trim().toLowerCase() === "mermaid") {
-        sources.push(state.sliceDoc(code.from, code.to));
+      if (info && state.sliceDoc(info.from, info.to).trim().toLowerCase() === "mermaid") {
+        sources.push(fencedText(state, node.node));
       }
       return false;
     },

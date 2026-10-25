@@ -17,6 +17,7 @@ import {
 } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
 import { AlertTitleWidget, alertTitles, alertType } from "./alerts";
+import { fencedText } from "./block-text";
 import { CodeCornerWidget } from "./code-corner";
 import { collectHeadings, findHeadingByAnchor } from "./document-structure";
 import { EmojiWidget, emojiFor } from "./emoji";
@@ -176,6 +177,14 @@ export function touches(ranges: readonly SelectionRange[], from: number, to: num
   return ranges.some((range) => range.from <= to && range.to >= from);
 }
 
+/**
+ * The range of whole lines a block covers. A block that shows as a rendering takes those lines, the
+ * markers of a quote or a list around it included, so a cursor anywhere on them is in it.
+ */
+export function lineRange(state: EditorState, node: SyntaxNode): [number, number] {
+  return [state.doc.lineAt(node.from).from, state.doc.lineAt(node.to).to];
+}
+
 function ancestorCount(node: SyntaxNode, name: string): number {
   let count = 0;
   for (let parent = node.parent; parent; parent = parent.parent) {
@@ -304,14 +313,14 @@ function visitCodeBlock(builder: DecorationBuilder, node: SyntaxNode): void {
     if (number === first) line.classes.add("md-code-block-start");
     if (number === last) line.classes.add("md-code-block-end");
   });
-  const active = touches(builder.ranges, node.from, node.to);
+  const active = touches(builder.ranges, ...lineRange(builder.state, node));
   const info = node.getChild("CodeInfo");
   if (node.name !== "BlockMath") {
     // Indented code keeps its indentation in the source, not in what is copied
     const code =
       node.name === "CodeBlock"
         ? builder.text(node.from, node.to).replace(/^(?: {4}|\t)/gm, "")
-        : builder.text(...codeRange(node));
+        : fencedText(builder.state, node);
     const language = info && !active ? builder.text(info.from, info.to) : undefined;
     const widget = new CodeCornerWidget(code, language);
     builder.decorations.push(Decoration.widget({ widget, side: -1 }).range(node.from));
@@ -323,12 +332,6 @@ function visitCodeBlock(builder: DecorationBuilder, node: SyntaxNode): void {
     if (!active) builder.lineClass(fence.from, fence.from, "md-syntax-line");
   }
   if (info) builder.marker(info, active);
-}
-
-/** The code of a fenced block, without its fences; empty for a block with no code yet. */
-function codeRange(node: SyntaxNode): [number, number] {
-  const code = node.getChild("CodeText");
-  return code ? [code.from, code.to] : [node.from, node.from];
 }
 
 function visitListItem(builder: DecorationBuilder, node: SyntaxNode): void {
