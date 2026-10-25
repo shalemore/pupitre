@@ -1,5 +1,5 @@
 import { Show, type Component } from "solid-js";
-import type { Settings } from "@shared/settings";
+import { SETTING_RANGES, type Settings } from "@shared/settings";
 import { Select, Slider, Switch } from "@/components/ui";
 import { t } from "@/i18n";
 import { settings, updateSettings } from "@/lib/settings";
@@ -57,9 +57,9 @@ export const EditorSection: Component = () => (
       >
         <Slider
           value={settings().fontSize}
-          min={12}
-          max={24}
-          step={1}
+          min={SETTING_RANGES.fontSize.min}
+          max={SETTING_RANGES.fontSize.max}
+          step={SETTING_RANGES.fontSize.step}
           onChange={(fontSize) => void updateSettings({ fontSize })}
           aria-label={t().settings.fontSize}
         />
@@ -72,9 +72,9 @@ export const EditorSection: Component = () => (
       >
         <Slider
           value={settings().lineHeight}
-          min={1.2}
-          max={2.4}
-          step={0.05}
+          min={SETTING_RANGES.lineHeight.min}
+          max={SETTING_RANGES.lineHeight.max}
+          step={SETTING_RANGES.lineHeight.step}
           onChange={(lineHeight) => void updateSettings({ lineHeight })}
           aria-label={t().settings.lineHeight}
         />

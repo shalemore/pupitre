@@ -1,9 +1,8 @@
 import type { WebContents } from "electron";
+import { ZOOM_STEPS } from "@shared/settings";
 import { getSettings, updateSettings } from "./settings-store";
 
-/** What Ctrl+plus, Ctrl+minus and Ctrl+wheel step through, the way a browser does; a zoom set elsewhere is stepped from where it is. */
-const ZOOM_STEPS = [50, 60, 70, 80, 90, 100, 110, 125, 150, 175, 200, 250, 300];
-
+/** Steps the zoom to the next value above or below it, which may be one the steps do not have. */
 export function stepZoom(direction: "in" | "out"): void {
   const { zoom } = getSettings();
   const next =

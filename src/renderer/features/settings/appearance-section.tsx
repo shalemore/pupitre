@@ -1,5 +1,5 @@
 import { Show, type Component } from "solid-js";
-import type { Settings } from "@shared/settings";
+import { SETTING_RANGES, type Settings } from "@shared/settings";
 import { Select, Slider, Switch } from "@/components/ui";
 import { t } from "@/i18n";
 import { settings, updateSettings } from "@/lib/settings";
@@ -73,9 +73,9 @@ export const AppearanceSection: Component = () => (
       <SettingField name="zoom" title={t().settings.zoom} description={`${settings().zoom}%`}>
         <Slider
           value={settings().zoom}
-          min={50}
-          max={300}
-          step={10}
+          min={SETTING_RANGES.zoom.min}
+          max={SETTING_RANGES.zoom.max}
+          step={SETTING_RANGES.zoom.step}
           onChange={(zoom) => void updateSettings({ zoom })}
           aria-label={t().settings.zoom}
         />

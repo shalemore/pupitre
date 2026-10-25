@@ -2,6 +2,33 @@ import { z } from "zod";
 import { LOCALE_CODES } from "./i18n/types";
 
 /**
+ * The range and step of every setting that is a number on a slider, shared with the settings
+ * window so that what the window offers is what the settings file may hold.
+ */
+export const SETTING_RANGES = {
+  fontSize: { min: 10, max: 32, step: 1 },
+  lineHeight: { min: 1, max: 3, step: 0.05 },
+  zoom: { min: 50, max: 300, step: 10 },
+} as const;
+
+/** What Ctrl+plus, Ctrl+minus and Ctrl+wheel step through, the way a browser does. */
+export const ZOOM_STEPS = [
+  SETTING_RANGES.zoom.min,
+  60,
+  70,
+  80,
+  90,
+  100,
+  110,
+  125,
+  150,
+  175,
+  200,
+  250,
+  SETTING_RANGES.zoom.max,
+] as const;
+
+/**
  * The single definition of every setting and its default. The settings file only stores values
  * the user changed; a missing or invalid value falls back to its own default through `.catch`, so
  * one bad entry never discards the rest of the file. Unknown keys are ignored.
@@ -23,7 +50,7 @@ export const settingsSchema = z.object({
   uiFont: z.string().catch(""),
   animations: z.enum(["system", "on", "off"]).catch("system"),
   /** Zoom of the main window in percent; Ctrl+plus, Ctrl+minus and Ctrl+wheel step it. */
-  zoom: z.number().min(50).max(300).catch(100),
+  zoom: z.number().min(SETTING_RANGES.zoom.min).max(SETTING_RANGES.zoom.max).catch(100),
   /** Read when a window is created, so a change applies to windows opened afterwards. */
   windowStyle: z.enum(["classic", "immersive"]).catch("classic"),
   sidebarVisible: z.boolean().catch(true),
@@ -46,8 +73,12 @@ export const settingsSchema = z.object({
   bodyFont: z.string().catch(""),
   fallbackFont: z.string().catch(""),
   codeFont: z.string().catch(""),
-  fontSize: z.number().min(10).max(32).catch(16),
-  lineHeight: z.number().min(1).max(3).catch(1.75),
+  fontSize: z.number().min(SETTING_RANGES.fontSize.min).max(SETTING_RANGES.fontSize.max).catch(16),
+  lineHeight: z
+    .number()
+    .min(SETTING_RANGES.lineHeight.min)
+    .max(SETTING_RANGES.lineHeight.max)
+    .catch(1.75),
   contentWidth: z.enum(["compact", "normal", "wide", "full"]).catch("normal"),
   spellcheck: z.boolean().catch(false),
   cursorShape: z.enum(["bar", "block", "underline"]).catch("bar"),
