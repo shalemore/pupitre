@@ -1,7 +1,7 @@
 import { cn } from "cn";
 import { Folder, ListTree, Pin } from "lucide-solid";
 import { createSignal, type Component, type JSX, Show } from "solid-js";
-import { Button, ScrollView, SegmentedControl } from "@/components/ui";
+import { IconButton, ScrollView, SegmentedControl } from "@/components/ui";
 import { t } from "@/i18n";
 
 export type SidebarMode = "outline" | "folder";
@@ -98,20 +98,18 @@ const SidebarFrame: Component<{
 
 /** Keeps the sidebars of an immersive window open while the user writes. Quiet until it is hovered or on. */
 const PinButton: Component<{ pinned: boolean; onChange: (pinned: boolean) => void }> = (props) => (
-  <Button
-    variant="ghost"
+  <IconButton
+    label={t().settings.pinSidebars}
     size="icon-2xs"
     aria-pressed={props.pinned}
-    aria-label={t().settings.pinSidebars}
-    title={t().settings.pinSidebars}
     class={cn(
-      "shrink-0 text-tertiary opacity-50 transition-opacity hover:opacity-100 focus-visible:opacity-100",
+      "text-tertiary opacity-50 transition-opacity hover:opacity-100 focus-visible:opacity-100",
       props.pinned && "text-brand opacity-100",
     )}
     onClick={() => props.onChange(!props.pinned)}
   >
     <Pin class={cn(!props.pinned && "rotate-45")} />
-  </Button>
+  </IconButton>
 );
 
 interface PinProps {

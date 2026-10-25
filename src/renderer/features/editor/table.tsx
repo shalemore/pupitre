@@ -26,7 +26,7 @@ import {
   Show,
 } from "solid-js";
 import { Dynamic, render } from "solid-js/web";
-import { Button, Separator } from "@/components/ui";
+import { IconButton, Separator } from "@/components/ui";
 import { t } from "@/i18n";
 import { InlineContent } from "./inline-content";
 import { openLink } from "./live-preview";
@@ -68,18 +68,15 @@ const ToolButton: Component<{
   onClick: () => void;
   children: JSX.Element;
 }> = (props) => (
-  <Button
-    variant="ghost"
-    size="icon-xs"
-    title={props.label}
-    aria-label={props.label}
+  <IconButton
+    label={props.label}
     class={cn(props.danger && "hover:bg-destructive/10 hover:text-destructive")}
     // Keeps the focus, and with it the cell being edited, in the table
     onMouseDown={(event) => event.preventDefault()}
     onClick={() => props.onClick()}
   >
     {props.children}
-  </Button>
+  </IconButton>
 );
 
 /** A row or column with a cross on it, the way `Grid2x2X` marks a table that is deleted whole. */

@@ -4,7 +4,7 @@ import { FileCode2, FolderOpen, Info, Palette, Settings2, Type } from "lucide-so
 import { createEffect, onMount, Show, type Component } from "solid-js";
 import { TitleBar } from "@/components/title-bar";
 import {
-  Button,
+  IconButton,
   ScrollView,
   SegmentedControl,
   Separator,
@@ -77,15 +77,13 @@ export const SettingsWindow: Component = () => {
                     {fileNameOf(root())}
                   </span>
                   <Show when={workspace().exists}>
-                    <Button
-                      variant="ghost"
+                    <IconButton
+                      label={t().settings.revealSettingsFile}
                       size="icon-2xs"
-                      title={t().settings.revealSettingsFile}
-                      aria-label={t().settings.revealSettingsFile}
                       onClick={() => void desktop.invoke("workspace:reveal")}
                     >
                       <FolderOpen />
-                    </Button>
+                    </IconButton>
                   </Show>
                 </div>
               </div>

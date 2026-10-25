@@ -10,7 +10,7 @@ import {
   X,
 } from "lucide-solid";
 import { createEffect, createSignal, on, Show, type Component, type JSX } from "solid-js";
-import { Badge, Button, buttonVariants, Input } from "@/components/ui";
+import { Badge, Button, buttonVariants, IconButton, Input } from "@/components/ui";
 import { t } from "@/i18n";
 import type { MatchStats, SearchOptions } from "./markdown-editor";
 
@@ -55,6 +55,7 @@ export const FindBar: Component<FindBarProps> = (props) => {
   const [caseSensitive, setCaseSensitive] = createSignal(false);
   const [wholeWord, setWholeWord] = createSignal(false);
   const [regexp, setRegexp] = createSignal(false);
+  const hasMatches = () => props.matchStats.total > 0;
   let searchInput: HTMLInputElement | undefined;
   let replaceInput: HTMLInputElement | undefined;
 
@@ -111,20 +112,14 @@ export const FindBar: Component<FindBarProps> = (props) => {
       )}
     >
       <div class="flex items-center gap-1.5">
-        <Button
-          variant="ghost"
-          size="icon-xs"
-          onClick={props.onToggleReplace}
-          title={t().editor.toggleReplace}
-          class="shrink-0"
-        >
+        <IconButton label={t().editor.toggleReplace} onClick={props.onToggleReplace}>
           <ChevronRight
             class={cn(
-              "size-3.5 transition-transform duration-snap ease-snap rtl:-scale-x-100",
+              "transition-transform duration-snap ease-snap rtl:-scale-x-100",
               props.showReplace && "rotate-90",
             )}
           />
-        </Button>
+        </IconButton>
 
         <div class="relative flex-1 flex items-center min-w-0">
           <Input
@@ -157,41 +152,29 @@ export const FindBar: Component<FindBarProps> = (props) => {
 
         <div class="shrink-0 tabular-nums">
           <Show when={searchText()}>
-            <Badge variant={props.matchStats.total > 0 ? "secondary" : "destructive"} size="sm">
+            <Badge variant={hasMatches() ? "secondary" : "destructive"} size="sm">
               {props.matchStats.current}/{props.matchStats.total}
             </Badge>
           </Show>
         </div>
 
-        <Button
-          variant="ghost"
-          size="icon-xs"
+        <IconButton
+          label={t().editor.previousMatch}
           onClick={props.onFindPrevious}
-          title={t().editor.previousMatch}
-          disabled={props.matchStats.total === 0}
-          class="shrink-0"
+          disabled={!hasMatches()}
         >
-          <ChevronUp class="size-3.5" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon-xs"
+          <ChevronUp />
+        </IconButton>
+        <IconButton
+          label={t().editor.nextMatch}
           onClick={props.onFindNext}
-          title={t().editor.nextMatch}
-          disabled={props.matchStats.total === 0}
-          class="shrink-0"
+          disabled={!hasMatches()}
         >
-          <ChevronDown class="size-3.5" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon-xs"
-          onClick={props.onClose}
-          title={t().editor.closeFind}
-          class="shrink-0"
-        >
-          <X class="size-3.5" />
-        </Button>
+          <ChevronDown />
+        </IconButton>
+        <IconButton label={t().editor.closeFind} onClick={props.onClose}>
+          <X />
+        </IconButton>
       </div>
 
       <Show when={props.showReplace}>
@@ -210,16 +193,11 @@ export const FindBar: Component<FindBarProps> = (props) => {
             variant="outline"
             size="xs"
             onClick={props.onReplaceNext}
-            disabled={props.matchStats.total === 0}
+            disabled={!hasMatches()}
           >
             {t().editor.replaceOne}
           </Button>
-          <Button
-            variant="outline"
-            size="xs"
-            onClick={props.onReplaceAll}
-            disabled={props.matchStats.total === 0}
-          >
+          <Button variant="outline" size="xs" onClick={props.onReplaceAll} disabled={!hasMatches()}>
             {t().editor.replaceAll}
           </Button>
         </div>

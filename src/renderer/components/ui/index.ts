@@ -2,6 +2,7 @@ export * from "./badge";
 export * from "./button";
 export * from "./callout";
 export * from "./combobox";
+export * from "./icon-button";
 export * from "./input";
 export * from "./kbd";
 export * from "./list-item";

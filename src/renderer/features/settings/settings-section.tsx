@@ -2,7 +2,7 @@ import { cn } from "cn";
 import { RotateCcw } from "lucide-solid";
 import { type JSX, type ParentComponent, Show } from "solid-js";
 import { isModified, isWorkspaceKey, type SettingKey } from "@shared/settings";
-import { Button, SettingRow } from "@/components/ui";
+import { IconButton, SettingRow } from "@/components/ui";
 import { t } from "@/i18n";
 import { resetSetting, settings } from "@/lib/settings";
 import { workspace } from "@/lib/workspace";
@@ -58,16 +58,14 @@ export const SettingField: ParentComponent<SettingFieldProps> = (props) => {
           </Show>
           {props.title}
           <Show when={modified()}>
-            <Button
-              variant="ghost"
+            <IconButton
+              label={t().settings.resetToDefault}
               size="icon-2xs"
               onClick={() => void resetSetting(props.name)}
-              title={t().settings.resetToDefault}
-              aria-label={t().settings.resetToDefault}
               class="animate-in fade-in-0 zoom-in-75 duration-snap"
             >
               <RotateCcw />
-            </Button>
+            </IconButton>
           </Show>
         </span>
       }
