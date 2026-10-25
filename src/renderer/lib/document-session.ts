@@ -5,7 +5,7 @@ import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
 import { getSampleDocument } from "@/features/samples/sample-document";
 import { currentLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
-import { messageOf } from "@/lib/errors";
+import { messageOf, reportFailure } from "@/lib/errors";
 import { fileNameOf, withTrailingNewline } from "@/lib/file";
 import { recentFiles } from "@/lib/recent-files";
 import { settings } from "@/lib/settings";
@@ -106,13 +106,7 @@ export function createDocumentSession(
     } catch (error) {
       diskContent = previousDiskContent;
       const message = messageOf(error);
-      await desktop.invoke(
-        "dialog:show-error",
-        t().dialogs.saveFailed,
-        `${path}
-
-${message}`,
-      );
+      await reportFailure(t().dialogs.saveFailed, path, message);
       return false;
     }
     markSaved(markdown);
@@ -183,7 +177,7 @@ ${message}`,
     } catch (error) {
       const message = messageOf(error);
       if (showError) {
-        await desktop.invoke("dialog:show-error", t().dialogs.openFailed, `${path}\n\n${message}`);
+        await reportFailure(t().dialogs.openFailed, path, message);
       }
       return message;
     }

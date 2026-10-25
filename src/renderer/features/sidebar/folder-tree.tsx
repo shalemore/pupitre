@@ -15,7 +15,7 @@ import { ListItem, rowIndent } from "@/components/ui";
 import { MenuPopup } from "@/features/menu/menu-popup";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
-import { messageOf } from "@/lib/errors";
+import { messageOf, reportFailure } from "@/lib/errors";
 
 interface TreeContext {
   activePath: () => string | undefined;
@@ -222,7 +222,7 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
       if (changed !== undefined) props.onPathChanged?.(changed.old, changed.path);
     } catch (error) {
       const message = messageOf(error);
-      await desktop.invoke("dialog:show-error", t().dialogs.fileActionFailed, message);
+      await reportFailure(t().dialogs.fileActionFailed, message);
     }
   };
 
