@@ -28,6 +28,8 @@ scoop bucket add shalemore https://github.com/shalemore/scoop-bucket
 scoop install pupitre
 ```
 
+_The browser demo cannot open a folder, and a document is lost when the tab closes._
+
 ## Features
 
 - Focus and typewriter modes
