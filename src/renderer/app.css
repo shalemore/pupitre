@@ -265,8 +265,9 @@
   --color-segmented-track: var(--ui-segmented-track);
   --color-segmented-thumb: var(--ui-segmented-thumb);
   --color-knob: var(--ui-knob);
-  /* The red of the native Windows close button, so the drawn caption buttons match the system ones */
+  /* The red of the native Windows close button and the white on it, so the drawn caption buttons match the system ones */
   --color-window-close: #c42b1c;
+  --color-window-close-foreground: #ffffff;
 
   --radius-xs: calc(2px * var(--ui-radius-scale));
   --radius-sm: calc(4px * var(--ui-radius-scale));
