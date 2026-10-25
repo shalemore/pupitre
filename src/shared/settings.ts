@@ -47,7 +47,7 @@ export const settingsSchema = z.object({
   autoCheckUpdates: z.boolean().catch(true),
 
   // Appearance
-  colorScheme: z.enum(["system", "light", "dark"]).catch("system"),
+  colorScheme: z.enum(["system", "light", "dark"]).catch("light"),
   /** Theme folder name, see src/renderer/themes. */
   theme: z.string().min(1).catch("pupitre"),
   /** Theme used while the dark color scheme is active; empty means the same as `theme`. */
