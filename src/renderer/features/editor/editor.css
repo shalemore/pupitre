@@ -356,17 +356,14 @@
     background: var(--ui-brand);
   }
 
-  .md-task-checkbox {
-    --task-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
-  }
-
   /* The check mark, in the color that reads on the accent; a mask keeps it centered in the box */
   .md-task-checkbox:checked::after {
     content: "";
     position: absolute;
     inset: 0;
     background: var(--brand-foreground);
-    mask: var(--task-check) center / 0.62em no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E")
+      center / 0.62em no-repeat;
   }
 
   .md-task-checked {
