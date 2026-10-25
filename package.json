@@ -23,8 +23,8 @@
     "build:web": "vite build --config vite.web.config.ts",
     "dist": "electron-vite build && electron-builder",
     "typecheck": "tsc -b",
-    "lint": "oxfmt --check . && oxlint . && node scripts/import-order.mjs --check",
-    "fix": "oxfmt . && oxlint --fix . && node scripts/import-order.mjs"
+    "lint": "oxfmt --check . && oxlint . && node scripts/import-order.ts --check",
+    "fix": "oxfmt . && oxlint --fix . && node scripts/import-order.ts"
   },
   "dependencies": {
     "electron-updater": "^6.8.9",

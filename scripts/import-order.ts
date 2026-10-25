@@ -1,4 +1,3 @@
-// @ts-check
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -16,8 +15,16 @@ const MODULE = /\.(?:ts|tsx)$/;
 const SPECIFIER = /(?:\bfrom\s+|^import\s+)"([^"]+)"/;
 const SIDE_EFFECT = /^import\s+"/;
 
-/** The order a specifier sorts in: its group, then its name. */
-function sortKey(specifier) {
+interface ImportChunk {
+  /** Comment lines written above the statement, which stay with it. */
+  comments: string[];
+  statement: string[];
+  specifier: string;
+  /** The module is imported for what evaluating it does, not for a name it exports. */
+  sideEffect: boolean;
+}
+
+function sortKey(specifier: string): [group: number, name: string] {
   if (specifier.startsWith("node:")) return [0, specifier];
   if (specifier.startsWith("@shared/")) return [2, specifier];
   if (specifier.startsWith("@/")) return [3, specifier];
@@ -25,51 +32,52 @@ function sortKey(specifier) {
   return [1, specifier];
 }
 
-function compare(a, b) {
+function compare(a: string, b: string): number {
   const [groupA, nameA] = sortKey(a);
   const [groupB, nameB] = sortKey(b);
-  return groupA - groupB || (nameA < nameB ? -1 : nameA > nameB ? 1 : 0);
+  if (groupA !== groupB) return groupA - groupB;
+  if (nameA === nameB) return 0;
+  return nameA < nameB ? -1 : 1;
 }
 
-function isComment(line) {
+function isComment(line: string): boolean {
   const text = line.trim();
   return (
     text.startsWith("//") || text.startsWith("/*") || text.startsWith("*") || text.endsWith("*/")
   );
 }
 
-/** Comment lines that sit directly above a statement stay with it. */
-function commentsOf(pending) {
-  const lines = [...pending];
-  while (lines.length > 0 && (lines[0] ?? "").trim() === "") lines.shift();
-  while (lines.length > 0 && (lines.at(-1) ?? "").trim() === "") lines.pop();
-  return lines;
+/** The comment lines of a block that may also hold blank lines. */
+function commentsOf(pending: string[]): string[] {
+  const first = pending.findIndex((line) => line.trim() !== "");
+  if (first === -1) return [];
+  const last = pending.findLastIndex((line) => line.trim() !== "");
+  return pending.slice(first, last + 1);
 }
 
-/** The module with its imports ordered, or undefined when it does not start with a comment or import. */
-function ordered(source) {
+/** The module with its imports ordered, or undefined when it imports nothing. */
+function ordered(source: string): string | undefined {
   const lines = source.split("\n");
-  /** @type {{ comments: string[], statement: string[], specifier: string, side: boolean }[]} */
-  const chunks = [];
-  let prefix = [];
-  let pending = [];
+  const chunks: ImportChunk[] = [];
+  let prefix: string[] = [];
+  let pending: string[] = [];
   let pendingStart = 0;
   let i = 0;
   while (i < lines.length) {
-    const line = lines[i];
+    const line = lines[i] ?? "";
     if (line.startsWith("import ")) {
-      const statement = [];
+      const statement: string[] = [];
       do {
-        statement.push(lines[i]);
+        statement.push(lines[i] ?? "");
         i += 1;
-      } while (!(statement.at(-1) ?? "").endsWith(";"));
+      } while (i < lines.length && !(statement.at(-1) ?? "").endsWith(";"));
       const text = statement.join("\n");
       const first = chunks.length === 0;
       chunks.push({
         comments: first ? [] : commentsOf(pending),
         statement,
         specifier: SPECIFIER.exec(text)?.[1] ?? "",
-        side: SIDE_EFFECT.test(text),
+        sideEffect: SIDE_EFFECT.test(text),
       });
       // A comment above the first import describes the module, so it stays at the top
       if (first) prefix = pending;
@@ -87,15 +95,17 @@ function ordered(source) {
   }
   if (chunks.length === 0) return undefined;
 
-  const side = chunks.filter((chunk) => chunk.side);
+  const sideEffects = chunks.filter((chunk) => chunk.sideEffect);
   const sorted = chunks
-    .filter((chunk) => !chunk.side)
+    .filter((chunk) => !chunk.sideEffect)
     .toSorted((a, b) => compare(a.specifier, b.specifier));
-  const statements = side.concat(sorted).flatMap((chunk) => chunk.comments.concat(chunk.statement));
+  const statements = sideEffects
+    .concat(sorted)
+    .flatMap((chunk) => chunk.comments.concat(chunk.statement));
   return prefix.concat(statements, lines.slice(pendingStart)).join("\n");
 }
 
-function modules(folder) {
+function modules(folder: string): string[] {
   return readdirSync(folder, { withFileTypes: true }).flatMap((entry) => {
     const path = join(folder, entry.name);
     if (entry.isDirectory()) return modules(path);

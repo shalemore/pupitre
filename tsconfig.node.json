@@ -15,7 +15,7 @@
     "electron.vite.config.ts",
     "vite.shared.ts",
     "vite.web.config.ts",
-    "scripts/third-party-notices.ts",
+    "scripts",
     "src/main",
     "src/preload",
     "src/shared"

@@ -160,7 +160,7 @@ only make code generation easier.
   helpers in `lib`. Do not create folders just to group a single file.
 - Import internal modules directly. Barrel files (`index.ts`) are only for deliberate public
   boundaries such as `components/ui`.
-- Imports are ordered by `scripts/import-order.mjs`, which `npm run lint` checks and `npm run fix`
+- Imports are ordered by `scripts/import-order.ts`, which `npm run lint` checks and `npm run fix`
   applies: `node:` builtins, packages, `@shared/*`, `@/*`, then relative paths, alphabetically
   inside each group. Imports for their side effects come first, in the order they run.
 - Remove dead code instead of leaving it around "for later".
