@@ -3,6 +3,7 @@ import { type EditorState, Facet } from "@codemirror/state";
 import { type EditorView, WidgetType } from "@codemirror/view";
 import { toHex } from "@/lib/theme";
 import { fencedText } from "./block-text";
+import { onScrollbar } from "./scrollbar";
 
 /** Mermaid's theme variables; only hex colors work, since Mermaid derives shades from them. */
 export type DiagramTheme = Readonly<Record<string, string | boolean>>;
@@ -137,6 +138,6 @@ export class MermaidWidget extends WidgetType {
 
   // As with math, the scrollbar of a diagram wider than the line must scroll it, not select text
   override ignoreEvent(event: Event): boolean {
-    return event.target instanceof Element && event.target.classList.contains("md-mermaid");
+    return onScrollbar(event);
   }
 }

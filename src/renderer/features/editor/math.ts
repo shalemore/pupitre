@@ -11,6 +11,7 @@ import type {
 } from "@lezer/markdown";
 import { blockText, fencedText } from "./block-text";
 import { renderMath } from "./mathjax";
+import { onScrollbar } from "./scrollbar";
 
 const DOLLAR = 36;
 const BACKSLASH = 92;
@@ -156,10 +157,9 @@ export class MathWidget extends WidgetType {
     return element;
   }
 
-  // Dragging the scrollbar of a formula wider than the line must scroll it, not start a selection;
-  // a click on the formula itself places the cursor there, which reveals its source
+  // Dragging the scrollbar of a formula wider than the line must scroll it, not start a selection
   override ignoreEvent(event: Event): boolean {
-    return event.target instanceof Element && event.target.classList.contains("md-math-block");
+    return onScrollbar(event);
   }
 }
 
