@@ -64,7 +64,7 @@ export function Combobox(props: ComboboxProps) {
         >
           <span class="flex items-baseline gap-2 min-w-0">
             <KobalteCombobox.ItemLabel
-              class="truncate text-sm text-foreground group-data-selected:text-brand"
+              class="truncate text-foreground group-data-selected:text-brand"
               style={itemProps.item.rawValue.style}
             >
               {itemProps.item.rawValue.label}

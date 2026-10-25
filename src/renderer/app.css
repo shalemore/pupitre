@@ -165,8 +165,8 @@
  * The scales below are the only values components use; a component never invents its own size,
  * duration or curve.
  *
- * Type: text-2xs (11px) captions, descriptions and shortcuts; text-xs (12px) the interface body;
- * text-sm (14px) list labels in menus; text-base and up for headings.
+ * Type: text-2xs (11px) captions, descriptions and shortcuts; text-xs (12px) everything else in the
+ * interface, the choices of a dropdown included; text-base and text-xl for headings.
  *
  * Radii, by role, nested corners following outer = inner + gap:
  *   xs marks and search hits, sm small icon buttons and keycaps, md controls and list rows,
