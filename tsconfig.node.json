@@ -13,6 +13,7 @@
   },
   "include": [
     "electron.vite.config.ts",
+    "vite.shared.ts",
     "vite.web.config.ts",
     "scripts/third-party-notices.ts",
     "src/main",
