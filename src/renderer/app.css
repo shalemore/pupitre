@@ -116,6 +116,14 @@
     --ui-segmented-track: oklch(from var(--ui-text-primary) l c h / 7%);
     /* Fill of text fields and dropdown triggers: a recess in whatever surface holds them */
     --ui-field: oklch(from var(--ui-surface-0) l c h / 60%);
+    /*
+     * What a selection washes over the text. Relative to the accent, which already has a value per
+     * colour scheme, so it needs no dark variant of its own; a theme whose accent fills blocks
+     * replaces it, since such a wash would vanish into them.
+     */
+    --ui-selection: oklch(from var(--ui-brand) l c h / 22%);
+    /* ==highlight== in the document, for themes that do not pick their own */
+    --md-highlight: oklch(0.91 0.11 92 / 75%);
 
     --ui-shadow-sm: 0 1px 2px var(--ui-shadow-near), 0 2px 8px var(--ui-shadow-far);
     --ui-shadow-md: 0 2px 4px var(--ui-shadow-near), 0 6px 16px var(--ui-shadow-far);
@@ -157,7 +165,13 @@
   @media (prefers-color-scheme: dark) {
     :root {
       --ui-field: oklch(from var(--ui-surface-0) l c h / 40%);
+      --md-highlight: oklch(0.82 0.13 88 / 28%);
     }
+  }
+
+  /* In the base layer, so a theme may replace the wash itself as well as the token */
+  ::selection {
+    background-color: var(--ui-selection);
   }
 }
 

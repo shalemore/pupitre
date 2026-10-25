@@ -38,6 +38,11 @@
 
   /* <mark>: a wash of the red */
   --plakat-highlight: oklch(from var(--ui-brand) l c h / 16%);
+  /*
+   * The banner and the mark wash are the accent already, so a selection tinted with the accent
+   * would vanish on them.
+   */
+  --ui-selection: oklch(from var(--ui-text-primary) l c h / 22%);
   /* The title banner and the text printed on it */
   --plakat-banner: var(--ui-brand);
   --plakat-on-banner: oklch(0.99 0 0);
@@ -278,11 +283,6 @@
 .md-footnote-ref {
   color: var(--ui-brand);
   font-weight: 700;
-}
-
-/* Selected text in the editor */
-.md-document ::selection {
-  background: oklch(from var(--ui-brand) l c h / 22%);
 }
 
 /* The YAML front matter block at the very top of a file */

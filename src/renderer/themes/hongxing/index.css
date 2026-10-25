@@ -260,10 +260,6 @@
   font-weight: 700;
 }
 
-.md-document ::selection {
-  background: oklch(from var(--ui-brand) l c h / 20%);
-}
-
 .md-front-matter {
   background: var(--ui-alpha-1);
   color: var(--ui-text-secondary);

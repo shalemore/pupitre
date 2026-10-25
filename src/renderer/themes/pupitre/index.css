@@ -18,6 +18,8 @@
  *   - Document typography: the `md-*` classes inside `.md-document`.
  *   - Code colors: --syntax-*.
  *   - Alert colors: --alert-note, --alert-tip, --alert-important, --alert-warning, --alert-caution.
+ *   - Selection: --ui-selection, the wash painted over selected text; the default follows the
+ *     accent, which a theme that fills blocks with the accent has to replace with something else.
  *   - Interface shape: --ui-radius-scale (corner roundness), --ui-shadow-near/far/float
  *     (transparent for flat), --font-sans (interface font).
  *   - The front matter block is styled here, not by the app.
@@ -281,11 +283,6 @@
 /* Footnote references */
 .md-footnote-ref {
   color: var(--ui-brand);
-}
-
-/* Selected text in the editor */
-.md-document ::selection {
-  background: oklch(from var(--ui-brand) l c h / 22%);
 }
 
 /* The YAML front matter block at the very top of a file (--- … ---) */

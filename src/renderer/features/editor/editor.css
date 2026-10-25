@@ -151,7 +151,7 @@
 
   .md-tag-mark {
     border-radius: var(--radius-xs);
-    background: oklch(from var(--ui-brand) l c h / 25%);
+    background: var(--md-highlight);
   }
 
   .md-tag-sub,

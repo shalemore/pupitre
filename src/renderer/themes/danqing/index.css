@@ -229,10 +229,6 @@
   color: var(--danqing-cinnabar);
 }
 
-.md-document ::selection {
-  background: oklch(from var(--ui-brand) l c h / 22%);
-}
-
 .md-front-matter {
   background: var(--ui-alpha-1);
   color: var(--ui-text-secondary);
