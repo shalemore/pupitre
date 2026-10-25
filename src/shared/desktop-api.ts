@@ -216,6 +216,8 @@ export interface HostCapabilities {
   setDefaultApp: boolean;
   /** Read the fonts installed on the system. */
   systemFonts: boolean;
+  /** Set the zoom of the window; a browser zooms the page itself, with its own shortcuts. */
+  zoom: boolean;
 }
 
 export interface InitialState {

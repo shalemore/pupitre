@@ -23,7 +23,6 @@ import {
   type Settings,
   settingsFileSchema,
   withoutSetting,
-  zoomFactor,
 } from "@shared/settings";
 import { getSampleDocument } from "@/features/samples/sample-document";
 import about from "./demo/about.md?raw";
@@ -93,7 +92,6 @@ window.addEventListener("load", followColorScheme);
 
 function publishSettings(): void {
   settings = resolveSettings(settingsFile);
-  document.documentElement.style.zoom = String(zoomFactor(settings.zoom));
   followColorScheme();
   emit("settings:changed", settings);
 }
@@ -406,6 +404,7 @@ const desktop: DesktopApi = {
       revealFiles: false,
       setDefaultApp: false,
       systemFonts: false,
+      zoom: false,
     },
     recentFiles: [],
     captionSide: undefined,
