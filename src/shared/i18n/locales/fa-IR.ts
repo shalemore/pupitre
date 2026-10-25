@@ -172,6 +172,8 @@ export const faIR = {
     pinSidebars: "سنجاق کردن نوارهای کناری",
     pinSidebar: (name) => `سنجاق کردن نوار کناری ${name}`,
     pinSidebarsDesc: "پنجرهٔ فراگیر هنگام نوشتن نوارهای کناری را باز نگه می‌دارد",
+    filePreviews: "پیش‌نمایش فایل‌ها",
+    filePreviewsDesc: "نخستین سطرهای هر فایل زیر نامش در پوشه",
     showWordCount: "نمایش شمار واژه‌ها",
     showWordCountDesc: "شمار واژه‌ها و نویسه‌ها در نوار عنوان",
     bodyFont: "قلم",

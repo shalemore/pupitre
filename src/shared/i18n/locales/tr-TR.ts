@@ -174,6 +174,8 @@ export const trTR = {
     pinSidebars: "Kenar Çubuklarını Sabitle",
     pinSidebar: (name) => `${name} Kenar Çubuğunu Sabitle`,
     pinSidebarsDesc: "Sürükleyici bir pencere, siz yazarken kenar çubuklarını açık tutar",
+    filePreviews: "Dosya önizlemeleri",
+    filePreviewsDesc: "Klasörde her dosyanın adının altında dosyanın ilk satırlarını gösterir",
     showWordCount: "Sözcük Sayısını Göster",
     showWordCountDesc: "Başlık çubuğunda sözcük ve karakter sayısı",
     bodyFont: "Yazı Tipi",

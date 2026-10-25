@@ -172,6 +172,8 @@ export const nbNO = {
     pinSidebars: "Fest sidefelt",
     pinSidebar: (name) => `Fest ${name}-sidefeltet`,
     pinSidebarsDesc: "Et oppslukende vindu holder sidefeltene åpne mens du skriver",
+    filePreviews: "Filforhåndsvisninger",
+    filePreviewsDesc: "De første linjene i hver fil under navnet i mappen",
     showWordCount: "Vis ordantall",
     showWordCountDesc: "Antall ord og tegn i tittellinjen",
     bodyFont: "Skrifttype",

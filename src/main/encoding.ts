@@ -32,7 +32,7 @@ const UTF16LE_BOM = Buffer.from([0xff, 0xfe]);
 const UTF16BE_BOM = Buffer.from([0xfe, 0xff]);
 
 /** The encoding a file announces in its first bytes. */
-function declaredEncoding(buffer: Buffer): TextEncoding | undefined {
+export function declaredEncoding(buffer: Buffer): TextEncoding | undefined {
   if (buffer.subarray(0, 3).equals(UTF8_BOM)) return "utf-8-bom";
   if (buffer.subarray(0, 2).equals(UTF16LE_BOM)) return "utf-16le";
   if (buffer.subarray(0, 2).equals(UTF16BE_BOM)) return "utf-16be";

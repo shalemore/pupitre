@@ -66,6 +66,8 @@ export const settingsSchema = z.object({
     .max(SETTING_RANGES.immersiveGap.max)
     .catch(8),
   sidebarVisible: z.boolean().catch(true),
+  /** Whether the folder shows the first lines of each file under its name. */
+  sidebarPreview: z.boolean().catch(false),
   /** Folder and outline in two sidebars, one at each edge, or as tabs of one sidebar. */
   sidebarLayout: z.enum(["split", "combined"]).catch("split"),
   /**

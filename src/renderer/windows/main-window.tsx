@@ -10,7 +10,7 @@ import {
   Show,
   type Component,
 } from "solid-js";
-import type { AppCommand } from "@shared/desktop-api";
+import { DOCUMENT_FILE, type AppCommand } from "@shared/desktop-api";
 import { TitleBar } from "@/components/title-bar";
 import type { OutlineHeading } from "@/features/editor/document-structure";
 import { FindBar } from "@/features/editor/find-bar";
@@ -188,7 +188,7 @@ export const MainWindow: Component = () => {
 
   const exportPdf = async () => {
     if (!session.activeDocument()) return;
-    const pdfName = session.fileName().replace(/\.(md|markdown|mdown|txt)$/i, "") + ".pdf";
+    const pdfName = session.fileName().replace(DOCUMENT_FILE, "") + ".pdf";
     const resume = await editor?.prepareForPrint();
     try {
       await desktop.invoke("document:export-pdf", pdfName);

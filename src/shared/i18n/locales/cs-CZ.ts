@@ -175,6 +175,8 @@ export const csCZ = {
     pinSidebars: "Připnout postranní panely",
     pinSidebarsDesc: "Pohlcující okno nechává postranní panely při psaní otevřené",
     pinSidebar: (name) => `Připnout panel ${name}`,
+    filePreviews: "Náhledy souborů",
+    filePreviewsDesc: "První řádky každého souboru pod jeho názvem ve složce",
     showWordCount: "Zobrazit počet slov",
     showWordCountDesc: "Počet slov a znaků v záhlaví",
     bodyFont: "Písmo",

@@ -35,7 +35,9 @@ linux:
   category: Office
   # deb packages require a maintainer with an email; the GitHub noreply address satisfies that
   maintainer: shalemore <190341017+shalemore@users.noreply.github.com>
-# Registers Pupitre as a handler for Markdown files; the installers remove it on uninstall
+# The Markdown documents Pupitre asks to open by default; the installers remove it on uninstall.
+# Fewer than the DOCUMENT_EXTENSIONS the editor opens: mdx it can only just read, and txt is not
+# Markdown, so neither is claimed here.
 fileAssociations:
   - ext: [md, markdown, mdown, mkd]
     name: Markdown

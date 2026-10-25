@@ -173,6 +173,8 @@ export const nlNL = {
     pinSidebars: "Zijbalken vastzetten",
     pinSidebar: (name) => `${name}-zijbalk vastzetten`,
     pinSidebarsDesc: "Een meeslepend venster houdt de zijbalken open terwijl je schrijft",
+    filePreviews: "Bestandsvoorbeelden",
+    filePreviewsDesc: "De eerste regels van elk bestand onder zijn naam in de map",
     showWordCount: "Woordaantal tonen",
     showWordCountDesc: "Woorden en tekens in de titelbalk",
     bodyFont: "Lettertype",

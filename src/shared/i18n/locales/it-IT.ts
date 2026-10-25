@@ -170,6 +170,8 @@ export const itIT = {
     pinSidebars: "Blocca le barre laterali",
     pinSidebar: (name) => `Blocca la barra laterale ${name}`,
     pinSidebarsDesc: "Una finestra immersiva tiene aperte le barre laterali mentre scrivi",
+    filePreviews: "Anteprime dei file",
+    filePreviewsDesc: "Le prime righe di ogni file sotto il suo nome nella cartella",
     showWordCount: "Mostra conteggio parole",
     showWordCountDesc: "Parole e caratteri nella barra del titolo",
     bodyFont: "Carattere",

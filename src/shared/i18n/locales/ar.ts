@@ -185,6 +185,8 @@ export const ar = {
     pinSidebars: "تثبيت الأشرطة الجانبية",
     pinSidebarsDesc: "تُبقي النافذة الغامرة الأشرطة الجانبية مفتوحة أثناء الكتابة",
     pinSidebar: (name) => `تثبيت شريط ${name} الجانبي`,
+    filePreviews: "معاينات الملفات",
+    filePreviewsDesc: "الأسطر الأولى من كل ملف تحت اسمه في المجلد",
     showWordCount: "إظهار عدد الكلمات",
     showWordCountDesc: "عدد الكلمات والأحرف في شريط العنوان",
     bodyFont: "الخط",

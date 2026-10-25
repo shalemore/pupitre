@@ -172,6 +172,8 @@ export const svSE = {
     pinSidebars: "Fäst sidofält",
     pinSidebar: (name) => `Fäst ${name}-sidofältet`,
     pinSidebarsDesc: "Ett uppslukande fönster håller sidofälten öppna medan du skriver",
+    filePreviews: "Filförhandsgranskningar",
+    filePreviewsDesc: "De första raderna i varje fil under dess namn i mappen",
     showWordCount: "Visa ordantal",
     showWordCountDesc: "Antal ord och tecken i namnlisten",
     bodyFont: "Teckensnitt",

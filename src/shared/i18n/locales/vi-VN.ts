@@ -170,6 +170,8 @@ export const viVN = {
     pinSidebars: "Ghim thanh bên",
     pinSidebar: (name) => `Ghim thanh bên ${name}`,
     pinSidebarsDesc: "Cửa sổ đắm chìm giữ các thanh bên mở khi bạn viết",
+    filePreviews: "Bản xem trước tệp",
+    filePreviewsDesc: "Vài dòng đầu của mỗi tệp dưới tên của nó trong thư mục",
     showWordCount: "Hiện số từ",
     showWordCountDesc: "Số từ và số ký tự trên thanh tiêu đề",
     bodyFont: "Phông chữ",

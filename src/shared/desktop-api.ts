@@ -37,6 +37,18 @@ export interface OpenedDocument extends DocumentLocation {
   encoding: TextEncoding;
 }
 
+/**
+ * Extensions of the text documents the editor opens, previews and links to. Separate from the file
+ * types the installer claims as Pupitre's own (see fileAssociations), which are fewer.
+ */
+export const DOCUMENT_EXTENSIONS = ["md", "markdown", "mdown", "mkd", "mdx", "txt"] as const;
+
+/** Those files, as a test for a path. */
+export const DOCUMENT_FILE = new RegExp(`\\.(?:${DOCUMENT_EXTENSIONS.join("|")})$`, "i");
+
+/** How much of a file a folder preview reads. */
+export const PREVIEW_BYTES = 1024;
+
 export interface FolderEntry {
   name: string;
   path: string;
@@ -125,6 +137,11 @@ export interface InvokeChannels {
   "document:read": (path: string) => OpenedDocument | null;
   /** Lists one level of a folder: directories first, then files, each sorted by name; hidden entries are left out. */
   "folder:list": (path: string) => FolderEntry[];
+  /**
+   * The first bytes of every Markdown file in one level of a folder, keyed by path, which is what the
+   * folder shows under a file name when previews are on.
+   */
+  "folder:previews": (path: string) => Record<string, string>;
   /** Creates an empty file or a folder inside `parent` and returns its path. */
   "folder:create": (parent: string, name: string, kind: FolderEntry["kind"]) => string;
   /** Renames a file or folder inside its own folder and returns its new path. */

@@ -169,6 +169,8 @@ export const koKR = {
     pinSidebars: "사이드바 고정",
     pinSidebar: (name) => `${name} 사이드바 고정`,
     pinSidebarsDesc: "몰입형 창에서 글을 쓰는 동안에도 사이드바를 열어 둡니다",
+    filePreviews: "파일 미리보기",
+    filePreviewsDesc: "폴더에서 각 파일 이름 아래에 파일의 처음 몇 줄을 표시합니다",
     showWordCount: "단어 수 표시",
     showWordCountDesc: "제목 표시줄에 단어 수와 글자 수 표시",
     bodyFont: "글꼴",

@@ -1,4 +1,4 @@
-import { access, mkdir, readdir, readFile, stat, writeFile } from "node:fs/promises";
+import { access, mkdir, open, readdir, readFile, stat, writeFile } from "node:fs/promises";
 import { basename, dirname, extname, join } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
@@ -20,10 +20,13 @@ import {
   type TextEncoding,
   INITIAL_STATE_SYNC,
   type InitialState,
+  DOCUMENT_EXTENSIONS,
+  DOCUMENT_FILE,
+  PREVIEW_BYTES,
 } from "@shared/desktop-api";
 import { showAboutDialog } from "./about";
 import { setAsDefaultMarkdownApp } from "./default-app";
-import { decodeDocument, decodeWith, encodeDocument } from "./encoding";
+import { decodeDocument, decodeWith, declaredEncoding, encodeDocument } from "./encoding";
 import { createEntry, renameEntry, trashEntry } from "./file-actions";
 import { t } from "./i18n";
 import { clickMenuItem, menuSnapshot, setDocumentState } from "./menu";
@@ -128,6 +131,35 @@ async function listFolder(path: string): Promise<FolderEntry[]> {
     );
 }
 
+/** The first bytes of a file as text; undefined when it cannot be read. */
+async function readHead(path: string): Promise<string | undefined> {
+  try {
+    const file = await open(path, "r");
+    try {
+      const buffer = Buffer.alloc(PREVIEW_BYTES);
+      const { bytesRead } = await file.read(buffer, 0, PREVIEW_BYTES, 0);
+      const head = buffer.subarray(0, bytesRead);
+      return decodeWith(head, declaredEncoding(head) ?? "utf-8");
+    } finally {
+      await file.close();
+    }
+  } catch {
+    return undefined;
+  }
+}
+
+async function folderPreviews(path: string): Promise<Record<string, string>> {
+  const files = (await listFolder(path)).filter(
+    (entry) => entry.kind === "file" && DOCUMENT_FILE.test(entry.name),
+  );
+  const heads = await Promise.all(
+    files.map(async (file) => [file.path, await readHead(file.path)] as const),
+  );
+  return Object.fromEntries(
+    heads.filter((head): head is [string, string] => head[1] !== undefined),
+  );
+}
+
 /** Strips the BOM of a file (its encoding keeps it on save) and normalizes line endings to LF; the original line ending is restored on save. */
 function normalizeText(raw: string): string {
   return raw.replace(/^\uFEFF/, "").replaceAll("\r\n", "\n");
@@ -205,7 +237,7 @@ export function registerIpcHandlers(): void {
   handle("document:open", async (event) => {
     const path = await openPath(senderWindow(event), {
       properties: ["openFile"],
-      filters: [{ name: "Markdown", extensions: ["md", "markdown", "mdown", "txt"] }],
+      filters: [{ name: "Markdown", extensions: [...DOCUMENT_EXTENSIONS] }],
     });
     return path === null ? null : readDocument(path, senderWindow(event));
   });
@@ -214,6 +246,7 @@ export function registerIpcHandlers(): void {
     openPath(senderWindow(event), { properties: ["openDirectory"] }),
   );
   handle("folder:list", (_event, path) => listFolder(path));
+  handle("folder:previews", (_event, path) => folderPreviews(path));
   handle("folder:create", (_event, parent, name, kind) => createEntry(parent, name, kind));
   handle("path:rename", (_event, path, name) => renameEntry(path, name));
   handle("path:trash", (_event, path) => trashEntry(path));

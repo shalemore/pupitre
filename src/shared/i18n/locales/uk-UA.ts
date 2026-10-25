@@ -176,6 +176,8 @@ export const ukUA = {
     pinSidebars: "Закріпити бічні панелі",
     pinSidebar: (name) => `Закріпити бічну панель: ${name}`,
     pinSidebarsDesc: "Занурювальне вікно не приховує бічні панелі під час набору",
+    filePreviews: "Попередній перегляд файлів",
+    filePreviewsDesc: "Перші рядки кожного файлу під його назвою в теці",
     showWordCount: "Показувати кількість слів",
     showWordCountDesc: "Кількість слів і символів у рядку заголовка",
     bodyFont: "Шрифт",

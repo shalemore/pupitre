@@ -175,6 +175,8 @@ export const ruRU = {
     pinSidebars: "Закрепить боковые панели",
     pinSidebar: (name) => `Закрепить боковую панель: ${name}`,
     pinSidebarsDesc: "Погружающее окно не скрывает боковые панели во время набора",
+    filePreviews: "Предпросмотр файлов",
+    filePreviewsDesc: "Первые строки каждого файла под его именем в папке",
     showWordCount: "Показывать число слов",
     showWordCountDesc: "Слова и символы в заголовке окна",
     bodyFont: "Шрифт",

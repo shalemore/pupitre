@@ -170,6 +170,8 @@ export const deDE = {
     pinSidebars: "Seitenleisten fixieren",
     pinSidebarsDesc: "Ein immersives Fenster lässt die Seitenleisten beim Schreiben geöffnet",
     pinSidebar: (name) => `${name}-Seitenleiste fixieren`,
+    filePreviews: "Dateivorschauen",
+    filePreviewsDesc: "Die ersten Zeilen jeder Datei unter ihrem Namen im Ordner",
     showWordCount: "Wortanzahl anzeigen",
     showWordCountDesc: "Wörter und Zeichen in der Titelleiste",
     bodyFont: "Schriftart",

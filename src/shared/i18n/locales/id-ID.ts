@@ -172,6 +172,8 @@ export const idID = {
     pinSidebars: "Sematkan Bilah Samping",
     pinSidebar: (name) => `Sematkan Bilah Samping ${name}`,
     pinSidebarsDesc: "Jendela imersif menjaga bilah samping tetap terbuka saat Anda menulis",
+    filePreviews: "Pratinjau berkas",
+    filePreviewsDesc: "Baris-baris pertama setiap berkas di bawah namanya di folder",
     showWordCount: "Tampilkan jumlah kata",
     showWordCountDesc: "Jumlah kata dan karakter di bilah judul",
     bodyFont: "Font",

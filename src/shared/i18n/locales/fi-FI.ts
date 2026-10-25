@@ -172,6 +172,8 @@ export const fiFI = {
     pinSidebars: "Kiinnitä sivupalkit",
     pinSidebar: (name) => `Kiinnitä ${name}-sivupalkki`,
     pinSidebarsDesc: "Immersiivinen ikkuna pitää sivupalkit auki kirjoittaessasi",
+    filePreviews: "Tiedostojen esikatselut",
+    filePreviewsDesc: "Jokaisen tiedoston ensimmäiset rivit nimen alla kansiossa",
     showWordCount: "Näytä sanamäärä",
     showWordCountDesc: "Sanojen ja merkkien määrä otsikkorivillä",
     bodyFont: "Kirjasin",

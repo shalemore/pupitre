@@ -173,6 +173,8 @@ export const isIS = {
     pinSidebars: "Festa hliðarstikur",
     pinSidebar: (name) => `Festa ${name} hliðarstiku`,
     pinSidebarsDesc: "Sökkvandi gluggi heldur hliðarstikum opnum meðan þú skrifar",
+    filePreviews: "Forskoðun skráa",
+    filePreviewsDesc: "Fyrstu línur hverrar skráar undir nafni hennar í möppunni",
     showWordCount: "Sýna orðafjölda",
     showWordCountDesc: "Fjöldi orða og stafa í titilstikunni",
     bodyFont: "Leturgerð",

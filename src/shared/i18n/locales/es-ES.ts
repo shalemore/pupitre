@@ -169,6 +169,8 @@ export const esES = {
     pinSidebar: (name) => `Fijar la barra lateral de ${name}`,
     pinSidebarsDesc:
       "Una ventana inmersiva mantiene abiertas las barras laterales mientras escribes",
+    filePreviews: "Vistas previas de los archivos",
+    filePreviewsDesc: "Las primeras líneas de cada archivo bajo su nombre en la carpeta",
     showWordCount: "Mostrar recuento de palabras",
     showWordCountDesc: "Palabras y caracteres en la barra de título",
     bodyFont: "Fuente",

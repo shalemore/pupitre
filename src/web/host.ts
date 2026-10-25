@@ -1,11 +1,14 @@
-import type {
-  AppCommand,
-  DesktopApi,
-  DesktopPlatform,
-  FolderEntry,
-  InvokeChannels,
-  OpenedDocument,
-  RendererEvents,
+import {
+  DOCUMENT_EXTENSIONS,
+  DOCUMENT_FILE,
+  PREVIEW_BYTES,
+  type AppCommand,
+  type DesktopApi,
+  type DesktopPlatform,
+  type FolderEntry,
+  type InvokeChannels,
+  type OpenedDocument,
+  type RendererEvents,
 } from "@shared/desktop-api";
 import {
   FORMAT_ACTIONS,
@@ -165,11 +168,21 @@ function listFolder(path: string): FolderEntry[] {
   );
 }
 
+function folderPreviews(path: string): Record<string, string> {
+  const previews: Record<string, string> = {};
+  for (const [file, text] of files) {
+    const name = file.slice(path.length + 1);
+    if (!file.startsWith(`${path}/`) || name.includes("/") || !DOCUMENT_FILE.test(name)) continue;
+    previews[file] = text.slice(0, PREVIEW_BYTES);
+  }
+  return previews;
+}
+
 function pickFile(): Promise<OpenedDocument | null> {
   return new Promise((resolve) => {
     const input = document.createElement("input");
     input.type = "file";
-    input.accept = ".md,.markdown,.mdown,.txt";
+    input.accept = DOCUMENT_EXTENSIONS.map((extension) => `.${extension}`).join(",");
     input.addEventListener("cancel", () => resolve(null));
     input.addEventListener("change", async () => {
       const file = input.files?.[0];
@@ -313,6 +326,7 @@ const handlers: Handlers = {
     return opened(path);
   },
   "folder:list": listFolder,
+  "folder:previews": folderPreviews,
   // The demo folder lives in memory, so its files can be created, renamed and deleted like any other
   "folder:create": (parent, name, kind) => {
     const path = `${parent}/${name}`;
@@ -338,9 +352,7 @@ const handlers: Handlers = {
   "dialog:choose-save-path": (suggestedName) => {
     const name = prompt(labels().menu.saveAs, suggestedName)?.trim();
     if (!name) return null;
-    return opened(
-      `${DEMO_FOLDER}/${/\.(md|markdown|mdown|txt)$/i.test(name) ? name : `${name}.md`}`,
-    );
+    return opened(`${DEMO_FOLDER}/${DOCUMENT_FILE.test(name) ? name : `${name}.md`}`);
   },
   "document:save-image": (_path, _name, data) => URL.createObjectURL(new Blob([data.slice()])),
   "document:export-pdf": () => {

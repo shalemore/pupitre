@@ -1,6 +1,7 @@
 import { cn } from "cn";
 import { ChevronRight, CircleAlert, FileText, Folder } from "lucide-solid";
 import {
+  createMemo,
   createResource,
   createSignal,
   For,
@@ -16,6 +17,8 @@ import { MenuPopup } from "@/features/menu/menu-popup";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { messageOf, reportFailure } from "@/lib/errors";
+import { excerptOf } from "@/lib/markdown-excerpt";
+import { settings } from "@/lib/settings";
 
 interface TreeContext {
   activePath: () => string | undefined;
@@ -53,12 +56,21 @@ const FolderChildren: Component<FolderChildrenProps> = (props) => {
     () => props.path,
     (path) => desktop.invoke("folder:list", path),
   );
+  // Only read while previews are on, so a folder costs nothing when its rows show names alone
+  const [previews, { refetch: refetchPreviews }] = createResource(
+    () => (settings().sidebarPreview ? props.path : undefined),
+    (path) => desktop.invoke("folder:previews", path),
+  );
+  // The resource keeps its last value when previews go off, so the rows stop reading it instead
+  const shownPreviews = () => (settings().sidebarPreview ? previews() : undefined);
 
   onMount(() => {
     const { path } = props;
     void desktop.invoke("folder:watch", path);
     const unlisten = desktop.on("folder:changed", (changed) => {
-      if (changed === path) void refetch();
+      if (changed !== path) return;
+      void refetch();
+      void refetchPreviews();
     });
     onCleanup(() => {
       unlisten();
@@ -74,7 +86,9 @@ const FolderChildren: Component<FolderChildrenProps> = (props) => {
       }
     >
       <For each={entries()}>
-        {(entry) => <FolderRow entry={entry} depth={props.depth} tree={props.tree} />}
+        {(entry) => (
+          <FolderRow entry={entry} depth={props.depth} tree={props.tree} previews={shownPreviews} />
+        )}
       </For>
     </Show>
   );
@@ -118,11 +132,20 @@ const RenameField: Component<{
   );
 };
 
-const FolderRow: Component<{ entry: FolderEntry; depth: number; tree: TreeContext }> = (props) => {
+const FolderRow: Component<{
+  entry: FolderEntry;
+  depth: number;
+  tree: TreeContext;
+  /** The beginning of each file in this folder, when previews are on. */
+  previews: () => Readonly<Record<string, string>> | undefined;
+}> = (props) => {
   const expanded = () => props.tree.isExpanded(props.entry.path);
   const failure = () => props.tree.failures()[props.entry.path];
   const isActive = () => props.tree.activePath() === props.entry.path;
   const isDirectory = () => props.entry.kind === "directory";
+  const excerpt = createMemo(
+    () => excerptOf(props.previews()?.[props.entry.path] ?? "") || undefined,
+  );
 
   return (
     <>
@@ -145,6 +168,7 @@ const FolderRow: Component<{ entry: FolderEntry; depth: number; tree: TreeContex
             }}
             style={rowIndent(props.depth, 6)}
             title={failure() ?? props.entry.name}
+            class={cn(excerpt() && "items-start")}
           >
             <Show when={isDirectory()} fallback={<span class="size-3 shrink-0" />}>
               <ChevronRight
@@ -157,15 +181,30 @@ const FolderRow: Component<{ entry: FolderEntry; depth: number; tree: TreeContex
             <Show
               when={isDirectory()}
               fallback={
-                <Show when={failure()} fallback={<FileText class="size-3.5 shrink-0" />}>
-                  <CircleAlert class="size-3.5 shrink-0" />
+                <Show
+                  when={failure()}
+                  fallback={<FileText class={cn("size-3.5 shrink-0", excerpt() && "mt-0.5")} />}
+                >
+                  <CircleAlert class={cn("size-3.5 shrink-0", excerpt() && "mt-0.5")} />
                 </Show>
               }
             >
               <Folder class="size-3.5 shrink-0" />
             </Show>
-            <span class="min-w-0 truncate">
-              <bdi dir="ltr">{props.entry.name}</bdi>
+            <span class={cn("min-w-0", excerpt() ? "flex-1" : "truncate")}>
+              <span class="block truncate">
+                <bdi dir="ltr">{props.entry.name}</bdi>
+              </span>
+              <Show when={excerpt()}>
+                {/* Isolated, so an excerpt in another script never turns the row around */}
+                <bdi
+                  dir="auto"
+                  aria-hidden="true"
+                  class="mt-0.5 line-clamp-2 text-2xs font-normal text-tertiary"
+                >
+                  {excerpt()}
+                </bdi>
+              </Show>
             </span>
           </ListItem>
         }

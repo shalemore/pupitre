@@ -169,6 +169,8 @@ export const frFR = {
     pinSidebars: "Épingler les barres latérales",
     pinSidebar: (name) => `Épingler la barre latérale ${name}`,
     pinSidebarsDesc: "Une fenêtre immersive garde ses barres latérales ouvertes pendant l'écriture",
+    filePreviews: "Aperçus des fichiers",
+    filePreviewsDesc: "Les premières lignes de chaque fichier sous son nom dans le dossier",
     showWordCount: "Afficher le nombre de mots",
     showWordCountDesc: "Mots et caractères dans la barre de titre",
     bodyFont: "Police",

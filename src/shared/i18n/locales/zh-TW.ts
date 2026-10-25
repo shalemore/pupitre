@@ -165,6 +165,8 @@ export const zhTW = {
     pinSidebars: "釘選側邊欄",
     pinSidebar: (name) => `釘選${name}側邊欄`,
     pinSidebarsDesc: "沉浸式視窗在書寫時保持側邊欄展開",
+    filePreviews: "檔案預覽",
+    filePreviewsDesc: "在資料夾中每個檔案名稱下方顯示該檔案的前幾行",
     showWordCount: "顯示字數",
     showWordCountDesc: "在標題列顯示詞數和字元數",
     bodyFont: "內文字型",

@@ -16,6 +16,7 @@ import {
   WidgetType,
 } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
+import { DOCUMENT_EXTENSIONS } from "@shared/desktop-api";
 import { desktop } from "@/lib/desktop";
 import { AlertTitleWidget, alertTitles, alertType } from "./alerts";
 import { fencedText } from "./block-text";
@@ -682,7 +683,8 @@ export function openLink(href: string): boolean {
   return true;
 }
 
-const MARKDOWN_FILE = /^[^:]+\.(?:md|markdown|mdown)(?:#.*)?$/i;
+/** A link to a document next to this one, which the window opens in place. */
+const DOCUMENT_LINK = new RegExp(`^[^:]+\\.(?:${DOCUMENT_EXTENSIONS.join("|")})(?:#.*)?$`, "i");
 
 /**
  * Follows a link: web addresses open in the browser, `#anchors` scroll to their heading and
@@ -700,7 +702,7 @@ function followLink(view: EditorView, href: string): boolean {
     return true;
   }
   const base = view.state.facet(documentBaseUrl);
-  if (!base || !MARKDOWN_FILE.test(href)) return false;
+  if (!base || !DOCUMENT_LINK.test(href)) return false;
   // A file URL's path starts with a slash before a Windows drive letter
   const path = decodeURIComponent(new URL(href, base).pathname).replace(/^\/(?=[A-Za-z]:)/, "");
   void desktop.invoke("app:dispatch", { id: "file.open-path", path });

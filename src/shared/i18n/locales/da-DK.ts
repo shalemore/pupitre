@@ -172,6 +172,8 @@ export const daDK = {
     pinSidebars: "Fastgør sidebjælker",
     pinSidebarsDesc: "Et fordybende vindue holder sidebjælkerne åbne, mens du skriver",
     pinSidebar: (name) => `Fastgør ${name} sidebjælke`,
+    filePreviews: "Filforhåndsvisninger",
+    filePreviewsDesc: "De første linjer af hver fil under dens navn i mappen",
     showWordCount: "Vis ordantal",
     showWordCountDesc: "Antal ord og tegn i titellinjen",
     bodyFont: "Skrifttype",

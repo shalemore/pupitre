@@ -169,6 +169,8 @@ export const jaJP = {
     pinSidebars: "サイドバーを固定",
     pinSidebar: (name) => `${name}サイドバーを固定`,
     pinSidebarsDesc: "没入型ウィンドウで、書いている間もサイドバーを開いたままにします",
+    filePreviews: "ファイルのプレビュー",
+    filePreviewsDesc: "フォルダ内の各ファイル名の下に、そのファイルの最初の数行を表示します",
     showWordCount: "語数を表示",
     showWordCountDesc: "タイトルバーに語数と文字数を表示",
     bodyFont: "フォント",

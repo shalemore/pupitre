@@ -173,6 +173,8 @@ export const huHU = {
     pinSidebars: "Oldalsávok rögzítése",
     pinSidebar: (name) => `${name} oldalsáv rögzítése`,
     pinSidebarsDesc: "A magával ragadó ablak írás közben nyitva tartja az oldalsávokat",
+    filePreviews: "Fájlelőnézetek",
+    filePreviewsDesc: "Minden fájl első sorai a neve alatt a mappában",
     showWordCount: "Szószám megjelenítése",
     showWordCountDesc: "Szavak és karakterek száma a címsorban",
     bodyFont: "Betűtípus",

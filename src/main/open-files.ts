@@ -1,9 +1,7 @@
 import { resolve } from "node:path";
 import { app } from "electron";
+import { DOCUMENT_FILE } from "@shared/desktop-api";
 import { createMainWindow, dispatchToMainWindow, getMainWindow } from "./windows";
-
-/** Files Pupitre opens when the system or the command line passes them (see fileAssociations). */
-const MARKDOWN_FILE = /\.(?:md|markdown|mdown|mkd|txt)$/i;
 
 let launchFile: string | undefined;
 
@@ -22,7 +20,7 @@ function fileFromArgv(argv: readonly string[], workingDirectory: string): string
   // argv starts with the executable, and with the app folder as well when running unpackaged
   const file = argv
     .slice(app.isPackaged ? 1 : 2)
-    .find((arg) => !arg.startsWith("-") && MARKDOWN_FILE.test(arg));
+    .find((arg) => !arg.startsWith("-") && DOCUMENT_FILE.test(arg));
   return file === undefined ? undefined : resolve(workingDirectory, file);
 }
 

@@ -165,6 +165,8 @@ export const zhCN = {
     pinSidebars: "钉住侧边栏",
     pinSidebar: (name) => `钉住${name}侧边栏`,
     pinSidebarsDesc: "沉浸式窗口在书写时保持侧边栏展开",
+    filePreviews: "文件预览",
+    filePreviewsDesc: "在文件夹中每个文件名下方显示该文件的前几行",
     showWordCount: "显示字数",
     showWordCountDesc: "在标题栏显示词数和字符数",
     bodyFont: "正文字体",

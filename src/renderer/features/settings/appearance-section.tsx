@@ -172,6 +172,18 @@ export const AppearanceSection: Component = () => (
               aria-label={t().settings.sidebarLayout}
             />
           </SettingField>
+          <SettingField
+            nested
+            name="sidebarPreview"
+            title={t().settings.filePreviews}
+            description={t().settings.filePreviewsDesc}
+          >
+            <Switch
+              checked={settings().sidebarPreview}
+              onChange={(sidebarPreview) => void updateSettings({ sidebarPreview })}
+              aria-label={t().settings.filePreviews}
+            />
+          </SettingField>
         </Show>
         <Show when={settings().sidebarVisible && settings().windowStyle === "immersive"}>
           <SettingField

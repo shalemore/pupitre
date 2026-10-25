@@ -168,6 +168,8 @@ export const ptPT = {
     pinSidebars: "Fixar barras laterais",
     pinSidebar: (name) => `Fixar a barra lateral de ${name}`,
     pinSidebarsDesc: "Uma janela imersiva mantém as barras laterais abertas enquanto escreve",
+    filePreviews: "Pré-visualizações dos ficheiros",
+    filePreviewsDesc: "As primeiras linhas de cada ficheiro sob o nome dele na pasta",
     showWordCount: "Mostrar contagem de palavras",
     showWordCountDesc: "Número de palavras e de caracteres na barra de título",
     bodyFont: "Tipo de letra",

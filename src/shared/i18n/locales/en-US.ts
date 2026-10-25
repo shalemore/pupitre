@@ -169,6 +169,8 @@ export const enUS = {
     pinSidebarsDesc: "An immersive window keeps its sidebars open while you write",
     /** Pin the sidebar that holds `name`, as the layout names it. */
     pinSidebar: (name: string) => `Pin the ${name} Sidebar`,
+    filePreviews: "File Previews",
+    filePreviewsDesc: "The first lines of each file under its name in the folder",
     showWordCount: "Show Word Count",
     showWordCountDesc: "Word and character counts in the title bar",
     bodyFont: "Font",

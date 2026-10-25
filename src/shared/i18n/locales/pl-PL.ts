@@ -177,6 +177,8 @@ export const plPL = {
     pinSidebars: "Przypnij paski boczne",
     pinSidebar: (name) => `Przypnij pasek boczny: ${name}`,
     pinSidebarsDesc: "Okno immersyjne zostawia paski boczne otwarte podczas pisania",
+    filePreviews: "Podgląd plików",
+    filePreviewsDesc: "Pierwsze wiersze każdego pliku pod jego nazwą w folderze",
     showWordCount: "Pokaż liczbę słów",
     showWordCountDesc: "Liczba słów i znaków na pasku tytułu",
     bodyFont: "Czcionka",
