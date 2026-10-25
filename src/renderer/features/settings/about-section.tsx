@@ -14,9 +14,7 @@ export const AboutSection: Component = () => (
         <h2 class="text-base font-semibold text-foreground">Pupitre</h2>
         <div class="text-2xs text-muted-foreground tabular-nums">
           {t().settings.version} {pkg.version}
-          <Show when={desktop.versions.electron}>
-            {(electron) => <> · Electron {electron()}</>}
-          </Show>
+          <Show when={desktop.electronVersion}>{(version) => <> · Electron {version()}</>}</Show>
         </div>
       </div>
       <Show when={desktop.initialState.capabilities.selfUpdate}>

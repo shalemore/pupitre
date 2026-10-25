@@ -234,7 +234,8 @@ export const INITIAL_STATE_SYNC = "app:initial-state";
 
 export interface DesktopApi {
   readonly platform: DesktopPlatform;
-  readonly versions: { electron: string; chrome: string };
+  /** The Electron the window runs in; a host that is not Electron leaves it out. */
+  readonly electronVersion?: string;
   invoke<K extends keyof InvokeChannels>(
     channel: K,
     ...args: Parameters<InvokeChannels[K]>

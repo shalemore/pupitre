@@ -385,7 +385,6 @@ const handlers: Handlers = {
 
 const desktop: DesktopApi = {
   platform,
-  versions: { electron: "", chrome: "" },
   invoke: async <K extends keyof InvokeChannels>(
     channel: K,
     ...args: Parameters<InvokeChannels[K]>
