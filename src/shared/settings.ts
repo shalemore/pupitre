@@ -28,6 +28,11 @@ export const ZOOM_STEPS = [
   SETTING_RANGES.zoom.max,
 ] as const;
 
+/** The zoom setting is a percentage; hosts want the factor it means. */
+export function zoomFactor(percent: number): number {
+  return percent / 100;
+}
+
 /**
  * The single definition of every setting and its default. The settings file only stores values
  * the user changed; a missing or invalid value falls back to its own default through `.catch`, so
