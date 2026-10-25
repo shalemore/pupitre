@@ -25,6 +25,11 @@ const listItemVariants = cva(
 export type ListItemProps = JSX.ButtonHTMLAttributes<HTMLButtonElement> &
   VariantProps<typeof listItemVariants>;
 
+/** How far one level of nesting moves a row past `base`, the start padding a row without nesting has. */
+export function rowIndent(depth: number, base: number) {
+  return { "padding-inline-start": `${base + depth * 12}px` };
+}
+
 /**
  * A row in a sidebar list (outline, folder tree, recent files). The current row gets a neutral
  * fill rather than the accent, so the accent stays reserved for the caret, links and toggles.

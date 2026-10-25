@@ -11,7 +11,7 @@ import {
   Show,
   type Component,
 } from "solid-js";
-import { ListItem } from "@/components/ui";
+import { ListItem, rowIndent } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { MenuPopup } from "@/features/menu/menu-popup";
@@ -97,7 +97,7 @@ const RenameField: Component<{
       value={props.initial}
       dir="auto"
       aria-label={t().sidebar.rename}
-      style={{ "padding-inline-start": `${6 + props.depth * 12}px` }}
+      style={rowIndent(props.depth, 6)}
       class="w-full rounded-md border border-border bg-surface-2 py-1 pe-2.5 text-xs text-foreground outline-none focus-visible:shadow-focus"
       // Focused once it is in the document, so typing replaces the selected name right away
       ref={(element) =>
@@ -121,7 +121,7 @@ const FolderRow: Component<{ entry: FolderEntry; depth: number; tree: TreeContex
   const expanded = () => props.tree.isExpanded(props.entry.path);
   const failure = () => props.tree.failures()[props.entry.path];
   const isActive = () => props.tree.activePath() === props.entry.path;
-  const indent = () => ({ "padding-inline-start": `${6 + props.depth * 12}px` });
+  const indent = () => rowIndent(props.depth, 6);
 
   return (
     <>
@@ -142,7 +142,6 @@ const FolderRow: Component<{ entry: FolderEntry; depth: number; tree: TreeContex
               event.stopPropagation();
               props.tree.onMenu(props.entry, event);
             }}
-            // The indent follows the nesting depth, which is data, so an inline style is the only option
             style={indent()}
             title={failure() ?? props.entry.name}
           >

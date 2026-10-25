@@ -1,6 +1,6 @@
 import { cn } from "cn";
 import { For, Show, type Component } from "solid-js";
-import { ListItem } from "@/components/ui";
+import { ListItem, rowIndent } from "@/components/ui";
 import { t } from "@/i18n";
 import type { OutlineHeading } from "@/features/editor/document-structure";
 
@@ -28,8 +28,7 @@ export const OutlineList: Component<OutlineListProps> = (props) => {
               dir="auto"
               active={props.activeIndex === index()}
               onClick={() => props.onSelectHeading(heading)}
-              // Each heading level indents by 12px; the level is data, so an inline style is the only option
-              style={{ "padding-inline-start": `${10 + (heading.level - 1) * 12}px` }}
+              style={rowIndent(heading.level - 1, 10)}
               class={cn(heading.level === 1 && "font-medium")}
               title={heading.text}
             >
