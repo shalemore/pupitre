@@ -122,6 +122,7 @@ const FolderRow: Component<{ entry: FolderEntry; depth: number; tree: TreeContex
   const expanded = () => props.tree.isExpanded(props.entry.path);
   const failure = () => props.tree.failures()[props.entry.path];
   const isActive = () => props.tree.activePath() === props.entry.path;
+  const isDirectory = () => props.entry.kind === "directory";
 
   return (
     <>
@@ -133,7 +134,7 @@ const FolderRow: Component<{ entry: FolderEntry; depth: number; tree: TreeContex
             active={isActive()}
             tone={failure() ? "danger" : "default"}
             onClick={() =>
-              props.entry.kind === "directory"
+              isDirectory()
                 ? props.tree.onToggleExpanded(props.entry.path)
                 : props.tree.onOpenFile(props.entry.path)
             }
@@ -145,10 +146,7 @@ const FolderRow: Component<{ entry: FolderEntry; depth: number; tree: TreeContex
             style={rowIndent(props.depth, 6)}
             title={failure() ?? props.entry.name}
           >
-            <Show
-              when={props.entry.kind === "directory"}
-              fallback={<span class="size-3 shrink-0" />}
-            >
+            <Show when={isDirectory()} fallback={<span class="size-3 shrink-0" />}>
               <ChevronRight
                 class={cn(
                   "size-3 shrink-0 transition-transform duration-base rtl:-scale-x-100",
@@ -157,7 +155,7 @@ const FolderRow: Component<{ entry: FolderEntry; depth: number; tree: TreeContex
               />
             </Show>
             <Show
-              when={props.entry.kind === "directory"}
+              when={isDirectory()}
               fallback={
                 <Show when={failure()} fallback={<FileText class="size-3.5 shrink-0" />}>
                   <CircleAlert class="size-3.5 shrink-0" />
