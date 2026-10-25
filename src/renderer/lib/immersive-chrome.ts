@@ -75,7 +75,8 @@ export function createImmersiveChrome(options: ChromeOptions) {
     /** Scrolling the document folds the chrome, unless it is a pull at the top, which brings it back. */
     onWheel: (event: WheelEvent) => {
       if (!(event.target instanceof Element) || event.target.closest("[data-sidebar]")) return;
-      const atTop = (event.target.closest(".overflow-y-auto")?.scrollTop ?? 0) <= 0;
+      // Outside a sidebar a wheel event scrolls the document, whose port is CodeMirror's own
+      const atTop = (event.target.closest<HTMLElement>(".cm-scroller")?.scrollTop ?? 0) <= 0;
       const up = event.deltaY < 0;
       if (event.timeStamp - lastWheelAt > GESTURE_GAP) {
         pulling = atTop && up;
