@@ -203,6 +203,8 @@ export const elGR = {
     scrollbarAuto: "Αυτόματη απόκρυψη",
     scrollbarAlways: "Πάντα εμφάνιση",
     scrollbarNever: "Πάντα απόκρυψη",
+    pdfPageNumbers: "Αριθμοί σελίδων στο PDF",
+    pdfPageNumbersDesc: "Αρίθμηση των σελίδων του εξαγόμενου PDF",
     scrollFade: "Σβήσιμο άκρων",
     scrollFadeDesc:
       "Σταδιακή εξαφάνιση του περιεχομένου στο πάνω και κάτω μέρος μιας περιοχής κύλισης",

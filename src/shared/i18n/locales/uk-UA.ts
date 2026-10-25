@@ -208,6 +208,8 @@ export const ukUA = {
     scrollbarAuto: "Автоматично приховувати",
     scrollbarAlways: "Завжди показувати",
     scrollbarNever: "Завжди приховувати",
+    pdfPageNumbers: "Номери сторінок у PDF",
+    pdfPageNumbersDesc: "Нумерувати сторінки експортованого PDF",
     scrollFade: "Згасання країв",
     scrollFadeDesc: "Плавно приховувати вміст біля верхньої та нижньої меж області прокручування",
     markdownDesc: "Синтаксис, яким записуються команди форматування та вставлений текст.",

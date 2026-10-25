@@ -200,6 +200,8 @@ export const ptPT = {
     scrollbarAuto: "Ocultar automaticamente",
     scrollbarAlways: "Mostrar sempre",
     scrollbarNever: "Ocultar sempre",
+    pdfPageNumbers: "Números de página no PDF",
+    pdfPageNumbersDesc: "Numerar as páginas do PDF exportado",
     scrollFade: "Esbater extremidades",
     scrollFadeDesc: "Esbate o conteúdo na parte superior e inferior de uma área de deslocação",
     markdownDesc: "A sintaxe usada pelos comandos de formatação e pelo texto colado.",

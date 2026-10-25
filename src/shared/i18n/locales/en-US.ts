@@ -200,6 +200,8 @@ export const enUS = {
     scrollbarAuto: "Auto-hide",
     scrollbarAlways: "Always show",
     scrollbarNever: "Always hide",
+    pdfPageNumbers: "PDF Page Numbers",
+    pdfPageNumbersDesc: "Number the pages of an exported PDF",
     scrollFade: "Edge Fade",
     scrollFadeDesc: "Fade content out at the top and bottom of a scrolling area",
     markdownDesc: "The syntax that formatting commands and pasted text are written with.",

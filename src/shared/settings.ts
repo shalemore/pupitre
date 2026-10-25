@@ -104,6 +104,8 @@ export const settingsSchema = z.object({
   cursorBlink: z.enum(["system", "smooth", "off"]).catch("system"),
   scrollbar: z.enum(["auto", "always", "never"]).catch("auto"),
   scrollFade: z.boolean().catch(false),
+  /** Whether an exported PDF numbers its pages at the foot. */
+  pdfPageNumbers: z.boolean().catch(false),
 
   // How Markdown is written, matching the remark-stringify options of the same meaning
   bulletMarker: z.enum(["-", "*", "+"]).catch("-"),

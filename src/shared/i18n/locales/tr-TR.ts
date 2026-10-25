@@ -205,6 +205,8 @@ export const trTR = {
     scrollbarAuto: "Otomatik gizle",
     scrollbarAlways: "Her zaman göster",
     scrollbarNever: "Her zaman gizle",
+    pdfPageNumbers: "PDF Sayfa Numaraları",
+    pdfPageNumbersDesc: "Dışa aktarılan PDF'nin sayfalarını numaralandır",
     scrollFade: "Kenar Solması",
     scrollFadeDesc: "Kaydırma alanının üst ve alt kenarında içeriği solarak gizle",
     markdownDesc: "Biçimlendirme komutlarının ve yapıştırılan metnin kullandığı söz dizimi.",

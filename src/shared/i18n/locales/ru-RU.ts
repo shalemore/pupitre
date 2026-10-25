@@ -206,6 +206,8 @@ export const ruRU = {
     scrollbarAuto: "Скрывать автоматически",
     scrollbarAlways: "Всегда показывать",
     scrollbarNever: "Всегда скрывать",
+    pdfPageNumbers: "Номера страниц в PDF",
+    pdfPageNumbersDesc: "Нумеровать страницы экспортированного PDF",
     scrollFade: "Затухание краёв",
     scrollFadeDesc: "Плавно скрывать содержимое у верхней и нижней границ области прокрутки",
     markdownDesc: "Синтаксис, которым записываются команды форматирования и вставленный текст.",

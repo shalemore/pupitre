@@ -203,6 +203,8 @@ export const idID = {
     scrollbarAuto: "Sembunyikan otomatis",
     scrollbarAlways: "Selalu tampilkan",
     scrollbarNever: "Selalu sembunyikan",
+    pdfPageNumbers: "Nomor Halaman PDF",
+    pdfPageNumbersDesc: "Beri nomor pada halaman PDF yang diekspor",
     scrollFade: "Pudar Tepi",
     scrollFadeDesc: "Pudarkan konten di bagian atas dan bawah area gulir",
     markdownDesc: "Sintaks yang dipakai perintah pemformatan dan teks yang ditempel.",

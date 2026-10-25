@@ -200,6 +200,8 @@ export const jaJP = {
     scrollbarAuto: "自動的に隠す",
     scrollbarAlways: "常に表示",
     scrollbarNever: "常に非表示",
+    pdfPageNumbers: "PDF のページ番号",
+    pdfPageNumbersDesc: "書き出した PDF にページ番号を付けます",
     scrollFade: "端のフェード",
     scrollFadeDesc: "スクロール領域の上端と下端で内容をフェードアウトします",
     markdownDesc: "書式コマンドと貼り付けたテキストで使う記法です。",

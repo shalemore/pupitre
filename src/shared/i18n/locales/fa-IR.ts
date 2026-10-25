@@ -203,6 +203,8 @@ export const faIR = {
     scrollbarAuto: "پنهان‌سازی خودکار",
     scrollbarAlways: "همیشه نمایش",
     scrollbarNever: "همیشه پنهان",
+    pdfPageNumbers: "شماره صفحه در PDF",
+    pdfPageNumbersDesc: "شماره‌گذاری صفحه‌های PDF صادرشده",
     scrollFade: "محو شدن لبه‌ها",
     scrollFadeDesc: "محو تدریجی محتوا در بالا و پایین ناحیهٔ پیمایش",
     markdownDesc: "نحوی که فرمان‌های قالب‌بندی و متن چسبانده‌شده با آن نوشته می‌شوند.",

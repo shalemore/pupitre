@@ -203,6 +203,8 @@ export const thTH = {
     scrollbarAuto: "ซ่อนอัตโนมัติ",
     scrollbarAlways: "แสดงเสมอ",
     scrollbarNever: "ซ่อนเสมอ",
+    pdfPageNumbers: "หมายเลขหน้าใน PDF",
+    pdfPageNumbersDesc: "ใส่หมายเลขหน้าให้ PDF ที่ส่งออก",
     scrollFade: "เฟดขอบ",
     scrollFadeDesc: "ทำให้เนื้อหาจางลงที่ด้านบนและด้านล่างของพื้นที่เลื่อน",
     markdownDesc: "ไวยากรณ์ที่คำสั่งจัดรูปแบบและข้อความที่วางใช้",

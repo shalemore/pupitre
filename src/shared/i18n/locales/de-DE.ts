@@ -201,6 +201,8 @@ export const deDE = {
     scrollbarAuto: "Automatisch ausblenden",
     scrollbarAlways: "Immer anzeigen",
     scrollbarNever: "Immer ausblenden",
+    pdfPageNumbers: "Seitenzahlen im PDF",
+    pdfPageNumbersDesc: "Die Seiten der exportierten PDF nummerieren",
     scrollFade: "Verblassende Ränder",
     scrollFadeDesc: "Inhalt am oberen und unteren Rand eines Scrollbereichs ausblenden",
     markdownDesc:

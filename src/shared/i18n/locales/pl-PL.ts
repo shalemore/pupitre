@@ -209,6 +209,8 @@ export const plPL = {
     scrollbarAuto: "Ukrywaj automatycznie",
     scrollbarAlways: "Zawsze pokazuj",
     scrollbarNever: "Zawsze ukrywaj",
+    pdfPageNumbers: "Numery stron w PDF",
+    pdfPageNumbersDesc: "Numeruj strony eksportowanego PDF",
     scrollFade: "Zanikanie krawędzi",
     scrollFadeDesc: "Zanikanie zawartości przy górnej i dolnej krawędzi przewijanego obszaru",
     markdownDesc: "Składnia, którą stosują polecenia formatowania i wklejany tekst.",

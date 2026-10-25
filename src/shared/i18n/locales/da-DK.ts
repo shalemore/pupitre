@@ -203,6 +203,8 @@ export const daDK = {
     scrollbarAuto: "Skjul automatisk",
     scrollbarAlways: "Vis altid",
     scrollbarNever: "Skjul altid",
+    pdfPageNumbers: "Sidenumre i PDF",
+    pdfPageNumbersDesc: "Nummerér siderne i den eksporterede PDF",
     scrollFade: "Udtoning af kanter",
     scrollFadeDesc: "Tone indholdet ud i top og bund af et rulleområde",
     markdownDesc: "Den syntaks, som formateringskommandoer og indsat tekst skrives med.",

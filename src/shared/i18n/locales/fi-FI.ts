@@ -204,6 +204,8 @@ export const fiFI = {
     scrollbarAuto: "Piilota automaattisesti",
     scrollbarAlways: "Näytä aina",
     scrollbarNever: "Piilota aina",
+    pdfPageNumbers: "PDF-sivunumerot",
+    pdfPageNumbersDesc: "Numeroi viedyn PDF:n sivut",
     scrollFade: "Reunojen häivytys",
     scrollFadeDesc: "Häivytä sisältö vieritysalueen ylä- ja alareunassa",
     markdownDesc: "Syntaksi, jolla muotoilukomennot ja liitetty teksti kirjoitetaan.",

@@ -204,6 +204,8 @@ export const huHU = {
     scrollbarAuto: "Automatikus elrejtés",
     scrollbarAlways: "Mindig látható",
     scrollbarNever: "Mindig rejtett",
+    pdfPageNumbers: "PDF oldalszámok",
+    pdfPageNumbersDesc: "Az exportált PDF oldalainak számozása",
     scrollFade: "Szélek elhalványítása",
     scrollFadeDesc: "A tartalom elhalványítása a görgethető terület tetején és alján",
     markdownDesc: "A formázási parancsok és a beillesztett szöveg által használt szintaxis.",

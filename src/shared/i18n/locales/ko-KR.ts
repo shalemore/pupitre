@@ -200,6 +200,8 @@ export const koKR = {
     scrollbarAuto: "자동 숨김",
     scrollbarAlways: "항상 표시",
     scrollbarNever: "항상 숨김",
+    pdfPageNumbers: "PDF 페이지 번호",
+    pdfPageNumbersDesc: "내보낸 PDF의 페이지에 번호를 붙입니다",
     scrollFade: "가장자리 페이드",
     scrollFadeDesc: "스크롤 영역의 위쪽과 아래쪽에서 내용을 서서히 사라지게 합니다",
     markdownDesc: "서식 명령과 붙여넣은 텍스트에 쓰는 문법입니다.",

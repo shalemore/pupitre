@@ -203,6 +203,8 @@ export const nbNO = {
     scrollbarAuto: "Skjul automatisk",
     scrollbarAlways: "Vis alltid",
     scrollbarNever: "Skjul alltid",
+    pdfPageNumbers: "Sidetall i PDF",
+    pdfPageNumbersDesc: "Nummerer sidene i den eksporterte PDF-en",
     scrollFade: "Uttoning av kanter",
     scrollFadeDesc: "Tone ut innholdet øverst og nederst i et rulleområde",
     markdownDesc: "Syntaksen som formateringskommandoer og innlimt tekst skrives med.",

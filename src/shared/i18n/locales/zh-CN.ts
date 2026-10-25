@@ -196,6 +196,8 @@ export const zhCN = {
     scrollbarAuto: "自动隐藏",
     scrollbarAlways: "始终显示",
     scrollbarNever: "始终隐藏",
+    pdfPageNumbers: "PDF 页码",
+    pdfPageNumbersDesc: "为导出的 PDF 标注页码",
     scrollFade: "边缘渐隐",
     scrollFadeDesc: "在滚动区域的顶部和底部让内容渐隐",
     markdownDesc: "格式命令和粘贴内容所用的 Markdown 写法。",

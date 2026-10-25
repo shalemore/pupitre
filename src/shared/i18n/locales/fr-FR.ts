@@ -200,6 +200,8 @@ export const frFR = {
     scrollbarAuto: "Masquer automatiquement",
     scrollbarAlways: "Toujours afficher",
     scrollbarNever: "Toujours masquer",
+    pdfPageNumbers: "Numéros de page du PDF",
+    pdfPageNumbersDesc: "Numéroter les pages du PDF exporté",
     scrollFade: "Fondu des bords",
     scrollFadeDesc: "Estompe le contenu en haut et en bas d'une zone défilante",
     markdownDesc: "La syntaxe utilisée par les commandes de mise en forme et le texte collé.",

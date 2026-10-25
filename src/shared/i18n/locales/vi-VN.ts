@@ -201,6 +201,8 @@ export const viVN = {
     scrollbarAuto: "Tự động ẩn",
     scrollbarAlways: "Luôn hiện",
     scrollbarNever: "Luôn ẩn",
+    pdfPageNumbers: "Số trang PDF",
+    pdfPageNumbersDesc: "Đánh số trang cho PDF đã xuất",
     scrollFade: "Mờ dần ở mép",
     scrollFadeDesc: "Làm mờ dần nội dung ở đầu và cuối vùng cuộn",
     markdownDesc: "Cú pháp mà các lệnh định dạng và văn bản được dán sử dụng.",

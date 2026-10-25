@@ -196,6 +196,8 @@ export const zhHK = {
     scrollbarAuto: "自動隱藏",
     scrollbarAlways: "一律顯示",
     scrollbarNever: "一律隱藏",
+    pdfPageNumbers: "PDF 頁碼",
+    pdfPageNumbersDesc: "為匯出的 PDF 標上頁碼",
     scrollFade: "邊緣漸隱",
     scrollFadeDesc: "在捲動區域的頂部和底部讓內容漸隱",
     markdownDesc: "格式指令和貼上內容所用的 Markdown 寫法。",

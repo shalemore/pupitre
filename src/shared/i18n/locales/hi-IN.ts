@@ -201,6 +201,8 @@ export const hiIN = {
     scrollbarAuto: "अपने-आप छिपाएँ",
     scrollbarAlways: "हमेशा दिखाएँ",
     scrollbarNever: "हमेशा छिपाएँ",
+    pdfPageNumbers: "PDF पृष्ठ संख्याएँ",
+    pdfPageNumbersDesc: "निर्यात किए गए PDF के पृष्ठों पर संख्या लगाएँ",
     scrollFade: "किनारों का फीका होना",
     scrollFadeDesc: "स्क्रॉल क्षेत्र के ऊपर और नीचे सामग्री को धीरे-धीरे फीका करें",
     markdownDesc: "वह सिंटैक्स जिससे फ़ॉर्मेटिंग कमांड और चिपकाया गया टेक्स्ट लिखा जाता है।",

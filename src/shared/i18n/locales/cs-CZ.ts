@@ -206,6 +206,8 @@ export const csCZ = {
     scrollbarAuto: "Automaticky skrýt",
     scrollbarAlways: "Vždy zobrazit",
     scrollbarNever: "Vždy skrýt",
+    pdfPageNumbers: "Čísla stran v PDF",
+    pdfPageNumbersDesc: "Číslovat stránky exportovaného PDF",
     scrollFade: "Slábnutí okrajů",
     scrollFadeDesc: "Obsah na horním a dolním okraji posouvané oblasti postupně mizí",
     markdownDesc: "Syntaxe, kterou používají příkazy formátování a vložený text.",

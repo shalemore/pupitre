@@ -131,6 +131,15 @@ async function listFolder(path: string): Promise<FolderEntry[]> {
     );
 }
 
+/**
+ * The foot of a page of an exported PDF: the page number, in the width of the text so that it
+ * lines up with it. Chromium fills in the `pageNumber` and `totalPages` classes.
+ */
+const PAGE_NUMBER_FOOTER = `
+  <div style="width: 100%; margin: 0 18mm; font: 9px/1 sans-serif; color: #8a8a8a; text-align: center;">
+    <span class="pageNumber"></span> / <span class="totalPages"></span>
+  </div>`;
+
 /** The first bytes of a file as text; undefined when it cannot be read. */
 async function readHead(path: string): Promise<string | undefined> {
   try {
@@ -285,12 +294,18 @@ export function registerIpcHandlers(): void {
       filters: [{ name: "PDF", extensions: ["pdf"] }],
     });
     if (filePath === null) return null;
-    const pdf = await event.sender.printToPDF({
+    const pageNumbers = getSettings().pdfPageNumbers;
+    const options: Electron.PrintToPDFOptions = {
       printBackground: true,
       // The stylesheet decides the sheet the document is printed on, so a theme can change it
       preferCSSPageSize: true,
       pageSize: "A4",
-    });
+      // Chromium draws the foot of every page in the page's margin and fills in the two classes
+      displayHeaderFooter: pageNumbers,
+      headerTemplate: "<div></div>",
+      footerTemplate: PAGE_NUMBER_FOOTER,
+    };
+    const pdf = await event.sender.printToPDF(options);
     await writeFile(filePath, pdf);
     return filePath;
   });

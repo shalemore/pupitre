@@ -204,6 +204,8 @@ export const nlNL = {
     scrollbarAuto: "Automatisch verbergen",
     scrollbarAlways: "Altijd tonen",
     scrollbarNever: "Altijd verbergen",
+    pdfPageNumbers: "Paginanummers in pdf",
+    pdfPageNumbersDesc: "De pagina's van de geëxporteerde pdf nummeren",
     scrollFade: "Vervagende randen",
     scrollFadeDesc: "Laat inhoud vervagen boven- en onderaan een scrollgebied",
     markdownDesc: "De syntaxis waarmee opmaakopdrachten en geplakte tekst worden geschreven.",

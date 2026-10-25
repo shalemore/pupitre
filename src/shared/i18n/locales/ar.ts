@@ -216,6 +216,8 @@ export const ar = {
     scrollbarAuto: "إخفاء تلقائي",
     scrollbarAlways: "إظهار دائم",
     scrollbarNever: "إخفاء دائم",
+    pdfPageNumbers: "أرقام صفحات PDF",
+    pdfPageNumbersDesc: "رقم الصفحات في ملف PDF المصدَّر",
     scrollFade: "تلاشي الحواف",
     scrollFadeDesc: "إخفاء المحتوى تدريجيًا عند أعلى وأسفل منطقة التمرير",
     markdownDesc: "الصيغة التي تكتب بها أوامر التنسيق والنصوص الملصقة.",
