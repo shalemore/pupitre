@@ -85,6 +85,8 @@ src/
 web/          the web demo: an index.html and `host.ts`, a browser `window.desktop` (GitHub Pages)
 build/        icons and other electron-builder resources
 docs/         design notes and mockups
+scripts/      helpers for the build and the release, run by node as they are (a .ts file is
+              stripped of its types, not compiled)
 ```
 
 - `src/shared/desktop-api.ts` is the IPC contract. Every channel is declared there once and both

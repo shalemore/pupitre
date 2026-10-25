@@ -1,26 +1,38 @@
 // Writes the Scoop manifest and the sha256 file of a released Windows installer.
-// Usage: node scripts/scoop-manifest.mjs <installer> <out-dir>
+// Usage: node scripts/scoop-manifest.ts <installer> <out-dir>
 // Scoop does not run the NSIS installer: the "#/dl.7z" fragment makes it unpack the installer, which
 // holds the app as app-64.7z, and pre_install unpacks that into the app folder. The manifest is
 // built from package.json and the installer itself, so nothing is written down twice.
 import { hash } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
 import { basename, join } from "node:path";
+import { z } from "zod";
+
+const packageSchema = z.object({
+  name: z.string(),
+  version: z.string(),
+  description: z.string(),
+  homepage: z.string(),
+  license: z.string(),
+  productName: z.string(),
+  repository: z.object({ url: z.string() }),
+});
 
 const [installerPath, outDir] = process.argv.slice(2);
-if (!installerPath || !outDir) {
-  console.error("usage: scoop-manifest.mjs <installer> <out-dir>");
+if (installerPath === undefined || outDir === undefined) {
+  console.error("usage: scoop-manifest.ts <installer> <out-dir>");
   process.exit(1);
 }
 
-const pkg = JSON.parse(await readFile("package.json", "utf8"));
+const packageFile: unknown = JSON.parse(await readFile("package.json", "utf8"));
+const pkg = packageSchema.parse(packageFile);
 const { name, version, description, homepage, license } = pkg;
 const repo = pkg.repository.url.replace(/^git\+/, "").replace(/\.git$/, "");
 
 const asset = basename(installerPath);
 const sha256 = hash("sha256", await readFile(installerPath));
 
-const url = (v) => `${repo}/releases/download/v${v}/${asset.replaceAll(version, v)}#/dl.7z`;
+const url = (v: string) => `${repo}/releases/download/v${v}/${asset.replaceAll(version, v)}#/dl.7z`;
 const executable = `${pkg.productName}.exe`;
 const unpackApp = 'Expand-7zipArchive "$dir\\`$PLUGINSDIR\\app-64.7z" "$dir"';
 

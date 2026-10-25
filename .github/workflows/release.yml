@@ -105,7 +105,7 @@ jobs:
           # Publish the draft release created by electron-builder with the generated notes
           gh release edit "v$VERSION" --draft=false --notes-file notes.md
 
-  # Scoop unpacks the released installer instead of running it, see scripts/scoop-manifest.mjs. The
+  # Scoop unpacks the released installer instead of running it, see scripts/scoop-manifest.ts. The
   # bucket needs the secret SCOOP_BUCKET_TOKEN, see CONTRIBUTING.md; without it the release is still
   # published.
   scoop:
@@ -121,7 +121,7 @@ jobs:
       - name: Add the Scoop manifest to the release
         run: |
           gh release download "v$VERSION" --pattern '*-win-x64.exe' --dir dist
-          node scripts/scoop-manifest.mjs dist/*-win-x64.exe dist
+          node scripts/scoop-manifest.ts dist/*-win-x64.exe dist
           gh release upload "v$VERSION" dist/*.scoop.json dist/*.sha256
         env:
           GH_TOKEN: ${{ github.token }}
