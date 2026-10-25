@@ -1,5 +1,11 @@
 import { syntaxTree } from "@codemirror/language";
-import { EditorState, type Extension, StateEffect, StateField } from "@codemirror/state";
+import {
+  EditorSelection,
+  EditorState,
+  type Extension,
+  StateEffect,
+  StateField,
+} from "@codemirror/state";
 import {
   Decoration,
   type DecorationSet,
@@ -55,9 +61,10 @@ function focusedLines(state: EditorState, grain: Settings["focusModeGrain"]): nu
 interface RowBand {
   /** Start of the line the band belongs to. */
   from: number;
-  /** Top and bottom of the row, in CSS pixels from the line's top. */
-  start: number;
-  end: number;
+  /** The row's index among the line's rows. */
+  row: number;
+  /** The line's top padding, above the first row. */
+  pad: number;
 }
 
 const setRowBand = StateEffect.define<RowBand | undefined>();
@@ -73,27 +80,34 @@ const rowBand = StateField.define<RowBand | undefined>({
 
 const sameRow = (a: RowBand | undefined, b: RowBand | undefined) =>
   a === b ||
-  (a !== undefined &&
-    b !== undefined &&
-    a.from === b.from &&
-    Math.abs(a.start - b.start) < 0.5 &&
-    Math.abs(a.end - b.end) < 0.5);
+  (a !== undefined && b !== undefined && a.from === b.from && a.row === b.row && a.pad === b.pad);
 
-/** The row the caret is on, measured from the line it belongs to; undefined for a line of one row. */
+/**
+ * The row the caret is on inside a line that wraps, or undefined when the line is one row. Nothing
+ * is counted out by hand: CodeMirror knows where a wrapped line breaks, and a row starts where the
+ * one above it ends.
+ */
 function measureRow(view: EditorView): RowBand | undefined {
   const { head, empty } = view.state.selection.main;
   if (!empty) return undefined;
-  const caret = view.coordsAtPos(head);
+  const line = view.state.doc.lineAt(head);
+  const rowStart = view.moveToLineBoundary(EditorSelection.cursor(head), false, true).head;
+  const rowEnd = view.moveToLineBoundary(EditorSelection.cursor(head), true, true).head;
+  // The row spans its line when the line does not wrap
+  if (rowStart === line.from && rowEnd === line.to) return undefined;
+  // A row starts where the one above it ends
+  let row = 0;
+  for (let from = line.from; from < rowStart;) {
+    const end = view.moveToLineBoundary(EditorSelection.cursor(from), true, true).head;
+    if (end <= from) break;
+    from = end;
+    row++;
+  }
   const node = view.domAtPos(head).node;
   const element = node instanceof Element ? node : node.parentElement;
-  const line = element?.closest(".cm-line");
-  if (!caret || !line) return undefined;
-  const box = line.getBoundingClientRect();
-  const start = Math.max(0, caret.top - box.top);
-  const end = Math.min(box.height, caret.bottom - box.top);
-  // The whole line is the row when it does not wrap
-  if (end - start >= box.height - 0.5) return undefined;
-  return { from: view.state.doc.lineAt(head).from, start, end };
+  const lineElement = element?.closest(".cm-line");
+  const pad = lineElement ? Number.parseFloat(getComputedStyle(lineElement).paddingBlockStart) : 0;
+  return { from: line.from, row, pad: Number.isNaN(pad) ? 0 : pad };
 }
 
 /** Measures after the update, since the layout cannot be read during one. */
@@ -141,7 +155,7 @@ function focusDecorations(state: EditorState, grain: Settings["focusModeGrain"])
     if (band === undefined || band.from !== from) return currentLine.range(from);
     return Decoration.line({
       class: "is-current focus-row",
-      attributes: { style: `--focus-row-start: ${band.start}px; --focus-row-end: ${band.end}px` },
+      attributes: { style: `--focus-row: ${band.row}; --focus-pad: ${band.pad}px` },
     }).range(from);
   });
   return Decoration.set(decorations);

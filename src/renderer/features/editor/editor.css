@@ -682,9 +682,12 @@
 
   /*
    * A line that wraps over several rows dims like the rest except where the caret is: the band is
-   * the caret's row, measured by writing-modes.ts.
+   * the row it holds, one line height tall from the line's padding, so it covers the row whatever
+   * the fonts make of it. writing-modes.ts only says which row that is.
    */
   .md-document.focus-mode > .focus-row {
+    --focus-row-start: calc(var(--focus-pad, 0px) + var(--focus-row) * 1lh);
+    --focus-row-end: calc(var(--focus-row-start) + 1lh);
     mask-image: linear-gradient(
       to bottom,
       rgb(0 0 0 / 0.3) 0 var(--focus-row-start),
