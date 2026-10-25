@@ -233,7 +233,7 @@ function menuItems(menu: TopMenu): DemoMenuEntry[] {
     case "paragraphMenu":
       return PARAGRAPH_MENU_GROUPS.flatMap((group, index) => {
         const items = formatItems(group);
-        return index === 0 ? items : [divider, ...items];
+        return index === 0 ? items : items.toSpliced(0, 0, divider);
       });
     case "format":
       return formatItems(INLINE_FORMAT_ACTIONS);
