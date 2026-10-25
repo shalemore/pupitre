@@ -7,6 +7,8 @@ import {
   dialog,
   ipcMain,
   type IpcMainInvokeEvent,
+  type OpenDialogOptions,
+  type SaveDialogOptions,
   shell,
 } from "electron";
 import {
@@ -70,6 +72,19 @@ function senderWindow(event: IpcMainInvokeEvent): BrowserWindow {
   const window = BrowserWindow.fromWebContents(event.sender);
   if (!window) throw new Error("IPC sender is not attached to a window");
   return window;
+}
+
+/** The file or folder the user picked, or null when they dropped out of the dialog. */
+async function openPath(window: BrowserWindow, options: OpenDialogOptions): Promise<string | null> {
+  const { canceled, filePaths } = await dialog.showOpenDialog(window, options);
+  const [path] = filePaths;
+  return canceled || path === undefined ? null : path;
+}
+
+/** Where the user wants a file written, or null when they dropped out of the dialog. */
+async function savePath(window: BrowserWindow, options: SaveDialogOptions): Promise<string | null> {
+  const { canceled, filePath } = await dialog.showSaveDialog(window, options);
+  return canceled || filePath === "" ? null : filePath;
 }
 
 function locate(path: string): DocumentLocation {
@@ -182,22 +197,16 @@ export function registerIpcHandlers(): void {
   handle("workspace:reveal", () => revealWorkspaceFile());
 
   handle("document:open", async (event) => {
-    const { canceled, filePaths } = await dialog.showOpenDialog(senderWindow(event), {
+    const path = await openPath(senderWindow(event), {
       properties: ["openFile"],
       filters: [{ name: "Markdown", extensions: ["md", "markdown", "mdown", "txt"] }],
     });
-    const [path] = filePaths;
-    if (canceled || path === undefined) return null;
-    return readDocument(path, senderWindow(event));
+    return path === null ? null : readDocument(path, senderWindow(event));
   });
   handle("document:read", (event, path) => readDocument(path, senderWindow(event)));
-  handle("folder:choose", async (event) => {
-    const { canceled, filePaths } = await dialog.showOpenDialog(senderWindow(event), {
-      properties: ["openDirectory"],
-    });
-    const [path] = filePaths;
-    return canceled || path === undefined ? null : path;
-  });
+  handle("folder:choose", (event) =>
+    openPath(senderWindow(event), { properties: ["openDirectory"] }),
+  );
   handle("folder:list", (_event, path) => listFolder(path));
   handle("folder:create", (_event, parent, name, kind) => createEntry(parent, name, kind));
   handle("path:rename", (_event, path, name) => renameEntry(path, name));
@@ -220,23 +229,23 @@ export function registerIpcHandlers(): void {
     writeDocument(path, content, lineEnding, encoding),
   );
   handle("dialog:choose-save-path", async (event, suggestedName) => {
-    const { canceled, filePath } = await dialog.showSaveDialog(senderWindow(event), {
+    const path = await savePath(senderWindow(event), {
       defaultPath: suggestedName,
       filters: [{ name: "Markdown", extensions: ["md"] }],
     });
-    if (canceled || !filePath) return null;
-    addRecentFile(filePath);
-    return locate(filePath);
+    if (path === null) return null;
+    addRecentFile(path);
+    return locate(path);
   });
   handle("document:save-image", (_event, documentPath, fileName, data) =>
     saveImage(documentPath, fileName, data),
   );
   handle("document:export-pdf", async (event, suggestedName) => {
-    const { canceled, filePath } = await dialog.showSaveDialog(senderWindow(event), {
+    const filePath = await savePath(senderWindow(event), {
       defaultPath: suggestedName,
       filters: [{ name: "PDF", extensions: ["pdf"] }],
     });
-    if (canceled || !filePath) return null;
+    if (filePath === null) return null;
     const pdf = await event.sender.printToPDF({
       printBackground: true,
       // The stylesheet decides the sheet the document is printed on, so a theme can change it
