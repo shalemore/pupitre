@@ -259,19 +259,9 @@ const MenuPanel: Component<PanelProps> = (props) => {
   );
 };
 
-export interface MenuPopupProps {
-  entries: readonly MenuEntry[];
-  /** The rect of the bar button the menu belongs to, in viewport coordinates. */
-  anchor: DOMRect;
-  onSelect: (entry: MenuItemEntry) => void;
-  onClose: () => void;
-  /** Tells the bar that the pointer is over the menu, who keeps it open while it is. */
-  onPointerOver?: (() => void) | undefined;
-  /** Tells the bar that the pointer left the menu, which folds it up after a moment. */
-  onPointerLeave?: (() => void) | undefined;
-}
-
 /** The menu under a title bar button, drawn by the window: Windows and Linux have no system menu bar to show. */
+export type MenuPopupProps = Omit<PanelProps, "nested" | "onCloseSelf">;
+
 export const MenuPopup: Component<MenuPopupProps> = (props) => (
   // A popup is drawn outside the title bar, whose height is animated and therefore clips its children
   <Portal>
