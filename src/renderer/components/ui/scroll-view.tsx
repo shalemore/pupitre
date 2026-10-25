@@ -159,7 +159,7 @@ export function ScrollView(props: ScrollViewProps) {
           >
             <div
               class={cn(
-                "absolute inset-e-0.5 w-1.5 rounded-full bg-border transition-opacity duration-sheet hover:bg-border-strong",
+                "absolute inset-e-0.5 w-(--ui-scrollbar-thickness) rounded-full bg-border transition-opacity duration-sheet hover:bg-border-strong",
                 visible() ? "opacity-100" : "opacity-0",
               )}
               style={{ top: `${thumb().top}px`, height: `${thumb().height}px` }}

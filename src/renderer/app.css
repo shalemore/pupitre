@@ -50,6 +50,9 @@
     /* Multiplies every corner radius: 0 gives square corners, 2 rounder ones */
     --ui-radius-scale: 1;
 
+    /* Thickness of a scrollbar, the native one and the thumb ScrollView draws in its place */
+    --ui-scrollbar-thickness: 6px;
+
     --ui-ring-inner: 0px;
     --ui-ring-outer: 1px;
 
@@ -381,8 +384,8 @@ textarea {
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: var(--ui-scrollbar-thickness);
+  height: var(--ui-scrollbar-thickness);
 }
 ::-webkit-scrollbar-track {
   background: transparent;
