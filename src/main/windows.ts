@@ -8,15 +8,18 @@ import {
   shell,
   type WebContents,
 } from "electron";
-import type { AppCommand, CaptionSide, WindowColors } from "@shared/desktop-api";
+import {
+  TITLE_BAR_HEIGHT,
+  type AppCommand,
+  type CaptionSide,
+  type WindowColors,
+} from "@shared/desktop-api";
 import { setupContextMenu } from "./context-menu";
 import { onSettingsChange } from "./settings-store";
 import { applyZoom, stepZoom } from "./zoom";
 
 /** The renderer picks the view to show from location.hash. */
 type View = "main" | "settings";
-
-const TITLE_BAR_HEIGHT = 40;
 
 let mainWindow: BrowserWindow | undefined;
 // Windows with unsaved changes; the renderer must ask about saving before they close

@@ -90,6 +90,9 @@ export type AppCommand =
   /** The document has unsaved changes before the window closes; the renderer should ask the user first. */
   | { id: "window.close" };
 
+/** Height of the title bar every window draws at its top, which the main process also gives the native buttons. */
+export const TITLE_BAR_HEIGHT = 40;
+
 /** Window background and secondary text color under the current theme, used to avoid a flash before the window shows and to color the Windows title bar buttons. */
 export interface WindowColors {
   background: string;

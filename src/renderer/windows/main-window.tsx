@@ -148,7 +148,7 @@ export const MainWindow: Component = () => {
       () => session.activeDocument()?.id,
       () => {
         setFindMode("closed");
-        chrome.reset();
+        chrome.show();
       },
     ),
   );

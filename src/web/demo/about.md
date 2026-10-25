@@ -3,7 +3,7 @@
 Pupitre is a desktop Markdown editor that **renders while you type**: the syntax under the cursor stays visible and editable, everything else reads like the finished page. This page is the real editor running in your browser. Try it right here; nothing you type leaves your computer.
 
 > [!TIP]
-> Start typing, then watch the title bar and the sidebars step aside. Scroll back to the top, pause, and push up once more to bring them back. Pin them with the pin button, or drag a sidebar's edge to resize it.
+> Start typing, then watch the title bar and the sidebars step aside. Scroll back to the top and push up a little more to bring them back, or move the pointer to the top or to a side edge of the window. Pin them with the pin button, or drag a sidebar's edge to resize it.
 
 ## What to try
 

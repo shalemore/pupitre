@@ -6,8 +6,8 @@ import { CaptionButtons } from "./caption-buttons";
 /**
  * The window title bar. It is draggable as a whole and leaves room for the native caption buttons
  * or traffic lights (see .app-title-bar in app.css); the main window on Windows and Linux gets
- * caption buttons drawn here instead. Its 40px height is the one the main process gives the
- * native buttons and the traffic lights, TITLE_BAR_HEIGHT in src/main/windows.ts.
+ * caption buttons drawn here instead. Its height is h-10, which has to stay TITLE_BAR_HEIGHT, the
+ * height the main process gives the native buttons and the traffic lights.
  */
 export const TitleBar: ParentComponent<{ class?: string; inert?: boolean }> = (props) => {
   const side = desktop.initialState.captionSide;
