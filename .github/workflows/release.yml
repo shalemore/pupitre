@@ -5,6 +5,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      scoop:
+        description: "Version whose Scoop manifest to rebuild alone, such as 0.7.2"
+        required: false
+        default: ""
 
 concurrency:
   group: release
@@ -110,19 +115,28 @@ jobs:
   # published.
   scoop:
     needs: [check, publish-release]
+    # A dispatch that names a version rebuilds only the manifest of a release that is already out
+    if: ${{ always() && (inputs.scoop != '' || needs.publish-release.result == 'success') }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
     env:
-      VERSION: ${{ needs.check.outputs.version }}
+      VERSION: ${{ inputs.scoop || needs.check.outputs.version }}
     steps:
       - uses: actions/checkout@v4
 
+      # The manifest script runs on its own, so only Node is set up, not the dependencies
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
       - name: Add the Scoop manifest to the release
         run: |
+          # The version may be given with or without the leading v
+          VERSION="${VERSION#v}"
           gh release download "v$VERSION" --pattern '*-win-x64.exe' --dir dist
           node scripts/scoop-manifest.ts dist/*-win-x64.exe dist
-          gh release upload "v$VERSION" dist/*.scoop.json dist/*.sha256
+          gh release upload "v$VERSION" dist/*.scoop.json dist/*.sha256 --clobber
         env:
           GH_TOKEN: ${{ github.token }}
 
@@ -135,7 +149,7 @@ jobs:
             echo "::notice::SCOOP_BUCKET_TOKEN is not set, so the Scoop bucket was not updated"
             exit 0
           fi
-          gh workflow run import-manifest.yml --repo "$BUCKET" -f repo="$GITHUB_REPOSITORY" -f tag="v$VERSION"
+          gh workflow run import-manifest.yml --repo "$BUCKET" -f repo="$GITHUB_REPOSITORY" -f tag="v${VERSION#v}"
         env:
           GH_TOKEN: ${{ secrets.SCOOP_BUCKET_TOKEN }}
           BUCKET: ${{ vars.SCOOP_BUCKET || format('{0}/scoop-bucket', github.repository_owner) }}

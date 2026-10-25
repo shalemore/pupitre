@@ -3,20 +3,51 @@
 // Scoop does not run the NSIS installer: the "#/dl.7z" fragment makes it unpack the installer, which
 // holds the app as app-64.7z, and pre_install unpacks that into the app folder. The manifest is
 // built from package.json and the installer itself, so nothing is written down twice.
+// It reads package.json without the app's dependencies, so a release can run it with plain Node.
 import { hash } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
 import { basename, join } from "node:path";
-import { z } from "zod";
 
-const packageSchema = z.object({
-  name: z.string(),
-  version: z.string(),
-  description: z.string(),
-  homepage: z.string(),
-  license: z.string(),
-  productName: z.string(),
-  repository: z.object({ url: z.string() }),
-});
+/** The fields of package.json the manifest is built from. */
+interface PackageInfo {
+  name: string;
+  version: string;
+  description: string;
+  homepage: string;
+  license: string;
+  productName: string;
+  repositoryUrl: string;
+}
+
+/** The members of a JSON object, or a failure naming what was expected there. */
+function members(value: unknown, where: string): Map<string, unknown> {
+  if (typeof value !== "object" || value === null) throw new Error(`${where} is not an object`);
+  const map = new Map<string, unknown>();
+  for (const [key, member] of Object.entries(value)) map.set(key, member);
+  return map;
+}
+
+function stringOf(map: Map<string, unknown>, key: string, where: string): string {
+  const value = map.get(key);
+  if (typeof value !== "string" || value === "") {
+    throw new Error(`${where}: ${key} must be a non-empty string`);
+  }
+  return value;
+}
+
+function readPackage(source: string): PackageInfo {
+  const pkg = members(JSON.parse(source), "package.json");
+  const repository = members(pkg.get("repository"), "package.json: repository");
+  return {
+    name: stringOf(pkg, "name", "package.json"),
+    version: stringOf(pkg, "version", "package.json"),
+    description: stringOf(pkg, "description", "package.json"),
+    homepage: stringOf(pkg, "homepage", "package.json"),
+    license: stringOf(pkg, "license", "package.json"),
+    productName: stringOf(pkg, "productName", "package.json"),
+    repositoryUrl: stringOf(repository, "url", "package.json: repository"),
+  };
+}
 
 const [installerPath, outDir] = process.argv.slice(2);
 if (installerPath === undefined || outDir === undefined) {
@@ -24,10 +55,9 @@ if (installerPath === undefined || outDir === undefined) {
   process.exit(1);
 }
 
-const packageFile: unknown = JSON.parse(await readFile("package.json", "utf8"));
-const pkg = packageSchema.parse(packageFile);
+const pkg = readPackage(await readFile("package.json", "utf8"));
 const { name, version, description, homepage, license } = pkg;
-const repo = pkg.repository.url.replace(/^git\+/, "").replace(/\.git$/, "");
+const repo = pkg.repositoryUrl.replace(/^git\+/, "").replace(/\.git$/, "");
 
 const asset = basename(installerPath);
 const sha256 = hash("sha256", await readFile(installerPath));
