@@ -91,7 +91,8 @@ export const esES = {
     osLabel: "SO:",
     openSampleDoc: "Abrir documento de ejemplo",
     sampleDocTitle: "Documento de ejemplo",
-    sampleDocDesc: "Explora la demo y la sintaxis Markdown completa",
+    sampleDocDesc:
+      "Explora la demostración de funciones de Pupitre y la guía completa de sintaxis Markdown",
   },
   menu: {
     file: "Archivo",

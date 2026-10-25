@@ -92,7 +92,8 @@ export const ptBR = {
     osLabel: "SO:",
     openSampleDoc: "Abrir documento de exemplo",
     sampleDocTitle: "Documento de exemplo",
-    sampleDocDesc: "Explore a demonstração e a sintaxe Markdown completa",
+    sampleDocDesc:
+      "Explore a demonstração de recursos do Pupitre e o guia completo de sintaxe Markdown",
   },
   menu: {
     file: "Arquivo",
