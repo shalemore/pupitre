@@ -69,6 +69,18 @@ export function createDocumentSession(
     setActiveDocument({ ...doc, id: nextDocumentId++ });
   };
 
+  /** A document with no file behind it: a new one or the sample, both kept in memory until saved. */
+  const loadInMemory = (markdown: string, isSample: boolean) =>
+    load({
+      path: undefined,
+      folder: undefined,
+      baseUrl: undefined,
+      markdown,
+      lineEnding: "lf",
+      encoding: "utf-8",
+      isSample,
+    });
+
   const loadOpened = (opened: OpenedDocument) => {
     diskContent = opened.content;
     load({ ...opened, markdown: opened.content, isSample: false });
@@ -150,15 +162,7 @@ ${message}`,
 
   const newDocument = async () => {
     if (!(await confirmDiscard())) return;
-    load({
-      path: undefined,
-      folder: undefined,
-      baseUrl: undefined,
-      markdown: "",
-      lineEnding: "lf",
-      encoding: "utf-8",
-      isSample: false,
-    });
+    loadInMemory("", false);
   };
 
   const open = async () => {
@@ -186,15 +190,7 @@ ${message}`,
 
   const openSample = async () => {
     if (!(await confirmDiscard())) return;
-    load({
-      path: undefined,
-      folder: undefined,
-      baseUrl: undefined,
-      markdown: getSampleDocument(currentLocale()),
-      lineEnding: "lf",
-      encoding: "utf-8",
-      isSample: true,
-    });
+    loadInMemory(getSampleDocument(currentLocale()), true);
   };
 
   /** When the window opens, the "On startup" setting decides between the welcome page, the last file or a new document. */
