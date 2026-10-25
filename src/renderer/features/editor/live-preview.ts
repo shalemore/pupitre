@@ -345,8 +345,9 @@ function visitListItem(builder: DecorationBuilder, node: SyntaxNode): void {
   builder.eachLine(node.from, node.to, (line, number) => {
     const isFirst = number === firstLine.number;
     line.listDepth = depth;
-    line.classes.delete(isFirst ? "md-list-continuation" : "md-list-item");
-    line.classes.add(isFirst ? "md-list-item" : "md-list-continuation");
+    // The marker of the first line hangs into the indentation; the others only take the depth
+    if (isFirst) line.classes.add("md-list-item");
+    else line.classes.delete("md-list-item");
     line.listIndent = isFirst ? mark.from - markLine.from : contentColumn;
   });
 
