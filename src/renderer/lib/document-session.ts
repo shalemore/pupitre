@@ -5,6 +5,7 @@ import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
 import { getSampleDocument } from "@/features/samples/sample-document";
 import { currentLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
+import { messageOf } from "@/lib/errors";
 import { fileNameOf, withTrailingNewline } from "@/lib/file";
 import { recentFiles } from "@/lib/recent-files";
 import { settings } from "@/lib/settings";
@@ -104,7 +105,7 @@ export function createDocumentSession(
       await desktop.invoke("document:write", path, diskContent, lineEndingFor(doc), doc.encoding);
     } catch (error) {
       diskContent = previousDiskContent;
-      const message = error instanceof Error ? error.message : String(error);
+      const message = messageOf(error);
       await desktop.invoke(
         "dialog:show-error",
         t().dialogs.saveFailed,
@@ -180,7 +181,7 @@ ${message}`,
       if (opened !== null) loadOpened(opened);
       return undefined;
     } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
+      const message = messageOf(error);
       if (showError) {
         await desktop.invoke("dialog:show-error", t().dialogs.openFailed, `${path}\n\n${message}`);
       }

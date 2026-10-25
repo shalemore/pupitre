@@ -1,6 +1,7 @@
 import { syntaxTree } from "@codemirror/language";
 import { type EditorState, Facet } from "@codemirror/state";
 import { type EditorView, WidgetType } from "@codemirror/view";
+import { messageOf } from "@/lib/errors";
 import { toHex } from "@/lib/theme";
 import { fencedText } from "./block-text";
 import { onReveal, onScrollbar } from "./widget-events";
@@ -146,7 +147,7 @@ export class MermaidWidget extends WidgetType {
       },
       (error: unknown) => {
         element.classList.add("is-invalid");
-        element.textContent = error instanceof Error ? error.message : String(error);
+        element.textContent = messageOf(error);
         view.requestMeasure();
       },
     );
