@@ -1,5 +1,7 @@
 /** Rendered formulas by display mode and source; widgets are rebuilt while scrolling and editing. */
 const cache = new Map<string, Promise<string>>();
+/** Enough for the formulas of a document, with room to spare: typing in one renders it per keystroke. */
+const MAX_FORMULAS = 100;
 
 function escapeHtml(text: string): string {
   return text.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
@@ -17,6 +19,9 @@ export function renderMath(tex: string, display: boolean): Promise<string> {
     svg = import("./mathjax-document")
       .then(({ texToSvg }) => texToSvg(tex, display))
       .catch(() => `<span class="md-math-error">${escapeHtml(tex)}</span>`);
+    // A map iterates in insertion order, so its first key is the formula that went stale first
+    const oldest = cache.keys().next().value;
+    if (oldest !== undefined && cache.size >= MAX_FORMULAS) cache.delete(oldest);
     cache.set(key, svg);
   }
   return svg;
