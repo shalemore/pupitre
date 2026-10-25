@@ -25,6 +25,8 @@ interface PanelProps {
 
 const PANEL_GAP = 2;
 const VIEWPORT_MARGIN = 4;
+/** A submenu overlaps the entry it opens from by this much, instead of hanging below it. */
+const SUBMENU_LIFT = 6;
 
 const MenuPanel: Component<PanelProps> = (props) => {
   let panel: HTMLDivElement | undefined;
@@ -63,7 +65,8 @@ const MenuPanel: Component<PanelProps> = (props) => {
         : rightToLeft()
           ? props.anchor.right - width
           : props.anchor.left;
-    const top = props.nested === true ? props.anchor.top - 6 : props.anchor.bottom + PANEL_GAP;
+    const top =
+      props.nested === true ? props.anchor.top - SUBMENU_LIFT : props.anchor.bottom + PANEL_GAP;
     setOffset({
       left: Math.max(VIEWPORT_MARGIN, Math.min(left, window.innerWidth - VIEWPORT_MARGIN - width)),
       top: Math.max(VIEWPORT_MARGIN, Math.min(top, window.innerHeight - VIEWPORT_MARGIN - height)),

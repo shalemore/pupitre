@@ -14,6 +14,8 @@ interface WelcomeScreenProps {
 }
 
 const modifier = isMacOS ? "⌘" : "Ctrl+";
+/** The menus list every recent file; the welcome screen keeps a short reminder of them. */
+const RECENT_FILES_SHOWN = 5;
 
 export const WelcomeScreen: Component<WelcomeScreenProps> = (props) => {
   return (
@@ -47,7 +49,7 @@ export const WelcomeScreen: Component<WelcomeScreenProps> = (props) => {
           <span class="text-2xs font-medium text-muted-foreground px-2.5 mb-1">
             {t().menu.openRecent}
           </span>
-          <For each={props.recentFiles.slice(0, 5)}>
+          <For each={props.recentFiles.slice(0, RECENT_FILES_SHOWN)}>
             {(path) => (
               <ListItem
                 onClick={() => props.onOpenRecent(path)}

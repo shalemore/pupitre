@@ -168,6 +168,8 @@ const inList: (command: Command) => Command = (command) => (view) => {
   return false;
 };
 
+const STATS_DEBOUNCE_MS = 200;
+
 function matchStats(view: EditorView): MatchStats {
   const query = getSearchQuery(view.state);
   if (!query.valid) return { current: 0, total: 0 };
@@ -202,7 +204,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     // Counting walks the whole text, so coalesce it while typing in long documents
     const updateStats = debounce(
       (state: EditorState) => props.onStatsChange(countText(readableText(state))),
-      200,
+      STATS_DEBOUNCE_MS,
     );
     const focusCompartment = new Compartment();
     const typewriterCompartment = new Compartment();
