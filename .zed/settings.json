@@ -34,6 +34,15 @@
           "suggestCanonicalClasses": "ignore"
         }
       }
+    },
+    "tailwindcss-intellisense-css": {
+      "settings": {
+        "css": {
+          "lint": {
+            "validProperties": ["caret-animation"]
+          }
+        }
+      }
     }
   },
   "languages": {
