@@ -10,6 +10,7 @@ import {
   type OpenDialogOptions,
   type SaveDialogOptions,
   shell,
+  type WebContents,
 } from "electron";
 import {
   type DocumentLocation,
@@ -130,6 +131,9 @@ async function listFolder(path: string): Promise<FolderEntry[]> {
         nameCollator.compare(a.name, b.name),
     );
 }
+
+/** Windows whose page layout has been warmed up, see the export handler. */
+const printWarmedUp = new WeakSet<WebContents>();
 
 /**
  * The foot of a page of an exported PDF: the page number, in the width of the text so that it
@@ -305,6 +309,13 @@ export function registerIpcHandlers(): void {
       headerTemplate: "<div></div>",
       footerTemplate: PAGE_NUMBER_FOOTER,
     };
+    // The first page layout of a window renders the lines it showed and no others, which leaves a
+    // page carrying nothing but its number at the end; one thrown-away page settles that layout,
+    // and the next one is laid out whole
+    if (!printWarmedUp.has(event.sender)) {
+      await event.sender.printToPDF({ ...options, pageRanges: "1" });
+      printWarmedUp.add(event.sender);
+    }
     const pdf = await event.sender.printToPDF(options);
     await writeFile(filePath, pdf);
     return filePath;
