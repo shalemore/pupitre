@@ -680,6 +680,19 @@
     opacity: 0.3;
   }
 
+  /*
+   * A line that wraps over several rows dims like the rest except where the caret is: the band is
+   * the caret's row, measured by writing-modes.ts.
+   */
+  .md-document.focus-mode > .focus-row {
+    mask-image: linear-gradient(
+      to bottom,
+      rgb(0 0 0 / 0.3) 0 var(--focus-row-start),
+      #000 var(--focus-row-start) var(--focus-row-end),
+      rgb(0 0 0 / 0.3) var(--focus-row-end)
+    );
+  }
+
   /* Room below the document for its last lines to reach the place the line is held at */
   .md-document.typewriter-mode[data-typewriter="center"] {
     padding-block-end: 50vh;
@@ -687,6 +700,23 @@
 
   .md-document.typewriter-mode[data-typewriter="top"] {
     padding-block-end: 100vh;
+  }
+
+  /*
+   * A held line keeps its place for the first and the last line too, which takes room above as
+   * well. --typewriter-edge is its edge margin (writing-modes.ts).
+   */
+  .md-document.typewriter-mode[data-typewriter-fixed="true"][data-typewriter="center"] {
+    padding-block: 50vh;
+  }
+
+  .md-document.typewriter-mode[data-typewriter-fixed="true"][data-typewriter="top"] {
+    padding-block-start: var(--typewriter-edge);
+  }
+
+  .md-document.typewriter-mode[data-typewriter-fixed="true"][data-typewriter="bottom"] {
+    padding-block-start: calc(100vh - var(--typewriter-edge));
+    padding-block-end: var(--typewriter-edge);
   }
 }
 
@@ -698,5 +728,6 @@
 
   .md-document.focus-mode > * {
     opacity: 1;
+    mask-image: none;
   }
 }

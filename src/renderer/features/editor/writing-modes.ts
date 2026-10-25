@@ -1,5 +1,5 @@
 import { syntaxTree } from "@codemirror/language";
-import { EditorState, type Extension, type Range } from "@codemirror/state";
+import { EditorState, type Extension, StateEffect, StateField } from "@codemirror/state";
 import {
   Decoration,
   type DecorationSet,
@@ -20,6 +20,17 @@ const FOCUS_BLOCK =
 
 const currentLine = Decoration.line({ class: "is-current" });
 
+/** The start of every line from the one holding `from` to the one holding `to`. */
+function lineStarts(state: EditorState, from: number, to: number): number[] {
+  const starts: number[] = [];
+  for (let pos = from; pos <= to;) {
+    const line = state.doc.lineAt(pos);
+    starts.push(line.from);
+    pos = line.to + 1;
+  }
+  return starts;
+}
+
 /** The block that focus mode treats as one unit around `pos`, or just its line. */
 function blockAt(state: EditorState, pos: number, side: -1 | 1): { from: number; to: number } {
   for (let node = syntaxTree(state).resolveInner(pos, side); node.parent; node = node.parent) {
@@ -29,47 +40,128 @@ function blockAt(state: EditorState, pos: number, side: -1 | 1): { from: number;
   return { from, to: from };
 }
 
-/** The blocks the selection touches stay in focus, not just the one at its head. */
-function currentBlock(view: EditorView): DecorationSet {
-  const { state } = view;
-  const { from: start, to: end, empty } = state.selection.main;
-  const first = blockAt(state, start, empty ? -1 : 1);
+/** The lines focus mode keeps sharp: those the selection covers, or those of the blocks it touches. */
+function focusedLines(state: EditorState, grain: Settings["focusModeGrain"]): number[] {
+  const { from, to, empty } = state.selection.main;
   // A selection that ends at the start of a line, as a triple-click leaves it, stops short of that line
-  const last = empty
-    ? first
-    : blockAt(state, state.doc.lineAt(end).from === end ? end - 1 : end, -1);
-  const from = first.from;
-  const to = Math.max(first.to, last.to);
-  const decorations: Range<Decoration>[] = [];
-  for (let pos = from; pos <= to;) {
-    const line = state.doc.lineAt(pos);
-    decorations.push(currentLine.range(line.from));
-    pos = line.to + 1;
-  }
+  const end = empty || state.doc.lineAt(to).from !== to ? to : to - 1;
+  if (grain === "line") return lineStarts(state, from, end);
+  const first = blockAt(state, from, empty ? -1 : 1);
+  const last = blockAt(state, end, -1);
+  return lineStarts(state, first.from, Math.max(first.to, last.to));
+}
+
+/** Where the caret's row sits in its line, when that line fills more than one row. */
+interface RowBand {
+  /** Start of the line the band belongs to. */
+  from: number;
+  /** Top and bottom of the row, in CSS pixels from the line's top. */
+  start: number;
+  end: number;
+}
+
+const setRowBand = StateEffect.define<RowBand | undefined>();
+
+const rowBand = StateField.define<RowBand | undefined>({
+  create: () => undefined,
+  update(band, tr) {
+    for (const effect of tr.effects) if (effect.is(setRowBand)) return effect.value;
+    // A new position gets a row of its own, which is measured next
+    return tr.docChanged || tr.selection ? undefined : band;
+  },
+});
+
+const sameRow = (a: RowBand | undefined, b: RowBand | undefined) =>
+  a === b ||
+  (a !== undefined &&
+    b !== undefined &&
+    a.from === b.from &&
+    Math.abs(a.start - b.start) < 0.5 &&
+    Math.abs(a.end - b.end) < 0.5);
+
+/** The row the caret is on, measured from the line it belongs to; undefined for a line of one row. */
+function measureRow(view: EditorView): RowBand | undefined {
+  const { head, empty } = view.state.selection.main;
+  if (!empty) return undefined;
+  const caret = view.coordsAtPos(head);
+  const node = view.domAtPos(head).node;
+  const element = node instanceof Element ? node : node.parentElement;
+  const line = element?.closest(".cm-line");
+  if (!caret || !line) return undefined;
+  const box = line.getBoundingClientRect();
+  const start = Math.max(0, caret.top - box.top);
+  const end = Math.min(box.height, caret.bottom - box.top);
+  // The whole line is the row when it does not wrap
+  if (end - start >= box.height - 0.5) return undefined;
+  return { from: view.state.doc.lineAt(head).from, start, end };
+}
+
+/** Measures after the update, since the layout cannot be read during one. */
+function rowMeasure(grain: Settings["focusModeGrain"]): Extension {
+  return ViewPlugin.fromClass(
+    class {
+      private frame = 0;
+
+      constructor(view: EditorView) {
+        this.measure(view);
+      }
+
+      update(update: ViewUpdate): void {
+        if (
+          update.docChanged ||
+          update.selectionSet ||
+          update.geometryChanged ||
+          update.viewportChanged
+        ) {
+          this.measure(update.view);
+        }
+      }
+
+      destroy(): void {
+        cancelAnimationFrame(this.frame);
+      }
+
+      private measure(view: EditorView): void {
+        if (grain !== "line") return;
+        cancelAnimationFrame(this.frame);
+        this.frame = requestAnimationFrame(() => {
+          const band = measureRow(view);
+          if (!sameRow(band, view.state.field(rowBand))) {
+            view.dispatch({ effects: setRowBand.of(band) });
+          }
+        });
+      }
+    },
+  );
+}
+
+function focusDecorations(state: EditorState, grain: Settings["focusModeGrain"]): DecorationSet {
+  const band = grain === "line" ? state.field(rowBand) : undefined;
+  const decorations = focusedLines(state, grain).map((from) => {
+    if (band === undefined || band.from !== from) return currentLine.range(from);
+    return Decoration.line({
+      class: "is-current focus-row",
+      attributes: { style: `--focus-row-start: ${band.start}px; --focus-row-end: ${band.end}px` },
+    }).range(from);
+  });
   return Decoration.set(decorations);
 }
 
 /**
- * Focus mode: every block except the one being written is dimmed. Only the lines of the current
- * block are decorated; the dimming itself is CSS (editor.css).
+ * Focus mode: everything except the line being written is dimmed, or except the whole block around
+ * it; within a line that wraps over several rows, only the row the caret is on stays sharp. The
+ * dimming itself is CSS (editor.css), and so is the band that keeps that row.
  */
-export const focusMode: Extension = [
-  EditorView.contentAttributes.of({ class: "focus-mode" }),
-  ViewPlugin.fromClass(
-    class {
-      decorations: DecorationSet;
-
-      constructor(view: EditorView) {
-        this.decorations = currentBlock(view);
-      }
-
-      update(update: ViewUpdate): void {
-        if (update.docChanged || update.selectionSet) this.decorations = currentBlock(update.view);
-      }
-    },
-    { decorations: (plugin) => plugin.decorations },
-  ),
-];
+export function focusMode(grain: Settings["focusModeGrain"]): Extension {
+  return [
+    EditorView.contentAttributes.of({ class: "focus-mode" }),
+    rowBand,
+    EditorView.decorations.compute([rowBand, "selection"], (state) =>
+      focusDecorations(state, grain),
+    ),
+    rowMeasure(grain),
+  ];
+}
 
 /** Where typewriter mode holds the line, and how far from the window edge for the top and bottom. */
 const TYPEWRITER_ALIGN: Record<Settings["typewriterPosition"], "center" | "start" | "end"> = {
@@ -79,23 +171,36 @@ const TYPEWRITER_ALIGN: Record<Settings["typewriterPosition"], "center" | "start
 };
 const TYPEWRITER_EDGE_MARGIN = 64;
 
+/** The scroll that puts the line holding `head` where typewriter mode holds it. */
+export function holdLine(head: number, position: Settings["typewriterPosition"]) {
+  return EditorView.scrollIntoView(head, {
+    y: TYPEWRITER_ALIGN[position],
+    yMargin: position === "center" ? 5 : TYPEWRITER_EDGE_MARGIN,
+  });
+}
+
 /**
  * Typewriter mode: the line being written stays at one place in the window, the middle, near the
- * top or near the bottom, and the text moves instead of the cursor. Extra space below the
- * document (editor.css) lets the last lines reach that place too. Selections made with the mouse
- * are left where they are, otherwise the text would jump away from the pointer while dragging.
+ * top or near the bottom, and the text moves instead of the cursor. Room below the document
+ * (editor.css) lets the last lines reach that place; `fixed` leaves room above and below as well,
+ * so the first ones reach it too. Selections made with the mouse are left where they are,
+ * otherwise the text would jump away from the pointer.
  */
-export function typewriterMode(position: Settings["typewriterPosition"]): Extension {
+export function typewriterMode(
+  position: Settings["typewriterPosition"],
+  fixed: boolean,
+): Extension {
   return [
-    EditorView.contentAttributes.of({ class: "typewriter-mode", "data-typewriter": position }),
+    // The stylesheet needs the edge margin to leave exactly that much room above the first line
+    EditorView.contentAttributes.of({
+      class: "typewriter-mode",
+      "data-typewriter": position,
+      "data-typewriter-fixed": String(fixed),
+      style: `--typewriter-edge: ${TYPEWRITER_EDGE_MARGIN}px`,
+    }),
     EditorState.transactionExtender.of((tr) =>
       (tr.docChanged || tr.selection) && !tr.isUserEvent("select.pointer")
-        ? {
-            effects: EditorView.scrollIntoView(tr.newSelection.main.head, {
-              y: TYPEWRITER_ALIGN[position],
-              yMargin: position === "center" ? 5 : TYPEWRITER_EDGE_MARGIN,
-            }),
-          }
+        ? { effects: holdLine(tr.newSelection.main.head, position) }
         : null,
     ),
   ];

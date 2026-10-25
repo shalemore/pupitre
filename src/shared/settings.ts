@@ -79,9 +79,13 @@ export const settingsSchema = z.object({
   sidebarPinnedEnd: z.boolean().catch(false),
   showWordCount: z.boolean().catch(true),
   focusMode: z.boolean().catch(false),
+  /** Whether focus mode keeps the line being written sharp, or the whole block around it. */
+  focusModeGrain: z.enum(["line", "block"]).catch("line"),
   typewriterMode: z.boolean().catch(false),
   /** Where typewriter mode holds the line being written. */
   typewriterPosition: z.enum(["center", "top", "bottom"]).catch("center"),
+  /** Whether it holds that place for the first and the last line too, which takes room above and below. */
+  typewriterFixed: z.boolean().catch(true),
 
   // Editor; an empty font name means "use the theme's font"
   bodyFont: z.string().catch(""),

@@ -61,7 +61,7 @@ import { diagramTheme, prerenderDiagrams, readDiagramTheme } from "./mermaid";
 import { pasteHtml } from "./paste-html";
 import { renderedBlocks } from "./rendered-blocks";
 import { textDirection } from "./text-direction";
-import { focusMode, typewriterMode } from "./writing-modes";
+import { focusMode, holdLine, typewriterMode } from "./writing-modes";
 
 export interface SearchOptions {
   search: string;
@@ -286,16 +286,20 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     createEffect(() => {
       const {
         focusMode: focus,
+        focusModeGrain,
         typewriterMode: typewriter,
         typewriterPosition,
+        typewriterFixed,
         spellcheck,
         cursorShape,
         cursorBlink,
       } = settings();
       view.dispatch({
         effects: [
-          focusCompartment.reconfigure(focus ? focusMode : []),
-          typewriterCompartment.reconfigure(typewriter ? typewriterMode(typewriterPosition) : []),
+          focusCompartment.reconfigure(focus ? focusMode(focusModeGrain) : []),
+          typewriterCompartment.reconfigure(
+            typewriter ? typewriterMode(typewriterPosition, typewriterFixed) : [],
+          ),
           spellcheckCompartment.reconfigure(
             EditorView.contentAttributes.of({ spellcheck: String(spellcheck) }),
           ),
@@ -303,6 +307,23 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         ],
       });
     });
+
+    // A held line takes its place at once, whether the mode is switched on or moved
+    createEffect(
+      on(
+        () =>
+          settings().typewriterMode && settings().typewriterFixed
+            ? settings().typewriterPosition
+            : false,
+        (position) => {
+          if (position) {
+            view.dispatch({
+              effects: holdLine(view.state.selection.main.head, position),
+            });
+          }
+        },
+      ),
+    );
 
     // Save As moves the document without rebuilding the editor; relative images resolve from the new folder
     createEffect(

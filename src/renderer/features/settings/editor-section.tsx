@@ -111,17 +111,32 @@ export const EditorSection: Component = () => (
         />
       </SettingField>
 
-      <SettingField
-        name="focusMode"
-        title={t().settings.focusMode}
-        description={t().settings.focusModeDesc}
-      >
-        <Switch
-          checked={settings().focusMode}
-          onChange={(focusMode) => void updateSettings({ focusMode })}
-          aria-label={t().settings.focusMode}
-        />
-      </SettingField>
+      <div>
+        <SettingField
+          name="focusMode"
+          title={t().settings.focusMode}
+          description={t().settings.focusModeDesc}
+        >
+          <Switch
+            checked={settings().focusMode}
+            onChange={(focusMode) => void updateSettings({ focusMode })}
+            aria-label={t().settings.focusMode}
+          />
+        </SettingField>
+        <Show when={settings().focusMode}>
+          <SettingField nested name="focusModeGrain" title={t().settings.focusModeGrain}>
+            <Select<Settings["focusModeGrain"]>
+              value={settings().focusModeGrain}
+              onChange={(focusModeGrain) => void updateSettings({ focusModeGrain })}
+              options={[
+                { value: "line", label: t().settings.focusModeGrainLine },
+                { value: "block", label: t().settings.focusModeGrainBlock },
+              ]}
+              aria-label={t().settings.focusModeGrain}
+            />
+          </SettingField>
+        </Show>
+      </div>
 
       <div>
         <SettingField
@@ -146,6 +161,18 @@ export const EditorSection: Component = () => (
                 { value: "bottom", label: t().settings.typewriterPositionBottom },
               ]}
               aria-label={t().settings.typewriterPosition}
+            />
+          </SettingField>
+          <SettingField
+            nested
+            name="typewriterFixed"
+            title={t().settings.typewriterFixed}
+            description={t().settings.typewriterFixedDesc}
+          >
+            <Switch
+              checked={settings().typewriterFixed}
+              onChange={(typewriterFixed) => void updateSettings({ typewriterFixed })}
+              aria-label={t().settings.typewriterFixed}
             />
           </SettingField>
         </Show>
