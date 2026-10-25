@@ -95,6 +95,10 @@ function buildDecorations(state: EditorState): DecorationSet {
       // A table is edited in place (table.tsx), so its source never shows
       if (node.name === "Table" || !touches(ranges, from, to)) {
         hideLines(node.from, node.to, widget);
+      } else if (node.name === "BlockMath" || node.name === "FencedCode") {
+        // Math and diagrams open in the first line of their source, which is a code card, so the
+        // rendering and the source stay one piece instead of becoming two blocks of their own
+        decorations.push(Decoration.widget({ widget, side: 1 }).range(from));
       } else {
         decorations.push(Decoration.widget({ widget, block: true, side: 1 }).range(to));
       }

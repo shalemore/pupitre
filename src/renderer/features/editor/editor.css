@@ -485,6 +485,13 @@
     overflow-x: auto;
   }
 
+  /* A rendering opens in the first line of its source, a code line set in a smaller font; it keeps
+     the size MathJax gave it and the padding it has where the block is shown on its own */
+  .md-math-block,
+  .md-mermaid {
+    font-size: var(--pref-font-size);
+  }
+
   .md-mermaid.is-invalid {
     justify-content: start;
     color: var(--ui-danger);
