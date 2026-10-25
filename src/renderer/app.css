@@ -171,9 +171,10 @@
  *   xl popovers and floating bars, 2xl dialogs, full pills, dots and thumbs.
  *
  * Motion, by role:
- *   fast (60ms) press feedback; snap (120ms) toggles and indicators; ui (150ms) hover and
- *   color changes, the default; base (200ms) popovers and folding chrome; sheet (300ms) panels
- *   and fades; slow (450ms) the spring back after a press.
+ *   fast (60ms) press feedback and menu highlights; snap (120ms) toggles and indicators;
+ *   ui (150ms) hover and color changes, the default; base (200ms) floating panels and rows
+ *   arriving; sheet (300ms) folding chrome and page fades; slow (450ms) the spring back after
+ *   a press.
  *   ease-out-expo settles quickly and is the default; ease-snap for things that click into
  *   place; ease-enter for content arriving; ease-spring overshoots slightly, for releases.
  */

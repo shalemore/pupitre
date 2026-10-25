@@ -104,7 +104,7 @@ const TableToolbar: Component<{
     props.run((model) => alignColumn(state(), model, column(), value), props.cell);
 
   return (
-    <div class="absolute bottom-full inset-s-0 z-10 mb-1 flex items-center gap-0.5 rounded-lg bg-popover p-0.5 shadow-float animate-in fade-in-0 slide-in-from-bottom-1 duration-ui print:hidden">
+    <div class="absolute bottom-full inset-s-0 z-10 mb-1 flex items-center gap-0.5 rounded-lg bg-popover p-0.5 shadow-float animate-in fade-in-0 slide-in-from-bottom-1 duration-base print:hidden">
       <ToolButton label={labels().alignStart} onClick={() => align("start")}>
         <TextAlignStart />
       </ToolButton>
