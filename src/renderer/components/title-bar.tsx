@@ -18,7 +18,8 @@ export const TitleBar: ParentComponent<{ class?: string; inert?: boolean }> = (p
       data-caption-buttons={side}
       inert={props.inert}
       class={cn(
-        "app-title-bar print:hidden w-full h-10 shrink-0 flex items-center gap-2 px-3 select-none bg-surface-0 text-xs",
+        // The horizontal padding comes from .app-title-bar, which leaves room for the caption buttons
+        "app-title-bar print:hidden w-full h-10 shrink-0 flex items-center gap-2 select-none bg-surface-0 text-xs",
         props.class,
       )}
     >
