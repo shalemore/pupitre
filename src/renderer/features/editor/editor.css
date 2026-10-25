@@ -721,16 +721,65 @@
     padding-block-start: calc(100vh - var(--typewriter-edge));
     padding-block-end: var(--typewriter-edge);
   }
-}
 
-@media print {
-  .md-document {
-    max-width: none;
-    padding: 0;
-  }
+  /*
+   * Printing. A page has no viewport to hold a line in, so the room typewriter mode and the theme
+   * leave above and below the document goes with it, and so does the dimming.
+   *
+   * These rules sit in this layer rather than after it on purpose: CodeMirror hands the padding
+   * back to the layers with revert-layer, which takes the value of the last layer that sets it, so
+   * an unlayered reset would be undone there. They also weigh as much as the rules they undo, since
+   * logical and physical padding count as one property when the cascade picks a winner.
+   */
+  @media print {
+    .md-document,
+    .md-document.typewriter-mode[data-typewriter][data-typewriter-fixed] {
+      max-width: none;
+      padding: 0;
+      padding-block: 0;
+    }
 
-  .md-document.focus-mode > * {
-    opacity: 1;
-    mask-image: none;
+    .md-document.focus-mode > :not(.is-current),
+    .md-document.focus-mode > .focus-row {
+      opacity: 1;
+      mask-image: none;
+    }
+
+    /* A heading at the foot of a page stays with the text it introduces */
+    .md-document > .md-heading {
+      break-after: avoid;
+    }
+
+    /* Blocks that only read as a whole stay on one page */
+    .md-document
+      > :is(.md-code-block, .md-image-preview, .md-math-block, .md-mermaid, .md-table-block) {
+      break-inside: avoid;
+    }
+
+    /* No page starts or ends with a stray line of a paragraph */
+    .md-document {
+      orphans: 3;
+      widows: 3;
+    }
+
+    /* A caret and a selection are interface, not paper */
+    .cm-cursorLayer,
+    .cm-selectionLayer {
+      display: none;
+    }
+
+    /*
+     * The gaps at the end of the document lead nowhere, and are what pushes a page of their own
+     * once the text ends near the page's edge: CodeMirror keeps the lines themselves blocks, so
+     * the padding that made the gaps is what gives way.
+     */
+    .md-document > .md-blank:last-child {
+      padding-block: 0;
+    }
+
+    .md-document > .cm-line:last-child,
+    .md-document > .cm-line:has(+ .md-blank:last-child) {
+      padding-block-end: 0;
+    }
   }
 }
