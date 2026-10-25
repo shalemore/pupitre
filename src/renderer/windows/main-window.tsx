@@ -20,9 +20,9 @@ import {
   type MatchStats,
 } from "@/features/editor/markdown-editor";
 import type { OutlineHeading } from "@/features/editor/document-structure";
-import { FolderTree } from "@/features/folder/folder-tree";
+import { FolderTree } from "@/features/sidebar/folder-tree";
 import { MenuBar } from "@/features/menu/menu-bar";
-import { OutlineList } from "@/features/outline/outline-list";
+import { OutlineList } from "@/features/sidebar/outline-list";
 import {
   SIDEBAR_WIDTH,
   Sidebar,
