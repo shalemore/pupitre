@@ -52,6 +52,7 @@ export function setupAppearance(): void {
     createEffect(() => {
       const { fontSize, lineHeight, contentWidth, bodyFont, fallbackFont, codeFont, uiFont } =
         settings();
+      // The theme brings the fonts the stacks below fall back to, so a change of theme rebuilds them
       activeTheme();
       const themeStyle = getComputedStyle(root);
       const themeFonts = themeStyle.getPropertyValue("--font-document");
