@@ -7,7 +7,10 @@ npm install
 npm run dev
 ```
 
-Run `npm run lint`, `npm run typecheck` and `npm run build` before sending a change. Commits follow [Conventional Commits](https://www.conventionalcommits.org). Project conventions are in [AGENTS.md](AGENTS.md).
+Run `npm run lint`, `npm run typecheck`, `npm test` and `npm run build` before sending a change.
+`npm run test:e2e` drives the built app; run `npm run build` first. Commits follow
+[Conventional Commits](https://www.conventionalcommits.org). Project conventions are in
+[AGENTS.md](AGENTS.md).
 
 ## Releasing
 

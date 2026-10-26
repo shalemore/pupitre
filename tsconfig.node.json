@@ -15,6 +15,7 @@
     "electron.vite.config.ts",
     "vite.shared.ts",
     "vite.web.config.ts",
+    "vitest.config.ts",
     "scripts",
     "src/main",
     "src/preload",

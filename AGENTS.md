@@ -5,18 +5,45 @@ This file is the single source of project conventions for humans and coding agen
 
 ## Commands
 
-| Command             | Purpose                                           |
-| :------------------ | :------------------------------------------------ |
-| `npm run dev`       | Start Electron with the Vite dev server (HMR)     |
-| `npm run build`     | Bundle main, preload and renderer into `out/`     |
-| `npm run dev:web`   | Serve the web demo (renderer on the browser host) |
-| `npm run build:web` | Build the web demo into `out/web`                 |
-| `npm run dist`      | Build and package installers into `release/`      |
-| `npm run typecheck` | Type-check every project (`tsc -b`)               |
-| `npm run lint`      | Check formatting (oxfmt) and lint (oxlint)        |
-| `npm run fix`       | Apply formatting and safe lint fixes              |
+| Command                 | Purpose                                              |
+| :---------------------- | :--------------------------------------------------- |
+| `npm run dev`           | Start Electron with the Vite dev server (HMR)        |
+| `npm run build`         | Bundle main, preload and renderer into `out/`        |
+| `npm run dev:web`       | Serve the web demo (renderer on the browser host)    |
+| `npm run build:web`     | Build the web demo into `out/web`                    |
+| `npm run dist`          | Build and package installers into `release/`         |
+| `npm test`              | Run the unit tests (Vitest)                          |
+| `npm run test:coverage` | Run the unit tests with coverage and check its floor |
+| `npm run test:e2e`      | Drive the built app with Playwright (`build` first)  |
+| `npm run typecheck`     | Type-check every project (`tsc -b`)                  |
+| `npm run lint`          | Check formatting (oxfmt) and lint (oxlint)           |
+| `npm run fix`           | Apply formatting and safe lint fixes                 |
 
-Before considering a change done, `lint`, `typecheck` and `build` must all pass.
+Before considering a change done, `lint`, `typecheck`, `test` and `build` must all pass. Run
+`npm run test:e2e` as well once the change touches the main process, the IPC contract or a flow it
+covers. Keep the coverage floor: it only catches a suite that shrank, and goes up as more of the
+app is covered.
+
+## Tests
+
+- Unit tests sit next to what they test (`*.test.ts`). `vitest.config.ts` runs the main process and
+  the shared code in Node, and the renderer in jsdom; the renderer project loads `src/web/host.ts`
+  as `window.desktop`, so modules that reach for the host still import. Pure functions are the first
+  thing to cover; a test that needs layout or a native dialog belongs in the E2E suite.
+- `src/renderer/features/editor/testing.ts` builds the editor's state and tree for tests. A document
+  is written with `|` marking the cursor and with two of them around a selection, so the test reads
+  the way the text looks in the editor.
+- `e2e/` drives the built app (`out/main/index.js`) over Playwright, after `npm run build`. Each
+  launch gets its own `--user-data-dir`, so a run does not touch the settings, drafts or lock of a
+  dev instance. Send commands through `window.desktop.invoke("app:dispatch", …)`: native menu
+  shortcuts do not fire from CDP key events. Native message boxes are stubbed in the main process
+  (`answerDialogs`), because a real one would block the run.
+- On Linux the E2E suite needs a display: CI runs it under `xvfb-run -a`. On Windows, run it with
+  `npx offstage-windows npx playwright test` to keep the windows off the screen.
+- `markdown-language.test.ts` keeps an `it.fails` for an upstream `@lezer/markdown` 1.8.1 bug: a
+  table that directly follows a paragraph can leave the paragraph split in an incremental parse. If
+  the expectation starts to pass, the fix landed: drop `fails` and put tables back into the property
+  test's pieces.
 
 ## Testing the running app
 

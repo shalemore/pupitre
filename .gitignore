@@ -1,5 +1,9 @@
 /node_modules
 /out
 /release
+/test-results
+/playwright-report
+/blob-report
+/coverage
 *.log
 .DS_Store

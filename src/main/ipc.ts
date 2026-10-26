@@ -37,7 +37,9 @@ import {
   decodeWith,
   declaredEncoding,
   encodeDocument,
+  lineEndingOf,
   normalizeText,
+  withLineEnding,
 } from "./encoding";
 import { exportImage } from "./export-image";
 import { createEntry, renameEntry, trashEntry } from "./file-actions";
@@ -233,7 +235,7 @@ async function readDocument(path: string, window: BrowserWindow): Promise<Opened
     return {
       ...locate(path),
       content: normalizeText(decoded.text),
-      lineEnding: decoded.text.includes("\r\n") ? "crlf" : "lf",
+      lineEnding: lineEndingOf(decoded.text),
       encoding: decoded.encoding,
     };
   } catch (error) {
@@ -262,8 +264,7 @@ function writeDocument(
   lineEnding: LineEnding,
   encoding: TextEncoding,
 ): Promise<void> {
-  const text = lineEnding === "crlf" ? content.replaceAll("\n", "\r\n") : content;
-  return writeFile(path, encodeDocument(text, encoding));
+  return writeFile(path, encodeDocument(withLineEnding(content, lineEnding), encoding));
 }
 
 /**

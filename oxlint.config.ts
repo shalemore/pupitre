@@ -6,7 +6,7 @@ export default defineConfig({
     suspicious: "error",
     perf: "error",
   },
-  plugins: ["unicorn", "typescript", "oxc"],
+  plugins: ["unicorn", "typescript", "oxc", "vitest"],
   jsPlugins: ["oxlint-tailwindcss"],
   settings: {
     tailwindcss: {

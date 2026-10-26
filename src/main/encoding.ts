@@ -1,7 +1,7 @@
 import { isUtf8 } from "node:buffer";
 import { type BrowserWindow, dialog } from "electron";
 import iconv from "iconv-lite";
-import type { TextEncoding } from "@shared/desktop-api";
+import type { LineEnding, TextEncoding } from "@shared/desktop-api";
 import { t } from "./i18n";
 
 /**
@@ -123,6 +123,16 @@ export class LossyEncodingError extends Error {
  */
 export function normalizeText(raw: string): string {
   return raw.replace(/^\uFEFF/, "").replaceAll("\r\n", "\n");
+}
+
+/** The line ending a save restores for a file that was read as `raw`. */
+export function lineEndingOf(raw: string): LineEnding {
+  return raw.includes("\r\n") ? "crlf" : "lf";
+}
+
+/** The editor's text with the line ending of its file put back. */
+export function withLineEnding(text: string, lineEnding: LineEnding): string {
+  return lineEnding === "crlf" ? text.replaceAll("\n", "\r\n") : text;
 }
 
 /** Decodes a file whose encoding is known. */
