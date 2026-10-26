@@ -90,6 +90,7 @@ describe("helpers", () => {
   it("keeps app settings out of a folder", () => {
     expect(isWorkspaceKey("startup")).toBe(false);
     expect(isWorkspaceKey("autoCheckUpdates")).toBe(false);
+    expect(isWorkspaceKey("sourceMode")).toBe(false);
     expect(isWorkspaceKey("fontSize")).toBe(true);
   });
 

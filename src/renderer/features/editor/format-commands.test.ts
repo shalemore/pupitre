@@ -58,6 +58,42 @@ describe("inline formats", () => {
   });
 });
 
+describe("the inline formats the live preview renders", () => {
+  it("wraps and unwraps highlight, subscript, superscript and inline math", () => {
+    expect(format("a |word| here", "highlight")).toBe("a ==|word|== here");
+    expect(format("a ==|word|== here", "highlight")).toBe("a |word| here");
+    expect(format("a |word| here", "subscript")).toBe("a ~|word|~ here");
+    expect(format("a |word| here", "superscript")).toBe("a ^|word|^ here");
+    expect(format("a |word| here", "inlineMath")).toBe("a $|word|$ here");
+  });
+
+  it("wraps and unwraps underline as its HTML tag", () => {
+    expect(format("a |word| here", "underline")).toBe("a <u>|word|</u> here");
+    expect(format("a <u>|word|</u> here", "underline")).toBe("a |word| here");
+  });
+
+  it("clears the inline formats a selection covers and turns a link into its text", () => {
+    expect(format("|**word**|", "clearFormat")).toBe("|word|");
+    expect(format("**wo|rd**", "clearFormat")).toBe("wo|rd");
+    expect(format("|[text](url)|", "clearFormat")).toBe("|text|");
+  });
+});
+
+describe("the block actions", () => {
+  it("inserts a table of contents and a footnote reference with its definition", () => {
+    expect(format("|", "toc")).toBe("[TOC]\n|");
+    expect(format("one|", "footnote")).toBe("one[^1]|\n\n[^1]: ");
+  });
+
+  it("steps a heading up and down, and a paragraph becomes a heading", () => {
+    expect(format("## Ti|tle", "headingUp")).toBe("# Ti|tle");
+    expect(format("# Ti|tle", "headingUp")).toBe("Ti|tle");
+    expect(format("Ti|tle", "headingUp")).toBe("# Ti|tle");
+    expect(format("## Ti|tle", "headingDown")).toBe("### Ti|tle");
+    expect(format("###### Ti|tle", "headingDown")).toBe("Ti|tle");
+  });
+});
+
 describe("block formats", () => {
   it("sets, changes and removes a heading level", () => {
     expect(format("Ti|tle", "heading2")).toBe("## Ti|tle");

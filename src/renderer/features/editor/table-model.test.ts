@@ -7,8 +7,11 @@ import {
   deleteRow,
   deleteTable,
   editCell,
+  emptyTableSource,
   insertColumn,
   insertRow,
+  moveColumn,
+  moveRow,
   readTable,
   type TableModel,
 } from "./table-model";
@@ -25,6 +28,26 @@ function apply(doc: string, edit: (state: EditorState, table: TableModel) => Cha
   const [state, table] = tableOf(doc);
   return state.update({ changes: edit(state, table) }).state.doc.toString();
 }
+
+describe("table sizes and moves", () => {
+  it("writes an empty table of the requested size", () => {
+    expect(emptyTableSource(2, 3)).toBe("|  |  |  |\n| --- | --- | --- |\n|  |  |  |\n");
+    expect(emptyTableSource(1, 2)).toBe("|  |  |\n| --- | --- |\n");
+  });
+
+  it("moves a body row and refuses to move the header", () => {
+    expect(apply(TABLE, (state, table) => moveRow(state, table, 1, 1))).toBe(
+      "| Name | Age |\n| :--- | ---: |\n| Bob | 27 |\n| Ann | 31 |",
+    );
+    expect(apply(TABLE, (state, table) => moveRow(state, table, 0, 1))).toBe(TABLE);
+  });
+
+  it("moves a column with its alignment", () => {
+    expect(apply(TABLE, (state, table) => moveColumn(state, table, 0, 1))).toBe(
+      "| Age | Name |\n| ---: | :--- |\n| 31 | Ann |\n| 27 | Bob |",
+    );
+  });
+});
 
 describe("readTable", () => {
   it("reads the cells, the alignments and the rows", () => {
