@@ -185,27 +185,35 @@ async function tableHtml(ctx: ExportContext, block: SyntaxNode): Promise<string>
   return `<div class="md-table-scroll"><table>${head}${foot}</table></div>`;
 }
 
+/**
+ * The paragraph a list item or a footnote shows without a wrapper of its own, and the blocks after
+ * it; every other block of the list is rendered as a block.
+ */
+function leadingParagraph(blocks: readonly SyntaxNode[]): {
+  leading: SyntaxNode | undefined;
+  rest: SyntaxNode[];
+} {
+  const [first, ...rest] = blocks;
+  return first?.name === "Paragraph"
+    ? { leading: first, rest }
+    : { leading: undefined, rest: [...blocks] };
+}
+
 async function listItem(ctx: ExportContext, item: SyntaxNode): Promise<string> {
   const { state } = ctx;
   const blocks = blocksOf(item);
+  // A task marker carries the item's own text; any other item reads as its first paragraph
   const task = blocks[0]?.name === "Task" ? blocks[0] : undefined;
-  const rest = task === undefined ? blocks : blocks.slice(1);
-  // A list item reads as its first paragraph rather than as a paragraph of its own
-  const first = task === undefined ? rest[0] : undefined;
-  const inline =
-    task !== undefined
-      ? await itemsHtml(ctx, inlineItems(state, task))
-      : first?.name === "Paragraph"
-        ? await itemsHtml(ctx, inlineItems(state, first))
-        : "";
-  const body = task !== undefined ? rest : first?.name === "Paragraph" ? rest.slice(1) : rest;
+  const { leading, rest } = leadingParagraph(task === undefined ? blocks : blocks.slice(1));
+  const own = task ?? leading;
+  const inline = own === undefined ? "" : await itemsHtml(ctx, inlineItems(state, own));
   const marker = task?.getChild("TaskMarker") ?? undefined;
   const checked = marker !== undefined && /x/i.test(state.sliceDoc(marker.from, marker.to));
   const box =
     marker === undefined ? "" : `<input type="checkbox" disabled${checked ? " checked" : ""}>`;
   const kind =
     marker === undefined ? "" : checked ? ' class="md-task md-task-checked"' : ' class="md-task"';
-  const nested = body.length > 0 ? `\n${await renderBlocks(ctx, body)}` : "";
+  const nested = rest.length > 0 ? `\n${await renderBlocks(ctx, rest)}` : "";
   return `<li${kind}>${box}${inline.trim()}${nested}</li>`;
 }
 
@@ -260,13 +268,10 @@ async function footnoteSection(ctx: ExportContext): Promise<string> {
       if (!node) return "";
       const label = footnoteLabel(ctx.state, node);
       const blocks = blocksOf(definition).filter((child) => child.name !== "FootnoteLabel");
-      const [first, ...rest] = blocks;
+      const { leading, rest } = leadingParagraph(blocks);
       const inline =
-        first?.name === "Paragraph"
-          ? (await itemsHtml(ctx, inlineItems(ctx.state, first))).trim()
-          : "";
-      const body = first?.name === "Paragraph" ? rest : blocks;
-      const nested = body.length > 0 ? `\n${await renderBlocks(ctx, body)}` : "";
+        leading === undefined ? "" : (await itemsHtml(ctx, inlineItems(ctx.state, leading))).trim();
+      const nested = rest.length > 0 ? `\n${await renderBlocks(ctx, rest)}` : "";
       const back = ctx.referenced.has(label)
         ? ` <a class="md-footnote-back" href="#fnref-${escapeHtml(label)}">↩</a>`
         : "";
