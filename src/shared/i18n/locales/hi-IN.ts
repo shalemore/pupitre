@@ -60,10 +60,21 @@ export const hiIN = {
       deleteRow: "पंक्ति हटाएँ",
       deleteColumn: "स्तंभ हटाएँ",
       deleteTable: "तालिका हटाएँ",
+      moveRowUp: "Move Row Up",
+      moveRowDown: "Move Row Down",
+      moveColumnBefore: "Move Column Left",
+      moveColumnAfter: "Move Column Right",
     },
 
     codeLanguage: "Code Block Language",
     codeLanguagePlain: "Plain Text",
+
+    tableSize: {
+      title: "Insert Table",
+      rows: "Rows",
+      columns: "Columns",
+      insert: "Insert",
+    },
   },
   dialogs: {
     copyButton: "कॉपी करें",
@@ -169,6 +180,8 @@ export const hiIN = {
     versionHistory: "संस्करण इतिहास…",
 
     insertImage: "Insert Image…",
+
+    insertTable: "Insert Table…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

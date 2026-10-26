@@ -131,6 +131,18 @@ function rowSource(cells: readonly string[]): string {
   return `| ${cells.join(" | ")} |`;
 }
 
+/**
+ * The source of an empty table of `rows` rows and `columns` columns, the header row first and the
+ * delimiter row right after it, with a line ending after each line.
+ */
+export function emptyTableSource(rows: number, columns: number): string {
+  const empty = Array.from({ length: columns }, () => "");
+  const header = rowSource(empty);
+  const delimiter = rowSource(empty.map(() => delimiterCell(undefined)));
+  const body = Array.from({ length: Math.max(rows - 1, 0) }, () => header);
+  return [header, delimiter, ...body].map((line) => `${line}\n`).join("");
+}
+
 /** Replaces a cell's text; a missing cell is added by rewriting its row. */
 export function editCell(
   state: EditorState,
@@ -206,6 +218,27 @@ export function deleteRow(state: EditorState, table: TableModel, index: number):
   return { from: line.from - 1, to: line.to };
 }
 
+/**
+ * Moves the body row at `index` by `delta` places, swapping the rows' source with each other. The
+ * rows keep the spacing and the escaping they were written with; only their order changes, and the
+ * header stays first because it is the line that says what the table holds.
+ */
+export function moveRow(
+  state: EditorState,
+  table: TableModel,
+  index: number,
+  delta: number,
+): ChangeSpec {
+  const target = index + delta;
+  const row = table.rows[index];
+  const other = table.rows[target];
+  if (!row || !other || index < 1 || target < 1) return [];
+  return [
+    { from: row.from, to: row.to, insert: state.sliceDoc(other.from, other.to) },
+    { from: other.from, to: other.to, insert: state.sliceDoc(row.from, row.to) },
+  ];
+}
+
 export function insertColumn(state: EditorState, table: TableModel, index: number): ChangeSpec {
   return rewriteRows(state, table, (cells, isDelimiter) =>
     cells.toSpliced(index, 0, isDelimiter ? delimiterCell(undefined) : ""),
@@ -215,6 +248,27 @@ export function insertColumn(state: EditorState, table: TableModel, index: numbe
 export function deleteColumn(state: EditorState, table: TableModel, index: number): ChangeSpec {
   if (columnCount(table) <= 1) return deleteTable(state, table);
   return rewriteRows(state, table, (cells) => cells.toSpliced(index, 1));
+}
+
+/** The cells with the two at `a` and `b` exchanged. */
+function swapCells(cells: readonly string[], a: number, b: number): string[] {
+  const next = [...cells];
+  const first = next[a] ?? "";
+  next[a] = next[b] ?? "";
+  next[b] = first;
+  return next;
+}
+
+/** Moves the column at `index` by `delta` places, its alignment, heading and cells along with it. */
+export function moveColumn(
+  state: EditorState,
+  table: TableModel,
+  index: number,
+  delta: number,
+): ChangeSpec {
+  const target = index + delta;
+  if (target === index || target < 0 || target >= columnCount(table)) return [];
+  return rewriteRows(state, table, (cells) => swapCells(cells, index, target));
 }
 
 export function alignColumn(

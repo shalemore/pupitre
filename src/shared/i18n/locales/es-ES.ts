@@ -59,10 +59,21 @@ export const esES = {
       deleteRow: "Eliminar fila",
       deleteColumn: "Eliminar columna",
       deleteTable: "Eliminar tabla",
+      moveRowUp: "Move Row Up",
+      moveRowDown: "Move Row Down",
+      moveColumnBefore: "Move Column Left",
+      moveColumnAfter: "Move Column Right",
     },
 
     codeLanguage: "Code Block Language",
     codeLanguagePlain: "Plain Text",
+
+    tableSize: {
+      title: "Insert Table",
+      rows: "Rows",
+      columns: "Columns",
+      insert: "Insert",
+    },
   },
   dialogs: {
     copyButton: "Copiar",
@@ -167,6 +178,8 @@ export const esES = {
     versionHistory: "Historial de versiones…",
 
     insertImage: "Insert Image…",
+
+    insertTable: "Insert Table…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

@@ -58,9 +58,20 @@ export const enUS = {
       insertRowBelow: "Insert Row Below",
       insertColumnBefore: "Insert Column Left",
       insertColumnAfter: "Insert Column Right",
+      moveRowUp: "Move Row Up",
+      moveRowDown: "Move Row Down",
+      moveColumnBefore: "Move Column Left",
+      moveColumnAfter: "Move Column Right",
       deleteRow: "Delete Row",
       deleteColumn: "Delete Column",
       deleteTable: "Delete Table",
+    },
+    /** Asks for the size of the table the Insert Table command writes. */
+    tableSize: {
+      title: "Insert Table",
+      rows: "Rows",
+      columns: "Columns",
+      insert: "Insert",
     },
   },
   dialogs: {
@@ -167,6 +178,7 @@ export const enUS = {
     quickOpen: "Open Quickly…",
     versionHistory: "Version History…",
     insertImage: "Insert Image…",
+    insertTable: "Insert Table…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

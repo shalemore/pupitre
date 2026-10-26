@@ -210,10 +210,19 @@ function buildTemplate(): MenuItemConstructorOptions[] {
       id: "paragraphMenu",
       label: labels.paragraphMenu,
       enabled: hasDocument,
-      submenu: withGroupSeparators(
-        PARAGRAPH_MENU_GROUPS.map((group) => formatItems(group, dispatchToMainWindow)),
+      // The Table action inside the groups writes the size its shortcut does; this entry asks for
+      // a size of its own, which no formatting action can do
+      submenu: [
+        ...withGroupSeparators(
+          PARAGRAPH_MENU_GROUPS.map((group) => formatItems(group, dispatchToMainWindow)),
+          separator,
+        ),
         separator,
-      ),
+        {
+          label: labels.insertTable,
+          click: () => dispatchToMainWindow({ id: "edit.insert-table" }),
+        },
+      ],
     },
     {
       id: "format",

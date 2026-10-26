@@ -11,6 +11,7 @@ import type { SyntaxNode } from "@lezer/common";
 import { FORMAT_ACTIONS, type FormatAction } from "@shared/format";
 import type { Settings } from "@shared/settings";
 import { htmlTag } from "./html";
+import { emptyTableSource } from "./table-model";
 
 /**
  * Formatting as text edits: every action inserts or removes Markdown syntax in the source, the
@@ -356,6 +357,19 @@ function insertBlock(view: EditorView, text: string, cursorOffset: number): void
   );
 }
 
+/**
+ * Inserts an empty table of that many rows and columns after the current line; the rows count the
+ * header. The caret goes into the first body cell, which is where the writing starts; a table of a
+ * header alone has no body cell and is written from its header instead.
+ */
+export function insertTable(view: EditorView, rows: number, columns: number): void {
+  const source = emptyTableSource(rows, columns);
+  const firstLineEnd = source.indexOf("\n");
+  const bodyStart = rows > 1 ? source.indexOf("\n", firstLineEnd + 1) + 1 : 0;
+  // Two characters past the line start put the caret between the first cell's two spaces
+  insertBlock(view, source, bodyStart + 2);
+}
+
 /** The smallest positive footnote number the document does not use yet. */
 function nextFootnoteLabel(state: EditorState): number {
   const used = new Set<number>();
@@ -443,7 +457,8 @@ export function runFormatAction(
     case "mathBlock":
       return insertFencedBlock(view, "$$");
     case "table":
-      return insertBlock(view, "|  |  |  |\n| --- | --- | --- |\n|  |  |  |\n", 2);
+      // The shortcut writes the size it always has: a header row and one body row
+      return insertTable(view, 2, 3);
     case "divider":
       return insertBlock(view, `${style.ruleMarker.repeat(3)}\n`, 4);
     default:

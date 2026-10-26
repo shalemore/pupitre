@@ -21,6 +21,7 @@ import {
   type MarkdownEditorHandle,
   type MatchStats,
 } from "@/features/editor/markdown-editor";
+import { TableSizeDialog } from "@/features/editor/table-size-dialog";
 import { VersionHistory } from "@/features/history/version-history";
 import { MenuBar } from "@/features/menu/menu-bar";
 import { QuickOpen } from "@/features/quick-open/quick-open";
@@ -67,6 +68,7 @@ export const MainWindow: Component = () => {
   const [historyOpen, setHistoryOpen] = createSignal(false);
   const [quickOpenOpen, setQuickOpenOpen] = createSignal(false);
   const [workspaceSearchOpen, setWorkspaceSearchOpen] = createSignal(false);
+  const [tableSizeOpen, setTableSizeOpen] = createSignal(false);
   // A match to select once the editor holds the document it was found in
   const [matchToReveal, setMatchToReveal] = createSignal<
     { path: string; from: number; to: number } | undefined
@@ -289,6 +291,17 @@ export const MainWindow: Component = () => {
     await desktop.invoke("clipboard:write-rich", fragment.markdown, fragment.html);
   };
 
+  /** Puts the caret back where the table would go, for a size dialog that was not answered. */
+  const closeTableSize = () => {
+    setTableSizeOpen(false);
+    editor()?.focus();
+  };
+
+  const insertTable = (rows: number, columns: number) => {
+    setTableSizeOpen(false);
+    editor()?.insertTable(rows, columns);
+  };
+
   /** Asks about every tab with unsaved changes, then lets the window go. */
   const closeWindow = async () => {
     if (!(await session.confirmDiscard())) return;
@@ -339,6 +352,8 @@ export const MainWindow: Component = () => {
         return void copyAsHtml();
       case "edit.insert-image":
         return void editor()?.insertImage();
+      case "edit.insert-table":
+        return setTableSizeOpen(true);
       case "edit.search-workspace":
         return setWorkspaceSearchOpen(true);
       case "view.toggle-sidebar":
@@ -591,6 +606,10 @@ export const MainWindow: Component = () => {
 
       <Show when={paletteOpen()}>
         <CommandPalette onClose={() => setPaletteOpen(false)} />
+      </Show>
+
+      <Show when={tableSizeOpen()}>
+        <TableSizeDialog onInsert={insertTable} onClose={closeTableSize} />
       </Show>
 
       {/* The versions belong to a file, so a document that has none has no panel to offer */}

@@ -59,10 +59,21 @@ export const koKR = {
       deleteRow: "행 삭제",
       deleteColumn: "열 삭제",
       deleteTable: "표 삭제",
+      moveRowUp: "Move Row Up",
+      moveRowDown: "Move Row Down",
+      moveColumnBefore: "Move Column Left",
+      moveColumnAfter: "Move Column Right",
     },
 
     codeLanguage: "Code Block Language",
     codeLanguagePlain: "Plain Text",
+
+    tableSize: {
+      title: "Insert Table",
+      rows: "Rows",
+      columns: "Columns",
+      insert: "Insert",
+    },
   },
   dialogs: {
     copyButton: "복사",
@@ -168,6 +179,8 @@ export const koKR = {
     versionHistory: "버전 기록…",
 
     insertImage: "Insert Image…",
+
+    insertTable: "Insert Table…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

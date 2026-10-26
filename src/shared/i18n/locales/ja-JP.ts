@@ -59,10 +59,21 @@ export const jaJP = {
       deleteRow: "行を削除",
       deleteColumn: "列を削除",
       deleteTable: "表を削除",
+      moveRowUp: "Move Row Up",
+      moveRowDown: "Move Row Down",
+      moveColumnBefore: "Move Column Left",
+      moveColumnAfter: "Move Column Right",
     },
 
     codeLanguage: "Code Block Language",
     codeLanguagePlain: "Plain Text",
+
+    tableSize: {
+      title: "Insert Table",
+      rows: "Rows",
+      columns: "Columns",
+      insert: "Insert",
+    },
   },
   dialogs: {
     copyButton: "コピー",
@@ -168,6 +179,8 @@ export const jaJP = {
     versionHistory: "版の履歴…",
 
     insertImage: "Insert Image…",
+
+    insertTable: "Insert Table…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

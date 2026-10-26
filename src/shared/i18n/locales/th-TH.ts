@@ -63,10 +63,21 @@ export const thTH = {
       deleteRow: "ลบแถว",
       deleteColumn: "ลบคอลัมน์",
       deleteTable: "ลบตาราง",
+      moveRowUp: "Move Row Up",
+      moveRowDown: "Move Row Down",
+      moveColumnBefore: "Move Column Left",
+      moveColumnAfter: "Move Column Right",
     },
 
     codeLanguage: "Code Block Language",
     codeLanguagePlain: "Plain Text",
+
+    tableSize: {
+      title: "Insert Table",
+      rows: "Rows",
+      columns: "Columns",
+      insert: "Insert",
+    },
   },
   dialogs: {
     copyButton: "คัดลอก",
@@ -171,6 +182,8 @@ export const thTH = {
     versionHistory: "ประวัติเวอร์ชัน…",
 
     insertImage: "Insert Image…",
+
+    insertTable: "Insert Table…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

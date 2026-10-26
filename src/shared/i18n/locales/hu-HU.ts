@@ -60,10 +60,21 @@ export const huHU = {
       deleteRow: "Sor törlése",
       deleteColumn: "Oszlop törlése",
       deleteTable: "Táblázat törlése",
+      moveRowUp: "Move Row Up",
+      moveRowDown: "Move Row Down",
+      moveColumnBefore: "Move Column Left",
+      moveColumnAfter: "Move Column Right",
     },
 
     codeLanguage: "Code Block Language",
     codeLanguagePlain: "Plain Text",
+
+    tableSize: {
+      title: "Insert Table",
+      rows: "Rows",
+      columns: "Columns",
+      insert: "Insert",
+    },
   },
   dialogs: {
     copyButton: "Másolás",
@@ -173,6 +184,8 @@ export const huHU = {
     versionHistory: "Verziótörténet…",
 
     insertImage: "Insert Image…",
+
+    insertTable: "Insert Table…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

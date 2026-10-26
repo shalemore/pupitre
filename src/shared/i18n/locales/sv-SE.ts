@@ -60,10 +60,21 @@ export const svSE = {
       deleteRow: "Ta bort rad",
       deleteColumn: "Ta bort kolumn",
       deleteTable: "Ta bort tabell",
+      moveRowUp: "Move Row Up",
+      moveRowDown: "Move Row Down",
+      moveColumnBefore: "Move Column Left",
+      moveColumnAfter: "Move Column Right",
     },
 
     codeLanguage: "Code Block Language",
     codeLanguagePlain: "Plain Text",
+
+    tableSize: {
+      title: "Insert Table",
+      rows: "Rows",
+      columns: "Columns",
+      insert: "Insert",
+    },
   },
   dialogs: {
     copyButton: "Kopiera",
@@ -172,6 +183,8 @@ export const svSE = {
     versionHistory: "Versionshistorik…",
 
     insertImage: "Insert Image…",
+
+    insertTable: "Insert Table…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

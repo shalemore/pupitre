@@ -59,10 +59,21 @@ export const ptPT = {
       deleteRow: "Eliminar linha",
       deleteColumn: "Eliminar coluna",
       deleteTable: "Eliminar tabela",
+      moveRowUp: "Move Row Up",
+      moveRowDown: "Move Row Down",
+      moveColumnBefore: "Move Column Left",
+      moveColumnAfter: "Move Column Right",
     },
 
     codeLanguage: "Code Block Language",
     codeLanguagePlain: "Plain Text",
+
+    tableSize: {
+      title: "Insert Table",
+      rows: "Rows",
+      columns: "Columns",
+      insert: "Insert",
+    },
   },
   dialogs: {
     copyButton: "Copiar",
@@ -167,6 +178,8 @@ export const ptPT = {
     versionHistory: "Histórico de versões…",
 
     insertImage: "Insert Image…",
+
+    insertTable: "Insert Table…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

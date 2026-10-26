@@ -53,6 +53,7 @@ import {
 import {
   formatKeymap,
   insertParagraphBreak,
+  insertTable,
   type MarkdownStyle,
   runFormatAction,
 } from "./format-commands";
@@ -107,6 +108,11 @@ export interface MarkdownEditorHandle {
   replaceNext: () => MatchStats;
   replaceAll: () => MatchStats;
   format: (action: FormatAction) => void;
+  /**
+   * Inserts an empty table of that many rows and columns, the rows counting the header, and puts the
+   * caret in its first body cell.
+   */
+  insertTable: (rows: number, columns: number) => void;
   /**
    * Shows the whole document rendered and waits for fonts and diagrams, so a printout is complete;
    * the returned function goes back to editing.
@@ -517,6 +523,12 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       format: (action) => {
         runFormatAction(view, action, markdownStyle());
         view.focus();
+      },
+      insertTable: (rows, columns) => {
+        // The live preview opens the cell the caret lands in only for a change made while the
+        // editor has the focus, and the size dialog held that until the size was picked
+        view.focus();
+        insertTable(view, rows, columns);
       },
       prepareForPrint: async () => {
         const hadFocus = view.hasFocus;

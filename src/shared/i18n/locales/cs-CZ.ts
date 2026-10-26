@@ -66,10 +66,21 @@ export const csCZ = {
       deleteRow: "Odstranit řádek",
       deleteColumn: "Odstranit sloupec",
       deleteTable: "Odstranit tabulku",
+      moveRowUp: "Move Row Up",
+      moveRowDown: "Move Row Down",
+      moveColumnBefore: "Move Column Left",
+      moveColumnAfter: "Move Column Right",
     },
 
     codeLanguage: "Code Block Language",
     codeLanguagePlain: "Plain Text",
+
+    tableSize: {
+      title: "Insert Table",
+      rows: "Rows",
+      columns: "Columns",
+      insert: "Insert",
+    },
   },
   dialogs: {
     copyButton: "Kopírovat",
@@ -176,6 +187,8 @@ export const csCZ = {
     versionHistory: "Historie verzí…",
 
     insertImage: "Insert Image…",
+
+    insertTable: "Insert Table…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

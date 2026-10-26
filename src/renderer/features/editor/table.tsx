@@ -4,6 +4,10 @@ import type { ChangeSpec } from "@codemirror/state";
 import { type EditorView, ViewPlugin, type ViewUpdate, WidgetType } from "@codemirror/view";
 import { cn } from "cn";
 import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowRight,
+  ArrowUp,
   BetweenHorizontalEnd,
   BetweenHorizontalStart,
   BetweenVerticalEnd,
@@ -40,6 +44,8 @@ import {
   editCell,
   insertColumn,
   insertRow,
+  moveColumn,
+  moveRow,
   readTable,
   type TableModel,
 } from "./table-model";
@@ -90,6 +96,7 @@ const Deleted = (props: { children: JSX.Element }) => (
 /** Floats above the table while a cell is edited; acts on that cell's row and column. */
 const TableToolbar: Component<{
   cell: CellPosition;
+  model: Accessor<TableModel>;
   view: EditorView;
   run: (edit: (model: TableModel) => ChangeSpec, focus?: CellPosition) => void;
 }> = (props) => {
@@ -97,6 +104,8 @@ const TableToolbar: Component<{
   const state = () => props.view.state;
   const row = () => props.cell.row;
   const column = () => props.cell.column;
+  const rowTotal = () => props.model().rows.length;
+  const columnTotal = () => columnCount(props.model());
   const align = (value: Alignment) =>
     props.run((model) => alignColumn(state(), model, column(), value), props.cell);
 
@@ -148,6 +157,59 @@ const TableToolbar: Component<{
       >
         <BetweenVerticalEnd />
       </ToolButton>
+      {/* Only body rows move: the header line says what the columns hold and stays first */}
+      <Show when={row() > 1}>
+        <ToolButton
+          label={labels().moveRowUp}
+          onClick={() =>
+            props.run((model) => moveRow(state(), model, row(), -1), {
+              row: row() - 1,
+              column: column(),
+            })
+          }
+        >
+          <ArrowUp />
+        </ToolButton>
+      </Show>
+      <Show when={row() > 0 && row() < rowTotal() - 1}>
+        <ToolButton
+          label={labels().moveRowDown}
+          onClick={() =>
+            props.run((model) => moveRow(state(), model, row(), 1), {
+              row: row() + 1,
+              column: column(),
+            })
+          }
+        >
+          <ArrowDown />
+        </ToolButton>
+      </Show>
+      <Show when={column() > 0}>
+        <ToolButton
+          label={labels().moveColumnBefore}
+          onClick={() =>
+            props.run((model) => moveColumn(state(), model, column(), -1), {
+              row: row(),
+              column: column() - 1,
+            })
+          }
+        >
+          <ArrowLeft />
+        </ToolButton>
+      </Show>
+      <Show when={column() < columnTotal() - 1}>
+        <ToolButton
+          label={labels().moveColumnAfter}
+          onClick={() =>
+            props.run((model) => moveColumn(state(), model, column(), 1), {
+              row: row(),
+              column: column() + 1,
+            })
+          }
+        >
+          <ArrowRight />
+        </ToolButton>
+      </Show>
       <Separator orientation="vertical" class="mx-0.5 h-4" />
       <Show when={row() > 0}>
         <ToolButton
@@ -365,7 +427,7 @@ const TableView: Component<TableViewProps> = (props) => {
       }}
     >
       <Show when={props.active()}>
-        {(cell) => <TableToolbar cell={cell()} run={run} view={view} />}
+        {(cell) => <TableToolbar cell={cell()} model={props.model} run={run} view={view} />}
       </Show>
       <div class="md-table-scroll">
         <table class="md-table-view">

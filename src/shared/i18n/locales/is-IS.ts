@@ -61,10 +61,21 @@ export const isIS = {
       deleteRow: "Eyða línu",
       deleteColumn: "Eyða dálki",
       deleteTable: "Eyða töflu",
+      moveRowUp: "Move Row Up",
+      moveRowDown: "Move Row Down",
+      moveColumnBefore: "Move Column Left",
+      moveColumnAfter: "Move Column Right",
     },
 
     codeLanguage: "Code Block Language",
     codeLanguagePlain: "Plain Text",
+
+    tableSize: {
+      title: "Insert Table",
+      rows: "Rows",
+      columns: "Columns",
+      insert: "Insert",
+    },
   },
   dialogs: {
     copyButton: "Afrita",
@@ -172,6 +183,8 @@ export const isIS = {
     versionHistory: "Útgáfusaga…",
 
     insertImage: "Insert Image…",
+
+    insertTable: "Insert Table…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

@@ -66,10 +66,21 @@ export const plPL = {
       deleteRow: "Usuń wiersz",
       deleteColumn: "Usuń kolumnę",
       deleteTable: "Usuń tabelę",
+      moveRowUp: "Move Row Up",
+      moveRowDown: "Move Row Down",
+      moveColumnBefore: "Move Column Left",
+      moveColumnAfter: "Move Column Right",
     },
 
     codeLanguage: "Code Block Language",
     codeLanguagePlain: "Plain Text",
+
+    tableSize: {
+      title: "Insert Table",
+      rows: "Rows",
+      columns: "Columns",
+      insert: "Insert",
+    },
   },
   dialogs: {
     copyButton: "Kopiuj",
@@ -178,6 +189,8 @@ export const plPL = {
     versionHistory: "Historia wersji…",
 
     insertImage: "Insert Image…",
+
+    insertTable: "Insert Table…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

@@ -59,10 +59,21 @@ export const deDE = {
       deleteRow: "Zeile löschen",
       deleteColumn: "Spalte löschen",
       deleteTable: "Tabelle löschen",
+      moveRowUp: "Move Row Up",
+      moveRowDown: "Move Row Down",
+      moveColumnBefore: "Move Column Left",
+      moveColumnAfter: "Move Column Right",
     },
 
     codeLanguage: "Code Block Language",
     codeLanguagePlain: "Plain Text",
+
+    tableSize: {
+      title: "Insert Table",
+      rows: "Rows",
+      columns: "Columns",
+      insert: "Insert",
+    },
   },
   dialogs: {
     copyButton: "Kopieren",
@@ -169,6 +180,8 @@ export const deDE = {
     versionHistory: "Versionsverlauf…",
 
     insertImage: "Insert Image…",
+
+    insertTable: "Insert Table…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
