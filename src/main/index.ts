@@ -37,11 +37,11 @@ if (!app.requestSingleInstanceLock()) {
     registerIpcHandlers();
     setupUpdater();
     rebuildApplicationMenu();
+    createMainWindow();
     applySpellCheck();
     onSettingsChange(rebuildApplicationMenu);
     onSettingsChange(applySpellCheck);
     onRecentFilesChange(rebuildApplicationMenu);
-    createMainWindow();
     checkForUpdatesOnStartup();
 
     app.on("activate", () => {
