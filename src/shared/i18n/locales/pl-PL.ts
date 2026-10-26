@@ -67,6 +67,9 @@ export const plPL = {
       deleteColumn: "Usuń kolumnę",
       deleteTable: "Usuń tabelę",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "Kopiuj",

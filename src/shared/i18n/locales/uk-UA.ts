@@ -67,6 +67,9 @@ export const ukUA = {
       deleteColumn: "Видалити стовпець",
       deleteTable: "Видалити таблицю",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "Копіювати",

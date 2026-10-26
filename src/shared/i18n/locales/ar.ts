@@ -76,6 +76,9 @@ export const ar = {
       deleteColumn: "حذف العمود",
       deleteTable: "حذف الجدول",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "نسخ",

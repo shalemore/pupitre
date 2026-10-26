@@ -61,6 +61,9 @@ export const viVN = {
       deleteColumn: "Xóa cột",
       deleteTable: "Xóa bảng",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "Sao chép",

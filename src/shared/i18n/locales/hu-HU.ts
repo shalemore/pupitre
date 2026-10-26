@@ -61,6 +61,9 @@ export const huHU = {
       deleteColumn: "Oszlop törlése",
       deleteTable: "Táblázat törlése",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "Másolás",

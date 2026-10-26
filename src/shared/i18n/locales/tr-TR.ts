@@ -61,6 +61,9 @@ export const trTR = {
       deleteColumn: "Sütunu sil",
       deleteTable: "Tabloyu sil",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "Kopyala",

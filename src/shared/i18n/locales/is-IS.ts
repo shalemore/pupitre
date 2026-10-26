@@ -62,6 +62,9 @@ export const isIS = {
       deleteColumn: "Eyða dálki",
       deleteTable: "Eyða töflu",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "Afrita",

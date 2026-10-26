@@ -61,6 +61,9 @@ export const idID = {
       deleteColumn: "Hapus kolom",
       deleteTable: "Hapus tabel",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "Salin",

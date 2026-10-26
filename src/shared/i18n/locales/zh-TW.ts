@@ -60,6 +60,9 @@ export const zhTW = {
       deleteColumn: "刪除欄",
       deleteTable: "刪除表格",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "複製",

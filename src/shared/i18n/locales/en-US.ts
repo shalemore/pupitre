@@ -39,6 +39,9 @@ export const enUS = {
     nextMatch: "Next Match",
     closeFind: "Close",
     placeholder: "Start writing…",
+    /** Picker of the language a code block's fence names; plain text takes the language away. */
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
     alerts: {
       note: "Note",
       tip: "Tip",

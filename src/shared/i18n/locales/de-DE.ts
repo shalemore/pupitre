@@ -60,6 +60,9 @@ export const deDE = {
       deleteColumn: "Spalte löschen",
       deleteTable: "Tabelle löschen",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "Kopieren",

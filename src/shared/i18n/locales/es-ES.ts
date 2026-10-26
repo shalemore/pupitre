@@ -60,6 +60,9 @@ export const esES = {
       deleteColumn: "Eliminar columna",
       deleteTable: "Eliminar tabla",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "Copiar",

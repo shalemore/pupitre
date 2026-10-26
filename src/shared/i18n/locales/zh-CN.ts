@@ -60,6 +60,9 @@ export const zhCN = {
       deleteColumn: "删除列",
       deleteTable: "删除表格",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "复制",

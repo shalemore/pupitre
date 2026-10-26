@@ -60,6 +60,9 @@ export const koKR = {
       deleteColumn: "열 삭제",
       deleteTable: "표 삭제",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "복사",

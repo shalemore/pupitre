@@ -61,6 +61,9 @@ export const nbNO = {
       deleteColumn: "Slett kolonne",
       deleteTable: "Slett tabell",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "Kopier",

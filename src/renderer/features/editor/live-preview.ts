@@ -20,7 +20,7 @@ import { DOCUMENT_EXTENSIONS } from "@shared/desktop-api";
 import { desktop } from "@/lib/desktop";
 import { AlertTitleWidget, alertTitles, alertType } from "./alerts";
 import { fencedText } from "./block-text";
-import { CodeCornerWidget } from "./code-corner";
+import { CodeCornerWidget, type FenceInfo } from "./code-corner";
 import { collectHeadings, findHeadingByAnchor, HEADING_LEVEL } from "./document-structure";
 import { EmojiWidget, emojiFor } from "./emoji";
 import { footnoteTarget } from "./footnotes";
@@ -305,6 +305,22 @@ class DecorationBuilder {
   }
 }
 
+/**
+ * Where the corner's picker writes the language: the rest of the opening fence line, which holds the
+ * info string and nothing else. An indented block has no fence to write one into, and a fence whose
+ * line the selection is on is edited as source.
+ */
+function fenceInfo(
+  builder: DecorationBuilder,
+  node: SyntaxNode,
+  active: boolean,
+): FenceInfo | undefined {
+  const mark = node.name === "FencedCode" ? node.getChild("CodeMark") : null;
+  if (!mark || active) return undefined;
+  const line = builder.lineAt(mark.from);
+  return { language: builder.text(mark.to, line.to).trim(), from: mark.to, to: line.to };
+}
+
 function visitCodeBlock(builder: DecorationBuilder, node: SyntaxNode): void {
   const first = builder.lineAt(node.from).number;
   const last = builder.lineAt(node.to).number;
@@ -321,8 +337,7 @@ function visitCodeBlock(builder: DecorationBuilder, node: SyntaxNode): void {
       node.name === "CodeBlock"
         ? builder.text(node.from, node.to).replace(/^(?: {4}|\t)/gm, "")
         : fencedText(builder.state, node);
-    const language = info && !active ? builder.text(info.from, info.to) : undefined;
-    const widget = new CodeCornerWidget(code, language);
+    const widget = new CodeCornerWidget(code, fenceInfo(builder, node, active));
     builder.decorations.push(Decoration.widget({ widget, side: -1 }).range(node.from));
   }
   if (node.name === "CodeBlock") return;

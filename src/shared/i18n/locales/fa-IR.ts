@@ -62,6 +62,9 @@ export const faIR = {
       deleteColumn: "حذف ستون",
       deleteTable: "حذف جدول",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "رونوشت",

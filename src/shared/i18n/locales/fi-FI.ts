@@ -61,6 +61,9 @@ export const fiFI = {
       deleteColumn: "Poista sarake",
       deleteTable: "Poista taulukko",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "Kopioi",

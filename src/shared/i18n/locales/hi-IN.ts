@@ -61,6 +61,9 @@ export const hiIN = {
       deleteColumn: "स्तंभ हटाएँ",
       deleteTable: "तालिका हटाएँ",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "कॉपी करें",

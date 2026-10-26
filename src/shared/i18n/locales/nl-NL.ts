@@ -61,6 +61,9 @@ export const nlNL = {
       deleteColumn: "Kolom verwijderen",
       deleteTable: "Tabel verwijderen",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "Kopiëren",

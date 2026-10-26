@@ -67,6 +67,9 @@ export const ruRU = {
       deleteColumn: "Удалить столбец",
       deleteTable: "Удалить таблицу",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "Копировать",

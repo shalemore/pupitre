@@ -60,6 +60,9 @@ export const frFR = {
       deleteColumn: "Supprimer la colonne",
       deleteTable: "Supprimer le tableau",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "Copier",

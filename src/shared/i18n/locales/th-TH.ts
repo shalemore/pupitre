@@ -64,6 +64,9 @@ export const thTH = {
       deleteColumn: "ลบคอลัมน์",
       deleteTable: "ลบตาราง",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "คัดลอก",

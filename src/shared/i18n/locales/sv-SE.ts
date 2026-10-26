@@ -61,6 +61,9 @@ export const svSE = {
       deleteColumn: "Ta bort kolumn",
       deleteTable: "Ta bort tabell",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "Kopiera",

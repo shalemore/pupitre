@@ -60,6 +60,9 @@ export const jaJP = {
       deleteColumn: "列を削除",
       deleteTable: "表を削除",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "コピー",

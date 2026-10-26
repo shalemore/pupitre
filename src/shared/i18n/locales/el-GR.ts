@@ -61,6 +61,9 @@ export const elGR = {
       deleteColumn: "Διαγραφή στήλης",
       deleteTable: "Διαγραφή πίνακα",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "Αντιγραφή",

@@ -418,6 +418,42 @@
     user-select: none;
   }
 
+  /*
+   * The language the fence names, picked in the corner. It is a select so it keeps the platform's
+   * keyboard, typeahead and screen reader behavior, and it is drawn as the plain label it replaces.
+   */
+  .md-code-language {
+    appearance: none;
+    /* As wide as the language it shows, not as the longest one the list holds */
+    field-sizing: content;
+    max-inline-size: 8rem;
+    min-inline-size: 0;
+    padding: 0.125rem 0.25rem;
+    /* The label stays where it was before it became a control */
+    margin-inline: -0.25rem;
+    overflow: hidden;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    transition:
+      color var(--transition-duration-ui),
+      background-color var(--transition-duration-ui);
+  }
+
+  .md-code-language:hover {
+    background: var(--ui-alpha-1);
+    color: var(--ui-text-primary);
+  }
+
+  .md-code-language:focus-visible {
+    outline: none;
+    box-shadow: var(--ui-focus-shadow);
+  }
+
   .md-code-copy {
     display: grid;
     place-items: center;

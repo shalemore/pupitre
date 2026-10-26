@@ -61,6 +61,9 @@ export const ptBR = {
       deleteColumn: "Excluir coluna",
       deleteTable: "Excluir tabela",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "Copiar",

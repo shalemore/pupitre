@@ -67,6 +67,9 @@ export const csCZ = {
       deleteColumn: "Odstranit sloupec",
       deleteTable: "Odstranit tabulku",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "Kopírovat",

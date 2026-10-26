@@ -60,6 +60,9 @@ export const itIT = {
       deleteColumn: "Elimina colonna",
       deleteTable: "Elimina tabella",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "Copia",

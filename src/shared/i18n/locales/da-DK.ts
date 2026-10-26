@@ -61,6 +61,9 @@ export const daDK = {
       deleteColumn: "Slet kolonne",
       deleteTable: "Slet tabel",
     },
+
+    codeLanguage: "Code Block Language",
+    codeLanguagePlain: "Plain Text",
   },
   dialogs: {
     copyButton: "Kopiér",
