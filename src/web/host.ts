@@ -5,6 +5,7 @@ import {
   type AppCommand,
   type DesktopApi,
   type DesktopPlatform,
+  type DocumentState,
   type DraftSession,
   type FolderEntry,
   type InvokeChannels,
@@ -228,6 +229,7 @@ type DemoMenuEntry =
       label: string;
       /** An Electron accelerator; it is written the way the platform shows it. */
       shortcut?: string;
+      enabled?: boolean;
       checked?: boolean;
       run?: () => void;
       submenu?: readonly DemoMenuEntry[];
@@ -239,6 +241,9 @@ let menuRuns = new Map<string, () => void>();
 
 function menuItems(menu: TopMenu): DemoMenuEntry[] {
   const { menu: m, format } = labels();
+  const { hasDocument, hasPath } = documentState;
+  // A document without a file has no versions kept of it
+  const hasFile = hasDocument && hasPath;
   const send = (command: AppCommand) => () => dispatch(command);
   const formatItems = (actions: readonly FormatAction[]): DemoMenuEntry[] =>
     actions.map((action) => {
@@ -261,18 +266,23 @@ function menuItems(menu: TopMenu): DemoMenuEntry[] {
           run: send({ id: "file.quick-open" }),
         },
         divider,
-        { label: m.save, run: send({ id: "file.save" }) },
-        { label: m.saveAs, run: send({ id: "file.save-as" }) },
-        { label: m.print, run: send({ id: "file.print" }) },
-        { label: m.exportPdf, run: send({ id: "file.export-pdf" }) },
-        { label: m.exportHtml, run: send({ id: "file.export-html" }) },
-        { label: m.exportImage, run: send({ id: "file.export-image" }) },
+        { label: m.save, enabled: hasDocument, run: send({ id: "file.save" }) },
+        { label: m.saveAs, enabled: hasDocument, run: send({ id: "file.save-as" }) },
+        { label: m.print, enabled: hasDocument, run: send({ id: "file.print" }) },
+        { label: m.exportPdf, enabled: hasDocument, run: send({ id: "file.export-pdf" }) },
+        { label: m.exportHtml, enabled: hasDocument, run: send({ id: "file.export-html" }) },
+        { label: m.exportImage, enabled: hasDocument, run: send({ id: "file.export-image" }) },
         divider,
         // The demo folder lives in memory, so nothing is kept of what a save writes over; the
         // panel still opens, and tells that no version was kept
-        { label: m.versionHistory, run: send({ id: "file.version-history" }) },
+        { label: m.versionHistory, enabled: hasFile, run: send({ id: "file.version-history" }) },
         divider,
-        { label: m.closeTab, shortcut: "CmdOrCtrl+W", run: send({ id: "file.close-tab" }) },
+        {
+          label: m.closeTab,
+          shortcut: "CmdOrCtrl+W",
+          enabled: hasDocument,
+          run: send({ id: "file.close-tab" }),
+        },
         { label: m.preferences, run: () => void handlers["window:open-settings"]() },
       ];
     case "edit":
@@ -350,6 +360,7 @@ function menuEntries(entries: readonly DemoMenuEntry[], parentId: string): MenuE
       id,
       label: entry.label,
       ...(entry.shortcut === undefined ? {} : { shortcut: formatShortcut(entry.shortcut) }),
+      ...(entry.enabled === undefined ? {} : { enabled: entry.enabled }),
       ...(entry.checked === undefined ? {} : { checked: entry.checked }),
       ...(entry.submenu === undefined ? {} : { submenu: menuEntries(entry.submenu, id) }),
     };
@@ -361,8 +372,8 @@ function menuSnapshot(): Menus {
   return menusOf((menu) => menuEntries(menuItems(menu), menu));
 }
 
-let dirty = false;
-window.addEventListener("beforeunload", (event) => dirty && event.preventDefault());
+let documentState: DocumentState = { hasDocument: false, hasPath: false, isDirty: false };
+window.addEventListener("beforeunload", (event) => documentState.isDirty && event.preventDefault());
 // Fonts would need a permission prompt and a browser that has the API; the demo keeps the defaults
 Object.defineProperty(window, "queryLocalFonts", { value: undefined });
 
@@ -484,7 +495,7 @@ const handlers: Handlers = {
   },
   "menu:items": menuSnapshot,
   "menu:click": (itemId) => menuRuns.get(itemId)?.(),
-  "window:set-document-state": (state) => void (dirty = state.isDirty),
+  "window:set-document-state": (state) => void (documentState = state),
   "window:close-confirmed": nothing,
   "window:minimize": nothing,
   "window:toggle-maximize": nothing,
