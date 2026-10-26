@@ -20,7 +20,14 @@ import {
   type FormatAction,
 } from "@shared/format";
 import { getDictionary, resolveLocale } from "@shared/i18n";
-import { formatShortcut, type MenuEntry, type Menus, menusOf, type TopMenu } from "@shared/menu";
+import {
+  formatShortcut,
+  type MenuEntry,
+  type Menus,
+  menusOf,
+  type TopMenu,
+  withGroupSeparators,
+} from "@shared/menu";
 import {
   DEFAULT_SETTINGS,
   patchSettingsFile,
@@ -305,10 +312,7 @@ function menuItems(menu: TopMenu): DemoMenuEntry[] {
         },
       ];
     case "paragraphMenu":
-      return PARAGRAPH_MENU_GROUPS.flatMap((group, index) => {
-        const items = formatItems(group);
-        return index === 0 ? items : items.toSpliced(0, 0, divider);
-      });
+      return withGroupSeparators(PARAGRAPH_MENU_GROUPS.map(formatItems), divider);
     case "format":
       return formatItems(INLINE_FORMAT_ACTIONS);
     case "view":

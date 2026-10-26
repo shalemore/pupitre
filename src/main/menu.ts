@@ -10,7 +10,13 @@ import {
 } from "electron";
 import type { DocumentState } from "@shared/desktop-api";
 import { INLINE_FORMAT_ACTIONS, PARAGRAPH_MENU_GROUPS } from "@shared/format";
-import { formatShortcut, type MenuEntry, type Menus, menusOf } from "@shared/menu";
+import {
+  formatShortcut,
+  type MenuEntry,
+  type Menus,
+  menusOf,
+  withGroupSeparators,
+} from "@shared/menu";
 import { showAboutDialog } from "./about";
 import { formatItems } from "./format-menu";
 import { t } from "./i18n";
@@ -204,10 +210,10 @@ function buildTemplate(): MenuItemConstructorOptions[] {
       id: "paragraphMenu",
       label: labels.paragraphMenu,
       enabled: hasDocument,
-      submenu: PARAGRAPH_MENU_GROUPS.flatMap((group, index) => {
-        const items = formatItems(group, dispatchToMainWindow);
-        return index === 0 ? items : [separator].concat(items);
-      }),
+      submenu: withGroupSeparators(
+        PARAGRAPH_MENU_GROUPS.map((group) => formatItems(group, dispatchToMainWindow)),
+        separator,
+      ),
     },
     {
       id: "format",

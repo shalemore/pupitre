@@ -1,5 +1,6 @@
 import { Menu, type MenuItemConstructorOptions, type WebContents } from "electron";
 import { INLINE_FORMAT_ACTIONS } from "@shared/format";
+import { withGroupSeparators } from "@shared/menu";
 import { formatItems } from "./format-menu";
 import { t } from "./i18n";
 
@@ -55,9 +56,6 @@ export function setupContextMenu(webContents: WebContents, options: ContextMenuO
         : [];
     const groups = [spelling, formatting, editItems].filter((group) => group.length > 0);
     if (groups.length === 0) return;
-    const template = groups.flatMap((group, index) =>
-      index === 0 ? group : [separator].concat(group),
-    );
-    Menu.buildFromTemplate(template).popup();
+    Menu.buildFromTemplate(withGroupSeparators(groups, separator)).popup();
   });
 }

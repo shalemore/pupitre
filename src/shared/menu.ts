@@ -49,6 +49,11 @@ export function formatShortcut(accelerator: string): string {
     .join("+");
 }
 
+/** The items of several groups one after another, with one separator between each pair of groups. */
+export function withGroupSeparators<T>(groups: readonly (readonly T[])[], separator: T): T[] {
+  return groups.flatMap((group, index) => (index === 0 ? group : [separator, ...group]));
+}
+
 /** The entries of every top-level menu, given how to make the entries of one; both hosts make them this way. */
 export function menusOf(entriesOf: (menu: TopMenu) => readonly MenuEntry[]): Menus {
   return {
