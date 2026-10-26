@@ -53,9 +53,29 @@ export class LineBreakWidget extends WidgetType {
   }
 }
 
+/**
+ * Elements whose content never becomes visible text: the sanitizer drops it together with the
+ * element, so a block that opens with one would hide its source behind nothing. An unclosed
+ * `<script>` or `<style>` runs to the end of the document, which would swallow everything after it.
+ */
+const HIDDEN_CONTENT_TAGS = new Set([
+  "head",
+  "iframe",
+  "noembed",
+  "noframes",
+  "noscript",
+  "plaintext",
+  "script",
+  "style",
+  "template",
+  "title",
+  "xmp",
+]);
+
 /** Whether an HTML block is an element that can be shown rendered. */
 export function isRenderableHtml(source: string): boolean {
-  return /^<[a-z]/i.test(source) && !/^<details[\s>]/i.test(source);
+  const tag = /^<([a-z][a-z0-9]*)[\s/>]/i.exec(source)?.[1]?.toLowerCase();
+  return tag !== undefined && tag !== "details" && !HIDDEN_CONTENT_TAGS.has(tag);
 }
 
 export class HtmlBlockWidget extends WidgetType {
