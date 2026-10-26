@@ -117,6 +117,7 @@ export const nbNO = {
     save: "Lagre",
     saveAs: "Lagre som…",
     exportPdf: "Eksporter som PDF…",
+    exportHtml: "Eksporter som HTML…",
     close: "Lukk vindu",
     undo: "Angre",
     redo: "Gjør om",

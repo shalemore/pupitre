@@ -239,6 +239,7 @@ function menuItems(menu: TopMenu): DemoMenuEntry[] {
         { label: m.save, run: send({ id: "file.save" }) },
         { label: m.saveAs, run: send({ id: "file.save-as" }) },
         { label: m.exportPdf, run: send({ id: "file.export-pdf" }) },
+        { label: m.exportHtml, run: send({ id: "file.export-html" }) },
         divider,
         { label: m.preferences, run: () => void handlers["window:open-settings"]() },
       ];
@@ -379,6 +380,17 @@ const handlers: Handlers = {
   "document:export-pdf": () => {
     window.print();
     return null;
+  },
+  "document:export-html": (suggestedName, html) => {
+    // The page the desktop app writes next to the document is a file the browser downloads here
+    const url = URL.createObjectURL(new Blob([html], { type: "text/html" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = suggestedName;
+    link.click();
+    // The download reads the address after the click returns
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+    return suggestedName;
   },
   "dialog:confirm-unsaved": (fileName) => {
     const { dialogs } = labels();

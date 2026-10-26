@@ -117,6 +117,7 @@ export const thTH = {
     save: "บันทึก",
     saveAs: "บันทึกเป็น...",
     exportPdf: "ส่งออกเป็น PDF...",
+    exportHtml: "ส่งออกเป็น HTML...",
     close: "ปิดหน้าต่าง",
     undo: "เลิกทำ",
     redo: "ทำซ้ำ",

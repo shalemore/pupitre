@@ -120,6 +120,11 @@ function buildTemplate(): MenuItemConstructorOptions[] {
           enabled: hasDocument,
           click: () => dispatchToMainWindow({ id: "file.export-pdf" }),
         },
+        {
+          label: labels.exportHtml,
+          enabled: hasDocument,
+          click: () => dispatchToMainWindow({ id: "file.export-html" }),
+        },
         separator,
         ...(isMac ? [] : [preferences, separator]),
         { label: labels.close, role: "close" },

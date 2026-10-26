@@ -113,6 +113,7 @@ export const esES = {
     save: "Guardar",
     saveAs: "Guardar como...",
     exportPdf: "Exportar como PDF...",
+    exportHtml: "Exportar como HTML...",
     close: "Cerrar ventana",
     undo: "Deshacer",
     redo: "Rehacer",

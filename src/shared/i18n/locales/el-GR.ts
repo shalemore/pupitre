@@ -117,6 +117,7 @@ export const elGR = {
     save: "Αποθήκευση",
     saveAs: "Αποθήκευση ως…",
     exportPdf: "Εξαγωγή ως PDF…",
+    exportHtml: "Εξαγωγή ως HTML…",
     close: "Κλείσιμο παραθύρου",
     undo: "Αναίρεση",
     redo: "Επανάληψη",

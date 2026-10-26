@@ -72,7 +72,7 @@ let renderCount = 0;
 const cache = new Map<string, Promise<string>>();
 
 /** Mermaid is large, so it is loaded the first time a diagram is shown. */
-function renderDiagram(source: string, theme: DiagramTheme): Promise<string> {
+export function renderDiagram(source: string, theme: DiagramTheme): Promise<string> {
   const key = `${JSON.stringify(theme)}\n${source}`;
   let svg = cache.get(key);
   if (!svg) {

@@ -118,6 +118,7 @@ export const huHU = {
     save: "Mentés",
     saveAs: "Mentés másként…",
     exportPdf: "Exportálás PDF-ként…",
+    exportHtml: "Exportálás HTML-ként…",
     close: "Ablak bezárása",
     undo: "Visszavonás",
     redo: "Mégis",

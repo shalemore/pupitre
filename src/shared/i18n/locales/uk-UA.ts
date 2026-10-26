@@ -123,6 +123,7 @@ export const ukUA = {
     save: "Зберегти",
     saveAs: "Зберегти як…",
     exportPdf: "Експортувати як PDF…",
+    exportHtml: "Експортувати як HTML…",
     close: "Закрити вікно",
     undo: "Скасувати",
     redo: "Повторити",

@@ -118,6 +118,7 @@ export const isIS = {
     save: "Vista",
     saveAs: "Vista sem…",
     exportPdf: "Flytja út sem PDF…",
+    exportHtml: "Flytja út sem HTML…",
     close: "Loka glugga",
     undo: "Afturkalla",
     redo: "Endurgera",

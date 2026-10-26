@@ -28,6 +28,7 @@ import { GFM, Subscript, Superscript } from "@lezer/markdown";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { debounce } from "@solid-primitives/scheduled";
 import { createEffect, on, onCleanup, onMount, type Component } from "solid-js";
+import { DOCUMENT_FILE } from "@shared/desktop-api";
 import type { FormatAction } from "@shared/format";
 import { ScrollView } from "@/components/ui";
 import { t } from "@/i18n";
@@ -37,9 +38,11 @@ import {
   flushDocumentPositions,
   rememberDocumentPosition,
 } from "@/lib/document-positions";
+import { fileNameOf } from "@/lib/file";
 import { settings } from "@/lib/settings";
 import { countText, type TextStats } from "@/lib/text-stats";
 import { themeApplied } from "@/lib/theme";
+import { documentHtml } from "../export/document-html";
 import { alertTitles } from "./alerts";
 import { codeHighlight } from "./code-highlight";
 import { cursorStyle, restartCursorBlink } from "./cursor";
@@ -103,6 +106,8 @@ export interface MarkdownEditorHandle {
   prepareForPrint: () => Promise<() => void>;
   /** Writes images pasted before the document had a file next to it, see images.ts. */
   persistImages: (documentPath: string) => Promise<void>;
+  /** The document as a self-contained HTML page, see features/export/document-html.ts. */
+  toHtml: () => Promise<string>;
 }
 
 export interface MarkdownEditorProps {
@@ -140,6 +145,12 @@ function markdownStyle(): MarkdownStyle {
     ruleMarker,
     incrementListMarker,
   };
+}
+
+/** The title of an exported page: the document's file name without its extension. */
+function documentTitle(path: string | undefined): string {
+  const name = path ? fileNameOf(path) : t().common.untitledFileName;
+  return name.replace(DOCUMENT_FILE, "");
 }
 
 /**
@@ -490,6 +501,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         };
       },
       persistImages: (documentPath) => pendingImages.persist(view, documentPath),
+      toHtml: () => documentHtml(view.state, documentTitle(props.documentPath)),
     });
 
     onCleanup(() => {

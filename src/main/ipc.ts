@@ -329,6 +329,17 @@ export function registerIpcHandlers(): void {
     return filePath;
   });
 
+  handle("document:export-html", async (event, suggestedName, html) => {
+    const filePath = await savePath(senderWindow(event), {
+      defaultPath: suggestedName,
+      filters: [{ name: "HTML", extensions: ["html"] }],
+    });
+    if (filePath === null) return null;
+    // A page carries its own charset, so it is written as UTF-8 whatever the document was
+    await writeFile(filePath, html, "utf8");
+    return filePath;
+  });
+
   handle("dialog:confirm-unsaved", async (event, fileName) => {
     const labels = t().dialogs;
     const { response } = await dialog.showMessageBox(senderWindow(event), {

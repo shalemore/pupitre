@@ -114,6 +114,7 @@ export const frFR = {
     save: "Enregistrer",
     saveAs: "Enregistrer sous...",
     exportPdf: "Exporter au format PDF...",
+    exportHtml: "Exporter au format HTML...",
     close: "Fermer la fenêtre",
     undo: "Annuler",
     redo: "Rétablir",

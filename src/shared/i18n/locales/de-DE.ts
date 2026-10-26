@@ -114,6 +114,7 @@ export const deDE = {
     save: "Speichern",
     saveAs: "Speichern unter...",
     exportPdf: "Als PDF exportieren...",
+    exportHtml: "Als HTML exportieren...",
     close: "Fenster schließen",
     undo: "Rückgängig",
     redo: "Wiederholen",

@@ -2,15 +2,17 @@ import type { EditorState } from "@codemirror/state";
 import type { SyntaxNode } from "@lezer/common";
 import { type Component, createResource, For, Match, Switch } from "solid-js";
 import { Dynamic } from "solid-js/web";
+import { emojiFor } from "./emoji";
 import { htmlTag, isFormattingTag } from "./html";
 import { imageSource, resolveUrl } from "./images";
 import { markers } from "./live-preview";
 import { renderMath } from "./mathjax";
 
 /**
- * Inline Markdown rendered as elements, for widgets that replace their source (table cells).
- * It is built from the same Lezer tree as the live preview, so both read the syntax alike. Inline
- * HTML other than formatting tags is left out and its text kept.
+ * Inline Markdown rendered as elements, for widgets that replace their source (table cells) and for
+ * the HTML export, which writes the items as markup. It is built from the same Lezer tree as the
+ * live preview, so both read the syntax alike. Inline HTML other than formatting tags is left out
+ * and its text kept.
  */
 
 export type InlineItem =
@@ -19,12 +21,16 @@ export type InlineItem =
   | { type: "element"; tag: string; class?: string; children: InlineItem[] }
   | { type: "link"; href: string; children: InlineItem[] }
   | { type: "image"; src: string; alt: string }
-  | { type: "math"; tex: string; display: boolean };
+  | { type: "math"; tex: string; display: boolean }
+  | { type: "footnote"; label: string };
 
 const ELEMENT_TAGS: Record<string, { tag: string; class: string }> = {
   StrongEmphasis: { tag: "strong", class: "md-strong" },
   Emphasis: { tag: "em", class: "md-em" },
   Strikethrough: { tag: "del", class: "md-strike" },
+  Highlight: { tag: "mark", class: "md-tag md-tag-mark" },
+  Subscript: { tag: "sub", class: "md-tag md-tag-sub" },
+  Superscript: { tag: "sup", class: "md-tag md-tag-sup" },
 };
 
 /** The items between `from` and `to`, children of `parent`. */
@@ -52,7 +58,10 @@ export function inlineItems(
     switch (child.name) {
       case "StrongEmphasis":
       case "Emphasis":
-      case "Strikethrough": {
+      case "Strikethrough":
+      case "Highlight":
+      case "Subscript":
+      case "Superscript": {
         const element = ELEMENT_TAGS[child.name] ?? { tag: "span", class: "" };
         push({ type: "element", ...element, children: inner() });
         break;
@@ -86,6 +95,14 @@ export function inlineItems(
         push({ type: "image", src, alt: text(start, end) });
         break;
       }
+      case "FootnoteReference":
+        push({ type: "footnote", label: text(start, end) });
+        break;
+      case "Emoji": {
+        const source = text(child.from, child.to);
+        push({ type: "text", text: emojiFor(source) ?? source });
+        break;
+      }
       case "Escape":
         push({ type: "text", text: text(child.from + 1, child.to) });
         break;
@@ -111,7 +128,9 @@ export function inlineItems(
         break;
       }
       default:
-        if (!child.name.endsWith("Mark")) push({ type: "text", text: text(child.from, child.to) });
+        // A task's `[x]` is a marker too, though its name ends in "Marker" rather than "Mark"
+        if (!child.name.endsWith("Mark") && child.name !== "TaskMarker")
+          push({ type: "text", text: text(child.from, child.to) });
     }
   }
   if (to > pos) push({ type: "text", text: text(pos, to) });
@@ -159,6 +178,9 @@ export const InlineContent: Component<{ items: InlineItem[] }> = (props) => (
         </Match>
         <Match when={item.type === "math" && item}>
           {(math) => <MathItem tex={math().tex} display={math().display} />}
+        </Match>
+        <Match when={item.type === "footnote" && item}>
+          {(note) => <sup class="md-footnote-ref">{note().label}</sup>}
         </Match>
       </Switch>
     )}

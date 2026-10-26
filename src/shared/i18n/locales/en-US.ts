@@ -114,6 +114,7 @@ export const enUS = {
     save: "Save",
     saveAs: "Save As...",
     exportPdf: "Export as PDF...",
+    exportHtml: "Export as HTML...",
     close: "Close Window",
     undo: "Undo",
     redo: "Redo",

@@ -110,6 +110,7 @@ export const zhHK = {
     save: "儲存",
     saveAs: "另存新檔...",
     exportPdf: "匯出為 PDF...",
+    exportHtml: "匯出為 HTML...",
     close: "關閉視窗",
     undo: "復原",
     redo: "重做",

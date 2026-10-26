@@ -118,6 +118,7 @@ export const trTR = {
     save: "Kaydet",
     saveAs: "Farklı Kaydet…",
     exportPdf: "PDF Olarak Dışa Aktar…",
+    exportHtml: "HTML Olarak Dışa Aktar…",
     close: "Pencereyi Kapat",
     undo: "Geri Al",
     redo: "Yinele",

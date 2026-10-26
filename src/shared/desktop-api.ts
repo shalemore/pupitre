@@ -136,6 +136,7 @@ export type AppCommand =
   | { id: "file.save" }
   | { id: "file.save-as" }
   | { id: "file.export-pdf" }
+  | { id: "file.export-html" }
   | { id: "edit.find" }
   | { id: "edit.replace" }
   | { id: "edit.search-workspace" }
@@ -225,6 +226,8 @@ export interface InvokeChannels {
   /** Saves an image into the assets folder next to the document and returns a relative path ready for Markdown. */
   "document:save-image": (documentPath: string, fileName: string, data: Uint8Array) => string;
   "document:export-pdf": (suggestedName: string) => string | null;
+  /** Writes a page the renderer built into the file the user chose, and returns its path. */
+  "document:export-html": (suggestedName: string, html: string) => string | null;
   "dialog:confirm-unsaved": (fileName: string) => UnsavedChoice;
   /** The open file was changed on disk while the document has unsaved changes. */
   "dialog:confirm-external-change": (fileName: string) => ExternalChangeChoice;

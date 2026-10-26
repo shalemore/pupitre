@@ -118,6 +118,7 @@ export const nlNL = {
     save: "Opslaan",
     saveAs: "Opslaan als…",
     exportPdf: "Exporteren als PDF…",
+    exportHtml: "Exporteren als HTML…",
     close: "Venster sluiten",
     undo: "Ongedaan maken",
     redo: "Opnieuw",

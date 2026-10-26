@@ -113,6 +113,7 @@ export const ptPT = {
     save: "Guardar",
     saveAs: "Guardar como…",
     exportPdf: "Exportar como PDF…",
+    exportHtml: "Exportar como HTML…",
     close: "Fechar janela",
     undo: "Anular",
     redo: "Refazer",

@@ -238,6 +238,14 @@ export const MainWindow: Component = () => {
     }
   };
 
+  const exportHtml = async () => {
+    if (!session.activeDocument()) return;
+    const html = await editor()?.toHtml();
+    if (html === undefined) return;
+    const htmlName = session.fileName().replace(DOCUMENT_FILE, "") + ".html";
+    await desktop.invoke("document:export-html", htmlName, html);
+  };
+
   const runCommand = (command: AppCommand) => {
     switch (command.id) {
       case "file.new":
@@ -256,6 +264,8 @@ export const MainWindow: Component = () => {
         return void session.saveAs();
       case "file.export-pdf":
         return void exportPdf();
+      case "file.export-html":
+        return void exportHtml();
       case "edit.find":
         return openFind("find");
       case "edit.replace":
