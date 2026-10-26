@@ -63,6 +63,7 @@
     "lucide-solid": "^1.16.0",
     "mathjax-full": "^3.2.2",
     "mermaid": "^12.2.0",
+    "offstage-windows": "^0.1.2",
     "oxfmt": "^0.74.0",
     "oxlint": "^1.89.0",
     "oxlint-tailwindcss": "^1.16.0",
