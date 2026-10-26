@@ -172,12 +172,14 @@ export const MainWindow: Component = () => {
       isDirty: session.hasDirtyTabs(),
     });
   });
-  // Close the find bar when the document changes; the old document's matches mean nothing
+  // Close the find bar and the version history when the document changes: the old document's
+  // matches and versions mean nothing to the one that replaced it
   createEffect(
     on(
       () => session.activeDocument()?.id,
       () => {
         setFindMode("closed");
+        setHistoryOpen(false);
         chrome.show();
       },
     ),
