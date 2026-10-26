@@ -319,7 +319,11 @@ function menuItems(menu: TopMenu): DemoMenuEntry[] {
         },
       ];
     case "paragraphMenu":
-      return withGroupSeparators(PARAGRAPH_MENU_GROUPS.map(formatItems), divider);
+      return [
+        ...withGroupSeparators(PARAGRAPH_MENU_GROUPS.map(formatItems), divider),
+        divider,
+        { label: m.insertTable, run: send({ id: "edit.insert-table" }) },
+      ];
     case "format":
       return [
         ...formatItems(INLINE_FORMAT_ACTIONS),
@@ -339,6 +343,12 @@ function menuItems(menu: TopMenu): DemoMenuEntry[] {
         },
         divider,
         { label: m.toggleSidebar, run: send({ id: "view.toggle-sidebar" }) },
+        {
+          label: m.sourceMode,
+          shortcut: "CmdOrCtrl+/",
+          checked: settings.sourceMode,
+          run: () => updateSettings({ sourceMode: !settings.sourceMode }),
+        },
         { label: m.nextTab, shortcut: "Control+Tab", run: send({ id: "view.next-tab" }) },
         {
           label: m.previousTab,
