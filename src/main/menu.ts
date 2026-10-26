@@ -322,7 +322,12 @@ function buildTemplate(): MenuItemConstructorOptions[] {
         { label: labels.fullScreen, role: "togglefullscreen" },
         ...(app.isPackaged
           ? []
-          : [separator, { role: "reload" } as const, { role: "toggleDevTools" } as const]),
+          : [
+              separator,
+              { role: "reload" } as const,
+              // F12 keeps the developer tools away from Insert Image's Ctrl+Shift+I
+              { role: "toggleDevTools", accelerator: "F12" } as const,
+            ]),
       ],
     },
     ...(isMac ? [{ role: "windowMenu" } as const] : []),
