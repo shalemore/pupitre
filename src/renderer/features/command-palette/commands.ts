@@ -1,5 +1,5 @@
 import { TOP_MENUS, type MenuEntry, type Menus, type TopMenu } from "@shared/menu";
-import { matchesSubsequence } from "@/features/palette/fuzzy";
+import { matchRanges } from "@/features/palette/fuzzy";
 
 /** One entry of the palette: something a menu runs, with the menus it lives under. */
 export interface PaletteCommand {
@@ -54,7 +54,8 @@ export function filterCommands(
 ): PaletteCommand[] {
   const needle = query.trim();
   if (needle === "") return [...commands];
-  return commands.filter((command) =>
-    matchesSubsequence(`${command.label} ${command.parent} ${command.shortcut ?? ""}`, needle),
-  );
+  return commands.filter((command) => {
+    const text = `${command.label} ${command.parent} ${command.shortcut ?? ""}`;
+    return matchRanges(text, needle) !== undefined;
+  });
 }

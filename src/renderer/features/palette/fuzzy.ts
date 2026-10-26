@@ -27,24 +27,9 @@ function* loweredChars(text: string): Generator<LoweredChar> {
 }
 
 /**
- * Whether the characters of a query appear in the text in that order, ignoring case, the way "tsb"
- * finds "Toggle Sidebars". A query with nothing in it matches any text.
- */
-export function matchesSubsequence(text: string, query: string): boolean {
-  const wanted = Array.from(query.toLowerCase());
-  if (wanted.length === 0) return true;
-  let at = 0;
-  for (const { char } of loweredChars(text)) {
-    if (char !== wanted[at]) continue;
-    at += 1;
-    if (at === wanted.length) return true;
-  }
-  return false;
-}
-
-/**
- * Where in the text the characters of a query were found, to show what matched, or undefined when
- * they are not all there. Characters found next to each other make one range.
+ * Where in the text the characters of a query were found, in that order and ignoring case, the way
+ * "tsb" finds "Toggle Sidebars"; undefined when they are not all there. Characters found next to
+ * each other make one range. A query with nothing in it matches any text.
  */
 export function matchRanges(text: string, query: string): MatchRange[] | undefined {
   const wanted = Array.from(query.toLowerCase());
