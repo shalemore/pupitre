@@ -248,7 +248,7 @@ let menuRuns = new Map<string, () => void>();
 
 function menuItems(menu: TopMenu): DemoMenuEntry[] {
   const { menu: m, format } = labels();
-  const { hasDocument, hasPath } = documentState;
+  const { hasDocument, hasPath, canReopenTab } = documentState;
   // A document without a file has no versions kept of it
   const hasFile = hasDocument && hasPath;
   const send = (command: AppCommand) => () => dispatch(command);
@@ -289,6 +289,13 @@ function menuItems(menu: TopMenu): DemoMenuEntry[] {
           shortcut: "CmdOrCtrl+W",
           enabled: hasDocument,
           run: send({ id: "file.close-tab" }),
+        },
+        {
+          label: m.reopenTab,
+          shortcut: "CmdOrCtrl+Shift+T",
+          // Only a tab that was closed can come back, and closing one is the only thing that changes that
+          enabled: canReopenTab,
+          run: send({ id: "file.reopen-tab" }),
         },
         { label: m.preferences, run: () => void handlers["window:open-settings"]() },
       ];
