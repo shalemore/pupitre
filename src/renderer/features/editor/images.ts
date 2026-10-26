@@ -1,5 +1,6 @@
 import { type EditorState, type Extension, Facet, Transaction } from "@codemirror/state";
 import { EditorView, WidgetType } from "@codemirror/view";
+import { desktop } from "@/lib/desktop";
 
 /** file:// URL of the document's folder, to resolve relative image paths; undefined if unsaved. */
 export const documentBaseUrl = Facet.define<string | undefined, string | undefined>({
@@ -91,10 +92,52 @@ export function imageInput(upload: (file: File) => Promise<string>): Extension {
   });
 }
 
+/** Writes a pasted or dropped picture next to `documentPath` and returns the address to link it. */
+export async function saveImageNextTo(documentPath: string, file: File): Promise<string> {
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  return desktop.invoke("document:save-image", documentPath, file.name, bytes);
+}
+
 interface PendingImage {
   file: File;
   /** Where the image was written, for the document path it was written for. */
   saved?: { documentPath: string; src: string };
+}
+
+/** A written image, by the blob: URL the document still links it with. */
+interface ShownImage {
+  url: string;
+  src: string;
+}
+
+interface LinkChange {
+  from: number;
+  to: number;
+  insert: string;
+}
+
+/** Every place in `text` that still shows the image by its blob: URL. */
+function linkChanges(text: string, shown: readonly ShownImage[]): LinkChange[] {
+  return shown.flatMap(({ url, src }) => {
+    const changes: LinkChange[] = [];
+    for (let at = text.indexOf(url); at >= 0; at = text.indexOf(url, at + url.length)) {
+      changes.push({ from: at, to: at + url.length, insert: src });
+    }
+    return changes;
+  });
+}
+
+export interface PendingImages {
+  /** Keeps `file` in memory and returns the blob: URL showing it until the document is written. */
+  add: (file: File) => string;
+  /**
+   * Writes the images `markdown` still shows next to `documentPath`; returns the text linking them
+   * there. The session writes a tab that is not on show with it, without the editor that shows it.
+   */
+  persistText: (markdown: string, documentPath: string) => Promise<string>;
+  /** The same for the document an editor shows, linking the written images in place. */
+  persistView: (view: EditorView, documentPath: string) => Promise<void>;
+  dispose: () => void;
 }
 
 /**
@@ -102,10 +145,23 @@ interface PendingImage {
  * to the image folder when the document is first saved, so an unsaved document never embeds image
  * data in its Markdown.
  */
-export function createPendingImages(
-  saveImage: (documentPath: string, file: File) => Promise<string>,
-) {
+export function createPendingImages(): PendingImages {
   const images = new Map<string, PendingImage>();
+
+  /** Writes the images `markdown` still shows, each once for the document path it belongs to. */
+  const writeShown = async (markdown: string, documentPath: string): Promise<ShownImage[]> => {
+    const shown = [...images].filter(([url]) => markdown.includes(url));
+    return Promise.all(
+      shown.map(async ([url, image]) => {
+        const saved =
+          image.saved?.documentPath === documentPath
+            ? image.saved
+            : { documentPath, src: await saveImageNextTo(documentPath, image.file) };
+        image.saved = saved;
+        return { url, src: saved.src };
+      }),
+    );
+  };
 
   return {
     add: (file: File): string => {
@@ -114,30 +170,23 @@ export function createPendingImages(
       return url;
     },
 
-    /** Saves the images the document still shows next to `documentPath` and links them there. */
-    persist: async (view: EditorView, documentPath: string): Promise<void> => {
+    persistText: async (markdown, documentPath) => {
+      const shown = await writeShown(markdown, documentPath);
+      // A blob: URL names one picture, and a function replacer keeps a path with a `$` literal
+      return shown.reduce((text, { url, src }) => text.replaceAll(url, () => src), markdown);
+    },
+
+    persistView: async (view, documentPath) => {
       const before = view.state.doc.toString();
-      const shown = [...images].filter(([url]) => before.includes(url));
-      await Promise.all(
-        shown.map(async ([, image]) => {
-          if (image.saved?.documentPath === documentPath) return;
-          image.saved = { documentPath, src: await saveImage(documentPath, image.file) };
-        }),
-      );
+      const shown = await writeShown(before, documentPath);
       // Read the document again: it may have changed while the files were written
       const text = view.state.doc.toString();
-      const changes = shown.flatMap(([url, image]) => {
-        const src = image.saved?.src;
-        if (src === undefined) return [];
-        const found = [];
-        for (let at = text.indexOf(url); at >= 0; at = text.indexOf(url, at + url.length)) {
-          found.push({ from: at, to: at + url.length, insert: src });
-        }
-        return found;
-      });
       // Keep undo from bringing back the in-memory address; if it still does, the next save
       // links the image again
-      view.dispatch({ changes, annotations: Transaction.addToHistory.of(false) });
+      view.dispatch({
+        changes: linkChanges(text, shown),
+        annotations: Transaction.addToHistory.of(false),
+      });
     },
 
     dispose: () => {

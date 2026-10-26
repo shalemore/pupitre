@@ -26,17 +26,15 @@ import { type Command, EditorView, keymap, placeholder } from "@codemirror/view"
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { debounce } from "@solid-primitives/scheduled";
 import { createEffect, on, onCleanup, onMount, type Component } from "solid-js";
-import { DOCUMENT_FILE } from "@shared/desktop-api";
 import type { FormatAction } from "@shared/format";
 import { ScrollView } from "@/components/ui";
 import { t } from "@/i18n";
-import { desktop } from "@/lib/desktop";
 import {
   type DocumentPosition,
   flushDocumentPositions,
   rememberDocumentPosition,
 } from "@/lib/document-positions";
-import { fileNameOf } from "@/lib/file";
+import { fileNameOf, withoutDocumentExtension } from "@/lib/file";
 import { settings } from "@/lib/settings";
 import { countText, type TextStats } from "@/lib/text-stats";
 import { themeApplied } from "@/lib/theme";
@@ -57,7 +55,7 @@ import {
   type MarkdownStyle,
   runFormatAction,
 } from "./format-commands";
-import { createPendingImages, documentBaseUrl, imageInput } from "./images";
+import { type PendingImages, documentBaseUrl, imageInput, saveImageNextTo } from "./images";
 import { livePreview, setPrinting } from "./live-preview";
 import { markdownLanguage } from "./markdown-language";
 import { prerenderMath } from "./math";
@@ -124,6 +122,11 @@ export interface MarkdownEditorProps {
   baseUrl: string | undefined;
   /** Path of the document; pasted images are saved next to it. */
   documentPath: string | undefined;
+  /**
+   * Pictures pasted into the document before it had a file. They belong to the tab rather than to
+   * the editor, which is rebuilt every time another tab is shown.
+   */
+  pendingImages: PendingImages;
   /** Called once the editor exists, with its content as the clean baseline. */
   onReady: (markdown: string) => void;
   onMarkdownChange: (markdown: string) => void;
@@ -155,8 +158,7 @@ function markdownStyle(): MarkdownStyle {
 
 /** The title of an exported page: the document's file name without its extension. */
 function documentTitle(path: string | undefined): string {
-  const name = path ? fileNameOf(path) : t().common.untitledFileName;
-  return name.replace(DOCUMENT_FILE, "");
+  return withoutDocumentExtension(path ? fileNameOf(path) : t().common.untitledFileName);
 }
 
 /**
@@ -214,16 +216,9 @@ function matchStats(view: EditorView): MatchStats {
 export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
   let container: HTMLDivElement | undefined;
 
-  const saveImage = async (documentPath: string, file: File): Promise<string> => {
-    const bytes = new Uint8Array(await file.arrayBuffer());
-    return desktop.invoke("document:save-image", documentPath, file.name, bytes);
-  };
-  const pendingImages = createPendingImages(saveImage);
-  onCleanup(pendingImages.dispose);
-
   // Saved documents store pasted images in a folder next to them; unsaved ones keep them in memory
   const uploadImage = async (file: File): Promise<string> =>
-    props.documentPath ? saveImage(props.documentPath, file) : pendingImages.add(file);
+    props.documentPath ? saveImageNextTo(props.documentPath, file) : props.pendingImages.add(file);
 
   onMount(() => {
     if (!container) return;
@@ -504,7 +499,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           if (hadFocus) view.focus();
         };
       },
-      persistImages: (documentPath) => pendingImages.persist(view, documentPath),
+      persistImages: (documentPath) => props.pendingImages.persistView(view, documentPath),
       toHtml: () => documentHtml(view.state, documentTitle(props.documentPath)),
       toHtmlFragment: async () => {
         const { from, to } = view.state.selection.main;

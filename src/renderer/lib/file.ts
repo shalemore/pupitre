@@ -1,5 +1,12 @@
+import { DOCUMENT_FILE } from "@shared/desktop-api";
+
 export function fileNameOf(path: string): string {
   return path.split(/[\\/]/).pop() ?? path;
+}
+
+/** A document's name without its Markdown extension, for naming what is exported from it. */
+export function withoutDocumentExtension(name: string): string {
+  return name.replace(DOCUMENT_FILE, "");
 }
 
 // Unicode's left-to-right isolate and the mark that ends it, written as code points because

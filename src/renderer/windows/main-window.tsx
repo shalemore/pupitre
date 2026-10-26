@@ -548,6 +548,7 @@ export const MainWindow: Component = () => {
                       initialPosition={documentPosition(tab().doc.path)}
                       baseUrl={tab().doc.baseUrl}
                       documentPath={tab().doc.path}
+                      pendingImages={tab().pendingImages}
                       onReady={session.handleEditorReady}
                       onMarkdownChange={session.handleMarkdownChange}
                       onOutlineChange={setOutline}

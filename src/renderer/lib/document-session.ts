@@ -7,6 +7,7 @@ import type {
   OpenedDocument,
   TextEncoding,
 } from "@shared/desktop-api";
+import { createPendingImages, type PendingImages } from "@/features/editor/images";
 import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
 import { getSampleDocument } from "@/features/samples/sample-document";
 import { currentLocale, t } from "@/i18n";
@@ -47,6 +48,11 @@ export interface Tab {
   diskContent: string;
   /** The user let this tab's changes go on the way out; no draft of it is kept until it is typed into again. */
   discarded: boolean;
+  /**
+   * Pictures pasted into the document before it had a file. They belong to the tab: switching tabs
+   * rebuilds the editor that showed them, and a save of any tab has to write them first.
+   */
+  pendingImages: PendingImages;
 }
 
 const SAMPLE_FILE_NAME = "Pupitre-Guide.md";
@@ -128,6 +134,7 @@ export function createDocumentSession(
           missingOnDisk: false,
           diskContent: text.diskContent,
           discarded: false,
+          pendingImages: createPendingImages(),
         },
       ]);
       setActiveTabId(id);
@@ -174,8 +181,15 @@ export function createDocumentSession(
     // The editor holds the tab being shown; any other tab is written from the text the session keeps for it
     const editor = tab.id === activeTabId() ? getEditor() : undefined;
     if (tab.id === activeTabId() && editor === undefined) return false;
-    if (editor !== undefined) await editor.persistImages(path);
-    const markdown = editor === undefined ? tab.markdown : editor.getMarkdown();
+    let markdown = tab.markdown;
+    if (editor !== undefined) {
+      await editor.persistImages(path);
+      markdown = editor.getMarkdown();
+    } else {
+      // The tab on show is not the only one a save can reach: the images pasted into another one are
+      // still in memory, and their blob: URLs must not reach the file
+      markdown = await tab.pendingImages.persistText(markdown, path);
+    }
     const previousDiskContent = tab.diskContent;
     const diskContent = withTrailingNewline(markdown);
     patchTab(tab.id, { diskContent });
@@ -314,6 +328,7 @@ export function createDocumentSession(
     const tab = tabs()[index];
     if (tab === undefined) return;
     if (!(await confirmCloseTab(tab))) return;
+    tab.pendingImages.dispose();
     const closed = tabs().filter((candidate) => candidate.id !== id);
     batch(() => {
       setTabs(closed);
@@ -410,6 +425,7 @@ export function createDocumentSession(
           missingOnDisk: false,
           diskContent: onDisk ?? "",
           discarded: false,
+          pendingImages: createPendingImages(),
         };
         return tab;
       }),
