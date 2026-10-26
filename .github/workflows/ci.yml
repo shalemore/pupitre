@@ -17,7 +17,7 @@ jobs:
     outputs:
       skip: ${{ steps.preflight.outputs.skip }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - id: preflight
         uses: ./.github/actions/preflight
 
@@ -27,7 +27,7 @@ jobs:
     if: needs.check.outputs.skip != 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: ./.github/actions/setup-node
       - run: npm run lint
       - run: npm run typecheck

@@ -13,7 +13,9 @@ Run `npm run lint`, `npm run typecheck`, `npm test` and `npm run build` before s
 [AGENTS.md](AGENTS.md).
 
 The parser benchmark, the end-to-end timings and the bundle size check have their own commands,
-described in [docs/performance.md](docs/performance.md).
+described in [docs/performance.md](docs/performance.md). What a release attests about the files it
+publishes, and the code scanning and dependency updates around it, are described in
+[docs/supply-chain.md](docs/supply-chain.md).
 
 ## Releasing
 
