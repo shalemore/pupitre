@@ -14,12 +14,15 @@ import {
   type WebContents,
 } from "electron";
 import {
+  type DeletedFileChoice,
   type DocumentLocation,
+  type ExternalChangeChoice,
   type FolderEntry,
   type InvokeChannels,
   type LineEnding,
   type OpenedDocument,
   type TextEncoding,
+  type UnsavedChoice,
   INITIAL_STATE_SYNC,
   type InitialState,
   DOCUMENT_EXTENSIONS,
@@ -90,6 +93,33 @@ function senderWindow(event: IpcMainInvokeEvent): BrowserWindow {
   const window = BrowserWindow.fromWebContents(event.sender);
   if (!window) throw new Error("IPC sender is not attached to a window");
   return window;
+}
+
+/** One button of a confirm box: the words on it, and the answer the window reads back. */
+interface Answer<T> {
+  label: string;
+  value: T;
+}
+
+/** Asks about a document in a native box whose buttons are the answers, and gives back the one that was pressed. */
+async function confirmChoice<T>(
+  window: BrowserWindow,
+  question: { message: string; detail: string },
+  answers: readonly [Answer<T>, ...Answer<T>[]],
+  defaultIndex = 0,
+): Promise<T> {
+  const { response } = await dialog.showMessageBox(window, {
+    type: "warning",
+    message: question.message,
+    detail: question.detail,
+    buttons: answers.map((answer) => answer.label),
+    defaultId: defaultIndex,
+    cancelId: answers.length - 1,
+    noLink: true,
+  });
+  // A box the user dismisses reports its cancel button, which is the last one
+  const [firstAnswer, ...otherAnswers] = answers;
+  return (answers[response] ?? otherAnswers.at(-1) ?? firstAnswer).value;
 }
 
 /** The file or folder the user picked, or null when they dropped out of the dialog. */
@@ -392,44 +422,42 @@ export function registerIpcHandlers(): void {
     return filePath;
   });
 
-  handle("dialog:confirm-unsaved", async (event, fileName) => {
+  handle("dialog:confirm-unsaved", (event, fileName) => {
     const labels = t().dialogs;
-    const { response } = await dialog.showMessageBox(senderWindow(event), {
-      type: "warning",
-      message: labels.unsavedMessage(fileName),
-      detail: labels.unsavedDetail,
-      buttons: [labels.save, labels.dontSave, labels.cancel],
-      defaultId: 0,
-      cancelId: 2,
-      noLink: true,
-    });
-    return response === 0 ? "save" : response === 1 ? "discard" : "cancel";
+    return confirmChoice<UnsavedChoice>(
+      senderWindow(event),
+      { message: labels.unsavedMessage(fileName), detail: labels.unsavedDetail },
+      [
+        { label: labels.save, value: "save" },
+        { label: labels.dontSave, value: "discard" },
+        { label: labels.cancel, value: "cancel" },
+      ],
+    );
   });
-  handle("dialog:confirm-external-change", async (event, fileName) => {
+  handle("dialog:confirm-external-change", (event, fileName) => {
     const labels = t().dialogs;
-    const { response } = await dialog.showMessageBox(senderWindow(event), {
-      type: "warning",
-      message: labels.externalChangeMessage(fileName),
-      detail: labels.externalChangeDetail,
-      buttons: [labels.overwrite, labels.reload, labels.keepEditing],
-      defaultId: 2,
-      cancelId: 2,
-      noLink: true,
-    });
-    return response === 0 ? "overwrite" : response === 1 ? "reload" : "keep";
+    return confirmChoice<ExternalChangeChoice>(
+      senderWindow(event),
+      { message: labels.externalChangeMessage(fileName), detail: labels.externalChangeDetail },
+      [
+        { label: labels.overwrite, value: "overwrite" },
+        { label: labels.reload, value: "reload" },
+        { label: labels.keepEditing, value: "keep" },
+      ],
+      // Keep Editing touches nothing, so it is the answer a stray Return picks
+      2,
+    );
   });
-  handle("dialog:confirm-deleted", async (event, fileName) => {
+  handle("dialog:confirm-deleted", (event, fileName) => {
     const labels = t().dialogs;
-    const { response } = await dialog.showMessageBox(senderWindow(event), {
-      type: "warning",
-      message: labels.fileDeletedMessage(fileName),
-      detail: labels.fileDeletedDetail,
-      buttons: [labels.save, labels.dontSave],
-      defaultId: 0,
-      cancelId: 1,
-      noLink: true,
-    });
-    return response === 0 ? "save" : "keep";
+    return confirmChoice<DeletedFileChoice>(
+      senderWindow(event),
+      { message: labels.fileDeletedMessage(fileName), detail: labels.fileDeletedDetail },
+      [
+        { label: labels.save, value: "save" },
+        { label: labels.dontSave, value: "keep" },
+      ],
+    );
   });
   handle("dialog:show-error", async (event, message, detail) => {
     await dialog.showMessageBox(senderWindow(event), {
