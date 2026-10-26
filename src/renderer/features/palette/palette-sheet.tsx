@@ -1,5 +1,4 @@
 import {
-  createEffect,
   createMemo,
   createSignal,
   createUniqueId,
@@ -11,6 +10,7 @@ import {
 } from "solid-js";
 import { Portal } from "solid-js/web";
 import { Input, ListItem, ScrollView } from "@/components/ui";
+import { createListNavigation } from "@/lib/list-navigation";
 
 export interface PaletteSheetProps<Item> {
   /** Names the sheet and the list it holds, for anyone who cannot see it. */
@@ -40,19 +40,16 @@ export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
   const listId = `${sheetId}-list`;
   const rowId = (index: number) => `${sheetId}-row-${index}`;
   const [query, setQuery] = createSignal("");
-  const [wanted, setWanted] = createSignal(0);
   let input: HTMLInputElement | undefined;
   let list: HTMLDivElement | undefined;
   let opener: HTMLElement | undefined;
 
   const shown = createMemo(() => props.rows(query()));
-  // Clamped rather than reset, so a list that narrows under the query never points past its end
-  const active = createMemo(() => Math.min(wanted(), Math.max(shown().length - 1, 0)));
-
-  // The highlight follows the list; it has to be seen even when it moved past the port
-  createEffect(() => {
-    list?.querySelector(`[data-index="${active()}"]`)?.scrollIntoView({ block: "nearest" });
-  });
+  const navigation = createListNavigation(
+    () => shown().length,
+    () => list,
+  );
+  const active = navigation.active;
 
   onMount(() => {
     opener = document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
@@ -63,37 +60,9 @@ export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
     if (opener?.isConnected === true) opener.focus();
   });
 
-  const move = (step: number) => {
-    const count = shown().length;
-    if (count === 0) return;
-    setWanted((active() + step + count) % count);
-  };
-
   const pick = (item: Item) => {
     props.onPick(item);
     props.onClose();
-  };
-
-  const onKeyDown = (event: KeyboardEvent) => {
-    switch (event.key) {
-      case "ArrowDown":
-        event.preventDefault();
-        return move(1);
-      case "ArrowUp":
-        event.preventDefault();
-        return move(-1);
-      case "Enter": {
-        const item = shown()[active()];
-        if (item === undefined) return;
-        event.preventDefault();
-        return pick(item);
-      }
-      case "Escape":
-        event.preventDefault();
-        return props.onClose();
-      default:
-        return;
-    }
   };
 
   return (
@@ -112,7 +81,15 @@ export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
           role="dialog"
           aria-modal="true"
           aria-label={props.title}
-          onKeyDown={onKeyDown}
+          onKeyDown={(event) =>
+            navigation.onKeyDown(event, {
+              pick: (index) => {
+                const item = shown()[index];
+                if (item !== undefined) pick(item);
+              },
+              close: props.onClose,
+            })
+          }
           class="floating-panel flex max-h-full w-full max-w-lg flex-col gap-2 p-2 text-xs animate-in fade-in-0 zoom-in-95 duration-base ease-enter"
         >
           <Input
@@ -120,7 +97,7 @@ export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
             value={query()}
             onInput={(event) => {
               setQuery(event.currentTarget.value);
-              setWanted(0);
+              navigation.reset();
             }}
             placeholder={props.placeholder}
             aria-label={props.title}
@@ -146,7 +123,7 @@ export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
                   aria-selected={index() === active()}
                   active={index() === active()}
                   tabIndex={-1}
-                  onPointerEnter={() => setWanted(index())}
+                  onPointerEnter={() => navigation.pointAt(index())}
                   onClick={() => pick(item)}
                   class="gap-3"
                 >

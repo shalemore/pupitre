@@ -22,6 +22,7 @@ import type {
 import { Badge, Button, Input, ListItem, ScrollView } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
+import { createListNavigation } from "@/lib/list-navigation";
 
 /** Typing must not ask the main process for the whole folder once per keystroke. */
 const SEARCH_DELAY_MS = 150;
@@ -92,7 +93,6 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
   const [wholeWord, setWholeWord] = createSignal(false);
   const [regexp, setRegexp] = createSignal(false);
   const [answer, setAnswer] = createSignal<WorkspaceSearchResponse>();
-  const [wanted, setWanted] = createSignal(0);
   let input: HTMLInputElement | undefined;
   let list: HTMLDivElement | undefined;
 
@@ -110,15 +110,13 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
       group.matches.map(({ match, index }): ResultRow => ({ path: group.file.path, match, index })),
     ),
   );
-  // Clamped rather than reset, so a list that narrows under the query never points past its end
-  const active = createMemo(() => Math.min(wanted(), Math.max(rows().length - 1, 0)));
+  const navigation = createListNavigation(
+    () => rows().length,
+    () => list,
+  );
+  const active = navigation.active;
   const noResults = () =>
     props.root !== undefined && query() !== "" && answer()?.kind === "ok" && rows().length === 0;
-
-  // The highlight follows the list; it has to be seen even when it moved past the port
-  createEffect(() => {
-    list?.querySelector(`[data-index="${active()}"]`)?.scrollIntoView({ block: "nearest" });
-  });
 
   // Counts the questions asked, so that only the answer to the last one is shown
   let latest = 0;
@@ -135,7 +133,7 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
     // A slower answer must not replace the one of a question asked after it
     if (request !== latest) return;
     setAnswer(found);
-    setWanted(0);
+    navigation.reset();
   };
   const searchSoon = debounce(() => void search(), SEARCH_DELAY_MS);
   onCleanup(() => searchSoon.clear());
@@ -148,37 +146,7 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
 
   onMount(() => input?.focus());
 
-  const move = (step: number) => {
-    const count = rows().length;
-    if (count === 0) return;
-    setWanted((active() + step + count) % count);
-  };
-
   const open = (row: ResultRow) => props.onOpenMatch(row.path, row.match.from, row.match.to);
-
-  const onKeyDown = (event: KeyboardEvent) => {
-    // Enter while composing with an input method confirms the candidate and must not open a result
-    if (event.isComposing) return;
-    switch (event.key) {
-      case "ArrowDown":
-        event.preventDefault();
-        return move(1);
-      case "ArrowUp":
-        event.preventDefault();
-        return move(-1);
-      case "Enter": {
-        const row = rows()[active()];
-        if (row === undefined) return;
-        event.preventDefault();
-        return open(row);
-      }
-      case "Escape":
-        event.preventDefault();
-        return props.onClose();
-      default:
-        return;
-    }
-  };
 
   return (
     // Outside the window's own tree: the title bar clips its children and the panel covers them
@@ -193,7 +161,15 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
           role="dialog"
           aria-modal="true"
           aria-label={t().workspaceSearch.title}
-          onKeyDown={onKeyDown}
+          onKeyDown={(event) =>
+            navigation.onKeyDown(event, {
+              pick: (index) => {
+                const row = rows()[index];
+                if (row !== undefined) open(row);
+              },
+              close: props.onClose,
+            })
+          }
           class="floating-panel flex max-h-full w-full max-w-xl flex-col gap-2 p-2 text-xs animate-in fade-in-0 zoom-in-95 duration-base ease-enter"
         >
           <div class="flex items-center gap-1.5">
@@ -279,7 +255,7 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
                         aria-selected={row.index === active()}
                         active={row.index === active()}
                         tabIndex={-1}
-                        onPointerEnter={() => setWanted(row.index)}
+                        onPointerEnter={() => navigation.pointAt(row.index)}
                         onClick={() => open({ path: group.file.path, ...row })}
                         class="gap-2 ps-6"
                       >
