@@ -127,7 +127,9 @@ export function imageAddress(folder: string, path: string): string {
 
 /** The Markdown image that links `src` and reads as `alt`; an address holding spaces goes between angle brackets. */
 export function imageMarkdown(alt: string, src: string): string {
-  return `![${alt}](${/\s/.test(src) ? `<${src}>` : src})`;
+  // Brackets and backslashes would end the alt text early
+  const altText = alt.replace(/[\\[\]]/g, "\\$&");
+  return `![${altText}](${/\s/.test(src) ? `<${src}>` : src})`;
 }
 
 /** The alt text of a picture picked from disk: its file name without the extension. */
