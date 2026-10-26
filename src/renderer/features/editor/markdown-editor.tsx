@@ -28,6 +28,7 @@ import { debounce } from "@solid-primitives/scheduled";
 import { createEffect, on, onCleanup, onMount, type Component } from "solid-js";
 import type { FormatAction } from "@shared/format";
 import { ScrollView } from "@/components/ui";
+import { documentHtml, markdownFragment } from "@/features/export/document-html";
 import { t } from "@/i18n";
 import {
   type DocumentPosition,
@@ -38,7 +39,6 @@ import { fileNameOf, withoutDocumentExtension } from "@/lib/file";
 import { settings } from "@/lib/settings";
 import { countText, type TextStats } from "@/lib/text-stats";
 import { themeApplied } from "@/lib/theme";
-import { documentHtml, markdownFragment } from "../export/document-html";
 import { alertTitles } from "./alerts";
 import { codeHighlight } from "./code-highlight";
 import { cursorStyle, restartCursorBlink } from "./cursor";
