@@ -7,7 +7,7 @@ import { tags } from "@lezer/highlight";
  * changes. Markdown's own tags (headings, emphasis, links) are left out on purpose: the document
  * itself is styled by the live preview (live-preview.ts), not by syntax highlighting.
  */
-const highlightStyle = HighlightStyle.define([
+export const codeHighlightStyle = HighlightStyle.define([
   { tag: [tags.keyword, tags.controlKeyword, tags.moduleKeyword], color: "var(--syntax-keyword)" },
   { tag: tags.operatorKeyword, color: "var(--syntax-keyword)" },
   { tag: [tags.string, tags.regexp], color: "var(--syntax-string)" },
@@ -27,4 +27,26 @@ const highlightStyle = HighlightStyle.define([
   { tag: tags.invalid, color: "var(--syntax-invalid)" },
 ]);
 
-export const codeHighlight = syntaxHighlighting(highlightStyle);
+/**
+ * The theme tokens the style reads, by the end of their names. An exported page carries no theme
+ * of its own, so its stylesheet sets them from the window that wrote it (see page-style.ts): a
+ * color a token holds has to be listed here to reach the page.
+ */
+export const CODE_COLOR_TOKENS: readonly string[] = [
+  "keyword",
+  "string",
+  "special-string",
+  "number",
+  "variable",
+  "definition",
+  "function",
+  "type",
+  "property",
+  "comment",
+  "operator",
+  "punctuation",
+  "invalid",
+];
+
+/** The editor extension that colors a code block by the style above. */
+export const codeHighlight = syntaxHighlighting(codeHighlightStyle);

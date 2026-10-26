@@ -1,4 +1,5 @@
 import type { AlertType } from "@/features/editor/alerts";
+import { CODE_COLOR_TOKENS, codeHighlightStyle } from "@/features/editor/code-highlight";
 import { toHex } from "@/lib/theme";
 
 /**
@@ -39,6 +40,11 @@ function readTokens() {
     fontSize: raw("--pref-font-size") || "16px",
     lineHeight: raw("--pref-line-height") || "1.7",
     contentWidth: raw("--pref-content-width") || "52rem",
+    /** The code colors, under the names the highlighter reads them by (code-highlight.ts). */
+    syntax: CODE_COLOR_TOKENS.map((token) => ({
+      name: `--syntax-${token}`,
+      color: hex(`--syntax-${token}`),
+    })),
   };
 }
 
@@ -82,6 +88,7 @@ export function pageStyle(): string {
   --important: ${tokens.important};
   --warning: ${tokens.warning};
   --caution: ${tokens.caution};
+${tokens.syntax.map((syntax) => `  ${syntax.name}: ${syntax.color};`).join("\n")}
   --hairline: color-mix(in oklab, var(--text) 14%, transparent);
   --hairline-strong: color-mix(in oklab, var(--text) 30%, transparent);
   --accent-line: color-mix(in oklab, var(--accent) 40%, transparent);
@@ -352,6 +359,12 @@ pre {
 pre code {
   font-size: 0.9em;
 }
+
+/*
+ * The colors of a highlighted code block: the classes the editor's highlighter puts on its tokens,
+ * in the editor's own rules (code-highlight.ts), which read the --syntax-* colors above.
+ */
+${codeHighlightStyle.module?.getRules() ?? ""}
 
 /* Tables, scrolling sideways when the page is too narrow for their columns */
 .md-table-scroll {

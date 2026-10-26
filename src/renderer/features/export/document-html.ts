@@ -14,15 +14,18 @@ import { mathFence, mathOf } from "../editor/math";
 import { renderMath } from "../editor/mathjax";
 import { diagramTheme, readDiagramTheme, renderDiagram } from "../editor/mermaid";
 import { columnCount, readTable } from "../editor/table-model";
+import { codeHtml } from "./code-html";
+import { escapeHtml } from "./escape-html";
 import { pageStyle } from "./page-style";
 
 /**
  * A document as one self-contained HTML page, for File › Export as HTML.
  *
- * The editor's Lezer tree is the only parser involved: the export renders what the live preview
- * renders, from the same nodes, so a construct that shows up in the editor shows up on the page.
- * MathJax formulas and Mermaid diagrams are drawn here, before the page is written, so the result
- * needs no script and no network to be read.
+ * The page is rendered from the editor's Lezer tree, the same nodes the live preview renders from,
+ * so a construct that shows up in the editor shows up on the page; a code block is read by a second
+ * parser, that of its own language, only to color it (code-html.ts). MathJax formulas and Mermaid
+ * diagrams are drawn here, before the page is written, so the result needs no script and no
+ * network to be read.
  */
 
 /** How much of the document decides its base direction, the same sample the editor reads. */
@@ -30,17 +33,6 @@ const DIRECTION_SAMPLE = 4096;
 const HEADING = /^(?:ATX|Setext)Heading([1-6])$/;
 /** Links to the web open in a tab of their own; an address inside the page stays in it. */
 const EXTERNAL = /^https?:/i;
-const ESCAPES: Readonly<Record<string, string>> = {
-  "&": "&amp;",
-  "<": "&lt;",
-  ">": "&gt;",
-  '"': "&quot;",
-  "'": "&#39;",
-};
-
-function escape(text: string): string {
-  return text.replace(/[&<>"']/g, (character) => ESCAPES[character] ?? character);
-}
 
 /** The markers of a quote, a list or a task, which sit beside the blocks they belong to. */
 const MARKER = /(?:Mark|TaskMarker)$/;
@@ -72,13 +64,13 @@ function linkHtml(href: string, inner: string): string {
   // A reference link without its definition has nowhere to go; its text still reads as a link
   if (href === "") return `<span class="md-link">${inner}</span>`;
   const target = EXTERNAL.test(href) ? ' target="_blank" rel="noreferrer"' : "";
-  return `<a href="${escape(href)}"${target}>${inner}</a>`;
+  return `<a href="${escapeHtml(href)}"${target}>${inner}</a>`;
 }
 
 function footnoteReference(ctx: ExportContext, label: string): string {
-  const id = ctx.referenced.has(label) ? "" : ` id="fnref-${escape(label)}"`;
+  const id = ctx.referenced.has(label) ? "" : ` id="fnref-${escapeHtml(label)}"`;
   ctx.referenced.add(label);
-  return `<sup class="md-footnote-ref"><a href="#fn-${escape(label)}"${id}>${escape(label)}</a></sup>`;
+  return `<sup class="md-footnote-ref"><a href="#fn-${escapeHtml(label)}"${id}>${escapeHtml(label)}</a></sup>`;
 }
 
 async function itemsHtml(ctx: ExportContext, items: readonly InlineItem[]): Promise<string> {
@@ -89,7 +81,7 @@ async function itemsHtml(ctx: ExportContext, items: readonly InlineItem[]): Prom
 async function itemHtml(ctx: ExportContext, item: InlineItem): Promise<string> {
   switch (item.type) {
     case "text":
-      return escape(item.text);
+      return escapeHtml(item.text);
     case "break":
       return "<br>";
     case "element": {
@@ -99,7 +91,7 @@ async function itemHtml(ctx: ExportContext, item: InlineItem): Promise<string> {
     case "link":
       return linkHtml(item.href, await itemsHtml(ctx, item.children));
     case "image":
-      return `<img src="${escape(documentAddress(ctx.state, item.src))}" alt="${escape(item.alt)}">`;
+      return `<img src="${escapeHtml(documentAddress(ctx.state, item.src))}" alt="${escapeHtml(item.alt)}">`;
     case "math":
       return `<span class="md-math">${await renderMath(item.tex, item.display)}</span>`;
     case "footnote":
@@ -119,7 +111,7 @@ async function diagram(ctx: ExportContext, source: string): Promise<string> {
     const drawing = Object.keys(theme).length > 0 ? theme : readDiagramTheme();
     return `<div class="md-mermaid">${await renderDiagram(source, drawing)}</div>`;
   } catch {
-    return `<pre><code class="language-mermaid">${escape(source)}</code></pre>`;
+    return `<pre><code class="language-mermaid">${escapeHtml(source)}</code></pre>`;
   }
 }
 
@@ -137,7 +129,9 @@ async function codeBlock(ctx: ExportContext, block: SyntaxNode): Promise<string>
   if (language.toLowerCase() === "mermaid") return diagram(ctx, code);
   const name = language.replace(/[^\w+#.-]/g, "").toLowerCase();
   const attribute = name === "" ? "" : ` class="language-${name}"`;
-  return `<pre><code${attribute}>${escape(code.replace(/\n$/, ""))}</code></pre>`;
+  const text = code.replace(/\n$/, "");
+  const highlighted = await codeHtml(text, language);
+  return `<pre><code${attribute}>${highlighted ?? escapeHtml(text)}</code></pre>`;
 }
 
 /** The number an ordered list starts at, when it does not start at one. */
@@ -234,7 +228,7 @@ async function quoteBlock(ctx: ExportContext, quote: SyntaxNode): Promise<string
   // The marker line reads as the title; the rest of the quote, and of that paragraph, follows it
   const body = await alertBody(ctx, first);
   const rest = await renderBlocks(ctx, blocks.slice(1));
-  const title = `<p class="md-alert-title">${escape(titles[type])}</p>`;
+  const title = `<p class="md-alert-title">${escapeHtml(titles[type])}</p>`;
   return `<blockquote class="md-alert" data-alert="${type}">${title}${body}${rest}</blockquote>`;
 }
 
@@ -258,9 +252,9 @@ async function footnoteSection(ctx: ExportContext): Promise<string> {
       const body = first?.name === "Paragraph" ? rest : blocks;
       const nested = body.length > 0 ? `\n${await renderBlocks(ctx, body)}` : "";
       const back = ctx.referenced.has(label)
-        ? ` <a class="md-footnote-back" href="#fnref-${escape(label)}">↩</a>`
+        ? ` <a class="md-footnote-back" href="#fnref-${escapeHtml(label)}">↩</a>`
         : "";
-      return `<li id="fn-${escape(label)}">${inline}${back}${nested}</li>`;
+      return `<li id="fn-${escapeHtml(label)}">${inline}${back}${nested}</li>`;
     }),
   );
   const html = items.filter((item) => item !== "");
@@ -308,7 +302,7 @@ async function detailsBlock(
   inner: Promise<string>,
 ): Promise<string> {
   const open = section.open ? " open" : "";
-  return `<details${open}><summary>${escape(section.summary)}</summary>\n${await inner}</details>`;
+  return `<details${open}><summary>${escapeHtml(section.summary)}</summary>\n${await inner}</details>`;
 }
 
 function renderBlocks(ctx: ExportContext, blocks: readonly SyntaxNode[]): Promise<string> {
@@ -346,11 +340,11 @@ export async function documentHtml(state: EditorState, title: string): Promise<s
   const lang = document.documentElement.lang || "en";
   const dir = textDirection === "neutral" ? "" : ` dir="${textDirection}"`;
   return `<!doctype html>
-<html lang="${escape(lang)}"${dir}>
+<html lang="${escapeHtml(lang)}"${dir}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${escape(title)}</title>
+<title>${escapeHtml(title)}</title>
 <style>
 ${pageStyle()}</style>
 </head>
