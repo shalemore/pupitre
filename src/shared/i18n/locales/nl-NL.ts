@@ -24,6 +24,12 @@ export const nlNL = {
     moveToTrash: "Naar de prullenbak",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "Of sleep Markdown-bestanden naar dit venster",

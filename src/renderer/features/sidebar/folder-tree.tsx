@@ -1,10 +1,12 @@
 import { cn } from "cn";
 import { ChevronRight, CircleAlert, FileText, Folder } from "lucide-solid";
 import {
+  createEffect,
   createMemo,
   createResource,
   createSignal,
   For,
+  on,
   onCleanup,
   onMount,
   Show,
@@ -77,6 +79,16 @@ const FolderChildren: Component<FolderChildrenProps> = (props) => {
       void desktop.invoke("folder:unwatch", path);
     });
   });
+
+  // The main process orders the rows, so a new order has to be asked for; the rows stay on screen
+  // until it arrives, and every other open folder asks for its own again the same way
+  createEffect(
+    on(
+      () => settings().folderSort,
+      () => void refetch(),
+      { defer: true },
+    ),
+  );
 
   return (
     <Show
@@ -278,11 +290,16 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
       return undefined;
     });
 
-  const trash = (path: string) =>
+  /** Runs an action whose success changes nothing in this window; only its failure is reported. */
+  const perform = (action: () => Promise<unknown>) =>
     void run(async () => {
-      await desktop.invoke("path:trash", path);
+      await action();
       return undefined;
     });
+
+  const trash = (path: string) => perform(() => desktop.invoke("path:trash", path));
+  const reveal = (path: string) => perform(() => desktop.invoke("path:reveal", path));
+  const copyPath = (path: string) => perform(() => desktop.invoke("clipboard:write-text", path));
 
   const openMenu = (entry: FolderEntry, event: MouseEvent) => {
     const actions = new Map<string, () => void>();
@@ -292,6 +309,10 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
     };
     const renameItem = item("rename", t().sidebar.rename, () => setRenaming(entry.path));
     const trashItem = item("trash", t().sidebar.moveToTrash, () => trash(entry.path));
+    const pathItems = [
+      item("reveal", t().sidebar.showInFolder, () => reveal(entry.path)),
+      item("copy-path", t().sidebar.copyPath, () => copyPath(entry.path)),
+    ];
     const entries: MenuEntry[] =
       entry.kind === "directory"
         ? [
@@ -299,9 +320,12 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
             item("new-folder", t().sidebar.newFolder, () => create(entry.path, "directory")),
             { type: "separator" },
             renameItem,
+            { type: "separator" },
+            ...pathItems,
+            { type: "separator" },
             trashItem,
           ]
-        : [renameItem, trashItem];
+        : [renameItem, { type: "separator" }, ...pathItems, { type: "separator" }, trashItem];
     setMenu({ entries, actions, anchor: new DOMRect(event.clientX, event.clientY, 0, 0) });
   };
 

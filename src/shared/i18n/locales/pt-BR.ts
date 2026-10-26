@@ -23,6 +23,12 @@ export const ptBR = {
     moveToTrash: "Mover para a lixeira",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "Ou arraste e solte arquivos Markdown nesta janela",

@@ -23,6 +23,12 @@ export const frFR = {
     moveToTrash: "Mettre à la corbeille",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "Vous pouvez aussi glisser-déposer des fichiers Markdown ici",

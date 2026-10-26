@@ -24,6 +24,12 @@ export const nbNO = {
     moveToTrash: "Flytt til papirkurven",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "Du kan også dra Markdown-filer inn i dette vinduet",

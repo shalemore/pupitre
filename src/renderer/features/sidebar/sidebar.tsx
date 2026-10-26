@@ -118,7 +118,7 @@ interface PinProps {
   onPinnedChange?: ((pinned: boolean) => void) | undefined;
 }
 
-const SidebarTitle: Component<{ title: string } & PinProps> = (props) => (
+const SidebarTitle: Component<{ title: string; action?: JSX.Element } & PinProps> = (props) => (
   <div class="flex items-center gap-1 ps-4 pe-2 pt-2">
     <div
       dir="auto"
@@ -127,6 +127,7 @@ const SidebarTitle: Component<{ title: string } & PinProps> = (props) => (
     >
       {props.title}
     </div>
+    {props.action}
     <Show when={props.onPinnedChange}>
       {(onChange) => <PinButton pinned={props.pinned} onChange={onChange()} />}
     </Show>
@@ -138,12 +139,19 @@ export const SidebarPanel: Component<
   {
     side: SidebarSide;
     title: string;
+    /** A control the title carries, such as the sort menu of the folder. */
+    action?: JSX.Element;
     class?: string | undefined;
     children: JSX.Element;
   } & PinProps
 > = (props) => (
   <SidebarFrame class={props.class}>
-    <SidebarTitle title={props.title} pinned={props.pinned} onPinnedChange={props.onPinnedChange} />
+    <SidebarTitle
+      title={props.title}
+      action={props.action}
+      pinned={props.pinned}
+      onPinnedChange={props.onPinnedChange}
+    />
     <ScrollView class="flex-1">{props.children}</ScrollView>
   </SidebarFrame>
 );
@@ -155,6 +163,8 @@ interface SidebarProps extends PinProps {
   hasFolder: boolean;
   /** Name of the folder shown in folder mode. */
   folderName: string;
+  /** A control the folder title carries, such as the sort menu. */
+  folderAction?: JSX.Element;
   onModeChange: (mode: SidebarMode) => void;
   outline: JSX.Element;
   folder: JSX.Element;
@@ -185,7 +195,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
         </div>
       </Show>
       <Show when={props.mode === "folder"}>
-        <SidebarTitle title={props.folderName} pinned={props.pinned} />
+        <SidebarTitle title={props.folderName} action={props.folderAction} pinned={props.pinned} />
       </Show>
       {/* Both stay mounted so the expanded folders survive a switch to the outline */}
       <ScrollView class={cn("flex-1", props.mode !== "outline" && "hidden")}>

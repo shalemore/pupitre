@@ -23,6 +23,12 @@ export const itIT = {
     moveToTrash: "Sposta nel cestino",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "Oppure trascina e rilascia i file Markdown in questa finestra",

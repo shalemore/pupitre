@@ -30,6 +30,12 @@ export const ruRU = {
     moveToTrash: "Переместить в корзину",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "Или перетащите файл Markdown в это окно",

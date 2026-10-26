@@ -23,6 +23,12 @@ export const deDE = {
     moveToTrash: "In den Papierkorb",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "Oder Markdown-Dateien direkt in dieses Fenster ziehen",

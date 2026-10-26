@@ -23,6 +23,12 @@ export const enUS = {
     newFolder: "New Folder",
     rename: "Rename",
     moveToTrash: "Move to Trash",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "Or drag and drop Markdown files into this window",

@@ -23,6 +23,12 @@ export const zhTW = {
     moveToTrash: "移到資源回收筒",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "亦可直接將 Markdown 檔案拖曳至視窗中",

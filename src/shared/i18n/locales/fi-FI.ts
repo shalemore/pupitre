@@ -24,6 +24,12 @@ export const fiFI = {
     moveToTrash: "Siirrä roskakoriin",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "Voit myös vetää Markdown-tiedostoja tähän ikkunaan",

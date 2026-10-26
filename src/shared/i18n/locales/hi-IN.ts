@@ -24,6 +24,12 @@ export const hiIN = {
     moveToTrash: "रीसायकल बिन में भेजें",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "या Markdown फ़ाइलों को सीधे इस विंडो में खींचकर छोड़ें",

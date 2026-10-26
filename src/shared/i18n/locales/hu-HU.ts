@@ -24,6 +24,12 @@ export const huHU = {
     moveToTrash: "Áthelyezés a kukába",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "A Markdown-fájlokat erre az ablakra is húzhatja",

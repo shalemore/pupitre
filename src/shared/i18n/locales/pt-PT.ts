@@ -23,6 +23,12 @@ export const ptPT = {
     moveToTrash: "Mover para o lixo",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "Ou arraste ficheiros Markdown para esta janela",

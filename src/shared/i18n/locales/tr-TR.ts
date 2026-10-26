@@ -24,6 +24,12 @@ export const trTR = {
     moveToTrash: "Çöp Kutusuna Taşı",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "Markdown dosyalarını bu pencereye de sürükleyebilirsiniz",

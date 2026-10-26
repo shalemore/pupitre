@@ -25,6 +25,12 @@ export const faIR = {
     moveToTrash: "انتقال به سطل زباله",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "یا پرونده‌های Markdown را به این پنجره بکشید و رها کنید",

@@ -23,6 +23,12 @@ export const jaJP = {
     moveToTrash: "ゴミ箱へ移動",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "Markdown ファイルをウィンドウに直接ドラッグ＆ドロップすることもできます",

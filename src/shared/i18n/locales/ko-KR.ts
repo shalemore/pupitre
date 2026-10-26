@@ -23,6 +23,12 @@ export const koKR = {
     moveToTrash: "휴지통으로 이동",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "Markdown 파일을 창으로 직접 드래그 앤 드롭할 수도 있습니다",

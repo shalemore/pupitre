@@ -25,6 +25,12 @@ export const isIS = {
     moveToTrash: "Færa í ruslatunnu",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "Þú getur einnig dregið Markdown-skrár á þennan glugga",

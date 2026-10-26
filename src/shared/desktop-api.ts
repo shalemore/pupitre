@@ -263,7 +263,7 @@ export interface InvokeChannels {
   "folder:choose": () => string | null;
   /** Null when the user gave up on choosing the encoding of a file that is not UTF-8. */
   "document:read": (path: string) => OpenedDocument | null;
-  /** Lists one level of a folder: directories first, then files, each sorted by name; hidden entries are left out. */
+  /** Lists one level of a folder: directories first, then by name, modified or created time as the folderSort setting says; hidden entries are left out. */
   "folder:list": (path: string) => FolderEntry[];
   /**
    * Every document inside a folder and its subfolders, sorted by relative path, for finding one by

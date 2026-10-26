@@ -24,6 +24,12 @@ export const elGR = {
     moveToTrash: "Μετακίνηση στον κάδο",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "Μπορείτε επίσης να σύρετε αρχεία Markdown σε αυτό το παράθυρο",

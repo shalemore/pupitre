@@ -24,6 +24,12 @@ export const daDK = {
     moveToTrash: "Flyt til papirkurv",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "Du kan også trække Markdown-filer ind i dette vindue",

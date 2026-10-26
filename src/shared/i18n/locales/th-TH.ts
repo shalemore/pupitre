@@ -27,6 +27,12 @@ export const thTH = {
     moveToTrash: "ย้ายไปถังขยะ",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "หรือลากไฟล์ Markdown มาวางในหน้าต่างนี้ได้เลย",

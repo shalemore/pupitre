@@ -30,6 +30,12 @@ export const ukUA = {
     moveToTrash: "Перемістити до кошика",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "Також можна перетягнути файли Markdown у це вікно",

@@ -24,6 +24,12 @@ export const svSE = {
     moveToTrash: "Flytta till papperskorgen",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "Du kan också dra Markdown-filer till det här fönstret",

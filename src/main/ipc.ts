@@ -29,6 +29,7 @@ import {
   DOCUMENT_FILE,
   PREVIEW_BYTES,
 } from "@shared/desktop-api";
+import type { Settings } from "@shared/settings";
 import { showAboutDialog } from "./about";
 import { setAsDefaultMarkdownApp } from "./default-app";
 import { clearDraft, readDraft, writeDraft } from "./drafts";
@@ -195,7 +196,11 @@ async function saveImage(
   return [...folder.split(/[\\/]+/), name].map(encodeURIComponent).join("/");
 }
 
-async function listFolder(path: string): Promise<FolderEntry[]> {
+/** How the folder sidebar orders the entries of one folder. */
+type FolderSort = Settings["folderSort"];
+
+/** The entries of one level of a folder, hidden ones left out, in no order. */
+async function readFolder(path: string): Promise<FolderEntry[]> {
   const entries = await readdir(path, { withFileTypes: true });
   return entries
     .filter((entry) => !entry.name.startsWith("."))
@@ -203,12 +208,46 @@ async function listFolder(path: string): Promise<FolderEntry[]> {
       name: entry.name,
       path: join(path, entry.name),
       kind: entry.isDirectory() ? "directory" : "file",
-    }))
-    .toSorted(
-      (a, b) =>
-        Number(b.kind === "directory") - Number(a.kind === "directory") ||
-        nameCollator.compare(a.name, b.name),
-    );
+    }));
+}
+
+/** When an entry was modified or created, or undefined when the system would not say. */
+async function entryTime(
+  path: string,
+  sort: Exclude<FolderSort, "name">,
+): Promise<number | undefined> {
+  try {
+    const stats = await stat(path);
+    return sort === "modified" ? stats.mtimeMs : stats.birthtimeMs;
+  } catch {
+    // A file that vanished since it was listed, or one the user may not read, still has a row
+    return undefined;
+  }
+}
+
+/** What the time of an entry that the system would not report sorts as. */
+const UNTIMED = Number.MIN_SAFE_INTEGER;
+
+/**
+ * One level of a folder: directories first, then the order the folderSort setting asks for. The
+ * times cost one call per entry, so only the orders that read them pay for it.
+ */
+async function listFolder(path: string): Promise<FolderEntry[]> {
+  const entries = await readFolder(path);
+  const sort = getSettings().folderSort;
+  const times =
+    sort === "name"
+      ? undefined
+      : await Promise.all(entries.map((entry) => entryTime(entry.path, sort)));
+  return entries
+    .map((entry, index) => ({ entry, time: times?.[index] ?? UNTIMED }))
+    .toSorted((a, b) => {
+      if (a.entry.kind !== b.entry.kind) return a.entry.kind === "directory" ? -1 : 1;
+      // Newest first; an entry without a time keeps the end of the list, in name order
+      if (a.time !== b.time) return b.time - a.time;
+      return nameCollator.compare(a.entry.name, b.entry.name);
+    })
+    .map(({ entry }) => entry);
 }
 
 /** Windows whose page layout has been warmed up, see the export handler. */
@@ -241,7 +280,7 @@ async function readHead(path: string): Promise<string | undefined> {
 }
 
 async function folderPreviews(path: string): Promise<Record<string, string>> {
-  const files = (await listFolder(path)).filter(
+  const files = (await readFolder(path)).filter(
     (entry) => entry.kind === "file" && DOCUMENT_FILE.test(entry.name),
   );
   const heads = await Promise.all(

@@ -25,6 +25,7 @@ import { TableSizeDialog } from "@/features/editor/table-size-dialog";
 import { VersionHistory } from "@/features/history/version-history";
 import { MenuBar } from "@/features/menu/menu-bar";
 import { QuickOpen } from "@/features/quick-open/quick-open";
+import { FolderSortButton } from "@/features/sidebar/folder-sort-button";
 import { FolderTree } from "@/features/sidebar/folder-tree";
 import { OutlineList } from "@/features/sidebar/outline-list";
 import {
@@ -529,6 +530,7 @@ export const MainWindow: Component = () => {
                 hasOutline={session.activeDocument() !== undefined}
                 hasFolder={folderRoot() !== undefined}
                 folderName={fileNameOf(folderRoot() ?? "")}
+                folderAction={<FolderSortButton />}
                 onModeChange={setPreferredMode}
                 outline={outlineList()}
                 folder={
@@ -544,6 +546,7 @@ export const MainWindow: Component = () => {
                 <SidebarPanel
                   side="start"
                   title={fileNameOf(root)}
+                  action={<FolderSortButton />}
                   pinned={settings().sidebarPinnedStart}
                   onPinnedChange={onStartPinnedChange()}
                   class={cn(!immersive() && "border-e border-border")}

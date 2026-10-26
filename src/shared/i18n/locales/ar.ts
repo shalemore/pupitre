@@ -39,6 +39,12 @@ export const ar = {
     moveToTrash: "نقل إلى سلة المحذوفات",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "أو اسحب ملفات ماركداون وأفلتها في هذه النافذة",

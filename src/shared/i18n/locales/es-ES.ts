@@ -23,6 +23,12 @@ export const esES = {
     moveToTrash: "Mover a la papelera",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "O arrastra y suelta archivos Markdown en esta ventana",

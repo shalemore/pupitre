@@ -30,6 +30,12 @@ export const csCZ = {
     moveToTrash: "Přesunout do koše",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "Markdown soubory můžete také přetáhnout do tohoto okna",

@@ -24,6 +24,12 @@ export const viVN = {
     moveToTrash: "Chuyển vào thùng rác",
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    sort: "Sort",
+    sortName: "Name",
+    sortModified: "Date Modified",
+    sortCreated: "Date Created",
+    showInFolder: "Show in Folder",
+    copyPath: "Copy Path",
   },
   welcome: {
     dragDropHint: "Hoặc kéo và thả tệp Markdown thẳng vào cửa sổ này",
