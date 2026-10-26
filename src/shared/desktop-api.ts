@@ -184,6 +184,7 @@ export type AppCommand =
   | { id: "file.save" }
   | { id: "file.save-as" }
   | { id: "file.close-tab" }
+  | { id: "file.reopen-tab" }
   | { id: "file.print" }
   | { id: "file.version-history" }
   | { id: "view.next-tab" }
@@ -194,6 +195,8 @@ export type AppCommand =
   | { id: "edit.find" }
   | { id: "edit.replace" }
   | { id: "edit.copy-html" }
+  | { id: "edit.insert-image" }
+  | { id: "edit.insert-table" }
   | { id: "edit.search-workspace" }
   | { id: "view.toggle-sidebar" }
   | { id: "view.command-palette" }
@@ -278,6 +281,8 @@ export interface InvokeChannels {
   "path:rename": (path: string, name: string) => string;
   /** Moves a file or folder to the recycle bin of the system. */
   "path:trash": (path: string) => void;
+  /** Shows a file or folder in the system file manager. */
+  "path:reveal": (path: string) => void;
   /** Where a path lives, so a renamed document keeps resolving its relative addresses. */
   "path:locate": (path: string) => DocumentLocation;
   /** Starts or stops telling the window, through folder:changed, when the entries of a listed folder change. */
