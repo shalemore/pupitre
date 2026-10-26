@@ -1,11 +1,11 @@
 import { LanguageDescription } from "@codemirror/language";
-import { languages } from "@codemirror/language-data";
 import { type EditorView, WidgetType } from "@codemirror/view";
 import { Check, Copy } from "lucide-solid";
 import { createMemo, createSignal, For, onCleanup, Show, type Component } from "solid-js";
 import { render } from "solid-js/web";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
+import { codeLanguages } from "./code-languages";
 
 const COPIED_MS = 1500;
 
@@ -37,16 +37,15 @@ function fenceTag(language: LanguageDescription): string | undefined {
  * info string, matched against the names and aliases of the known grammars.
  */
 function namedLanguage(language: string): LanguageDescription | null {
-  return LanguageDescription.matchLanguageName(languages, language.match(/\S*/)?.[0] ?? "", true);
+  return LanguageDescription.matchLanguageName(
+    codeLanguages,
+    language.match(/\S*/)?.[0] ?? "",
+    true,
+  );
 }
 
-/**
- * The languages a fence can name, by the name they are known under. A grammar whose names all
- * hold a space — MariaDB SQL, MS SQL, Closure Stylesheets, RPM Changes, RPM Spec, Tiki wiki,
- * Web IDL and Angular Template — is left out: an info string ends at the first space, so no fence
- * can name it.
- */
-const LANGUAGE_CHOICES: readonly LanguageChoice[] = languages
+/** The languages a fence can name, by the name they are known under. */
+const LANGUAGE_CHOICES: readonly LanguageChoice[] = codeLanguages
   .flatMap((language) => {
     const tag = fenceTag(language);
     return tag === undefined ? [] : [{ tag, name: language.name }];
