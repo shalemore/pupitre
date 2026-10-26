@@ -3,6 +3,9 @@ export const REPOSITORY_URL = "https://github.com/shalemore/pupitre";
 /** The app keeps its name in every language, so the report title does too. */
 const APP_NAME = "Pupitre";
 
+/** The issue form the report opens; the trackers of the project offer no blank issue. */
+const BUG_REPORT_FORM = "bug_report.yml";
+
 /**
  * What the report says about the machine the app runs on. It names the log file and never reads
  * it: what the user attaches is their choice.
@@ -14,34 +17,33 @@ export interface DiagnosticsInfo {
   arch: string;
   osRelease: string;
   logFilePath: string;
+  homeDirectory: string;
 }
 
 /**
- * The GitHub new-issue page, prefilled with the template and the versions. The address alone is
- * what opens; the log stays where it is until the user attaches it to the issue.
+ * The bug report form, prefilled through the query parameters GitHub names after the fields' ids.
+ * The form itself asks what happened: the address carries the diagnostics and nothing else, and
+ * the log stays where it is until the user attaches it to the issue.
  */
 export function reportIssueUrl(info: DiagnosticsInfo): string {
   const query = new URLSearchParams({
+    template: BUG_REPORT_FORM,
     title: `${APP_NAME} ${info.appVersion}: `,
-    body: reportBody(info),
+    version: info.appVersion,
+    // The form has no field of its own for the runtime, and which Electron version ran matters
+    platform: `${info.platform} ${info.osRelease} ${info.arch} · Electron ${info.electronVersion}`,
+    log: relativeToHome(info.logFilePath, info.homeDirectory),
   });
   return `${REPOSITORY_URL}/issues/new?${query.toString()}`;
 }
 
-function reportBody(info: DiagnosticsInfo): string {
-  return [
-    "**What happened?**",
-    "",
-    "",
-    "**What I expected**",
-    "",
-    "",
-    "---",
-    "**Diagnostics**",
-    `${APP_NAME}: ${info.appVersion}`,
-    `Electron: ${info.electronVersion}`,
-    `System: ${info.platform} ${info.osRelease} ${info.arch}`,
-    // Naming the file rather than inlining it: the log belongs to the machine it was written on
-    `Log file: ${info.logFilePath}`,
-  ].join("\n");
+/**
+ * The path as the user knows it, so a public issue does not carry the name of their account. A path
+ * outside the home folder — a temporary profile, a log directory on another drive — stays whole.
+ */
+function relativeToHome(path: string, home: string): string {
+  if (!path.startsWith(home)) return path;
+  const rest = path.slice(home.length);
+  if (rest !== "" && !rest.startsWith("/") && !rest.startsWith("\\")) return path;
+  return `~${rest}`;
 }

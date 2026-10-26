@@ -9,21 +9,26 @@ This file is the single source of project conventions for humans and coding agen
 | :---------------------- | :--------------------------------------------------- |
 | `npm run dev`           | Start Electron with the Vite dev server (HMR)        |
 | `npm run build`         | Bundle main, preload and renderer into `out/`        |
+| `npm run check:bundle`  | Fail when a renderer chunk passes its size budget    |
 | `npm run dev:web`       | Serve the web demo (renderer on the browser host)    |
 | `npm run build:web`     | Build the web demo into `out/web`                    |
 | `npm run dist`          | Build and package installers into `release/`         |
 | `npm test`              | Run the unit tests (Vitest)                          |
 | `npm run test:coverage` | Run the unit tests with coverage and check its floor |
 | `npm run test:e2e`      | Drive the built app with Playwright (`build` first)  |
+| `npm run test:perf`     | Time the built app by hand, minutes long (`build`)   |
+| `npm run bench`         | Benchmark the parser by hand, a minute long          |
 | `npm run typecheck`     | Type-check every project (`tsc -b`)                  |
 | `npm run lint`          | Check formatting (oxfmt) and lint (oxlint)           |
 | `npm run knip`          | Find dead files, unused exports and dependencies     |
 | `npm run fix`           | Apply formatting and safe lint fixes                 |
 
-Before considering a change done, `lint`, `typecheck`, `knip`, `test` and `build` must all pass.
-Run `npm run test:e2e` as well once the change touches the main process, the IPC contract or a flow
-it covers. Keep the coverage floor: it only catches a suite that shrank, and goes up as more of the
-app is covered.
+Before considering a change done, `lint`, `typecheck`, `knip`, `test`, `build` and `check:bundle`
+must all pass. Run `npm run test:e2e` as well once the change touches the main process, the IPC
+contract or a flow it covers. Keep the coverage floor: it only catches a suite that shrank, and goes
+up as more of the app is covered. `bench` and `test:perf` report numbers that belong to the machine
+they ran on: run them for a change that could move them, not on every pull request. `test:perf`
+wraps itself in `offstage-windows`, so its windows stay off the screen on Windows.
 
 ## Tests
 

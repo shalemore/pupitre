@@ -3,5 +3,12 @@
   "extends": ["config:recommended", ":pinDigests"],
   "lockFileMaintenance": {
     "enabled": true
-  }
+  },
+  "packageRules": [
+    {
+      "description": "The version is pinned to patches/@lezer+markdown+1.8.1.patch, which fixes an incremental-parse bug upstream. Regenerate the patch and check that the property test still passes before re-enabling this.",
+      "matchPackageNames": ["@lezer/markdown"],
+      "enabled": false
+    }
+  ]
 }

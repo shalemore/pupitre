@@ -13,6 +13,9 @@ export default defineConfig({
   // A cold start and a 20 MB open have to fit, even where the disk is slow
   timeout: 600_000,
   expect: { timeout: 10_000 },
+  // Electron only downloads its binary once something requires it, and the cold start below must
+  // not be the step that pays for the download
+  globalSetup: "./e2e/global-setup.ts",
   reporter: "list",
   use: { trace: "off" },
 });

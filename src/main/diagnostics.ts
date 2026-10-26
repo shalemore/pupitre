@@ -9,6 +9,9 @@ import type { DiagnosticsInfo } from "./report-issue";
  */
 const LOG_LEVELS = ["silly", "debug", "verbose", "info", "warn", "error"] as const;
 
+/** The switch a run of the end-to-end or the performance suite passes to keep its own profile. */
+const PROFILE_SWITCH = "user-data-dir";
+
 /**
  * Sends the logs to a file in the app's own logs folder and tells Crashpad to keep its dumps on
  * this machine. Nothing here leaves the computer: a report carries the path, not the contents.
@@ -22,9 +25,25 @@ export function setupDiagnostics(): void {
   log.transports.file.level = level ?? "info";
   // Small enough to attach to an issue, big enough to keep a few sessions before it rotates
   log.transports.file.maxSize = 5 * 1024 * 1024;
-  // Electron's own logs folder, so the path in a report is the one the system expects
+  // A run with a profile of its own keeps its log in there: macOS resolves `logs` under
+  // ~/Library/Logs, where a temporary profile would leave a second log behind. The packaged app
+  // keeps Electron's own logs folder, so the path in a report is the one the system expects.
+  if (app.commandLine.hasSwitch(PROFILE_SWITCH)) {
+    app.setAppLogsPath(join(app.getPath("userData"), "logs"));
+  }
   log.transports.file.resolvePathFn = () => join(app.getPath("logs"), "main.log");
-  log.errorHandler.startCatching({ showDialog: false });
+  log.errorHandler.startCatching({
+    showDialog: false,
+    // An exception leaves a process no window can reach that still holds the single-instance
+    // lock, so this one ends. A rejected promise says less about the state the app is in, and it
+    // keeps running.
+    onError: ({ error, errorName }) => {
+      log.error(errorName, error);
+      if (errorName === "Unhandled") app.exit(1);
+      // Logged above, so that the process ends after the line reaches the file rather than before
+      return false;
+    },
+  });
 
   crashReporter.start({ uploadToServer: false });
 
@@ -43,5 +62,6 @@ export function diagnosticsInfo(): DiagnosticsInfo {
     arch: process.arch,
     osRelease: process.getSystemVersion(),
     logFilePath: log.transports.file.getFile().path,
+    homeDirectory: app.getPath("home"),
   };
 }

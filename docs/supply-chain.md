@@ -38,8 +38,10 @@ the provenance, and `--format json` prints either for a script to read.
 
 ## CodeQL and Scorecard
 
-Both workflows post what they find to the Security tab of the repository and to the pull request
-that caused it.
+Both workflows post what they find to the Security tab of the repository. CodeQL also reports on the
+pull request that caused an alert. Scorecard has no pull request trigger: it scores the default
+branch on a push to `main`, when a branch protection rule changes and weekly, so its report reaches
+the Security tab rather than a review.
 
 `codeql.yml` runs CodeQL, GitHub's static analysis, on every push to `main`, on pull requests and
 weekly. It reads the JavaScript and TypeScript of the whole project — the main process, the preload

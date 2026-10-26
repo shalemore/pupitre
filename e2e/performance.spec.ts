@@ -94,17 +94,22 @@ async function openToTail(testApp: TestApp, title: string, started: number): Pro
 /**
  * Times a keystroke from its `keydown` to the first frame drawn after it, which is where the
  * character becomes visible. The listener sits on the document in the capture phase, so it starts
- * before CodeMirror handles the key rather than after it.
+ * before CodeMirror handles the key rather than after it. The measure runs from the event's own
+ * timestamp to the frame's, both on the same clock, so the keystrokes of a run do not share one
+ * mark.
  */
 async function measureTyping(page: Page, text: string): Promise<number[]> {
   await page.locator(".cm-line").first().click();
   await page.evaluate(() => {
+    // A measure left by an earlier typing in this window would be read as one of these keystrokes
+    performance.clearMeasures("typing-latency");
     document.addEventListener(
       "keydown",
       (event) => {
         if (event.key.length !== 1) return;
-        performance.mark("typing-start");
-        requestAnimationFrame(() => performance.measure("typing-latency", "typing-start"));
+        requestAnimationFrame((frameTime) => {
+          performance.measure("typing-latency", { start: event.timeStamp, end: frameTime });
+        });
       },
       true,
     );
@@ -119,11 +124,16 @@ async function measureTyping(page: Page, text: string): Promise<number[]> {
   );
 }
 
-/** The latency that this share of the keystrokes stayed under. */
+/**
+ * The latency that this share of the keystrokes stayed under. It throws rather than answers 0 when
+ * nothing was timed, so a run that measured no keystroke cannot pass as a fast one.
+ */
 function percentile(values: readonly number[], fraction: number): number {
   const sorted = values.toSorted((a, b) => a - b);
   const index = Math.min(sorted.length - 1, Math.ceil(sorted.length * fraction) - 1);
-  return sorted[index] ?? 0;
+  const value = sorted[index];
+  if (value === undefined) throw new Error(`no measurement to take the ${fraction} percentile of`);
+  return value;
 }
 
 test("measures the cold start to the editor", async () => {
@@ -154,6 +164,7 @@ test("opens a 200 KB document and types into it", async () => {
 
     // Twenty characters, a short phrase, typed one keystroke at a time
     const latencies = await measureTyping(testApp.page, "typing latency check");
+    expect(latencies.length).toBeGreaterThan(0);
     const p95 = percentile(latencies, 0.95);
     record("typing latency median", percentile(latencies, 0.5), "ms");
     record("typing latency p95", p95, "ms");

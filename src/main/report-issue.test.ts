@@ -8,10 +8,11 @@ const INFO: DiagnosticsInfo = {
   arch: "x64",
   osRelease: "10.0.22631",
   logFilePath: "C:\\Users\\ana\\AppData\\Roaming\\Pupitre\\logs\\main.log",
+  homeDirectory: "C:\\Users\\ana",
 };
 
-function newIssuePage() {
-  return new URL(reportIssueUrl(INFO));
+function newIssuePage(info: DiagnosticsInfo = INFO) {
+  return new URL(reportIssueUrl(info));
 }
 
 describe("reportIssueUrl", () => {
@@ -21,26 +22,45 @@ describe("reportIssueUrl", () => {
     );
   });
 
+  it("opens the bug report form, since a blank issue is turned off", () => {
+    expect(newIssuePage().searchParams.get("template")).toBe("bug_report.yml");
+  });
+
   it("titles the issue with the version, ready for the rest of the line", () => {
     expect(newIssuePage().searchParams.get("title")).toBe("Pupitre 0.7.2: ");
   });
 
-  it("encodes the body into the query rather than pasting it in", () => {
-    const url = reportIssueUrl(INFO);
-    expect(url).not.toContain("\n");
-    expect(url).toContain("body=");
-    expect(newIssuePage().searchParams.get("body")).toContain("**What happened?**");
-    expect(newIssuePage().searchParams.get("body")).toContain("**What I expected**");
+  it("fills the version field of the form", () => {
+    expect(newIssuePage().searchParams.get("version")).toBe("0.7.2");
   });
 
-  it("ends the body with the diagnostics, naming the log file and not its contents", () => {
-    const body = newIssuePage().searchParams.get("body") ?? "";
-    expect(body.split("\n").slice(-5)).toEqual([
-      "**Diagnostics**",
-      "Pupitre: 0.7.2",
-      "Electron: 45.0.0",
-      "System: win32 10.0.22631 x64",
-      `Log file: ${INFO.logFilePath}`,
-    ]);
+  it("fills the platform field with the system and the Electron version the form cannot ask for", () => {
+    expect(newIssuePage().searchParams.get("platform")).toBe(
+      "win32 10.0.22631 x64 · Electron 45.0.0",
+    );
+  });
+
+  it("names the log file relative to the home folder, so no account name travels with it", () => {
+    expect(newIssuePage().searchParams.get("log")).toBe(
+      "~\\AppData\\Roaming\\Pupitre\\logs\\main.log",
+    );
+  });
+
+  it("keeps a log path outside the home folder whole", () => {
+    const profile: DiagnosticsInfo = {
+      ...INFO,
+      logFilePath: "/tmp/pupitre-e2e-k2f9/profile/logs/main.log",
+      homeDirectory: "/home/ana",
+    };
+    expect(newIssuePage(profile).searchParams.get("log")).toBe(
+      "/tmp/pupitre-e2e-k2f9/profile/logs/main.log",
+    );
+  });
+
+  it("leaves the body to the form rather than encoding one into the query", () => {
+    const url = reportIssueUrl(INFO);
+    expect(url).not.toContain("\n");
+    expect(url).not.toContain("body=");
+    expect(newIssuePage().searchParams.has("body")).toBe(false);
   });
 });

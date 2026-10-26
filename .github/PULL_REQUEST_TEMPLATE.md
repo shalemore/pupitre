@@ -13,6 +13,7 @@ Closes #
 - [ ] `npm run knip`
 - [ ] `npm test`
 - [ ] `npm run build`
+- [ ] `npm run check:bundle`
 - [ ] `npm run test:e2e`, when the change touches the main process, the IPC contract or a covered
       flow
 

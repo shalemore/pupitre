@@ -35,6 +35,15 @@ jobs:
       - run: npm run test:coverage
       - run: npm run build
       - run: npm run check:bundle
+      # electron-builder sets the fuses while it packages, so a folder build is the only way to read
+      # them back without cutting a release. The build lands in release/, which git ignores.
+      - name: Package the Linux app and read its fuses back
+        run: |
+          npx electron-builder --linux dir
+          fuses="$(npx electron-fuses read --app release/linux-unpacked/pupitre)"
+          echo "$fuses"
+          grep -q "RunAsNode is Disabled" <<< "$fuses"
+          grep -q "OnlyLoadAppFromAsar is Enabled" <<< "$fuses"
       # Electron draws a window even in a test, so it needs a display on Linux
       - run: sudo apt-get update && sudo apt-get install -y xvfb
       - run: xvfb-run -a npm run test:e2e
