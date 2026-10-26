@@ -9,7 +9,8 @@ export interface OutlineHeading {
   pos: number;
 }
 
-const HEADING = /^(?:ATX|Setext)Heading([1-6])$/;
+/** A heading's node name, whose last character is its level: ATXHeading2, SetextHeading1. */
+export const HEADING_LEVEL = /^(?:ATX|Setext)Heading([1-6])$/;
 const LEAF_BLOCK = /^(?:Paragraph|FencedCode|CodeBlock|HTMLBlock|Table|FrontMatter)$/;
 const HTML_MARKUP = /<!--[^]*?-->|<[^>]*>/g;
 /** Source that a reader never sees: link destinations, code languages, markup, front matter. */
@@ -72,7 +73,7 @@ export function collectHeadings(state: EditorState): OutlineHeading[] {
   const headings: OutlineHeading[] = [];
   syntaxTree(state).iterate({
     enter: (node) => {
-      const level = HEADING.exec(node.name)?.[1];
+      const level = HEADING_LEVEL.exec(node.name)?.[1];
       // Headings never sit inside leaf blocks, so their content need not be walked
       if (level === undefined) return !LEAF_BLOCK.test(node.name);
       const text = readableText(state, node.from, node.to).trim();

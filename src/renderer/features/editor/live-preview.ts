@@ -21,7 +21,7 @@ import { desktop } from "@/lib/desktop";
 import { AlertTitleWidget, alertTitles, alertType } from "./alerts";
 import { fencedText } from "./block-text";
 import { CodeCornerWidget } from "./code-corner";
-import { collectHeadings, findHeadingByAnchor } from "./document-structure";
+import { collectHeadings, findHeadingByAnchor, HEADING_LEVEL } from "./document-structure";
 import { EmojiWidget, emojiFor } from "./emoji";
 import { footnoteTarget } from "./footnotes";
 import { htmlTag, isFormattingTag, LineBreakWidget } from "./html";
@@ -44,7 +44,6 @@ import { mathOf, MathWidget } from "./math";
  * supporting a new syntax means adding its Lezer extension and handling its nodes in `visit`.
  */
 
-const HEADING = /^(?:ATX|Setext)Heading([1-6])$/;
 /** Nodes whose children are inline content, where inline HTML can occur. */
 const INLINE_CONTAINER =
   /^(?:Paragraph|Task|(?:ATX|Setext)Heading\d|TableCell|Emphasis|StrongEmphasis|Strikethrough|Highlight|Superscript|Subscript|Link)$/;
@@ -78,7 +77,7 @@ function inlineClass(name: string): string | undefined {
 
 /** Line classes of leaf blocks that are styled as a whole. */
 function blockClass(name: string): string | undefined {
-  const heading = HEADING.exec(name);
+  const heading = HEADING_LEVEL.exec(name);
   if (heading) return `md-heading md-h${heading[1]}`;
   switch (name) {
     case "HorizontalRule":

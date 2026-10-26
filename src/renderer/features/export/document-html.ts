@@ -5,6 +5,7 @@ import DOMPurify from "dompurify";
 import { alertTitles, alertType } from "@/features/editor/alerts";
 import { fencedText } from "@/features/editor/block-text";
 import { detailsSection } from "@/features/editor/details";
+import { HEADING_LEVEL } from "@/features/editor/document-structure";
 import { footnoteLabel } from "@/features/editor/footnotes";
 import { isRenderableHtml } from "@/features/editor/html";
 import { documentBaseUrl } from "@/features/editor/images";
@@ -30,7 +31,6 @@ import { pageStyle } from "./page-style";
  * network to be read.
  */
 
-const HEADING = /^(?:ATX|Setext)Heading([1-6])$/;
 /** Links to the web open in a tab of their own; an address inside the page stays in it. */
 const EXTERNAL = /^https?:/i;
 
@@ -284,7 +284,7 @@ async function footnoteSection(ctx: ExportContext): Promise<string> {
 
 async function renderBlock(ctx: ExportContext, block: SyntaxNode): Promise<string> {
   const { state } = ctx;
-  const heading = HEADING.exec(block.name);
+  const heading = HEADING_LEVEL.exec(block.name);
   if (heading) return headingBlock(ctx, block, heading[1] ?? "1");
   switch (block.name) {
     case "Paragraph":
