@@ -127,6 +127,17 @@ function linkChanges(text: string, shown: readonly ShownImage[]): LinkChange[] {
   });
 }
 
+/** `text` with every picture it still shows under a blob: URL linked to where it was written. */
+function withWrittenImages(text: string, shown: readonly ShownImage[]): string {
+  // Applied from the end, so no change moves the place of the ones before it
+  return linkChanges(text, shown)
+    .toSorted((a, b) => b.from - a.from)
+    .reduce(
+      (result, { from, to, insert }) => result.slice(0, from) + insert + result.slice(to),
+      text,
+    );
+}
+
 export interface PendingImages {
   /** Keeps `file` in memory and returns the blob: URL showing it until the document is written. */
   add: (file: File) => string;
@@ -172,8 +183,7 @@ export function createPendingImages(): PendingImages {
 
     persistText: async (markdown, documentPath) => {
       const shown = await writeShown(markdown, documentPath);
-      // A blob: URL names one picture, and a function replacer keeps a path with a `$` literal
-      return shown.reduce((text, { url, src }) => text.replaceAll(url, () => src), markdown);
+      return withWrittenImages(markdown, shown);
     },
 
     persistView: async (view, documentPath) => {
