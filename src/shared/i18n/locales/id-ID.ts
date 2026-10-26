@@ -322,6 +322,13 @@ export const idID = {
     defaultAppManual:
       "Di Finder, pilih berkas .md, pilih Berkas › Dapatkan Info, pilih Pupitre di 'Buka dengan', lalu klik 'Ubah Semua'",
     defaultAppFailed: "Aplikasi bawaan tidak dapat diubah; atur dari pengaturan sistem",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "Tebal",

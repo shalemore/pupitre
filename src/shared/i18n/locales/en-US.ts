@@ -239,6 +239,13 @@ export const enUS = {
     widthFull: "Full Width",
     spellcheck: "Spell Check",
     spellcheckDesc: "Underline misspelled words; right-click for suggestions",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
     cursorShape: "Cursor Style",
     cursorShapeBar: "Bar",
     cursorShapeBlock: "Block",

@@ -318,6 +318,13 @@ export const koKR = {
     defaultAppManual:
       "Finder에서 .md 파일을 선택하고 파일 › 정보 가져오기에서 다음으로 열기를 Pupitre로 바꾼 뒤 모두 변경을 클릭하세요",
     defaultAppFailed: "기본 앱을 변경하지 못했습니다. 시스템 설정에서 변경하세요",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "굵게",

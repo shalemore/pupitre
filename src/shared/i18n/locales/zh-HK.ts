@@ -315,6 +315,13 @@ export const zhHK = {
     defaultAppManual:
       "在 Finder 中選取一個 .md 檔案，選擇「檔案 › 顯示簡介」，在「開啟方式」中選擇 Pupitre 並按一下「全部更改」",
     defaultAppFailed: "無法變更預設應用程式，請在系統設定中變更",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "粗體",

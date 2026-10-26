@@ -1,4 +1,4 @@
-import { closeBrackets, closeBracketsKeymap } from "@codemirror/autocomplete";
+import { closeBracketsKeymap } from "@codemirror/autocomplete";
 import {
   defaultKeymap,
   history,
@@ -72,6 +72,7 @@ import { prerenderMath } from "./math";
 import { diagramTheme, prerenderDiagrams, readDiagramTheme } from "./mermaid";
 import { pasteHtml } from "./paste-html";
 import { renderedBlocks } from "./rendered-blocks";
+import { markdownPairing, smartTyping } from "./smart-typing";
 import { textDirection } from "./text-direction";
 import { focusMode, holdLine, typewriterMode } from "./writing-modes";
 
@@ -283,6 +284,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     const baseUrlCompartment = new Compartment();
     const diagramThemeCompartment = new Compartment();
     const previewCompartment = new Compartment();
+    const pairingCompartment = new Compartment();
 
     // While the saved place is still on its way the editor must not save its own, or the top of
     // the document would replace the place it is about to go back to
@@ -309,11 +311,11 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         doc: props.markdown,
         extensions: [
           history(),
-          closeBrackets(),
-          // Backticks pair as well, which the default brackets leave out
-          EditorState.languageData.of(() => [
-            { closeBrackets: { brackets: ["(", "[", "{", "'", '"', "`"] } },
-          ]),
+          smartTyping(() => ({
+            smartQuotes: settings().smartQuotes,
+            smartDashes: settings().smartDashes,
+          })),
+          pairingCompartment.of(markdownPairing(settings().autoPairMarkdown)),
           // Ahead of lang-markdown's Enter, which only continues lists and quotes
           Prec.highest(keymap.of([{ key: "Enter", run: insertParagraphBreak }])),
           keymap.of([
@@ -374,6 +376,19 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
 
     // The setting may be changed from the View menu, the settings window or a folder's own file
     createEffect(on(() => settings().sourceMode, showSource));
+
+    // Only the characters that pair change, so the setting swaps that one extension and keeps the
+    // text, the caret and the undo history as they are
+    createEffect(
+      on(
+        () => settings().autoPairMarkdown,
+        (autoPairMarkdown) =>
+          view.dispatch({
+            effects: pairingCompartment.reconfigure(markdownPairing(autoPairMarkdown)),
+          }),
+        { defer: true },
+      ),
+    );
 
     createEffect(() => {
       const {

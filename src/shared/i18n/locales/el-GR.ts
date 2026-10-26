@@ -327,6 +327,13 @@ export const elGR = {
       "Στο Finder επιλέξτε ένα αρχείο .md, διαλέξτε Αρχείο › Πληροφορίες, επιλέξτε Pupitre στο Άνοιγμα με και κάντε κλικ στο Αλλαγή όλων",
     defaultAppFailed:
       "Δεν ήταν δυνατή η αλλαγή της προεπιλεγμένης εφαρμογής· ορίστε την στις ρυθμίσεις συστήματος",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "Έντονα",

@@ -323,6 +323,13 @@ export const deDE = {
       "Wählen Sie im Finder eine .md-Datei, dann Ablage › Informationen, unter „Öffnen mit“ Pupitre und klicken Sie auf „Alle ändern“",
     defaultAppFailed:
       "Die Standard-App konnte nicht geändert werden; legen Sie sie in den Systemeinstellungen fest",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "Fett",

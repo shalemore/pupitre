@@ -322,6 +322,13 @@ export const faIR = {
     defaultAppManual:
       "در Finder یک پرونده ‎.md را انتخاب کنید، پرونده › گرفتن اطلاعات را بزنید، زیر «باز شدن با» گزینه Pupitre را انتخاب کنید و روی «تغییر همه» بزنید",
     defaultAppFailed: "برنامه پیش‌فرض تغییر نکرد؛ آن را از تنظیمات سامانه تعیین کنید",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "پررنگ",

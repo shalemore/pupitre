@@ -327,6 +327,13 @@ export const huHU = {
       "A Finderben válasszon ki egy .md fájlt, válassza a Fájl › Információk menüpontot, a Megnyitás ezzel alatt válassza a Pupitre-t, majd kattintson az Összes módosítása gombra",
     defaultAppFailed:
       "Nem sikerült módosítani az alapértelmezett alkalmazást; állítsa be a rendszerbeállításoknál",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "Félkövér",

@@ -328,6 +328,13 @@ export const csCZ = {
     defaultAppManual:
       "Ve Finderu vyberte soubor .md, zvolte Soubor › Získat informace, vyberte Pupitre u položky Otevřít v aplikaci a klikněte na Změnit vše",
     defaultAppFailed: "Výchozí aplikaci nelze změnit; nastavte ji v nastavení systému",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "Tučně",

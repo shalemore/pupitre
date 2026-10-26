@@ -320,6 +320,13 @@ export const ptBR = {
       "No Finder, selecione um arquivo .md, escolha Arquivo › Obter Informações, selecione o Pupitre em Abrir com e clique em Alterar Tudo",
     defaultAppFailed:
       "Não foi possível alterar o app padrão; defina-o nas configurações do sistema",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "Negrito",

@@ -314,6 +314,13 @@ export const zhCN = {
     defaultAppManual:
       "在访达中选中一个 .md 文件，选择“文件 › 显示简介”，在“打开方式”中选择 Pupitre 并点按“全部更改”",
     defaultAppFailed: "无法更改默认应用，请在系统设置中更改",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "加粗",

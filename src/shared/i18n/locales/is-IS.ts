@@ -323,6 +323,13 @@ export const isIS = {
     defaultAppManual:
       "Í Finder skaltu velja .md-skrá, velja Skrá › Fá upplýsingar, velja Pupitre undir Opna með og smella á Breyta öllum",
     defaultAppFailed: "Ekki tókst að breyta sjálfgefna forritinu; stilltu það í kerfisstillingum",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "Feitletra",

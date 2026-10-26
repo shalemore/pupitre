@@ -318,6 +318,13 @@ export const jaJP = {
     defaultAppManual:
       "Finder で .md ファイルを選び、[ファイル] › [情報を見る] の [このアプリケーションで開く] で Pupitre を選んで [すべてを変更] をクリックします",
     defaultAppFailed: "既定のアプリを変更できませんでした。システム設定で変更してください",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "太字",

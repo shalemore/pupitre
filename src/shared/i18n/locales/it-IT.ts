@@ -322,6 +322,13 @@ export const itIT = {
       "Nel Finder, seleziona un file .md, scegli File › Ottieni informazioni, seleziona Pupitre in Apri con e fai clic su Modifica tutto",
     defaultAppFailed:
       "Impossibile cambiare l’app predefinita; impostala nelle impostazioni di sistema",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "Grassetto",

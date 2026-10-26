@@ -321,6 +321,13 @@ export const viVN = {
     defaultAppManual:
       "Trong Finder, chọn tệp .md, chọn Tệp › Lấy thông tin, chọn Pupitre ở 'Mở bằng' rồi bấm 'Thay đổi tất cả'",
     defaultAppFailed: "Không đổi được ứng dụng mặc định; hãy đặt trong phần cài đặt hệ thống",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "In đậm",

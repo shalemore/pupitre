@@ -334,6 +334,13 @@ export const ar = {
     defaultAppManual:
       "في Finder، حدد ملف ‎.md، واختر ملف › إظهار المعلومات، ثم اختر Pupitre ضمن الفتح باستخدام وانقر على تغيير الكل",
     defaultAppFailed: "تعذر تغيير التطبيق الافتراضي؛ عيّنه من إعدادات النظام",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "غامق",

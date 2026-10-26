@@ -326,6 +326,13 @@ export const nlNL = {
     defaultAppManual:
       "Selecteer in Finder een .md-bestand, kies Archief › Informatie, kies Pupitre bij Open met en klik op Alles wijzigen",
     defaultAppFailed: "Kon de standaard-app niet wijzigen; stel deze in via de systeeminstellingen",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "Vet",

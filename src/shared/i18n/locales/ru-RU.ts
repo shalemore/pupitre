@@ -328,6 +328,13 @@ export const ruRU = {
       "В Finder выберите файл .md, затем «Файл» › «Свойства», в разделе «Открывать в программе» выберите Pupitre и нажмите «Изменить все»",
     defaultAppFailed:
       "Не удалось изменить приложение по умолчанию; задайте его в настройках системы",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "Полужирный",

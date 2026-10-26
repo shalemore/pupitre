@@ -324,6 +324,13 @@ export const trTR = {
     defaultAppManual:
       "Finder'da bir .md dosyası seçin, Dosya › Bilgi Al'ı seçin, Birlikte Aç altında Pupitre'yi seçin ve Tümünü Değiştir'e tıklayın",
     defaultAppFailed: "Varsayılan uygulama değiştirilemedi; sistem ayarlarından ayarlayın",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "Kalın",

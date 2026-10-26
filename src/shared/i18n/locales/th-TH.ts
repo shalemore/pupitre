@@ -321,6 +321,13 @@ export const thTH = {
     defaultAppManual:
       "ใน Finder ให้เลือกไฟล์ .md เลือก ไฟล์ › รับข้อมูล แล้วเลือก Pupitre ใน 'เปิดด้วย' และคลิก 'เปลี่ยนทั้งหมด'",
     defaultAppFailed: "เปลี่ยนแอปค่าเริ่มต้นไม่ได้ โปรดตั้งค่าในการตั้งค่าระบบ",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "ตัวหนา",

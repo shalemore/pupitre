@@ -323,6 +323,13 @@ export const nbNO = {
     defaultAppManual:
       "Velg en .md-fil i Finder, velg Arkiv › Vis info, velg Pupitre under Åpne med og klikk Endre alle",
     defaultAppFailed: "Kunne ikke endre standardappen; angi den i systeminnstillingene",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "Fet",

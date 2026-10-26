@@ -322,6 +322,13 @@ export const daDK = {
     defaultAppManual:
       "Vælg en .md-fil i Finder, vælg Filer › Vis info, vælg Pupitre under Åbn med, og klik på Skift alle",
     defaultAppFailed: "Kunne ikke ændre standardappen; angiv den i systemindstillingerne",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "Fed",

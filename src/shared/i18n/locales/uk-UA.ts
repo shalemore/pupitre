@@ -330,6 +330,13 @@ export const ukUA = {
     defaultAppManual:
       "У Finder виберіть файл .md, виберіть Файл › Отримати інформацію, виберіть Pupitre у розділі «Відкривати за допомогою» та натисніть «Змінити все»",
     defaultAppFailed: "Не вдалося змінити стандартну програму; задайте її в налаштуваннях системи",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "Напівжирний",

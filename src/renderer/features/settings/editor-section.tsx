@@ -180,6 +180,44 @@ export const EditorSection: Component = () => (
     </SettingGroup>
 
     <SettingGroup>
+      <SettingField
+        name="smartQuotes"
+        title={t().settings.smartQuotes}
+        description={t().settings.smartQuotesDesc}
+      >
+        <Switch
+          checked={settings().smartQuotes}
+          onChange={(smartQuotes) => void updateSettings({ smartQuotes })}
+          aria-label={t().settings.smartQuotes}
+        />
+      </SettingField>
+
+      <SettingField
+        name="smartDashes"
+        title={t().settings.smartDashes}
+        description={t().settings.smartDashesDesc}
+      >
+        <Switch
+          checked={settings().smartDashes}
+          onChange={(smartDashes) => void updateSettings({ smartDashes })}
+          aria-label={t().settings.smartDashes}
+        />
+      </SettingField>
+
+      <SettingField
+        name="autoPairMarkdown"
+        title={t().settings.autoPairMarkdown}
+        description={t().settings.autoPairMarkdownDesc}
+      >
+        <Switch
+          checked={settings().autoPairMarkdown}
+          onChange={(autoPairMarkdown) => void updateSettings({ autoPairMarkdown })}
+          aria-label={t().settings.autoPairMarkdown}
+        />
+      </SettingField>
+    </SettingGroup>
+
+    <SettingGroup>
       <SettingField name="cursorShape" title={t().settings.cursorShape}>
         <Select<Settings["cursorShape"]>
           value={settings().cursorShape}

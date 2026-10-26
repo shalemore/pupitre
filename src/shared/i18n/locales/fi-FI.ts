@@ -323,6 +323,13 @@ export const fiFI = {
     defaultAppManual:
       "Valitse Finderissa .md-tiedosto, valitse Tiedosto › Hanki tietoja, valitse Pupitre kohdasta Avaa sovelluksella ja napsauta Muuta kaikkia",
     defaultAppFailed: "Oletussovelluksen vaihto epäonnistui; aseta se järjestelmäasetuksissa",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "Lihavointi",

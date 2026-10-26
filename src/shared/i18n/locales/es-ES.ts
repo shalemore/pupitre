@@ -322,6 +322,13 @@ export const esES = {
       "En el Finder, selecciona un archivo .md, elige Archivo › Obtener información, selecciona Pupitre en Abrir con y haz clic en Cambiar todo",
     defaultAppFailed:
       "No se pudo cambiar la aplicación predeterminada; cámbiala en la configuración del sistema",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "Negrita",

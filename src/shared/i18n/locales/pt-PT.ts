@@ -322,6 +322,13 @@ export const ptPT = {
       "No Finder, selecione um ficheiro .md, escolha Ficheiro › Obter informação, escolha o Pupitre em Abrir com e clique em Alterar tudo",
     defaultAppFailed:
       "Não foi possível alterar a aplicação predefinida; defina-a nas definições do sistema",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "Negrito",

@@ -319,6 +319,13 @@ export const hiIN = {
     defaultAppManual:
       "Finder में एक .md फ़ाइल चुनें, फ़ाइल › जानकारी पाएँ चुनें, 'इसके साथ खोलें' में Pupitre चुनें और 'सभी बदलें' पर क्लिक करें",
     defaultAppFailed: "डिफ़ॉल्ट ऐप बदला नहीं जा सका; इसे सिस्टम सेटिंग्स में बदलें",
+    smartQuotes: "Smart Quotes",
+    smartQuotesDesc: "Curly quotes while typing, except in code, math, HTML and link addresses",
+    smartDashes: "Smart Dashes",
+    smartDashesDesc:
+      "En and em dashes and an ellipsis for --, --- and ..., except in code, math, HTML and link addresses",
+    autoPairMarkdown: "Pair Markdown Markers",
+    autoPairMarkdownDesc: "Close * _ ~ $ ^ along with brackets, quotes and backticks",
   },
   format: {
     bold: "बोल्ड",
