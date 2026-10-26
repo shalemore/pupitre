@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { type DiagnosticsInfo, reportIssueUrl } from "./report-issue";
 
@@ -62,5 +63,21 @@ describe("reportIssueUrl", () => {
     expect(url).not.toContain("\n");
     expect(url).not.toContain("body=");
     expect(newIssuePage().searchParams.has("body")).toBe(false);
+  });
+
+  it("names only fields the bug report form declares", () => {
+    const form = readFileSync(
+      new URL("../../.github/ISSUE_TEMPLATE/bug_report.yml", import.meta.url),
+      "utf8",
+    );
+    const ids = new Set<string>();
+    for (const match of form.matchAll(/^\s*id:\s*([a-z-]+)\s*$/gm)) {
+      if (match[1]) ids.add(match[1]);
+    }
+    const fields = [...newIssuePage().searchParams.keys()].filter(
+      (key) => key !== "template" && key !== "title",
+    );
+    expect(fields).toEqual(["version", "platform", "log"]);
+    for (const field of fields) expect(ids.has(field)).toBe(true);
   });
 });
