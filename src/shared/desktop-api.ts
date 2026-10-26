@@ -63,8 +63,10 @@ export interface DraftSession {
 }
 
 export interface OpenedDocument extends DocumentLocation {
-  /** Content with every line ending normalized to
- LF; the file's original line ending is kept in lineEnding and restored on save. */
+  /**
+   * Content with every line ending normalized to LF; the file's original line ending is kept in
+   * lineEnding and restored on save.
+   */
   content: string;
   lineEnding: LineEnding;
   encoding: TextEncoding;
@@ -136,8 +138,8 @@ export type ExternalChangeChoice = "overwrite" | "reload" | "keep";
 export type DeletedFileChoice = "save" | "keep";
 
 /**
- * A version of a document a save wrote over. The text itself stays in the history folder until it
- * is asked for: a document can keep twenty of them and only a few are ever read.
+ * A version of a document a save wrote over. The text stays in the history folder until it is asked
+ * for, and a document keeps only so many of them.
  */
 export interface HistoryEntry {
   /** Names the snapshot within the versions of its document; the index keeps it unique. */
@@ -261,7 +263,10 @@ export interface InvokeChannels {
    * folder shows under a file name when previews are on.
    */
   "folder:previews": (path: string) => Record<string, string>;
-  /** Every match of `query` in the documents under a folder, grouped by file; at most the first 100 files and 500 matches. */
+  /**
+   * Every match of `query` in the documents under a folder, grouped by file; a folder with more
+   * files or matches than a search reads reports the first ones.
+   */
   "folder:search": (
     root: string,
     query: string,
@@ -372,7 +377,6 @@ export interface RendererEvents {
   "window:maximized-changed": boolean;
 }
 
-/** State a window needs before its first paint; fetched synchronously by the preload script. */
 /**
  * What a host can do besides editing text: the browser demo has no file manager, no installed
  * fonts to read, no installer to hand an update to and no way to register itself for .md files.
@@ -390,6 +394,7 @@ export interface HostCapabilities {
   zoom: boolean;
 }
 
+/** State a window needs before its first paint; fetched synchronously by the preload script. */
 export interface InitialState {
   settings: Settings;
   settingsPath: string;
