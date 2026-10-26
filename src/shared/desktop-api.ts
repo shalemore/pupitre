@@ -159,6 +159,7 @@ export type AppCommand =
   | { id: "file.save-as" }
   | { id: "file.export-pdf" }
   | { id: "file.export-html" }
+  | { id: "file.export-image" }
   | { id: "edit.find" }
   | { id: "edit.replace" }
   | { id: "edit.search-workspace" }
@@ -256,6 +257,16 @@ export interface InvokeChannels {
   "document:export-pdf": (suggestedName: string) => string | null;
   /** Writes a page the renderer built into the file the user chose, and returns its path. */
   "document:export-html": (suggestedName: string, html: string) => string | null;
+  /**
+   * Renders a page as one tall PNG, twice the width of the page in device pixels, and returns the
+   * file it was written to; null when the user gave up on the save dialog. The page resolves its
+   * relative addresses in `baseFolder`, which is undefined while the document was never saved.
+   */
+  "document:export-image": (
+    suggestedName: string,
+    html: string,
+    baseFolder: string | undefined,
+  ) => string | null;
   "dialog:confirm-unsaved": (fileName: string) => UnsavedChoice;
   /** The open file was changed on disk while the document has unsaved changes. */
   "dialog:confirm-external-change": (fileName: string) => ExternalChangeChoice;

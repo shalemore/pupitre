@@ -111,6 +111,7 @@ export const zhHK = {
     saveAs: "另存新檔...",
     exportPdf: "匯出為 PDF...",
     exportHtml: "匯出為 HTML...",
+    exportImage: "匯出為 PNG...",
     close: "關閉視窗",
     undo: "復原",
     redo: "重做",

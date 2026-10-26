@@ -265,6 +265,7 @@ function menuItems(menu: TopMenu): DemoMenuEntry[] {
         { label: m.saveAs, run: send({ id: "file.save-as" }) },
         { label: m.exportPdf, run: send({ id: "file.export-pdf" }) },
         { label: m.exportHtml, run: send({ id: "file.export-html" }) },
+        { label: m.exportImage, run: send({ id: "file.export-image" }) },
         divider,
         { label: m.preferences, run: () => void handlers["window:open-settings"]() },
       ];
@@ -420,6 +421,8 @@ const handlers: Handlers = {
     setTimeout(() => URL.revokeObjectURL(url), 0);
     return suggestedName;
   },
+  // A browser has no window it could render a page in on its own, so the demo leaves the export out
+  "document:export-image": () => null,
   "dialog:confirm-unsaved": (fileName) => {
     const { dialogs } = labels();
     if (confirm(`${dialogs.unsavedMessage(fileName)}\n\n${dialogs.save}?`)) return "save";

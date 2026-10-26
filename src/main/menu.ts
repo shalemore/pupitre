@@ -125,6 +125,11 @@ function buildTemplate(): MenuItemConstructorOptions[] {
           enabled: hasDocument,
           click: () => dispatchToMainWindow({ id: "file.export-html" }),
         },
+        {
+          label: labels.exportImage,
+          enabled: hasDocument,
+          click: () => dispatchToMainWindow({ id: "file.export-image" }),
+        },
         separator,
         ...(isMac ? [] : [preferences, separator]),
         { label: labels.close, role: "close" },

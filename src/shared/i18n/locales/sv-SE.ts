@@ -118,6 +118,7 @@ export const svSE = {
     saveAs: "Spara som…",
     exportPdf: "Exportera som PDF…",
     exportHtml: "Exportera som HTML…",
+    exportImage: "Exportera som PNG…",
     close: "Stäng fönster",
     undo: "Ångra",
     redo: "Gör om",

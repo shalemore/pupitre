@@ -123,6 +123,7 @@ export const csCZ = {
     saveAs: "Uložit jako…",
     exportPdf: "Exportovat jako PDF…",
     exportHtml: "Exportovat jako HTML…",
+    exportImage: "Exportovat jako PNG…",
     close: "Zavřít okno",
     undo: "Zpět",
     redo: "Znovu",

@@ -119,6 +119,7 @@ export const nlNL = {
     saveAs: "Opslaan als…",
     exportPdf: "Exporteren als PDF…",
     exportHtml: "Exporteren als HTML…",
+    exportImage: "Exporteren als PNG…",
     close: "Venster sluiten",
     undo: "Ongedaan maken",
     redo: "Opnieuw",

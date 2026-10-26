@@ -115,6 +115,7 @@ export const itIT = {
     saveAs: "Salva con nome...",
     exportPdf: "Esporta come PDF...",
     exportHtml: "Esporta come HTML...",
+    exportImage: "Esporta come PNG...",
     close: "Chiudi finestra",
     undo: "Annulla",
     redo: "Ripeti",

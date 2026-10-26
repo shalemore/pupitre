@@ -114,6 +114,7 @@ export const esES = {
     saveAs: "Guardar como...",
     exportPdf: "Exportar como PDF...",
     exportHtml: "Exportar como HTML...",
+    exportImage: "Exportar como PNG...",
     close: "Cerrar ventana",
     undo: "Deshacer",
     redo: "Rehacer",

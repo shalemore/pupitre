@@ -118,6 +118,7 @@ export const daDK = {
     saveAs: "Gem som…",
     exportPdf: "Eksportér som PDF…",
     exportHtml: "Eksportér som HTML…",
+    exportImage: "Eksportér som PNG…",
     close: "Luk vindue",
     undo: "Fortryd",
     redo: "Annullér fortryd",

@@ -117,6 +117,7 @@ export const idID = {
     saveAs: "Simpan sebagai...",
     exportPdf: "Ekspor sebagai PDF...",
     exportHtml: "Ekspor sebagai HTML...",
+    exportImage: "Ekspor sebagai PNG...",
     close: "Tutup jendela",
     undo: "Urungkan",
     redo: "Ulangi",

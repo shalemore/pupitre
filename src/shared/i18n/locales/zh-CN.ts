@@ -111,6 +111,7 @@ export const zhCN = {
     saveAs: "另存为...",
     exportPdf: "导出为 PDF...",
     exportHtml: "导出为 HTML...",
+    exportImage: "导出为 PNG...",
     close: "关闭窗口",
     undo: "撤销",
     redo: "重做",

@@ -123,6 +123,7 @@ export const ruRU = {
     saveAs: "Сохранить как...",
     exportPdf: "Экспорт в PDF...",
     exportHtml: "Экспорт в HTML...",
+    exportImage: "Экспорт в PNG...",
     close: "Закрыть окно",
     undo: "Отменить",
     redo: "Повторить",

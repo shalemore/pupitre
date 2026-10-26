@@ -115,6 +115,7 @@ export const jaJP = {
     saveAs: "名前を付けて保存...",
     exportPdf: "PDF としてエクスポート...",
     exportHtml: "HTML としてエクスポート...",
+    exportImage: "PNG としてエクスポート...",
     close: "ウィンドウを閉じる",
     undo: "元に戻す",
     redo: "やり直す",

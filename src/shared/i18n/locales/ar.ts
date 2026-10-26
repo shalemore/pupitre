@@ -131,6 +131,7 @@ export const ar = {
     saveAs: "حفظ باسم...",
     exportPdf: "تصدير كـ PDF...",
     exportHtml: "تصدير كـ HTML...",
+    exportImage: "تصدير كـ PNG...",
     close: "إغلاق النافذة",
     undo: "تراجع",
     redo: "إعادة",

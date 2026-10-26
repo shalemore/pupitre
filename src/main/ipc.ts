@@ -35,6 +35,7 @@ import {
   encodeDocument,
   normalizeText,
 } from "./encoding";
+import { exportImage } from "./export-image";
 import { createEntry, renameEntry, trashEntry } from "./file-actions";
 import { t } from "./i18n";
 import { clickMenuItem, menuSnapshot, setDocumentState } from "./menu";
@@ -341,6 +342,16 @@ export function registerIpcHandlers(): void {
     if (filePath === null) return null;
     // A page carries its own charset, so it is written as UTF-8 whatever the document was
     await writeFile(filePath, html, "utf8");
+    return filePath;
+  });
+
+  handle("document:export-image", async (event, suggestedName, html, baseFolder) => {
+    const filePath = await savePath(senderWindow(event), {
+      defaultPath: suggestedName,
+      filters: [{ name: "PNG", extensions: ["png"] }],
+    });
+    if (filePath === null) return null;
+    await exportImage({ html, filePath, baseFolder });
     return filePath;
   });
 

@@ -114,6 +114,7 @@ export const ptPT = {
     saveAs: "Guardar como…",
     exportPdf: "Exportar como PDF…",
     exportHtml: "Exportar como HTML…",
+    exportImage: "Exportar como PNG…",
     close: "Fechar janela",
     undo: "Anular",
     redo: "Refazer",

@@ -116,6 +116,7 @@ export const hiIN = {
     saveAs: "इस नाम से सहेजें...",
     exportPdf: "PDF के रूप में निर्यात करें...",
     exportHtml: "HTML के रूप में निर्यात करें...",
+    exportImage: "PNG के रूप में निर्यात करें...",
     close: "विंडो बंद करें",
     undo: "पूर्ववत करें",
     redo: "फिर से करें",

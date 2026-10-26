@@ -37,6 +37,7 @@ import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
 import { documentPosition } from "@/lib/document-positions";
 import { createDocumentSession } from "@/lib/document-session";
+import { messageOf, reportFailure } from "@/lib/errors";
 import { fileNameOf, isInsideFolder, isolateFileName } from "@/lib/file";
 import { createImmersiveChrome } from "@/lib/immersive-chrome";
 import { recentFiles } from "@/lib/recent-files";
@@ -238,12 +239,21 @@ export const MainWindow: Component = () => {
     }
   };
 
-  const exportHtml = async () => {
-    if (!session.activeDocument()) return;
+  /** Writes the document as the page the editor would show, as a web page or as one tall image. */
+  const exportDocument = async (format: "html" | "image") => {
+    const doc = session.activeDocument();
+    if (!doc) return;
     const html = await editor()?.toHtml();
     if (html === undefined) return;
-    const htmlName = session.fileName().replace(DOCUMENT_FILE, "") + ".html";
-    await desktop.invoke("document:export-html", htmlName, html);
+    const name =
+      session.fileName().replace(DOCUMENT_FILE, "") + (format === "html" ? ".html" : ".png");
+    try {
+      await (format === "html"
+        ? desktop.invoke("document:export-html", name, html)
+        : desktop.invoke("document:export-image", name, html, doc.folder));
+    } catch (error) {
+      await reportFailure(t().dialogs.saveFailed, name, messageOf(error));
+    }
   };
 
   const runCommand = (command: AppCommand) => {
@@ -265,7 +275,9 @@ export const MainWindow: Component = () => {
       case "file.export-pdf":
         return void exportPdf();
       case "file.export-html":
-        return void exportHtml();
+        return void exportDocument("html");
+      case "file.export-image":
+        return void exportDocument("image");
       case "edit.find":
         return openFind("find");
       case "edit.replace":

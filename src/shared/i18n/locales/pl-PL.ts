@@ -125,6 +125,7 @@ export const plPL = {
     saveAs: "Zapisz jako…",
     exportPdf: "Eksportuj jako PDF…",
     exportHtml: "Eksportuj jako HTML…",
+    exportImage: "Eksportuj jako PNG…",
     close: "Zamknij okno",
     undo: "Cofnij",
     redo: "Ponów",

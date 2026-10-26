@@ -118,6 +118,7 @@ export const faIR = {
     saveAs: "ذخیره به‌عنوان...",
     exportPdf: "خروجی PDF...",
     exportHtml: "خروجی HTML...",
+    exportImage: "خروجی PNG...",
     close: "بستن پنجره",
     undo: "واگرد",
     redo: "بازانجام",

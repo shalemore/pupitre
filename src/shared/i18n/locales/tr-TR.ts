@@ -119,6 +119,7 @@ export const trTR = {
     saveAs: "Farklı Kaydet…",
     exportPdf: "PDF Olarak Dışa Aktar…",
     exportHtml: "HTML Olarak Dışa Aktar…",
+    exportImage: "PNG Olarak Dışa Aktar…",
     close: "Pencereyi Kapat",
     undo: "Geri Al",
     redo: "Yinele",

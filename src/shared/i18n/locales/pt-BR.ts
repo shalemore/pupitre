@@ -115,6 +115,7 @@ export const ptBR = {
     saveAs: "Salvar Como...",
     exportPdf: "Exportar como PDF...",
     exportHtml: "Exportar como HTML...",
+    exportImage: "Exportar como PNG...",
     close: "Fechar Janela",
     undo: "Desfazer",
     redo: "Refazer",

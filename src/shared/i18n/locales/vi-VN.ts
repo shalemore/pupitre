@@ -116,6 +116,7 @@ export const viVN = {
     saveAs: "Lưu thành...",
     exportPdf: "Xuất thành PDF...",
     exportHtml: "Xuất thành HTML...",
+    exportImage: "Xuất thành PNG...",
     close: "Đóng cửa sổ",
     undo: "Hoàn tác",
     redo: "Làm lại",

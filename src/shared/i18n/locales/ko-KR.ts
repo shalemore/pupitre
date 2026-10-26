@@ -115,6 +115,7 @@ export const koKR = {
     saveAs: "다른 이름으로 저장...",
     exportPdf: "PDF로 내보내기...",
     exportHtml: "HTML로 내보내기...",
+    exportImage: "PNG로 내보내기...",
     close: "창 닫기",
     undo: "실행 취소",
     redo: "다시 실행",

@@ -118,6 +118,7 @@ export const fiFI = {
     saveAs: "Tallenna nimellä…",
     exportPdf: "Vie PDF-muodossa…",
     exportHtml: "Vie HTML-muodossa…",
+    exportImage: "Vie PNG-muodossa…",
     close: "Sulje ikkuna",
     undo: "Kumoa",
     redo: "Tee uudelleen",
