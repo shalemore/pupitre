@@ -28,7 +28,12 @@ import { resetZoom, stepZoom } from "./zoom";
 const REPOSITORY_URL = "https://github.com/shalemore/pupitre";
 const separator: MenuItemConstructorOptions = { type: "separator" };
 
-let documentState: DocumentState = { hasDocument: false, hasPath: false, isDirty: false };
+let documentState: DocumentState = {
+  hasDocument: false,
+  hasPath: false,
+  isDirty: false,
+  canReopenTab: false,
+};
 
 function buildTemplate(): MenuItemConstructorOptions[] {
   const labels = t().menu;
@@ -156,6 +161,13 @@ function buildTemplate(): MenuItemConstructorOptions[] {
           accelerator: "CmdOrCtrl+W",
           enabled: hasDocument,
           click: () => dispatchToMainWindow({ id: "file.close-tab" }),
+        },
+        {
+          label: labels.reopenTab,
+          accelerator: "CmdOrCtrl+Shift+T",
+          // Only a tab that was closed can come back, and closing one is the only thing that changes that
+          enabled: documentState.canReopenTab,
+          click: () => dispatchToMainWindow({ id: "file.reopen-tab" }),
         },
         {
           label: labels.closeWindow,
@@ -379,10 +391,12 @@ export function rebuildApplicationMenu(): void {
 }
 
 export function setDocumentState(state: DocumentState): void {
-  // The menu only cares whether a document is open and whether a file is behind it; the dirty state
-  // can change on every keystroke and must not rebuild the menu
+  // The menu only cares whether a document is open, whether a file is behind it and whether a closed
+  // tab can come back; the dirty state can change on every keystroke and must not rebuild the menu
   const menuChanged =
-    state.hasDocument !== documentState.hasDocument || state.hasPath !== documentState.hasPath;
+    state.hasDocument !== documentState.hasDocument ||
+    state.hasPath !== documentState.hasPath ||
+    state.canReopenTab !== documentState.canReopenTab;
   documentState = state;
   if (menuChanged) rebuildApplicationMenu();
 }

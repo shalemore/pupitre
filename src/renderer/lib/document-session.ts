@@ -55,8 +55,23 @@ export interface Tab {
   pendingImages: PendingImages;
 }
 
+/** The text of a closed tab that had no file: nothing on disk holds it, so the closed tabs keep it whole. */
+interface InMemoryTab extends Omit<OpenDocument, "id" | "path"> {
+  markdown: string;
+  /** What its text was compared to, so a reopened tab shows the unsaved changes it had. */
+  savedMarkdown: string;
+}
+
+/**
+ * A tab on its way back in, kept for File › Reopen Closed Tab. A document with a file is read again
+ * when it reopens; one without a file exists nowhere else, so the text it was closed with comes along.
+ */
+type ClosedTab = { kind: "file"; path: string } | { kind: "in-memory"; text: InMemoryTab };
+
 const SAMPLE_FILE_NAME = "Pupitre-Guide.md";
 const AUTO_SAVE_DELAY = 1500;
+// File › Reopen Closed Tab walks back through the tabs that were closed, and only so many are kept
+const CLOSED_TAB_LIMIT = 20;
 // A draft follows the pause after typing, not the keystrokes themselves; the main process writes it out a moment later
 const DRAFT_WRITE_DELAY = 1000;
 // Saving compares the file on disk with what was last read or written; bigger files skip the comparison to keep saving fast
@@ -76,6 +91,8 @@ export function createDocumentSession(
 ) {
   const [tabs, setTabs] = createSignal<Tab[]>([]);
   const [activeTabId, setActiveTabId] = createSignal<number>();
+  // Tabs in the order they were closed, so the last one is the next to come back
+  const [closedTabs, setClosedTabs] = createSignal<ClosedTab[]>([]);
   // False until the window has read what an earlier session left; an empty session before that says
   // nothing about drafts, and dropping the one a crash wrote would lose the work it holds
   const [startupDone, setStartupDone] = createSignal(false);
@@ -335,13 +352,38 @@ export function createDocumentSession(
         Promise.resolve(true),
       );
 
+  const canReopenTab = () => closedTabs().length > 0;
+
+  /** Keeps a tab that is being closed, so File › Reopen Closed Tab can bring it back. */
+  const rememberClosedTab = (tab: Tab) => {
+    const closed: ClosedTab =
+      tab.doc.path === undefined
+        ? {
+            kind: "in-memory",
+            text: {
+              folder: tab.doc.folder,
+              baseUrl: tab.doc.baseUrl,
+              lineEnding: tab.doc.lineEnding,
+              encoding: tab.doc.encoding,
+              isSample: tab.doc.isSample,
+              markdown: tab.markdown,
+              savedMarkdown: tab.savedMarkdown,
+            },
+          }
+        : { kind: "file", path: tab.doc.path };
+    // Once the stack is full the oldest tab makes room for the one just closed
+    setClosedTabs([...closedTabs(), closed].slice(-CLOSED_TAB_LIMIT));
+  };
+
   /** Closes one tab, asking first about its unsaved changes; the next one takes its place and the last leaves the welcome screen. */
   const closeTab = async (id: number) => {
     const index = tabs().findIndex((tab) => tab.id === id);
     const tab = tabs()[index];
     if (tab === undefined) return;
+    // A close the user cancelled leaves no tab behind to bring back
     if (!(await confirmCloseTab(tab))) return;
     tab.pendingImages.dispose();
+    rememberClosedTab(tab);
     const closed = tabs().filter((candidate) => candidate.id !== id);
     batch(() => {
       setTabs(closed);
@@ -353,6 +395,34 @@ export function createDocumentSession(
 
   const activateTab = (id: number) => {
     if (tabs().some((tab) => tab.id === id)) setActiveTabId(id);
+  };
+
+  /**
+   * Brings the tab that was closed last back. Its file is read again, so a document changed or
+   * deleted on disk comes back as it is now, or reports the failure the way opening it would.
+   */
+  const reopenTab = async () => {
+    const closed = closedTabs().at(-1);
+    if (closed === undefined) return;
+    // The tab is spent even when its file cannot be read any more, so the next press reaches further back
+    setClosedTabs(closedTabs().slice(0, -1));
+    if (closed.kind === "file") {
+      await openPath(closed.path);
+      return;
+    }
+    const { text } = closed;
+    addTab(
+      {
+        path: undefined,
+        folder: text.folder,
+        baseUrl: text.baseUrl,
+        lineEnding: text.lineEnding,
+        encoding: text.encoding,
+        isSample: text.isSample,
+      },
+      text.markdown,
+      { savedMarkdown: text.savedMarkdown, diskContent: "" },
+    );
   };
 
   /** Moves the active tab by `step`, wrapping around; one tab has nowhere to go. */
@@ -623,6 +693,8 @@ export function createDocumentSession(
     openPath,
     openSample,
     closeTab,
+    canReopenTab,
+    reopenTab,
     activateTab,
     nextTab,
     previousTab,

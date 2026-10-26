@@ -235,6 +235,8 @@ export interface DocumentState {
   hasPath: boolean;
   /** Any tab has unsaved changes, so closing the window has to ask first. */
   isDirty: boolean;
+  /** A tab was closed and can still come back, so File › Reopen Closed Tab is usable. */
+  canReopenTab: boolean;
 }
 
 /** An image the user picked from disk, handed over as the bytes of a pasted picture would be. */

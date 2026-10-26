@@ -209,6 +209,7 @@ export const huHU = {
 
     insertTable: "Insert Table…",
     sourceMode: "Source Code Mode",
+    reopenTab: "Reopen Closed Tab",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

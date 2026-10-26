@@ -213,6 +213,7 @@ export const MainWindow: Component = () => {
       hasDocument: session.activeDocument() !== undefined,
       hasPath: session.activeDocument()?.path !== undefined,
       isDirty: session.hasDirtyTabs(),
+      canReopenTab: session.canReopenTab(),
     });
   });
   // Close the find bar and the version history when the document changes: the old document's
@@ -375,6 +376,8 @@ export const MainWindow: Component = () => {
         return void session.saveAs();
       case "file.close-tab":
         return void closeActiveTab();
+      case "file.reopen-tab":
+        return void session.reopenTab();
       case "file.print":
         return void printDocument();
       case "file.export-pdf":

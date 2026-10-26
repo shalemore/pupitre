@@ -172,6 +172,7 @@ export const enUS = {
     exportHtml: "Export as HTML...",
     exportImage: "Export as PNG...",
     closeTab: "Close Tab",
+    reopenTab: "Reopen Closed Tab",
     closeWindow: "Close Window",
     undo: "Undo",
     redo: "Redo",

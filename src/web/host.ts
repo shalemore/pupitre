@@ -384,7 +384,12 @@ function menuSnapshot(): Menus {
   return menusOf((menu) => menuEntries(menuItems(menu), menu));
 }
 
-let documentState: DocumentState = { hasDocument: false, hasPath: false, isDirty: false };
+let documentState: DocumentState = {
+  hasDocument: false,
+  hasPath: false,
+  isDirty: false,
+  canReopenTab: false,
+};
 window.addEventListener("beforeunload", (event) => documentState.isDirty && event.preventDefault());
 // Fonts would need a permission prompt and a browser that has the API; the demo keeps the defaults
 Object.defineProperty(window, "queryLocalFonts", { value: undefined });
