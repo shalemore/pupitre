@@ -31,9 +31,10 @@ issue — with its `title`, `version`, `platform` and `log` fields filled in. Th
 ask for on its own: the system, its release and the architecture, and Electron's version.
 
 The form itself asks what happened, what the user expected and how to get back to it, and the
-answers are the report. The only thing about the machine is the path of the log file, written
-relative to the home folder (`~\AppData\Roaming\Pupitre\logs\main.log`) so that a public issue does
-not carry the name of the account it was written under.
+answers are the report. Beyond the platform line above, the only thing about the machine is the
+path of the log file, written relative to the home folder when it sits inside it
+(`~\AppData\Roaming\Pupitre\logs\main.log`) so that a public issue does not carry the name of the
+account it was written under. A path outside the home folder is shown whole.
 
 The log is never read, attached or sent by the app: nothing leaves the machine until the issue is
 posted, and posting it is a click the user makes. To let a maintainer see what happened, attach the

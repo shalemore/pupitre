@@ -65,9 +65,9 @@ body:
     attributes:
       label: Path of the log file
       description: |
-        Help › Report an Issue fills this in, with the path written relative to your home folder.
-        Windows `%APPDATA%\Pupitre\logs\main.log`, macOS `~/Library/Logs/Pupitre/main.log`,
-        Linux `~/.config/Pupitre/logs/main.log`.
+        Help › Report an Issue fills this in, with the path written relative to your home folder
+        when it sits inside it. Windows `%APPDATA%\Pupitre\logs\main.log`, macOS
+        `~/Library/Logs/Pupitre/main.log`, Linux `~/.config/Pupitre/logs/main.log`.
         Attach `main.log` to the issue by hand, and `main.old.log` too if the problem started
         earlier. Read it first if a file name you opened should not travel with the report.
       placeholder: ~/Library/Logs/Pupitre/main.log
