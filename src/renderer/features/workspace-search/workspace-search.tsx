@@ -13,13 +13,12 @@ import {
   type Component,
   type JSX,
 } from "solid-js";
-import { Portal } from "solid-js/web";
 import type {
   WorkspaceMatch,
   WorkspaceSearchOptions,
   WorkspaceSearchResponse,
 } from "@shared/desktop-api";
-import { Badge, Button, Input, ListItem, ScrollView } from "@/components/ui";
+import { Badge, Button, Input, ListItem, ScrollView, Sheet } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { createListNavigation } from "@/lib/list-navigation";
@@ -149,131 +148,116 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
   const open = (row: ResultRow) => props.onOpenMatch(row.path, row.match.from, row.match.to);
 
   return (
-    // Outside the window's own tree: the title bar clips its children and the panel covers them
-    <Portal>
-      <div
-        class="fixed inset-0 z-50 flex items-start justify-center bg-surface-0/60 p-4 pt-16 backdrop-blur-sm animate-in fade-in-0 duration-base"
-        onPointerDown={(event) => {
-          if (event.target === event.currentTarget) props.onClose();
-        }}
-      >
-        <div
-          role="dialog"
-          aria-modal="true"
+    <Sheet
+      title={t().workspaceSearch.title}
+      placement="top"
+      onClose={props.onClose}
+      onKeyDown={(event) =>
+        navigation.onKeyDown(event, {
+          pick: (index) => {
+            const row = rows()[index];
+            if (row !== undefined) open(row);
+          },
+          close: props.onClose,
+        })
+      }
+    >
+      <div class="flex items-center gap-1.5">
+        <Input
+          ref={(element) => (input = element)}
+          dir="auto"
+          value={query()}
+          onInput={(event) => setQuery(event.currentTarget.value)}
+          placeholder={t().workspaceSearch.placeholder}
           aria-label={t().workspaceSearch.title}
-          onKeyDown={(event) =>
-            navigation.onKeyDown(event, {
-              pick: (index) => {
-                const row = rows()[index];
-                if (row !== undefined) open(row);
-              },
-              close: props.onClose,
-            })
-          }
-          class="floating-panel flex max-h-full w-full max-w-xl flex-col gap-2 p-2 text-xs animate-in fade-in-0 zoom-in-95 duration-base ease-enter"
-        >
-          <div class="flex items-center gap-1.5">
-            <Input
-              ref={(element) => (input = element)}
-              dir="auto"
-              value={query()}
-              onInput={(event) => setQuery(event.currentTarget.value)}
-              placeholder={t().workspaceSearch.placeholder}
-              aria-label={t().workspaceSearch.title}
-              role="combobox"
-              aria-expanded={true}
-              aria-controls={LISTBOX_ID}
-              aria-autocomplete="list"
-              aria-activedescendant={rows().length > 0 ? optionId(active()) : undefined}
-            />
-            <div class="flex shrink-0 items-center gap-0.5">
-              <OptionButton
-                pressed={caseSensitive()}
-                onChange={setCaseSensitive}
-                label={t().editor.matchCase}
-              >
-                <CaseSensitive />
-              </OptionButton>
-              <OptionButton
-                pressed={wholeWord()}
-                onChange={setWholeWord}
-                label={t().editor.wholeWord}
-              >
-                <WholeWord />
-              </OptionButton>
-              <OptionButton pressed={regexp()} onChange={setRegexp} label={t().editor.useRegex}>
-                <Regex />
-              </OptionButton>
-            </div>
-          </div>
-
-          <Show when={props.root === undefined}>
-            <p role="status" class="px-2.5 py-1.5 text-muted-foreground">
-              {t().workspaceSearch.noFolder}
-            </p>
-          </Show>
-          <Show when={answer()?.kind === "invalid-regexp"}>
-            <p role="status" class="px-2.5 py-1.5 text-destructive">
-              {t().workspaceSearch.invalidRegexp}
-            </p>
-          </Show>
-          <Show when={noResults()}>
-            <p role="status" class="px-2.5 py-1.5 text-muted-foreground">
-              {t().workspaceSearch.noResults}
-            </p>
-          </Show>
-          <Show when={rows().length > 0}>
-            <p role="status" class="px-2.5 text-2xs text-tertiary tabular-nums">
-              {t().workspaceSearch.matchCount(rows().length)}
-            </p>
-          </Show>
-
-          <ScrollView
-            ref={(element) => (list = element)}
-            id={LISTBOX_ID}
-            role="listbox"
-            aria-label={t().workspaceSearch.title}
-            class="flex min-h-0 flex-col gap-0.5"
+          role="combobox"
+          aria-expanded={true}
+          aria-controls={LISTBOX_ID}
+          aria-autocomplete="list"
+          aria-activedescendant={rows().length > 0 ? optionId(active()) : undefined}
+        />
+        <div class="flex shrink-0 items-center gap-0.5">
+          <OptionButton
+            pressed={caseSensitive()}
+            onChange={setCaseSensitive}
+            label={t().editor.matchCase}
           >
-            <For each={groups()}>
-              {(group) => (
-                <div role="presentation" class="flex flex-col gap-0.5">
-                  <div class="flex items-center gap-1.5 px-2.5 pt-1.5">
-                    <span dir="auto" class="min-w-0 flex-1 truncate font-medium">
-                      {group.file.relative}
-                    </span>
-                    <Badge variant="muted" size="sm">
-                      {group.matches.length}
-                    </Badge>
-                  </div>
-                  <For each={group.matches}>
-                    {(row) => (
-                      <ListItem
-                        id={optionId(row.index)}
-                        data-index={row.index}
-                        role="option"
-                        aria-selected={row.index === active()}
-                        active={row.index === active()}
-                        tabIndex={-1}
-                        onPointerEnter={() => navigation.pointAt(row.index)}
-                        onClick={() => open({ path: group.file.path, ...row })}
-                        class="gap-2 ps-6"
-                      >
-                        <span class="w-6 shrink-0 text-end text-2xs text-tertiary tabular-nums">
-                          {row.match.line}
-                        </span>
-                        <span dir="auto" class="min-w-0 flex-1 truncate">
-                          <MatchLine match={row.match} />
-                        </span>
-                      </ListItem>
-                    )}
-                  </For>
-                </div>
-              )}
-            </For>
-          </ScrollView>
+            <CaseSensitive />
+          </OptionButton>
+          <OptionButton pressed={wholeWord()} onChange={setWholeWord} label={t().editor.wholeWord}>
+            <WholeWord />
+          </OptionButton>
+          <OptionButton pressed={regexp()} onChange={setRegexp} label={t().editor.useRegex}>
+            <Regex />
+          </OptionButton>
         </div>
       </div>
-    </Portal>
+
+      <Show when={props.root === undefined}>
+        <p role="status" class="px-2.5 py-1.5 text-muted-foreground">
+          {t().workspaceSearch.noFolder}
+        </p>
+      </Show>
+      <Show when={answer()?.kind === "invalid-regexp"}>
+        <p role="status" class="px-2.5 py-1.5 text-destructive">
+          {t().workspaceSearch.invalidRegexp}
+        </p>
+      </Show>
+      <Show when={noResults()}>
+        <p role="status" class="px-2.5 py-1.5 text-muted-foreground">
+          {t().workspaceSearch.noResults}
+        </p>
+      </Show>
+      <Show when={rows().length > 0}>
+        <p role="status" class="px-2.5 text-2xs text-tertiary tabular-nums">
+          {t().workspaceSearch.matchCount(rows().length)}
+        </p>
+      </Show>
+
+      <ScrollView
+        ref={(element) => (list = element)}
+        id={LISTBOX_ID}
+        role="listbox"
+        aria-label={t().workspaceSearch.title}
+        class="flex min-h-0 flex-col gap-0.5"
+      >
+        <For each={groups()}>
+          {(group) => (
+            <div role="presentation" class="flex flex-col gap-0.5">
+              <div class="flex items-center gap-1.5 px-2.5 pt-1.5">
+                <span dir="auto" class="min-w-0 flex-1 truncate font-medium">
+                  {group.file.relative}
+                </span>
+                <Badge variant="muted" size="sm">
+                  {group.matches.length}
+                </Badge>
+              </div>
+              <For each={group.matches}>
+                {(row) => (
+                  <ListItem
+                    id={optionId(row.index)}
+                    data-index={row.index}
+                    role="option"
+                    aria-selected={row.index === active()}
+                    active={row.index === active()}
+                    tabIndex={-1}
+                    onPointerEnter={() => navigation.pointAt(row.index)}
+                    onClick={() => open({ path: group.file.path, ...row })}
+                    class="gap-2 ps-6"
+                  >
+                    <span class="w-6 shrink-0 text-end text-2xs text-tertiary tabular-nums">
+                      {row.match.line}
+                    </span>
+                    <span dir="auto" class="min-w-0 flex-1 truncate">
+                      <MatchLine match={row.match} />
+                    </span>
+                  </ListItem>
+                )}
+              </For>
+            </div>
+          )}
+        </For>
+      </ScrollView>
+    </Sheet>
   );
 };

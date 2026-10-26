@@ -11,6 +11,7 @@ export * from "./segmented-control";
 export * from "./select";
 export * from "./separator";
 export * from "./setting-row";
+export * from "./sheet";
 export * from "./slider";
 export * from "./switch";
 export * from "./tabs";

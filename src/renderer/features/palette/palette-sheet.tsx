@@ -8,8 +8,7 @@ import {
   onMount,
   Show,
 } from "solid-js";
-import { Portal } from "solid-js/web";
-import { Input, ListItem, ScrollView } from "@/components/ui";
+import { Input, ListItem, ScrollView, Sheet } from "@/components/ui";
 import { createListNavigation } from "@/lib/list-navigation";
 
 export interface PaletteSheetProps<Item> {
@@ -66,82 +65,67 @@ export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
   };
 
   return (
-    // Outside the window's own tree: the title bar clips its children and the sheet covers them
-    <Portal>
-      <div
-        class="fixed inset-0 z-50 flex items-center justify-center bg-surface-0/60 p-4 backdrop-blur-sm animate-in fade-in-0 duration-base"
-        onPointerDown={(event) => {
-          if (event.target !== event.currentTarget) return;
-          // The press must not move the focus itself, or it lands on the page the sheet uncovers
-          event.preventDefault();
-          props.onClose();
+    <Sheet
+      title={props.title}
+      onClose={props.onClose}
+      onKeyDown={(event) =>
+        navigation.onKeyDown(event, {
+          pick: (index) => {
+            const item = shown()[index];
+            if (item !== undefined) pick(item);
+          },
+          close: props.onClose,
+        })
+      }
+    >
+      <Input
+        ref={(element) => (input = element)}
+        value={query()}
+        onInput={(event) => {
+          setQuery(event.currentTarget.value);
+          navigation.reset();
         }}
+        placeholder={props.placeholder}
+        aria-label={props.title}
+        role="combobox"
+        aria-expanded={true}
+        aria-controls={listId}
+        aria-autocomplete="list"
+        aria-activedescendant={shown().length > 0 ? rowId(active()) : undefined}
+      />
+      <ScrollView
+        ref={(element) => (list = element)}
+        id={listId}
+        role="listbox"
+        aria-label={props.title}
+        class="flex max-h-80 min-h-0 flex-col gap-0.5"
       >
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label={props.title}
-          onKeyDown={(event) =>
-            navigation.onKeyDown(event, {
-              pick: (index) => {
-                const item = shown()[index];
-                if (item !== undefined) pick(item);
-              },
-              close: props.onClose,
-            })
-          }
-          class="floating-panel flex max-h-full w-full max-w-lg flex-col gap-2 p-2 text-xs animate-in fade-in-0 zoom-in-95 duration-base ease-enter"
-        >
-          <Input
-            ref={(element) => (input = element)}
-            value={query()}
-            onInput={(event) => {
-              setQuery(event.currentTarget.value);
-              navigation.reset();
-            }}
-            placeholder={props.placeholder}
-            aria-label={props.title}
-            role="combobox"
-            aria-expanded={true}
-            aria-controls={listId}
-            aria-autocomplete="list"
-            aria-activedescendant={shown().length > 0 ? rowId(active()) : undefined}
-          />
-          <ScrollView
-            ref={(element) => (list = element)}
-            id={listId}
-            role="listbox"
-            aria-label={props.title}
-            class="flex max-h-80 min-h-0 flex-col gap-0.5"
-          >
-            <For each={shown()}>
-              {(item, index) => (
-                <ListItem
-                  id={rowId(index())}
-                  data-index={index()}
-                  role="option"
-                  aria-selected={index() === active()}
-                  active={index() === active()}
-                  tabIndex={-1}
-                  onPointerEnter={() => navigation.pointAt(index())}
-                  onClick={() => pick(item)}
-                  class="gap-3"
-                >
-                  {props.children(item)}
-                </ListItem>
-              )}
-            </For>
-          </ScrollView>
-          <Show when={shown().length === 0 && props.emptyMessage !== undefined}>
-            <p role="status" class="px-2 py-1.5 text-muted-foreground">
-              {props.emptyMessage}
-            </p>
-          </Show>
-          <Show when={props.hint}>
-            {(hint) => <p class="px-2 pb-1 text-2xs text-muted-foreground">{hint()}</p>}
-          </Show>
-        </div>
-      </div>
-    </Portal>
+        <For each={shown()}>
+          {(item, index) => (
+            <ListItem
+              id={rowId(index())}
+              data-index={index()}
+              role="option"
+              aria-selected={index() === active()}
+              active={index() === active()}
+              tabIndex={-1}
+              onPointerEnter={() => navigation.pointAt(index())}
+              onClick={() => pick(item)}
+              class="gap-3"
+            >
+              {props.children(item)}
+            </ListItem>
+          )}
+        </For>
+      </ScrollView>
+      <Show when={shown().length === 0 && props.emptyMessage !== undefined}>
+        <p role="status" class="px-2 py-1.5 text-muted-foreground">
+          {props.emptyMessage}
+        </p>
+      </Show>
+      <Show when={props.hint}>
+        {(hint) => <p class="px-2 pb-1 text-2xs text-muted-foreground">{hint()}</p>}
+      </Show>
+    </Sheet>
   );
 }
