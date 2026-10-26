@@ -68,6 +68,8 @@ export const settingsSchema = z.object({
   sidebarVisible: z.boolean().catch(true),
   /** Whether the folder shows the first lines of each file under its name. */
   sidebarPreview: z.boolean().catch(false),
+  /** How the folder orders the entries of the open folder. */
+  folderSort: z.enum(["name", "modified", "created"]).catch("name"),
   /** Folder and outline in two sidebars, one at each edge, or as tabs of one sidebar. */
   sidebarLayout: z.enum(["split", "combined"]).catch("split"),
   /**
@@ -86,6 +88,8 @@ export const settingsSchema = z.object({
   typewriterPosition: z.enum(["center", "top", "bottom"]).catch("center"),
   /** Whether it holds that place for the first and the last line too, which takes room above and below. */
   typewriterFixed: z.boolean().catch(true),
+  /** Shows the Markdown source instead of the rendered document while typing. */
+  sourceMode: z.boolean().catch(false),
 
   // Editor; an empty font name means "use the theme's font"
   bodyFont: z.string().catch(""),
@@ -104,8 +108,16 @@ export const settingsSchema = z.object({
   cursorBlink: z.enum(["system", "smooth", "off"]).catch("system"),
   scrollbar: z.enum(["auto", "always", "never"]).catch("auto"),
   scrollFade: z.boolean().catch(false),
+  /** Types curly quotes instead of straight ones, except in code, math and front matter. */
+  smartQuotes: z.boolean().catch(false),
+  /** Types en and em dashes and an ellipsis for `--`, `---` and `...`, except in code, math and front matter. */
+  smartDashes: z.boolean().catch(false),
+  /** Pairs Markdown markers such as `*` and `$` as well as brackets and quotes. */
+  autoPairMarkdown: z.boolean().catch(false),
   /** Whether an exported PDF numbers its pages at the foot. */
   pdfPageNumbers: z.boolean().catch(false),
+  pdfPageSize: z.enum(["a4", "letter", "legal"]).catch("a4"),
+  pdfMargin: z.enum(["none", "narrow", "normal", "wide"]).catch("normal"),
 
   // How Markdown is written, matching the remark-stringify options of the same meaning
   bulletMarker: z.enum(["-", "*", "+"]).catch("-"),
