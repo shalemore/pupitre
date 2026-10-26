@@ -118,6 +118,7 @@ export const zhCN = {
     paste: "粘贴",
     selectAll: "全选",
     find: "查找...",
+    searchInFolder: "在文件夹中查找...",
     replace: "替换...",
     zoomIn: "放大",
     zoomOut: "缩小",
@@ -304,5 +305,13 @@ export const zhCN = {
     placeholder: "输入文件名…",
     noFolder: "打开文件夹即可查找其中的文档",
     noResults: "没有匹配的文件",
+  },
+  workspaceSearch: {
+    title: "在文件夹中查找",
+    placeholder: "在文件夹中查找…",
+    noFolder: "打开一个文件夹，即可在其中查找文档。",
+    noResults: "没有匹配项",
+    invalidRegexp: "此正则表达式无效。",
+    matchCount: (count: number) => `${count} 处匹配`,
   },
 } satisfies TranslationSchema;

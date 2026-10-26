@@ -49,6 +49,40 @@ export const DOCUMENT_FILE = new RegExp(`\\.(?:${DOCUMENT_EXTENSIONS.join("|")})
 /** How much of a file a folder preview reads. */
 export const PREVIEW_BYTES = 1024;
 
+/** How a folder search compares the query with the documents. */
+export interface WorkspaceSearchOptions {
+  caseSensitive: boolean;
+  wholeWord: boolean;
+  /** Read the query as a regular expression rather than as literal text. */
+  regexp: boolean;
+}
+
+/** One match in a document, positioned in the text the way the editor holds it: no BOM, LF line endings. */
+export interface WorkspaceMatch {
+  /** Offset of the first character of the match in the content of the file. */
+  from: number;
+  to: number;
+  /** 1-based number of the line the match is on. */
+  line: number;
+  /** The whole line the match is on, without its line break. */
+  text: string;
+  /** Offset of the match in `text`, so a row can highlight it without the text of the lines above. */
+  column: number;
+}
+
+/** The matches of one document of the searched folder. */
+export interface WorkspaceFileMatches {
+  path: string;
+  /** Where the file sits in the folder, with / between the segments. */
+  relative: string;
+  matches: WorkspaceMatch[];
+}
+
+/** What a folder search found: a regexp the user wrote can be invalid instead, which is told apart from a search without matches. */
+export type WorkspaceSearchResponse =
+  | { kind: "ok"; files: WorkspaceFileMatches[] }
+  | { kind: "invalid-regexp" };
+
 export interface FolderEntry {
   name: string;
   path: string;
@@ -104,6 +138,7 @@ export type AppCommand =
   | { id: "file.export-pdf" }
   | { id: "edit.find" }
   | { id: "edit.replace" }
+  | { id: "edit.search-workspace" }
   | { id: "view.toggle-sidebar" }
   | { id: "view.command-palette" }
   | { id: "help.sample-document" }
@@ -156,6 +191,12 @@ export interface InvokeChannels {
    * folder shows under a file name when previews are on.
    */
   "folder:previews": (path: string) => Record<string, string>;
+  /** Every match of `query` in the documents under a folder, grouped by file; at most the first 100 files and 500 matches. */
+  "folder:search": (
+    root: string,
+    query: string,
+    options: WorkspaceSearchOptions,
+  ) => WorkspaceSearchResponse;
   /** Creates an empty file or a folder inside `parent` and returns its path. */
   "folder:create": (parent: string, name: string, kind: FolderEntry["kind"]) => string;
   /** Renames a file or folder inside its own folder and returns its new path. */

@@ -4,6 +4,8 @@ import type { TranslationSchema } from "../types";
 const words = createPlural("pl", { one: "słowo", few: "słowa", many: "słów" });
 const characters = createPlural("pl", { one: "znak", few: "znaki", many: "znaków" });
 
+const matches = createPlural("pl", { one: "wynik", few: "wyniki", many: "wyników" });
+
 export const plPL = {
   common: {
     appName: "Pupitre",
@@ -130,6 +132,7 @@ export const plPL = {
     paste: "Wklej",
     selectAll: "Zaznacz wszystko",
     find: "Znajdź…",
+    searchInFolder: "Szukaj w folderze...",
     replace: "Zamień…",
     zoomIn: "Powiększ",
     zoomOut: "Pomniejsz",
@@ -319,5 +322,13 @@ export const plPL = {
     placeholder: "Wpisz nazwę pliku…",
     noFolder: "Otwórz folder, aby znaleźć jego dokumenty",
     noResults: "Brak pasujących plików",
+  },
+  workspaceSearch: {
+    title: "Szukaj w folderze",
+    placeholder: "Szukaj w folderze…",
+    noFolder: "Otwórz folder, aby przeszukać jego dokumenty.",
+    noResults: "Brak wyników",
+    invalidRegexp: "To wyrażenie regularne jest nieprawidłowe.",
+    matchCount: (count: number) => `${count} ${matches(count)}`,
   },
 } satisfies TranslationSchema;

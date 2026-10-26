@@ -138,6 +138,7 @@ export const ar = {
     paste: "لصق",
     selectAll: "تحديد الكل",
     find: "بحث...",
+    searchInFolder: "البحث في المجلد...",
     replace: "استبدال...",
     zoomIn: "تكبير",
     zoomOut: "تصغير",
@@ -324,5 +325,20 @@ export const ar = {
     placeholder: "اكتب اسم ملف...",
     noFolder: "افتح مجلدًا للعثور على مستنداته",
     noResults: "لا توجد ملفات مطابقة",
+  },
+  workspaceSearch: {
+    title: "البحث في المجلد",
+    placeholder: "ابحث في المجلد…",
+    noFolder: "افتح مجلدًا للبحث في مستنداته.",
+    noResults: "لا توجد نتائج مطابقة",
+    invalidRegexp: "هذا التعبير النمطي غير صالح.",
+    matchCount: (count: number) => {
+      if (count === 0) return "لا توجد نتائج";
+      if (count === 1) return "نتيجة واحدة";
+      if (count === 2) return "نتيجتان";
+      const lastTwo = count % 100;
+      if (lastTwo >= 3 && lastTwo <= 10) return `${count} نتائج`;
+      return `${count} نتيجة`;
+    },
   },
 } satisfies TranslationSchema;

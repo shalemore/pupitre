@@ -32,6 +32,7 @@ import {
   type SidebarMode,
 } from "@/features/sidebar/sidebar";
 import { WelcomeScreen } from "@/features/welcome/welcome-screen";
+import { WorkspaceSearch } from "@/features/workspace-search/workspace-search";
 import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
 import { documentPosition } from "@/lib/document-positions";
@@ -45,8 +46,10 @@ import type { TextStats } from "@/lib/text-stats";
 type FindMode = "closed" | "find" | "replace";
 
 export const MainWindow: Component = () => {
-  let editor: MarkdownEditorHandle | undefined;
-  const session = createDocumentSession(() => editor);
+  // A signal rather than a variable: a new document brings a new editor, and a match found in the
+  // folder waits for that editor before it selects itself
+  const [editor, setEditor] = createSignal<MarkdownEditorHandle>();
+  const session = createDocumentSession(() => editor());
   const [outline, setOutline] = createSignal<OutlineHeading[]>([]);
   const [activeHeading, setActiveHeading] = createSignal(-1);
   const [stats, setStats] = createSignal<TextStats>({ words: 0, characters: 0 });
@@ -56,6 +59,11 @@ export const MainWindow: Component = () => {
   const [findMode, setFindMode] = createSignal<FindMode>("closed");
   const [paletteOpen, setPaletteOpen] = createSignal(false);
   const [quickOpenOpen, setQuickOpenOpen] = createSignal(false);
+  const [workspaceSearchOpen, setWorkspaceSearchOpen] = createSignal(false);
+  // A match to select once the editor holds the document it was found in
+  const [matchToReveal, setMatchToReveal] = createSignal<
+    { path: string; from: number; to: number } | undefined
+  >();
   const [initialSearch, setInitialSearch] = createSignal("");
   const [matchStats, setMatchStats] = createSignal<MatchStats>({ current: 0, total: 0 });
   const [menuOpen, setMenuOpen] = createSignal(false);
@@ -120,7 +128,7 @@ export const MainWindow: Component = () => {
     <OutlineList
       headings={outline()}
       activeIndex={activeHeading()}
-      onSelectHeading={(heading) => editor?.scrollTo(heading.pos)}
+      onSelectHeading={(heading) => editor()?.scrollTo(heading.pos)}
     />
   );
   const folderTree = (root: string) => (
@@ -158,26 +166,54 @@ export const MainWindow: Component = () => {
     ),
   );
 
+  // The editor of a document is built after the document changed, so the match waits for the
+  // handle of the new editor rather than for the document: revealing it on the one that is being
+  // torn down would leave the new one at its remembered place instead of at the match
+  createEffect(
+    on(editor, (handle) => {
+      const match = matchToReveal();
+      if (handle === undefined || match === undefined) return;
+      if (session.activeDocument()?.path !== match.path) return;
+      setMatchToReveal(undefined);
+      handle.revealRange(match.from, match.to);
+    }),
+  );
+
+  const closeWorkspaceSearch = () => {
+    setWorkspaceSearchOpen(false);
+    editor()?.focus();
+  };
+
+  const openWorkspaceMatch = async (path: string, from: number, to: number) => {
+    setWorkspaceSearchOpen(false);
+    setMatchToReveal({ path, from, to });
+    await session.openPath(path, false);
+    // The file was not opened: a document with unsaved changes kept its own, and the match has
+    // nowhere to appear
+    if (session.activeDocument()?.path !== path) setMatchToReveal(undefined);
+  };
+
   const openFind = (mode: Exclude<FindMode, "closed">) => {
     if (!session.activeDocument()) return;
-    setInitialSearch(editor?.getSelectedText().trim() ?? "");
+    setInitialSearch(editor()?.getSelectedText().trim() ?? "");
     setFindMode(mode);
   };
 
   const closeFind = () => {
     setFindMode("closed");
-    editor?.setSearch({
+    editor()?.setSearch({
       search: "",
       replace: "",
       caseSensitive: false,
       wholeWord: false,
       regexp: false,
     });
-    editor?.focus();
+    editor()?.focus();
   };
 
   const runSearch = (action: (handle: MarkdownEditorHandle) => MatchStats) => {
-    if (editor) setMatchStats(action(editor));
+    const handle = editor();
+    if (handle) setMatchStats(action(handle));
   };
 
   const showFolder = (path: string) => {
@@ -194,7 +230,7 @@ export const MainWindow: Component = () => {
   const exportPdf = async () => {
     if (!session.activeDocument()) return;
     const pdfName = session.fileName().replace(DOCUMENT_FILE, "") + ".pdf";
-    const resume = await editor?.prepareForPrint();
+    const resume = await editor()?.prepareForPrint();
     try {
       await desktop.invoke("document:export-pdf", pdfName);
     } finally {
@@ -224,6 +260,8 @@ export const MainWindow: Component = () => {
         return openFind("find");
       case "edit.replace":
         return openFind("replace");
+      case "edit.search-workspace":
+        return setWorkspaceSearchOpen(true);
       case "view.toggle-sidebar":
         return void updateSettings({ sidebarVisible: !settings().sidebarVisible });
       case "view.command-palette":
@@ -231,7 +269,7 @@ export const MainWindow: Component = () => {
       case "help.sample-document":
         return void session.openSample();
       case "format":
-        return editor?.format(command.action);
+        return editor()?.format(command.action);
       case "window.close":
         return void session.confirmDiscard().then((confirmed) => {
           if (confirmed) void desktop.invoke("window:close-confirmed");
@@ -426,7 +464,7 @@ export const MainWindow: Component = () => {
                     onOutlineChange={setOutline}
                     onActiveHeadingChange={setActiveHeading}
                     onStatsChange={setStats}
-                    ref={(handle) => (editor = handle)}
+                    ref={setEditor}
                   />
                 </Show>
               </main>
@@ -463,6 +501,14 @@ export const MainWindow: Component = () => {
           root={folderRoot()}
           onClose={() => setQuickOpenOpen(false)}
           onOpen={(path) => void session.openPath(path)}
+        />
+      </Show>
+
+      <Show when={workspaceSearchOpen()}>
+        <WorkspaceSearch
+          root={folderRoot()}
+          onOpenMatch={(path, from, to) => void openWorkspaceMatch(path, from, to)}
+          onClose={closeWorkspaceSearch}
         />
       </Show>
     </div>

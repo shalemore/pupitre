@@ -122,6 +122,7 @@ export const enUS = {
     paste: "Paste",
     selectAll: "Select All",
     find: "Find...",
+    searchInFolder: "Search in Folder...",
     replace: "Replace...",
     zoomIn: "Zoom In",
     zoomOut: "Zoom Out",
@@ -310,5 +311,13 @@ export const enUS = {
     placeholder: "Type a file name…",
     noFolder: "Open a folder to find its documents",
     noResults: "No matching files",
+  },
+  workspaceSearch: {
+    title: "Search in Folder",
+    placeholder: "Search in folder…",
+    noFolder: "Open a folder to search its documents.",
+    noResults: "No matches",
+    invalidRegexp: "This regular expression is not valid.",
+    matchCount: (count: number) => (count === 1 ? "1 match" : `${count} matches`),
   },
 };

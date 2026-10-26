@@ -125,6 +125,7 @@ export const elGR = {
     paste: "Επικόλληση",
     selectAll: "Επιλογή όλων",
     find: "Εύρεση…",
+    searchInFolder: "Αναζήτηση στον φάκελο...",
     replace: "Αντικατάσταση…",
     zoomIn: "Μεγέθυνση",
     zoomOut: "Σμίκρυνση",
@@ -316,5 +317,13 @@ export const elGR = {
     placeholder: "Πληκτρολογήστε όνομα αρχείου…",
     noFolder: "Ανοίξτε έναν φάκελο για να βρείτε τα έγγραφά του",
     noResults: "Κανένα αρχείο δεν ταιριάζει",
+  },
+  workspaceSearch: {
+    title: "Αναζήτηση στον φάκελο",
+    placeholder: "Αναζήτηση στον φάκελο…",
+    noFolder: "Ανοίξτε έναν φάκελο για να αναζητήσετε στα έγγραφά του.",
+    noResults: "Δεν βρέθηκαν αντιστοιχίσεις",
+    invalidRegexp: "Αυτή η κανονική έκφραση δεν είναι έγκυρη.",
+    matchCount: (count: number) => `${count} ${count === 1 ? "αντιστοίχιση" : "αντιστοιχίσεις"}`,
   },
 } satisfies TranslationSchema;

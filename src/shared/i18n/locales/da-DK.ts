@@ -125,6 +125,7 @@ export const daDK = {
     paste: "Indsæt",
     selectAll: "Markér alt",
     find: "Find…",
+    searchInFolder: "Søg i mappe...",
     replace: "Erstat…",
     zoomIn: "Zoom ind",
     zoomOut: "Zoom ud",
@@ -312,5 +313,13 @@ export const daDK = {
     placeholder: "Skriv et filnavn…",
     noFolder: "Åbn en mappe for at finde dens dokumenter",
     noResults: "Ingen matchende filer",
+  },
+  workspaceSearch: {
+    title: "Søg i mappe",
+    placeholder: "Søg i mappen…",
+    noFolder: "Åbn en mappe for at søge i dens dokumenter.",
+    noResults: "Ingen resultater",
+    invalidRegexp: "Dette regulære udtryk er ikke gyldigt.",
+    matchCount: (count: number) => `${count} ${count === 1 ? "resultat" : "resultater"}`,
   },
 } satisfies TranslationSchema;

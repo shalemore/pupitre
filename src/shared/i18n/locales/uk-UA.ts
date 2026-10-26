@@ -4,6 +4,8 @@ import type { TranslationSchema } from "../types";
 const words = createPlural("uk", { one: "слово", few: "слова", many: "слів" });
 const characters = createPlural("uk", { one: "символ", few: "символи", many: "символів" });
 
+const matches = createPlural("uk", { one: "збіг", few: "збіги", many: "збігів" });
+
 export const ukUA = {
   common: {
     appName: "Pupitre",
@@ -129,6 +131,7 @@ export const ukUA = {
     paste: "Вставити",
     selectAll: "Вибрати все",
     find: "Знайти…",
+    searchInFolder: "Знайти в папці...",
     replace: "Замінити…",
     zoomIn: "Збільшити",
     zoomOut: "Зменшити",
@@ -318,5 +321,13 @@ export const ukUA = {
     placeholder: "Почніть вводити назву файлу…",
     noFolder: "Відкрийте теку, щоб знайти її документи",
     noResults: "Відповідних файлів немає",
+  },
+  workspaceSearch: {
+    title: "Пошук у папці",
+    placeholder: "Пошук у папці…",
+    noFolder: "Відкрийте папку, щоб шукати в її документах.",
+    noResults: "Збігів немає",
+    invalidRegexp: "Цей регулярний вираз некоректний.",
+    matchCount: (count: number) => `${count} ${matches(count)}`,
   },
 } satisfies TranslationSchema;

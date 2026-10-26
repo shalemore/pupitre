@@ -246,6 +246,13 @@ function menuItems(menu: TopMenu): DemoMenuEntry[] {
       return [
         { label: m.find, run: send({ id: "edit.find" }) },
         { label: m.replace, run: send({ id: "edit.replace" }) },
+        // The demo folder is searched like any other, but it is read in the page, so the search
+        // finds nothing rather than reaching for the file system
+        {
+          label: m.searchInFolder,
+          shortcut: "CmdOrCtrl+Shift+F",
+          run: send({ id: "edit.search-workspace" }),
+        },
       ];
     case "paragraphMenu":
       return PARAGRAPH_MENU_GROUPS.flatMap((group, index) => {
@@ -340,6 +347,7 @@ const handlers: Handlers = {
   // A browser has no folder to walk, so Quick Open has nothing to search in the demo
   "folder:files": () => [],
   "folder:previews": folderPreviews,
+  "folder:search": () => ({ kind: "ok", files: [] }),
   // The demo folder lives in memory, so its files can be created, renamed and deleted like any other
   "folder:create": (parent, name, kind) => {
     const path = `${parent}/${name}`;

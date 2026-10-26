@@ -125,6 +125,7 @@ export const svSE = {
     paste: "Klistra in",
     selectAll: "Markera allt",
     find: "Sök…",
+    searchInFolder: "Sök i mappen...",
     replace: "Ersätt…",
     zoomIn: "Zooma in",
     zoomOut: "Zooma ut",
@@ -312,5 +313,13 @@ export const svSE = {
     placeholder: "Skriv ett filnamn…",
     noFolder: "Öppna en mapp för att hitta dess dokument",
     noResults: "Inga matchande filer",
+  },
+  workspaceSearch: {
+    title: "Sök i mappen",
+    placeholder: "Sök i mappen…",
+    noFolder: "Öppna en mapp för att söka i dess dokument.",
+    noResults: "Inga träffar",
+    invalidRegexp: "Det här reguljära uttrycket är ogiltigt.",
+    matchCount: (count: number) => `${count} ${count === 1 ? "träff" : "träffar"}`,
   },
 } satisfies TranslationSchema;

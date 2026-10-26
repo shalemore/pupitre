@@ -122,6 +122,7 @@ export const jaJP = {
     paste: "貼り付け",
     selectAll: "すべて選択",
     find: "検索...",
+    searchInFolder: "フォルダー内を検索...",
     replace: "置換...",
     zoomIn: "拡大",
     zoomOut: "縮小",
@@ -308,5 +309,13 @@ export const jaJP = {
     placeholder: "ファイル名を入力…",
     noFolder: "フォルダーを開くと、そのドキュメントを探せます",
     noResults: "一致するファイルがありません",
+  },
+  workspaceSearch: {
+    title: "フォルダー内を検索",
+    placeholder: "フォルダー内を検索…",
+    noFolder: "フォルダーを開くと、その中の文書を検索できます。",
+    noResults: "一致する項目はありません",
+    invalidRegexp: "この正規表現は無効です。",
+    matchCount: (count: number) => `${count} 件`,
   },
 } satisfies TranslationSchema;

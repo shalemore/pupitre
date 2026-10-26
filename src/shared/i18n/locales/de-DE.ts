@@ -122,6 +122,7 @@ export const deDE = {
     paste: "Einfügen",
     selectAll: "Alles auswählen",
     find: "Suchen...",
+    searchInFolder: "Im Ordner suchen...",
     replace: "Ersetzen...",
     zoomIn: "Vergrößern",
     zoomOut: "Verkleinern",
@@ -312,5 +313,13 @@ export const deDE = {
     placeholder: "Dateinamen eingeben...",
     noFolder: "Öffnen Sie einen Ordner, um seine Dokumente zu finden",
     noResults: "Keine passenden Dateien",
+  },
+  workspaceSearch: {
+    title: "Im Ordner suchen",
+    placeholder: "Im Ordner suchen…",
+    noFolder: "Öffnen Sie einen Ordner, um seine Dokumente zu durchsuchen.",
+    noResults: "Keine Treffer",
+    invalidRegexp: "Dieser reguläre Ausdruck ist ungültig.",
+    matchCount: (count: number) => `${count} Treffer`,
   },
 } satisfies TranslationSchema;

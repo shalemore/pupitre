@@ -151,6 +151,11 @@ function buildTemplate(): MenuItemConstructorOptions[] {
           enabled: hasDocument,
           click: () => dispatchToMainWindow({ id: "edit.replace" }),
         },
+        {
+          label: labels.searchInFolder,
+          accelerator: "CmdOrCtrl+Shift+F",
+          click: () => dispatchToMainWindow({ id: "edit.search-workspace" }),
+        },
       ],
     },
     {

@@ -27,7 +27,13 @@ import {
 } from "@shared/desktop-api";
 import { showAboutDialog } from "./about";
 import { setAsDefaultMarkdownApp } from "./default-app";
-import { decodeDocument, decodeWith, declaredEncoding, encodeDocument } from "./encoding";
+import {
+  decodeDocument,
+  decodeWith,
+  declaredEncoding,
+  encodeDocument,
+  normalizeText,
+} from "./encoding";
 import { createEntry, renameEntry, trashEntry } from "./file-actions";
 import { t } from "./i18n";
 import { clickMenuItem, menuSnapshot, setDocumentState } from "./menu";
@@ -62,6 +68,7 @@ import {
   showSettingsWindow,
 } from "./windows";
 import { listWorkspaceFiles } from "./workspace-files";
+import { searchWorkspace } from "./workspace-search";
 
 function handle<K extends keyof InvokeChannels>(
   channel: K,
@@ -177,11 +184,6 @@ async function folderPreviews(path: string): Promise<Record<string, string>> {
   );
 }
 
-/** Strips the BOM of a file (its encoding keeps it on save) and normalizes line endings to LF; the original line ending is restored on save. */
-function normalizeText(raw: string): string {
-  return raw.replace(/^\uFEFF/, "").replaceAll("\r\n", "\n");
-}
-
 /** Null when the user gave up on the encoding of a file that is not UTF-8. */
 async function readDocument(path: string, window: BrowserWindow): Promise<OpenedDocument | null> {
   try {
@@ -265,6 +267,7 @@ export function registerIpcHandlers(): void {
   handle("folder:list", (_event, path) => listFolder(path));
   handle("folder:files", (_event, root) => listWorkspaceFiles(root));
   handle("folder:previews", (_event, path) => folderPreviews(path));
+  handle("folder:search", (_event, root, query, options) => searchWorkspace(root, query, options));
   handle("folder:create", (_event, parent, name, kind) => createEntry(parent, name, kind));
   handle("path:rename", (_event, path, name) => renameEntry(path, name));
   handle("path:trash", (_event, path) => trashEntry(path));

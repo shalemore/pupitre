@@ -123,6 +123,7 @@ export const hiIN = {
     paste: "चिपकाएँ",
     selectAll: "सभी चुनें",
     find: "खोजें...",
+    searchInFolder: "फ़ोल्डर में खोजें...",
     replace: "बदलें...",
     zoomIn: "ज़ूम इन करें",
     zoomOut: "ज़ूम आउट करें",
@@ -309,5 +310,13 @@ export const hiIN = {
     placeholder: "फ़ाइल का नाम लिखें...",
     noFolder: "इसके दस्तावेज़ खोजने के लिए कोई फ़ोल्डर खोलें",
     noResults: "कोई मिलती हुई फ़ाइल नहीं",
+  },
+  workspaceSearch: {
+    title: "फ़ोल्डर में खोजें",
+    placeholder: "फ़ोल्डर में खोजें…",
+    noFolder: "उसके दस्तावेज़ों में खोजने के लिए कोई फ़ोल्डर खोलें।",
+    noResults: "कोई मेल नहीं मिला",
+    invalidRegexp: "यह रेगुलर एक्सप्रेशन मान्य नहीं है।",
+    matchCount: (count: number) => `${count} मेल`,
   },
 } satisfies TranslationSchema;

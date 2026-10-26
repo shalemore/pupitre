@@ -82,6 +82,15 @@ export class LossyEncodingError extends Error {
   }
 }
 
+/**
+ * Strips the BOM of a file (its encoding keeps it on save) and normalizes line endings to LF; the
+ * original line ending is restored on save. This is the text the editor and the folder search both
+ * see, so an offset found by one is an offset in the other.
+ */
+export function normalizeText(raw: string): string {
+  return raw.replace(/^\uFEFF/, "").replaceAll("\r\n", "\n");
+}
+
 /** Decodes a file whose encoding is known. */
 export function decodeWith(buffer: Buffer, encoding: TextEncoding): string {
   return iconv.decode(withoutBom(buffer, encoding), iconvName(encoding));

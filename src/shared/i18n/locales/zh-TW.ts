@@ -118,6 +118,7 @@ export const zhTW = {
     paste: "貼上",
     selectAll: "全選",
     find: "尋找...",
+    searchInFolder: "在資料夾中尋找...",
     replace: "取代...",
     zoomIn: "放大",
     zoomOut: "縮小",
@@ -305,5 +306,13 @@ export const zhTW = {
     placeholder: "輸入檔案名稱…",
     noFolder: "開啟資料夾即可尋找其中的文件",
     noResults: "沒有符合的檔案",
+  },
+  workspaceSearch: {
+    title: "在資料夾中尋找",
+    placeholder: "在資料夾中尋找…",
+    noFolder: "開啟一個資料夾，即可在其中尋找文件。",
+    noResults: "沒有符合的結果",
+    invalidRegexp: "此正規表示式無效。",
+    matchCount: (count: number) => `${count} 個相符`,
   },
 } satisfies TranslationSchema;

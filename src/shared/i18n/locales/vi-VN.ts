@@ -123,6 +123,7 @@ export const viVN = {
     paste: "Dán",
     selectAll: "Chọn tất cả",
     find: "Tìm...",
+    searchInFolder: "Tìm trong thư mục...",
     replace: "Thay thế...",
     zoomIn: "Phóng to",
     zoomOut: "Thu nhỏ",
@@ -311,5 +312,13 @@ export const viVN = {
     placeholder: "Nhập tên tệp…",
     noFolder: "Mở một thư mục để tìm tài liệu trong đó",
     noResults: "Không có tệp phù hợp",
+  },
+  workspaceSearch: {
+    title: "Tìm trong thư mục",
+    placeholder: "Tìm trong thư mục…",
+    noFolder: "Hãy mở một thư mục để tìm trong các tài liệu của thư mục đó.",
+    noResults: "Không có kết quả nào",
+    invalidRegexp: "Biểu thức chính quy này không hợp lệ.",
+    matchCount: (count: number) => `${count} kết quả`,
   },
 } satisfies TranslationSchema;

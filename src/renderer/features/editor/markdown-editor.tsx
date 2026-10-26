@@ -88,6 +88,8 @@ export interface MarkdownEditorHandle {
   focus: () => void;
   scrollTo: (pos: number) => void;
   getSelectedText: () => string;
+  /** Selects a range of the text, scrolls it into view and gives the editor the focus; used to show a match found in the folder. */
+  revealRange: (from: number, to: number) => void;
   setSearch: (options: SearchOptions) => MatchStats;
   findNext: () => MatchStats;
   findPrevious: () => MatchStats;
@@ -445,6 +447,16 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       focus: () => view.focus(),
       scrollTo: (pos) => {
         view.dispatch({ effects: EditorView.scrollIntoView(pos, { y: "start" }) });
+        view.focus();
+      },
+      revealRange: (from, to) => {
+        // The document may have been edited since the search read it from disk
+        const length = view.state.doc.length;
+        const start = Math.min(from, length);
+        view.dispatch({
+          selection: { anchor: start, head: Math.min(to, length) },
+          effects: EditorView.scrollIntoView(start, { y: "center" }),
+        });
         view.focus();
       },
       getSelectedText: () => {

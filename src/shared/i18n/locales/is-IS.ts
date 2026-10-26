@@ -126,6 +126,7 @@ export const isIS = {
     paste: "Líma",
     selectAll: "Velja allt",
     find: "Finna…",
+    searchInFolder: "Leita í möppu...",
     replace: "Skipta út…",
     zoomIn: "Auka aðdrátt",
     zoomOut: "Minnka aðdrátt",
@@ -313,5 +314,13 @@ export const isIS = {
     placeholder: "Skrifaðu skráarheiti…",
     noFolder: "Opnaðu möppu til að finna skjölin í henni",
     noResults: "Engar samsvarandi skrár",
+  },
+  workspaceSearch: {
+    title: "Leita í möppu",
+    placeholder: "Leita í möppu…",
+    noFolder: "Opnaðu möppu til að leita í skjölunum hennar.",
+    noResults: "Engar niðurstöður",
+    invalidRegexp: "Þessi reglulega segð er ekki gild.",
+    matchCount: (count: number) => `${count} ${count === 1 ? "niðurstaða" : "niðurstöður"}`,
   },
 } satisfies TranslationSchema;

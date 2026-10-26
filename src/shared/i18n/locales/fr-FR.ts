@@ -122,6 +122,7 @@ export const frFR = {
     paste: "Coller",
     selectAll: "Tout sélectionner",
     find: "Rechercher...",
+    searchInFolder: "Rechercher dans le dossier...",
     replace: "Remplacer...",
     zoomIn: "Zoom avant",
     zoomOut: "Zoom arrière",
@@ -312,5 +313,13 @@ export const frFR = {
     placeholder: "Saisissez un nom de fichier...",
     noFolder: "Ouvrez un dossier pour trouver ses documents",
     noResults: "Aucun fichier correspondant",
+  },
+  workspaceSearch: {
+    title: "Rechercher dans le dossier",
+    placeholder: "Rechercher dans le dossier…",
+    noFolder: "Ouvrez un dossier pour rechercher dans ses documents.",
+    noResults: "Aucune correspondance",
+    invalidRegexp: "Cette expression régulière n'est pas valide.",
+    matchCount: (count: number) => `${count} ${count <= 1 ? "correspondance" : "correspondances"}`,
   },
 } satisfies TranslationSchema;

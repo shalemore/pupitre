@@ -124,6 +124,7 @@ export const idID = {
     paste: "Tempel",
     selectAll: "Pilih semua",
     find: "Cari...",
+    searchInFolder: "Cari di Folder...",
     replace: "Ganti...",
     zoomIn: "Perbesar",
     zoomOut: "Perkecil",
@@ -312,5 +313,13 @@ export const idID = {
     placeholder: "Ketik nama berkas...",
     noFolder: "Buka folder untuk menemukan dokumennya",
     noResults: "Tidak ada berkas yang cocok",
+  },
+  workspaceSearch: {
+    title: "Cari di Folder",
+    placeholder: "Cari di folder…",
+    noFolder: "Buka folder untuk mencari di dokumennya.",
+    noResults: "Tidak ada hasil",
+    invalidRegexp: "Ekspresi reguler ini tidak valid.",
+    matchCount: (count: number) => `${count} hasil`,
   },
 } satisfies TranslationSchema;

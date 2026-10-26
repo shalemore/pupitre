@@ -125,6 +125,7 @@ export const faIR = {
     paste: "چسباندن",
     selectAll: "انتخاب همه",
     find: "یافتن...",
+    searchInFolder: "جستجو در پوشه...",
     replace: "جایگزینی...",
     zoomIn: "بزرگ‌نمایی",
     zoomOut: "کوچک‌نمایی",
@@ -312,5 +313,13 @@ export const faIR = {
     placeholder: "نام فایل را بنویسید...",
     noFolder: "برای یافتن سندهای یک پوشه، آن را باز کنید",
     noResults: "فایلی مطابقت ندارد",
+  },
+  workspaceSearch: {
+    title: "جستجو در پوشه",
+    placeholder: "جستجو در پوشه…",
+    noFolder: "برای جستجو در سندهای یک پوشه، ابتدا آن را باز کنید.",
+    noResults: "نتیجهای یافت نشد",
+    invalidRegexp: "این عبارت باقاعده معتبر نیست.",
+    matchCount: (count: number) => `${count} نتیجه`,
   },
 } satisfies TranslationSchema;

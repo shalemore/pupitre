@@ -126,6 +126,7 @@ export const nlNL = {
     paste: "Plakken",
     selectAll: "Alles selecteren",
     find: "Zoeken…",
+    searchInFolder: "In map zoeken...",
     replace: "Vervangen…",
     zoomIn: "Inzoomen",
     zoomOut: "Uitzoomen",
@@ -315,5 +316,13 @@ export const nlNL = {
     placeholder: "Typ een bestandsnaam…",
     noFolder: "Open een map om de documenten erin te vinden",
     noResults: "Geen overeenkomende bestanden",
+  },
+  workspaceSearch: {
+    title: "In map zoeken",
+    placeholder: "In map zoeken…",
+    noFolder: "Open een map om in de documenten ervan te zoeken.",
+    noResults: "Geen resultaten",
+    invalidRegexp: "Deze reguliere expressie is ongeldig.",
+    matchCount: (count: number) => `${count} ${count === 1 ? "resultaat" : "resultaten"}`,
   },
 } satisfies TranslationSchema;

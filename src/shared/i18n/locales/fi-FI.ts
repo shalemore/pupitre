@@ -125,6 +125,7 @@ export const fiFI = {
     paste: "Liitä",
     selectAll: "Valitse kaikki",
     find: "Etsi…",
+    searchInFolder: "Etsi kansiosta...",
     replace: "Korvaa…",
     zoomIn: "Suurenna",
     zoomOut: "Pienennä",
@@ -313,5 +314,13 @@ export const fiFI = {
     placeholder: "Kirjoita tiedoston nimi…",
     noFolder: "Avaa kansio löytääksesi sen asiakirjat",
     noResults: "Ei vastaavia tiedostoja",
+  },
+  workspaceSearch: {
+    title: "Etsi kansiosta",
+    placeholder: "Etsi kansiosta…",
+    noFolder: "Avaa kansio, jos haluat etsiä sen asiakirjoista.",
+    noResults: "Ei osumia",
+    invalidRegexp: "Tämä säännöllinen lauseke ei ole kelvollinen.",
+    matchCount: (count: number) => `${count} ${count === 1 ? "osuma" : "osumaa"}`,
   },
 } satisfies TranslationSchema;

@@ -125,6 +125,7 @@ export const nbNO = {
     paste: "Lim inn",
     selectAll: "Merk alt",
     find: "Finn…",
+    searchInFolder: "Søk i mappen...",
     replace: "Erstatt…",
     zoomIn: "Zoom inn",
     zoomOut: "Zoom ut",
@@ -312,5 +313,13 @@ export const nbNO = {
     placeholder: "Skriv inn et filnavn…",
     noFolder: "Åpne en mappe for å finne dokumentene i den",
     noResults: "Ingen samsvarende filer",
+  },
+  workspaceSearch: {
+    title: "Søk i mappen",
+    placeholder: "Søk i mappen…",
+    noFolder: "Åpne en mappe for å søke i dokumentene i den.",
+    noResults: "Ingen treff",
+    invalidRegexp: "Dette regulære uttrykket er ugyldig.",
+    matchCount: (count: number) => `${count} treff`,
   },
 } satisfies TranslationSchema;

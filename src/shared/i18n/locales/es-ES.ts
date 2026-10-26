@@ -121,6 +121,7 @@ export const esES = {
     paste: "Pegar",
     selectAll: "Seleccionar todo",
     find: "Buscar...",
+    searchInFolder: "Buscar en la carpeta...",
     replace: "Reemplazar...",
     zoomIn: "Acercar",
     zoomOut: "Alejar",
@@ -312,5 +313,13 @@ export const esES = {
     placeholder: "Escribe un nombre de archivo...",
     noFolder: "Abre una carpeta para encontrar sus documentos",
     noResults: "Ningún archivo coincide",
+  },
+  workspaceSearch: {
+    title: "Buscar en la carpeta",
+    placeholder: "Buscar en la carpeta…",
+    noFolder: "Abre una carpeta para buscar en sus documentos.",
+    noResults: "No hay coincidencias",
+    invalidRegexp: "Esta expresión regular no es válida.",
+    matchCount: (count: number) => `${count} ${count === 1 ? "coincidencia" : "coincidencias"}`,
   },
 } satisfies TranslationSchema;

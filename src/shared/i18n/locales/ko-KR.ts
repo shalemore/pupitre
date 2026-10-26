@@ -122,6 +122,7 @@ export const koKR = {
     paste: "붙여넣기",
     selectAll: "모두 선택",
     find: "찾기...",
+    searchInFolder: "폴더에서 검색...",
     replace: "바꾸기...",
     zoomIn: "확대",
     zoomOut: "축소",
@@ -308,5 +309,13 @@ export const koKR = {
     placeholder: "파일 이름을 입력하세요…",
     noFolder: "폴더를 열면 그 안의 문서를 찾을 수 있습니다",
     noResults: "일치하는 파일이 없습니다",
+  },
+  workspaceSearch: {
+    title: "폴더에서 검색",
+    placeholder: "폴더에서 검색…",
+    noFolder: "폴더를 열면 그 안의 문서를 검색할 수 있습니다.",
+    noResults: "일치하는 항목 없음",
+    invalidRegexp: "이 정규식은 올바르지 않습니다.",
+    matchCount: (count: number) => `${count}개`,
   },
 } satisfies TranslationSchema;

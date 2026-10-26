@@ -4,6 +4,8 @@ import type { TranslationSchema } from "../types";
 const words = createPlural("ru", { one: "слово", few: "слова", many: "слов" });
 const characters = createPlural("ru", { one: "символ", few: "символа", many: "символов" });
 
+const matches = createPlural("ru", { one: "совпадение", few: "совпадения", many: "совпадений" });
+
 export const ruRU = {
   common: {
     appName: "Pupitre",
@@ -128,6 +130,7 @@ export const ruRU = {
     paste: "Вставить",
     selectAll: "Выбрать все",
     find: "Найти...",
+    searchInFolder: "Найти в папке...",
     replace: "Заменить...",
     zoomIn: "Увеличить",
     zoomOut: "Уменьшить",
@@ -316,5 +319,13 @@ export const ruRU = {
     placeholder: "Начните вводить имя файла…",
     noFolder: "Откройте папку, чтобы найти её документы",
     noResults: "Подходящих файлов нет",
+  },
+  workspaceSearch: {
+    title: "Поиск в папке",
+    placeholder: "Поиск в папке…",
+    noFolder: "Откройте папку, чтобы искать по её документам.",
+    noResults: "Совпадений нет",
+    invalidRegexp: "Это регулярное выражение некорректно.",
+    matchCount: (count: number) => `${count} ${matches(count)}`,
   },
 } satisfies TranslationSchema;

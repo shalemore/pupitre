@@ -122,6 +122,7 @@ export const ptBR = {
     paste: "Colar",
     selectAll: "Selecionar Tudo",
     find: "Localizar...",
+    searchInFolder: "Pesquisar na pasta...",
     replace: "Substituir...",
     zoomIn: "Aumentar zoom",
     zoomOut: "Diminuir zoom",
@@ -310,5 +311,13 @@ export const ptBR = {
     placeholder: "Digite o nome do arquivo...",
     noFolder: "Abra uma pasta para encontrar os documentos dela",
     noResults: "Nenhum arquivo correspondente",
+  },
+  workspaceSearch: {
+    title: "Pesquisar na pasta",
+    placeholder: "Pesquisar na pasta…",
+    noFolder: "Abra uma pasta para pesquisar nos documentos dela.",
+    noResults: "Nenhuma ocorrência",
+    invalidRegexp: "Esta expressão regular não é válida.",
+    matchCount: (count: number) => `${count} ${count === 1 ? "ocorrência" : "ocorrências"}`,
   },
 } satisfies TranslationSchema;

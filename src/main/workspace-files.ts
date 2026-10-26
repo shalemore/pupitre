@@ -1,3 +1,4 @@
+import type { Dirent } from "node:fs";
 import { readdir } from "node:fs/promises";
 import { join, relative, sep } from "node:path";
 import { DOCUMENT_FILE, type FolderFile } from "@shared/desktop-api";
@@ -15,9 +16,24 @@ const SKIPPED_FOLDERS = new Set(["node_modules"]);
 // One collator for the whole walk: creating it per comparison is what makes localeCompare slow
 const pathCollator = new Intl.Collator(undefined, { numeric: true });
 
-/** A path written the way the palette shows it, whatever separator the platform joins paths with. */
+/** A path written the way a palette shows it, whatever separator the platform joins paths with. */
 function slashed(path: string): string {
   return sep === "/" ? path : path.split(sep).join("/");
+}
+
+/** Where an entry sits under the folder a walk or a search started at. */
+export function relativeTo(root: string, path: string): string {
+  return slashed(relative(root, path));
+}
+
+/** Whether an entry is a folder to walk into: another tool's state and link cycles are not. */
+export function isWorkspaceFolder(entry: Dirent): boolean {
+  return entry.isDirectory() && !entry.name.startsWith(".") && !SKIPPED_FOLDERS.has(entry.name);
+}
+
+/** Whether an entry is a document: a text file, neither hidden nor a link to one somewhere else. */
+export function isWorkspaceDocument(entry: Dirent): boolean {
+  return entry.isFile() && !entry.name.startsWith(".") && DOCUMENT_FILE.test(entry.name);
 }
 
 /**
@@ -34,13 +50,9 @@ export async function listWorkspaceFiles(root: string): Promise<FolderFile[]> {
     await Promise.all(
       entries.map(async (entry) => {
         if (files.length >= MAX_WORKSPACE_FILES) return;
-        if (entry.name.startsWith(".") || SKIPPED_FOLDERS.has(entry.name)) return;
-        if (entry.isSymbolicLink()) return;
         const path = join(folder, entry.name);
-        if (entry.isDirectory()) return walk(path);
-        if (entry.isFile() && DOCUMENT_FILE.test(entry.name)) {
-          files.push({ path, relative: slashed(relative(root, path)) });
-        }
+        if (isWorkspaceFolder(entry)) return walk(path);
+        if (isWorkspaceDocument(entry)) files.push({ path, relative: relativeTo(root, path) });
       }),
     );
   };

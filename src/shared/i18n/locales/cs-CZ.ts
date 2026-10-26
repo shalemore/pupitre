@@ -4,6 +4,8 @@ import type { TranslationSchema } from "../types";
 const words = createPlural("cs", { one: "slovo", few: "slova", many: "slov" });
 const characters = createPlural("cs", { one: "znak", few: "znaky", many: "znaků" });
 
+const matches = createPlural("cs", { one: "shoda", few: "shody", many: "shod" });
+
 export const csCZ = {
   common: {
     appName: "Pupitre",
@@ -128,6 +130,7 @@ export const csCZ = {
     paste: "Vložit",
     selectAll: "Vybrat vše",
     find: "Najít…",
+    searchInFolder: "Hledat ve složce...",
     replace: "Nahradit…",
     zoomIn: "Zvětšit",
     zoomOut: "Zmenšit",
@@ -316,5 +319,13 @@ export const csCZ = {
     placeholder: "Začněte psát název souboru…",
     noFolder: "Otevřete složku, abyste našli její dokumenty",
     noResults: "Žádné odpovídající soubory",
+  },
+  workspaceSearch: {
+    title: "Hledat ve složce",
+    placeholder: "Hledat ve složce…",
+    noFolder: "Otevřete složku, abyste v jejích dokumentech mohli hledat.",
+    noResults: "Žádné shody",
+    invalidRegexp: "Tento regulární výraz není platný.",
+    matchCount: (count: number) => `${count} ${matches(count)}`,
   },
 } satisfies TranslationSchema;

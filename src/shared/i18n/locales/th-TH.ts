@@ -125,6 +125,7 @@ export const thTH = {
     paste: "วาง",
     selectAll: "เลือกทั้งหมด",
     find: "ค้นหา...",
+    searchInFolder: "ค้นหาในโฟลเดอร์...",
     replace: "แทนที่...",
     zoomIn: "ขยาย",
     zoomOut: "ย่อ",
@@ -311,5 +312,13 @@ export const thTH = {
     placeholder: "พิมพ์ชื่อไฟล์…",
     noFolder: "เปิดโฟลเดอร์เพื่อค้นหาเอกสารในโฟลเดอร์นั้น",
     noResults: "ไม่พบไฟล์ที่ตรงกัน",
+  },
+  workspaceSearch: {
+    title: "ค้นหาในโฟลเดอร์",
+    placeholder: "ค้นหาในโฟลเดอร์…",
+    noFolder: "เปิดโฟลเดอร์เพื่อค้นหาในเอกสารของโฟลเดอร์นั้น",
+    noResults: "ไม่พบรายการที่ตรงกัน",
+    invalidRegexp: "นิพจน์ปกติ (regular expression) นี้ไม่ถูกต้อง",
+    matchCount: (count: number) => `${countFormatter.format(count)} รายการ`,
   },
 } satisfies TranslationSchema;

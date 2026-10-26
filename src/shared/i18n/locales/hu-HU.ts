@@ -126,6 +126,7 @@ export const huHU = {
     paste: "Beillesztés",
     selectAll: "Összes kijelölése",
     find: "Keresés…",
+    searchInFolder: "Keresés a mappában...",
     replace: "Csere…",
     zoomIn: "Nagyítás",
     zoomOut: "Kicsinyítés",
@@ -316,5 +317,13 @@ export const huHU = {
     placeholder: "Kezdj el gépelni egy fájlnevet…",
     noFolder: "Nyiss meg egy mappát a dokumentumai megtalálásához",
     noResults: "Nincs egyező fájl",
+  },
+  workspaceSearch: {
+    title: "Keresés a mappában",
+    placeholder: "Keresés a mappában…",
+    noFolder: "Nyisson meg egy mappát a dokumentumaiban való kereséshez.",
+    noResults: "Nincs találat",
+    invalidRegexp: "Ez a reguláris kifejezés érvénytelen.",
+    matchCount: (count: number) => `${count} találat`,
   },
 } satisfies TranslationSchema;

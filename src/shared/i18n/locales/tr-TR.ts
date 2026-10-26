@@ -126,6 +126,7 @@ export const trTR = {
     paste: "Yapıştır",
     selectAll: "Tümünü Seç",
     find: "Bul…",
+    searchInFolder: "Klasörde Ara...",
     replace: "Değiştir…",
     zoomIn: "Yakınlaştır",
     zoomOut: "Uzaklaştır",
@@ -314,5 +315,13 @@ export const trTR = {
     placeholder: "Bir dosya adı yazın…",
     noFolder: "Belgelerini bulmak için bir klasör açın",
     noResults: "Eşleşen dosya yok",
+  },
+  workspaceSearch: {
+    title: "Klasörde Ara",
+    placeholder: "Klasörde ara…",
+    noFolder: "Belgelerinde arama yapmak için bir klasör açın.",
+    noResults: "Eşleşme yok",
+    invalidRegexp: "Bu düzenli ifade geçerli değil.",
+    matchCount: (count: number) => `${count} eşleşme`,
   },
 } satisfies TranslationSchema;
