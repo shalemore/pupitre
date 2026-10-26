@@ -13,6 +13,7 @@ export const ukUA = {
     wordsCount: (count: number) => `${count} ${words(count)}`,
     charsCount: (count: number) => `${count} ${characters(count)}`,
     copy: "Копіювати",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "Новий",

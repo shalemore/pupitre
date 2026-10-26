@@ -7,6 +7,7 @@ export const zhHK = {
     wordsCount: (count: number) => `${count} 字`,
     charsCount: (count: number) => `${count} 字元`,
     copy: "複製",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "新增",

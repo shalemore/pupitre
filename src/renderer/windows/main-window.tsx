@@ -62,18 +62,21 @@ export const MainWindow: Component = () => {
   const [outline, setOutline] = createSignal<OutlineHeading[]>([]);
   const [activeHeading, setActiveHeading] = createSignal(-1);
   const [stats, setStats] = createSignal<TextStats>({ words: 0, characters: 0 });
-  // A selection is counted before the document totals, as "12 words / 300 words"
+  // A selection is counted before the document totals, as "12 words / 300 words"; the dictionary
+  // decides the order and the separator
   const wordsText = createMemo(() => {
     const { words, selectedWords } = stats();
+    const total = t().common.wordsCount(words);
     return selectedWords === undefined
-      ? t().common.wordsCount(words)
-      : `${t().common.wordsCount(selectedWords)} / ${t().common.wordsCount(words)}`;
+      ? total
+      : t().common.selectedOfTotal(t().common.wordsCount(selectedWords), total);
   });
   const charsText = createMemo(() => {
     const { characters, selectedCharacters } = stats();
+    const total = t().common.charsCount(characters);
     return selectedCharacters === undefined
-      ? t().common.charsCount(characters)
-      : `${t().common.charsCount(selectedCharacters)} / ${t().common.charsCount(characters)}`;
+      ? total
+      : t().common.selectedOfTotal(t().common.charsCount(selectedCharacters), total);
   });
   // A folder the user dropped in or opened; while the open file is outside of it, the file's own folder is shown instead
   const [openedFolder, setOpenedFolder] = createSignal<string>();

@@ -7,6 +7,7 @@ export const nlNL = {
     wordsCount: (count: number) => (count === 1 ? "1 woord" : `${count} woorden`),
     charsCount: (count: number) => (count === 1 ? "1 teken" : `${count} tekens`),
     copy: "Kopiëren",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "Nieuw",

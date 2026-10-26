@@ -7,6 +7,7 @@ export const esES = {
     wordsCount: (count: number) => (count === 1 ? "1 palabra" : `${count} palabras`),
     charsCount: (count: number) => (count === 1 ? "1 carácter" : `${count} caracteres`),
     copy: "Copiar",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "Nuevo",

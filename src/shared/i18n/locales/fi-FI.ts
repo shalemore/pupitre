@@ -7,6 +7,7 @@ export const fiFI = {
     wordsCount: (count: number) => (count === 1 ? "1 sana" : `${count} sanaa`),
     charsCount: (count: number) => (count === 1 ? "1 merkki" : `${count} merkkiä`),
     copy: "Kopioi",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "Uusi",

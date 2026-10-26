@@ -7,6 +7,7 @@ export const elGR = {
     wordsCount: (count: number) => (count === 1 ? "1 λέξη" : `${count} λέξεις`),
     charsCount: (count: number) => (count === 1 ? "1 χαρακτήρας" : `${count} χαρακτήρες`),
     copy: "Αντιγραφή",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "Νέο",

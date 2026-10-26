@@ -22,6 +22,7 @@ export const ar = {
       return `${count} حرفًا`;
     },
     copy: "نسخ",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "جديد",

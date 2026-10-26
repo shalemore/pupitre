@@ -7,6 +7,7 @@ export const koKR = {
     wordsCount: (count: number) => `${count} 단어`,
     charsCount: (count: number) => `${count} 글자`,
     copy: "복사",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "새로 만들기",

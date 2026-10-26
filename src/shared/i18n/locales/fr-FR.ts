@@ -7,6 +7,7 @@ export const frFR = {
     wordsCount: (count: number) => (count <= 1 ? `${count} mot` : `${count} mots`),
     charsCount: (count: number) => (count <= 1 ? `${count} caractère` : `${count} caractères`),
     copy: "Copier",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "Nouveau",

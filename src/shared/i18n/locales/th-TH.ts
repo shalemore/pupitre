@@ -10,6 +10,7 @@ export const thTH = {
     wordsCount: (count: number) => `${countFormatter.format(count)} คำ`,
     charsCount: (count: number) => `${countFormatter.format(count)} ตัวอักษร`,
     copy: "คัดลอก",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "ใหม่",

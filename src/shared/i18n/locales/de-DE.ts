@@ -7,6 +7,7 @@ export const deDE = {
     wordsCount: (count: number) => (count === 1 ? "1 Wort" : `${count} Wörter`),
     charsCount: (count: number) => (count === 1 ? "1 Zeichen" : `${count} Zeichen`),
     copy: "Kopieren",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "Neu",

@@ -5,6 +5,8 @@ export const enUS = {
     wordsCount: (count: number) => (count === 1 ? "1 word" : `${count} words`),
     charsCount: (count: number) => (count === 1 ? "1 char" : `${count} chars`),
     copy: "Copy",
+    // A count of the selection beside the count of the document, in the order this language reads
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "New",

@@ -7,6 +7,7 @@ export const viVN = {
     wordsCount: (count: number) => `${count} từ`,
     charsCount: (count: number) => `${count} ký tự`,
     copy: "Sao chép",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "Mới",

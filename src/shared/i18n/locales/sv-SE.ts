@@ -7,6 +7,7 @@ export const svSE = {
     wordsCount: (count: number) => (count === 1 ? "1 ord" : `${count} ord`),
     charsCount: (count: number) => (count === 1 ? "1 tecken" : `${count} tecken`),
     copy: "Kopiera",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "Ny",

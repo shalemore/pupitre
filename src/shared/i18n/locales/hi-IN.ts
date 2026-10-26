@@ -7,6 +7,7 @@ export const hiIN = {
     wordsCount: (count: number) => `${count} शब्द`,
     charsCount: (count: number) => `${count} अक्षर`,
     copy: "कॉपी करें",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "नया",

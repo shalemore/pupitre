@@ -8,6 +8,7 @@ export const isIS = {
     charsCount: (count: number) =>
       count % 10 === 1 && count % 100 !== 11 ? `${count} stafur` : `${count} stafir`,
     copy: "Afrita",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "Nýtt",

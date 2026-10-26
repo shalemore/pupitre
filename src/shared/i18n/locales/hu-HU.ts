@@ -7,6 +7,7 @@ export const huHU = {
     wordsCount: (count: number) => `${count} szó`,
     charsCount: (count: number) => `${count} karakter`,
     copy: "Másolás",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "Új",

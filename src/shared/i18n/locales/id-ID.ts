@@ -7,6 +7,7 @@ export const idID = {
     wordsCount: (count: number) => `${count} kata`,
     charsCount: (count: number) => `${count} karakter`,
     copy: "Salin",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "Baru",

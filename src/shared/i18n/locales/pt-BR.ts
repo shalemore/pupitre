@@ -7,6 +7,7 @@ export const ptBR = {
     wordsCount: (count: number) => (count === 1 ? "1 palavra" : `${count} palavras`),
     charsCount: (count: number) => (count === 1 ? "1 caractere" : `${count} caracteres`),
     copy: "Copiar",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "Novo",

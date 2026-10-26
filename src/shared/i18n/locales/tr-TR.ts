@@ -7,6 +7,7 @@ export const trTR = {
     wordsCount: (count: number) => `${count} kelime`,
     charsCount: (count: number) => `${count} karakter`,
     copy: "Kopyala",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "Yeni",

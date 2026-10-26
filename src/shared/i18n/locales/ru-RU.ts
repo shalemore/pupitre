@@ -13,6 +13,7 @@ export const ruRU = {
     wordsCount: (count: number) => `${count} ${words(count)}`,
     charsCount: (count: number) => `${count} ${characters(count)}`,
     copy: "Копировать",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "Создать",

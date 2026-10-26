@@ -8,6 +8,7 @@ export const faIR = {
     wordsCount: (count: number) => (count === 0 ? "بدون کلمه" : `${count} کلمه`),
     charsCount: (count: number) => (count === 0 ? "بدون نویسه" : `${count} نویسه`),
     copy: "رونوشت",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "جدید",

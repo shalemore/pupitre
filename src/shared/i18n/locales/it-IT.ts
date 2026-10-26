@@ -7,6 +7,7 @@ export const itIT = {
     wordsCount: (count: number) => (count === 1 ? "1 parola" : `${count} parole`),
     charsCount: (count: number) => (count === 1 ? "1 carattere" : `${count} caratteri`),
     copy: "Copia",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "Nuovo",

@@ -7,6 +7,7 @@ export const nbNO = {
     wordsCount: (count: number) => (count === 1 ? "1 ord" : `${count} ord`),
     charsCount: (count: number) => (count === 1 ? "1 tegn" : `${count} tegn`),
     copy: "Kopier",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "Ny",

@@ -7,6 +7,7 @@ export const jaJP = {
     wordsCount: (count: number) => `${count} 語`,
     charsCount: (count: number) => `${count} 文字`,
     copy: "コピー",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "新規",

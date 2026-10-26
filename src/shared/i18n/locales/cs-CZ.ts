@@ -13,6 +13,7 @@ export const csCZ = {
     wordsCount: (count: number) => `${count} ${words(count)}`,
     charsCount: (count: number) => `${count} ${characters(count)}`,
     copy: "Kopírovat",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "Nový",

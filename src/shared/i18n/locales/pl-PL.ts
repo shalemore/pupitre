@@ -13,6 +13,7 @@ export const plPL = {
     wordsCount: (count: number) => `${count} ${words(count)}`,
     charsCount: (count: number) => `${count} ${characters(count)}`,
     copy: "Kopiuj",
+    selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
   },
   actions: {
     newDoc: "Nowy",
