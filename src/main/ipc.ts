@@ -41,6 +41,7 @@ import { createEntry, renameEntry, trashEntry } from "./file-actions";
 import { listVersions, readVersion, recordVersion } from "./history";
 import { t } from "./i18n";
 import { clickMenuItem, menuSnapshot, setDocumentState } from "./menu";
+import { nameCollator } from "./name-collator";
 import { takeLaunchFile } from "./open-files";
 import { unwatchPath, watchPath } from "./path-watcher";
 import { addRecentFile, getRecentFiles, removeRecentFile } from "./recent-files";
@@ -128,9 +129,6 @@ async function saveImage(
   // Paths in Markdown use / and each segment is encoded for spaces and other special characters
   return [...folder.split(/[\\/]+/), name].map(encodeURIComponent).join("/");
 }
-
-// One collator for every comparison: creating it per call is what makes localeCompare slow on large folders
-const nameCollator = new Intl.Collator(undefined, { numeric: true });
 
 async function listFolder(path: string): Promise<FolderEntry[]> {
   const entries = await readdir(path, { withFileTypes: true });

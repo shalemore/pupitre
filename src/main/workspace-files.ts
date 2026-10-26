@@ -2,6 +2,7 @@ import type { Dirent } from "node:fs";
 import { readdir } from "node:fs/promises";
 import { join, relative, sep } from "node:path";
 import { DOCUMENT_FILE, type FolderFile } from "@shared/desktop-api";
+import { nameCollator } from "./name-collator";
 
 /**
  * How many documents a walk collects before it stops. A folder that holds more than this is not
@@ -12,9 +13,6 @@ export const MAX_WORKSPACE_FILES = 20000;
 
 /** Folders that hold dependencies rather than documents, wherever they turn up. */
 const SKIPPED_FOLDERS = new Set(["node_modules"]);
-
-// One collator for the whole walk: creating it per comparison is what makes localeCompare slow
-const pathCollator = new Intl.Collator(undefined, { numeric: true });
 
 /** A path written the way a palette shows it, whatever separator the platform joins paths with. */
 function slashed(path: string): string {
@@ -60,5 +58,5 @@ export async function listWorkspaceFiles(root: string): Promise<FolderFile[]> {
   // Branches walked side by side can step past the end between two checks, so the list is cut back
   return files
     .slice(0, MAX_WORKSPACE_FILES)
-    .toSorted((a, b) => pathCollator.compare(a.relative, b.relative));
+    .toSorted((a, b) => nameCollator.compare(a.relative, b.relative));
 }

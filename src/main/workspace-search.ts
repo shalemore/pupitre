@@ -14,6 +14,7 @@ import {
   normalizeText,
   undeclaredUtf16,
 } from "./encoding";
+import { nameCollator } from "./name-collator";
 import { isWorkspaceDocument, isWorkspaceFolder, relativeTo } from "./workspace-files";
 
 /**
@@ -25,9 +26,6 @@ import { isWorkspaceDocument, isWorkspaceFolder, relativeTo } from "./workspace-
 const MAX_MATCHES = 500;
 const MAX_FILES = 100;
 const MAX_FILE_BYTES = 2 * 1024 * 1024;
-
-// One collator for every folder: creating it per comparison is what makes localeCompare slow
-const nameCollator = new Intl.Collator(undefined, { numeric: true });
 
 /** A word as CodeMirror's own search counts one, so whole-word means the same in both searches. */
 const WORD_CHARACTER = /[\p{L}\p{N}_]/u;
