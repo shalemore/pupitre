@@ -19,14 +19,19 @@ Settu bendilinn inn í **feitletraðan texta**, `kóða í texta` eða [hlekk](h
 | :---------------------------------- | :---------------------------------------------------------------------------------------------------------- |
 | Feitletra / Skáletra / Kóði í texta | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
 | Yfirstrika                          | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| Undirstrikun                        | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
+| Hreinsa snið                        | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | Hlekkur                             | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| Setja inn mynd…                     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | Fyrirsögn 1–6 / Málsgrein           | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | Tilvitnun                           | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | Númeraður / punktalisti             | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | Kóðablokk / Stærðfræðiblokk         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | Tafla                               | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Finna / Skipta út                   | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Opna lokaðan flipa aftur            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | Efnisyfirlit                        | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Frumkóðahamur                       | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Einbeitingarhamur / Skrifvélarhamur | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Endurstilla aðdrátt                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | Forstillingar                       | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |

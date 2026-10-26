@@ -19,14 +19,19 @@ Sett markøren inne i **fet tekst**, et `kodeavsnitt` eller en [lenke](https://g
 | :----------------------------- | :---------------------------------------------------------------------------------------------------------- |
 | Fet / Kursiv / Innebygd kode   | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
 | Gjennomstreket                 | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| Understreking                  | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
+| Fjern formatering              | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | Lenke                          | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| Sett inn bilde…                | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | Overskrift 1–6 / Avsnitt       | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | Sitat                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | Nummerert / punktliste         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | Kodeblokk / Matematikkblokk    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | Tabell                         | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Finn / Erstatt                 | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Åpne lukket fane på nytt       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | Innholdsfortegnelse            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Kildekodemodus                 | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Fokusmodus / Skrivemaskinmodus | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Tilbakestill zoom              | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | Innstillinger                  | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |

@@ -19,14 +19,19 @@ Sijoita kursori **lihavoituun tekstiin**, `rivinsisäiseen koodiin` tai [linkkii
 | :----------------------------------- | :---------------------------------------------------------------------------------------------------------- |
 | Lihavointi / Kursiivi / Koodi        | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
 | Yliviivaus                           | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| Alleviivaus                          | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
+| Tyhjennä muotoilut                   | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | Linkki                               | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| Lisää kuva…                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | Otsikko 1–6 / Kappale                | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | Lainaus                              | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | Numeroitu / luettelomerkitetty lista | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | Koodilohko / Matematiikkalohko       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | Taulukko                             | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Etsi / Korvaa                        | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Avaa suljettu välilehti uudelleen    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | Sisällysluettelo                     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Lähdekooditila                       | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Keskittymistila / Kirjoituskonetila  | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Palauta zoomaus                      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | Asetukset                            | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |

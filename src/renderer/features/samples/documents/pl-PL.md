@@ -19,14 +19,19 @@ Przenieś kursor do **pogrubionego tekstu**, `kodu w tekście` lub [łącza](htt
 | :------------------------------------ | :---------------------------------------------------------------------------------------------------------- |
 | Pogrubienie / Kursywa / Kod w tekście | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
 | Przekreślenie                         | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| Podkreślenie                          | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
+| Wyczyść formatowanie                  | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | Łącze                                 | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| Wstaw obraz…                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | Nagłówek 1–6 / Akapit                 | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | Cytat                                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | Lista numerowana / punktowana         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | Blok kodu / Blok matematyczny         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | Tabela                                | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Znajdź / Zamień                       | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Otwórz ponownie zamkniętą kartę       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | Spis treści                           | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Tryb kodu źródłowego                  | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Tryb skupienia / maszyny do pisania   | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Przywróć powiększenie                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | Ustawienia                            | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |

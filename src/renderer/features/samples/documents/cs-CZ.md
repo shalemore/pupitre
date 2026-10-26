@@ -19,14 +19,19 @@ Umístěte kurzor do **tučného textu**, `vloženého kódu` nebo [odkazu](http
 | :--------------------------------- | :---------------------------------------------------------------------------------------------------------- |
 | Tučné / Kurzíva / Vložený kód      | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
 | Přeškrtnutí                        | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| Podtržení                          | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
+| Odstranit formátování              | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | Odkaz                              | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| Vložit obrázek…                    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | Nadpis 1–6 / Odstavec              | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | Citace                             | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | Číslovaný / odrážkový seznam       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | Blok kódu / Matematický blok       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | Tabulka                            | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Najít / Nahradit                   | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Znovu otevřít zavřenou kartu       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | Osnova                             | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Režim zdrojového kódu              | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Režim soustředění / psacího stroje | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Obnovit zvětšení                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | Předvolby                          | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |

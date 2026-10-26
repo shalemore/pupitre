@@ -19,14 +19,19 @@ Pupitre — настольный редактор Markdown. Документы �
 | :----------------------------------- | :---------------------------------------------------------------------------------------------------------- |
 | Полужирный / Курсив / Встроенный код | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
 | Зачёркнутый                          | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| Подчёркнутый                         | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
+| Очистить форматирование              | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | Ссылка                               | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| Вставить изображение…                | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | Заголовок 1–6 / Абзац                | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | Цитата                               | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | Нумерованный / маркированный список  | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | Блок кода / Блок формулы             | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | Таблица                              | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Найти / Заменить                     | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Открыть закрытую вкладку             | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | Оглавление                           | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Режим исходного кода                 | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Режим фокуса / Режим пишущей машинки | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Сбросить масштаб                     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | Настройки                            | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |

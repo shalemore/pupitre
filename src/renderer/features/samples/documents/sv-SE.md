@@ -19,14 +19,19 @@ Sätt markören i **fet text**, ett `kodstycke` eller en [länk](https://github.
 | :--------------------------- | :---------------------------------------------------------------------------------------------------------- |
 | Fet / Kursiv / Infogad kod   | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
 | Genomstruken                 | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| Understrykning               | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
+| Rensa formatering            | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | Länk                         | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| Infoga bild…                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | Rubrik 1–6 / Stycke          | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | Citat                        | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | Numrerad / punktad lista     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | Kodblock / Matematikblock    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | Tabell                       | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Sök / Ersätt                 | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Öppna stängd flik igen       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | Disposition                  | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Källkodsläge                 | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Fokusläge / Skrivmaskinsläge | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Återställ zoom               | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | Inställningar                | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |

@@ -19,14 +19,19 @@ Pupitre — це настільний редактор Markdown. Докумен�
 | :--------------------------------------- | :---------------------------------------------------------------------------------------------------------- |
 | Жирний / Курсив / Вбудований код         | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
 | Закреслення                              | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| Підкреслений                             | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
+| Очистити форматування                    | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | Посилання                                | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| Вставити зображення…                     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | Заголовок 1–6 / Абзац                    | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | Цитата                                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | Нумерований / маркований список          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | Блок коду / Математичний блок            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | Таблиця                                  | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Знайти / Замінити                        | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Повторно відкрити закриту вкладку        | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | Структура                                | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Режим вихідного коду                     | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Режим зосередження / друкарської машинки | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Скинути масштаб                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | Параметри                                | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |

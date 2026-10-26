@@ -19,14 +19,19 @@ Sæt markøren inde i **fed tekst**, et `kodeafsnit` eller et [link](https://git
 | :------------------------------------ | :---------------------------------------------------------------------------------------------------------- |
 | Fed / Kursiv / Inline-kode            | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
 | Gennemstreget                         | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| Understregning                        | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
+| Ryd formatering                       | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | Link                                  | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| Indsæt billede…                       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | Overskrift 1–6 / Afsnit               | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | Citat                                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | Nummereret / punktliste               | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | Kodeblok / Matematikblok              | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | Tabel                                 | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Søg / Erstat                          | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Genåbn lukket faneblad                | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | Disposition                           | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Kildekodetilstand                     | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Fokustilstand / Skrivemaskinetilstand | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Nulstil zoom                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | Indstillinger                         | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
