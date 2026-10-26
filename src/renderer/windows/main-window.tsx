@@ -33,6 +33,7 @@ import {
 import { WelcomeScreen } from "@/features/welcome/welcome-screen";
 import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
+import { documentPosition } from "@/lib/document-positions";
 import { createDocumentSession } from "@/lib/document-session";
 import { fileNameOf, isInsideFolder, isolateFileName } from "@/lib/file";
 import { createImmersiveChrome } from "@/lib/immersive-chrome";
@@ -413,6 +414,7 @@ export const MainWindow: Component = () => {
                 <Show when={doc().id} keyed>
                   <MarkdownEditor
                     markdown={doc().markdown}
+                    initialPosition={documentPosition(doc().path)}
                     baseUrl={doc().baseUrl}
                     documentPath={doc().path}
                     onReady={session.markSaved}

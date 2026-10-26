@@ -1,5 +1,5 @@
 import { access, mkdir, open, readdir, readFile, stat, writeFile } from "node:fs/promises";
-import { basename, dirname, extname, join } from "node:path";
+import { basename, dirname, extname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
   BrowserWindow,
@@ -92,8 +92,11 @@ async function savePath(window: BrowserWindow, options: SaveDialogOptions): Prom
 }
 
 function locate(path: string): DocumentLocation {
-  const folder = dirname(path);
-  return { path, folder, baseUrl: pathToFileURL(join(folder, "/")).href };
+  // One spelling per file: the same document can be opened by a path with either separator, and
+  // the windows, the sidebar and the remembered places have to agree on which file they mean
+  const resolved = resolve(path);
+  const folder = dirname(resolved);
+  return { path: resolved, folder, baseUrl: pathToFileURL(join(folder, "/")).href };
 }
 
 async function saveImage(

@@ -25,12 +25,18 @@ import {
 import { Compartment, EditorState, Prec } from "@codemirror/state";
 import { type Command, EditorView, keymap, placeholder } from "@codemirror/view";
 import { GFM, Subscript, Superscript } from "@lezer/markdown";
+import { makeEventListener } from "@solid-primitives/event-listener";
 import { debounce } from "@solid-primitives/scheduled";
 import { createEffect, on, onCleanup, onMount, type Component } from "solid-js";
 import type { FormatAction } from "@shared/format";
 import { ScrollView } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
+import {
+  type DocumentPosition,
+  flushDocumentPositions,
+  rememberDocumentPosition,
+} from "@/lib/document-positions";
 import { settings } from "@/lib/settings";
 import { countText, type TextStats } from "@/lib/text-stats";
 import { themeApplied } from "@/lib/theme";
@@ -99,6 +105,8 @@ export interface MarkdownEditorHandle {
 
 export interface MarkdownEditorProps {
   markdown: string;
+  /** Where the reader left this document; applied once, when the editor is built for it. */
+  initialPosition: DocumentPosition | undefined;
   /** file:// URL of the document folder, to resolve relative image paths; undefined if unsaved. */
   baseUrl: string | undefined;
   /** Path of the document; pasted images are saved next to it. */
@@ -200,6 +208,12 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
 
   onMount(() => {
     if (!container) return;
+    // CodeMirror scrolls a document taller than the window in the ScrollView around it rather than
+    // in its own scroller, so that is where a place in the document is measured from
+    const scroller = container;
+    // The props follow the document the window shows, and by the time this editor is cleaned up
+    // that is already the next one; what it showed itself is kept here instead
+    let path = props.documentPath;
     let headings: OutlineHeading[] = [];
     // Counting walks the whole text, so coalesce it while typing in long documents
     const updateStats = debounce(
@@ -212,6 +226,25 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     const cursorCompartment = new Compartment();
     const baseUrlCompartment = new Compartment();
     const diagramThemeCompartment = new Compartment();
+
+    // While the saved place is still on its way the editor must not save its own, or the top of
+    // the document would replace the place it is about to go back to
+    let restoring = props.initialPosition !== undefined;
+    const savePosition = () => {
+      if (restoring) return;
+      // A document with no file behind it has no place to come back to
+      if (path === undefined) return;
+      // The place is kept as the text that was read, not as a scroll height: CodeMirror only
+      // estimates the height of the lines above the window until they have been in view, so a
+      // height comes back a line or two away from where it was
+      const height = scroller.getBoundingClientRect().top - view.documentTop;
+      const top = view.lineBlockAtHeight(height);
+      rememberDocumentPosition(path, {
+        caret: view.state.selection.main.head,
+        topLine: top.from,
+        topOffset: top.top - height,
+      });
+    };
 
     const view = new EditorView({
       parent: container,
@@ -278,6 +311,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           }),
           EditorView.updateListener.of((update) => {
             if (update.docChanged) props.onMarkdownChange(update.state.doc.toString());
+            if (update.selectionSet) savePosition();
           }),
         ],
       }),
@@ -325,6 +359,18 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       ),
     );
 
+    // Save As and a rename move the document without rebuilding the editor, and the place it is at
+    // belongs to the file it now lives in
+    createEffect(
+      on(
+        () => props.documentPath,
+        (nextPath) => {
+          path = nextPath;
+        },
+        { defer: true },
+      ),
+    );
+
     // Save As moves the document without rebuilding the editor; relative images resolve from the new folder
     createEffect(
       on(
@@ -351,6 +397,43 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     // CodeMirror normalizes line endings, so the baseline is the editor's text rather than the file's
     props.onReady(view.state.doc.toString());
     view.focus();
+
+    // The place is put back from the text it was taken from: the caret, and the line that was at
+    // the top of the editor with as much of it cut off as was before
+    const initialPosition = props.initialPosition;
+    if (initialPosition) {
+      // A file can have grown shorter since it was last read, so its places sit at its end at most
+      const length = view.state.doc.length;
+      view.dispatch({ selection: { anchor: Math.min(initialPosition.caret, length) } });
+      if (settings().typewriterMode) {
+        // Typewriter mode holds the line being written in place and scrolls there itself; the line
+        // that was at the top would only fight it
+        restoring = false;
+      } else {
+        const topLine = Math.min(initialPosition.topLine, length);
+        view.dispatch({
+          effects: EditorView.scrollIntoView(topLine, {
+            // The line's top sat above the top edge by as much as it was cut off, and a negative
+            // margin keeps that: the place is put back where it was rather than at the edge
+            y: "start",
+            yMargin: initialPosition.topOffset,
+          }),
+        });
+        // CodeMirror only estimates the height of the lines above the window until it has measured
+        // them, so the scroll settles over the next frames; reading the place back before that
+        // would save where it landed rather than where it was
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => {
+            restoring = false;
+          }),
+        );
+      }
+    }
+
+    // Scrolling does not change the document, so the update listener does not report it
+    makeEventListener(scroller, "scroll", savePosition, { passive: true });
+    // A window that closes before the next write of the places was due keeps them all the same
+    makeEventListener(window, "pagehide", flushDocumentPositions);
 
     const run = (command: Command): MatchStats => {
       if (getSearchQuery(view.state).valid) command(view);
@@ -399,6 +482,9 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
 
     onCleanup(() => {
       updateStats.clear();
+      // The view is gone once this returns, so the place has to be taken from it beforehand
+      savePosition();
+      flushDocumentPositions();
       view.destroy();
     });
   });
