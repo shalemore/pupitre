@@ -59,6 +59,7 @@ import { clickMenuItem, menuSnapshot, setDocumentState } from "./menu";
 import { nameCollator } from "./name-collator";
 import { takeLaunchFile } from "./open-files";
 import { unwatchPath, watchPath } from "./path-watcher";
+import { pdfPrintOptions } from "./pdf-print-options";
 import { addRecentFile, getRecentFiles, removeRecentFile } from "./recent-files";
 import {
   getSettings,
@@ -252,15 +253,6 @@ async function listFolder(path: string): Promise<FolderEntry[]> {
 
 /** Windows whose page layout has been warmed up, see the export handler. */
 const printWarmedUp = new WeakSet<WebContents>();
-
-/**
- * The foot of a page of an exported PDF: the page number, in the width of the text so that it
- * lines up with it. Chromium fills in the `pageNumber` and `totalPages` classes.
- */
-const PAGE_NUMBER_FOOTER = `
-  <div style="width: 100%; margin: 0 18mm; font: 9px/1 sans-serif; color: #8a8a8a; text-align: center;">
-    <span class="pageNumber"></span> / <span class="totalPages"></span>
-  </div>`;
 
 /** The first bytes of a file as text; undefined when it cannot be read. */
 async function readHead(path: string): Promise<string | undefined> {
@@ -493,17 +485,7 @@ export function registerIpcHandlers(): void {
       extensions: ["pdf"],
     });
     if (filePath === null) return null;
-    const pageNumbers = getSettings().pdfPageNumbers;
-    const options: Electron.PrintToPDFOptions = {
-      printBackground: true,
-      // The stylesheet decides the sheet the document is printed on, so a theme can change it
-      preferCSSPageSize: true,
-      pageSize: "A4",
-      // Chromium draws the foot of every page in the page's margin and fills in the two classes
-      displayHeaderFooter: pageNumbers,
-      headerTemplate: "<div></div>",
-      footerTemplate: PAGE_NUMBER_FOOTER,
-    };
+    const options = pdfPrintOptions(getSettings());
     // The first page layout of a window renders the lines it showed and no others, which leaves a
     // page carrying nothing but its number at the end; one thrown-away page settles that layout,
     // and the next one is laid out whole

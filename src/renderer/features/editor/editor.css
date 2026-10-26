@@ -39,21 +39,18 @@
     overflow-x: auto;
   }
 
-  /* A scroll container keeps painting its scrollbar on every printed page */
+  /*
+   * A scroll container keeps painting its scrollbar on every printed page. The sheet and its
+   * margins are not set here: they belong to the Export settings (pdf-print-options.ts), and a
+   * theme that gives the printed page an @page of its own wins over them
+   */
   @media print {
     .cm-scroller {
       overflow: visible;
     }
-
     /* A fold marker is interface, and a printout shows the whole document anyway */
     .cm-gutters {
       display: none;
-    }
-
-    /* The sheet a printed document is laid out on, which the theme can set to its own size */
-    @page {
-      size: A4;
-      margin: 20mm 18mm;
     }
   }
 

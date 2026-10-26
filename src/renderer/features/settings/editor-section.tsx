@@ -271,19 +271,5 @@ export const EditorSection: Component = () => (
         />
       </SettingField>
     </SettingGroup>
-
-    <SettingGroup>
-      <SettingField
-        name="pdfPageNumbers"
-        title={t().settings.pdfPageNumbers}
-        description={t().settings.pdfPageNumbersDesc}
-      >
-        <Switch
-          checked={settings().pdfPageNumbers}
-          onChange={(pdfPageNumbers) => void updateSettings({ pdfPageNumbers })}
-          aria-label={t().settings.pdfPageNumbers}
-        />
-      </SettingField>
-    </SettingGroup>
   </SettingsSection>
 );

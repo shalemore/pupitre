@@ -1,6 +1,6 @@
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { cn } from "cn";
-import { FileCode2, FolderOpen, Info, Palette, Settings2, Type } from "lucide-solid";
+import { FileCode2, FolderOpen, Info, Palette, Printer, Settings2, Type } from "lucide-solid";
 import { createEffect, onMount, Show, type Component } from "solid-js";
 import { TitleBar } from "@/components/title-bar";
 import {
@@ -16,6 +16,7 @@ import {
 import { AboutSection } from "@/features/settings/about-section";
 import { AppearanceSection } from "@/features/settings/appearance-section";
 import { EditorSection } from "@/features/settings/editor-section";
+import { ExportSection } from "@/features/settings/export-section";
 import { GeneralSection } from "@/features/settings/general-section";
 import { MarkdownSection } from "@/features/settings/markdown-section";
 import { t } from "@/i18n";
@@ -110,6 +111,10 @@ export const SettingsWindow: Component = () => {
               <FileCode2 />
               <span>{t().settings.markdown}</span>
             </TabsTrigger>
+            <TabsTrigger value="export">
+              <Printer />
+              <span>{t().settings.export}</span>
+            </TabsTrigger>
             <Separator class="my-2" />
             <TabsTrigger value="about">
               <Info />
@@ -133,6 +138,9 @@ export const SettingsWindow: Component = () => {
           </TabsContent>
           <TabsContent value="markdown">
             <MarkdownSection />
+          </TabsContent>
+          <TabsContent value="export">
+            <ExportSection />
           </TabsContent>
           <TabsContent value="about">
             <AboutSection />
