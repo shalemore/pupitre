@@ -101,13 +101,28 @@ function matchChinese(tag: Intl.Locale): SupportedLocale {
 }
 
 /**
+ * Reads one of the system's language tags. A Linux session that sets no locale reports "C", and
+ * the C library hands out POSIX names such as "en_US.UTF-8" elsewhere; `Intl.Locale` throws on
+ * both, and an app that cannot read the tag still has to open, so it counts as no match.
+ */
+function parseLanguageTag(language: string): Intl.Locale | undefined {
+  try {
+    return new Intl.Locale(language);
+  } catch {
+    return undefined;
+  }
+}
+
+/**
  * Picks the first supported language from the system's preferred languages; the same language
  * in another region (such as en-GB) also matches.
  */
 function matchLocale(preferredLanguages: readonly string[]): SupportedLocale {
   for (const language of preferredLanguages) {
     if (NORWEGIAN_TAGS.has(language)) return "nb-NO";
-    const tag = new Intl.Locale(language).maximize();
+    const parsed = parseLanguageTag(language);
+    if (parsed === undefined) continue;
+    const tag = parsed.maximize();
     if (tag.language === "zh") return matchChinese(tag);
     const exact = SUPPORTED_LOCALES.find(
       (locale) => locale.code === `${tag.language}-${tag.region}`,
