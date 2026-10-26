@@ -42,32 +42,32 @@ const MenuPanel: Component<PanelProps> = (props) => {
   const hasChecks = () =>
     props.entries.some((entry) => entry.type === "item" && entry.checked !== undefined);
 
-  /** Keeps the panel inside the window and flips a submenu to the other side when there is no room. */
+  /** Past the end of its entry, or on the other side of it when there is no room past the end. */
+  const submenuLeft = (width: number, mirrored: boolean): number => {
+    const towardEnd = mirrored
+      ? props.anchor.left - PANEL_GAP - width
+      : props.anchor.right + PANEL_GAP;
+    const endFits = mirrored
+      ? towardEnd >= VIEWPORT_MARGIN
+      : towardEnd + width <= window.innerWidth - VIEWPORT_MARGIN;
+    if (endFits) return towardEnd;
+    return mirrored ? props.anchor.right + PANEL_GAP : props.anchor.left - PANEL_GAP - width;
+  };
+
+  /** Under a bar button the panel lines up with the button's end edge, so it stays over the bar. */
+  const barLeft = (width: number, mirrored: boolean): number =>
+    mirrored ? props.anchor.right - width : props.anchor.left;
+
+  /** Puts the panel beside its anchor, then keeps it inside the window. */
   const place = () => {
     if (!panel) return;
     const { width, height } = panel.getBoundingClientRect();
     // A submenu opens toward the end of its line, which is the left in a right-to-left menu
-    setRightToLeft(getComputedStyle(panel).direction === "rtl");
-    const towardEnd = rightToLeft()
-      ? props.anchor.left - PANEL_GAP - width
-      : props.anchor.right + PANEL_GAP;
-    const towardStart = rightToLeft()
-      ? props.anchor.right + PANEL_GAP
-      : props.anchor.left - PANEL_GAP - width;
-    const endFits = rightToLeft()
-      ? towardEnd >= VIEWPORT_MARGIN
-      : towardEnd + width <= window.innerWidth - VIEWPORT_MARGIN;
-    // Under a bar button the panel lines up with the button's end edge, so it stays over the bar
-    const left =
-      props.nested === true
-        ? endFits
-          ? towardEnd
-          : towardStart
-        : rightToLeft()
-          ? props.anchor.right - width
-          : props.anchor.left;
-    const top =
-      props.nested === true ? props.anchor.top - SUBMENU_LIFT : props.anchor.bottom + PANEL_GAP;
+    const mirrored = getComputedStyle(panel).direction === "rtl";
+    setRightToLeft(mirrored);
+    const nested = props.nested === true;
+    const left = nested ? submenuLeft(width, mirrored) : barLeft(width, mirrored);
+    const top = nested ? props.anchor.top - SUBMENU_LIFT : props.anchor.bottom + PANEL_GAP;
     setOffset({
       left: Math.max(VIEWPORT_MARGIN, Math.min(left, window.innerWidth - VIEWPORT_MARGIN - width)),
       top: Math.max(VIEWPORT_MARGIN, Math.min(top, window.innerHeight - VIEWPORT_MARGIN - height)),
