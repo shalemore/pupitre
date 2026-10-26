@@ -148,6 +148,7 @@ export const csCZ = {
     focusMode: "Režim soustředění",
     typewriterMode: "Režim psacího stroje",
     commandPalette: "Paleta příkazů",
+    quickOpen: "Rychle otevřít…",
   },
   settings: {
     title: "Předvolby",
@@ -309,5 +310,11 @@ export const csCZ = {
     maximize: "Maximalizovat",
     restore: "Obnovit",
     close: "Zavřít",
+  },
+  quickOpen: {
+    title: "Rychlé otevření",
+    placeholder: "Začněte psát název souboru…",
+    noFolder: "Otevřete složku, abyste našli její dokumenty",
+    noResults: "Žádné odpovídající soubory",
   },
 } satisfies TranslationSchema;

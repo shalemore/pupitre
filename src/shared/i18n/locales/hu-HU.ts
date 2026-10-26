@@ -146,6 +146,7 @@ export const huHU = {
     focusMode: "Fókuszmód",
     typewriterMode: "Írógép mód",
     commandPalette: "Parancspaletta",
+    quickOpen: "Gyors megnyitás…",
   },
   settings: {
     title: "Beállítások",
@@ -309,5 +310,11 @@ export const huHU = {
     maximize: "Maximalizálás",
     restore: "Visszaállítás",
     close: "Bezárás",
+  },
+  quickOpen: {
+    title: "Gyors megnyitás",
+    placeholder: "Kezdj el gépelni egy fájlnevet…",
+    noFolder: "Nyiss meg egy mappát a dokumentumai megtalálásához",
+    noResults: "Nincs egyező fájl",
   },
 } satisfies TranslationSchema;

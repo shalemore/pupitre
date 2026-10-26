@@ -55,6 +55,13 @@ export interface FolderEntry {
   kind: "directory" | "file";
 }
 
+/** A document somewhere in a folder, found by walking it whole. */
+export interface FolderFile {
+  path: string;
+  /** Where the file sits under the folder, written with forward slashes so it reads the same everywhere. */
+  relative: string;
+}
+
 /** The choice made when the file of a document with unsaved changes was modified elsewhere; "keep" continues editing without saving. */
 export type ExternalChangeChoice = "overwrite" | "reload" | "keep";
 
@@ -91,6 +98,7 @@ export type AppCommand =
   | { id: "file.open" }
   | { id: "file.open-path"; path: string }
   | { id: "file.open-folder" }
+  | { id: "file.quick-open" }
   | { id: "file.save" }
   | { id: "file.save-as" }
   | { id: "file.export-pdf" }
@@ -138,6 +146,11 @@ export interface InvokeChannels {
   "document:read": (path: string) => OpenedDocument | null;
   /** Lists one level of a folder: directories first, then files, each sorted by name; hidden entries are left out. */
   "folder:list": (path: string) => FolderEntry[];
+  /**
+   * Every document inside a folder and its subfolders, sorted by relative path, for finding one by
+   * name. Hidden files and folders, node_modules and symbolic links stay out of it.
+   */
+  "folder:files": (root: string) => FolderFile[];
   /**
    * The first bytes of every Markdown file in one level of a folder, keyed by path, which is what the
    * folder shows under a file name when previews are on.

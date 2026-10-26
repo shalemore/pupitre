@@ -145,6 +145,7 @@ export const faIR = {
     focusMode: "حالت تمرکز",
     typewriterMode: "حالت ماشین تحریر",
     commandPalette: "پالت فرمان‌ها",
+    quickOpen: "باز کردن سریع...",
   },
   settings: {
     title: "تنظیمات",
@@ -305,5 +306,11 @@ export const faIR = {
     maximize: "بزرگ‌کردن",
     restore: "بازیابی",
     close: "بستن",
+  },
+  quickOpen: {
+    title: "باز کردن سریع",
+    placeholder: "نام فایل را بنویسید...",
+    noFolder: "برای یافتن سندهای یک پوشه، آن را باز کنید",
+    noResults: "فایلی مطابقت ندارد",
   },
 } satisfies TranslationSchema;

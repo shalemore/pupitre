@@ -150,6 +150,7 @@ export const plPL = {
     focusMode: "Tryb skupienia",
     typewriterMode: "Tryb maszyny do pisania",
     commandPalette: "Paleta poleceń",
+    quickOpen: "Otwórz szybko…",
   },
   settings: {
     title: "Ustawienia",
@@ -312,5 +313,11 @@ export const plPL = {
     maximize: "Maksymalizuj",
     restore: "Przywróć",
     close: "Zamknij",
+  },
+  quickOpen: {
+    title: "Szybkie otwieranie",
+    placeholder: "Wpisz nazwę pliku…",
+    noFolder: "Otwórz folder, aby znaleźć jego dokumenty",
+    noResults: "Brak pasujących plików",
   },
 } satisfies TranslationSchema;

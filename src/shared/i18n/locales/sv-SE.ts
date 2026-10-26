@@ -145,6 +145,7 @@ export const svSE = {
     focusMode: "Fokusläge",
     typewriterMode: "Skrivmaskinsläge",
     commandPalette: "Kommandopalett",
+    quickOpen: "Öppna snabbt…",
   },
   settings: {
     title: "Inställningar",
@@ -305,5 +306,11 @@ export const svSE = {
     maximize: "Maximera",
     restore: "Återställ",
     close: "Stäng",
+  },
+  quickOpen: {
+    title: "Snabböppna",
+    placeholder: "Skriv ett filnamn…",
+    noFolder: "Öppna en mapp för att hitta dess dokument",
+    noResults: "Inga matchande filer",
   },
 } satisfies TranslationSchema;

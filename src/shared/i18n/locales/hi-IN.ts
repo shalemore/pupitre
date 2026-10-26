@@ -143,6 +143,7 @@ export const hiIN = {
     focusMode: "एकाग्रता मोड",
     typewriterMode: "टाइपराइटर मोड",
     commandPalette: "कमांड पैलेट",
+    quickOpen: "त्वरित खोलें...",
   },
   settings: {
     title: "प्राथमिकताएँ",
@@ -302,5 +303,11 @@ export const hiIN = {
     maximize: "बड़ा करें",
     restore: "पहले जैसा करें",
     close: "बंद करें",
+  },
+  quickOpen: {
+    title: "त्वरित खोलें",
+    placeholder: "फ़ाइल का नाम लिखें...",
+    noFolder: "इसके दस्तावेज़ खोजने के लिए कोई फ़ोल्डर खोलें",
+    noResults: "कोई मिलती हुई फ़ाइल नहीं",
   },
 } satisfies TranslationSchema;

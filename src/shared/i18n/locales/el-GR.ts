@@ -145,6 +145,7 @@ export const elGR = {
     focusMode: "Λειτουργία συγκέντρωσης",
     typewriterMode: "Λειτουργία γραφομηχανής",
     commandPalette: "Παλέτα εντολών",
+    quickOpen: "Γρήγορο άνοιγμα…",
   },
   settings: {
     title: "Προτιμήσεις",
@@ -309,5 +310,11 @@ export const elGR = {
     maximize: "Μεγιστοποίηση",
     restore: "Επαναφορά",
     close: "Κλείσιμο",
+  },
+  quickOpen: {
+    title: "Γρήγορο άνοιγμα",
+    placeholder: "Πληκτρολογήστε όνομα αρχείου…",
+    noFolder: "Ανοίξτε έναν φάκελο για να βρείτε τα έγγραφά του",
+    noResults: "Κανένα αρχείο δεν ταιριάζει",
   },
 } satisfies TranslationSchema;

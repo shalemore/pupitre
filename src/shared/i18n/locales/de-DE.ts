@@ -142,6 +142,7 @@ export const deDE = {
     focusMode: "Fokusmodus",
     typewriterMode: "Schreibmaschinenmodus",
     commandPalette: "Befehlspalette",
+    quickOpen: "Schnell öffnen...",
   },
   settings: {
     title: "Einstellungen",
@@ -305,5 +306,11 @@ export const deDE = {
     maximize: "Maximieren",
     restore: "Wiederherstellen",
     close: "Schließen",
+  },
+  quickOpen: {
+    title: "Schnell öffnen",
+    placeholder: "Dateinamen eingeben...",
+    noFolder: "Öffnen Sie einen Ordner, um seine Dokumente zu finden",
+    noResults: "Keine passenden Dateien",
   },
 } satisfies TranslationSchema;

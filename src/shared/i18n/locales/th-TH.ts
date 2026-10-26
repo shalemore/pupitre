@@ -145,6 +145,7 @@ export const thTH = {
     focusMode: "โหมดโฟกัส",
     typewriterMode: "โหมดพิมพ์ดีด",
     commandPalette: "พาเลตคำสั่ง",
+    quickOpen: "เปิดอย่างรวดเร็ว…",
   },
   settings: {
     title: "การตั้งค่า",
@@ -304,5 +305,11 @@ export const thTH = {
     maximize: "ขยายหน้าต่าง",
     restore: "คืนขนาดเดิม",
     close: "ปิด",
+  },
+  quickOpen: {
+    title: "เปิดอย่างรวดเร็ว",
+    placeholder: "พิมพ์ชื่อไฟล์…",
+    noFolder: "เปิดโฟลเดอร์เพื่อค้นหาเอกสารในโฟลเดอร์นั้น",
+    noResults: "ไม่พบไฟล์ที่ตรงกัน",
   },
 } satisfies TranslationSchema;

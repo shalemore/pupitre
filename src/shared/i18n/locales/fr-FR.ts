@@ -142,6 +142,7 @@ export const frFR = {
     focusMode: "Mode concentration",
     typewriterMode: "Mode machine à écrire",
     commandPalette: "Palette de commandes",
+    quickOpen: "Ouvrir rapidement...",
   },
   settings: {
     title: "Préférences",
@@ -305,5 +306,11 @@ export const frFR = {
     maximize: "Agrandir",
     restore: "Restaurer",
     close: "Fermer",
+  },
+  quickOpen: {
+    title: "Ouverture rapide",
+    placeholder: "Saisissez un nom de fichier...",
+    noFolder: "Ouvrez un dossier pour trouver ses documents",
+    noResults: "Aucun fichier correspondant",
   },
 } satisfies TranslationSchema;

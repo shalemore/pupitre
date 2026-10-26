@@ -141,6 +141,7 @@ export const esES = {
     focusMode: "Modo concentración",
     typewriterMode: "Modo máquina de escribir",
     commandPalette: "Paleta de comandos",
+    quickOpen: "Abrir rápidamente...",
   },
   settings: {
     title: "Preferencias",
@@ -305,5 +306,11 @@ export const esES = {
     maximize: "Maximizar",
     restore: "Restaurar",
     close: "Cerrar",
+  },
+  quickOpen: {
+    title: "Apertura rápida",
+    placeholder: "Escribe un nombre de archivo...",
+    noFolder: "Abre una carpeta para encontrar sus documentos",
+    noResults: "Ningún archivo coincide",
   },
 } satisfies TranslationSchema;

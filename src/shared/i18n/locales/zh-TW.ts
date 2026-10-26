@@ -138,6 +138,7 @@ export const zhTW = {
     focusMode: "專注模式",
     typewriterMode: "打字機模式",
     commandPalette: "命令面板",
+    quickOpen: "快速開啟…",
   },
   settings: {
     title: "偏好設定",
@@ -298,5 +299,11 @@ export const zhTW = {
     maximize: "最大化",
     restore: "還原",
     close: "關閉",
+  },
+  quickOpen: {
+    title: "快速開啟",
+    placeholder: "輸入檔案名稱…",
+    noFolder: "開啟資料夾即可尋找其中的文件",
+    noResults: "沒有符合的檔案",
   },
 } satisfies TranslationSchema;

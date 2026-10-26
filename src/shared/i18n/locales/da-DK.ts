@@ -145,6 +145,7 @@ export const daDK = {
     focusMode: "Fokustilstand",
     typewriterMode: "Skrivemaskinetilstand",
     commandPalette: "Kommandopalet",
+    quickOpen: "Åbn hurtigt…",
   },
   settings: {
     title: "Indstillinger",
@@ -305,5 +306,11 @@ export const daDK = {
     maximize: "Maksimér",
     restore: "Gendan",
     close: "Luk",
+  },
+  quickOpen: {
+    title: "Hurtig åbning",
+    placeholder: "Skriv et filnavn…",
+    noFolder: "Åbn en mappe for at finde dens dokumenter",
+    noResults: "Ingen matchende filer",
   },
 } satisfies TranslationSchema;

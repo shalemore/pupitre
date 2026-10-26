@@ -158,6 +158,7 @@ export const ar = {
     focusMode: "وضع التركيز",
     typewriterMode: "وضع الآلة الكاتبة",
     commandPalette: "لوحة الأوامر",
+    quickOpen: "فتح سريع...",
   },
   settings: {
     title: "التفضيلات",
@@ -317,5 +318,11 @@ export const ar = {
     maximize: "تكبير",
     restore: "استعادة",
     close: "إغلاق",
+  },
+  quickOpen: {
+    title: "الفتح السريع",
+    placeholder: "اكتب اسم ملف...",
+    noFolder: "افتح مجلدًا للعثور على مستنداته",
+    noResults: "لا توجد ملفات مطابقة",
   },
 } satisfies TranslationSchema;

@@ -230,6 +230,11 @@ function menuItems(menu: TopMenu): DemoMenuEntry[] {
         { label: m.newFile, run: send({ id: "file.new" }) },
         { label: m.openFile, run: send({ id: "file.open" }) },
         // No entry for opening a folder: the demo has one folder and it is open already
+        {
+          label: m.quickOpen,
+          shortcut: "CmdOrCtrl+P",
+          run: send({ id: "file.quick-open" }),
+        },
         divider,
         { label: m.save, run: send({ id: "file.save" }) },
         { label: m.saveAs, run: send({ id: "file.save-as" }) },
@@ -332,6 +337,8 @@ const handlers: Handlers = {
     return opened(path);
   },
   "folder:list": listFolder,
+  // A browser has no folder to walk, so Quick Open has nothing to search in the demo
+  "folder:files": () => [],
   "folder:previews": folderPreviews,
   // The demo folder lives in memory, so its files can be created, renamed and deleted like any other
   "folder:create": (parent, name, kind) => {

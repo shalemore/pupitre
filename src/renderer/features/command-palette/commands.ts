@@ -1,4 +1,5 @@
 import { TOP_MENUS, type MenuEntry, type Menus, type TopMenu } from "@shared/menu";
+import { matchesSubsequence } from "@/features/palette/fuzzy";
 
 /** One entry of the palette: something a menu runs, with the menus it lives under. */
 export interface PaletteCommand {
@@ -51,15 +52,9 @@ export function filterCommands(
   commands: readonly PaletteCommand[],
   query: string,
 ): PaletteCommand[] {
-  const needle = query.trim().toLocaleLowerCase();
+  const needle = query.trim();
   if (needle === "") return [...commands];
-  return commands.filter((command) => {
-    const text = `${command.label} ${command.parent} ${command.shortcut ?? ""}`.toLocaleLowerCase();
-    let at = 0;
-    for (const character of text) {
-      if (character === needle[at]) at += 1;
-      if (at === needle.length) return true;
-    }
-    return false;
-  });
+  return commands.filter((command) =>
+    matchesSubsequence(`${command.label} ${command.parent} ${command.shortcut ?? ""}`, needle),
+  );
 }

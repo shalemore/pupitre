@@ -142,6 +142,7 @@ export const jaJP = {
     focusMode: "フォーカスモード",
     typewriterMode: "タイプライターモード",
     commandPalette: "コマンドパレット",
+    quickOpen: "クイックオープン…",
   },
   settings: {
     title: "環境設定",
@@ -301,5 +302,11 @@ export const jaJP = {
     maximize: "最大化",
     restore: "元に戻す",
     close: "閉じる",
+  },
+  quickOpen: {
+    title: "クイックオープン",
+    placeholder: "ファイル名を入力…",
+    noFolder: "フォルダーを開くと、そのドキュメントを探せます",
+    noResults: "一致するファイルがありません",
   },
 } satisfies TranslationSchema;

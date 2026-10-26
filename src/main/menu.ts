@@ -96,6 +96,11 @@ function buildTemplate(): MenuItemConstructorOptions[] {
           accelerator: "CmdOrCtrl+Shift+O",
           click: () => dispatchToMainWindow({ id: "file.open-folder" }),
         },
+        {
+          label: labels.quickOpen,
+          accelerator: "CmdOrCtrl+P",
+          click: () => dispatchToMainWindow({ id: "file.quick-open" }),
+        },
         { label: labels.openRecent, submenu: recentMenu },
         separator,
         {

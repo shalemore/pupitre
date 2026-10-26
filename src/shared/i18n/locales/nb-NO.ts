@@ -145,6 +145,7 @@ export const nbNO = {
     focusMode: "Fokusmodus",
     typewriterMode: "Skrivemaskinmodus",
     commandPalette: "Kommandopalett",
+    quickOpen: "Åpne hurtig…",
   },
   settings: {
     title: "Innstillinger",
@@ -305,5 +306,11 @@ export const nbNO = {
     maximize: "Maksimer",
     restore: "Gjenopprett",
     close: "Lukk",
+  },
+  quickOpen: {
+    title: "Hurtigåpning",
+    placeholder: "Skriv inn et filnavn…",
+    noFolder: "Åpne en mappe for å finne dokumentene i den",
+    noResults: "Ingen samsvarende filer",
   },
 } satisfies TranslationSchema;

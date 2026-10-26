@@ -61,6 +61,7 @@ import {
   setDocumentEdited,
   showSettingsWindow,
 } from "./windows";
+import { listWorkspaceFiles } from "./workspace-files";
 
 function handle<K extends keyof InvokeChannels>(
   channel: K,
@@ -262,6 +263,7 @@ export function registerIpcHandlers(): void {
     openPath(senderWindow(event), { properties: ["openDirectory"] }),
   );
   handle("folder:list", (_event, path) => listFolder(path));
+  handle("folder:files", (_event, root) => listWorkspaceFiles(root));
   handle("folder:previews", (_event, path) => folderPreviews(path));
   handle("folder:create", (_event, parent, name, kind) => createEntry(parent, name, kind));
   handle("path:rename", (_event, path, name) => renameEntry(path, name));

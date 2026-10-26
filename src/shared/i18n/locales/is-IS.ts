@@ -146,6 +146,7 @@ export const isIS = {
     focusMode: "Einbeitingarhamur",
     typewriterMode: "Skrifvélarhamur",
     commandPalette: "Skipanaspjald",
+    quickOpen: "Opna fljótt…",
   },
   settings: {
     title: "Forstillingar",
@@ -306,5 +307,11 @@ export const isIS = {
     maximize: "Stækka",
     restore: "Endurheimta",
     close: "Loka",
+  },
+  quickOpen: {
+    title: "Flýtiopnun",
+    placeholder: "Skrifaðu skráarheiti…",
+    noFolder: "Opnaðu möppu til að finna skjölin í henni",
+    noResults: "Engar samsvarandi skrár",
   },
 } satisfies TranslationSchema;

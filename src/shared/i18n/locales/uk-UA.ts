@@ -149,6 +149,7 @@ export const ukUA = {
     focusMode: "Режим зосередження",
     typewriterMode: "Режим друкарської машинки",
     commandPalette: "Палітра команд",
+    quickOpen: "Швидко відкрити…",
   },
   settings: {
     title: "Параметри",
@@ -311,5 +312,11 @@ export const ukUA = {
     maximize: "Розгорнути",
     restore: "Відновити",
     close: "Закрити",
+  },
+  quickOpen: {
+    title: "Швидке відкриття",
+    placeholder: "Почніть вводити назву файлу…",
+    noFolder: "Відкрийте теку, щоб знайти її документи",
+    noResults: "Відповідних файлів немає",
   },
 } satisfies TranslationSchema;

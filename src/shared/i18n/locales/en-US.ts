@@ -142,6 +142,7 @@ export const enUS = {
     focusMode: "Focus Mode",
     typewriterMode: "Typewriter Mode",
     commandPalette: "Command Palette",
+    quickOpen: "Open Quickly…",
   },
   settings: {
     title: "Preferences",
@@ -303,5 +304,11 @@ export const enUS = {
     maximize: "Maximize",
     restore: "Restore",
     close: "Close",
+  },
+  quickOpen: {
+    title: "Quick Open",
+    placeholder: "Type a file name…",
+    noFolder: "Open a folder to find its documents",
+    noResults: "No matching files",
   },
 };

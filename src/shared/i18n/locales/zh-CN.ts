@@ -138,6 +138,7 @@ export const zhCN = {
     focusMode: "专注模式",
     typewriterMode: "打字机模式",
     commandPalette: "命令面板",
+    quickOpen: "快速打开…",
   },
   settings: {
     title: "偏好设置",
@@ -297,5 +298,11 @@ export const zhCN = {
     maximize: "最大化",
     restore: "还原",
     close: "关闭",
+  },
+  quickOpen: {
+    title: "快速打开",
+    placeholder: "输入文件名…",
+    noFolder: "打开文件夹即可查找其中的文档",
+    noResults: "没有匹配的文件",
   },
 } satisfies TranslationSchema;

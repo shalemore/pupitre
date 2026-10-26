@@ -142,6 +142,7 @@ export const koKR = {
     focusMode: "집중 모드",
     typewriterMode: "타자기 모드",
     commandPalette: "명령 팔레트",
+    quickOpen: "빠르게 열기…",
   },
   settings: {
     title: "환경설정",
@@ -301,5 +302,11 @@ export const koKR = {
     maximize: "최대화",
     restore: "이전 크기로 복원",
     close: "닫기",
+  },
+  quickOpen: {
+    title: "빠른 열기",
+    placeholder: "파일 이름을 입력하세요…",
+    noFolder: "폴더를 열면 그 안의 문서를 찾을 수 있습니다",
+    noResults: "일치하는 파일이 없습니다",
   },
 } satisfies TranslationSchema;

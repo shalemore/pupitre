@@ -142,6 +142,7 @@ export const ptBR = {
     focusMode: "Modo foco",
     typewriterMode: "Modo máquina de escrever",
     commandPalette: "Paleta de comandos",
+    quickOpen: "Abrir rapidamente...",
   },
   settings: {
     title: "Preferências",
@@ -303,5 +304,11 @@ export const ptBR = {
     maximize: "Maximizar",
     restore: "Restaurar",
     close: "Fechar",
+  },
+  quickOpen: {
+    title: "Abertura rápida",
+    placeholder: "Digite o nome do arquivo...",
+    noFolder: "Abra uma pasta para encontrar os documentos dela",
+    noResults: "Nenhum arquivo correspondente",
   },
 } satisfies TranslationSchema;

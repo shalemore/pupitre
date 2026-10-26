@@ -148,6 +148,7 @@ export const ruRU = {
     focusMode: "Режим фокуса",
     typewriterMode: "Режим пишущей машинки",
     commandPalette: "Палитра команд",
+    quickOpen: "Быстро открыть…",
   },
   settings: {
     title: "Настройки",
@@ -309,5 +310,11 @@ export const ruRU = {
     maximize: "Развернуть",
     restore: "Восстановить",
     close: "Закрыть",
+  },
+  quickOpen: {
+    title: "Быстрое открытие",
+    placeholder: "Начните вводить имя файла…",
+    noFolder: "Откройте папку, чтобы найти её документы",
+    noResults: "Подходящих файлов нет",
   },
 } satisfies TranslationSchema;

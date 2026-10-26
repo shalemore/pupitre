@@ -21,6 +21,7 @@ import {
   type MatchStats,
 } from "@/features/editor/markdown-editor";
 import { MenuBar } from "@/features/menu/menu-bar";
+import { QuickOpen } from "@/features/quick-open/quick-open";
 import { FolderTree } from "@/features/sidebar/folder-tree";
 import { OutlineList } from "@/features/sidebar/outline-list";
 import {
@@ -54,6 +55,7 @@ export const MainWindow: Component = () => {
   const [preferredMode, setPreferredMode] = createSignal<SidebarMode>("outline");
   const [findMode, setFindMode] = createSignal<FindMode>("closed");
   const [paletteOpen, setPaletteOpen] = createSignal(false);
+  const [quickOpenOpen, setQuickOpenOpen] = createSignal(false);
   const [initialSearch, setInitialSearch] = createSignal("");
   const [matchStats, setMatchStats] = createSignal<MatchStats>({ current: 0, total: 0 });
   const [menuOpen, setMenuOpen] = createSignal(false);
@@ -208,6 +210,8 @@ export const MainWindow: Component = () => {
         return void session.open();
       case "file.open-folder":
         return void openFolder();
+      case "file.quick-open":
+        return setQuickOpenOpen(true);
       case "file.open-path":
         return void session.openPath(command.path);
       case "file.save":
@@ -452,6 +456,14 @@ export const MainWindow: Component = () => {
 
       <Show when={paletteOpen()}>
         <CommandPalette onClose={() => setPaletteOpen(false)} />
+      </Show>
+
+      <Show when={quickOpenOpen()}>
+        <QuickOpen
+          root={folderRoot()}
+          onClose={() => setQuickOpenOpen(false)}
+          onOpen={(path) => void session.openPath(path)}
+        />
       </Show>
     </div>
   );

@@ -145,6 +145,7 @@ export const fiFI = {
     focusMode: "Keskittymistila",
     typewriterMode: "Kirjoituskonetila",
     commandPalette: "Komentopaletti",
+    quickOpen: "Avaa nopeasti…",
   },
   settings: {
     title: "Asetukset",
@@ -306,5 +307,11 @@ export const fiFI = {
     maximize: "Suurenna",
     restore: "Palauta",
     close: "Sulje",
+  },
+  quickOpen: {
+    title: "Pikahaku",
+    placeholder: "Kirjoita tiedoston nimi…",
+    noFolder: "Avaa kansio löytääksesi sen asiakirjat",
+    noResults: "Ei vastaavia tiedostoja",
   },
 } satisfies TranslationSchema;

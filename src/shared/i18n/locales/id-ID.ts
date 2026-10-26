@@ -144,6 +144,7 @@ export const idID = {
     focusMode: "Mode fokus",
     typewriterMode: "Mode mesin tik",
     commandPalette: "Palet Perintah",
+    quickOpen: "Buka dengan Cepat...",
   },
   settings: {
     title: "Preferensi",
@@ -305,5 +306,11 @@ export const idID = {
     maximize: "Perbesar",
     restore: "Pulihkan",
     close: "Tutup",
+  },
+  quickOpen: {
+    title: "Buka Cepat",
+    placeholder: "Ketik nama berkas...",
+    noFolder: "Buka folder untuk menemukan dokumennya",
+    noResults: "Tidak ada berkas yang cocok",
   },
 } satisfies TranslationSchema;

@@ -146,6 +146,7 @@ export const trTR = {
     focusMode: "Odak Modu",
     typewriterMode: "Daktilo Modu",
     commandPalette: "Komut Paleti",
+    quickOpen: "Hızlı Aç…",
   },
   settings: {
     title: "Tercihler",
@@ -307,5 +308,11 @@ export const trTR = {
     maximize: "Ekranı Kapla",
     restore: "Geri Yükle",
     close: "Kapat",
+  },
+  quickOpen: {
+    title: "Hızlı Aç",
+    placeholder: "Bir dosya adı yazın…",
+    noFolder: "Belgelerini bulmak için bir klasör açın",
+    noResults: "Eşleşen dosya yok",
   },
 } satisfies TranslationSchema;

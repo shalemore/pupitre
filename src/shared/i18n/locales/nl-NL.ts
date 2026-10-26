@@ -146,6 +146,7 @@ export const nlNL = {
     focusMode: "Focusmodus",
     typewriterMode: "Typemachinemodus",
     commandPalette: "Opdrachtenpalet",
+    quickOpen: "Snel openen…",
   },
   settings: {
     title: "Voorkeuren",
@@ -308,5 +309,11 @@ export const nlNL = {
     maximize: "Maximaliseren",
     restore: "Herstellen",
     close: "Sluiten",
+  },
+  quickOpen: {
+    title: "Snel openen",
+    placeholder: "Typ een bestandsnaam…",
+    noFolder: "Open een map om de documenten erin te vinden",
+    noResults: "Geen overeenkomende bestanden",
   },
 } satisfies TranslationSchema;

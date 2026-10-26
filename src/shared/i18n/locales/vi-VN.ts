@@ -143,6 +143,7 @@ export const viVN = {
     focusMode: "Chế độ tập trung",
     typewriterMode: "Chế độ máy đánh chữ",
     commandPalette: "Bảng lệnh",
+    quickOpen: "Mở nhanh…",
   },
   settings: {
     title: "Tùy chọn",
@@ -304,5 +305,11 @@ export const viVN = {
     maximize: "Phóng to",
     restore: "Khôi phục",
     close: "Đóng",
+  },
+  quickOpen: {
+    title: "Mở nhanh",
+    placeholder: "Nhập tên tệp…",
+    noFolder: "Mở một thư mục để tìm tài liệu trong đó",
+    noResults: "Không có tệp phù hợp",
   },
 } satisfies TranslationSchema;
