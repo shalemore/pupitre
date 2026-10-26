@@ -20,6 +20,8 @@ export const zhCN = {
     newFolder: "新建文件夹",
     rename: "重命名",
     moveToTrash: "移到回收站",
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
   },
   welcome: {
     dragDropHint: "也可以直接把 Markdown 文件拖拽到窗口中",
@@ -90,6 +92,9 @@ export const zhCN = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
   },
   dialogs: {
     copyButton: "复制",

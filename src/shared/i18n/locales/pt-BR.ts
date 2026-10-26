@@ -20,6 +20,8 @@ export const ptBR = {
     newFolder: "Nova pasta",
     rename: "Renomear",
     moveToTrash: "Mover para a lixeira",
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
   },
   welcome: {
     dragDropHint: "Ou arraste e solte arquivos Markdown nesta janela",
@@ -91,6 +93,9 @@ export const ptBR = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
   },
   dialogs: {
     copyButton: "Copiar",

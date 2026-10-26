@@ -27,6 +27,8 @@ export const plPL = {
     newFolder: "Nowy folder",
     rename: "Zmień nazwę",
     moveToTrash: "Przenieś do kosza",
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
   },
   welcome: {
     dragDropHint: "Możesz też przeciągnąć pliki Markdown do tego okna",
@@ -97,6 +99,9 @@ export const plPL = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
   },
   dialogs: {
     copyButton: "Kopiuj",

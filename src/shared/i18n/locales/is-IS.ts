@@ -22,6 +22,8 @@ export const isIS = {
     newFolder: "Ný mappa",
     rename: "Endurnefna",
     moveToTrash: "Færa í ruslatunnu",
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
   },
   welcome: {
     dragDropHint: "Þú getur einnig dregið Markdown-skrár á þennan glugga",
@@ -92,6 +94,9 @@ export const isIS = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
   },
   dialogs: {
     copyButton: "Afrita",

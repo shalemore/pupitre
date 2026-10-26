@@ -21,6 +21,8 @@ export const elGR = {
     newFolder: "Νέος φάκελος",
     rename: "Μετονομασία",
     moveToTrash: "Μετακίνηση στον κάδο",
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
   },
   welcome: {
     dragDropHint: "Μπορείτε επίσης να σύρετε αρχεία Markdown σε αυτό το παράθυρο",
@@ -91,6 +93,9 @@ export const elGR = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
   },
   dialogs: {
     copyButton: "Αντιγραφή",

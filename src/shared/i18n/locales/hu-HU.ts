@@ -21,6 +21,8 @@ export const huHU = {
     newFolder: "Új mappa",
     rename: "Átnevezés",
     moveToTrash: "Áthelyezés a kukába",
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
   },
   welcome: {
     dragDropHint: "A Markdown-fájlokat erre az ablakra is húzhatja",
@@ -91,6 +93,9 @@ export const huHU = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
   },
   dialogs: {
     copyButton: "Másolás",

@@ -20,6 +20,8 @@ export const frFR = {
     newFolder: "Nouveau dossier",
     rename: "Renommer",
     moveToTrash: "Mettre à la corbeille",
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
   },
   welcome: {
     dragDropHint: "Vous pouvez aussi glisser-déposer des fichiers Markdown ici",
@@ -90,6 +92,9 @@ export const frFR = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
   },
   dialogs: {
     copyButton: "Copier",

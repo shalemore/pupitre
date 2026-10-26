@@ -9,6 +9,15 @@ export interface OutlineHeading {
   pos: number;
 }
 
+/**
+ * What tells one outline heading apart from another: its level and its text. A position would move
+ * with every edit above the heading and open a collapsed section again while the document is
+ * being written.
+ */
+export function headingKey(heading: OutlineHeading): string {
+  return `${heading.level}:${heading.text}`;
+}
+
 /** A heading's node name, whose last character is its level: ATXHeading2, SetextHeading1. */
 export const HEADING_LEVEL = /^(?:ATX|Setext)Heading([1-6])$/;
 const LEAF_BLOCK = /^(?:Paragraph|FencedCode|CodeBlock|HTMLBlock|Table|FrontMatter)$/;

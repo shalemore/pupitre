@@ -15,6 +15,9 @@ export const enUS = {
     outline: "Outline",
     folder: "Folder",
     folderUnreadable: "This folder can't be read.",
+    /** The chevron of an outline heading, which hides or shows the headings under it. */
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
     newFolder: "New Folder",
     rename: "Rename",
     moveToTrash: "Move to Trash",
@@ -39,6 +42,10 @@ export const enUS = {
     nextMatch: "Next Match",
     closeFind: "Close",
     placeholder: "Start writing…",
+    /** The fold marker of the gutter, and the words a folded range is announced with. */
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
     /** Picker of the language a code block's fence names; plain text takes the language away. */
     codeLanguage: "Code Block Language",
     codeLanguagePlain: "Plain Text",

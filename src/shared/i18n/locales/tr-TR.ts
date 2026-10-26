@@ -21,6 +21,8 @@ export const trTR = {
     newFolder: "Yeni Klasör",
     rename: "Yeniden Adlandır",
     moveToTrash: "Çöp Kutusuna Taşı",
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
   },
   welcome: {
     dragDropHint: "Markdown dosyalarını bu pencereye de sürükleyebilirsiniz",
@@ -91,6 +93,9 @@ export const trTR = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
   },
   dialogs: {
     copyButton: "Kopyala",

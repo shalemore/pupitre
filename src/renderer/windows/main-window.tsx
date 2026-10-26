@@ -14,7 +14,7 @@ import {
 import type { AppCommand } from "@shared/desktop-api";
 import { TitleBar } from "@/components/title-bar";
 import { CommandPalette } from "@/features/command-palette/command-palette";
-import type { OutlineHeading } from "@/features/editor/document-structure";
+import { headingKey, type OutlineHeading } from "@/features/editor/document-structure";
 import { FindBar } from "@/features/editor/find-bar";
 import {
   MarkdownEditor,
@@ -51,6 +51,8 @@ import type { TextStats } from "@/lib/text-stats";
 type FindMode = "closed" | "find" | "replace";
 // A drag reports the pointer for every pixel it moves; only the width it settles on is worth writing
 const SIDEBAR_WIDTH_SAVE_DELAY = 300;
+/** The outline of a document nothing is folded in yet, and of no document at all. */
+const OPEN_SECTIONS: ReadonlySet<string> = new Set();
 
 export const MainWindow: Component = () => {
   // A signal rather than a variable: a new document brings a new editor, and a match found in the
@@ -88,6 +90,11 @@ export const MainWindow: Component = () => {
   >();
   const [initialSearch, setInitialSearch] = createSignal("");
   const [matchStats, setMatchStats] = createSignal<MatchStats>({ current: 0, total: 0 });
+  // The outline sections the user folded, by headingKey, each document with its own: a fold belongs
+  // to the document it was made in and survives every edit of it
+  const [foldedSections, setFoldedSections] = createSignal<
+    ReadonlyMap<number, ReadonlySet<string>>
+  >(new Map());
   const [menuOpen, setMenuOpen] = createSignal(false);
   const immersive = () => settings().windowStyle === "immersive";
   // Split, the folder has its own sidebar at the start edge and the outline one at the end edge; combined, one sidebar shows either
@@ -155,10 +162,28 @@ export const MainWindow: Component = () => {
     return folderRoot() === undefined ? "outline" : preferredMode();
   };
 
+  const foldedHeadings = () => {
+    const id = session.activeDocument()?.id;
+    return id === undefined ? OPEN_SECTIONS : (foldedSections().get(id) ?? OPEN_SECTIONS);
+  };
+
+  const toggleOutlineSection = (heading: OutlineHeading) => {
+    const id = session.activeDocument()?.id;
+    if (id === undefined) return;
+    const key = headingKey(heading);
+    setFoldedSections((current) => {
+      const keys = new Set(current.get(id));
+      if (!keys.delete(key)) keys.add(key);
+      return new Map(current).set(id, keys);
+    });
+  };
+
   const outlineList = () => (
     <OutlineList
       headings={outline()}
       activeIndex={activeHeading()}
+      collapsed={foldedHeadings()}
+      onToggleCollapsed={toggleOutlineSection}
       onSelectHeading={(heading) => editor()?.scrollTo(heading.pos)}
     />
   );

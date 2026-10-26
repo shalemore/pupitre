@@ -20,6 +20,8 @@ export const esES = {
     newFolder: "Nueva carpeta",
     rename: "Cambiar nombre",
     moveToTrash: "Mover a la papelera",
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
   },
   welcome: {
     dragDropHint: "O arrastra y suelta archivos Markdown en esta ventana",
@@ -90,6 +92,9 @@ export const esES = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
   },
   dialogs: {
     copyButton: "Copiar",

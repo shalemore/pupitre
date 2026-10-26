@@ -21,6 +21,8 @@ export const nlNL = {
     newFolder: "Nieuwe map",
     rename: "Naam wijzigen",
     moveToTrash: "Naar de prullenbak",
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
   },
   welcome: {
     dragDropHint: "Of sleep Markdown-bestanden naar dit venster",
@@ -91,6 +93,9 @@ export const nlNL = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
   },
   dialogs: {
     copyButton: "Kopiëren",

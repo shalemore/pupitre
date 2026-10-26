@@ -7,7 +7,7 @@ import {
   indentMore,
   isolateHistory,
 } from "@codemirror/commands";
-import { syntaxTree } from "@codemirror/language";
+import { foldedRanges, foldEffect, syntaxTree, unfoldAll } from "@codemirror/language";
 import {
   closeSearchPanel,
   findNext,
@@ -50,6 +50,7 @@ import {
   type OutlineHeading,
   readableText,
 } from "./document-structure";
+import { folding, foldingKeymap } from "./folding";
 import {
   formatKeymap,
   insertParagraphBreak,
@@ -206,6 +207,13 @@ const layeredStyles = EditorView.theme({
     caretColor: "revert-layer",
   },
   ".cm-placeholder": { color: "revert-layer" },
+  // The fold gutter is not a column of its own (editor.css), so it wears neither of CodeMirror's
+  // color schemes: its surface comes from the layers, where a theme can give it one
+  "&.cm-editor .cm-gutters": {
+    backgroundColor: "revert-layer",
+    color: "revert-layer",
+    border: "revert-layer",
+  },
   ".cm-line": { padding: "revert-layer" },
   "&.cm-editor .cm-searchMatch, &.cm-editor .cm-searchMatch-selected": {
     backgroundColor: "revert-layer",
@@ -323,9 +331,15 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
             { key: "Tab", run: inList(indentMore), shift: inList(indentLess) },
             ...closeBracketsKeymap,
             ...defaultKeymap,
+            ...foldingKeymap,
             ...historyKeymap,
           ]),
           markdownLanguage,
+          folding({
+            fold: t().editor.fold,
+            unfold: t().editor.unfold,
+            foldedText: t().editor.foldedText,
+          }),
           codeHighlight,
           previewCompartment.of(previewOf(settings().sourceMode)),
           imageInput(uploadImage),
@@ -590,6 +604,13 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         const hadFocus = view.hasFocus;
         // The caret would be printed too
         view.contentDOM.blur();
+        // A fold is a way of reading the document, not a part of it, so a printout shows it whole
+        const printed = view.state.doc;
+        const folded: { from: number; to: number }[] = [];
+        foldedRanges(view.state).between(0, view.state.doc.length, (from, to) => {
+          folded.push({ from, to });
+        });
+        unfoldAll(view);
         // A printout is always the rendered document, so source mode gives the preview back for it
         // and takes it out again afterwards. The extensions go in first: a printing field added by
         // the same change would not see the effect that turns printing on.
@@ -600,6 +621,11 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         return () => {
           view.dispatch({ effects: setPrinting.of(false) });
           showSource(sourceMode);
+          // The folds go back to the lines they were made on, unless the document was edited
+          // while it was being printed and they would stand for something else now
+          if (folded.length > 0 && view.state.doc.eq(printed)) {
+            view.dispatch({ effects: folded.map((range) => foldEffect.of(range)) });
+          }
           if (hadFocus) view.focus();
         };
       },

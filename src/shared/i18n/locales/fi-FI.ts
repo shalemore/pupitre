@@ -21,6 +21,8 @@ export const fiFI = {
     newFolder: "Uusi kansio",
     rename: "Nimeä uudelleen",
     moveToTrash: "Siirrä roskakoriin",
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
   },
   welcome: {
     dragDropHint: "Voit myös vetää Markdown-tiedostoja tähän ikkunaan",
@@ -91,6 +93,9 @@ export const fiFI = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
   },
   dialogs: {
     copyButton: "Kopioi",

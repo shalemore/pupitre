@@ -21,6 +21,8 @@ export const hiIN = {
     newFolder: "नया फ़ोल्डर",
     rename: "नाम बदलें",
     moveToTrash: "रीसायकल बिन में भेजें",
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
   },
   welcome: {
     dragDropHint: "या Markdown फ़ाइलों को सीधे इस विंडो में खींचकर छोड़ें",
@@ -91,6 +93,9 @@ export const hiIN = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
   },
   dialogs: {
     copyButton: "कॉपी करें",

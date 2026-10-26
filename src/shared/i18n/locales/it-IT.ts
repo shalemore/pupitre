@@ -20,6 +20,8 @@ export const itIT = {
     newFolder: "Nuova cartella",
     rename: "Rinomina",
     moveToTrash: "Sposta nel cestino",
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
   },
   welcome: {
     dragDropHint: "Oppure trascina e rilascia i file Markdown in questa finestra",
@@ -90,6 +92,9 @@ export const itIT = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
   },
   dialogs: {
     copyButton: "Copia",

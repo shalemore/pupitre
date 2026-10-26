@@ -27,6 +27,8 @@ export const ukUA = {
     newFolder: "Нова папка",
     rename: "Перейменувати",
     moveToTrash: "Перемістити до кошика",
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
   },
   welcome: {
     dragDropHint: "Також можна перетягнути файли Markdown у це вікно",
@@ -97,6 +99,9 @@ export const ukUA = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
   },
   dialogs: {
     copyButton: "Копіювати",

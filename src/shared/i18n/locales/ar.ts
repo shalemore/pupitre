@@ -36,6 +36,8 @@ export const ar = {
     newFolder: "مجلد جديد",
     rename: "إعادة التسمية",
     moveToTrash: "نقل إلى سلة المحذوفات",
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
   },
   welcome: {
     dragDropHint: "أو اسحب ملفات ماركداون وأفلتها في هذه النافذة",
@@ -106,6 +108,9 @@ export const ar = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
   },
   dialogs: {
     copyButton: "نسخ",

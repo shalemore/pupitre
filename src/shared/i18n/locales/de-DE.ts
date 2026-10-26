@@ -20,6 +20,8 @@ export const deDE = {
     newFolder: "Neuer Ordner",
     rename: "Umbenennen",
     moveToTrash: "In den Papierkorb",
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
   },
   welcome: {
     dragDropHint: "Oder Markdown-Dateien direkt in dieses Fenster ziehen",
@@ -90,6 +92,9 @@ export const deDE = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
   },
   dialogs: {
     copyButton: "Kopieren",

@@ -27,6 +27,8 @@ export const ruRU = {
     newFolder: "Новая папка",
     rename: "Переименовать",
     moveToTrash: "Переместить в корзину",
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
   },
   welcome: {
     dragDropHint: "Или перетащите файл Markdown в это окно",
@@ -97,6 +99,9 @@ export const ruRU = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
   },
   dialogs: {
     copyButton: "Копировать",

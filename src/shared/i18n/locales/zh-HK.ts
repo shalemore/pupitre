@@ -20,6 +20,8 @@ export const zhHK = {
     newFolder: "新增資料夾",
     rename: "重新命名",
     moveToTrash: "移到回收站",
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
   },
   welcome: {
     dragDropHint: "亦可直接將 Markdown 檔案拖曳至視窗中",
@@ -90,6 +92,9 @@ export const zhHK = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
   },
   dialogs: {
     copyButton: "複製",

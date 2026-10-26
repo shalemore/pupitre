@@ -24,6 +24,8 @@ export const thTH = {
     newFolder: "โฟลเดอร์ใหม่",
     rename: "เปลี่ยนชื่อ",
     moveToTrash: "ย้ายไปถังขยะ",
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
   },
   welcome: {
     dragDropHint: "หรือลากไฟล์ Markdown มาวางในหน้าต่างนี้ได้เลย",
@@ -94,6 +96,9 @@ export const thTH = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
   },
   dialogs: {
     copyButton: "คัดลอก",

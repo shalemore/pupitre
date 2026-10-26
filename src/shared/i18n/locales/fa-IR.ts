@@ -22,6 +22,8 @@ export const faIR = {
     newFolder: "پوشهٔ جدید",
     rename: "تغییر نام",
     moveToTrash: "انتقال به سطل زباله",
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
   },
   welcome: {
     dragDropHint: "یا پرونده‌های Markdown را به این پنجره بکشید و رها کنید",
@@ -92,6 +94,9 @@ export const faIR = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
   },
   dialogs: {
     copyButton: "رونوشت",

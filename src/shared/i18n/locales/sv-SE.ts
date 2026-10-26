@@ -21,6 +21,8 @@ export const svSE = {
     newFolder: "Ny mapp",
     rename: "Byt namn",
     moveToTrash: "Flytta till papperskorgen",
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
   },
   welcome: {
     dragDropHint: "Du kan också dra Markdown-filer till det här fönstret",
@@ -91,6 +93,9 @@ export const svSE = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
   },
   dialogs: {
     copyButton: "Kopiera",

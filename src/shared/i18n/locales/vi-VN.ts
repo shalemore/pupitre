@@ -21,6 +21,8 @@ export const viVN = {
     newFolder: "Thư mục mới",
     rename: "Đổi tên",
     moveToTrash: "Chuyển vào thùng rác",
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
   },
   welcome: {
     dragDropHint: "Hoặc kéo và thả tệp Markdown thẳng vào cửa sổ này",
@@ -91,6 +93,9 @@ export const viVN = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
   },
   dialogs: {
     copyButton: "Sao chép",

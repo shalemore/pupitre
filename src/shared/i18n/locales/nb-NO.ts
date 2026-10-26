@@ -21,6 +21,8 @@ export const nbNO = {
     newFolder: "Ny mappe",
     rename: "Gi nytt navn",
     moveToTrash: "Flytt til papirkurven",
+    collapseSection: "Collapse Section",
+    expandSection: "Expand Section",
   },
   welcome: {
     dragDropHint: "Du kan også dra Markdown-filer inn i dette vinduet",
@@ -91,6 +93,9 @@ export const nbNO = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    fold: "Fold",
+    unfold: "Unfold",
+    foldedText: "Folded Text",
   },
   dialogs: {
     copyButton: "Kopier",

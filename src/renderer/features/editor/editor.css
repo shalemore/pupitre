@@ -45,6 +45,11 @@
       overflow: visible;
     }
 
+    /* A fold marker is interface, and a printout shows the whole document anyway */
+    .cm-gutters {
+      display: none;
+    }
+
     /* The sheet a printed document is laid out on, which the theme can set to its own size */
     @page {
       size: A4;
@@ -819,13 +824,98 @@
     background-color: var(--ui-brand);
     color: var(--brand-foreground);
   }
+
+  /*
+   * Folding, see folding.ts. The fold gutter is a column of no width of its own that hangs into the
+   * room the document keeps for its inline start padding: the document is centered, so a gutter
+   * with room of its own would take that centering away and shift the text sideways. Its markers
+   * are the only part that takes the pointer, so the margin still puts the caret into a line
+   * instead of folding it by accident. The start margin is what the document is centered with
+   * (see the preferences layer), which is how the markers stay at the edge of the text.
+   */
+  .cm-gutters {
+    margin-inline-start: auto;
+    margin-inline-end: -1.25rem;
+    border: 0;
+    background: none;
+    color: inherit;
+    pointer-events: none;
+  }
+
+  .cm-foldGutter .cm-gutterElement {
+    display: flex;
+    align-items: center;
+    inline-size: 1.25rem;
+  }
+
+  .md-fold-marker {
+    display: grid;
+    place-items: center;
+    inline-size: 1rem;
+    block-size: 1rem;
+    color: var(--ui-text-muted);
+    opacity: 0.45;
+    pointer-events: auto;
+    cursor: pointer;
+    transition:
+      opacity var(--transition-duration-ui),
+      color var(--transition-duration-ui);
+  }
+
+  /* An open section points its chevron down, a folded one towards the text */
+  .md-fold-marker::before {
+    content: "";
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    background: currentColor;
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+    transform: rotate(90deg);
+    transition: transform var(--transition-duration-ui) var(--ease-out-expo);
+  }
+
+  .md-fold-marker:dir(rtl)::before {
+    transform: scaleX(-1) rotate(90deg);
+  }
+
+  .md-fold-marker[data-folded]::before {
+    transform: none;
+  }
+
+  .md-fold-marker[data-folded]:dir(rtl)::before {
+    transform: scaleX(-1);
+  }
+
+  .md-fold-marker:hover {
+    color: var(--ui-text-primary);
+    opacity: 1;
+  }
+
+  /* What a fold leaves behind: the text it hides, standing in for it where the line ended */
+  .md-fold-placeholder {
+    padding-inline: 0.25em;
+    border-radius: var(--radius-sm);
+    background: var(--ui-alpha-2);
+    color: var(--ui-text-muted);
+    font-size: 0.75em;
+    cursor: pointer;
+  }
+
+  .md-fold-placeholder:hover {
+    background: var(--ui-alpha-3);
+    color: var(--ui-text-primary);
+  }
 }
 
 @layer preferences {
   .md-document {
     box-sizing: content-box;
     max-width: var(--pref-content-width);
-    margin-inline: auto;
+    /*
+     * The document is centered by the two auto margins, its own and the one the fold gutter takes
+     * on the other side (editor.css): together they split the free room, which puts the document in
+     * the middle and the fold markers right at its edge.
+     */
+    margin-inline: 0 auto;
     /* Room on both sides of the text; this is app layout and not left to themes */
     padding-inline: 4.5rem;
     /* Without a chosen font, fall back to the theme's own font */
