@@ -27,8 +27,8 @@ vi.mock("./i18n", async () => {
 /** Presses the button of the encoding question at `index`; 0 is GB18030. */
 function answerEncodingQuestion(index: number) {
   return vi
-    .mocked(dialog.showMessageBox)
-    .mockResolvedValue({ response: index, checkboxChecked: false });
+    .mocked(dialog)
+    .showMessageBox.mockResolvedValue({ response: index, checkboxChecked: false });
 }
 
 /** Opens a file the way the app does, then saves the text it shows unchanged. */
@@ -121,7 +121,7 @@ describe("open and save round trip", () => {
   });
 
   it("writes back the bytes of an unchanged legacy file", () => {
-    const characters = [..."abc XYZ 012.,#*-_\n中文漢字文档，。日本語のかなカナ한국어"];
+    const characters = Array.from("abc XYZ 012.,#*-_\n中文漢字文档，。日本語のかなカナ한국어");
     const text = fc.string({ unit: fc.constantFrom(...characters), maxLength: 60 });
     const encodings = fc.constantFrom("gb18030", "big5", "shift_jis" as const);
     fc.assert(

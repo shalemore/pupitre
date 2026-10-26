@@ -12,6 +12,7 @@
     "paths": { "@shared/*": ["./src/shared/*"] }
   },
   "include": [
+    "oxlint.config.ts",
     "electron.vite.config.ts",
     "vite.shared.ts",
     "vite.web.config.ts",

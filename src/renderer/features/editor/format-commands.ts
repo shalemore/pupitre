@@ -478,7 +478,8 @@ const PARAGRAPH_BLOCK = /^(?:Paragraph|ATXHeading[1-6])$/;
  * Markdown is usually written. Only what Enter inserts follows this; existing text is never
  * reformatted. Lists and quotes are left to lang-markdown, which continues their markup.
  */
-export const insertParagraphBreak: Command = ({ state, dispatch }) => {
+export const insertParagraphBreak: Command = (view) => {
+  const { state } = view;
   const { main } = state.selection;
   if (state.selection.ranges.length > 1 || !main.empty) return false;
   let block = syntaxTree(state).resolveInner(main.head, -1);
@@ -487,7 +488,7 @@ export const insertParagraphBreak: Command = ({ state, dispatch }) => {
   // Spaces at the split would become the indentation of the new paragraph
   const line = state.doc.lineAt(main.head);
   const spaces = /^[ \t]*/.exec(line.text.slice(main.head - line.from))?.[0].length ?? 0;
-  dispatch(
+  view.dispatch(
     state.update({
       changes: { from: main.head, to: main.head + spaces, insert: "\n\n" },
       selection: { anchor: main.head + 2 },

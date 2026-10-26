@@ -118,7 +118,7 @@ const MATH_LANGUAGE = /^(?:math|latex|tex|katex)$/i;
 /** The TeX of a fenced code block that names math as its language, if it does. */
 export function mathFence(state: EditorState, node: SyntaxNode): string | undefined {
   const info = node.getChild("CodeInfo");
-  if (!info || !MATH_LANGUAGE.test(state.sliceDoc(info.from, info.to).trim())) return;
+  if (!info || !MATH_LANGUAGE.test(state.sliceDoc(info.from, info.to).trim())) return undefined;
   return fencedText(state, node);
 }
 

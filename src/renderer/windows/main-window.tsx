@@ -365,7 +365,7 @@ export const MainWindow: Component = () => {
   const runCommand = (command: AppCommand) => {
     switch (command.id) {
       case "file.new":
-        return void session.newDocument();
+        return session.newDocument();
       case "file.open":
         return void session.open();
       case "file.open-folder":
@@ -413,7 +413,7 @@ export const MainWindow: Component = () => {
       case "view.previous-tab":
         return session.previousTab();
       case "help.sample-document":
-        return void session.openSample();
+        return session.openSample();
       case "format":
         return editor()?.format(command.action);
       case "window.close":

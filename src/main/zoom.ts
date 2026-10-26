@@ -9,11 +9,11 @@ export function stepZoom(direction: "in" | "out"): void {
     direction === "in"
       ? ZOOM_STEPS.find((step) => step > zoom)
       : ZOOM_STEPS.findLast((step) => step < zoom);
-  if (next !== undefined) void updateSettings({ zoom: next });
+  if (next !== undefined) updateSettings({ zoom: next });
 }
 
 export function resetZoom(): void {
-  void updateSettings({ zoom: 100 });
+  updateSettings({ zoom: 100 });
 }
 
 export function applyZoom(webContents: WebContents): void {

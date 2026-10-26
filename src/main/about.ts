@@ -22,6 +22,6 @@ export function showAboutDialog(window: BrowserWindow): void {
       noLink: true,
     })
     .then(({ response }) => {
-      if (response === 1) clipboard.writeText(detail);
+      if (response === 1) void clipboard.writeText(detail);
     });
 }

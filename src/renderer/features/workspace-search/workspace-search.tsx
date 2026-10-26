@@ -121,7 +121,10 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
   let latest = 0;
   const search = async () => {
     const root = props.root;
-    if (root === undefined || query() === "") return setAnswer(undefined);
+    if (root === undefined || query() === "") {
+      setAnswer(undefined);
+      return;
+    }
     const options: WorkspaceSearchOptions = {
       caseSensitive: caseSensitive(),
       wholeWord: wholeWord(),

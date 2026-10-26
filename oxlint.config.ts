@@ -14,6 +14,10 @@ export default defineConfig({
     },
   },
   rules: {
+    // An exhaustive switch over a union ends a function on a path the rule counts as falling off
+    // its end, though TypeScript proves that no case is left; `noImplicitReturns` already rejects
+    // a function that returns a value on one branch and falls off its end.
+    "typescript/consistent-return": "off",
     "unicorn/consistent-function-scoping": "off",
     "tailwindcss/enforce-canonical": "warn",
     "tailwindcss/enforce-consistent-variable-syntax": "warn",

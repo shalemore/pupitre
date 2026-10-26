@@ -436,7 +436,7 @@ const handlers: Handlers = {
   },
   "draft:read": readDraft,
   "draft:write": writeDraft,
-  "draft:clear": () => void localStorage.removeItem(DRAFT_KEY),
+  "draft:clear": () => localStorage.removeItem(DRAFT_KEY),
   "folder:list": listFolder,
   // A browser has no folder to walk, so Quick Open has nothing to search in the demo
   "folder:files": () => [],
