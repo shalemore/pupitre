@@ -43,8 +43,11 @@ export function declaredEncoding(buffer: Buffer): TextEncoding | undefined {
  * UTF-16 without a BOM is rare, but its zero bytes give it away: the high byte of a character below
  * U+0100 is zero, so the zeros sit mostly on one side of every pair. CJK text has few such bytes,
  * so a file like that is asked about instead.
+ *
+ * The folder search reads a file with it as well, so that an offset it reports is one in the text
+ * the editor opens.
  */
-function undeclaredUtf16(buffer: Buffer): TextEncoding | undefined {
+export function undeclaredUtf16(buffer: Buffer): TextEncoding | undefined {
   const sample = buffer.subarray(0, 4096);
   const pairs = Math.floor(sample.length / 2);
   if (pairs < 8) return undefined;

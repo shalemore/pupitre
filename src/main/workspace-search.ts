@@ -7,7 +7,7 @@ import type {
   WorkspaceSearchOptions,
   WorkspaceSearchResponse,
 } from "@shared/desktop-api";
-import { normalizeText } from "./encoding";
+import { declaredEncoding, decodeWith, normalizeText, undeclaredUtf16 } from "./encoding";
 import { isWorkspaceDocument, isWorkspaceFolder, relativeTo } from "./workspace-files";
 
 /**
@@ -19,6 +19,9 @@ import { isWorkspaceDocument, isWorkspaceFolder, relativeTo } from "./workspace-
 const MAX_MATCHES = 500;
 const MAX_FILES = 100;
 const MAX_FILE_BYTES = 2 * 1024 * 1024;
+
+/** How much of a decoded file may be unreadable before it is read as binary content instead. */
+const MAX_UNREADABLE_SHARE = 0.1;
 
 // One collator for every folder: creating it per comparison is what makes localeCompare slow
 const nameCollator = new Intl.Collator(undefined, { numeric: true });
@@ -105,14 +108,51 @@ function matchesInText(
   return matches;
 }
 
+/**
+ * Whether a character of a decoded file is one no document holds: a control character other than
+ * the tab and the line breaks, or the replacement character a byte that is not UTF-8 becomes.
+ * Binary content turns most of its bytes into one or the other.
+ */
+function isUnreadable(codePoint: number): boolean {
+  if (codePoint === 0x7f || codePoint === 0xfffd) return true;
+  return codePoint < 0x20 && codePoint !== 0x09 && codePoint !== 0x0a && codePoint !== 0x0d;
+}
+
+/** How many characters of a decoded file are unreadable ones. */
+function unreadableCharacters(text: string): number {
+  let count = 0;
+  for (let index = 0; index < text.length; index++) {
+    if (isUnreadable(text.charCodeAt(index))) count += 1;
+  }
+  return count;
+}
+
+/**
+ * The text a file is searched in, or undefined for content that is not a document.
+ *
+ * The bytes are decoded the way the editor decodes a file it is not asked about: the encoding a BOM
+ * announces, UTF-16 when its zero bytes give it away, and UTF-8 for everything else. Legacy
+ * encodings are the limit of it: without a BOM, GB18030, Big5 and Shift_JIS look like nothing in
+ * particular, so a file written in one is read as UTF-8 rather than guessed at, since a wrong guess
+ * would report matches on text the editor shows differently. The bytes that leaves unreadable count
+ * towards the binary content below, so a document mostly made of them is skipped.
+ *
+ * Binary content is told apart after decoding rather than by the zero bytes a UTF-16 document is
+ * full of: what a text holds is what decides.
+ */
+function documentText(buffer: Buffer): string | undefined {
+  const declared = declaredEncoding(buffer) ?? undeclaredUtf16(buffer);
+  const text = normalizeText(
+    declared === undefined ? buffer.toString("utf8") : decodeWith(buffer, declared),
+  );
+  return unreadableCharacters(text) > text.length * MAX_UNREADABLE_SHARE ? undefined : text;
+}
+
 /** The text of a document in a folder, or undefined for a file too large to read or not text at all. */
 async function readSearchableFile(path: string): Promise<string | undefined> {
   try {
     if ((await stat(path)).size > MAX_FILE_BYTES) return undefined;
-    const buffer = await readFile(path);
-    // A zero byte means binary content, which includes UTF-16 text; a document is read as UTF-8
-    if (buffer.includes(0)) return undefined;
-    return normalizeText(buffer.toString("utf8"));
+    return documentText(await readFile(path));
   } catch {
     // A file that cannot be read only costs the matches it could have held
     return undefined;
