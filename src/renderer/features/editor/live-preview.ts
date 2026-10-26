@@ -25,6 +25,7 @@ import { collectHeadings, findHeadingByAnchor, HEADING_LEVEL } from "./document-
 import { EmojiWidget, emojiFor } from "./emoji";
 import { footnoteTarget } from "./footnotes";
 import { htmlTag, isFormattingTag, LineBreakWidget } from "./html";
+import { openImageMenu } from "./image-menu";
 import {
   documentBaseUrl,
   type DocumentImage,
@@ -796,6 +797,10 @@ const livePreviewPlugin = ViewPlugin.fromClass(
         }
         event.preventDefault();
         return true;
+      },
+      // A right-click on a picture offers what can be done with the file behind it
+      contextmenu(event, view) {
+        return openImageMenu(view, event);
       },
     },
   },

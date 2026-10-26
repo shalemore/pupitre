@@ -26,6 +26,101 @@ export function imageSource(destination: string): string {
   return destination.replace(/^<(.*)>$/, "$1");
 }
 
+/** `text` with its percent escapes read back; as it is where they are not valid escape text. */
+function decoded(text: string): string {
+  try {
+    return decodeURIComponent(text);
+  } catch {
+    return text;
+  }
+}
+
+/**
+ * The folder of the document on disk, read from the file:// address its relative paths resolve
+ * against; undefined while the document has no file, or in a window that has no file system.
+ */
+export function documentFolder(state: EditorState): string | undefined {
+  const base = state.facet(documentBaseUrl);
+  if (base === undefined) return undefined;
+  let url: URL;
+  try {
+    url = new URL(base);
+  } catch {
+    return undefined;
+  }
+  if (url.protocol !== "file:") return undefined;
+  // A file URL's path starts with a slash before a Windows drive letter
+  const folder = decoded(url.pathname)
+    .replace(/\/+$/, "")
+    .replace(/^\/(?=[A-Za-z]:)/, "");
+  return folder === "" ? "/" : folder;
+}
+
+/** Where the picture of an image address is: a file of this machine, or a page of the web. */
+export type ImageOrigin =
+  | { readonly kind: "file"; readonly path: string }
+  | { readonly kind: "remote"; readonly url: string };
+
+const WEB_ADDRESS = /^https?:\/\//i;
+/** The start of any other address that names a scheme of its own, such as data: or blob:. */
+const OTHER_ADDRESS = /^[a-z][a-z0-9+.-]*:/i;
+/** A path of this machine: a Windows drive, or the root of a Unix file system. */
+const ABSOLUTE_PATH = /^(?:[a-z]:[\\/]|[\\/])/i;
+
+/**
+ * Where the address of a picture points, read against the document's `folder`. undefined for an
+ * address no file action can reach, such as the data: of a picture pasted into a document that has
+ * no file yet.
+ */
+export function imageOrigin(folder: string, src: string): ImageOrigin | undefined {
+  if (WEB_ADDRESS.test(src)) return { kind: "remote", url: src };
+  // Any other scheme, file: included, names something other than a picture this machine holds
+  if (OTHER_ADDRESS.test(src) && !ABSOLUTE_PATH.test(src)) return undefined;
+  const path = src.split("/").map(decoded).join("/");
+  return { kind: "file", path: ABSOLUTE_PATH.test(src) ? path : `${folder}/${path}` };
+}
+
+function pathSegments(path: string): string[] {
+  return path.split(/[\\/]+/).filter((segment) => segment !== "");
+}
+
+/** A Windows drive letter, the one segment of a path that reads the same in either case. */
+function isDrive(segment: string | undefined): boolean {
+  return /^[a-z]:$/i.test(segment ?? "");
+}
+
+/** How many segments from the start the two paths share. */
+function sharedSegments(from: readonly string[], to: readonly string[]): number {
+  let shared = 0;
+  while (shared < from.length && shared < to.length) {
+    const start = from[shared] ?? "";
+    const end = to[shared] ?? "";
+    const same =
+      isDrive(start) || isDrive(end) ? start.toLowerCase() === end.toLowerCase() : start === end;
+    if (!same) break;
+    shared++;
+  }
+  return shared;
+}
+
+/** The segments of a path as one address, each encoded the way a Markdown destination is. */
+function addressOf(segments: readonly string[]): string {
+  return segments.map(encodeURIComponent).join("/");
+}
+
+/**
+ * `path` written as the document links it: relative to its folder, with / between the segments and
+ * each of them encoded. A picture on another drive has no such address and keeps its whole path.
+ */
+export function imageAddress(folder: string, path: string): string {
+  const from = pathSegments(folder);
+  const to = pathSegments(path);
+  const shared = sharedSegments(from, to);
+  if (shared === 0 && isDrive(from[0]) && isDrive(to[0])) return addressOf(to);
+  const up = from.slice(shared).map(() => "..");
+  return addressOf([...up, ...to.slice(shared)]);
+}
+
 /** The Markdown image that links `src` and reads as `alt`; an address holding spaces goes between angle brackets. */
 export function imageMarkdown(alt: string, src: string): string {
   return `![${alt}](${/\s/.test(src) ? `<${src}>` : src})`;
@@ -188,6 +283,60 @@ export function imageAt(state: EditorState, pos: number): DocumentImage | undefi
     },
   });
   return found;
+}
+
+/** The range of the value of the src attribute of the `<img>` tag written as `source`. */
+function tagAddressRange(source: string): { from: number; to: number } | undefined {
+  for (const match of source.matchAll(TAG_ATTRIBUTE)) {
+    if (match[1]?.toLowerCase() !== "src") continue;
+    const quoted = match[2] ?? match[3];
+    const value = quoted ?? match[4];
+    if (value === undefined) return undefined;
+    // The match ends right after the value, so the range counts back from there
+    const end = (match.index ?? 0) + match[0].length - (quoted === undefined ? 0 : 1);
+    return { from: end - value.length, to: end };
+  }
+  return undefined;
+}
+
+/**
+ * The range the address of `image` covers: the destination of a Markdown image, or the value of the
+ * src attribute of an inline `<img>` tag. undefined once the text there is no longer the picture.
+ */
+export function addressRange(
+  state: EditorState,
+  image: DocumentImage,
+): { from: number; to: number } | undefined {
+  if (image.to > state.doc.length) return undefined;
+  let range: { from: number; to: number } | undefined;
+  syntaxTree(state).iterate({
+    from: image.from,
+    to: image.to,
+    enter: (node) => {
+      if (range !== undefined) return false;
+      if (node.name === "URL" && node.node.parent?.name === "Image") {
+        range = { from: node.from, to: node.to };
+        return false;
+      }
+      return undefined;
+    },
+  });
+  if (range !== undefined) return range;
+  const tag = tagAddressRange(state.sliceDoc(image.from, image.to));
+  return tag && { from: image.from + tag.from, to: image.from + tag.to };
+}
+
+/**
+ * Points the picture of `image` at `src` by writing its address alone, so that the alt text, a title
+ * and a width stay as they are; a file action leaves a link the reader did not change.
+ */
+export function relinkImage(view: EditorView, image: DocumentImage, src: string): void {
+  const range = addressRange(view.state, image);
+  if (range === undefined || view.state.sliceDoc(range.from, range.to) === src) return;
+  view.dispatch({
+    changes: { from: range.from, to: range.to, insert: src },
+    userEvent: "input.format",
+  });
 }
 
 /** The declarations that put a picture at its alignment, the ones its source carries. */

@@ -1,0 +1,166 @@
+import type { EditorView } from "@codemirror/view";
+import type { Component } from "solid-js";
+import { render } from "solid-js/web";
+import type { MenuEntry } from "@shared/menu";
+import { MenuPopup } from "@/features/menu/menu-popup";
+import { t } from "@/i18n";
+import { desktop } from "@/lib/desktop";
+import { messageOf, reportFailure } from "@/lib/errors";
+import {
+  type DocumentImage,
+  documentFolder,
+  imageAddress,
+  imageAt,
+  imageOrigin,
+  relinkImage,
+} from "./images";
+
+/**
+ * The menu a right-click on a picture opens: what can be done with the file behind it, the way
+ * Typora offers it. An action that moves the file rewrites the address of that one picture, so the
+ * order of the document, its alt text and its size stay as they were; the selection is left alone,
+ * so the picture goes on showing itself rather than its source.
+ */
+
+/** The entries of the menu and what each one runs. */
+interface PictureMenu {
+  readonly entries: readonly MenuEntry[];
+  readonly actions: ReadonlyMap<string, () => void>;
+}
+
+/** Runs an action that may fail, telling the user what stopped it rather than leaving it silent. */
+function attempt(run: () => Promise<void>): () => void {
+  return () =>
+    void run().catch((error: unknown) =>
+      reportFailure(t().dialogs.fileActionFailed, messageOf(error)),
+    );
+}
+
+/** What the menu of `image` holds; undefined when the file behind it is out of reach of any action. */
+function pictureMenu(view: EditorView, image: DocumentImage): PictureMenu | undefined {
+  const labels = t().editor.imageFile;
+  const actions = new Map<string, () => void>();
+  const item = (id: string, label: string, run: () => void): MenuEntry => {
+    actions.set(id, run);
+    return { type: "item", id, label };
+  };
+
+  const folder = documentFolder(view.state);
+  if (folder === undefined) {
+    // Without a file the document has no folder to move a picture into or out of
+    return {
+      entries: [{ type: "item", id: "unsaved", label: labels.unsaved, enabled: false }],
+      actions,
+    };
+  }
+  const origin = imageOrigin(folder, image.src);
+  if (origin === undefined) return undefined;
+
+  /** The address the picture is linked with once the file behind it sits at `path`. */
+  const linkTo = (path: string) => relinkImage(view, image, imageAddress(folder, path));
+
+  if (origin.kind === "remote") {
+    const url = origin.url;
+    return {
+      entries: [
+        item("copy-path", labels.copyPath, () => void desktop.invoke("clipboard:write-text", url)),
+        item(
+          "download",
+          labels.download,
+          attempt(async () => {
+            const path = await desktop.invoke("image:download", url, folder);
+            if (path !== null) linkTo(path);
+          }),
+        ),
+      ],
+      actions,
+    };
+  }
+
+  const path = origin.path;
+  return {
+    entries: [
+      item("reveal", labels.reveal, () => void desktop.invoke("path:reveal", path)),
+      item("copy-path", labels.copyPath, () => void desktop.invoke("clipboard:write-text", path)),
+      { type: "separator" },
+      item(
+        "save-as",
+        labels.saveAs,
+        attempt(async () => {
+          const moved = await desktop.invoke("image:save-as", path);
+          if (moved !== null) linkTo(moved);
+        }),
+      ),
+      item(
+        "move",
+        labels.moveToImageFolder,
+        attempt(async () => {
+          const moved = await desktop.invoke("image:move", path, folder);
+          if (moved !== null) linkTo(moved);
+        }),
+      ),
+      item(
+        "copy-to",
+        labels.copyTo,
+        attempt(async () => {
+          const copied = await desktop.invoke("image:copy", path);
+          if (copied !== null) linkTo(copied);
+        }),
+      ),
+    ],
+    actions,
+  };
+}
+
+const PictureMenuPanel: Component<{
+  menu: PictureMenu;
+  anchor: DOMRect;
+  onSelect: (id: string) => void;
+  onClose: () => void;
+}> = (props) => (
+  <MenuPopup
+    entries={props.menu.entries}
+    anchor={props.anchor}
+    onSelect={(entry) => props.onSelect(entry.id)}
+    onClose={props.onClose}
+  />
+);
+
+/**
+ * Opens the file menu of the picture under a right-click at the pointer; returns whether the click
+ * was on a picture that has such a menu, so that every other click keeps what the window gives it.
+ */
+export function openImageMenu(view: EditorView, event: MouseEvent): boolean {
+  const target = event.target;
+  if (!(target instanceof Element) || target.closest(".md-image-preview") === null) return false;
+  const pos = view.posAtCoords(event);
+  if (pos === null) return false;
+  // A picture whose source stands beside it is reached from the character before its widget
+  const image = imageAt(view.state, pos) ?? imageAt(view.state, Math.max(pos - 1, 0));
+  if (image === undefined) return false;
+  const menu = pictureMenu(view, image);
+  if (menu === undefined) return false;
+  event.preventDefault();
+
+  // The panel draws itself outside the editor, so a root of its own holds it until it closes
+  const container = document.createElement("div");
+  let dispose: (() => void) | undefined;
+  const close = () => dispose?.();
+  dispose = render(
+    () => (
+      <PictureMenuPanel
+        menu={menu}
+        anchor={new DOMRect(event.clientX, event.clientY, 0, 0)}
+        onSelect={(id) => {
+          close();
+          // The menu took the focus with it; the caret belongs back in the text
+          view.focus();
+          menu.actions.get(id)?.();
+        }}
+        onClose={close}
+      />
+    ),
+    container,
+  );
+  return true;
+}

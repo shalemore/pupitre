@@ -451,6 +451,11 @@ const handlers: Handlers = {
     return opened(`${DEMO_FOLDER}/${DOCUMENT_FILE.test(name) ? name : `${name}.md`}`);
   },
   "document:save-image": (_path, _name, data) => URL.createObjectURL(new Blob([data.slice()])),
+  // A browser has no file manager and no folder of its own to move a picture through
+  "image:save-as": () => null,
+  "image:move": () => null,
+  "image:copy": () => null,
+  "image:download": () => null,
   "document:print": () => {
     window.print();
   },

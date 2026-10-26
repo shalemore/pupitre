@@ -1,5 +1,5 @@
 import { access, mkdir, open, readdir, readFile, stat, writeFile } from "node:fs/promises";
-import { basename, dirname, extname, join, resolve } from "node:path";
+import { basename, dirname, extname, isAbsolute, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
   BrowserWindow,
@@ -42,7 +42,16 @@ import {
   withLineEnding,
 } from "./encoding";
 import { exportImage } from "./export-image";
-import { createEntry, renameEntry, trashEntry } from "./file-actions";
+import {
+  MAX_IMAGE_BYTES,
+  copyImageInto,
+  createEntry,
+  downloadImage,
+  moveImage,
+  moveImageInto,
+  renameEntry,
+  trashEntry,
+} from "./file-actions";
 import { listVersions, readVersion, recordVersion } from "./history";
 import { t } from "./i18n";
 import { clickMenuItem, menuSnapshot, setDocumentState } from "./menu";
@@ -152,9 +161,22 @@ function locate(path: string): DocumentLocation {
   return { path: resolved, folder, baseUrl: pathToFileURL(join(folder, "/")).href };
 }
 
+/**
+ * The kind of path the window can hand to a file action. A path a picture is linked with comes from
+ * the document, so one that is not absolute would point outside the folder the user opened.
+ */
+function checkedPath(path: string): string {
+  if (!isAbsolute(path)) throw new Error(`${path} is not an absolute path`);
+  return path;
+}
+
 /** The pictures the Insert Image dialog offers, and how large one may be: a document links its images rather than embedding them. */
 const IMAGE_EXTENSIONS = ["png", "jpg", "jpeg", "gif", "webp", "svg", "bmp", "avif"];
-const MAX_IMAGE_BYTES = 20 * 1024 * 1024;
+
+/** Where the pictures of a document go: the image folder the settings name, beside the document. */
+function imageFolder(folder: string): string {
+  return join(folder, getSettings().imageFolder);
+}
 
 async function saveImage(
   documentPath: string,
@@ -162,7 +184,7 @@ async function saveImage(
   data: Uint8Array,
 ): Promise<string> {
   const folder = getSettings().imageFolder;
-  const directory = join(dirname(documentPath), folder);
+  const directory = imageFolder(dirname(documentPath));
   await mkdir(directory, { recursive: true });
   // Pasted screenshots are usually all named image.png; a timestamp keeps them from overwriting existing images
   const extension = extname(fileName) || ".png";
@@ -397,6 +419,28 @@ export function registerIpcHandlers(): void {
   });
   handle("document:save-image", (_event, documentPath, fileName, data) =>
     saveImage(documentPath, fileName, data),
+  );
+  // The window names the picture it shows, and the main process checks that path before it touches
+  // anything; where a picture goes is either a place the user picks or the image folder of the
+  // document
+  handle("image:save-as", async (event, path) => {
+    const source = checkedPath(path);
+    const target = await savePath(senderWindow(event), source, {
+      name: "Image",
+      extensions: IMAGE_EXTENSIONS,
+    });
+    return target === null ? null : moveImage(source, target);
+  });
+  handle("image:move", (_event, path, folder) =>
+    moveImageInto(checkedPath(path), imageFolder(checkedPath(folder))),
+  );
+  handle("image:copy", async (event, path) => {
+    const source = checkedPath(path);
+    const folder = await openPath(senderWindow(event), { properties: ["openDirectory"] });
+    return folder === null ? null : copyImageInto(source, folder);
+  });
+  handle("image:download", (_event, url, folder) =>
+    downloadImage(url, imageFolder(checkedPath(folder))),
   );
   // Printing goes through the system dialog, which also lets the user cancel; the callback reports
   // that cancel as a failure beside real failures, so its result is not worth handing to the window

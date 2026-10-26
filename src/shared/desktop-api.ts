@@ -313,6 +313,21 @@ export interface InvokeChannels {
   "image:pick": () => PickedImage | null;
   /** Saves an image into the assets folder next to the document and returns a relative path ready for Markdown. */
   "document:save-image": (documentPath: string, fileName: string, data: Uint8Array) => string;
+  /**
+   * Asks where to move the picture at `path`, moves it there and returns where it now sits; null
+   * when the user gave up. The picture keeps its contents: this renames it, and moves it as well
+   * when the chosen place is another folder.
+   */
+  "image:save-as": (path: string) => string | null;
+  /** Moves the picture at `path` into the image folder of `folder`, the folder of its document, and returns its new path. */
+  "image:move": (path: string, folder: string) => string | null;
+  /** Copies the picture at `path` into a folder the user picks and returns the path of the copy; null when they gave up. */
+  "image:copy": (path: string) => string | null;
+  /**
+   * Fetches the picture at the http(s) `url` into the image folder of `folder`, the folder of the
+   * document that links it, and returns the path it was written to; null when nothing was written.
+   */
+  "image:download": (url: string, folder: string) => string | null;
   /** Opens the system print dialog for the window; resolves once the dialog closed, whether a page was printed or not. */
   "document:print": () => void;
   "document:export-pdf": (suggestedName: string) => string | null;

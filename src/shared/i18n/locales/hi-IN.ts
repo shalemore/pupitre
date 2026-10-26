@@ -81,6 +81,16 @@ export const hiIN = {
       alignCenter: "Align Center",
       alignRight: "Align Right",
     },
+    imageFile: {
+      reveal: "Show in Folder",
+      copyPath: "Copy Path",
+      saveAs: "Rename / Save As…",
+      moveToImageFolder: "Move to Image Folder",
+      copyTo: "Copy Image to…",
+      download: "Download to Image Folder",
+      /** Stands in for those actions while the document has no folder of its own. */
+      unsaved: "Save the document to work with its images",
+    },
   },
   dialogs: {
     copyButton: "कॉपी करें",

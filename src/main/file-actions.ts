@@ -1,6 +1,6 @@
-import { mkdir, rename, stat, writeFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
-import { shell } from "electron";
+import { copyFile, mkdir, rename, stat, writeFile } from "node:fs/promises";
+import { basename, dirname, join, resolve } from "node:path";
+import { net, shell } from "electron";
 import type { FolderEntry } from "@shared/desktop-api";
 
 /**
@@ -64,4 +64,79 @@ export async function createEntry(
 
 export function trashEntry(path: string): Promise<void> {
   return shell.trashItem(path);
+}
+
+/** A picture is linked rather than embedded, so one larger than this is already unusual. */
+export const MAX_IMAGE_BYTES = 20 * 1024 * 1024;
+
+/** Moves a picture to the path the user picked for it and gives back where it now sits. */
+export async function moveImage(path: string, target: string): Promise<string> {
+  if (resolve(target) === resolve(path)) return path;
+  await rename(path, target);
+  return target;
+}
+
+/** Moves a picture into `folder`, keeping its name, or numbering it where that name is taken. */
+export async function moveImageInto(path: string, folder: string): Promise<string> {
+  // A picture already there keeps both its place and its name, and the link stands as it is
+  if (resolve(dirname(path)) === resolve(folder)) return path;
+  await mkdir(folder, { recursive: true });
+  const target = await freeTarget(folder, basename(path), 0);
+  await rename(path, target);
+  return target;
+}
+
+/** Copies a picture into `folder`, numbering the copy where its name is taken there. */
+export async function copyImageInto(path: string, folder: string): Promise<string> {
+  await mkdir(folder, { recursive: true });
+  const target = await freeTarget(folder, basename(path), 0);
+  await copyFile(path, target);
+  return target;
+}
+
+/** The extension of a picture a server names by its type, for an address that has none of its own. */
+const IMAGE_TYPES: Readonly<Record<string, string>> = {
+  "image/png": ".png",
+  "image/jpeg": ".jpg",
+  "image/gif": ".gif",
+  "image/webp": ".webp",
+  "image/svg+xml": ".svg",
+  "image/bmp": ".bmp",
+  "image/avif": ".avif",
+};
+
+/** `text` with its percent escapes read back; as it is where they are not valid escape text. */
+function decoded(text: string): string {
+  try {
+    return decodeURIComponent(text);
+  } catch {
+    return text;
+  }
+}
+
+/** The name a downloaded picture is written under: the last part of its address, or a name of its own type. */
+function downloadName(url: URL, contentType: string | undefined): string {
+  const last = decoded(url.pathname.split("/").at(-1) ?? "");
+  const name = last.replace(/[^\p{L}\p{N}._-]+/gu, "-");
+  if (/\.[a-z0-9]{1,5}$/i.test(name)) return name;
+  const type = (contentType ?? "").split(";")[0]?.trim().toLowerCase() ?? "";
+  const stem = name === "" || name === "." ? "image" : name;
+  return `${stem}${IMAGE_TYPES[type] ?? ".png"}`;
+}
+
+/** Writes the picture behind a web address into `folder`, where the document can link it. */
+export async function downloadImage(url: string, folder: string): Promise<string> {
+  const address = new URL(url);
+  if (address.protocol !== "http:" && address.protocol !== "https:") {
+    throw new Error(`${url} is not a web address`);
+  }
+  const response = await net.fetch(address.href);
+  if (!response.ok) throw new Error(`${url} answered ${response.status}`);
+  const data = new Uint8Array(await response.arrayBuffer());
+  if (data.byteLength > MAX_IMAGE_BYTES) throw new Error(`${url} is too large to download`);
+  await mkdir(folder, { recursive: true });
+  const name = downloadName(address, response.headers.get("content-type") ?? undefined);
+  const target = await freeTarget(folder, name, 0);
+  await writeFile(target, data, { flag: "wx" });
+  return target;
 }
