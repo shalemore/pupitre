@@ -56,7 +56,7 @@ the scratchpad, and import `playwright-core` by absolute path or run them from t
 
 A window takes the focus when it opens, so a plain launch keeps popping up over whatever the user
 is doing. Run the launcher on a hidden Windows desktop instead: `npx offstage-windows node
-<script>`. The script itself does not change, the app renders and screenshots as usual, and its
+script.mjs`. The script itself does not change, the app renders and screenshots as usual, and its
 windows never reach the screen. `OFFSTAGE=0` puts them back on screen for a run you want to watch,
 and on macOS or Linux the wrapper only passes the command through. It builds a small helper with
 the C# compiler that ships with Windows on first use, so endpoint protection may comment on it.
