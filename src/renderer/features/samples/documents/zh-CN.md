@@ -20,14 +20,19 @@ Pupitre 是一款桌面 Markdown 编辑器。文档就是普通的 `.md` 文件�
 | :--------------------- | :---------------------------------------------------------------------------------------------------------- |
 | 粗体 / 斜体 / 行内代码 | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
 | 删除线                 | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| 下划线                 | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
+| 清除格式               | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | 链接                   | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| 插入图片…              | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | 标题 1–6 / 正文        | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | 引用                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | 有序 / 无序列表        | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | 代码块 / 公式块        | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | 表格                   | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | 查找 / 替换            | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| 重新打开关闭的标签页   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | 侧边栏                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| 源代码模式             | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | 专注模式 / 打字机模式  | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | 重置缩放               | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | 偏好设置               | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
