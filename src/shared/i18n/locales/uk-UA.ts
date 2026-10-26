@@ -132,7 +132,8 @@ export const ukUA = {
     exportPdf: "Експортувати як PDF…",
     exportHtml: "Експортувати як HTML…",
     exportImage: "Експортувати як PNG…",
-    close: "Закрити вікно",
+    closeTab: "Закрити вкладку",
+    closeWindow: "Закрити вікно",
     undo: "Скасувати",
     redo: "Повторити",
     cut: "Вирізати",
@@ -149,6 +150,8 @@ export const ukUA = {
     resetZoom: "Скинути масштаб",
     toggleSidebar: "Показати/сховати бічні панелі",
     toggleTheme: "Перемкнути тему",
+    nextTab: "Наступна вкладка",
+    previousTab: "Попередня вкладка",
     preferences: "Параметри…",
     sampleDocument: "Зразок документа Markdown",
     about: "Про Pupitre",
@@ -165,6 +168,11 @@ export const ukUA = {
     commandPalette: "Палітра команд",
     quickOpen: "Швидко відкрити…",
     versionHistory: "Історія версій…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "Відкриті вкладки",
+    close: "Закрити вкладку",
   },
   settings: {
     title: "Параметри",

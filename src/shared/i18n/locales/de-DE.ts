@@ -124,7 +124,8 @@ export const deDE = {
     exportPdf: "Als PDF exportieren...",
     exportHtml: "Als HTML exportieren...",
     exportImage: "Als PNG exportieren...",
-    close: "Fenster schließen",
+    closeTab: "Tab schließen",
+    closeWindow: "Fenster schließen",
     undo: "Rückgängig",
     redo: "Wiederholen",
     cut: "Ausschneiden",
@@ -141,6 +142,8 @@ export const deDE = {
     resetZoom: "Zoom zurücksetzen",
     toggleSidebar: "Seitenleisten ein-/ausblenden",
     toggleTheme: "Design wechseln",
+    nextTab: "Nächster Tab",
+    previousTab: "Vorheriger Tab",
     preferences: "Einstellungen...",
     sampleDocument: "Markdown-Beispieldokument",
     about: "Über Pupitre",
@@ -157,6 +160,11 @@ export const deDE = {
     commandPalette: "Befehlspalette",
     quickOpen: "Schnell öffnen...",
     versionHistory: "Versionsverlauf…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "Geöffnete Tabs",
+    close: "Tab schließen",
   },
   settings: {
     title: "Einstellungen",

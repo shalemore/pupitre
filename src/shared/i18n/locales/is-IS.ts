@@ -127,7 +127,8 @@ export const isIS = {
     exportPdf: "Flytja út sem PDF…",
     exportHtml: "Flytja út sem HTML…",
     exportImage: "Flytja út sem PNG…",
-    close: "Loka glugga",
+    closeTab: "Loka flipa",
+    closeWindow: "Loka glugga",
     undo: "Afturkalla",
     redo: "Endurgera",
     cut: "Klippa",
@@ -144,6 +145,8 @@ export const isIS = {
     resetZoom: "Endurstilla aðdrátt",
     toggleSidebar: "Sýna/fela hliðarstikur",
     toggleTheme: "Skipta um þema",
+    nextTab: "Næsta flipa",
+    previousTab: "Fyrri flipa",
     preferences: "Forstillingar…",
     sampleDocument: "Sýnishorn af Markdown-skjali",
     about: "Um Pupitre",
@@ -160,6 +163,11 @@ export const isIS = {
     commandPalette: "Skipanaspjald",
     quickOpen: "Opna fljótt…",
     versionHistory: "Útgáfusaga…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "Opnar flipar",
+    close: "Loka flipa",
   },
   settings: {
     title: "Forstillingar",

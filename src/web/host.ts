@@ -5,13 +5,13 @@ import {
   type AppCommand,
   type DesktopApi,
   type DesktopPlatform,
-  type Draft,
+  type DraftSession,
   type FolderEntry,
   type InvokeChannels,
   type OpenedDocument,
   type RendererEvents,
 } from "@shared/desktop-api";
-import { draftSchema } from "@shared/draft";
+import { readDraftSession } from "@shared/draft";
 import {
   FORMAT_ACTIONS,
   INLINE_FORMAT_ACTIONS,
@@ -128,13 +128,13 @@ function dispatch(command: AppCommand): void {
   if (!isSettingsWindow) emit("app:command", command);
 }
 
-// The unsaved document, kept where the desktop app keeps it in userData; a page that reloads or
-// closes by accident finds it the same way
-function readDraft(): Draft | null {
+// The unsaved documents, kept where the desktop app keeps them in userData; a page that reloads or
+// closes by accident finds them the same way
+function readDraft(): DraftSession | null {
   try {
     const stored: unknown = JSON.parse(localStorage.getItem(DRAFT_KEY) ?? "null");
-    const parsed = draftSchema.safeParse(stored);
-    if (parsed.success) return parsed.data;
+    const draft = readDraftSession(stored);
+    if (draft !== null) return draft;
   } catch {
     // A draft that is not JSON at all falls through to the same answer
   }
@@ -142,11 +142,11 @@ function readDraft(): Draft | null {
   return null;
 }
 
-function writeDraft(draft: Draft): void {
+function writeDraft(session: DraftSession): void {
   try {
-    localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(session));
   } catch {
-    // Full or unavailable storage only costs the draft; the document itself is in the page
+    // Full or unavailable storage only costs the draft; the documents themselves are in the page
   }
 }
 
@@ -272,6 +272,7 @@ function menuItems(menu: TopMenu): DemoMenuEntry[] {
         // panel still opens, and tells that no version was kept
         { label: m.versionHistory, run: send({ id: "file.version-history" }) },
         divider,
+        { label: m.closeTab, shortcut: "CmdOrCtrl+W", run: send({ id: "file.close-tab" }) },
         { label: m.preferences, run: () => void handlers["window:open-settings"]() },
       ];
     case "edit":
@@ -309,6 +310,12 @@ function menuItems(menu: TopMenu): DemoMenuEntry[] {
         },
         divider,
         { label: m.toggleSidebar, run: send({ id: "view.toggle-sidebar" }) },
+        { label: m.nextTab, shortcut: "Control+Tab", run: send({ id: "view.next-tab" }) },
+        {
+          label: m.previousTab,
+          shortcut: "Control+Shift+Tab",
+          run: send({ id: "view.previous-tab" }),
+        },
         {
           label: m.focusMode,
           shortcut: "F8",

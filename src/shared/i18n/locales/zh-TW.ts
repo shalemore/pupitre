@@ -119,7 +119,8 @@ export const zhTW = {
     exportPdf: "匯出為 PDF...",
     exportHtml: "匯出為 HTML...",
     exportImage: "匯出為 PNG...",
-    close: "關閉視窗",
+    closeTab: "關閉分頁",
+    closeWindow: "關閉視窗",
     undo: "復原",
     redo: "重做",
     cut: "剪下",
@@ -136,6 +137,8 @@ export const zhTW = {
     resetZoom: "重設縮放",
     toggleSidebar: "顯示/隱藏側邊欄",
     toggleTheme: "切換深淺佈景主題",
+    nextTab: "下一個分頁",
+    previousTab: "上一個分頁",
     preferences: "偏好設定...",
     sampleDocument: "範例 Markdown 文件",
     about: "關於 Pupitre",
@@ -152,6 +155,11 @@ export const zhTW = {
     commandPalette: "命令面板",
     quickOpen: "快速開啟…",
     versionHistory: "版本記錄…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "已開啟的分頁",
+    close: "關閉分頁",
   },
   settings: {
     title: "偏好設定",

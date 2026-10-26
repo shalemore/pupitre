@@ -131,7 +131,8 @@ export const ruRU = {
     exportPdf: "Экспорт в PDF...",
     exportHtml: "Экспорт в HTML...",
     exportImage: "Экспорт в PNG...",
-    close: "Закрыть окно",
+    closeTab: "Закрыть вкладку",
+    closeWindow: "Закрыть окно",
     undo: "Отменить",
     redo: "Повторить",
     cut: "Вырезать",
@@ -148,6 +149,8 @@ export const ruRU = {
     resetZoom: "Сбросить масштаб",
     toggleSidebar: "Показать/скрыть боковые панели",
     toggleTheme: "Переключить тему",
+    nextTab: "Следующая вкладка",
+    previousTab: "Предыдущая вкладка",
     preferences: "Настройки...",
     sampleDocument: "Пример Markdown-документа",
     about: "О программе Pupitre",
@@ -164,6 +167,11 @@ export const ruRU = {
     commandPalette: "Палитра команд",
     quickOpen: "Быстро открыть…",
     versionHistory: "История версий…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "Открытые вкладки",
+    close: "Закрыть вкладку",
   },
   settings: {
     title: "Настройки",

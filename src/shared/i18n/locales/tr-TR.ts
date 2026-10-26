@@ -127,7 +127,8 @@ export const trTR = {
     exportPdf: "PDF Olarak Dışa Aktar…",
     exportHtml: "HTML Olarak Dışa Aktar…",
     exportImage: "PNG Olarak Dışa Aktar…",
-    close: "Pencereyi Kapat",
+    closeTab: "Sekmeyi Kapat",
+    closeWindow: "Pencereyi Kapat",
     undo: "Geri Al",
     redo: "Yinele",
     cut: "Kes",
@@ -144,6 +145,8 @@ export const trTR = {
     resetZoom: "Yakınlaştırmayı Sıfırla",
     toggleSidebar: "Kenar Çubuklarını Aç/Kapat",
     toggleTheme: "Temayı Değiştir",
+    nextTab: "Sonraki Sekme",
+    previousTab: "Önceki Sekme",
     preferences: "Tercihler…",
     sampleDocument: "Örnek Markdown Belgesi",
     about: "Pupitre Hakkında",
@@ -160,6 +163,11 @@ export const trTR = {
     commandPalette: "Komut Paleti",
     quickOpen: "Hızlı Aç…",
     versionHistory: "Sürüm Geçmişi…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "Açık Sekmeler",
+    close: "Sekmeyi Kapat",
   },
   settings: {
     title: "Tercihler",

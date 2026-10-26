@@ -127,7 +127,8 @@ export const elGR = {
     exportPdf: "Εξαγωγή ως PDF…",
     exportHtml: "Εξαγωγή ως HTML…",
     exportImage: "Εξαγωγή ως PNG…",
-    close: "Κλείσιμο παραθύρου",
+    closeTab: "Κλείσιμο καρτέλας",
+    closeWindow: "Κλείσιμο παραθύρου",
     undo: "Αναίρεση",
     redo: "Επανάληψη",
     cut: "Αποκοπή",
@@ -144,6 +145,8 @@ export const elGR = {
     resetZoom: "Επαναφορά μεγέθυνσης",
     toggleSidebar: "Εναλλαγή πλαϊνών γραμμών",
     toggleTheme: "Εναλλαγή θέματος",
+    nextTab: "Επόμενη καρτέλα",
+    previousTab: "Προηγούμενη καρτέλα",
     preferences: "Προτιμήσεις…",
     sampleDocument: "Δείγμα εγγράφου Markdown",
     about: "Σχετικά με το Pupitre",
@@ -160,6 +163,11 @@ export const elGR = {
     commandPalette: "Παλέτα εντολών",
     quickOpen: "Γρήγορο άνοιγμα…",
     versionHistory: "Ιστορικό εκδόσεων…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "Ανοιχτές καρτέλες",
+    close: "Κλείσιμο καρτέλας",
   },
   settings: {
     title: "Προτιμήσεις",

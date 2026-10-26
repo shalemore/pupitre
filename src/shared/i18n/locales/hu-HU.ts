@@ -128,7 +128,8 @@ export const huHU = {
     exportPdf: "Exportálás PDF-ként…",
     exportHtml: "Exportálás HTML-ként…",
     exportImage: "Exportálás PNG-ként…",
-    close: "Ablak bezárása",
+    closeTab: "Lap bezárása",
+    closeWindow: "Ablak bezárása",
     undo: "Visszavonás",
     redo: "Mégis",
     cut: "Kivágás",
@@ -145,6 +146,8 @@ export const huHU = {
     resetZoom: "Nagyítás visszaállítása",
     toggleSidebar: "Oldalsávok megjelenítése/elrejtése",
     toggleTheme: "Téma váltása",
+    nextTab: "Következő lap",
+    previousTab: "Előző lap",
     preferences: "Beállítások…",
     sampleDocument: "Markdown-mintadokumentum",
     about: "A Pupitre névjegye",
@@ -161,6 +164,11 @@ export const huHU = {
     commandPalette: "Parancspaletta",
     quickOpen: "Gyors megnyitás…",
     versionHistory: "Verziótörténet…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "Megnyitott lapok",
+    close: "Lap bezárása",
   },
   settings: {
     title: "Beállítások",

@@ -124,7 +124,8 @@ export const viVN = {
     exportPdf: "Xuất thành PDF...",
     exportHtml: "Xuất thành HTML...",
     exportImage: "Xuất thành PNG...",
-    close: "Đóng cửa sổ",
+    closeTab: "Đóng tab",
+    closeWindow: "Đóng cửa sổ",
     undo: "Hoàn tác",
     redo: "Làm lại",
     cut: "Cắt",
@@ -141,6 +142,8 @@ export const viVN = {
     resetZoom: "Đặt lại thu phóng",
     toggleSidebar: "Hiện/ẩn thanh bên",
     toggleTheme: "Đổi giao diện",
+    nextTab: "Tab tiếp theo",
+    previousTab: "Tab trước",
     preferences: "Tùy chọn...",
     sampleDocument: "Tài liệu Markdown mẫu",
     about: "Giới thiệu Pupitre",
@@ -157,6 +160,11 @@ export const viVN = {
     commandPalette: "Bảng lệnh",
     quickOpen: "Mở nhanh…",
     versionHistory: "Lịch sử phiên bản…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "Tab đang mở",
+    close: "Đóng tab",
   },
   settings: {
     title: "Tùy chọn",

@@ -127,7 +127,8 @@ export const svSE = {
     exportPdf: "Exportera som PDF…",
     exportHtml: "Exportera som HTML…",
     exportImage: "Exportera som PNG…",
-    close: "Stäng fönster",
+    closeTab: "Stäng flik",
+    closeWindow: "Stäng fönster",
     undo: "Ångra",
     redo: "Gör om",
     cut: "Klipp ut",
@@ -144,6 +145,8 @@ export const svSE = {
     resetZoom: "Återställ zoom",
     toggleSidebar: "Växla sidofält",
     toggleTheme: "Byt tema",
+    nextTab: "Nästa flik",
+    previousTab: "Föregående flik",
     preferences: "Inställningar…",
     sampleDocument: "Exempel på Markdown-dokument",
     about: "Om Pupitre",
@@ -160,6 +163,11 @@ export const svSE = {
     commandPalette: "Kommandopalett",
     quickOpen: "Öppna snabbt…",
     versionHistory: "Versionshistorik…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "Öppna flikar",
+    close: "Stäng flik",
   },
   settings: {
     title: "Inställningar",

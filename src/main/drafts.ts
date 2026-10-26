@@ -1,8 +1,8 @@
 import { rmSync } from "node:fs";
 import { join } from "node:path";
 import { app } from "electron";
-import { type Draft } from "@shared/desktop-api";
-import { draftSchema } from "@shared/draft";
+import { type DraftSession } from "@shared/desktop-api";
+import { readDraftSession } from "@shared/draft";
 import { readJsonFile, writeJsonFile } from "./json-file";
 
 const DRAFT_FILE = "draft.json";
@@ -10,7 +10,7 @@ const DRAFT_FILE = "draft.json";
 // still arrive together, such as an auto-save and the draft of the same edit
 const WRITE_DELAY = 500;
 
-let pending: Draft | undefined;
+let pending: DraftSession | undefined;
 let timer: NodeJS.Timeout | undefined;
 
 function draftPath(): string {
@@ -30,19 +30,19 @@ export function flushDraft(): void {
   pending = undefined;
 }
 
-/** The unsaved content of the current document, or null when there is none worth restoring. */
-export function readDraft(): Draft | null {
-  const parsed = draftSchema.safeParse(readJsonFile(draftPath()));
-  if (parsed.success) return parsed.data;
+/** The unsaved content of the open tabs, or null when there is none worth restoring. */
+export function readDraft(): DraftSession | null {
+  const draft = readDraftSession(readJsonFile(draftPath()));
+  if (draft !== null) return draft;
   // Nothing the editor wrote reads this way, so the file is a leftover of an interrupted write or
   // of another version; keeping it would only make it fail to restore at every start
   clearDraft();
   return null;
 }
 
-/** Keeps the unsaved content of the current document; only the last one before the delay reaches the disk. */
-export function writeDraft(draft: Draft): void {
-  pending = draft;
+/** Keeps the unsaved content of the open tabs; only the last draft before the delay reaches the disk. */
+export function writeDraft(session: DraftSession): void {
+  pending = session;
   cancelPending();
   timer = setTimeout(flushDraft, WRITE_DELAY);
   // A pending write must not be what keeps a quitting app alive, and flushDraft runs on will-quit

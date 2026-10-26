@@ -128,7 +128,8 @@ export const nlNL = {
     exportPdf: "Exporteren als PDF…",
     exportHtml: "Exporteren als HTML…",
     exportImage: "Exporteren als PNG…",
-    close: "Venster sluiten",
+    closeTab: "Tab sluiten",
+    closeWindow: "Venster sluiten",
     undo: "Ongedaan maken",
     redo: "Opnieuw",
     cut: "Knippen",
@@ -145,6 +146,8 @@ export const nlNL = {
     resetZoom: "Zoom herstellen",
     toggleSidebar: "Zijbalken tonen/verbergen",
     toggleTheme: "Thema wisselen",
+    nextTab: "Volgende tab",
+    previousTab: "Vorige tab",
     preferences: "Voorkeuren…",
     sampleDocument: "Voorbeeld van Markdown-document",
     about: "Over Pupitre",
@@ -161,6 +164,11 @@ export const nlNL = {
     commandPalette: "Opdrachtenpalet",
     quickOpen: "Snel openen…",
     versionHistory: "Versiegeschiedenis…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "Geopende tabs",
+    close: "Tab sluiten",
   },
   settings: {
     title: "Voorkeuren",

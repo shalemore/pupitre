@@ -119,7 +119,8 @@ export const zhCN = {
     exportPdf: "导出为 PDF...",
     exportHtml: "导出为 HTML...",
     exportImage: "导出为 PNG...",
-    close: "关闭窗口",
+    closeTab: "关闭标签页",
+    closeWindow: "关闭窗口",
     undo: "撤销",
     redo: "重做",
     cut: "剪切",
@@ -136,6 +137,8 @@ export const zhCN = {
     resetZoom: "重置缩放",
     toggleSidebar: "显示/隐藏侧边栏",
     toggleTheme: "切换深浅主题",
+    nextTab: "下一个标签页",
+    previousTab: "上一个标签页",
     preferences: "偏好设置...",
     sampleDocument: "示例 Markdown 文档",
     about: "关于 Pupitre",
@@ -152,6 +155,11 @@ export const zhCN = {
     commandPalette: "命令面板",
     quickOpen: "快速打开…",
     versionHistory: "版本历史…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "已打开的标签页",
+    close: "关闭标签页",
   },
   settings: {
     title: "偏好设置",

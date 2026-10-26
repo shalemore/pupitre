@@ -124,7 +124,8 @@ export const hiIN = {
     exportPdf: "PDF के रूप में निर्यात करें...",
     exportHtml: "HTML के रूप में निर्यात करें...",
     exportImage: "PNG के रूप में निर्यात करें...",
-    close: "विंडो बंद करें",
+    closeTab: "टैब बंद करें",
+    closeWindow: "विंडो बंद करें",
     undo: "पूर्ववत करें",
     redo: "फिर से करें",
     cut: "काटें",
@@ -141,6 +142,8 @@ export const hiIN = {
     resetZoom: "ज़ूम रीसेट करें",
     toggleSidebar: "साइडबार दिखाएँ/छिपाएँ",
     toggleTheme: "थीम बदलें",
+    nextTab: "अगला टैब",
+    previousTab: "पिछला टैब",
     preferences: "प्राथमिकताएँ...",
     sampleDocument: "नमूना Markdown दस्तावेज़",
     about: "Pupitre के बारे में",
@@ -157,6 +160,11 @@ export const hiIN = {
     commandPalette: "कमांड पैलेट",
     quickOpen: "त्वरित खोलें...",
     versionHistory: "संस्करण इतिहास…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "खुले टैब",
+    close: "टैब बंद करें",
   },
   settings: {
     title: "प्राथमिकताएँ",

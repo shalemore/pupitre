@@ -126,7 +126,8 @@ export const thTH = {
     exportPdf: "ส่งออกเป็น PDF...",
     exportHtml: "ส่งออกเป็น HTML...",
     exportImage: "ส่งออกเป็น PNG...",
-    close: "ปิดหน้าต่าง",
+    closeTab: "ปิดแท็บ",
+    closeWindow: "ปิดหน้าต่าง",
     undo: "เลิกทำ",
     redo: "ทำซ้ำ",
     cut: "ตัด",
@@ -143,6 +144,8 @@ export const thTH = {
     resetZoom: "รีเซ็ตการซูม",
     toggleSidebar: "แสดง/ซ่อนแถบด้านข้าง",
     toggleTheme: "สลับธีม",
+    nextTab: "แท็บถัดไป",
+    previousTab: "แท็บก่อนหน้า",
     preferences: "การตั้งค่า...",
     sampleDocument: "เอกสาร Markdown ตัวอย่าง",
     about: "เกี่ยวกับ Pupitre",
@@ -159,6 +162,11 @@ export const thTH = {
     commandPalette: "พาเลตคำสั่ง",
     quickOpen: "เปิดอย่างรวดเร็ว…",
     versionHistory: "ประวัติเวอร์ชัน…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "แท็บที่เปิดอยู่",
+    close: "ปิดแท็บ",
   },
   settings: {
     title: "การตั้งค่า",

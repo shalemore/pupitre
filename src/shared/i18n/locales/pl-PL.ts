@@ -133,7 +133,8 @@ export const plPL = {
     exportPdf: "Eksportuj jako PDF…",
     exportHtml: "Eksportuj jako HTML…",
     exportImage: "Eksportuj jako PNG…",
-    close: "Zamknij okno",
+    closeTab: "Zamknij kartę",
+    closeWindow: "Zamknij okno",
     undo: "Cofnij",
     redo: "Ponów",
     cut: "Wytnij",
@@ -150,6 +151,8 @@ export const plPL = {
     resetZoom: "Przywróć powiększenie",
     toggleSidebar: "Pokaż/ukryj paski boczne",
     toggleTheme: "Przełącz motyw",
+    nextTab: "Następna karta",
+    previousTab: "Poprzednia karta",
     preferences: "Ustawienia…",
     sampleDocument: "Przykładowy dokument Markdown",
     about: "O programie Pupitre",
@@ -166,6 +169,11 @@ export const plPL = {
     commandPalette: "Paleta poleceń",
     quickOpen: "Otwórz szybko…",
     versionHistory: "Historia wersji…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "Otwarte karty",
+    close: "Zamknij kartę",
   },
   settings: {
     title: "Ustawienia",

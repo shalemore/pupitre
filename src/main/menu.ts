@@ -145,8 +145,20 @@ function buildTemplate(): MenuItemConstructorOptions[] {
           click: () => dispatchToMainWindow({ id: "file.version-history" }),
         },
         separator,
+        {
+          label: labels.closeTab,
+          accelerator: "CmdOrCtrl+W",
+          enabled: hasDocument,
+          click: () => dispatchToMainWindow({ id: "file.close-tab" }),
+        },
+        {
+          label: labels.closeWindow,
+          // Ctrl+W closes a tab as it does everywhere else, so the window takes the longer one
+          accelerator: "CmdOrCtrl+Shift+W",
+          click: () => dispatchToMainWindow({ id: "window.close" }),
+        },
+        separator,
         ...(isMac ? [] : [preferences, separator]),
-        { label: labels.close, role: "close" },
         ...(isMac ? [] : [{ label: labels.quit, role: "quit" } as const]),
       ],
     },
@@ -222,6 +234,20 @@ function buildTemplate(): MenuItemConstructorOptions[] {
           label: labels.toggleTheme,
           click: () =>
             updateSettings({ colorScheme: nativeTheme.shouldUseDarkColors ? "light" : "dark" }),
+        },
+        separator,
+        // Ctrl+Tab stays Ctrl on every platform: Cmd+Tab is the system's own window switcher
+        {
+          label: labels.nextTab,
+          accelerator: "Control+Tab",
+          enabled: hasDocument,
+          click: () => dispatchToMainWindow({ id: "view.next-tab" }),
+        },
+        {
+          label: labels.previousTab,
+          accelerator: "Control+Shift+Tab",
+          enabled: hasDocument,
+          click: () => dispatchToMainWindow({ id: "view.previous-tab" }),
         },
         separator,
         {

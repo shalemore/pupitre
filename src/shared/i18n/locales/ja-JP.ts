@@ -123,7 +123,8 @@ export const jaJP = {
     exportPdf: "PDF としてエクスポート...",
     exportHtml: "HTML としてエクスポート...",
     exportImage: "PNG としてエクスポート...",
-    close: "ウィンドウを閉じる",
+    closeTab: "タブを閉じる",
+    closeWindow: "ウィンドウを閉じる",
     undo: "元に戻す",
     redo: "やり直す",
     cut: "切り取り",
@@ -140,6 +141,8 @@ export const jaJP = {
     resetZoom: "ズームをリセット",
     toggleSidebar: "サイドバーの表示切替",
     toggleTheme: "テーマの切り替え",
+    nextTab: "次のタブ",
+    previousTab: "前のタブ",
     preferences: "環境設定...",
     sampleDocument: "サンプル Markdown",
     about: "Pupitre について",
@@ -156,6 +159,11 @@ export const jaJP = {
     commandPalette: "コマンドパレット",
     quickOpen: "クイックオープン…",
     versionHistory: "版の履歴…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "開いているタブ",
+    close: "タブを閉じる",
   },
   settings: {
     title: "環境設定",

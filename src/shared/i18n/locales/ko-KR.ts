@@ -123,7 +123,8 @@ export const koKR = {
     exportPdf: "PDF로 내보내기...",
     exportHtml: "HTML로 내보내기...",
     exportImage: "PNG로 내보내기...",
-    close: "창 닫기",
+    closeTab: "탭 닫기",
+    closeWindow: "창 닫기",
     undo: "실행 취소",
     redo: "다시 실행",
     cut: "잘라내기",
@@ -140,6 +141,8 @@ export const koKR = {
     resetZoom: "배율 초기화",
     toggleSidebar: "사이드바 표시/숨기기",
     toggleTheme: "테마 전환",
+    nextTab: "다음 탭",
+    previousTab: "이전 탭",
     preferences: "환경설정...",
     sampleDocument: "예제 Markdown 문서",
     about: "Pupitre 정보",
@@ -156,6 +159,11 @@ export const koKR = {
     commandPalette: "명령 팔레트",
     quickOpen: "빠르게 열기…",
     versionHistory: "버전 기록…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "열린 탭",
+    close: "탭 닫기",
   },
   settings: {
     title: "환경설정",

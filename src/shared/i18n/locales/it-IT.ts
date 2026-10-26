@@ -123,7 +123,8 @@ export const itIT = {
     exportPdf: "Esporta come PDF...",
     exportHtml: "Esporta come HTML...",
     exportImage: "Esporta come PNG...",
-    close: "Chiudi finestra",
+    closeTab: "Chiudi scheda",
+    closeWindow: "Chiudi finestra",
     undo: "Annulla",
     redo: "Ripeti",
     cut: "Taglia",
@@ -140,6 +141,8 @@ export const itIT = {
     resetZoom: "Reimposta zoom",
     toggleSidebar: "Mostra/Nascondi le barre laterali",
     toggleTheme: "Cambia tema",
+    nextTab: "Scheda successiva",
+    previousTab: "Scheda precedente",
     preferences: "Preferenze...",
     sampleDocument: "Documento Markdown di esempio",
     about: "Informazioni su Pupitre",
@@ -156,6 +159,11 @@ export const itIT = {
     commandPalette: "Palette dei comandi",
     quickOpen: "Apri rapidamente...",
     versionHistory: "Cronologia versioni…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "Schede aperte",
+    close: "Chiudi scheda",
   },
   settings: {
     title: "Preferenze",

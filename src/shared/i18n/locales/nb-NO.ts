@@ -127,7 +127,8 @@ export const nbNO = {
     exportPdf: "Eksporter som PDF…",
     exportHtml: "Eksporter som HTML…",
     exportImage: "Eksporter som PNG…",
-    close: "Lukk vindu",
+    closeTab: "Lukk fane",
+    closeWindow: "Lukk vindu",
     undo: "Angre",
     redo: "Gjør om",
     cut: "Klipp ut",
@@ -144,6 +145,8 @@ export const nbNO = {
     resetZoom: "Tilbakestill zoom",
     toggleSidebar: "Vis/skjul sidefelt",
     toggleTheme: "Bytt tema",
+    nextTab: "Neste fane",
+    previousTab: "Forrige fane",
     preferences: "Innstillinger…",
     sampleDocument: "Eksempel på Markdown-dokument",
     about: "Om Pupitre",
@@ -160,6 +163,11 @@ export const nbNO = {
     commandPalette: "Kommandopalett",
     quickOpen: "Åpne hurtig…",
     versionHistory: "Versjonslogg…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "Åpne faner",
+    close: "Lukk fane",
   },
   settings: {
     title: "Innstillinger",

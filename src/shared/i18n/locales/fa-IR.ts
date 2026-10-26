@@ -126,7 +126,8 @@ export const faIR = {
     exportPdf: "خروجی PDF...",
     exportHtml: "خروجی HTML...",
     exportImage: "خروجی PNG...",
-    close: "بستن پنجره",
+    closeTab: "بستن زبانه",
+    closeWindow: "بستن پنجره",
     undo: "واگرد",
     redo: "بازانجام",
     cut: "برش",
@@ -143,6 +144,8 @@ export const faIR = {
     resetZoom: "بازنشانی بزرگ‌نمایی",
     toggleSidebar: "نمایش یا پنهان کردن نوارهای کناری",
     toggleTheme: "تغییر قالب",
+    nextTab: "زبانه بعدی",
+    previousTab: "زبانه قبلی",
     preferences: "تنظیمات...",
     sampleDocument: "سند نمونه Markdown",
     about: "درباره Pupitre",
@@ -159,6 +162,11 @@ export const faIR = {
     commandPalette: "پالت فرمان‌ها",
     quickOpen: "باز کردن سریع...",
     versionHistory: "تاریخچهٔ نسخه‌ها…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "زبانه‌های باز",
+    close: "بستن زبانه",
   },
   settings: {
     title: "تنظیمات",

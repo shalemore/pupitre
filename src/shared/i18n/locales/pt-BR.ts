@@ -123,7 +123,8 @@ export const ptBR = {
     exportPdf: "Exportar como PDF...",
     exportHtml: "Exportar como HTML...",
     exportImage: "Exportar como PNG...",
-    close: "Fechar Janela",
+    closeTab: "Fechar aba",
+    closeWindow: "Fechar Janela",
     undo: "Desfazer",
     redo: "Refazer",
     cut: "Recortar",
@@ -140,6 +141,8 @@ export const ptBR = {
     resetZoom: "Redefinir zoom",
     toggleSidebar: "Alternar barras laterais",
     toggleTheme: "Alternar Tema",
+    nextTab: "Próxima aba",
+    previousTab: "Aba anterior",
     preferences: "Preferências...",
     sampleDocument: "Documento Markdown de exemplo",
     about: "Sobre o Pupitre",
@@ -156,6 +159,11 @@ export const ptBR = {
     commandPalette: "Paleta de comandos",
     quickOpen: "Abrir rapidamente...",
     versionHistory: "Histórico de versões…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "Abas abertas",
+    close: "Fechar aba",
   },
   settings: {
     title: "Preferências",

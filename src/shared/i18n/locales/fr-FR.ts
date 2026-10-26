@@ -123,7 +123,8 @@ export const frFR = {
     exportPdf: "Exporter au format PDF...",
     exportHtml: "Exporter au format HTML...",
     exportImage: "Exporter au format PNG...",
-    close: "Fermer la fenêtre",
+    closeTab: "Fermer l'onglet",
+    closeWindow: "Fermer la fenêtre",
     undo: "Annuler",
     redo: "Rétablir",
     cut: "Couper",
@@ -140,6 +141,8 @@ export const frFR = {
     resetZoom: "Réinitialiser le zoom",
     toggleSidebar: "Afficher/Masquer les barres latérales",
     toggleTheme: "Changer de thème",
+    nextTab: "Onglet suivant",
+    previousTab: "Onglet précédent",
     preferences: "Préférences...",
     sampleDocument: "Exemple de document Markdown",
     about: "À propos de Pupitre",
@@ -156,6 +159,11 @@ export const frFR = {
     commandPalette: "Palette de commandes",
     quickOpen: "Ouvrir rapidement...",
     versionHistory: "Historique des versions…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "Onglets ouverts",
+    close: "Fermer l'onglet",
   },
   settings: {
     title: "Préférences",

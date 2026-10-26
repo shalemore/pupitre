@@ -126,7 +126,8 @@ export const fiFI = {
     exportPdf: "Vie PDF-muodossa…",
     exportHtml: "Vie HTML-muodossa…",
     exportImage: "Vie PNG-muodossa…",
-    close: "Sulje ikkuna",
+    closeTab: "Sulje välilehti",
+    closeWindow: "Sulje ikkuna",
     undo: "Kumoa",
     redo: "Tee uudelleen",
     cut: "Leikkaa",
@@ -143,6 +144,8 @@ export const fiFI = {
     resetZoom: "Palauta zoomaus",
     toggleSidebar: "Näytä/piilota sivupalkit",
     toggleTheme: "Vaihda teemaa",
+    nextTab: "Seuraava välilehti",
+    previousTab: "Edellinen välilehti",
     preferences: "Asetukset…",
     sampleDocument: "Esimerkki Markdown-asiakirjasta",
     about: "Tietoja Pupitresta",
@@ -159,6 +162,11 @@ export const fiFI = {
     commandPalette: "Komentopaletti",
     quickOpen: "Avaa nopeasti…",
     versionHistory: "Versiohistoria…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "Avoimet välilehdet",
+    close: "Sulje välilehti",
   },
   settings: {
     title: "Asetukset",

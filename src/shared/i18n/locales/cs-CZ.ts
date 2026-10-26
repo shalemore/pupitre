@@ -131,7 +131,8 @@ export const csCZ = {
     exportPdf: "Exportovat jako PDF…",
     exportHtml: "Exportovat jako HTML…",
     exportImage: "Exportovat jako PNG…",
-    close: "Zavřít okno",
+    closeTab: "Zavřít kartu",
+    closeWindow: "Zavřít okno",
     undo: "Zpět",
     redo: "Znovu",
     cut: "Vyjmout",
@@ -148,6 +149,8 @@ export const csCZ = {
     resetZoom: "Obnovit zvětšení",
     toggleSidebar: "Zobrazit/skrýt postranní panely",
     toggleTheme: "Přepnout motiv",
+    nextTab: "Další karta",
+    previousTab: "Předchozí karta",
     preferences: "Předvolby…",
     sampleDocument: "Vzorový dokument Markdown",
     about: "O aplikaci Pupitre",
@@ -164,6 +167,11 @@ export const csCZ = {
     commandPalette: "Paleta příkazů",
     quickOpen: "Rychle otevřít…",
     versionHistory: "Historie verzí…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "Otevřené karty",
+    close: "Zavřít kartu",
   },
   settings: {
     title: "Předvolby",

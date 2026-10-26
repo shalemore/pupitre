@@ -125,7 +125,8 @@ export const idID = {
     exportPdf: "Ekspor sebagai PDF...",
     exportHtml: "Ekspor sebagai HTML...",
     exportImage: "Ekspor sebagai PNG...",
-    close: "Tutup jendela",
+    closeTab: "Tutup tab",
+    closeWindow: "Tutup jendela",
     undo: "Urungkan",
     redo: "Ulangi",
     cut: "Potong",
@@ -142,6 +143,8 @@ export const idID = {
     resetZoom: "Atur ulang perbesaran",
     toggleSidebar: "Tampilkan/sembunyikan bilah samping",
     toggleTheme: "Ganti tema",
+    nextTab: "Tab berikutnya",
+    previousTab: "Tab sebelumnya",
     preferences: "Preferensi...",
     sampleDocument: "Dokumen contoh Markdown",
     about: "Tentang Pupitre",
@@ -158,6 +161,11 @@ export const idID = {
     commandPalette: "Palet Perintah",
     quickOpen: "Buka dengan Cepat...",
     versionHistory: "Riwayat Versi…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "Tab yang terbuka",
+    close: "Tutup tab",
   },
   settings: {
     title: "Preferensi",

@@ -122,7 +122,8 @@ export const esES = {
     exportPdf: "Exportar como PDF...",
     exportHtml: "Exportar como HTML...",
     exportImage: "Exportar como PNG...",
-    close: "Cerrar ventana",
+    closeTab: "Cerrar pestaña",
+    closeWindow: "Cerrar ventana",
     undo: "Deshacer",
     redo: "Rehacer",
     cut: "Cortar",
@@ -139,6 +140,8 @@ export const esES = {
     resetZoom: "Restablecer zoom",
     toggleSidebar: "Mostrar/Ocultar barras laterales",
     toggleTheme: "Cambiar tema claro/oscuro",
+    nextTab: "Pestaña siguiente",
+    previousTab: "Pestaña anterior",
     preferences: "Preferencias...",
     sampleDocument: "Documento Markdown de ejemplo",
     about: "Acerca de Pupitre",
@@ -155,6 +158,11 @@ export const esES = {
     commandPalette: "Paleta de comandos",
     quickOpen: "Abrir rápidamente...",
     versionHistory: "Historial de versiones…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "Pestañas abiertas",
+    close: "Cerrar pestaña",
   },
   settings: {
     title: "Preferencias",

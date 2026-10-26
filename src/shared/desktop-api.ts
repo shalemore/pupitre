@@ -35,9 +35,8 @@ export const TEXT_ENCODINGS = [
 export type TextEncoding = (typeof TEXT_ENCODINGS)[number];
 
 /**
- * The unsaved content of the current document, kept outside the editor so that a crash cannot take
- * it: the whole text, plus the version it was last read or saved as, so a restore can show what is
- * still unsaved. Only one document is edited at a time, so a host holds at most one draft.
+ * The unsaved content of one tab, kept outside the editor so that a crash cannot take it: the whole
+ * text, plus the version it was last read or saved as, so a restore can show what is still unsaved.
  */
 export interface Draft {
   path?: string | undefined;
@@ -49,6 +48,18 @@ export interface Draft {
   lineEnding: LineEnding;
   encoding: TextEncoding;
   isSample: boolean;
+}
+
+/**
+ * What a host holds for a crash: a draft per tab with unsaved changes, so every one of them comes
+ * back, plus which of those tabs was being edited. A tab with nothing unsaved has no draft; the
+ * startup setting decides what happens to the files then, as it always did.
+ */
+export interface DraftSession {
+  /** Tabs in the order they were open. */
+  tabs: Draft[];
+  /** Index of the tab that was active in `tabs`, or 0 when it was a tab with nothing unsaved. */
+  active: number;
 }
 
 export interface OpenedDocument extends DocumentLocation {
@@ -170,8 +181,11 @@ export type AppCommand =
   | { id: "file.quick-open" }
   | { id: "file.save" }
   | { id: "file.save-as" }
+  | { id: "file.close-tab" }
   | { id: "file.print" }
   | { id: "file.version-history" }
+  | { id: "view.next-tab" }
+  | { id: "view.previous-tab" }
   | { id: "file.export-pdf" }
   | { id: "file.export-html" }
   | { id: "file.export-image" }
@@ -210,9 +224,11 @@ export interface SidebarWidths {
 
 /** Document state the renderer reports to the main process: enables or disables menu items and decides whether closing the window must ask to save first. */
 export interface DocumentState {
+  /** A tab holds a document, so the entries that work on one are usable. */
   hasDocument: boolean;
-  /** Whether a file is behind the document; only a document with a path has versions to show. */
+  /** Whether a file is behind the document on show; only a document with a path has versions to keep. */
   hasPath: boolean;
+  /** Any tab has unsaved changes, so closing the window has to ask first. */
   isDirty: boolean;
 }
 
@@ -224,9 +240,9 @@ export interface InvokeChannels {
   "settings:reveal": () => void;
   "document:open": () => OpenedDocument | null;
   /** The unsaved content left behind by a session that did not end cleanly, or null when there is none. */
-  "draft:read": () => Draft | null;
-  /** Keeps the unsaved content of the current document; the host writes it out shortly after. */
-  "draft:write": (draft: Draft) => void;
+  "draft:read": () => DraftSession | null;
+  /** Keeps what is unsaved in the open tabs; the host writes it out shortly after. */
+  "draft:write": (session: DraftSession) => void;
   /** Forgets the draft, because there is nothing unsaved left to come back to. */
   "draft:clear": () => void;
   /** Asks for a folder to show in the sidebar. */

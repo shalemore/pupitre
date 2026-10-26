@@ -126,7 +126,8 @@ export const daDK = {
     exportPdf: "Eksportér som PDF…",
     exportHtml: "Eksportér som HTML…",
     exportImage: "Eksportér som PNG…",
-    close: "Luk vindue",
+    closeTab: "Luk faneblad",
+    closeWindow: "Luk vindue",
     undo: "Fortryd",
     redo: "Annullér fortryd",
     cut: "Klip",
@@ -143,6 +144,8 @@ export const daDK = {
     resetZoom: "Nulstil zoom",
     toggleSidebar: "Vis/skjul sidebjælker",
     toggleTheme: "Skift tema",
+    nextTab: "Næste faneblad",
+    previousTab: "Forrige faneblad",
     preferences: "Indstillinger…",
     sampleDocument: "Eksempel på Markdown-dokument",
     about: "Om Pupitre",
@@ -159,6 +162,11 @@ export const daDK = {
     commandPalette: "Kommandopalet",
     quickOpen: "Åbn hurtigt…",
     versionHistory: "Versionshistorik…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "Åbne faneblade",
+    close: "Luk faneblad",
   },
   settings: {
     title: "Indstillinger",

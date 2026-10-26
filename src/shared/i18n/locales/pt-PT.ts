@@ -122,7 +122,8 @@ export const ptPT = {
     exportPdf: "Exportar como PDF…",
     exportHtml: "Exportar como HTML…",
     exportImage: "Exportar como PNG…",
-    close: "Fechar janela",
+    closeTab: "Fechar separador",
+    closeWindow: "Fechar janela",
     undo: "Anular",
     redo: "Refazer",
     cut: "Cortar",
@@ -139,6 +140,8 @@ export const ptPT = {
     resetZoom: "Repor zoom",
     toggleSidebar: "Mostrar/ocultar barras laterais",
     toggleTheme: "Alternar tema",
+    nextTab: "Separador seguinte",
+    previousTab: "Separador anterior",
     preferences: "Preferências…",
     sampleDocument: "Documento Markdown de exemplo",
     about: "Acerca do Pupitre",
@@ -155,6 +158,11 @@ export const ptPT = {
     commandPalette: "Paleta de comandos",
     quickOpen: "Abrir rapidamente...",
     versionHistory: "Histórico de versões…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "Separadores abertos",
+    close: "Fechar separador",
   },
   settings: {
     title: "Preferências",

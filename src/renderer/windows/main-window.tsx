@@ -33,6 +33,7 @@ import {
   SidebarSlot,
   type SidebarMode,
 } from "@/features/sidebar/sidebar";
+import { TabsBar } from "@/features/tabs/tabs-bar";
 import { WelcomeScreen } from "@/features/welcome/welcome-screen";
 import { WorkspaceSearch } from "@/features/workspace-search/workspace-search";
 import { t } from "@/i18n";
@@ -168,7 +169,7 @@ export const MainWindow: Component = () => {
     void desktop.invoke("window:set-document-state", {
       hasDocument: session.activeDocument() !== undefined,
       hasPath: session.activeDocument()?.path !== undefined,
-      isDirty: session.isDirty(),
+      isDirty: session.hasDirtyTabs(),
     });
   });
   // Close the find bar when the document changes; the old document's matches mean nothing
@@ -204,8 +205,7 @@ export const MainWindow: Component = () => {
     setWorkspaceSearchOpen(false);
     setMatchToReveal({ path, from, to });
     await session.openPath(path, false);
-    // The file was not opened: a document with unsaved changes kept its own, and the match has
-    // nowhere to appear
+    // The file could not be read, so the match has nowhere to appear
     if (session.activeDocument()?.path !== path) setMatchToReveal(undefined);
   };
 
@@ -287,6 +287,20 @@ export const MainWindow: Component = () => {
     await desktop.invoke("clipboard:write-rich", fragment.markdown, fragment.html);
   };
 
+  /** Asks about every tab with unsaved changes, then lets the window go. */
+  const closeWindow = async () => {
+    if (!(await session.confirmDiscard())) return;
+    void desktop.invoke("window:close-confirmed");
+  };
+
+  /** Closes the tab being shown; the last one takes the window with it, the way a single document always did. */
+  const closeActiveTab = async () => {
+    const tab = session.activeTab();
+    if (tab === undefined) return;
+    if (session.tabs().length > 1) return session.closeTab(tab.id);
+    await closeWindow();
+  };
+
   const runCommand = (command: AppCommand) => {
     switch (command.id) {
       case "file.new":
@@ -303,6 +317,8 @@ export const MainWindow: Component = () => {
         return void session.save();
       case "file.save-as":
         return void session.saveAs();
+      case "file.close-tab":
+        return void closeActiveTab();
       case "file.print":
         return void printDocument();
       case "file.export-pdf":
@@ -325,14 +341,16 @@ export const MainWindow: Component = () => {
         return void updateSettings({ sidebarVisible: !settings().sidebarVisible });
       case "view.command-palette":
         return setPaletteOpen(true);
+      case "view.next-tab":
+        return session.nextTab();
+      case "view.previous-tab":
+        return session.previousTab();
       case "help.sample-document":
         return void session.openSample();
       case "format":
         return editor()?.format(command.action);
       case "window.close":
-        return void session.confirmDiscard().then((confirmed) => {
-          if (confirmed) void desktop.invoke("window:close-confirmed");
-        });
+        return void closeWindow();
     }
   };
 
@@ -475,60 +493,73 @@ export const MainWindow: Component = () => {
         {/* An immersive window shows the document as a card on the window background, which also holds the title bar and the sidebar */}
         <div
           class={cn(
-            "flex-1 min-w-0 flex overflow-hidden print:block print:overflow-visible",
+            "flex-1 min-w-0 flex flex-col overflow-hidden print:block print:overflow-visible",
             immersive() && "rounded-lg bg-surface-1 shadow-sm print:rounded-none print:shadow-none",
           )}
         >
-          <Show
-            when={session.activeDocument()}
-            fallback={
-              <main class="flex-1">
-                <WelcomeScreen
-                  recentFiles={recentFiles()}
-                  onNewDocument={session.newDocument}
-                  onOpenFile={session.open}
-                  onOpenRecent={session.openPath}
-                />
-              </main>
-            }
-          >
-            {(doc) => (
-              <main class="flex-1 h-full overflow-hidden relative print:h-auto print:overflow-visible">
-                <Show when={findMode() !== "closed"}>
-                  <FindBar
-                    showReplace={findMode() === "replace"}
-                    initialSearch={initialSearch()}
-                    matchStats={matchStats()}
-                    onToggleReplace={() =>
-                      setFindMode(findMode() === "replace" ? "find" : "replace")
-                    }
-                    onClose={closeFind}
-                    onSearchChange={(options) => runSearch((handle) => handle.setSearch(options))}
-                    onFindNext={() => runSearch((handle) => handle.findNext())}
-                    onFindPrevious={() => runSearch((handle) => handle.findPrevious())}
-                    onReplaceNext={() => runSearch((handle) => handle.replaceNext())}
-                    onReplaceAll={() => runSearch((handle) => handle.replaceAll())}
-                  />
-                </Show>
-
-                {/* Rebuild the editor per document id; Save As only changes the path, so the editor and its undo history stay */}
-                <Show when={doc().id} keyed>
-                  <MarkdownEditor
-                    markdown={doc().markdown}
-                    initialPosition={documentPosition(doc().path)}
-                    baseUrl={doc().baseUrl}
-                    documentPath={doc().path}
-                    onReady={session.handleEditorReady}
-                    onMarkdownChange={session.handleMarkdownChange}
-                    onOutlineChange={setOutline}
-                    onActiveHeadingChange={setActiveHeading}
-                    onStatsChange={setStats}
-                    ref={setEditor}
-                  />
-                </Show>
-              </main>
-            )}
+          {/* One document needs no strip: the title bar already names the one that is open */}
+          <Show when={session.tabs().length > 1}>
+            <TabsBar
+              tabs={session.tabs()}
+              activeId={session.activeTab()?.id}
+              nameOf={session.tabFileName}
+              onActivate={session.activateTab}
+              onClose={(id) => void session.closeTab(id)}
+            />
           </Show>
+
+          <div class="flex-1 min-h-0 flex overflow-hidden print:block print:overflow-visible">
+            <Show
+              when={session.activeTab()}
+              fallback={
+                <main class="flex-1">
+                  <WelcomeScreen
+                    recentFiles={recentFiles()}
+                    onNewDocument={session.newDocument}
+                    onOpenFile={session.open}
+                    onOpenRecent={session.openPath}
+                  />
+                </main>
+              }
+            >
+              {(tab) => (
+                <main class="flex-1 h-full overflow-hidden relative print:h-auto print:overflow-visible">
+                  <Show when={findMode() !== "closed"}>
+                    <FindBar
+                      showReplace={findMode() === "replace"}
+                      initialSearch={initialSearch()}
+                      matchStats={matchStats()}
+                      onToggleReplace={() =>
+                        setFindMode(findMode() === "replace" ? "find" : "replace")
+                      }
+                      onClose={closeFind}
+                      onSearchChange={(options) => runSearch((handle) => handle.setSearch(options))}
+                      onFindNext={() => runSearch((handle) => handle.findNext())}
+                      onFindPrevious={() => runSearch((handle) => handle.findPrevious())}
+                      onReplaceNext={() => runSearch((handle) => handle.replaceNext())}
+                      onReplaceAll={() => runSearch((handle) => handle.replaceAll())}
+                    />
+                  </Show>
+
+                  {/* Rebuild the editor per document id, which is a new one for every tab and every reload; Save As only changes the path, so the editor and its undo history stay */}
+                  <Show when={tab().doc.id} keyed>
+                    <MarkdownEditor
+                      markdown={tab().markdown}
+                      initialPosition={documentPosition(tab().doc.path)}
+                      baseUrl={tab().doc.baseUrl}
+                      documentPath={tab().doc.path}
+                      onReady={session.handleEditorReady}
+                      onMarkdownChange={session.handleMarkdownChange}
+                      onOutlineChange={setOutline}
+                      onActiveHeadingChange={setActiveHeading}
+                      onStatsChange={setStats}
+                      ref={setEditor}
+                    />
+                  </Show>
+                </main>
+              )}
+            </Show>
+          </div>
         </div>
 
         <Show when={split()}>

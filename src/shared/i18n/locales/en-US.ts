@@ -124,7 +124,8 @@ export const enUS = {
     exportPdf: "Export as PDF...",
     exportHtml: "Export as HTML...",
     exportImage: "Export as PNG...",
-    close: "Close Window",
+    closeTab: "Close Tab",
+    closeWindow: "Close Window",
     undo: "Undo",
     redo: "Redo",
     cut: "Cut",
@@ -141,6 +142,8 @@ export const enUS = {
     resetZoom: "Reset Zoom",
     toggleSidebar: "Toggle Sidebars",
     toggleTheme: "Toggle Theme",
+    nextTab: "Next Tab",
+    previousTab: "Previous Tab",
     preferences: "Preferences...",
     sampleDocument: "Example Markdown Document",
     about: "About Pupitre",
@@ -157,6 +160,11 @@ export const enUS = {
     commandPalette: "Command Palette",
     quickOpen: "Open Quickly…",
     versionHistory: "Version History…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "Open Tabs",
+    close: "Close Tab",
   },
   settings: {
     title: "Preferences",

@@ -139,7 +139,8 @@ export const ar = {
     exportPdf: "تصدير كـ PDF...",
     exportHtml: "تصدير كـ HTML...",
     exportImage: "تصدير كـ PNG...",
-    close: "إغلاق النافذة",
+    closeTab: "إغلاق علامة التبويب",
+    closeWindow: "إغلاق النافذة",
     undo: "تراجع",
     redo: "إعادة",
     cut: "قص",
@@ -156,6 +157,8 @@ export const ar = {
     resetZoom: "إعادة ضبط التكبير",
     toggleSidebar: "تبديل الأشرطة الجانبية",
     toggleTheme: "تبديل السمة",
+    nextTab: "علامة التبويب التالية",
+    previousTab: "علامة التبويب السابقة",
     preferences: "التفضيلات...",
     sampleDocument: "مستند Markdown نموذجي",
     about: "حول Pupitre",
@@ -172,6 +175,11 @@ export const ar = {
     commandPalette: "لوحة الأوامر",
     quickOpen: "فتح سريع...",
     versionHistory: "سجل الإصدارات…",
+  },
+  tabs: {
+    /** Names the strip of open documents, read aloud by a screen reader. */
+    bar: "علامات التبويب المفتوحة",
+    close: "إغلاق علامة التبويب",
   },
   settings: {
     title: "التفضيلات",
