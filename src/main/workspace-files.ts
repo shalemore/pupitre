@@ -9,7 +9,7 @@ import { nameCollator } from "./name-collator";
  * one a person picks a document out of by name, and searching all of it would take long enough to
  * be felt while the palette is already open.
  */
-export const MAX_WORKSPACE_FILES = 20000;
+const MAX_WORKSPACE_FILES = 20000;
 
 /** Folders that hold dependencies rather than documents, wherever they turn up. */
 const SKIPPED_FOLDERS = new Set(["node_modules"]);

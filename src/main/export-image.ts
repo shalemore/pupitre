@@ -37,7 +37,7 @@ const CAPTURE_DELAY = 120;
 /** Rounds of measuring a page that keeps changing height. */
 const HEIGHT_ATTEMPTS = 4;
 
-export interface ExportImageOptions {
+interface ExportImageOptions {
   /** A complete HTML document, rendered as it is. */
   html: string;
   /** The PNG file to write. */
@@ -47,8 +47,6 @@ export interface ExportImageOptions {
    * written as a temporary file. Without it the page goes to the system temporary folder.
    */
   baseFolder: string | undefined;
-  /** Width of the document in CSS pixels; the PNG is PIXEL_RATIO times as wide. */
-  width?: number;
 }
 
 /**
@@ -60,7 +58,6 @@ export async function exportImage({
   html,
   filePath,
   baseFolder,
-  width = DOCUMENT_WIDTH,
 }: ExportImageOptions): Promise<void> {
   // A page loaded from a data: URL or from the system temporary folder cannot reach the images next
   // to the document, so the page is written next to them when the caller knows the folder; the dot
@@ -68,7 +65,7 @@ export async function exportImage({
   const pagePath = join(baseFolder ?? tmpdir(), `.pupitre-export-${randomUUID()}.html`);
   await writeFile(pagePath, withoutScripts(html), "utf8");
   try {
-    await writeFile(filePath, await render(pagePath, width));
+    await writeFile(filePath, await render(pagePath, DOCUMENT_WIDTH));
   } finally {
     await rm(pagePath, { force: true });
   }
@@ -327,11 +324,7 @@ function cutToRows(image: NativeImage, width: number, height: number, from: numb
  * Stacks the slices into one image: they share their width, so their bitmaps are rows of equal
  * length and one bitmap after the other is the finished picture.
  */
-function stack(slices: readonly NativeImage[]): {
-  image: NativeImage;
-  width: number;
-  height: number;
-} {
+function stack(slices: readonly NativeImage[]): { image: NativeImage; width: number } {
   const buffers: Buffer[] = [];
   let width = 0;
   let height = 0;
@@ -355,5 +348,5 @@ function stack(slices: readonly NativeImage[]): {
     height,
     scaleFactor: PIXEL_RATIO,
   });
-  return { image, width, height };
+  return { image, width };
 }
