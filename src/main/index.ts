@@ -1,5 +1,6 @@
 import { join } from "node:path";
 import { app, BrowserWindow, nativeTheme, session } from "electron";
+import { setupDiagnostics } from "./diagnostics";
 import { flushDraft } from "./drafts";
 import { registerIpcHandlers } from "./ipc";
 import { allowMacTypeInjection } from "./mactype";
@@ -15,6 +16,8 @@ import { createMainWindow } from "./windows";
 allowMacTypeInjection();
 // Groups the taskbar button and attributes notifications to the app; electron-builder uses the same id
 app.setAppUserModelId("com.shalemore.pupitre");
+// The log and the crash dumps a report may point at, before a crash or a second instance can happen
+setupDiagnostics();
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();

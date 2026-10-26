@@ -18,14 +18,15 @@ import {
   withGroupSeparators,
 } from "@shared/menu";
 import { showAboutDialog } from "./about";
+import { diagnosticsInfo } from "./diagnostics";
 import { formatItems } from "./format-menu";
 import { t } from "./i18n";
 import { clearRecentFiles, getRecentFiles } from "./recent-files";
+import { REPOSITORY_URL, reportIssueUrl } from "./report-issue";
 import { getSettings, updateSettings } from "./settings-store";
 import { dispatchToMainWindow, getMainWindow, showSettingsWindow } from "./windows";
 import { resetZoom, stepZoom } from "./zoom";
 
-const REPOSITORY_URL = "https://github.com/shalemore/pupitre";
 const separator: MenuItemConstructorOptions = { type: "separator" };
 
 let documentState: DocumentState = {
@@ -343,7 +344,7 @@ function buildTemplate(): MenuItemConstructorOptions[] {
         { label: labels.documentation, click: () => void shell.openExternal(REPOSITORY_URL) },
         {
           label: labels.reportIssue,
-          click: () => void shell.openExternal(`${REPOSITORY_URL}/issues`),
+          click: () => void shell.openExternal(reportIssueUrl(diagnosticsInfo())),
         },
         ...(isMac ? [] : [separator, about]),
       ],
