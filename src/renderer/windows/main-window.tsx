@@ -356,6 +356,8 @@ export const MainWindow: Component = () => {
 
   onMount(() => {
     void session.restoreOnStartup();
+    // A window that closes before the next write of the draft was due keeps the last typing all the same
+    makeEventListener(window, "pagehide", session.flushDraft);
     // dragover's default behavior must be prevented, otherwise drop never fires
     makeEventListener(window, "dragover", (e) => e.preventDefault());
     makeEventListener(window, "drop", (e) => {

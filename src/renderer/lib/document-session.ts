@@ -302,7 +302,7 @@ export function createDocumentSession(
   };
 
   /** Keeps what is unsaved right now, for a window that closes before the delay of the draft ends. */
-  const keepDraft = () => {
+  const flushDraft = () => {
     const draft = currentDraft();
     scheduleDraft.clear();
     if (draft === undefined) return dropDraft();
@@ -629,9 +629,11 @@ export function createDocumentSession(
     handleRename,
     restoreOnStartup,
     confirmDiscard,
+    flushDraft,
     dispose: () => {
       scheduleSave.clear();
-      keepDraft();
+      flushDraft();
+      for (const tab of tabs()) tab.pendingImages.dispose();
     },
   };
 }
