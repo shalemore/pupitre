@@ -78,8 +78,8 @@ A repository owner does these once, in Settings:
   force pushes. Scorecard scores the protection that is configured, and a rule that names a required
   check also makes that workflow a gate.
 - **Private vulnerability reporting** (Settings › Code security) — lets a reporter open a draft
-  advisory that only the maintainers see, instead of a public issue. This repository has no
-  `SECURITY.md` pointing at it yet.
+  advisory that only the maintainers see, instead of a public issue. [SECURITY.md](../SECURITY.md)
+  sends a reporter there.
 - **Dependabot alerts** and the dependency graph (Settings › Code security) — turns on the alerts the
   npm advisories in `package-lock.json` produce. Alerts are what an updated lockfile closes, and
   Dependabot can open the pull request for one.

@@ -1,0 +1,25 @@
+name: Feature request
+description: Suggest a change to how Pupitre works.
+title: "[Feature]: "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is the problem?
+      description: The task that is hard or impossible today, and how you get around it now.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What should happen instead?
+      description: The behaviour you would like to see.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+      description: Other tools that do it, or a workaround that nearly fits.
+    validations:
+      required: false
