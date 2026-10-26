@@ -19,14 +19,19 @@ Zet de cursor in **vette tekst**, in een `inline code` of in een [link](https://
 | :------------------------------ | :---------------------------------------------------------------------------------------------------------- |
 | Vet / Cursief / Inline code     | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
 | Doorhalen                       | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| Onderstreept                    | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
+| Opmaak wissen                   | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | Link                            | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| Afbeelding invoegen…            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | Kop 1–6 / Alinea                | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | Citaat                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | Genummerde / ongenummerde lijst | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | Codeblok / Wiskundeblok         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | Tabel                           | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Zoeken / Vervangen              | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Gesloten tab opnieuw openen     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | Overzicht                       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Broncodemodus                   | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Focusmodus / Typemachinemodus   | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Zoom herstellen                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | Voorkeuren                      | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |

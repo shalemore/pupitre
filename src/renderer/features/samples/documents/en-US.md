@@ -20,14 +20,19 @@ Move the cursor into **bold text**, a `code span` or a [link](https://github.com
 | :--------------------------- | :---------------------------------------------------------------------------------------------------------- |
 | Bold / Italic / Inline code  | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
 | Strikethrough                | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| Underline                    | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
+| Clear format                 | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | Link                         | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| Insert image                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | Heading 1–6 / Paragraph      | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | Quote                        | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | Numbered / Bulleted list     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | Code block / Math block      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | Table                        | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Find / Replace               | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Reopen closed tab            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | Sidebars                     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Source code mode             | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Focus mode / Typewriter mode | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Reset zoom                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | Preferences                  | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |

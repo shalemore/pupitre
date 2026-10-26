@@ -19,14 +19,19 @@ Placez le curseur dans du **texte en gras**, un `extrait de code` ou un [lien](h
 | :----------------------------------------- | :---------------------------------------------------------------------------------------------------------- |
 | Gras / Italique / Code en ligne | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd> |
 | Barré | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd> |
+| Souligné | <kbd>Ctrl</kbd>+<kbd>U</kbd> |
+| Effacer la mise en forme | <kbd>Ctrl</kbd>+<kbd>\\</kbd> |
 | Lien | <kbd>Ctrl</kbd>+<kbd>K</kbd> |
+| Insérer une image… | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd> |
 | Titre 1–6 / Paragraphe | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd> |
 | Citation | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd> |
 | Liste numérotée / à puces | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd> |
 | Bloc de code / Bloc mathématique | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd> |
 | Tableau | <kbd>Ctrl</kbd>+<kbd>T</kbd> |
 | Rechercher / Remplacer | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Rouvrir l'onglet fermé | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd> |
 | Plan | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd> |
+| Mode code source | <kbd>Ctrl</kbd>+<kbd>/</kbd> |
 | Mode concentration / Mode machine à écrire | <kbd>F8</kbd> / <kbd>F9</kbd> |
 | Réinitialiser le zoom | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd> |
 | Préférences | <kbd>Ctrl</kbd>+<kbd>,</kbd> |

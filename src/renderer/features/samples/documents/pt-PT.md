@@ -19,14 +19,19 @@ Coloque o cursor dentro de **texto a negrito**, de um `trecho de código` ou de 
 | :---------------------------------- | :---------------------------------------------------------------------------------------------------------- |
 | Negrito / Itálico / Código em linha | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
 | Rasurado                            | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| Sublinhado                          | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
+| Limpar formatação                   | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | Ligação                             | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| Inserir imagem…                     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | Título 1–6 / Parágrafo              | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | Citação                             | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | Lista numerada / com marcadores     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | Bloco de código / Bloco matemático  | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | Tabela                              | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Localizar / Substituir              | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Reabrir separador fechado           | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | Índice                              | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Modo de código-fonte                | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Modo de concentração / de escrever  | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Repor zoom                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | Preferências                        | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |

@@ -19,14 +19,19 @@ Setzen Sie den Cursor in **fetten Text**, einen `Codeausschnitt` oder einen [Lin
 | :--------------------------------- | :---------------------------------------------------------------------------------------------------------- |
 | Fett / Kursiv / Inline-Code        | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
 | Durchgestrichen                    | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| Unterstrichen                      | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
+| Formatierung entfernen             | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | Link                               | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| Bild einfügen...                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | Überschrift 1–6 / Absatz           | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | Zitat                              | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | Nummerierte Liste / Aufzählung     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | Codeblock / Formelblock            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | Tabelle                            | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Suchen / Ersetzen                  | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Geschlossenen Tab wieder öffnen    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | Gliederung                         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Quellcode-Modus                    | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Fokusmodus / Schreibmaschinenmodus | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Zoom zurücksetzen                  | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | Einstellungen                      | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |

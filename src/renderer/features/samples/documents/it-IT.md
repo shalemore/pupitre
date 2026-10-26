@@ -19,14 +19,19 @@ Sposta il cursore dentro un **testo in grassetto**, un `frammento di codice` o u
 | :------------------------------------------------------ | :---------------------------------------------------------------------------------------------------------- |
 | Grassetto / Corsivo / Codice in linea                   | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
 | Barrato                                                 | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| Sottolineato                                            | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
+| Rimuovi formattazione                                   | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | Link                                                    | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| Inserisci immagine…                                     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | Titolo 1–6 / Paragrafo                                  | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | Citazione                                               | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | Elenco numerato / puntato                               | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | Blocco di codice / Blocco matematico                    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | Tabella                                                 | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Trova / Sostituisci                                     | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Riapri scheda chiusa                                    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | Struttura                                               | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Modalità codice sorgente                                | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Modalità concentrazione / Modalità macchina da scrivere | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Reimposta zoom                                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | Preferenze                                              | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |

@@ -19,14 +19,19 @@ Mova o cursor para dentro de um **texto em negrito**, um `trecho de código` ou 
 | :----------------------------------- | :---------------------------------------------------------------------------------------------------------- |
 | Negrito / Itálico / Código embutido  | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
 | Tachado                              | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| Sublinhado                           | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
+| Limpar formatação                    | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | Link                                 | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| Inserir imagem...                    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | Título 1–6 / Parágrafo               | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | Citação                              | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | Lista numerada / com marcadores      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | Bloco de código / Bloco matemático   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | Tabela                               | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Localizar / Substituir               | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Reabrir aba fechada                  | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | Estrutura                            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Modo código-fonte                    | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Modo foco / Modo máquina de escrever | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Redefinir zoom                       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | Preferências                         | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
