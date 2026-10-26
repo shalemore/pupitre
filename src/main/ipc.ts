@@ -60,6 +60,7 @@ import {
   getUpdateStatus,
   installUpdate,
 } from "./updater";
+import { readWindowState, updateWindowState } from "./window-state";
 import {
   applyWindowColors,
   closeWithoutPrompt,
@@ -243,6 +244,7 @@ export function registerIpcHandlers(): void {
       },
       recentFiles: getRecentFiles(),
       captionSide: getCaptionSide(event.sender),
+      sidebarWidths: readWindowState()?.sidebar,
       launchFile: event.sender === getMainWindow()?.webContents ? takeLaunchFile() : undefined,
     };
     event.returnValue = state;
@@ -411,6 +413,7 @@ export function registerIpcHandlers(): void {
 
   handle("window:open-settings", () => showSettingsWindow());
   handle("window:set-colors", (event, colors) => applyWindowColors(senderWindow(event), colors));
+  handle("window:set-sidebar-widths", (_event, widths) => updateWindowState({ sidebar: widths }));
   handle("app:show-about", (event) => showAboutDialog(senderWindow(event)));
   handle("app:set-default-markdown-app", () => setAsDefaultMarkdownApp());
   handle("app:dispatch", (_event, command) => dispatchToMainWindow(command));

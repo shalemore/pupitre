@@ -8,6 +8,7 @@ import { handleOpenFileRequests } from "./open-files";
 import { onRecentFilesChange } from "./recent-files";
 import { getSettings, onSettingsChange } from "./settings-store";
 import { checkForUpdatesOnStartup, setupUpdater } from "./updater";
+import { flushWindowState } from "./window-state";
 import { createMainWindow } from "./windows";
 
 allowMacTypeInjection();
@@ -46,6 +47,9 @@ if (!app.requestSingleInstanceLock()) {
   });
 
   app.on("window-all-closed", () => app.quit());
-  // A draft written as the window closed may still be waiting to reach the disk
-  app.on("will-quit", flushDraft);
+  // A draft or the window state written as the window closed may still be waiting to reach the disk
+  app.on("will-quit", () => {
+    flushDraft();
+    flushWindowState();
+  });
 }

@@ -443,6 +443,7 @@ const handlers: Handlers = {
     );
   },
   "window:set-colors": nothing,
+  "window:set-sidebar-widths": nothing,
   "app:show-about": nothing,
   "app:set-default-markdown-app": () => "failed",
   "app:dispatch": dispatch,
@@ -488,6 +489,7 @@ const desktop: DesktopApi = {
     },
     recentFiles: [],
     captionSide: undefined,
+    sidebarWidths: undefined,
     launchFile: isSettingsWindow ? undefined : ABOUT_PATH,
   },
   getPathForFile: (file) => {

@@ -1,4 +1,5 @@
 import { makeEventListener } from "@solid-primitives/event-listener";
+import { debounce } from "@solid-primitives/scheduled";
 import { cn } from "cn";
 import {
   createEffect,
@@ -45,6 +46,8 @@ import { settings, updateSettings } from "@/lib/settings";
 import type { TextStats } from "@/lib/text-stats";
 
 type FindMode = "closed" | "find" | "replace";
+// A drag reports the pointer for every pixel it moves; only the width it settles on is worth writing
+const SIDEBAR_WIDTH_SAVE_DELAY = 300;
 
 export const MainWindow: Component = () => {
   // A signal rather than a variable: a new document brings a new editor, and a match found in the
@@ -71,9 +74,18 @@ export const MainWindow: Component = () => {
   const immersive = () => settings().windowStyle === "immersive";
   // Split, the folder has its own sidebar at the start edge and the outline one at the end edge; combined, one sidebar shows either
   const split = () => settings().sidebarLayout === "split";
-  // Dragging a sidebar's edge sets its width for this window only
-  const [startWidth, setStartWidth] = createSignal(SIDEBAR_WIDTH.initial);
-  const [endWidth, setEndWidth] = createSignal(SIDEBAR_WIDTH.initial);
+  // A sidebar keeps the width the user dragged it to in an earlier run
+  const savedWidths = desktop.initialState.sidebarWidths;
+  const [startWidth, setStartWidth] = createSignal(savedWidths?.start ?? SIDEBAR_WIDTH.initial);
+  const [endWidth, setEndWidth] = createSignal(savedWidths?.end ?? SIDEBAR_WIDTH.initial);
+  const saveWidthsSoon = debounce(
+    (start: number, end: number) =>
+      void desktop.invoke("window:set-sidebar-widths", { start, end }),
+    SIDEBAR_WIDTH_SAVE_DELAY,
+  );
+  createEffect(
+    on([startWidth, endWidth], ([start, end]) => saveWidthsSoon(start, end), { defer: true }),
+  );
 
   // A folder the user opened shows at once, whatever document is open; opening a document from
   // outside it hands the sidebar back to the document's own folder

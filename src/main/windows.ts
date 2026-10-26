@@ -5,6 +5,7 @@ import {
   BrowserWindow,
   type BrowserWindowConstructorOptions,
   nativeTheme,
+  screen,
   shell,
   type WebContents,
 } from "electron";
@@ -16,6 +17,12 @@ import {
 } from "@shared/desktop-api";
 import { setupContextMenu } from "./context-menu";
 import { onSettingsChange } from "./settings-store";
+import {
+  flushWindowState,
+  readWindowState,
+  updateWindowState,
+  type WindowBounds,
+} from "./window-state";
 import { applyZoom, stepZoom } from "./zoom";
 
 /** The renderer picks the view to show from location.hash. */
@@ -25,6 +32,11 @@ let mainWindow: BrowserWindow | undefined;
 // Windows with unsaved changes; the renderer must ask about saving before they close
 const editedWindows = new WeakSet<BrowserWindow>();
 let settingsWindow: BrowserWindow | undefined;
+
+/** The size the main window opens at when nothing is remembered. */
+const MAIN_WINDOW_SIZE = { width: 1180, height: 780 };
+/** The smallest the main window may be made, which it has to fit on the display it opens on. */
+const MAIN_WINDOW_MIN_SIZE = { width: 720, height: 480 };
 
 // Before a window shows there is no page yet, so it uses the colors a theme reported earlier; the first launch uses the default theme's values
 const knownColors = {
@@ -141,15 +153,103 @@ function createWindow(view: View, options: BrowserWindowConstructorOptions): Bro
   return window;
 }
 
+/**
+ * The work area of the display the window was last on. A monitor that was unplugged or whose
+ * resolution changed leaves the saved bounds outside every display, where a window cannot be
+ * reached with the pointer, so those come back on the primary display.
+ */
+function workAreaFor({ x, y, width, height }: WindowBounds): WindowBounds {
+  const centerX = x + width / 2;
+  const centerY = y + height / 2;
+  const display = screen.getAllDisplays().find(({ workArea }) => {
+    const insideX = centerX >= workArea.x && centerX < workArea.x + workArea.width;
+    const insideY = centerY >= workArea.y && centerY < workArea.y + workArea.height;
+    return insideX && insideY;
+  });
+  return (display ?? screen.getPrimaryDisplay()).workArea;
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max);
+}
+
+/**
+ * Moves a window placed by saved bounds back inside the work area: the size a window reports once
+ * it exists is a few pixels larger than the one it was created with, which can leave an edge of it
+ * past the screen.
+ */
+function fitOnScreen(window: BrowserWindow): void {
+  const bounds = window.getBounds();
+  const area = workAreaFor(bounds);
+  const rightmost = Math.max(area.x, area.x + area.width - bounds.width);
+  const lowest = Math.max(area.y, area.y + area.height - bounds.height);
+  const x = clamp(bounds.x, area.x, rightmost);
+  const y = clamp(bounds.y, area.y, lowest);
+  if (x !== bounds.x || y !== bounds.y) window.setPosition(x, y);
+}
+
+/**
+ * Where the main window opens: the bounds it was last closed with, moved into a display that still
+ * exists and shrunk to fit it. Bounds too small for the window's smallest size there open at the
+ * default size, centered.
+ */
+function initialBounds(saved: WindowBounds | undefined): BrowserWindowConstructorOptions {
+  if (saved === undefined) return MAIN_WINDOW_SIZE;
+  const area = workAreaFor(saved);
+  const width = Math.min(saved.width, area.width);
+  const height = Math.min(saved.height, area.height);
+  if (width < MAIN_WINDOW_MIN_SIZE.width || height < MAIN_WINDOW_MIN_SIZE.height) {
+    const { width: openWidth, height: openHeight } = MAIN_WINDOW_SIZE;
+    return {
+      width: openWidth,
+      height: openHeight,
+      x: Math.round(area.x + (area.width - openWidth) / 2),
+      y: Math.round(area.y + (area.height - openHeight) / 2),
+    };
+  }
+  return {
+    width,
+    height,
+    x: clamp(saved.x, area.x, area.x + area.width - width),
+    y: clamp(saved.y, area.y, area.y + area.height - height),
+  };
+}
+
 export function createMainWindow(): BrowserWindow {
+  const saved = readWindowState();
   mainWindow = createWindow("main", {
-    width: 1180,
-    height: 780,
-    minWidth: 720,
-    minHeight: 480,
+    ...initialBounds(saved?.bounds),
+    minWidth: MAIN_WINDOW_MIN_SIZE.width,
+    minHeight: MAIN_WINDOW_MIN_SIZE.height,
     title: "Pupitre",
   });
   const window = mainWindow;
+  // Restoring these before the window is on screen does not stick on every platform, so the state
+  // it was closed in comes back once it shows
+  window.once("ready-to-show", () => {
+    fitOnScreen(window);
+    if (saved?.maximized === true) window.maximize();
+    if (saved?.fullscreen === true) window.setFullScreen(true);
+  });
+  // A maximized or full-screen window reports the whole work area, which must not replace the
+  // bounds it comes back to when it is restored
+  let normalBounds = window.getBounds();
+  const rememberState = () => {
+    const maximized = window.isMaximized();
+    const fullscreen = window.isFullScreen();
+    if (!maximized && !fullscreen) normalBounds = window.getBounds();
+    updateWindowState({ bounds: normalBounds, maximized, fullscreen });
+  };
+  window.on("move", rememberState);
+  window.on("resize", rememberState);
+  window.on("maximize", rememberState);
+  window.on("unmaximize", rememberState);
+  window.on("enter-full-screen", rememberState);
+  window.on("leave-full-screen", rememberState);
+  window.on("close", () => {
+    rememberState();
+    flushWindowState();
+  });
   window.on("close", (event) => {
     if (!editedWindows.has(window)) return;
     event.preventDefault();

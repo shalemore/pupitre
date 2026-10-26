@@ -187,6 +187,12 @@ export type DefaultAppResult = "done" | "opened-settings" | "manual" | "failed";
 /** Side of the window the page draws the caption buttons on (the main window on Windows and Linux); undefined when the system draws them. */
 export type CaptionSide = "left" | "right";
 
+/** How wide each sidebar of the main window is, at the start and at the end edge; the window remembers them between runs. */
+export interface SidebarWidths {
+  start: number;
+  end: number;
+}
+
 /** Document state the renderer reports to the main process: enables or disables menu items and decides whether closing the window must ask to save first. */
 export interface DocumentState {
   hasDocument: boolean;
@@ -284,6 +290,8 @@ export interface InvokeChannels {
   "workspace:use": (active: boolean) => void;
   "workspace:reveal": () => void;
   "window:set-colors": (colors: WindowColors) => void;
+  /** The width the user dragged each sidebar to; the window remembers it for the next run. */
+  "window:set-sidebar-widths": (widths: SidebarWidths) => void;
   "app:show-about": () => void;
   "app:set-default-markdown-app": () => DefaultAppResult;
   "app:dispatch": (command: AppCommand) => void;
@@ -348,6 +356,8 @@ export interface InitialState {
   capabilities: HostCapabilities;
   recentFiles: readonly string[];
   captionSide: CaptionSide | undefined;
+  /** The sidebar widths the main window was last closed with; only the main window uses them. */
+  sidebarWidths: SidebarWidths | undefined;
   /** A file the system asked to open when Pupitre started; only given to the main window. */
   launchFile: string | undefined;
 }

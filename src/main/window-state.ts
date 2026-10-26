@@ -1,0 +1,80 @@
+import { rmSync } from "node:fs";
+import { join } from "node:path";
+import { app } from "electron";
+import { z } from "zod";
+import { readJsonFile, writeJsonFile } from "./json-file";
+
+const WINDOW_STATE_FILE = "window-state.json";
+// Moving or resizing a window fires a dozen events a second; only where it settles is worth writing
+const WRITE_DELAY = 400;
+
+const boundsSchema = z.strictObject({
+  x: z.number(),
+  y: z.number(),
+  width: z.number(),
+  height: z.number(),
+});
+
+/**
+ * What the main window remembers between runs. A run can end before anything is known about it, so
+ * each part is optional; the state file never holds a part the app has not observed.
+ */
+const windowStateSchema = z.strictObject({
+  bounds: boundsSchema.optional(),
+  maximized: z.boolean().default(false),
+  fullscreen: z.boolean().default(false),
+  sidebar: z.strictObject({ start: z.number(), end: z.number() }).optional(),
+});
+
+export type WindowBounds = z.infer<typeof boundsSchema>;
+
+export type WindowState = z.infer<typeof windowStateSchema>;
+
+// What a window that has never been saved starts from: the schema's own defaults
+const FRESH_STATE: WindowState = windowStateSchema.parse({});
+
+let state: WindowState | undefined;
+let loaded = false;
+let dirty = false;
+let timer: NodeJS.Timeout | undefined;
+
+function statePath(): string {
+  return join(app.getPath("userData"), WINDOW_STATE_FILE);
+}
+
+function load(): WindowState | undefined {
+  const parsed = windowStateSchema.safeParse(readJsonFile(statePath()));
+  if (parsed.success) return parsed.data;
+  // Nothing the app wrote reads this way, so the file is left over from a write that was cut short
+  // or from another version; keeping it would only make it fail at every start
+  rmSync(statePath(), { force: true });
+  return undefined;
+}
+
+/** Where the window was last closed; undefined until a run has recorded anything about it. */
+export function readWindowState(): WindowState | undefined {
+  if (!loaded) {
+    loaded = true;
+    state = load();
+  }
+  return state;
+}
+
+/** Writes the window state still waiting for its delay: the window closed or the app is quitting before it ends. */
+export function flushWindowState(): void {
+  if (timer !== undefined) clearTimeout(timer);
+  timer = undefined;
+  if (!dirty || state === undefined) return;
+  writeJsonFile(statePath(), state);
+  dirty = false;
+}
+
+/** Remembers part of the window for the next run; the file follows once the window settles. */
+export function updateWindowState(patch: Partial<WindowState>): void {
+  state = { ...(readWindowState() ?? FRESH_STATE), ...patch };
+  dirty = true;
+  if (timer !== undefined) clearTimeout(timer);
+  timer = setTimeout(flushWindowState, WRITE_DELAY);
+  // A pending write must not be what keeps a quitting app alive, and will-quit flushes it
+  timer.unref();
+}
