@@ -94,6 +94,12 @@ export const ptPT = {
     sampleDocDesc:
       "Explore a demonstração das funcionalidades do Pupitre e o guia completo da sintaxe Markdown",
   },
+  commandPalette: {
+    title: "Paleta de comandos",
+    separator: " › ",
+    placeholder: "Pesquisar comando…",
+    noResults: "Nenhum comando correspondente",
+  },
   menu: {
     file: "Ficheiro",
     edit: "Editar",
@@ -134,6 +140,7 @@ export const ptPT = {
     paragraphMenu: "Parágrafo",
     focusMode: "Modo de concentração",
     typewriterMode: "Modo máquina de escrever",
+    commandPalette: "Paleta de comandos",
   },
   settings: {
     title: "Preferências",

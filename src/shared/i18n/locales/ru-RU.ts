@@ -100,6 +100,12 @@ export const ruRU = {
     sampleDocTitle: "Пример документа",
     sampleDocDesc: "Демонстрация возможностей Pupitre и синтаксиса Markdown",
   },
+  commandPalette: {
+    title: "Палитра команд",
+    separator: " › ",
+    placeholder: "Поиск команды…",
+    noResults: "Нет подходящих команд",
+  },
   menu: {
     file: "Файл",
     edit: "Правка",
@@ -141,6 +147,7 @@ export const ruRU = {
     paragraphMenu: "Абзац",
     focusMode: "Режим фокуса",
     typewriterMode: "Режим пишущей машинки",
+    commandPalette: "Палитра команд",
   },
   settings: {
     title: "Настройки",

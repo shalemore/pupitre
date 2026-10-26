@@ -97,6 +97,7 @@ export type AppCommand =
   | { id: "edit.find" }
   | { id: "edit.replace" }
   | { id: "view.toggle-sidebar" }
+  | { id: "view.command-palette" }
   | { id: "help.sample-document" }
   | { id: "format"; action: FormatAction }
   /** The document has unsaved changes before the window closes; the renderer should ask the user first. */

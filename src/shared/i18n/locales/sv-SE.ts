@@ -97,6 +97,12 @@ export const svSE = {
     sampleDocDesc:
       "Utforska Pupitres funktionsdemo och den fullständiga guiden till Markdown-syntax",
   },
+  commandPalette: {
+    title: "Kommandopalett",
+    separator: " › ",
+    placeholder: "Sök kommando…",
+    noResults: "Inga kommandon matchar",
+  },
   menu: {
     file: "Arkiv",
     edit: "Redigera",
@@ -138,6 +144,7 @@ export const svSE = {
     paragraphMenu: "Stycke",
     focusMode: "Fokusläge",
     typewriterMode: "Skrivmaskinsläge",
+    commandPalette: "Kommandopalett",
   },
   settings: {
     title: "Inställningar",

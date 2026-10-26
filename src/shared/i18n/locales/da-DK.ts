@@ -97,6 +97,12 @@ export const daDK = {
     sampleDocDesc:
       "Udforsk funktionsdemonstrationen i Pupitre og den fulde guide til Markdown-syntaks",
   },
+  commandPalette: {
+    title: "Kommandopalet",
+    separator: " › ",
+    placeholder: "Søg efter kommando…",
+    noResults: "Ingen kommandoer matcher",
+  },
   menu: {
     file: "Filer",
     edit: "Rediger",
@@ -138,6 +144,7 @@ export const daDK = {
     paragraphMenu: "Afsnit",
     focusMode: "Fokustilstand",
     typewriterMode: "Skrivemaskinetilstand",
+    commandPalette: "Kommandopalet",
   },
   settings: {
     title: "Indstillinger",

@@ -101,6 +101,12 @@ export const ukUA = {
     sampleDocDesc:
       "Ознайомтеся з демонстрацією функцій Pupitre та повним посібником із синтаксису Markdown",
   },
+  commandPalette: {
+    title: "Палітра команд",
+    separator: " › ",
+    placeholder: "Пошук команди…",
+    noResults: "Немає відповідних команд",
+  },
   menu: {
     file: "Файл",
     edit: "Редагувати",
@@ -142,6 +148,7 @@ export const ukUA = {
     paragraphMenu: "Абзац",
     focusMode: "Режим зосередження",
     typewriterMode: "Режим друкарської машинки",
+    commandPalette: "Палітра команд",
   },
   settings: {
     title: "Параметри",

@@ -98,6 +98,12 @@ export const trTR = {
     sampleDocTitle: "Örnek Belge",
     sampleDocDesc: "Pupitre özellik tanıtımını ve tüm Markdown sözdizimi kılavuzunu keşfedin",
   },
+  commandPalette: {
+    title: "Komut Paleti",
+    separator: " › ",
+    placeholder: "Komut ara…",
+    noResults: "Eşleşen komut yok",
+  },
   menu: {
     file: "Dosya",
     edit: "Düzen",
@@ -139,6 +145,7 @@ export const trTR = {
     paragraphMenu: "Paragraf",
     focusMode: "Odak Modu",
     typewriterMode: "Daktilo Modu",
+    commandPalette: "Komut Paleti",
   },
   settings: {
     title: "Tercihler",

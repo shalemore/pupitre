@@ -110,6 +110,12 @@ export const ar = {
     sampleDocTitle: "مستند نموذجي",
     sampleDocDesc: "استكشف ميزات Pupitre ودليل تنسيق Markdown الكامل",
   },
+  commandPalette: {
+    title: "لوحة الأوامر",
+    separator: " › ",
+    placeholder: "البحث عن أمر…",
+    noResults: "لا توجد أوامر مطابقة",
+  },
   menu: {
     file: "ملف",
     edit: "تحرير",
@@ -151,6 +157,7 @@ export const ar = {
     paragraphMenu: "فقرة",
     focusMode: "وضع التركيز",
     typewriterMode: "وضع الآلة الكاتبة",
+    commandPalette: "لوحة الأوامر",
   },
   settings: {
     title: "التفضيلات",

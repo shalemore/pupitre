@@ -98,6 +98,12 @@ export const isIS = {
     sampleDocDesc:
       "Skoðaðu kynningu á eiginleikum Pupitre og ítarlegar leiðbeiningar um Markdown-málfræði",
   },
+  commandPalette: {
+    title: "Skipanaspjald",
+    separator: " › ",
+    placeholder: "Leita að skipun…",
+    noResults: "Engar skipanir passa",
+  },
   menu: {
     file: "Skrá",
     edit: "Breyta",
@@ -139,6 +145,7 @@ export const isIS = {
     paragraphMenu: "Málsgrein",
     focusMode: "Einbeitingarhamur",
     typewriterMode: "Skrifvélarhamur",
+    commandPalette: "Skipanaspjald",
   },
   settings: {
     title: "Forstillingar",

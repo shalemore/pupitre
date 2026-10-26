@@ -97,6 +97,12 @@ export const thTH = {
     sampleDocTitle: "เอกสารตัวอย่าง",
     sampleDocDesc: "สำรวจคุณสมบัติของ Pupitre และคู่มือไวยากรณ์ Markdown ฉบับเต็ม",
   },
+  commandPalette: {
+    title: "พาเลตคำสั่ง",
+    separator: " › ",
+    placeholder: "ค้นหาคำสั่ง…",
+    noResults: "ไม่พบคำสั่งที่ตรงกัน",
+  },
   menu: {
     file: "ไฟล์",
     edit: "แก้ไข",
@@ -138,6 +144,7 @@ export const thTH = {
     paragraphMenu: "ย่อหน้า",
     focusMode: "โหมดโฟกัส",
     typewriterMode: "โหมดพิมพ์ดีด",
+    commandPalette: "พาเลตคำสั่ง",
   },
   settings: {
     title: "การตั้งค่า",

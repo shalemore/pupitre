@@ -102,6 +102,12 @@ export const plPL = {
     sampleDocTitle: "Dokument przykładowy",
     sampleDocDesc: "Poznaj funkcje Pupitre i pełny przewodnik po składni Markdown",
   },
+  commandPalette: {
+    title: "Paleta poleceń",
+    separator: " › ",
+    placeholder: "Szukaj polecenia…",
+    noResults: "Brak pasujących poleceń",
+  },
   menu: {
     file: "Plik",
     edit: "Edycja",
@@ -143,6 +149,7 @@ export const plPL = {
     paragraphMenu: "Akapit",
     focusMode: "Tryb skupienia",
     typewriterMode: "Tryb maszyny do pisania",
+    commandPalette: "Paleta poleceń",
   },
   settings: {
     title: "Ustawienia",

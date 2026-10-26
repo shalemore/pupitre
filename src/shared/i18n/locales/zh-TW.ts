@@ -91,6 +91,12 @@ export const zhTW = {
     sampleDocTitle: "範例文件",
     sampleDocDesc: "瀏覽 Pupitre 功能展示與完整 Markdown 語法範例",
   },
+  commandPalette: {
+    title: "命令面板",
+    separator: " › ",
+    placeholder: "搜尋命令…",
+    noResults: "沒有符合的命令",
+  },
   menu: {
     file: "檔案",
     edit: "編輯",
@@ -131,6 +137,7 @@ export const zhTW = {
     paragraphMenu: "段落",
     focusMode: "專注模式",
     typewriterMode: "打字機模式",
+    commandPalette: "命令面板",
   },
   settings: {
     title: "偏好設定",

@@ -95,6 +95,12 @@ export const viVN = {
     sampleDocTitle: "Tài liệu mẫu",
     sampleDocDesc: "Khám phá các tính năng của Pupitre và hướng dẫn cú pháp Markdown đầy đủ",
   },
+  commandPalette: {
+    title: "Bảng lệnh",
+    separator: " › ",
+    placeholder: "Tìm lệnh…",
+    noResults: "Không có lệnh phù hợp",
+  },
   menu: {
     file: "Tệp",
     edit: "Chỉnh sửa",
@@ -136,6 +142,7 @@ export const viVN = {
     paragraphMenu: "Đoạn văn",
     focusMode: "Chế độ tập trung",
     typewriterMode: "Chế độ máy đánh chữ",
+    commandPalette: "Bảng lệnh",
   },
   settings: {
     title: "Tùy chọn",

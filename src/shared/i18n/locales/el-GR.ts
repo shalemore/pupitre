@@ -97,6 +97,12 @@ export const elGR = {
     sampleDocDesc:
       "Εξερευνήστε την επίδειξη λειτουργιών του Pupitre και τον πλήρη οδηγό σύνταξης Markdown",
   },
+  commandPalette: {
+    title: "Παλέτα εντολών",
+    separator: " › ",
+    placeholder: "Αναζήτηση εντολής…",
+    noResults: "Δεν βρέθηκαν εντολές",
+  },
   menu: {
     file: "Αρχείο",
     edit: "Επεξεργασία",
@@ -138,6 +144,7 @@ export const elGR = {
     paragraphMenu: "Παράγραφος",
     focusMode: "Λειτουργία συγκέντρωσης",
     typewriterMode: "Λειτουργία γραφομηχανής",
+    commandPalette: "Παλέτα εντολών",
   },
   settings: {
     title: "Προτιμήσεις",

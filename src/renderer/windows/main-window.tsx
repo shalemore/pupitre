@@ -12,6 +12,7 @@ import {
 } from "solid-js";
 import { DOCUMENT_FILE, type AppCommand } from "@shared/desktop-api";
 import { TitleBar } from "@/components/title-bar";
+import { CommandPalette } from "@/features/command-palette/command-palette";
 import type { OutlineHeading } from "@/features/editor/document-structure";
 import { FindBar } from "@/features/editor/find-bar";
 import {
@@ -51,6 +52,7 @@ export const MainWindow: Component = () => {
   const [openedFolder, setOpenedFolder] = createSignal<string>();
   const [preferredMode, setPreferredMode] = createSignal<SidebarMode>("outline");
   const [findMode, setFindMode] = createSignal<FindMode>("closed");
+  const [paletteOpen, setPaletteOpen] = createSignal(false);
   const [initialSearch, setInitialSearch] = createSignal("");
   const [matchStats, setMatchStats] = createSignal<MatchStats>({ current: 0, total: 0 });
   const [menuOpen, setMenuOpen] = createSignal(false);
@@ -219,6 +221,8 @@ export const MainWindow: Component = () => {
         return openFind("replace");
       case "view.toggle-sidebar":
         return void updateSettings({ sidebarVisible: !settings().sidebarVisible });
+      case "view.command-palette":
+        return setPaletteOpen(true);
       case "help.sample-document":
         return void session.openSample();
       case "format":
@@ -443,6 +447,10 @@ export const MainWindow: Component = () => {
           </SidebarSlot>
         </Show>
       </div>
+
+      <Show when={paletteOpen()}>
+        <CommandPalette onClose={() => setPaletteOpen(false)} />
+      </Show>
     </div>
   );
 };

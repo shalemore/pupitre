@@ -94,6 +94,12 @@ export const esES = {
     sampleDocDesc:
       "Explora la demostración de funciones de Pupitre y la guía completa de sintaxis Markdown",
   },
+  commandPalette: {
+    title: "Paleta de comandos",
+    separator: " › ",
+    placeholder: "Buscar un comando…",
+    noResults: "No hay comandos coincidentes",
+  },
   menu: {
     file: "Archivo",
     edit: "Edición",
@@ -134,6 +140,7 @@ export const esES = {
     paragraphMenu: "Párrafo",
     focusMode: "Modo concentración",
     typewriterMode: "Modo máquina de escribir",
+    commandPalette: "Paleta de comandos",
   },
   settings: {
     title: "Preferencias",

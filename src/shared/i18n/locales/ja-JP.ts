@@ -95,6 +95,12 @@ export const jaJP = {
     sampleDocTitle: "サンプルドキュメント",
     sampleDocDesc: "Pupitre の機能デモと Markdown 記法ガイドを表示",
   },
+  commandPalette: {
+    title: "コマンドパレット",
+    separator: " › ",
+    placeholder: "コマンドを検索…",
+    noResults: "一致するコマンドがありません",
+  },
   menu: {
     file: "ファイル",
     edit: "編集",
@@ -135,6 +141,7 @@ export const jaJP = {
     paragraphMenu: "段落",
     focusMode: "フォーカスモード",
     typewriterMode: "タイプライターモード",
+    commandPalette: "コマンドパレット",
   },
   settings: {
     title: "環境設定",

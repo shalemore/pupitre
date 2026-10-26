@@ -97,6 +97,12 @@ export const faIR = {
     sampleDocTitle: "سند نمونه",
     sampleDocDesc: "امکانات Pupitre و راهنمای کامل نحو Markdown",
   },
+  commandPalette: {
+    title: "پالت فرمان‌ها",
+    separator: " › ",
+    placeholder: "جست‌وجوی فرمان…",
+    noResults: "فرمانی مطابقت ندارد",
+  },
   menu: {
     file: "پرونده",
     edit: "ویرایش",
@@ -138,6 +144,7 @@ export const faIR = {
     paragraphMenu: "پاراگراف",
     focusMode: "حالت تمرکز",
     typewriterMode: "حالت ماشین تحریر",
+    commandPalette: "پالت فرمان‌ها",
   },
   settings: {
     title: "تنظیمات",

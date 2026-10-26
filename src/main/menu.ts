@@ -168,6 +168,12 @@ function buildTemplate(): MenuItemConstructorOptions[] {
       label: labels.view,
       submenu: [
         {
+          label: labels.commandPalette,
+          accelerator: "CmdOrCtrl+Shift+P",
+          click: () => dispatchToMainWindow({ id: "view.command-palette" }),
+        },
+        separator,
+        {
           label: labels.toggleSidebar,
           accelerator: "CmdOrCtrl+Shift+L",
           click: () => dispatchToMainWindow({ id: "view.toggle-sidebar" }),

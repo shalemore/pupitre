@@ -98,6 +98,12 @@ export const huHU = {
     sampleDocDesc:
       "Ismerkedjen meg a Pupitre funkcióival és a teljes Markdown-szintaxis útmutatóval",
   },
+  commandPalette: {
+    title: "Parancspaletta",
+    separator: " › ",
+    placeholder: "Parancs keresése…",
+    noResults: "Nincs megfelelő parancs",
+  },
   menu: {
     file: "Fájl",
     edit: "Szerkesztés",
@@ -139,6 +145,7 @@ export const huHU = {
     paragraphMenu: "Bekezdés",
     focusMode: "Fókuszmód",
     typewriterMode: "Írógép mód",
+    commandPalette: "Parancspaletta",
   },
   settings: {
     title: "Beállítások",

@@ -95,6 +95,12 @@ export const frFR = {
     sampleDocTitle: "Document d'exemple",
     sampleDocDesc: "Découvrez la démo de Pupitre et la syntaxe Markdown complète",
   },
+  commandPalette: {
+    title: "Palette de commandes",
+    separator: " › ",
+    placeholder: "Rechercher une commande…",
+    noResults: "Aucune commande correspondante",
+  },
   menu: {
     file: "Fichier",
     edit: "Édition",
@@ -135,6 +141,7 @@ export const frFR = {
     paragraphMenu: "Paragraphe",
     focusMode: "Mode concentration",
     typewriterMode: "Mode machine à écrire",
+    commandPalette: "Palette de commandes",
   },
   settings: {
     title: "Préférences",

@@ -95,6 +95,12 @@ export const hiIN = {
     sampleDocTitle: "नमूना दस्तावेज़",
     sampleDocDesc: "Pupitre की सुविधाओं का प्रदर्शन और पूरी Markdown सिंटैक्स मार्गदर्शिका देखें",
   },
+  commandPalette: {
+    title: "कमांड पैलेट",
+    separator: " › ",
+    placeholder: "कमांड खोजें…",
+    noResults: "कोई मेल खाती कमांड नहीं",
+  },
   menu: {
     file: "फ़ाइल",
     edit: "संपादन",
@@ -136,6 +142,7 @@ export const hiIN = {
     paragraphMenu: "अनुच्छेद",
     focusMode: "एकाग्रता मोड",
     typewriterMode: "टाइपराइटर मोड",
+    commandPalette: "कमांड पैलेट",
   },
   settings: {
     title: "प्राथमिकताएँ",

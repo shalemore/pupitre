@@ -100,6 +100,12 @@ export const csCZ = {
     sampleDocTitle: "Vzorový dokument",
     sampleDocDesc: "Prozkoumejte ukázku funkcí Pupitre a kompletního průvodce syntaxí Markdown",
   },
+  commandPalette: {
+    title: "Paleta příkazů",
+    separator: " › ",
+    placeholder: "Hledat příkaz…",
+    noResults: "Žádné odpovídající příkazy",
+  },
   menu: {
     file: "Soubor",
     edit: "Úpravy",
@@ -141,6 +147,7 @@ export const csCZ = {
     paragraphMenu: "Odstavec",
     focusMode: "Režim soustředění",
     typewriterMode: "Režim psacího stroje",
+    commandPalette: "Paleta příkazů",
   },
   settings: {
     title: "Předvolby",

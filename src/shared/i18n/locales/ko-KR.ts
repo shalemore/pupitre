@@ -95,6 +95,12 @@ export const koKR = {
     sampleDocTitle: "예제 문서",
     sampleDocDesc: "Pupitre 기능 데모 및 전체 Markdown 구문 가이드 탐색",
   },
+  commandPalette: {
+    title: "명령 팔레트",
+    separator: " › ",
+    placeholder: "명령 검색…",
+    noResults: "일치하는 명령이 없습니다",
+  },
   menu: {
     file: "파일",
     edit: "편집",
@@ -135,6 +141,7 @@ export const koKR = {
     paragraphMenu: "단락",
     focusMode: "집중 모드",
     typewriterMode: "타자기 모드",
+    commandPalette: "명령 팔레트",
   },
   settings: {
     title: "환경설정",

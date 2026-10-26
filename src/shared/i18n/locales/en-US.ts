@@ -94,6 +94,13 @@ export const enUS = {
     sampleDocTitle: "Example Document",
     sampleDocDesc: "Explore the Pupitre feature demo and the full Markdown syntax guide",
   },
+  commandPalette: {
+    title: "Command Palette",
+    /** Between the names of the menus an entry lives under, as in "File › Export as PDF…". */
+    separator: " › ",
+    placeholder: "Type a command…",
+    noResults: "No matching commands",
+  },
   menu: {
     file: "File",
     edit: "Edit",
@@ -134,6 +141,7 @@ export const enUS = {
     paragraphMenu: "Paragraph",
     focusMode: "Focus Mode",
     typewriterMode: "Typewriter Mode",
+    commandPalette: "Command Palette",
   },
   settings: {
     title: "Preferences",

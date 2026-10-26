@@ -97,6 +97,12 @@ export const fiFI = {
     sampleDocTitle: "Esimerkkitiedosto",
     sampleDocDesc: "Tutustu Pupitren toimintoesittelyyn ja täydelliseen Markdown-syntaksioppaaseen",
   },
+  commandPalette: {
+    title: "Komentopaletti",
+    separator: " › ",
+    placeholder: "Hae komentoa…",
+    noResults: "Ei vastaavia komentoja",
+  },
   menu: {
     file: "Tiedosto",
     edit: "Muokkaa",
@@ -138,6 +144,7 @@ export const fiFI = {
     paragraphMenu: "Kappale",
     focusMode: "Keskittymistila",
     typewriterMode: "Kirjoituskonetila",
+    commandPalette: "Komentopaletti",
   },
   settings: {
     title: "Asetukset",

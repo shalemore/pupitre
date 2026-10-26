@@ -96,6 +96,12 @@ export const idID = {
     sampleDocTitle: "Dokumen contoh",
     sampleDocDesc: "Jelajahi fitur-fitur Pupitre dan panduan sintaksis Markdown lengkap",
   },
+  commandPalette: {
+    title: "Palet Perintah",
+    separator: " › ",
+    placeholder: "Cari perintah…",
+    noResults: "Tidak ada perintah yang cocok",
+  },
   menu: {
     file: "Berkas",
     edit: "Sunting",
@@ -137,6 +143,7 @@ export const idID = {
     paragraphMenu: "Paragraf",
     focusMode: "Mode fokus",
     typewriterMode: "Mode mesin tik",
+    commandPalette: "Palet Perintah",
   },
   settings: {
     title: "Preferensi",

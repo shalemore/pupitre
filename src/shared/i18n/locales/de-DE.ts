@@ -95,6 +95,12 @@ export const deDE = {
     sampleDocTitle: "Beispieldokument",
     sampleDocDesc: "Pupitre-Funktionsdemo und Markdown-Syntax erkunden",
   },
+  commandPalette: {
+    title: "Befehlspalette",
+    separator: " › ",
+    placeholder: "Befehl suchen…",
+    noResults: "Keine passenden Befehle",
+  },
   menu: {
     file: "Datei",
     edit: "Bearbeiten",
@@ -135,6 +141,7 @@ export const deDE = {
     paragraphMenu: "Absatz",
     focusMode: "Fokusmodus",
     typewriterMode: "Schreibmaschinenmodus",
+    commandPalette: "Befehlspalette",
   },
   settings: {
     title: "Einstellungen",

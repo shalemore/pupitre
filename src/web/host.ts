@@ -251,6 +251,12 @@ function menuItems(menu: TopMenu): DemoMenuEntry[] {
       return formatItems(INLINE_FORMAT_ACTIONS);
     case "view":
       return [
+        {
+          label: m.commandPalette,
+          shortcut: "CmdOrCtrl+Shift+P",
+          run: send({ id: "view.command-palette" }),
+        },
+        divider,
         { label: m.toggleSidebar, run: send({ id: "view.toggle-sidebar" }) },
         {
           label: m.focusMode,

@@ -97,6 +97,12 @@ export const nbNO = {
     sampleDocDesc:
       "Utforsk funksjonsdemonstrasjonen i Pupitre og den fullstendige veiledningen i Markdown-syntaks",
   },
+  commandPalette: {
+    title: "Kommandopalett",
+    separator: " › ",
+    placeholder: "Søk etter kommando…",
+    noResults: "Ingen kommandoer samsvarer",
+  },
   menu: {
     file: "Fil",
     edit: "Rediger",
@@ -138,6 +144,7 @@ export const nbNO = {
     paragraphMenu: "Avsnitt",
     focusMode: "Fokusmodus",
     typewriterMode: "Skrivemaskinmodus",
+    commandPalette: "Kommandopalett",
   },
   settings: {
     title: "Innstillinger",

@@ -98,6 +98,12 @@ export const nlNL = {
     sampleDocDesc:
       "Ontdek de functiedemo van Pupitre en de volledige handleiding voor Markdown-syntaxis",
   },
+  commandPalette: {
+    title: "Opdrachtenpalet",
+    separator: " › ",
+    placeholder: "Opdracht zoeken…",
+    noResults: "Geen overeenkomende opdrachten",
+  },
   menu: {
     file: "Bestand",
     edit: "Bewerken",
@@ -139,6 +145,7 @@ export const nlNL = {
     paragraphMenu: "Alinea",
     focusMode: "Focusmodus",
     typewriterMode: "Typemachinemodus",
+    commandPalette: "Opdrachtenpalet",
   },
   settings: {
     title: "Voorkeuren",
