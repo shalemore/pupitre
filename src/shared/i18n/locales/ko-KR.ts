@@ -113,6 +113,7 @@ export const koKR = {
     noRecentFiles: "최근 파일 없음",
     save: "저장",
     saveAs: "다른 이름으로 저장...",
+    print: "인쇄...",
     exportPdf: "PDF로 내보내기...",
     exportHtml: "HTML로 내보내기...",
     exportImage: "PNG로 내보내기...",

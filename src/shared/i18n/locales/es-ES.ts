@@ -112,6 +112,7 @@ export const esES = {
     noRecentFiles: "No hay archivos recientes",
     save: "Guardar",
     saveAs: "Guardar como...",
+    print: "Imprimir...",
     exportPdf: "Exportar como PDF...",
     exportHtml: "Exportar como HTML...",
     exportImage: "Exportar como PNG...",

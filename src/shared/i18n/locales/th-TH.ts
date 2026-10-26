@@ -116,6 +116,7 @@ export const thTH = {
     noRecentFiles: "ไม่มีไฟล์ล่าสุด",
     save: "บันทึก",
     saveAs: "บันทึกเป็น...",
+    print: "พิมพ์...",
     exportPdf: "ส่งออกเป็น PDF...",
     exportHtml: "ส่งออกเป็น HTML...",
     exportImage: "ส่งออกเป็น PNG...",

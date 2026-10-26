@@ -116,6 +116,7 @@ export const nbNO = {
     noRecentFiles: "Ingen nylige filer",
     save: "Lagre",
     saveAs: "Lagre som…",
+    print: "Skriv ut…",
     exportPdf: "Eksporter som PDF…",
     exportHtml: "Eksporter som HTML…",
     exportImage: "Eksporter som PNG…",

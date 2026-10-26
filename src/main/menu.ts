@@ -115,6 +115,12 @@ function buildTemplate(): MenuItemConstructorOptions[] {
           enabled: hasDocument,
           click: () => dispatchToMainWindow({ id: "file.save-as" }),
         },
+        // No accelerator: CmdOrCtrl+P is Quick Open, as it is in Typora
+        {
+          label: labels.print,
+          enabled: hasDocument,
+          click: () => dispatchToMainWindow({ id: "file.print" }),
+        },
         {
           label: labels.exportPdf,
           enabled: hasDocument,

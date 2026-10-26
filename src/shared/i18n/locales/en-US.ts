@@ -113,6 +113,7 @@ export const enUS = {
     noRecentFiles: "No Recent Files",
     save: "Save",
     saveAs: "Save As...",
+    print: "Print...",
     exportPdf: "Export as PDF...",
     exportHtml: "Export as HTML...",
     exportImage: "Export as PNG...",

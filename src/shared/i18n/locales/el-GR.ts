@@ -116,6 +116,7 @@ export const elGR = {
     noRecentFiles: "Κανένα πρόσφατο αρχείο",
     save: "Αποθήκευση",
     saveAs: "Αποθήκευση ως…",
+    print: "Εκτύπωση…",
     exportPdf: "Εξαγωγή ως PDF…",
     exportHtml: "Εξαγωγή ως HTML…",
     exportImage: "Εξαγωγή ως PNG…",

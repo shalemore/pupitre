@@ -113,6 +113,7 @@ export const jaJP = {
     noRecentFiles: "最近使った項目はありません",
     save: "保存",
     saveAs: "名前を付けて保存...",
+    print: "印刷...",
     exportPdf: "PDF としてエクスポート...",
     exportHtml: "HTML としてエクスポート...",
     exportImage: "PNG としてエクスポート...",

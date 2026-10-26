@@ -115,6 +115,7 @@ export const idID = {
     noRecentFiles: "Tidak ada berkas terbaru",
     save: "Simpan",
     saveAs: "Simpan sebagai...",
+    print: "Cetak...",
     exportPdf: "Ekspor sebagai PDF...",
     exportHtml: "Ekspor sebagai HTML...",
     exportImage: "Ekspor sebagai PNG...",

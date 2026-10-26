@@ -122,6 +122,7 @@ export const ukUA = {
     noRecentFiles: "Немає останніх файлів",
     save: "Зберегти",
     saveAs: "Зберегти як…",
+    print: "Друкувати…",
     exportPdf: "Експортувати як PDF…",
     exportHtml: "Експортувати як HTML…",
     exportImage: "Експортувати як PNG…",

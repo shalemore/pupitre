@@ -116,6 +116,7 @@ export const daDK = {
     noRecentFiles: "Ingen seneste filer",
     save: "Gem",
     saveAs: "Gem som…",
+    print: "Udskriv…",
     exportPdf: "Eksportér som PDF…",
     exportHtml: "Eksportér som HTML…",
     exportImage: "Eksportér som PNG…",

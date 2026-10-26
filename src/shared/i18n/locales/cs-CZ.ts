@@ -121,6 +121,7 @@ export const csCZ = {
     noRecentFiles: "Žádné nedávné soubory",
     save: "Uložit",
     saveAs: "Uložit jako…",
+    print: "Tisknout…",
     exportPdf: "Exportovat jako PDF…",
     exportHtml: "Exportovat jako HTML…",
     exportImage: "Exportovat jako PNG…",

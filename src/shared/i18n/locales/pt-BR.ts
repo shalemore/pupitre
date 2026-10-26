@@ -113,6 +113,7 @@ export const ptBR = {
     noRecentFiles: "Nenhum arquivo recente",
     save: "Salvar",
     saveAs: "Salvar Como...",
+    print: "Imprimir...",
     exportPdf: "Exportar como PDF...",
     exportHtml: "Exportar como HTML...",
     exportImage: "Exportar como PNG...",

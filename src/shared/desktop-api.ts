@@ -157,6 +157,7 @@ export type AppCommand =
   | { id: "file.quick-open" }
   | { id: "file.save" }
   | { id: "file.save-as" }
+  | { id: "file.print" }
   | { id: "file.export-pdf" }
   | { id: "file.export-html" }
   | { id: "file.export-image" }
@@ -254,6 +255,8 @@ export interface InvokeChannels {
   "dialog:choose-save-path": (suggestedName: string) => DocumentLocation | null;
   /** Saves an image into the assets folder next to the document and returns a relative path ready for Markdown. */
   "document:save-image": (documentPath: string, fileName: string, data: Uint8Array) => string;
+  /** Opens the system print dialog for the window; resolves once the dialog closed, whether a page was printed or not. */
+  "document:print": () => void;
   "document:export-pdf": (suggestedName: string) => string | null;
   /** Writes a page the renderer built into the file the user chose, and returns its path. */
   "document:export-html": (suggestedName: string, html: string) => string | null;

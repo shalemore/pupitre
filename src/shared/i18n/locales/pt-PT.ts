@@ -112,6 +112,7 @@ export const ptPT = {
     noRecentFiles: "Nenhum ficheiro recente",
     save: "Guardar",
     saveAs: "Guardar como…",
+    print: "Imprimir…",
     exportPdf: "Exportar como PDF…",
     exportHtml: "Exportar como HTML…",
     exportImage: "Exportar como PNG…",

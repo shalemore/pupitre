@@ -239,6 +239,15 @@ export const MainWindow: Component = () => {
     }
   };
 
+  const printDocument = async () => {
+    const resume = await editor()?.prepareForPrint();
+    try {
+      await desktop.invoke("document:print");
+    } finally {
+      resume?.();
+    }
+  };
+
   /** Writes the document as the page the editor would show, as a web page or as one tall image. */
   const exportDocument = async (format: "html" | "image") => {
     const doc = session.activeDocument();
@@ -272,6 +281,8 @@ export const MainWindow: Component = () => {
         return void session.save();
       case "file.save-as":
         return void session.saveAs();
+      case "file.print":
+        return void printDocument();
       case "file.export-pdf":
         return void exportPdf();
       case "file.export-html":

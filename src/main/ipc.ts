@@ -305,6 +305,12 @@ export function registerIpcHandlers(): void {
   handle("document:save-image", (_event, documentPath, fileName, data) =>
     saveImage(documentPath, fileName, data),
   );
+  // Printing goes through the system dialog, which also lets the user cancel; the callback reports
+  // that cancel as a failure beside real failures, so its result is not worth handing to the window
+  handle("document:print", async (event) => {
+    await new Promise<void>((done) => event.sender.print({ printBackground: true }, () => done()));
+  });
+
   handle("document:export-pdf", async (event, suggestedName) => {
     const filePath = await savePath(senderWindow(event), {
       defaultPath: suggestedName,

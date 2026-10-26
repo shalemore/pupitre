@@ -117,6 +117,7 @@ export const trTR = {
     noRecentFiles: "Son Kullanılan Dosya Yok",
     save: "Kaydet",
     saveAs: "Farklı Kaydet…",
+    print: "Yazdır…",
     exportPdf: "PDF Olarak Dışa Aktar…",
     exportHtml: "HTML Olarak Dışa Aktar…",
     exportImage: "PNG Olarak Dışa Aktar…",

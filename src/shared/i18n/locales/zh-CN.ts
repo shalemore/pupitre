@@ -109,6 +109,7 @@ export const zhCN = {
     noRecentFiles: "无最近文件",
     save: "保存",
     saveAs: "另存为...",
+    print: "打印...",
     exportPdf: "导出为 PDF...",
     exportHtml: "导出为 HTML...",
     exportImage: "导出为 PNG...",

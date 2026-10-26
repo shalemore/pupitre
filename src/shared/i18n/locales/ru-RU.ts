@@ -121,6 +121,7 @@ export const ruRU = {
     noRecentFiles: "Нет недавних файлов",
     save: "Сохранить",
     saveAs: "Сохранить как...",
+    print: "Печать...",
     exportPdf: "Экспорт в PDF...",
     exportHtml: "Экспорт в HTML...",
     exportImage: "Экспорт в PNG...",

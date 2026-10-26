@@ -114,6 +114,7 @@ export const hiIN = {
     noRecentFiles: "हाल ही में खोली गई कोई फ़ाइल नहीं",
     save: "सहेजें",
     saveAs: "इस नाम से सहेजें...",
+    print: "प्रिंट करें...",
     exportPdf: "PDF के रूप में निर्यात करें...",
     exportHtml: "HTML के रूप में निर्यात करें...",
     exportImage: "PNG के रूप में निर्यात करें...",

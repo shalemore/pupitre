@@ -263,6 +263,7 @@ function menuItems(menu: TopMenu): DemoMenuEntry[] {
         divider,
         { label: m.save, run: send({ id: "file.save" }) },
         { label: m.saveAs, run: send({ id: "file.save-as" }) },
+        { label: m.print, run: send({ id: "file.print" }) },
         { label: m.exportPdf, run: send({ id: "file.export-pdf" }) },
         { label: m.exportHtml, run: send({ id: "file.export-html" }) },
         { label: m.exportImage, run: send({ id: "file.export-image" }) },
@@ -406,6 +407,9 @@ const handlers: Handlers = {
     return opened(`${DEMO_FOLDER}/${DOCUMENT_FILE.test(name) ? name : `${name}.md`}`);
   },
   "document:save-image": (_path, _name, data) => URL.createObjectURL(new Blob([data.slice()])),
+  "document:print": () => {
+    window.print();
+  },
   "document:export-pdf": () => {
     window.print();
     return null;

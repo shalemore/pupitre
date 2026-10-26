@@ -114,6 +114,7 @@ export const viVN = {
     noRecentFiles: "Không có tệp gần đây",
     save: "Lưu",
     saveAs: "Lưu thành...",
+    print: "In...",
     exportPdf: "Xuất thành PDF...",
     exportHtml: "Xuất thành HTML...",
     exportImage: "Xuất thành PNG...",

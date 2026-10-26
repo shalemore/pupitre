@@ -123,6 +123,7 @@ export const plPL = {
     noRecentFiles: "Brak ostatnich plików",
     save: "Zapisz",
     saveAs: "Zapisz jako…",
+    print: "Drukuj…",
     exportPdf: "Eksportuj jako PDF…",
     exportHtml: "Eksportuj jako HTML…",
     exportImage: "Eksportuj jako PNG…",

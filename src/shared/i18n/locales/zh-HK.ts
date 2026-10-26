@@ -109,6 +109,7 @@ export const zhHK = {
     noRecentFiles: "沒有最近檔案",
     save: "儲存",
     saveAs: "另存新檔...",
+    print: "列印...",
     exportPdf: "匯出為 PDF...",
     exportHtml: "匯出為 HTML...",
     exportImage: "匯出為 PNG...",

@@ -116,6 +116,7 @@ export const fiFI = {
     noRecentFiles: "Ei viimeisimpiä tiedostoja",
     save: "Tallenna",
     saveAs: "Tallenna nimellä…",
+    print: "Tulosta…",
     exportPdf: "Vie PDF-muodossa…",
     exportHtml: "Vie HTML-muodossa…",
     exportImage: "Vie PNG-muodossa…",

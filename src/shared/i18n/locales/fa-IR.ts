@@ -116,6 +116,7 @@ export const faIR = {
     noRecentFiles: "پرونده اخیری نیست",
     save: "ذخیره",
     saveAs: "ذخیره به‌عنوان...",
+    print: "چاپ...",
     exportPdf: "خروجی PDF...",
     exportHtml: "خروجی HTML...",
     exportImage: "خروجی PNG...",

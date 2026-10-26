@@ -117,6 +117,7 @@ export const isIS = {
     noRecentFiles: "Engar nýlegar skrár",
     save: "Vista",
     saveAs: "Vista sem…",
+    print: "Prenta…",
     exportPdf: "Flytja út sem PDF…",
     exportHtml: "Flytja út sem HTML…",
     exportImage: "Flytja út sem PNG…",

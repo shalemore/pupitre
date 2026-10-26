@@ -117,6 +117,7 @@ export const nlNL = {
     noRecentFiles: "Geen recente bestanden",
     save: "Opslaan",
     saveAs: "Opslaan als…",
+    print: "Afdrukken…",
     exportPdf: "Exporteren als PDF…",
     exportHtml: "Exporteren als HTML…",
     exportImage: "Exporteren als PNG…",

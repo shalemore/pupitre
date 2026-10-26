@@ -117,6 +117,7 @@ export const huHU = {
     noRecentFiles: "Nincsenek legutóbbi fájlok",
     save: "Mentés",
     saveAs: "Mentés másként…",
+    print: "Nyomtatás…",
     exportPdf: "Exportálás PDF-ként…",
     exportHtml: "Exportálás HTML-ként…",
     exportImage: "Exportálás PNG-ként…",

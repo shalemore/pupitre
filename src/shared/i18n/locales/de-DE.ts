@@ -113,6 +113,7 @@ export const deDE = {
     noRecentFiles: "Keine zuletzt geöffneten Dateien",
     save: "Speichern",
     saveAs: "Speichern unter...",
+    print: "Drucken...",
     exportPdf: "Als PDF exportieren...",
     exportHtml: "Als HTML exportieren...",
     exportImage: "Als PNG exportieren...",

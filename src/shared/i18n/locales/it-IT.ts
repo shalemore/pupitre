@@ -113,6 +113,7 @@ export const itIT = {
     noRecentFiles: "Nessun file recente",
     save: "Salva",
     saveAs: "Salva con nome...",
+    print: "Stampa...",
     exportPdf: "Esporta come PDF...",
     exportHtml: "Esporta come HTML...",
     exportImage: "Esporta come PNG...",

@@ -116,6 +116,7 @@ export const svSE = {
     noRecentFiles: "Inga senaste filer",
     save: "Spara",
     saveAs: "Spara som…",
+    print: "Skriv ut…",
     exportPdf: "Exportera som PDF…",
     exportHtml: "Exportera som HTML…",
     exportImage: "Exportera som PNG…",

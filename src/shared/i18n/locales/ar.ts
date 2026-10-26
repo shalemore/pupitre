@@ -129,6 +129,7 @@ export const ar = {
     noRecentFiles: "لا توجد ملفات أخيرة",
     save: "حفظ",
     saveAs: "حفظ باسم...",
+    print: "طباعة...",
     exportPdf: "تصدير كـ PDF...",
     exportHtml: "تصدير كـ HTML...",
     exportImage: "تصدير كـ PNG...",
