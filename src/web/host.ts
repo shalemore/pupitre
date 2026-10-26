@@ -5,11 +5,13 @@ import {
   type AppCommand,
   type DesktopApi,
   type DesktopPlatform,
+  type Draft,
   type FolderEntry,
   type InvokeChannels,
   type OpenedDocument,
   type RendererEvents,
 } from "@shared/desktop-api";
+import { draftSchema } from "@shared/draft";
 import {
   FORMAT_ACTIONS,
   INLINE_FORMAT_ACTIONS,
@@ -37,6 +39,7 @@ import about from "./demo/about.md?raw";
  */
 
 const SETTINGS_KEY = "pupitre:settings";
+const DRAFT_KEY = "pupitre:draft";
 /** A browser is closest to Linux: shortcuts are written with Ctrl and windows have no system menu bar. */
 const platform: DesktopPlatform = "linux";
 const DEMO_FOLDER = "/demo";
@@ -123,6 +126,28 @@ window.addEventListener("storage", (event) => {
 // The preferences window has nothing to ask of the page it was opened from
 function dispatch(command: AppCommand): void {
   if (!isSettingsWindow) emit("app:command", command);
+}
+
+// The unsaved document, kept where the desktop app keeps it in userData; a page that reloads or
+// closes by accident finds it the same way
+function readDraft(): Draft | null {
+  try {
+    const stored: unknown = JSON.parse(localStorage.getItem(DRAFT_KEY) ?? "null");
+    const parsed = draftSchema.safeParse(stored);
+    if (parsed.success) return parsed.data;
+  } catch {
+    // A draft that is not JSON at all falls through to the same answer
+  }
+  localStorage.removeItem(DRAFT_KEY);
+  return null;
+}
+
+function writeDraft(draft: Draft): void {
+  try {
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+  } catch {
+    // Full or unavailable storage only costs the draft; the document itself is in the page
+  }
 }
 
 // Files: a small folder in memory
@@ -344,6 +369,9 @@ const handlers: Handlers = {
     dropped.delete(path);
     return opened(path);
   },
+  "draft:read": readDraft,
+  "draft:write": writeDraft,
+  "draft:clear": () => void localStorage.removeItem(DRAFT_KEY),
   "folder:list": listFolder,
   // A browser has no folder to walk, so Quick Open has nothing to search in the demo
   "folder:files": () => [],

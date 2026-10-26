@@ -1,5 +1,6 @@
 import { join } from "node:path";
 import { app, BrowserWindow, nativeTheme, session } from "electron";
+import { flushDraft } from "./drafts";
 import { registerIpcHandlers } from "./ipc";
 import { allowMacTypeInjection } from "./mactype";
 import { rebuildApplicationMenu } from "./menu";
@@ -45,4 +46,6 @@ if (!app.requestSingleInstanceLock()) {
   });
 
   app.on("window-all-closed", () => app.quit());
+  // A draft written as the window closed may still be waiting to reach the disk
+  app.on("will-quit", flushDraft);
 }

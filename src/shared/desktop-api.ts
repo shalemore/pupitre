@@ -13,21 +13,43 @@ export interface DocumentLocation {
   baseUrl: string;
 }
 
-export type LineEnding = "lf" | "crlf";
+export const LINE_ENDINGS = ["lf", "crlf"] as const;
+
+export type LineEnding = (typeof LINE_ENDINGS)[number];
 
 /**
  * How a document is encoded on disk. Anything but UTF-8 comes back the same way it was read, so a
  * file written by another editor is not converted behind the user's back.
  */
-export type TextEncoding =
-  | "utf-8"
-  | "utf-8-bom"
-  | "utf-16le"
-  | "utf-16be"
-  | "gb18030"
-  | "big5"
-  | "shift_jis"
-  | "windows-1252";
+export const TEXT_ENCODINGS = [
+  "utf-8",
+  "utf-8-bom",
+  "utf-16le",
+  "utf-16be",
+  "gb18030",
+  "big5",
+  "shift_jis",
+  "windows-1252",
+] as const;
+
+export type TextEncoding = (typeof TEXT_ENCODINGS)[number];
+
+/**
+ * The unsaved content of the current document, kept outside the editor so that a crash cannot take
+ * it: the whole text, plus the version it was last read or saved as, so a restore can show what is
+ * still unsaved. Only one document is edited at a time, so a host holds at most one draft.
+ */
+export interface Draft {
+  path?: string | undefined;
+  folder?: string | undefined;
+  baseUrl?: string | undefined;
+  markdown: string;
+  /** What the file held when the document was opened or saved; a restore compares the two. */
+  savedMarkdown: string;
+  lineEnding: LineEnding;
+  encoding: TextEncoding;
+  isSample: boolean;
+}
 
 export interface OpenedDocument extends DocumentLocation {
   /** Content with every line ending normalized to
@@ -176,6 +198,12 @@ export interface InvokeChannels {
   "settings:reset": (key: SettingKey) => void;
   "settings:reveal": () => void;
   "document:open": () => OpenedDocument | null;
+  /** The unsaved content left behind by a session that did not end cleanly, or null when there is none. */
+  "draft:read": () => Draft | null;
+  /** Keeps the unsaved content of the current document; the host writes it out shortly after. */
+  "draft:write": (draft: Draft) => void;
+  /** Forgets the draft, because there is nothing unsaved left to come back to. */
+  "draft:clear": () => void;
   /** Asks for a folder to show in the sidebar. */
   "folder:choose": () => string | null;
   /** Null when the user gave up on choosing the encoding of a file that is not UTF-8. */

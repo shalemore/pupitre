@@ -288,7 +288,7 @@ export const MainWindow: Component = () => {
   };
 
   onMount(() => {
-    session.restoreOnStartup();
+    void session.restoreOnStartup();
     // dragover's default behavior must be prevented, otherwise drop never fires
     makeEventListener(window, "dragover", (e) => e.preventDefault());
     makeEventListener(window, "drop", (e) => {
@@ -469,7 +469,7 @@ export const MainWindow: Component = () => {
                     initialPosition={documentPosition(doc().path)}
                     baseUrl={doc().baseUrl}
                     documentPath={doc().path}
-                    onReady={session.markSaved}
+                    onReady={session.handleEditorReady}
                     onMarkdownChange={session.handleMarkdownChange}
                     onOutlineChange={setOutline}
                     onActiveHeadingChange={setActiveHeading}

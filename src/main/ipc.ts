@@ -27,6 +27,7 @@ import {
 } from "@shared/desktop-api";
 import { showAboutDialog } from "./about";
 import { setAsDefaultMarkdownApp } from "./default-app";
+import { clearDraft, readDraft, writeDraft } from "./drafts";
 import {
   decodeDocument,
   decodeWith,
@@ -261,6 +262,9 @@ export function registerIpcHandlers(): void {
     return path === null ? null : readDocument(path, senderWindow(event));
   });
   handle("document:read", (event, path) => readDocument(path, senderWindow(event)));
+  handle("draft:read", () => readDraft());
+  handle("draft:write", (_event, draft) => writeDraft(draft));
+  handle("draft:clear", () => clearDraft());
   handle("folder:choose", (event) =>
     openPath(senderWindow(event), { properties: ["openDirectory"] }),
   );

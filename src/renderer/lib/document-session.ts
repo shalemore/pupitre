@@ -1,6 +1,6 @@
 import { debounce } from "@solid-primitives/scheduled";
 import { createEffect, createMemo, createSignal, on, onCleanup } from "solid-js";
-import type { LineEnding, OpenedDocument, TextEncoding } from "@shared/desktop-api";
+import type { Draft, LineEnding, OpenedDocument, TextEncoding } from "@shared/desktop-api";
 import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
 import { getSampleDocument } from "@/features/samples/sample-document";
 import { currentLocale, t } from "@/i18n";
@@ -26,6 +26,8 @@ export interface OpenDocument {
 
 const SAMPLE_FILE_NAME = "Pupitre-Guide.md";
 const AUTO_SAVE_DELAY = 1500;
+// A draft follows the pause after typing, not the keystrokes themselves; the main process writes it out a moment later
+const DRAFT_WRITE_DELAY = 1000;
 // Saving compares the file on disk with what was last read or written; bigger files skip the comparison to keep saving fast
 const MAX_CONFLICT_CHECK_BYTES = 512 * 1024;
 let nextDocumentId = 1;
@@ -49,6 +51,10 @@ export function createDocumentSession(
 
   const isDirty = () => currentMarkdown() !== savedMarkdown() || missingOnDisk();
 
+  // Set when the user let the unsaved changes go; until the document is replaced or typed into
+  // again, no draft of it may be kept, or the next start would bring back what was discarded
+  let discarded = false;
+
   // "Keep as is" keeps the file's own line endings; otherwise the setting decides
   const lineEndingFor = (doc: OpenDocument): LineEnding => {
     const preference = settings().lineEnding;
@@ -62,10 +68,12 @@ export function createDocumentSession(
     return doc.path ? fileNameOf(doc.path) : t().common.untitledFileName;
   };
 
-  const load = (doc: Omit<OpenDocument, "id">) => {
+  const load = (doc: Omit<OpenDocument, "id">, savedMarkdownOfDoc = doc.markdown) => {
     scheduleSave.clear();
+    scheduleDraft.clear();
+    discarded = false;
     setMissingOnDisk(false);
-    setSavedMarkdown(doc.markdown);
+    setSavedMarkdown(savedMarkdownOfDoc);
     setCurrentMarkdown(doc.markdown);
     setActiveDocument({ ...doc, id: nextDocumentId++ });
   };
@@ -147,12 +155,45 @@ export function createDocumentSession(
 
   const scheduleSave = debounce(() => void save(), AUTO_SAVE_DELAY);
 
+  /** The document as a crash would have left it: the text being edited, and the version it is compared to. */
+  const draftOf = (doc: OpenDocument, markdown: string): Draft => ({
+    path: doc.path,
+    folder: doc.folder,
+    baseUrl: doc.baseUrl,
+    markdown,
+    savedMarkdown: savedMarkdown(),
+    lineEnding: doc.lineEnding,
+    encoding: doc.encoding,
+    isSample: doc.isSample,
+  });
+
+  const scheduleDraft = debounce(
+    (draft: Draft) => void desktop.invoke("draft:write", draft),
+    DRAFT_WRITE_DELAY,
+  );
+
+  const dropDraft = () => {
+    scheduleDraft.clear();
+    void desktop.invoke("draft:clear");
+  };
+
+  /** Keeps what is unsaved right now, for a window that closes before the delay of the draft ends. */
+  const keepDraft = () => {
+    const doc = activeDocument();
+    if (discarded || !doc || !isDirty()) return dropDraft();
+    scheduleDraft.clear();
+    void desktop.invoke("draft:write", draftOf(doc, currentMarkdown()));
+  };
+
   /** Before replacing the current document, asks to save, discard or cancel if there are unsaved changes; returns whether to continue. */
   const confirmDiscard = async (): Promise<boolean> => {
     if (!isDirty()) return true;
     const choice = await desktop.invoke("dialog:confirm-unsaved", fileName());
     if (choice === "save") return save();
-    return choice === "discard";
+    if (choice !== "discard") return false;
+    discarded = true;
+    dropDraft();
+    return true;
   };
 
   const newDocument = async () => {
@@ -188,8 +229,44 @@ export function createDocumentSession(
     loadInMemory(getSampleDocument(currentLocale()), true);
   };
 
-  /** When the window opens, the "On startup" setting decides between the welcome page, the last file or a new document. */
-  const restoreOnStartup = () => {
+  /**
+   * The document that was being edited when the app went away, brought back with the version that
+   * was on disk: it opens with the same unsaved changes it had.
+   */
+  const restoreDraft = async (draft: Draft) => {
+    // The draft keeps the text as it was typed, while a save writes the file with a trailing
+    // newline, so only the file itself tells whether a save has to ask about a change elsewhere
+    const onDisk =
+      draft.path === undefined
+        ? undefined
+        : await desktop.invoke(
+            "document:peek",
+            draft.path,
+            MAX_CONFLICT_CHECK_BYTES,
+            draft.encoding,
+          );
+    diskContent = onDisk ?? "";
+    load(
+      {
+        path: draft.path,
+        folder: draft.folder,
+        baseUrl: draft.baseUrl,
+        markdown: draft.markdown,
+        lineEnding: draft.lineEnding,
+        encoding: draft.encoding,
+        isSample: draft.isSample,
+      },
+      draft.savedMarkdown,
+    );
+  };
+
+  /**
+   * When the window opens, what the user was editing comes first, then the file it was launched
+   * with, then the "On startup" setting.
+   */
+  const restoreOnStartup = async () => {
+    const draft = await desktop.invoke("draft:read").catch(() => null);
+    if (draft) return restoreDraft(draft);
     const { launchFile } = desktop.initialState;
     if (launchFile !== undefined) return void openPath(launchFile);
     const { startup } = settings();
@@ -198,9 +275,16 @@ export function createDocumentSession(
     else if (startup === "last-file" && lastFile !== undefined) void openPath(lastFile);
   };
 
+  /**
+   * The editor now holds the document: the saved version stays the one it was loaded from, so a
+   * document brought back from a draft still shows its unsaved changes.
+   */
+  const handleEditorReady = (markdown: string) => setCurrentMarkdown(markdown);
+
   /** Called when the editor content changes; with auto save on and a document path, saves shortly after typing stops. */
   const handleMarkdownChange = (markdown: string) => {
     setCurrentMarkdown(markdown);
+    discarded = false;
     scheduleSave.clear();
     if (settings().autoSave && activeDocument()?.path) scheduleSave();
   };
@@ -294,11 +378,22 @@ export function createDocumentSession(
     ),
   );
 
+  // The draft follows the unsaved changes: written once typing pauses, and dropped as soon as the
+  // document matches what was saved, so a crash never brings back what is already on disk
+  createEffect(() => {
+    const doc = activeDocument();
+    const markdown = currentMarkdown();
+    const unsaved = isDirty();
+    if (!doc) return;
+    if (!unsaved || discarded) return dropDraft();
+    scheduleDraft(draftOf(doc, markdown));
+  });
+
   return {
     activeDocument,
     isDirty,
     fileName,
-    markSaved,
+    handleEditorReady,
     handleMarkdownChange,
     save,
     saveAs,
@@ -309,6 +404,9 @@ export function createDocumentSession(
     handleRename,
     restoreOnStartup,
     confirmDiscard,
-    dispose: scheduleSave.clear,
+    dispose: () => {
+      scheduleSave.clear();
+      keepDraft();
+    },
   };
 }
