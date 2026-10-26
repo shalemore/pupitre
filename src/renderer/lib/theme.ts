@@ -1,7 +1,7 @@
 import { createSignal } from "solid-js";
 import { DEFAULT_SETTINGS } from "@shared/settings";
 
-export type ColorScheme = "light" | "dark";
+type ColorScheme = "light" | "dark";
 
 export interface ThemeInfo {
   /** Folder name under src/renderer/themes, also shown in settings. */

@@ -309,7 +309,7 @@ function tagAddressRange(source: string): { from: number; to: number } | undefin
  * The range the address of `image` covers: the destination of a Markdown image, or the value of the
  * src attribute of an inline `<img>` tag. undefined once the text there is no longer the picture.
  */
-export function addressRange(
+function addressRange(
   state: EditorState,
   image: DocumentImage,
 ): { from: number; to: number } | undefined {
@@ -360,7 +360,7 @@ export function imageStyle(size: ImageSize): string {
 }
 
 /** The Markdown for a picture: the image it was, until a width or an alignment is written beside it. */
-export function imageMarkup(image: TaggedImage): string {
+function imageMarkup(image: TaggedImage): string {
   const style = imageStyle(image);
   if (image.width === undefined && style === "") return imageMarkdown(image.alt, image.src);
   const width = image.width === undefined ? "" : ` width="${image.width}"`;

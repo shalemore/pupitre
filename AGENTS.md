@@ -17,11 +17,12 @@ This file is the single source of project conventions for humans and coding agen
 | `npm run test:e2e`      | Drive the built app with Playwright (`build` first)  |
 | `npm run typecheck`     | Type-check every project (`tsc -b`)                  |
 | `npm run lint`          | Check formatting (oxfmt) and lint (oxlint)           |
+| `npm run knip`          | Find dead files, unused exports and dependencies     |
 | `npm run fix`           | Apply formatting and safe lint fixes                 |
 
-Before considering a change done, `lint`, `typecheck`, `test` and `build` must all pass. Run
-`npm run test:e2e` as well once the change touches the main process, the IPC contract or a flow it
-covers. Keep the coverage floor: it only catches a suite that shrank, and goes up as more of the
+Before considering a change done, `lint`, `typecheck`, `knip`, `test` and `build` must all pass.
+Run `npm run test:e2e` as well once the change touches the main process, the IPC contract or a flow
+it covers. Keep the coverage floor: it only catches a suite that shrank, and goes up as more of the
 app is covered.
 
 ## Tests

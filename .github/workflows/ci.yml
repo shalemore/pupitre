@@ -31,6 +31,7 @@ jobs:
       - uses: ./.github/actions/setup-node
       - run: npm run lint
       - run: npm run typecheck
+      - run: npm run knip
       - run: npm run test:coverage
       - run: npm run build
       - run: npm run check:bundle

@@ -10,7 +10,7 @@ import { type InlineItem, inlineItems } from "./inline-content";
 
 export type Alignment = "start" | "center" | "end" | undefined;
 
-export interface TableCell {
+interface TableCell {
   /** The cell's text without the spaces around it; from equals to for an empty cell. */
   from: number;
   to: number;
@@ -22,7 +22,7 @@ export interface TableCell {
   items: InlineItem[];
 }
 
-export interface TableRow {
+interface TableRow {
   /** The row's text, after any quote or list indentation in front of it. */
   from: number;
   to: number;
