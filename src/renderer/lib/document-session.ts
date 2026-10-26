@@ -255,7 +255,20 @@ export function createDocumentSession(
     return tab === undefined ? false : saveTabAs(tab.id);
   };
 
-  const scheduleSave = debounce((id: number) => void saveTab(id), AUTO_SAVE_DELAY);
+  /**
+   * Saves every tab with changes and a file behind it: the delay follows the typing, so a pause
+   * reaches the file that was typed in even when another tab was shown in the meantime. One tab at
+   * a time, since a save may ask about a file changed elsewhere and only one question can be asked.
+   */
+  const saveDirtyTabs = () =>
+    tabs()
+      .filter((tab) => isTabDirty(tab) && tab.doc.path !== undefined)
+      .reduce<Promise<boolean>>(
+        (previous, tab) => previous.then(() => saveTab(tab.id)),
+        Promise.resolve(true),
+      );
+
+  const scheduleSave = debounce(() => void saveDirtyTabs(), AUTO_SAVE_DELAY);
 
   /** One tab as a crash would leave it: the text being edited, and the version it is compared to. */
   const draftOfTab = (tab: Tab): Draft => ({
@@ -466,13 +479,12 @@ export function createDocumentSession(
     if (tab !== undefined) patchTab(tab.id, { markdown });
   };
 
-  /** Called when the editor content changes; with auto save on and a file behind it, saves shortly after typing stops. */
+  /** Called when the editor content changes; with auto save on, the files of every changed tab are written shortly after typing stops. */
   const handleMarkdownChange = (markdown: string) => {
     const tab = activeTab();
     if (tab === undefined) return;
     patchTab(tab.id, { markdown, discarded: false });
-    scheduleSave.clear();
-    if (settings().autoSave && tab.doc.path !== undefined) scheduleSave(tab.id);
+    if (settings().autoSave) scheduleSave();
   };
 
   let askingAboutDisk = false;
