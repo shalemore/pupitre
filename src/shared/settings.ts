@@ -143,7 +143,7 @@ export const WORKSPACE_FILE = ".pupitre/settings.json";
  * What belongs to the app and not to a folder: both are read before any folder is open, or have
  * nothing to do with one. Every other setting can be given a value of its own for a folder.
  */
-const APP_KEYS: readonly SettingKey[] = ["startup", "autoCheckUpdates"];
+const APP_KEYS: readonly SettingKey[] = ["startup", "autoCheckUpdates", "sourceMode"];
 
 export function isWorkspaceKey(key: string): boolean {
   return !APP_KEYS.some((appKey) => appKey === key);
