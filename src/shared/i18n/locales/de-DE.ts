@@ -321,6 +321,17 @@ export const deDE = {
     heading4: "Überschrift 4",
     heading5: "Überschrift 5",
     heading6: "Überschrift 6",
+
+    underline: "Underline",
+    highlight: "Highlight",
+    subscript: "Subscript",
+    superscript: "Superscript",
+    clearFormat: "Clear Format",
+    inlineMath: "Inline Math",
+    toc: "Table of Contents",
+    footnote: "Footnote",
+    headingUp: "Increase Heading Level",
+    headingDown: "Decrease Heading Level",
   },
   window: {
     minimize: "Minimieren",

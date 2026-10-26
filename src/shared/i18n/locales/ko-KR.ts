@@ -316,6 +316,17 @@ export const koKR = {
     heading4: "제목 4",
     heading5: "제목 5",
     heading6: "제목 6",
+
+    underline: "Underline",
+    highlight: "Highlight",
+    subscript: "Subscript",
+    superscript: "Superscript",
+    clearFormat: "Clear Format",
+    inlineMath: "Inline Math",
+    toc: "Table of Contents",
+    footnote: "Footnote",
+    headingUp: "Increase Heading Level",
+    headingDown: "Decrease Heading Level",
   },
   window: {
     minimize: "최소화",

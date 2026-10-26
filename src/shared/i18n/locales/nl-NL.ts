@@ -324,6 +324,17 @@ export const nlNL = {
     heading4: "Kop 4",
     heading5: "Kop 5",
     heading6: "Kop 6",
+
+    underline: "Underline",
+    highlight: "Highlight",
+    subscript: "Subscript",
+    superscript: "Superscript",
+    clearFormat: "Clear Format",
+    inlineMath: "Inline Math",
+    toc: "Table of Contents",
+    footnote: "Footnote",
+    headingUp: "Increase Heading Level",
+    headingDown: "Decrease Heading Level",
   },
   window: {
     minimize: "Minimaliseren",

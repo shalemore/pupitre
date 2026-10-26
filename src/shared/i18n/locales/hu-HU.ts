@@ -325,6 +325,17 @@ export const huHU = {
     heading4: "4. címsor",
     heading5: "5. címsor",
     heading6: "6. címsor",
+
+    underline: "Underline",
+    highlight: "Highlight",
+    subscript: "Subscript",
+    superscript: "Superscript",
+    clearFormat: "Clear Format",
+    inlineMath: "Inline Math",
+    toc: "Table of Contents",
+    footnote: "Footnote",
+    headingUp: "Increase Heading Level",
+    headingDown: "Decrease Heading Level",
   },
   window: {
     minimize: "Minimalizálás",

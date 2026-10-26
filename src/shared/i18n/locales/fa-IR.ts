@@ -320,6 +320,17 @@ export const faIR = {
     heading4: "عنوان ۴",
     heading5: "عنوان ۵",
     heading6: "عنوان ۶",
+
+    underline: "Underline",
+    highlight: "Highlight",
+    subscript: "Subscript",
+    superscript: "Superscript",
+    clearFormat: "Clear Format",
+    inlineMath: "Inline Math",
+    toc: "Table of Contents",
+    footnote: "Footnote",
+    headingUp: "Increase Heading Level",
+    headingDown: "Decrease Heading Level",
   },
   window: {
     minimize: "کوچک‌کردن",

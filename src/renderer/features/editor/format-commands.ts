@@ -10,6 +10,7 @@ import type { Command, EditorView, KeyBinding } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
 import { FORMAT_ACTIONS, type FormatAction } from "@shared/format";
 import type { Settings } from "@shared/settings";
+import { htmlTag } from "./html";
 
 /**
  * Formatting as text edits: every action inserts or removes Markdown syntax in the source, the
@@ -44,11 +45,11 @@ function dispatchChanges(view: EditorView, changes: ChangeSpec, selection?: Edit
   );
 }
 
-/** The innermost `name` node that contains the whole range. */
+/** The innermost node named `name`, or matching the pattern, that contains the whole range. */
 function enclosing(
   state: EditorState,
   range: SelectionRange,
-  name: string,
+  name: string | RegExp,
 ): SyntaxNode | undefined {
   const sides: (1 | -1)[] = range.empty ? [1, -1] : [1];
   for (const side of sides) {
@@ -57,7 +58,8 @@ function enclosing(
       node;
       node = node.parent
     ) {
-      if (node.name === name && node.from <= range.from && node.to >= range.to) return node;
+      const matched = typeof name === "string" ? node.name === name : name.test(node.name);
+      if (matched && node.from <= range.from && node.to >= range.to) return node;
     }
   }
   return undefined;
@@ -114,6 +116,109 @@ function toggleLink(view: EditorView): void {
   );
 }
 
+const UNDERLINE_OPEN = "<u>";
+const UNDERLINE_CLOSE = "</u>";
+
+/** The `<u>` and `</u>` tags that enclose the range, innermost first, if any pair does. */
+function enclosingUnderline(
+  state: EditorState,
+  range: SelectionRange,
+): { open: SyntaxNode; close: SyntaxNode } | undefined {
+  const open: SyntaxNode[] = [];
+  let pair: { open: SyntaxNode; close: SyntaxNode } | undefined;
+  syntaxTree(state).iterate({
+    enter: (node) => {
+      if (node.name !== "HTMLTag") return;
+      const tag = htmlTag(state.sliceDoc(node.from, node.to));
+      if (tag?.name !== "u") return;
+      if (!tag.closing) {
+        open.push(node.node);
+        return;
+      }
+      const opening = open.pop();
+      // A tag that closes after the range pairs with the innermost tag that opened before it
+      if (opening && opening.from <= range.from && node.to >= range.to) {
+        pair = { open: opening, close: node.node };
+      }
+    },
+  });
+  return pair;
+}
+
+/**
+ * Wraps each selection in the tags that give it the look, or takes them off when they already
+ * enclose it. The live preview hides the tags of an element that pairs, so they look like Markdown.
+ */
+function toggleUnderline(view: EditorView): void {
+  const { state } = view;
+  view.dispatch(
+    state.update(
+      state.changeByRange((range) => {
+        const pair = enclosingUnderline(state, range);
+        if (pair) {
+          const changes = state.changes([
+            { from: pair.open.from, to: pair.open.to },
+            { from: pair.close.from, to: pair.close.to },
+          ]);
+          return { changes, range: range.map(changes) };
+        }
+        return {
+          changes: [
+            { from: range.from, insert: UNDERLINE_OPEN },
+            { from: range.to, insert: UNDERLINE_CLOSE },
+          ],
+          range: EditorSelection.range(
+            range.anchor + UNDERLINE_OPEN.length,
+            range.head + UNDERLINE_OPEN.length,
+          ),
+        };
+      }),
+      { scrollIntoView: true, userEvent: "input.format" },
+    ),
+  );
+}
+
+/** The inline formats whose syntax clearing takes off; a link keeps its text. */
+const CLEARED_INLINE =
+  /^(?:StrongEmphasis|Emphasis|Strikethrough|InlineCode|Highlight|Subscript|Superscript|Link)$/;
+
+/** What clearing removes from inside an inline format: a marker, or a link's bracket or address. */
+function removedByClearFormat(child: SyntaxNode): boolean {
+  return child.name.endsWith("Mark") || child.name === "URL" || child.name === "LinkTitle";
+}
+
+/**
+ * Takes the markers off the inline formats the selection covers and turns its links into their
+ * text, leaving the blocks around them as they are. With no selection, the format the cursor is
+ * in is the one cleared.
+ */
+function clearFormat(view: EditorView): void {
+  const { state } = view;
+  const tree = syntaxTree(state);
+  const removals: { from: number; to: number }[] = [];
+  for (const range of state.selection.ranges) {
+    const format = range.empty ? enclosing(state, range, CLEARED_INLINE) : undefined;
+    const from = format?.from ?? range.from;
+    const to = format?.to ?? range.to;
+    tree.iterate({
+      from,
+      to,
+      enter: (node) => {
+        // A format the selection covers only in part stays: clearing it would change what it holds
+        if (!CLEARED_INLINE.test(node.name) || node.from < from || node.to > to) return;
+        for (let child = node.node.firstChild; child; child = child.nextSibling) {
+          if (removedByClearFormat(child)) removals.push({ from: child.from, to: child.to });
+        }
+      },
+    });
+  }
+  if (removals.length === 0) return;
+  dispatchChanges(
+    view,
+    removals.toSorted((a, b) => a.from - b.from),
+  );
+}
+
 function selectedLines(state: EditorState): Line[] {
   const lines = new Map<number, Line>();
   for (const range of state.selection.ranges) {
@@ -125,16 +230,64 @@ function selectedLines(state: EditorState): Line[] {
   return [...lines.values()];
 }
 
-/** Sets the heading level of the selected lines; the level they already have, or 0, makes them paragraphs. */
-function setHeading(view: EditorView, level: number): void {
-  const changes = selectedLines(view.state).map((line) => {
+/** Whether the line is part of a setext heading, whose level is written on the line below its text. */
+function inSetextHeading(state: EditorState, pos: number): boolean {
+  for (
+    let node: SyntaxNode | null = syntaxTree(state).resolveInner(pos, 1);
+    node;
+    node = node.parent
+  ) {
+    if (node.name.startsWith("SetextHeading")) return true;
+  }
+  return false;
+}
+
+/**
+ * Sets the heading level of each selected line to what `levelOf` makes of the level it has (0 for
+ * a paragraph); a line it leaves undefined stays as it is.
+ */
+function changeHeadings(
+  view: EditorView,
+  levelOf: (line: Line, level: number) => number | undefined,
+): void {
+  const changes = selectedLines(view.state).flatMap((line) => {
     const start = line.from + (CONTAINER_PREFIX.exec(line.text)?.[0].length ?? 0);
     const existing = HEADING_PREFIX.exec(line.text.slice(start - line.from));
     const current = existing?.[1]?.length ?? 0;
+    const level = levelOf(line, current);
+    if (level === undefined) return [];
     const insert = level === 0 || level === current ? "" : `${"#".repeat(level)} `;
-    return { from: start, to: start + (existing?.[0].length ?? 0), insert };
+    return [{ from: start, to: start + (existing?.[0].length ?? 0), insert }];
   });
-  dispatchChanges(view, changes);
+  if (changes.length > 0) dispatchChanges(view, changes);
+}
+
+/** Sets the heading level of the selected lines; the level they already have, or 0, makes them paragraphs. */
+function setHeading(view: EditorView, level: number): void {
+  changeHeadings(view, () => level);
+}
+
+/**
+ * The level a step moves to: a heading goes one level up or down, H1 upwards and H6 downwards
+ * give a paragraph, and a paragraph becomes a heading, since it has none to step from.
+ */
+function steppedHeadingLevel(level: number, direction: -1 | 1): number {
+  if (level === 0) return 1;
+  const next = level + direction;
+  return next < 1 || next > 6 ? 0 : next;
+}
+
+/** Steps the heading level of each selected line, keeping a multi-line selection in step. */
+function stepHeading(view: EditorView, direction: -1 | 1): void {
+  const { state } = view;
+  changeHeadings(view, (line, level) => {
+    // A blank line has no level of its own, and a marker on it would make an empty heading
+    if (line.text.trim() === "") return undefined;
+    // A setext heading has no marker to step, and converting it would leave the line under its
+    // text behind
+    if (level === 0 && inSetextHeading(state, line.from)) return undefined;
+    return steppedHeadingLevel(level, direction);
+  });
 }
 
 function toggleQuote(view: EditorView): void {
@@ -203,6 +356,36 @@ function insertBlock(view: EditorView, text: string, cursorOffset: number): void
   );
 }
 
+/** The smallest positive footnote number the document does not use yet. */
+function nextFootnoteLabel(state: EditorState): number {
+  const used = new Set<number>();
+  for (const match of state.doc.toString().matchAll(/\[\^(\d+)\]/g)) {
+    const digits = match[1];
+    if (digits !== undefined) used.add(Number(digits));
+  }
+  let label = 1;
+  while (used.has(label)) label++;
+  return label;
+}
+
+/** A footnote reference at the caret, and its definition after the last line of the document. */
+function insertFootnote(view: EditorView): void {
+  const { state } = view;
+  const { from, to } = state.selection.main;
+  const label = `[^${nextFootnoteLabel(state)}]`;
+  // The definition is a block of its own, past the blank lines the document ends with; a last
+  // line ending stays after it, as the file had one
+  const end = Math.max(to, state.doc.toString().replace(/\n+$/, "").length);
+  dispatchChanges(
+    view,
+    [
+      { from, to, insert: label },
+      { from: end, insert: `${end === 0 ? "" : "\n\n"}${label}: ` },
+    ],
+    EditorSelection.single(from + label.length),
+  );
+}
+
 function headingLevel(action: FormatAction): number | undefined {
   const match = /^heading([1-6])$/.exec(action);
   return match ? Number(match[1]) : undefined;
@@ -221,8 +404,28 @@ export function runFormatAction(
       return toggleInline(view, "StrongEmphasis", style.strongMarker.repeat(2));
     case "italic":
       return toggleInline(view, "Emphasis", style.emphasisMarker);
+    case "underline":
+      return toggleUnderline(view);
     case "strikethrough":
       return toggleInline(view, "Strikethrough", "~~");
+    case "highlight":
+      return toggleInline(view, "Highlight", "==");
+    case "subscript":
+      return toggleInline(view, "Subscript", "~");
+    case "superscript":
+      return toggleInline(view, "Superscript", "^");
+    case "clearFormat":
+      return clearFormat(view);
+    case "inlineMath":
+      return toggleInline(view, "InlineMath", "$");
+    case "toc":
+      return insertBlock(view, "[TOC]\n", 6);
+    case "footnote":
+      return insertFootnote(view);
+    case "headingUp":
+      return stepHeading(view, -1);
+    case "headingDown":
+      return stepHeading(view, 1);
     case "inlineCode":
       return toggleInline(view, "InlineCode", "`");
     case "link":

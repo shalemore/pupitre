@@ -319,6 +319,17 @@ export const viVN = {
     heading4: "Tiêu đề 4",
     heading5: "Tiêu đề 5",
     heading6: "Tiêu đề 6",
+
+    underline: "Underline",
+    highlight: "Highlight",
+    subscript: "Subscript",
+    superscript: "Superscript",
+    clearFormat: "Clear Format",
+    inlineMath: "Inline Math",
+    toc: "Table of Contents",
+    footnote: "Footnote",
+    headingUp: "Increase Heading Level",
+    headingDown: "Decrease Heading Level",
   },
   window: {
     minimize: "Thu nhỏ",

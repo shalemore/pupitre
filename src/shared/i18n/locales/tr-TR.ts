@@ -322,6 +322,17 @@ export const trTR = {
     heading4: "Başlık 4",
     heading5: "Başlık 5",
     heading6: "Başlık 6",
+
+    underline: "Underline",
+    highlight: "Highlight",
+    subscript: "Subscript",
+    superscript: "Superscript",
+    clearFormat: "Clear Format",
+    inlineMath: "Inline Math",
+    toc: "Table of Contents",
+    footnote: "Footnote",
+    headingUp: "Increase Heading Level",
+    headingDown: "Decrease Heading Level",
   },
   window: {
     minimize: "Simge Durumuna Küçült",

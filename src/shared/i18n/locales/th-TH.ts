@@ -319,6 +319,17 @@ export const thTH = {
     heading4: "หัวข้อ 4",
     heading5: "หัวข้อ 5",
     heading6: "หัวข้อ 6",
+
+    underline: "Underline",
+    highlight: "Highlight",
+    subscript: "Subscript",
+    superscript: "Superscript",
+    clearFormat: "Clear Format",
+    inlineMath: "Inline Math",
+    toc: "Table of Contents",
+    footnote: "Footnote",
+    headingUp: "Increase Heading Level",
+    headingDown: "Decrease Heading Level",
   },
   window: {
     minimize: "ย่อหน้าต่าง",
