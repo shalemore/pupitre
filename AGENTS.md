@@ -40,10 +40,12 @@ app is covered.
   (`answerDialogs`), because a real one would block the run.
 - On Linux the E2E suite needs a display: CI runs it under `xvfb-run -a`. On Windows, run it with
   `npx offstage-windows npx playwright test` to keep the windows off the screen.
-- `markdown-language.test.ts` keeps an `it.fails` for an upstream `@lezer/markdown` 1.8.1 bug: a
-  table that directly follows a paragraph can leave the paragraph split in an incremental parse. If
-  the expectation starts to pass, the fix landed: drop `fails` and put tables back into the property
-  test's pieces.
+- `patches/@lezer+markdown+1.8.1.patch` fixes an upstream incremental-parse bug: a block that a
+  table ended (a paragraph, a footnote definition, a math block) is reused with its old end when
+  the table stops parsing, which splits it in two. `patch-package` applies the patch on install; the
+  dependency is pinned to 1.8.1 so the patch and the package cannot drift apart. The property test
+  includes tables and `reads a paragraph back together…` fails if the patch stops applying. Remove
+  both when the fix is in the version we use.
 
 ## Testing the running app
 

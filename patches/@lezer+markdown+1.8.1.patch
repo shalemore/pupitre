@@ -1,0 +1,84 @@
+diff --git a/node_modules/@lezer/markdown/dist/index.cjs b/node_modules/@lezer/markdown/dist/index.cjs
+index 4a361b0..e49ad53 100644
+--- a/node_modules/@lezer/markdown/dist/index.cjs
++++ b/node_modules/@lezer/markdown/dist/index.cjs
+@@ -1924,11 +1924,20 @@ class FragmentCursor {
+         // block's size, to avoid creating lopsided trees.
+         let maxAnonSize = (cx.lineStart - cx.block.from) >> 2;
+         let prevEnd = end, prevI = blockI;
++        // The stop before the last block taken. If the next block starts on the line right after
++        // that one, the last block may take those lines back when the next block stops parsing: a
++        // table that loses its delimiter row joins the paragraph before it, for example. Reusing the
++        // last block would then split it in two, so stop before it instead.
++        let stopEnd = end, stopI = blockI;
+         scan: for (;;) {
+             if (cur.to - off > Math.min(fragEnd, cx.to) ||
+                 cur.type.isAnonymous && cur.tree && (cur.to - cur.from > maxAnonSize || !canStopAfterLastChild(cur.tree))) {
+                 if (cur.type.isAnonymous && cur.firstChild())
+                     continue;
++                if (cur.from - off == end + 1 && this.fragment.to > end) {
++                    end = stopEnd;
++                    blockI = stopI;
++                }
+                 break;
+             }
+             let pos = toRelative(cur.from - off, cx.ranges);
+@@ -1948,12 +1957,16 @@ class FragmentCursor {
+                 // We checked earlier that anon nodes end in a block after
+                 // which we can stop reuse.
+                 if (cur.type.isAnonymous || NotLast.indexOf(cur.type.id) < 0) {
++                    stopEnd = end;
++                    stopI = blockI;
+                     end = cur.to - off;
+                     blockI = cx.block.children.length;
+                 }
+                 else {
+                     end = prevEnd;
+                     blockI = prevI;
++                    stopEnd = end;
++                    stopI = blockI;
+                 }
+                 prevEnd = cur.to - off;
+                 prevI = cx.block.children.length;
+diff --git a/node_modules/@lezer/markdown/dist/index.js b/node_modules/@lezer/markdown/dist/index.js
+index bcaae77..1d36264 100644
+--- a/node_modules/@lezer/markdown/dist/index.js
++++ b/node_modules/@lezer/markdown/dist/index.js
+@@ -1922,11 +1922,20 @@ class FragmentCursor {
+         // block's size, to avoid creating lopsided trees.
+         let maxAnonSize = (cx.lineStart - cx.block.from) >> 2;
+         let prevEnd = end, prevI = blockI;
++        // The stop before the last block taken. If the next block starts on the line right after
++        // that one, the last block may take those lines back when the next block stops parsing: a
++        // table that loses its delimiter row joins the paragraph before it, for example. Reusing the
++        // last block would then split it in two, so stop before it instead.
++        let stopEnd = end, stopI = blockI;
+         scan: for (;;) {
+             if (cur.to - off > Math.min(fragEnd, cx.to) ||
+                 cur.type.isAnonymous && cur.tree && (cur.to - cur.from > maxAnonSize || !canStopAfterLastChild(cur.tree))) {
+                 if (cur.type.isAnonymous && cur.firstChild())
+                     continue;
++                if (cur.from - off == end + 1 && this.fragment.to > end) {
++                    end = stopEnd;
++                    blockI = stopI;
++                }
+                 break;
+             }
+             let pos = toRelative(cur.from - off, cx.ranges);
+@@ -1946,12 +1955,16 @@ class FragmentCursor {
+                 // We checked earlier that anon nodes end in a block after
+                 // which we can stop reuse.
+                 if (cur.type.isAnonymous || NotLast.indexOf(cur.type.id) < 0) {
++                    stopEnd = end;
++                    stopI = blockI;
+                     end = cur.to - off;
+                     blockI = cx.block.children.length;
+                 }
+                 else {
+                     end = prevEnd;
+                     blockI = prevI;
++                    stopEnd = end;
++                    stopI = blockI;
+                 }
+                 prevEnd = cur.to - off;
+                 prevI = cx.block.children.length;

@@ -65,8 +65,7 @@ describe("the syntax Pupitre adds", () => {
 
 /**
  * Pieces of Markdown whose syntax spans several lines or depends on what is around it: where an
- * edit lands among them decides which parts of the old tree the parser may reuse. Tables are left
- * out because of the upstream bug the last test below keeps track of.
+ * edit lands among them decides which parts of the old tree the parser may reuse.
  */
 const PIECES = [
   "# Heading\n",
@@ -80,6 +79,7 @@ const PIECES = [
   "> A quote\n> over two lines\n",
   "- item\n  - nested\n- [ ] task\n",
   "1. first\n2. second\n",
+  "| a | b |\n| --- | :-: |\n| 1 | 2 |\n",
   "```\ncode\n```\n",
   "$$\nx = 1\n$$\n",
   "<details>\n<summary>More</summary>\n\nHidden\n</details>\n",
@@ -120,10 +120,11 @@ describe("incremental parsing", () => {
     );
   });
 
-  // @lezer/markdown 1.8.1 reuses a paragraph that a table ended even when the table no longer
-  // parses, so the editor shows two paragraphs until the text is read again from scratch. When this
-  // starts to pass, the bug is fixed: remove `fails` and put tables back among the pieces above.
-  it.fails("reads a paragraph back together when the table after it breaks", () => {
+  // @lezer/markdown 1.8.1 reuses the block before a table even when the table stops parsing, so a
+  // paragraph, footnote definition or math block that the table ended comes back split. The local
+  // patch in patches/@lezer+markdown+1.8.1.patch stops reuse before that block; without the patch
+  // this test fails. Remove the patch when upstream fixes it.
+  it("reads a paragraph back together when the table after it breaks", () => {
     const doc = `${"x".repeat(120)}\n| a | b |\n| --- | --- |\n`;
     const from = doc.indexOf("| ---");
     const state = updated(markdownState(doc), { changes: { from, to: from + 5 } });
