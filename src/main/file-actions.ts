@@ -1,4 +1,4 @@
-import { copyFile, mkdir, rename, stat, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, rename, rm, stat, writeFile } from "node:fs/promises";
 import { basename, dirname, join, resolve } from "node:path";
 import { net, shell } from "electron";
 import type { FolderEntry } from "@shared/desktop-api";
@@ -69,10 +69,29 @@ export function trashEntry(path: string): Promise<void> {
 /** A picture is linked rather than embedded, so one larger than this is already unusual. */
 export const MAX_IMAGE_BYTES = 20 * 1024 * 1024;
 
+/** Whether a rename failed because the two paths sit on different file systems. */
+function isCrossDevice(error: unknown): boolean {
+  return typeof error === "object" && error !== null && "code" in error && error.code === "EXDEV";
+}
+
+/**
+ * Moves a file, copying it when the destination is on another volume: a rename cannot cross one,
+ * and the native save dialog lets the user pick a folder anywhere.
+ */
+async function moveFile(from: string, to: string): Promise<void> {
+  try {
+    await rename(from, to);
+  } catch (error) {
+    if (!isCrossDevice(error)) throw error;
+    await copyFile(from, to);
+    await rm(from);
+  }
+}
+
 /** Moves a picture to the path the user picked for it and gives back where it now sits. */
 export async function moveImage(path: string, target: string): Promise<string> {
   if (resolve(target) === resolve(path)) return path;
-  await rename(path, target);
+  await moveFile(path, target);
   return target;
 }
 
@@ -82,7 +101,7 @@ export async function moveImageInto(path: string, folder: string): Promise<strin
   if (resolve(dirname(path)) === resolve(folder)) return path;
   await mkdir(folder, { recursive: true });
   const target = await freeTarget(folder, basename(path), 0);
-  await rename(path, target);
+  await moveFile(path, target);
   return target;
 }
 
