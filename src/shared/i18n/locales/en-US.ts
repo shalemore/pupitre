@@ -73,6 +73,16 @@ export const enUS = {
       columns: "Columns",
       insert: "Insert",
     },
+    /**
+     * The controls a rendered picture carries: the handle resizes it, the bar aligns it. Left and
+     * right follow the text direction, as the toolbar of a table does.
+     */
+    image: {
+      resize: "Resize Image",
+      alignLeft: "Align Left",
+      alignCenter: "Align Center",
+      alignRight: "Align Right",
+    },
   },
   dialogs: {
     copyButton: "Copy",

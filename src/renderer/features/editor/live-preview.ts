@@ -25,7 +25,14 @@ import { collectHeadings, findHeadingByAnchor, HEADING_LEVEL } from "./document-
 import { EmojiWidget, emojiFor } from "./emoji";
 import { footnoteTarget } from "./footnotes";
 import { htmlTag, isFormattingTag, LineBreakWidget } from "./html";
-import { documentBaseUrl, ImageWidget, imageSource, resolveUrl } from "./images";
+import {
+  documentBaseUrl,
+  type DocumentImage,
+  imageOf,
+  ImageWidget,
+  parseImageTag,
+  resolveUrl,
+} from "./images";
 import { mathOf, MathWidget } from "./math";
 
 /**
@@ -426,19 +433,27 @@ function visitAlert(builder: DecorationBuilder, quote: SyntaxNode): void {
   }
 }
 
-/** An image is shown in place of its source, and under it while the source is edited. */
-function visitImage(builder: DecorationBuilder, node: SyntaxNode): boolean {
-  const [open, close] = markers(node);
-  const url = node.getChild("URL");
-  const alt = open && close ? builder.text(open.to, close.from) : "";
-  const src = url ? resolveUrl(builder.state, imageSource(builder.text(url.from, url.to))) : "";
-  const widget = new ImageWidget(src, alt);
-  if (touches(builder.ranges, node.from, node.to)) {
-    builder.decorations.push(Decoration.widget({ widget, side: 1 }).range(node.to));
+/**
+ * A picture takes the place of its source; while a selection touches that source, the source stays
+ * and the picture follows it. Returns whether the source stays shown.
+ */
+function placeImage(builder: DecorationBuilder, image: DocumentImage): boolean {
+  const active = touches(builder.ranges, image.from, image.to);
+  const src = resolveUrl(builder.state, image.src);
+  const widget = new ImageWidget(src, image.alt, image, !active);
+  if (active) {
+    builder.decorations.push(Decoration.widget({ widget, side: 1 }).range(image.to));
     return true;
   }
-  builder.decorations.push(Decoration.replace({ widget }).range(node.from, node.to));
+  builder.decorations.push(Decoration.replace({ widget }).range(image.from, image.to));
   return false;
+}
+
+/** An image is shown in place of its source, and under it while the source is edited. */
+function visitImage(builder: DecorationBuilder, node: SyntaxNode): boolean {
+  const image = imageOf(builder.state, node);
+  // Only source the parser could not read completely is left as it is
+  return image ? placeImage(builder, image) : true;
 }
 
 /**
@@ -486,13 +501,24 @@ function visitInlineMath(builder: DecorationBuilder, node: SyntaxNode): void {
 /**
  * Formatting tags such as `<kbd>…</kbd>` among a node's children are paired like Markdown formats:
  * away from the selection the tags are hidden and the content takes the tag's look
- * (`md-tag-kbd`). A `<br>` breaks the line. Tags that do not pair stay source.
+ * (`md-tag-kbd`). A `<br>` breaks the line. A picture written as an inline `<img>` tag reads as the
+ * picture, the way the same construct is written for a width or an alignment. Tags that do not pair
+ * stay source.
  */
 function visitInlineHtml(builder: DecorationBuilder, node: SyntaxNode): void {
   const open: { name: string; tag: SyntaxNode }[] = [];
   for (let child = node.firstChild; child; child = child.nextSibling) {
     if (child.name !== "HTMLTag") continue;
-    const tag = htmlTag(builder.text(child.from, child.to));
+    const source = builder.text(child.from, child.to);
+    const picture = parseImageTag(source);
+    if (picture) {
+      // The picture is not Markdown syntax, so showing its source leaves the tag as muted text
+      if (placeImage(builder, { ...picture, from: child.from, to: child.to })) {
+        builder.mark(child.from, child.to, "md-mark");
+      }
+      continue;
+    }
+    const tag = htmlTag(source);
     if (!tag) continue;
     if (tag.name === "br") {
       if (!touches(builder.ranges, child.from, child.to)) {

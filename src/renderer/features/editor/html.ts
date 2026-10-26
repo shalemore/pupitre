@@ -1,12 +1,13 @@
-import { WidgetType } from "@codemirror/view";
+import { type EditorView, WidgetType } from "@codemirror/view";
 import DOMPurify from "dompurify";
-import { resolveAgainst } from "./images";
+import { imageDom, parseImageTag, resolveAgainst } from "./images";
 
 /**
  * Raw HTML in Markdown. Inline formatting elements such as `<kbd>Ctrl</kbd>` are shown with
  * their tags hidden away from the selection, like Markdown formats; other inline tags stay source.
  * HTML blocks that start with an element are rendered, sanitized with DOMPurify; comments and
- * closing tags stay source.
+ * closing tags stay source. A block that holds nothing but an `<img>` tag is the picture a resize
+ * writes, shown as that picture so that it can be resized and aligned again.
  */
 
 /** Inline HTML elements that format text. */
@@ -70,7 +71,11 @@ export class HtmlBlockWidget extends WidgetType {
     return other.source === this.source && other.base === this.base;
   }
 
-  toDOM(): HTMLElement {
+  toDOM(view: EditorView): HTMLElement {
+    const picture = parseImageTag(this.source);
+    if (picture) {
+      return imageDom(view, resolveAgainst(this.base, picture.src), picture.alt, picture, true);
+    }
     const block = document.createElement("div");
     block.className = "md-html-block";
     block.append(DOMPurify.sanitize(this.source, { RETURN_DOM_FRAGMENT: true }));

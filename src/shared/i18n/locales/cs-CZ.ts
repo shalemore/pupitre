@@ -81,6 +81,12 @@ export const csCZ = {
       columns: "Columns",
       insert: "Insert",
     },
+    image: {
+      resize: "Resize Image",
+      alignLeft: "Align Left",
+      alignCenter: "Align Center",
+      alignRight: "Align Right",
+    },
   },
   dialogs: {
     copyButton: "Kopírovat",

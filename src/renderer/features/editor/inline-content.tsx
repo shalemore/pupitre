@@ -4,7 +4,7 @@ import { type Component, createResource, For, Match, Switch } from "solid-js";
 import { Dynamic } from "solid-js/web";
 import { emojiFor } from "./emoji";
 import { htmlTag, isFormattingTag } from "./html";
-import { imageSource, resolveUrl } from "./images";
+import { type ImageAlignment, imageSource, imageStyle, parseImageTag, resolveUrl } from "./images";
 import { markers } from "./live-preview";
 import { renderMath } from "./mathjax";
 
@@ -20,7 +20,13 @@ export type InlineItem =
   | { type: "break" }
   | { type: "element"; tag: string; class?: string; children: InlineItem[] }
   | { type: "link"; href: string; children: InlineItem[] }
-  | { type: "image"; src: string; alt: string }
+  | {
+      type: "image";
+      src: string;
+      alt: string;
+      width: number | undefined;
+      alignment: ImageAlignment | undefined;
+    }
   | { type: "math"; tex: string; display: boolean }
   | { type: "footnote"; label: string };
 
@@ -92,7 +98,7 @@ export function inlineItems(
       case "Image": {
         const url = child.getChild("URL");
         const src = url ? resolveUrl(state, imageSource(text(url.from, url.to))) : "";
-        push({ type: "image", src, alt: text(start, end) });
+        push({ type: "image", src, alt: text(start, end), width: undefined, alignment: undefined });
         break;
       }
       case "FootnoteReference":
@@ -110,7 +116,19 @@ export function inlineItems(
         push({ type: "break" });
         break;
       case "HTMLTag": {
-        const tag = htmlTag(text(child.from, child.to));
+        const source = text(child.from, child.to);
+        const picture = parseImageTag(source);
+        if (picture) {
+          push({
+            type: "image",
+            src: resolveUrl(state, picture.src),
+            alt: picture.alt,
+            width: picture.width,
+            alignment: picture.alignment,
+          });
+          break;
+        }
+        const tag = htmlTag(source);
         if (tag?.name === "br") push({ type: "break" });
         else if (tag && isFormattingTag(tag.name) && !tag.closing)
           stack.push({ tag: tag.name, items: [] });
@@ -174,7 +192,15 @@ export const InlineContent: Component<{ items: InlineItem[] }> = (props) => (
           )}
         </Match>
         <Match when={item.type === "image" && item}>
-          {(image) => <img class="md-image-preview" src={image().src} alt={image().alt} />}
+          {(image) => (
+            <img
+              class="md-image-preview"
+              src={image().src}
+              alt={image().alt}
+              width={image().width}
+              style={imageStyle(image())}
+            />
+          )}
         </Match>
         <Match when={item.type === "math" && item}>
           {(math) => <MathItem tex={math().tex} display={math().display} />}
