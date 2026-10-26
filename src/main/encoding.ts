@@ -31,6 +31,9 @@ const UTF8_BOM = Buffer.from([0xef, 0xbb, 0xbf]);
 const UTF16LE_BOM = Buffer.from([0xff, 0xfe]);
 const UTF16BE_BOM = Buffer.from([0xfe, 0xff]);
 
+/** How much of a decoded file may be unreadable before it is read as text in that encoding. */
+const MAX_UNREADABLE_SHARE = 0.1;
+
 /** The encoding a file announces in its first bytes. */
 export function declaredEncoding(buffer: Buffer): TextEncoding | undefined {
   if (buffer.subarray(0, 3).equals(UTF8_BOM)) return "utf-8-bom";
@@ -62,6 +65,34 @@ export function undeclaredUtf16(buffer: Buffer): TextEncoding | undefined {
   if (mostly(odd, even)) return "utf-16le";
   if (mostly(even, odd)) return "utf-16be";
   return undefined;
+}
+
+/**
+ * Whether a character of a decoded file is one no document holds: a control character other than
+ * the tab and the line breaks, or the replacement character a byte that is not UTF-8 becomes.
+ * Binary content turns most of its bytes into one or the other.
+ */
+function isUnreadable(codePoint: number): boolean {
+  if (codePoint === 0x7f || codePoint === 0xfffd) return true;
+  return codePoint < 0x20 && codePoint !== 0x09 && codePoint !== 0x0a && codePoint !== 0x0d;
+}
+
+/** How many characters of a decoded file are unreadable ones. */
+function unreadableCharacters(text: string): number {
+  let count = 0;
+  for (let index = 0; index < text.length; index++) {
+    if (isUnreadable(text.charCodeAt(index))) count += 1;
+  }
+  return count;
+}
+
+/**
+ * Whether a file decoded as `text` is more likely text in another encoding, or not text at all:
+ * UTF-16 text in a script whose characters have no zero high byte is valid UTF-8, which turns its
+ * low bytes into control characters and its text into mojibake.
+ */
+export function mostlyUnreadable(text: string): boolean {
+  return unreadableCharacters(text) > text.length * MAX_UNREADABLE_SHARE;
 }
 
 function iconvName(encoding: TextEncoding): string {
@@ -139,10 +170,28 @@ export interface DecodedDocument {
   encoding: TextEncoding;
 }
 
+/** The two byte orders a file without a BOM can be UTF-16 in. */
+const UTF16_ORDERS = ["utf-16le", "utf-16be"] as const;
+
 /**
- * Reads a file for the editor. What declares an encoding or is valid UTF-8 is used as it is, since
- * guessing a legacy encoding would silently garble the text; anything else is asked about. Binary
- * content is refused instead of being shown as garbage.
+ * Whether a file with zero bytes in it reads as text in one of those byte orders: text in a script
+ * whose characters have no zero high byte still has zeros in its line breaks and spaces, while
+ * bytes that are not text decode to characters no document holds or to lone surrogates, which
+ * iconv passes through as they are.
+ */
+function readsAsUtf16(buffer: Buffer): boolean {
+  return UTF16_ORDERS.some((encoding) => {
+    const text = decodeWith(buffer, encoding);
+    return !mostlyUnreadable(text) && text.isWellFormed();
+  });
+}
+
+/**
+ * Reads a file for the editor. What declares an encoding or is recognizable UTF-16 is used as it
+ * is, since guessing a legacy encoding would silently garble the text. Text that is valid UTF-8 but
+ * decodes to characters no document holds is not UTF-8 either, and is asked about: UTF-16 text in
+ * a script without zero high bytes passes the UTF-8 check, and reading it as UTF-8 would write the
+ * mojibake back on the first save. Binary content is refused instead of being shown as garbage.
  */
 export async function decodeDocument(
   buffer: Buffer,
@@ -151,8 +200,13 @@ export async function decodeDocument(
 ): Promise<DecodedDocument | undefined> {
   const declared = declaredEncoding(buffer) ?? undeclaredUtf16(buffer);
   if (declared !== undefined) return { text: decodeWith(buffer, declared), encoding: declared };
-  if (isUtf8(buffer)) return { text: buffer.toString("utf8"), encoding: "utf-8" };
-  if (buffer.includes(0)) throw new Error("Not a text file");
+  if (isUtf8(buffer)) {
+    const text = buffer.toString("utf8");
+    if (!mostlyUnreadable(text)) return { text, encoding: "utf-8" };
+  }
+  // A UTF-16 document in such a script has the zero bytes of its line breaks and spaces, so a file
+  // that reads as one is asked about; only what reads as neither is refused
+  if (buffer.includes(0) && !readsAsUtf16(buffer)) throw new Error("Not a text file");
   const chosen = await askEncoding(window, path);
   if (chosen === undefined) return undefined;
   return { text: decodeWith(buffer, chosen), encoding: chosen };
