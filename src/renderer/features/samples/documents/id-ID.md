@@ -18,15 +18,20 @@ Letakkan kursor di dalam **teks tebal**, sebuah `rentang kode`, atau sebuah [tau
 | Tindakan                      | Pintasan                                                                                                    |
 | :---------------------------- | :---------------------------------------------------------------------------------------------------------- |
 | Tebal / Miring / Kode sebaris | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
+| Garis Bawah                   | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
 | Coret                         | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| Hapus Format                  | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | Tautan                        | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| Sisipkan Gambar               | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | Judul 1–6 / Paragraf          | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | Kutipan                       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | Daftar bernomor / butir       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | Blok kode / blok matematika   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | Tabel                         | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Cari / Ganti                  | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Buka Kembali Tab yang Ditutup | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | Kerangka                      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Mode Kode Sumber              | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Mode fokus / mesin tik        | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Atur ulang perbesaran         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | Preferensi                    | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |

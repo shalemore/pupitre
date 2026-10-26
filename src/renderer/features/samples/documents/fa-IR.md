@@ -18,15 +18,20 @@ Pupitre یک ویرایشگر دسکتاپ برای Markdown است. سندها 
 | کار                           | میان‌بر                                                                                                         |
 | :---------------------------- | :------------------------------------------------------------------------------------------------------------- |
 | پررنگ / مورب / کد درون‌خطی     | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                    |
+| زیرخط                         | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                   |
 | خط‌خورده                       | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                   |
+| پاک کردن قالب‌بندی             | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                                  |
 | پیوند                         | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                   |
+| درج تصویر                     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                                  |
 | عنوان ۱ تا ۶ / پاراگراف       | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                       |
 | نقل قول                       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                                  |
 | فهرست شماره‌دار / گلوله‌ای      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                   |
 | بلوک کد / بلوک ریاضی          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                   |
 | جدول                          | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                   |
 | یافتن / جایگزینی              | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (در macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| باز کردن دوبارهٔ زبانهٔ بسته‌شده | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                                  |
 | طرح کلی                       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                                  |
+| حالت کد منبع                  | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                   |
 | حالت تمرکز / حالت ماشین تحریر | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                                  |
 | بازنشانی بزرگ‌نمایی            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                                  |
 | تنظیمات                       | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                   |

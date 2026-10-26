@@ -18,15 +18,20 @@ Pupitre محرر Markdown لسطح المكتب. المستندات ملفات `
 | الإجراء                             | الاختصار                                                                                                     |
 | :--------------------------------- | :---------------------------------------------------------------------------------------------------------- |
 | غامق / مائل / تعليمات برمجية مضمنة | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
+| خط سفلي                            | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
 | يتوسطه خط                          | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| مسح التنسيق                        | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | رابط                               | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| إدراج صورة                         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | العنوان 1–6 / فقرة                 | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | اقتباس                             | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | قائمة مرقمة / نقطية                | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | كتلة تعليمات برمجية / كتلة رياضية  | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | جدول                               | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | بحث / استبدال                      | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| إعادة فتح علامة التبويب المغلقة     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | المخطط                             | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| وضع المصدر                         | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | وضع التركيز / وضع الآلة الكاتبة     | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | إعادة ضبط التكبير                  | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | التفضيلات                           | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |

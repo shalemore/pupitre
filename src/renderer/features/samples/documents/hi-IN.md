@@ -18,15 +18,20 @@ Pupitre एक डेस्कटॉप Markdown संपादक है। �
 | क्रिया                       | शॉर्टकट                                                                                                      |
 | :-------------------------- | :---------------------------------------------------------------------------------------------------------- |
 | बोल्ड / इटैलिक / इनलाइन कोड   | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
+| रेखांकन                       | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
 | स्ट्राइकथ्रू                    | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| स्वरूपण हटाएँ                  | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | लिंक                         | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| छवि डालें                     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | शीर्षक 1–6 / अनुच्छेद           | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | उद्धरण                       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | क्रमांकित / बुलेट सूची           | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | कोड ब्लॉक / गणित ब्लॉक        | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | तालिका                      | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | खोजें / बदलें                   | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| बंद टैब फिर से खोलें             | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | रूपरेखा                       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| स्रोत कोड मोड                | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | एकाग्रता मोड / टाइपराइटर मोड | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | ज़ूम रीसेट करें                  | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | प्राथमिकताएँ                  | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |

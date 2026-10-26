@@ -18,15 +18,20 @@ Pupitre เป็นโปรแกรมแก้ไข Markdown สำหร�
 | การกระทำ                    | คีย์ลัด                                                                                                        |
 | :-------------------------- | :---------------------------------------------------------------------------------------------------------- |
 | ตัวหนา / ตัวเอียง / โค้ดในบรรทัด | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
+| ขีดเส้นใต้                     | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
 | ขีดฆ่า                        | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| ล้างรูปแบบ                    | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | ลิงก์                         | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| แทรกรูปภาพ                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | หัวข้อ 1–6 / ย่อหน้า            | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | อ้างอิง                       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | รายการลำดับเลข / หัวข้อย่อย     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | บล็อกโค้ด / บล็อกคณิตศาสตร์      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | ตาราง                       | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | ค้นหา / แทนที่                 | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| เปิดแท็บที่ปิดไปอีกครั้ง            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | โครงร่าง                     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| โหมดโค้ดต้นฉบับ                | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | โหมดโฟกัส / โหมดพิมพ์ดีด        | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | รีเซ็ตการซูม                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | การตั้งค่า                     | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |

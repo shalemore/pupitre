@@ -18,15 +18,20 @@ Pupitre là trình soạn thảo Markdown trên máy tính. Tài liệu là các
 | Thao tác                          | Phím tắt                                                                                                    |
 | :-------------------------------- | :---------------------------------------------------------------------------------------------------------- |
 | In đậm / nghiêng / mã trong dòng  | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
+| Gạch chân                         | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
 | Gạch ngang                        | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| Xóa định dạng                     | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | Liên kết                          | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| Chèn ảnh                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | Tiêu đề 1–6 / Đoạn văn            | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | Trích dẫn                         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | Danh sách đánh số / gạch đầu dòng | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | Khối mã / khối công thức          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | Bảng                              | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Tìm / Thay thế                    | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Mở lại tab đã đóng                | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | Dàn ý                             | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Chế độ mã nguồn                   | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Chế độ tập trung / máy đánh chữ   | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Đặt lại thu phóng                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | Tùy chọn                          | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
