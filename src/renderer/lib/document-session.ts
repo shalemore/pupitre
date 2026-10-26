@@ -60,6 +60,8 @@ interface InMemoryTab extends Omit<OpenDocument, "id" | "path"> {
   markdown: string;
   /** What its text was compared to, so a reopened tab shows the unsaved changes it had. */
   savedMarkdown: string;
+  /** The pictures its text links by blob: URL, kept alive for as long as the tab can come back. */
+  pendingImages: PendingImages;
 }
 
 /**
@@ -129,7 +131,8 @@ export function createDocumentSession(
 
   /**
    * Adds a tab for `doc` holding `markdown` and activates it; `text` says what its text is compared
-   * to, which defaults to the text it is loaded with, so a tab starts out clean.
+   * to, which defaults to the text it is loaded with, so a tab starts out clean. `pendingImages`
+   * lets a reopened tab adopt the pictures its text links, which only a closed tab still holds.
    */
   const addTab = (
     doc: Omit<OpenDocument, "id">,
@@ -138,6 +141,7 @@ export function createDocumentSession(
       savedMarkdown: markdown,
       diskContent: "",
     },
+    pendingImages: PendingImages = createPendingImages(),
   ) => {
     const id = nextTabId++;
     batch(() => {
@@ -151,7 +155,7 @@ export function createDocumentSession(
           missingOnDisk: false,
           diskContent: text.diskContent,
           discarded: false,
-          pendingImages: createPendingImages(),
+          pendingImages,
         },
       ]);
       setActiveTabId(id);
@@ -354,6 +358,11 @@ export function createDocumentSession(
 
   const canReopenTab = () => closedTabs().length > 0;
 
+  /** Drops what a tab that will never come back still holds: the pictures of a text nobody shows. */
+  const forgetClosedTab = (closed: ClosedTab) => {
+    if (closed.kind === "in-memory") closed.text.pendingImages.dispose();
+  };
+
   /** Keeps a tab that is being closed, so File › Reopen Closed Tab can bring it back. */
   const rememberClosedTab = (tab: Tab) => {
     const closed: ClosedTab =
@@ -368,11 +377,16 @@ export function createDocumentSession(
               isSample: tab.doc.isSample,
               markdown: tab.markdown,
               savedMarkdown: tab.savedMarkdown,
+              pendingImages: tab.pendingImages,
             },
           }
         : { kind: "file", path: tab.doc.path };
-    // Once the stack is full the oldest tab makes room for the one just closed
-    setClosedTabs([...closedTabs(), closed].slice(-CLOSED_TAB_LIMIT));
+    // Once the stack is full the oldest tabs make room for the one just closed
+    const kept = [...closedTabs(), closed];
+    for (const gone of kept.slice(0, Math.max(kept.length - CLOSED_TAB_LIMIT, 0))) {
+      forgetClosedTab(gone);
+    }
+    setClosedTabs(kept.slice(-CLOSED_TAB_LIMIT));
   };
 
   /** Closes one tab, asking first about its unsaved changes; the next one takes its place and the last leaves the welcome screen. */
@@ -382,8 +396,14 @@ export function createDocumentSession(
     if (tab === undefined) return;
     // A close the user cancelled leaves no tab behind to bring back
     if (!(await confirmCloseTab(tab))) return;
-    tab.pendingImages.dispose();
-    rememberClosedTab(tab);
+    // The prompt may have saved the tab under a path it did not have before, which replaces the tab
+    // it was asked about: what comes back is the one the signal holds now, file and all
+    const closedTab = tabs().find((candidate) => candidate.id === id);
+    if (closedTab === undefined) return;
+    // A file is read again when it reopens, so nothing of it is kept; a text that exists nowhere
+    // else keeps its pictures too, or the links a later save writes would point at revoked URLs
+    if (closedTab.doc.path !== undefined) closedTab.pendingImages.dispose();
+    rememberClosedTab(closedTab);
     const closed = tabs().filter((candidate) => candidate.id !== id);
     batch(() => {
       setTabs(closed);
@@ -411,6 +431,8 @@ export function createDocumentSession(
       return;
     }
     const { text } = closed;
+    // Reopening brings the text of a discarded close back as unsaved work rather than as a file, and
+    // the pictures it links come with it, so a save of it writes the images it shows
     addTab(
       {
         path: undefined,
@@ -422,6 +444,7 @@ export function createDocumentSession(
       },
       text.markdown,
       { savedMarkdown: text.savedMarkdown, diskContent: "" },
+      text.pendingImages,
     );
   };
 
