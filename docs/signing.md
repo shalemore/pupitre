@@ -34,7 +34,7 @@ the fuse off would break them.
 What a build really has is readable from the packaged binary:
 
 ```sh
-npx electron-fuses read --app release/win-unpacked/Pupitre.exe
+npx --no-install electron-fuses read --app release/win-unpacked/Pupitre.exe
 ```
 
 ## Secrets

@@ -40,7 +40,7 @@ jobs:
       - name: Package the Linux app and read its fuses back
         run: |
           npx electron-builder --linux dir
-          fuses="$(npx electron-fuses read --app release/linux-unpacked/pupitre)"
+          fuses="$(FORCE_COLOR=0 npx --no-install electron-fuses read --app release/linux-unpacked/pupitre)"
           echo "$fuses"
           grep -q "RunAsNode is Disabled" <<< "$fuses"
           grep -q "OnlyLoadAppFromAsar is Enabled" <<< "$fuses"
