@@ -6,6 +6,9 @@ export default defineConfig({
   testDir: "./e2e",
   fullyParallel: false,
   workers: 1,
+  // A cold Electron start on CI can take a while before the first window paints
+  timeout: 60_000,
+  expect: { timeout: 10_000 },
   forbidOnly: Boolean(process.env["CI"]),
   retries: process.env["CI"] ? 1 : 0,
   reporter: process.env["CI"] ? "github" : "list",
