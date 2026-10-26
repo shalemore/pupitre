@@ -88,6 +88,10 @@ export const faIR = {
     fileDeletedDetail:
       "برای نگه داشتن این سند دوباره آن را ذخیره کنید. اگر ذخیره نکنید، بدون ذخیره باز می‌ماند و هنگام بستن دوباره پرسیده می‌شود.",
     fileActionFailed: "تغییر انجام نشد.",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "درباره Pupitre",
@@ -162,6 +166,8 @@ export const faIR = {
     commandPalette: "پالت فرمان‌ها",
     quickOpen: "باز کردن سریع...",
     versionHistory: "تاریخچهٔ نسخه‌ها…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

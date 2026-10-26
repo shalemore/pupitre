@@ -87,6 +87,10 @@ export const elGR = {
     fileDeletedDetail:
       "Αποθηκεύστε το ξανά για να διατηρήσετε το έγγραφο. Αν δεν το αποθηκεύσετε, θα παραμείνει ανοιχτό ως μη αποθηκευμένο και θα ερωτηθείτε ξανά κατά το κλείσιμο.",
     fileActionFailed: "Δεν ήταν δυνατή η αλλαγή.",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "Σχετικά με το Pupitre",
@@ -163,6 +167,8 @@ export const elGR = {
     commandPalette: "Παλέτα εντολών",
     quickOpen: "Γρήγορο άνοιγμα…",
     versionHistory: "Ιστορικό εκδόσεων…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

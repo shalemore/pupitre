@@ -86,6 +86,10 @@ export const jaJP = {
     fileDeletedDetail:
       "もう一度保存すると、この書類を残せます。保存しない場合は未保存のまま開いた状態になり、閉じるときにもう一度確認します。",
     fileActionFailed: "変更できませんでした。",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "Pupitre について",
@@ -159,6 +163,8 @@ export const jaJP = {
     commandPalette: "コマンドパレット",
     quickOpen: "クイックオープン…",
     versionHistory: "版の履歴…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

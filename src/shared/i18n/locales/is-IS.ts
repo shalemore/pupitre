@@ -88,6 +88,10 @@ export const isIS = {
     fileDeletedDetail:
       "Vistaðu hana aftur til að halda skjalinu. Ef þú vistar ekki helst það opið óvistað og spurt verður aftur þegar því er lokað.",
     fileActionFailed: "Ekki tókst að gera breytinguna.",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "Um Pupitre",
@@ -163,6 +167,8 @@ export const isIS = {
     commandPalette: "Skipanaspjald",
     quickOpen: "Opna fljótt…",
     versionHistory: "Útgáfusaga…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

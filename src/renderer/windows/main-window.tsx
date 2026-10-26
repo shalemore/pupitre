@@ -337,6 +337,8 @@ export const MainWindow: Component = () => {
         return openFind("replace");
       case "edit.copy-html":
         return void copyAsHtml();
+      case "edit.insert-image":
+        return void editor()?.insertImage();
       case "edit.search-workspace":
         return setWorkspaceSearchOpen(true);
       case "view.toggle-sidebar":

@@ -86,6 +86,10 @@ export const frFR = {
     fileDeletedDetail:
       "Enregistrez-le à nouveau pour conserver ce document. Sinon, il reste ouvert sans être enregistré et la question sera reposée à la fermeture.",
     fileActionFailed: "La modification n'a pas pu être faite.",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "À propos de Pupitre",
@@ -159,6 +163,8 @@ export const frFR = {
     commandPalette: "Palette de commandes",
     quickOpen: "Ouvrir rapidement...",
     versionHistory: "Historique des versions…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

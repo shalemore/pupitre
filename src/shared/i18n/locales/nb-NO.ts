@@ -87,6 +87,10 @@ export const nbNO = {
     fileDeletedDetail:
       "Lagre den på nytt for å beholde dokumentet. Lagrer du ikke, blir det værende åpent som ulagret, og du blir spurt igjen når du lukker det.",
     fileActionFailed: "Endringen kunne ikke gjøres.",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "Om Pupitre",
@@ -163,6 +167,8 @@ export const nbNO = {
     commandPalette: "Kommandopalett",
     quickOpen: "Åpne hurtig…",
     versionHistory: "Versjonslogg…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

@@ -87,6 +87,10 @@ export const svSE = {
     fileDeletedDetail:
       "Spara den igen för att behålla dokumentet. Om du inte sparar förblir det öppet osparat och du får frågan igen när du stänger det.",
     fileActionFailed: "Ändringen kunde inte göras.",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "Om Pupitre",
@@ -163,6 +167,8 @@ export const svSE = {
     commandPalette: "Kommandopalett",
     quickOpen: "Öppna snabbt…",
     versionHistory: "Versionshistorik…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

@@ -101,6 +101,10 @@ export const ar = {
     fileDeletedDetail:
       "احفظه مرة أخرى للاحتفاظ بهذا المستند. إذا لم تحفظه فسيبقى مفتوحًا دون حفظ وسيُطرح عليك السؤال مجددًا عند إغلاقه.",
     fileActionFailed: "تعذّر إجراء التغيير.",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "حول Pupitre",
@@ -175,6 +179,8 @@ export const ar = {
     commandPalette: "لوحة الأوامر",
     quickOpen: "فتح سريع...",
     versionHistory: "سجل الإصدارات…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

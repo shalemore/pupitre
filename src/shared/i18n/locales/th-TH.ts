@@ -88,6 +88,10 @@ export const thTH = {
     fileDeletedDetail:
       "บันทึกอีกครั้งเพื่อเก็บเอกสารนี้ไว้ หากไม่บันทึก เอกสารจะยังเปิดอยู่ในสถานะยังไม่บันทึก และจะถามอีกครั้งเมื่อปิด",
     fileActionFailed: "ดำเนินการเปลี่ยนแปลงไม่สำเร็จ",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "เกี่ยวกับ Pupitre",
@@ -162,6 +166,8 @@ export const thTH = {
     commandPalette: "พาเลตคำสั่ง",
     quickOpen: "เปิดอย่างรวดเร็ว…",
     versionHistory: "ประวัติเวอร์ชัน…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

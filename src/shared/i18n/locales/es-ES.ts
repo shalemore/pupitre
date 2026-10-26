@@ -84,6 +84,10 @@ export const esES = {
     fileDeletedDetail:
       "Guárdalo de nuevo para conservar este documento. Si no lo haces, seguirá abierto sin guardar y se te preguntará otra vez al cerrarlo.",
     fileActionFailed: "No se pudo hacer el cambio.",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "Acerca de Pupitre",
@@ -158,6 +162,8 @@ export const esES = {
     commandPalette: "Paleta de comandos",
     quickOpen: "Abrir rápidamente...",
     versionHistory: "Historial de versiones…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

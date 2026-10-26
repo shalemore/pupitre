@@ -86,6 +86,10 @@ export const koKR = {
     fileDeletedDetail:
       "다시 저장하면 이 문서를 보존할 수 있습니다. 저장하지 않으면 저장되지 않은 상태로 열려 있으며, 닫을 때 다시 확인합니다.",
     fileActionFailed: "변경할 수 없습니다.",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "Pupitre 정보",
@@ -159,6 +163,8 @@ export const koKR = {
     commandPalette: "명령 팔레트",
     quickOpen: "빠르게 열기…",
     versionHistory: "버전 기록…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

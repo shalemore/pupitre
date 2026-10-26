@@ -93,6 +93,10 @@ export const ukUA = {
     fileDeletedDetail:
       "Збережіть його знову, щоб зберегти документ. Якщо не зберігати, він залишиться відкритим як незбережений, і під час закриття запитання повториться.",
     fileActionFailed: "Не вдалося виконати зміну.",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "Про Pupitre",
@@ -168,6 +172,8 @@ export const ukUA = {
     commandPalette: "Палітра команд",
     quickOpen: "Швидко відкрити…",
     versionHistory: "Історія версій…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

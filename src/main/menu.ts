@@ -219,7 +219,15 @@ function buildTemplate(): MenuItemConstructorOptions[] {
       id: "format",
       label: labels.format,
       enabled: hasDocument,
-      submenu: formatItems(INLINE_FORMAT_ACTIONS, dispatchToMainWindow),
+      submenu: [
+        ...formatItems(INLINE_FORMAT_ACTIONS, dispatchToMainWindow),
+        separator,
+        {
+          label: labels.insertImage,
+          accelerator: "CmdOrCtrl+Shift+I",
+          click: () => dispatchToMainWindow({ id: "edit.insert-image" }),
+        },
+      ],
     },
     {
       id: "view",

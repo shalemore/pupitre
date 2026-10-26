@@ -87,6 +87,10 @@ export const idID = {
     fileDeletedDetail:
       "Simpan lagi untuk mempertahankan dokumen ini. Jika tidak disimpan, dokumen tetap terbuka sebagai belum tersimpan dan Anda akan ditanya lagi saat menutupnya.",
     fileActionFailed: "Perubahan tidak dapat dilakukan.",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "Tentang Pupitre",
@@ -161,6 +165,8 @@ export const idID = {
     commandPalette: "Palet Perintah",
     quickOpen: "Buka dengan Cepat...",
     versionHistory: "Riwayat Versi…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

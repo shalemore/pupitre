@@ -71,6 +71,9 @@ export const enUS = {
     cancel: "Cancel",
     openFailed: "The file couldn't be opened.",
     saveFailed: "The document couldn't be saved.",
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
     /** Asked for a file that is neither UTF-8 nor UTF-16, which declares no encoding of its own. */
     encodingMessage: "This file is not UTF-8. Which encoding was it saved in?",
     encodingCannotStore: (encoding: string) =>
@@ -160,6 +163,7 @@ export const enUS = {
     commandPalette: "Command Palette",
     quickOpen: "Open Quickly…",
     versionHistory: "Version History…",
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

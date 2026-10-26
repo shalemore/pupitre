@@ -86,6 +86,10 @@ export const hiIN = {
     fileDeletedDetail:
       "इस दस्तावेज़ को रखने के लिए इसे फिर से सहेजें। न सहेजने पर यह बिना सहेजे खुला रहेगा और बंद करते समय फिर पूछा जाएगा।",
     fileActionFailed: "बदलाव नहीं किया जा सका।",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "Pupitre के बारे में",
@@ -160,6 +164,8 @@ export const hiIN = {
     commandPalette: "कमांड पैलेट",
     quickOpen: "त्वरित खोलें...",
     versionHistory: "संस्करण इतिहास…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

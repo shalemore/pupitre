@@ -87,6 +87,10 @@ export const daDK = {
     fileDeletedDetail:
       "Gem den igen for at beholde dokumentet. Gemmer du ikke, forbliver det åbent uden at være gemt, og du bliver spurgt igen, når du lukker det.",
     fileActionFailed: "Ændringen kunne ikke udføres.",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "Om Pupitre",
@@ -162,6 +166,8 @@ export const daDK = {
     commandPalette: "Kommandopalet",
     quickOpen: "Åbn hurtigt…",
     versionHistory: "Versionshistorik…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

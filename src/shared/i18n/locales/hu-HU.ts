@@ -88,6 +88,10 @@ export const huHU = {
     fileDeletedDetail:
       "Mentsd újra, hogy megtartsd a dokumentumot. Ha nem mented, mentetlenül nyitva marad, és bezáráskor újra rákérdezünk.",
     fileActionFailed: "A módosítást nem sikerült végrehajtani.",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "A Pupitre névjegye",
@@ -164,6 +168,8 @@ export const huHU = {
     commandPalette: "Parancspaletta",
     quickOpen: "Gyors megnyitás…",
     versionHistory: "Verziótörténet…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

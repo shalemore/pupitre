@@ -88,6 +88,10 @@ export const nlNL = {
     fileDeletedDetail:
       "Sla het opnieuw op om dit document te behouden. Anders blijft het ongeopgeslagen geopend en word je bij het sluiten opnieuw gevraagd.",
     fileActionFailed: "De wijziging kon niet worden doorgevoerd.",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "Over Pupitre",
@@ -164,6 +168,8 @@ export const nlNL = {
     commandPalette: "Opdrachtenpalet",
     quickOpen: "Snel openen…",
     versionHistory: "Versiegeschiedenis…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

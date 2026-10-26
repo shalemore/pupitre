@@ -93,6 +93,10 @@ export const ruRU = {
     fileDeletedDetail:
       "Сохраните его снова, чтобы сохранить документ. Если не сохранять, он останется открытым как несохранённый, и при закрытии вопрос повторится.",
     fileActionFailed: "Не удалось выполнить изменение.",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "О программе Pupitre",
@@ -167,6 +171,8 @@ export const ruRU = {
     commandPalette: "Палитра команд",
     quickOpen: "Быстро открыть…",
     versionHistory: "История версий…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

@@ -88,6 +88,10 @@ export const fiFI = {
     fileDeletedDetail:
       "Tallenna se uudelleen säilyttääksesi asiakirjan. Jos et tallenna, se pysyy auki tallentamattomana ja sinulta kysytään uudelleen suljettaessa.",
     fileActionFailed: "Muutosta ei voitu tehdä.",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "Tietoja Pupitresta",
@@ -162,6 +166,8 @@ export const fiFI = {
     commandPalette: "Komentopaletti",
     quickOpen: "Avaa nopeasti…",
     versionHistory: "Versiohistoria…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

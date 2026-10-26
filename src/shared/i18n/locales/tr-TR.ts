@@ -89,6 +89,10 @@ export const trTR = {
     fileDeletedDetail:
       "Bu belgeyi korumak için yeniden kaydedin. Kaydetmezseniz kaydedilmemiş olarak açık kalır ve kapatırken tekrar sorulur.",
     fileActionFailed: "Değişiklik yapılamadı.",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "Pupitre Hakkında",
@@ -163,6 +167,8 @@ export const trTR = {
     commandPalette: "Komut Paleti",
     quickOpen: "Hızlı Aç…",
     versionHistory: "Sürüm Geçmişi…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

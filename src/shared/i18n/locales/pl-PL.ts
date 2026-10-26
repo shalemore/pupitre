@@ -95,6 +95,10 @@ export const plPL = {
     fileDeletedDetail:
       "Zapisz go ponownie, aby zachować dokument. Jeśli nie zapiszesz, pozostanie otwarty jako niezapisany, a przy zamykaniu zapytamy ponownie.",
     fileActionFailed: "Nie udało się wykonać zmiany.",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "O programie Pupitre",
@@ -169,6 +173,8 @@ export const plPL = {
     commandPalette: "Paleta poleceń",
     quickOpen: "Otwórz szybko…",
     versionHistory: "Historia wersji…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

@@ -82,6 +82,10 @@ export const zhCN = {
     fileDeletedDetail:
       "重新保存可保留此文档。若不保存，文档仍保持打开并视为未保存，关闭时会再次询问。",
     fileActionFailed: "无法完成此更改。",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "关于 Pupitre",
@@ -155,6 +159,8 @@ export const zhCN = {
     commandPalette: "命令面板",
     quickOpen: "快速打开…",
     versionHistory: "版本历史…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

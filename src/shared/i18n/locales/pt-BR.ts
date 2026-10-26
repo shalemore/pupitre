@@ -85,6 +85,10 @@ export const ptBR = {
     fileDeletedDetail:
       "Salve novamente para manter este documento. Se não salvar, ele continua aberto sem salvar e a pergunta será repetida ao fechar.",
     fileActionFailed: "Não foi possível fazer a alteração.",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "Sobre o Pupitre",
@@ -159,6 +163,8 @@ export const ptBR = {
     commandPalette: "Paleta de comandos",
     quickOpen: "Abrir rapidamente...",
     versionHistory: "Histórico de versões…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

@@ -314,7 +314,15 @@ function menuItems(menu: TopMenu): DemoMenuEntry[] {
     case "paragraphMenu":
       return withGroupSeparators(PARAGRAPH_MENU_GROUPS.map(formatItems), divider);
     case "format":
-      return formatItems(INLINE_FORMAT_ACTIONS);
+      return [
+        ...formatItems(INLINE_FORMAT_ACTIONS),
+        divider,
+        {
+          label: m.insertImage,
+          shortcut: "CmdOrCtrl+Shift+I",
+          run: send({ id: "edit.insert-image" }),
+        },
+      ];
     case "view":
       return [
         {
@@ -428,6 +436,8 @@ const handlers: Handlers = {
   "path:trash": (path) => void files.delete(path),
   "path:reveal": () => {},
   "path:locate": (path) => opened(path),
+  // A browser has no native file picker to hand an image to the editor
+  "image:pick": () => null,
   "folder:watch": nothing,
   "folder:unwatch": nothing,
   "document:watch": nothing,

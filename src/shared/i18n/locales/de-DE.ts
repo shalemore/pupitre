@@ -86,6 +86,10 @@ export const deDE = {
     fileDeletedDetail:
       "Speichere die Datei erneut, um das Dokument zu behalten. Ohne Speichern bleibt es ungesichert geöffnet, und beim Schließen wirst du erneut gefragt.",
     fileActionFailed: "Die Änderung konnte nicht vorgenommen werden.",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "Über Pupitre",
@@ -160,6 +164,8 @@ export const deDE = {
     commandPalette: "Befehlspalette",
     quickOpen: "Schnell öffnen...",
     versionHistory: "Versionsverlauf…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

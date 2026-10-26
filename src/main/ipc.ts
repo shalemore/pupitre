@@ -152,6 +152,10 @@ function locate(path: string): DocumentLocation {
   return { path: resolved, folder, baseUrl: pathToFileURL(join(folder, "/")).href };
 }
 
+/** The pictures the Insert Image dialog offers, and how large one may be: a document links its images rather than embedding them. */
+const IMAGE_EXTENSIONS = ["png", "jpg", "jpeg", "gif", "webp", "svg", "bmp", "avif"];
+const MAX_IMAGE_BYTES = 20 * 1024 * 1024;
+
 async function saveImage(
   documentPath: string,
   fileName: string,
@@ -371,6 +375,25 @@ export function registerIpcHandlers(): void {
     if (path === null) return null;
     addRecentFile(path);
     return locate(path);
+  });
+  handle("image:pick", async (event) => {
+    const window = senderWindow(event);
+    const path = await openPath(window, {
+      properties: ["openFile"],
+      filters: [{ name: "Images", extensions: IMAGE_EXTENSIONS }],
+    });
+    if (path === null) return null;
+    const name = basename(path);
+    if ((await stat(path)).size > MAX_IMAGE_BYTES) {
+      await dialog.showMessageBox(window, {
+        type: "error",
+        message: t().dialogs.imageTooLarge(name),
+        detail: t().dialogs.imageTooLargeDetail,
+        noLink: true,
+      });
+      return null;
+    }
+    return { name, data: new Uint8Array(await readFile(path)) };
   });
   handle("document:save-image", (_event, documentPath, fileName, data) =>
     saveImage(documentPath, fileName, data),

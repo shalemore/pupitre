@@ -22,6 +22,17 @@ export function imageSource(destination: string): string {
   return destination.replace(/^<(.*)>$/, "$1");
 }
 
+/** The Markdown image that links `src` and reads as `alt`; an address holding spaces goes between angle brackets. */
+export function imageMarkdown(alt: string, src: string): string {
+  return `![${alt}](${/\s/.test(src) ? `<${src}>` : src})`;
+}
+
+/** The alt text of a picture picked from disk: its file name without the extension. */
+export function imageAlt(name: string): string {
+  const dot = name.lastIndexOf(".");
+  return dot > 0 ? name.slice(0, dot) : name;
+}
+
 export class ImageWidget extends WidgetType {
   constructor(
     readonly src: string,
@@ -61,7 +72,7 @@ function imageFiles(data: DataTransfer | null): File[] {
 export function imageInput(upload: (file: File) => Promise<string>): Extension {
   const insert = async (view: EditorView, files: File[], pos: number) => {
     const sources = await Promise.all(files.map(upload));
-    const text = sources.map((src) => `![](${/\s/.test(src) ? `<${src}>` : src})`).join("\n");
+    const text = sources.map((src) => imageMarkdown("", src)).join("\n");
     const at = Math.min(pos, view.state.doc.length);
     view.dispatch({
       changes: { from: at, insert: text },
@@ -90,6 +101,28 @@ export function imageInput(upload: (file: File) => Promise<string>): Extension {
       return true;
     },
   });
+}
+
+/** The type of a picked picture, kept on the File so a document without a file can show it before the save. */
+const IMAGE_TYPES: Readonly<Record<string, string>> = {
+  png: "image/png",
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  gif: "image/gif",
+  webp: "image/webp",
+  svg: "image/svg+xml",
+  bmp: "image/bmp",
+  avif: "image/avif",
+};
+
+/** The image the user picked from disk, as the File a pasted picture arrives as; null when they dropped out of the dialog. */
+export async function pickImage(): Promise<File | null> {
+  const picked = await desktop.invoke("image:pick");
+  if (picked === null) return null;
+  const extension = picked.name.slice(picked.name.lastIndexOf(".") + 1).toLowerCase();
+  const type = IMAGE_TYPES[extension] ?? "";
+  // slice() gives the bytes an ArrayBuffer of their own, which is what a Blob takes
+  return new File([picked.data.slice()], picked.name, { type });
 }
 
 /** Writes a pasted or dropped picture next to `documentPath` and returns the address to link it. */

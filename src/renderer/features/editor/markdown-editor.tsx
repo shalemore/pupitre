@@ -35,6 +35,7 @@ import {
   flushDocumentPositions,
   rememberDocumentPosition,
 } from "@/lib/document-positions";
+import { messageOf, reportFailure } from "@/lib/errors";
 import { fileNameOf, withoutDocumentExtension } from "@/lib/file";
 import { settings } from "@/lib/settings";
 import { countText, type TextStats } from "@/lib/text-stats";
@@ -55,7 +56,15 @@ import {
   type MarkdownStyle,
   runFormatAction,
 } from "./format-commands";
-import { type PendingImages, documentBaseUrl, imageInput, saveImageNextTo } from "./images";
+import {
+  type PendingImages,
+  documentBaseUrl,
+  imageAlt,
+  imageInput,
+  imageMarkdown,
+  pickImage,
+  saveImageNextTo,
+} from "./images";
 import { livePreview, setPrinting } from "./live-preview";
 import { markdownLanguage } from "./markdown-language";
 import { prerenderMath } from "./math";
@@ -105,6 +114,8 @@ export interface MarkdownEditorHandle {
   prepareForPrint: () => Promise<() => void>;
   /** Writes images pasted before the document had a file next to it, see images.ts. */
   persistImages: (documentPath: string) => Promise<void>;
+  /** Asks for an image file and links it at the caret, the way a pasted picture is linked. */
+  insertImage: () => Promise<void>;
   /** The document as a self-contained HTML page, see features/export/document-html.ts. */
   toHtml: () => Promise<string>;
   /**
@@ -440,6 +451,25 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       return matchStats(view);
     };
 
+    const insertImage = async () => {
+      try {
+        const file = await pickImage();
+        if (file === null) return;
+        const src = await uploadImage(file);
+        const markdown = imageMarkdown(imageAlt(file.name), src);
+        // Picking and writing took a moment, so the caret the image goes to is read again here
+        const { from, to } = view.state.selection.main;
+        view.dispatch({
+          changes: { from, to, insert: markdown },
+          selection: { anchor: from + markdown.length },
+          scrollIntoView: true,
+        });
+        view.focus();
+      } catch (error) {
+        await reportFailure(t().dialogs.imageFailed, messageOf(error));
+      }
+    };
+
     props.ref({
       getMarkdown: () => view.state.doc.toString(),
       focus: () => view.focus(),
@@ -500,6 +530,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         };
       },
       persistImages: (documentPath) => props.pendingImages.persistView(view, documentPath),
+      insertImage,
       toHtml: () => documentHtml(view.state, documentTitle(props.documentPath)),
       toHtmlFragment: async () => {
         const { from, to } = view.state.selection.main;

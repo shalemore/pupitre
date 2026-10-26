@@ -86,6 +86,10 @@ export const viVN = {
     fileDeletedDetail:
       "Hãy lưu lại để giữ tài liệu này. Nếu không lưu, tài liệu vẫn mở ở trạng thái chưa lưu và sẽ được hỏi lại khi đóng.",
     fileActionFailed: "Không thể thực hiện thay đổi.",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "Giới thiệu Pupitre",
@@ -160,6 +164,8 @@ export const viVN = {
     commandPalette: "Bảng lệnh",
     quickOpen: "Mở nhanh…",
     versionHistory: "Lịch sử phiên bản…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

@@ -93,6 +93,10 @@ export const csCZ = {
     fileDeletedDetail:
       "Uložte jej znovu, abyste dokument zachovali. Pokud jej neuložíte, zůstane otevřený jako neuložený a při zavření se zeptáme znovu.",
     fileActionFailed: "Změnu se nepodařilo provést.",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "O aplikaci Pupitre",
@@ -167,6 +171,8 @@ export const csCZ = {
     commandPalette: "Paleta příkazů",
     quickOpen: "Rychle otevřít…",
     versionHistory: "Historie verzí…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

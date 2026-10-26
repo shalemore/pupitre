@@ -237,6 +237,13 @@ export interface DocumentState {
   isDirty: boolean;
 }
 
+/** An image the user picked from disk, handed over as the bytes of a pasted picture would be. */
+export interface PickedImage {
+  /** The name of the file, which names the image where it is written and reads as its alt text. */
+  name: string;
+  data: Uint8Array;
+}
+
 /** Channels the renderer calls through `ipcRenderer.invoke` and the main process implements with `ipcMain.handle`. */
 export interface InvokeChannels {
   "settings:update": (patch: Partial<Settings>) => void;
@@ -302,6 +309,8 @@ export interface InvokeChannels {
   ) => void;
   /** Asks where to save a document; the document is written with document:write afterwards. */
   "dialog:choose-save-path": (suggestedName: string) => DocumentLocation | null;
+  /** Asks for an image file; null when the user dropped out of the dialog or the file was too large to insert. */
+  "image:pick": () => PickedImage | null;
   /** Saves an image into the assets folder next to the document and returns a relative path ready for Markdown. */
   "document:save-image": (documentPath: string, fileName: string, data: Uint8Array) => string;
   /** Opens the system print dialog for the window; resolves once the dialog closed, whether a page was printed or not. */

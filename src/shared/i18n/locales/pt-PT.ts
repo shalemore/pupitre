@@ -84,6 +84,10 @@ export const ptPT = {
     fileDeletedDetail:
       "Guarde novamente para manter este documento. Se não guardar, continua aberto sem guardar e a pergunta será repetida ao fechar.",
     fileActionFailed: "Não foi possível efetuar a alteração.",
+
+    imageFailed: "The image couldn't be inserted.",
+    imageTooLarge: (fileName: string) => `${fileName} is too large to insert.`,
+    imageTooLargeDetail: "An image picked from disk can be 20 MiB at most.",
   },
   about: {
     windowTitle: "Acerca do Pupitre",
@@ -158,6 +162,8 @@ export const ptPT = {
     commandPalette: "Paleta de comandos",
     quickOpen: "Abrir rapidamente...",
     versionHistory: "Histórico de versões…",
+
+    insertImage: "Insert Image…",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
