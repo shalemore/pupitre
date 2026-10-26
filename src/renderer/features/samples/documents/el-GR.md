@@ -18,15 +18,20 @@
 | Ενέργεια                                | Συντόμευση                                                                                                  |
 | :-------------------------------------- | :---------------------------------------------------------------------------------------------------------- |
 | Έντονα / Πλάγια / Κώδικας εντός γραμμής | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
+| Υπογράμμιση                             | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
 | Διακριτή διαγραφή                       | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| Καθαρισμός μορφής                       | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | Σύνδεσμος                               | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| Εισαγωγή εικόνας                        | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | Επικεφαλίδα 1–6 / Παράγραφος            | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | Παράθεση                                | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | Αριθμημένη / λίστα με κουκκίδες         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | Μπλοκ κώδικα / Μαθηματικό μπλοκ         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | Πίνακας                                 | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Εύρεση / Αντικατάσταση                  | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Επανάνοιγμα κλειστής καρτέλας           | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | Περίγραμμα                              | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Λειτουργία πηγαίου κώδικα               | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Λειτουργία συγκέντρωσης / γραφομηχανής  | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Επαναφορά μεγέθυνσης                    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | Προτιμήσεις                             | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |

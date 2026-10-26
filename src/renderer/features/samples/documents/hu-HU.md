@@ -18,15 +18,20 @@ Helyezze a kurzort **félkövér szövegbe**, egy `soron belüli kódba` vagy eg
 | Művelet                            | Gyorsbillentyű                                                                                              |
 | :--------------------------------- | :---------------------------------------------------------------------------------------------------------- |
 | Félkövér / Dőlt / Soron belüli kód | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
+| Aláhúzás                           | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
 | Áthúzás                            | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| Formázás törlése                   | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | Hivatkozás                         | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| Kép beszúrása                      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | Címsor 1–6 / Bekezdés              | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | Idézet                             | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | Számozott / felsorolásos lista     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | Kódblokk / Matematikai blokk       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | Táblázat                           | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Keresés / Csere                    | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Bezárt lap újramegnyitása          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | Vázlat                             | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Forráskód mód                      | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Fókuszmód / Írógép mód             | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Nagyítás visszaállítása            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | Beállítások                        | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |

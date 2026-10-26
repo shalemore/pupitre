@@ -18,15 +18,20 @@ Pupitre はデスクトップ向けの Markdown エディタです。ドキュ�
 | 操作                                    | ショートカット                                                                                              |
 | :-------------------------------------- | :---------------------------------------------------------------------------------------------------------- |
 | 太字 / 斜体 / インラインコード          | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
+| 下線                                    | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
 | 取り消し線                              | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| 書式をクリア                            | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | リンク                                  | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| 画像を挿入                              | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | 見出し 1–6 / 段落                       | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | 引用                                    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | 番号付きリスト / 箇条書き               | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | コードブロック / 数式ブロック           | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | 表                                      | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | 検索 / 置換                             | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| 閉じたタブを再度開く                    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | アウトライン                            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| ソースコードモード                      | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | フォーカスモード / タイプライターモード | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | ズームをリセット                        | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | 環境設定                                | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |

@@ -18,15 +18,20 @@ Pupitre bir masaüstü Markdown düzenleyicisidir. Belgeler sıradan `.md` dosya
 | İşlem                           | Kısayol                                                                                                     |
 | :------------------------------ | :---------------------------------------------------------------------------------------------------------- |
 | Kalın / İtalik / Satır içi kod  | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
+| Altı Çizili                     | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
 | Üstü çizili                     | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| Biçimi Temizle                  | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | Bağlantı                        | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| Resim Ekle                      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | Başlık 1–6 / Paragraf           | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | Alıntı                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | Numaralı / madde işaretli liste | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | Kod bloğu / Matematik bloğu     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | Tablo                           | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Bul / Değiştir                  | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Kapatılan Sekmeyi Yeniden Aç    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | Anahat                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Kaynak Kodu Modu                | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Odak modu / Daktilo modu        | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Yakınlaştırmayı sıfırla         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | Tercihler                       | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |

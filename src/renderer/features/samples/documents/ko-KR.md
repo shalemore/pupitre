@@ -18,15 +18,20 @@ Pupitre는 데스크톱용 Markdown 편집기입니다. 문서는 일반 `.md` �
 | 동작                           | 단축키                                                                                                      |
 | :----------------------------- | :---------------------------------------------------------------------------------------------------------- |
 | 굵게 / 기울임꼴 / 인라인 코드  | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
+| 밑줄                           | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
 | 취소선                         | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
+| 서식 지우기                    | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | 링크                           | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
+| 이미지 삽입                    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | 제목 1–6 / 단락                | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | 인용                           | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | 번호 매기기 / 글머리 기호 목록 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
 | 코드 블록 / 수식 블록          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
 | 표                             | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | 찾기 / 바꾸기                  | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| 닫은 탭 다시 열기              | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | 아웃라인                       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| 소스 코드 모드                 | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | 집중 모드 / 타자기 모드        | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | 확대/축소 초기화               | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | 환경설정                       | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
