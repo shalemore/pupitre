@@ -170,6 +170,26 @@ const files = new Map([
 // Files dropped on the page are read after the page asked for their path
 const dropped = new Map<string, Promise<string>>();
 
+/** When the demo files were made and last written, for the folder orders that read times. */
+interface DemoTimes {
+  readonly created: number;
+  readonly modified: number;
+}
+const fileTimes = new Map<string, DemoTimes>();
+const demoStarted = Date.now();
+for (const path of files.keys()) {
+  fileTimes.set(path, { created: demoStarted, modified: demoStarted });
+}
+
+function touchFile(path: string, created = false): void {
+  const previous = fileTimes.get(path);
+  const now = Date.now();
+  fileTimes.set(path, {
+    created: created || previous === undefined ? now : previous.created,
+    modified: now,
+  });
+}
+
 function opened(path: string): OpenedDocument {
   const folder = path.slice(0, path.lastIndexOf("/"));
   return {
@@ -194,11 +214,25 @@ function listFolder(path: string): FolderEntry[] {
       kind: rest.length > 0 ? "directory" : "file",
     });
   }
-  return [...entries.values()].toSorted(
-    (a, b) =>
-      Number(b.kind === "directory") - Number(a.kind === "directory") ||
-      a.name.localeCompare(b.name),
-  );
+  const sort = settings.folderSort;
+  return [...entries.values()].toSorted((a, b) => {
+    if (a.kind !== b.kind) return a.kind === "directory" ? -1 : 1;
+    if (sort !== "name") {
+      const difference = timeOf(b, sort) - timeOf(a, sort);
+      if (difference !== 0) return difference;
+    }
+    return a.name.localeCompare(b.name);
+  });
+}
+
+/** The time the demo last wrote an entry, or its newest child for a folder. */
+function timeOf(entry: FolderEntry, sort: Exclude<Settings["folderSort"], "name">): number {
+  if (entry.kind === "file") return fileTimes.get(entry.path)?.[sort] ?? 0;
+  let newest = 0;
+  for (const [path, times] of fileTimes) {
+    if (path.startsWith(`${entry.path}/`)) newest = Math.max(newest, times[sort]);
+  }
+  return newest;
 }
 
 function folderPreviews(path: string): Record<string, string> {
@@ -445,17 +479,26 @@ const handlers: Handlers = {
   // The demo folder lives in memory, so its files can be created, renamed and deleted like any other
   "folder:create": (parent, name, kind) => {
     const path = `${parent}/${name}`;
-    if (kind === "file") files.set(path, "");
+    if (kind === "file") {
+      files.set(path, "");
+      touchFile(path, true);
+    }
     return path;
   },
   "path:rename": (path, name) => {
     const target = `${path.slice(0, path.lastIndexOf("/"))}/${name}`;
     const content = files.get(path) ?? "";
+    const times = fileTimes.get(path);
     files.delete(path);
     files.set(target, content);
+    fileTimes.delete(path);
+    if (times !== undefined) fileTimes.set(target, times);
     return target;
   },
-  "path:trash": (path) => void files.delete(path),
+  "path:trash": (path) => {
+    files.delete(path);
+    fileTimes.delete(path);
+  },
   "path:reveal": () => {},
   "path:locate": (path) => opened(path),
   // A browser has no native file picker to hand an image to the editor
@@ -466,7 +509,11 @@ const handlers: Handlers = {
   "document:unwatch": nothing,
   "document:peek": (path) => files.get(path),
   "document:exists": (path) => files.has(path),
-  "document:write": (path, content) => void files.set(path, content),
+  "document:write": (path, content) => {
+    const created = !files.has(path);
+    files.set(path, content);
+    touchFile(path, created);
+  },
   "dialog:choose-save-path": (suggestedName) => {
     const name = prompt(labels().menu.saveAs, suggestedName)?.trim();
     if (!name) return null;
