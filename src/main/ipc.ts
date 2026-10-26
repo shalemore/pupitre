@@ -8,8 +8,8 @@ import {
   dialog,
   ipcMain,
   type IpcMainInvokeEvent,
+  type FileFilter,
   type OpenDialogOptions,
-  type SaveDialogOptions,
   shell,
   type WebContents,
 } from "electron";
@@ -129,9 +129,16 @@ async function openPath(window: BrowserWindow, options: OpenDialogOptions): Prom
   return canceled || path === undefined ? null : path;
 }
 
-/** Where the user wants a file written, or null when they dropped out of the dialog. */
-async function savePath(window: BrowserWindow, options: SaveDialogOptions): Promise<string | null> {
-  const { canceled, filePath } = await dialog.showSaveDialog(window, options);
+/** Where the user wants a file of this kind written, or null when they dropped out of the dialog. */
+async function savePath(
+  window: BrowserWindow,
+  defaultPath: string,
+  filter: FileFilter,
+): Promise<string | null> {
+  const { canceled, filePath } = await dialog.showSaveDialog(window, {
+    defaultPath,
+    filters: [filter],
+  });
   return canceled || filePath === "" ? null : filePath;
 }
 
@@ -355,9 +362,9 @@ export function registerIpcHandlers(): void {
   handle("history:list", (_event, path) => listVersions(path));
   handle("history:read", (_event, path, id) => readVersion(path, id));
   handle("dialog:choose-save-path", async (event, suggestedName) => {
-    const path = await savePath(senderWindow(event), {
-      defaultPath: suggestedName,
-      filters: [{ name: "Markdown", extensions: ["md"] }],
+    const path = await savePath(senderWindow(event), suggestedName, {
+      name: "Markdown",
+      extensions: ["md"],
     });
     if (path === null) return null;
     addRecentFile(path);
@@ -373,9 +380,9 @@ export function registerIpcHandlers(): void {
   });
 
   handle("document:export-pdf", async (event, suggestedName) => {
-    const filePath = await savePath(senderWindow(event), {
-      defaultPath: suggestedName,
-      filters: [{ name: "PDF", extensions: ["pdf"] }],
+    const filePath = await savePath(senderWindow(event), suggestedName, {
+      name: "PDF",
+      extensions: ["pdf"],
     });
     if (filePath === null) return null;
     const pageNumbers = getSettings().pdfPageNumbers;
@@ -402,9 +409,9 @@ export function registerIpcHandlers(): void {
   });
 
   handle("document:export-html", async (event, suggestedName, html) => {
-    const filePath = await savePath(senderWindow(event), {
-      defaultPath: suggestedName,
-      filters: [{ name: "HTML", extensions: ["html"] }],
+    const filePath = await savePath(senderWindow(event), suggestedName, {
+      name: "HTML",
+      extensions: ["html"],
     });
     if (filePath === null) return null;
     // A page carries its own charset, so it is written as UTF-8 whatever the document was
@@ -413,9 +420,9 @@ export function registerIpcHandlers(): void {
   });
 
   handle("document:export-image", async (event, suggestedName, html, baseFolder) => {
-    const filePath = await savePath(senderWindow(event), {
-      defaultPath: suggestedName,
-      filters: [{ name: "PNG", extensions: ["png"] }],
+    const filePath = await savePath(senderWindow(event), suggestedName, {
+      name: "PNG",
+      extensions: ["png"],
     });
     if (filePath === null) return null;
     await exportImage({ html, filePath, baseFolder });
