@@ -125,6 +125,7 @@ export const fiFI = {
     redo: "Tee uudelleen",
     cut: "Leikkaa",
     copy: "Kopioi",
+    copyHtml: "Kopioi HTML-muodossa",
     paste: "Liitä",
     selectAll: "Valitse kaikki",
     find: "Etsi…",

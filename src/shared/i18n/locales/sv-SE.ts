@@ -125,6 +125,7 @@ export const svSE = {
     redo: "Gör om",
     cut: "Klipp ut",
     copy: "Kopiera",
+    copyHtml: "Kopiera som HTML",
     paste: "Klistra in",
     selectAll: "Markera allt",
     find: "Sök…",

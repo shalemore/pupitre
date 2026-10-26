@@ -125,6 +125,7 @@ export const elGR = {
     redo: "Επανάληψη",
     cut: "Αποκοπή",
     copy: "Αντιγραφή",
+    copyHtml: "Αντιγραφή ως HTML",
     paste: "Επικόλληση",
     selectAll: "Επιλογή όλων",
     find: "Εύρεση…",

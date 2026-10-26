@@ -121,6 +121,7 @@ export const ptPT = {
     redo: "Refazer",
     cut: "Cortar",
     copy: "Copiar",
+    copyHtml: "Copiar como HTML",
     paste: "Colar",
     selectAll: "Selecionar tudo",
     find: "Localizar…",

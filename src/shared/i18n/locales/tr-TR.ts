@@ -126,6 +126,7 @@ export const trTR = {
     redo: "Yinele",
     cut: "Kes",
     copy: "Kopyala",
+    copyHtml: "HTML olarak kopyala",
     paste: "Yapıştır",
     selectAll: "Tümünü Seç",
     find: "Bul…",

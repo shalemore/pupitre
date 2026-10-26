@@ -130,6 +130,7 @@ export const ruRU = {
     redo: "Повторить",
     cut: "Вырезать",
     copy: "Копировать",
+    copyHtml: "Копировать как HTML",
     paste: "Вставить",
     selectAll: "Выбрать все",
     find: "Найти...",

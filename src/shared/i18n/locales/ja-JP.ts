@@ -122,6 +122,7 @@ export const jaJP = {
     redo: "やり直す",
     cut: "切り取り",
     copy: "コピー",
+    copyHtml: "HTML としてコピー",
     paste: "貼り付け",
     selectAll: "すべて選択",
     find: "検索...",

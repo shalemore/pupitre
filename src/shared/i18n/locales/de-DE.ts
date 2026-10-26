@@ -122,6 +122,7 @@ export const deDE = {
     redo: "Wiederholen",
     cut: "Ausschneiden",
     copy: "Kopieren",
+    copyHtml: "Als HTML kopieren",
     paste: "Einfügen",
     selectAll: "Alles auswählen",
     find: "Suchen...",

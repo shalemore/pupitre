@@ -126,6 +126,7 @@ export const isIS = {
     redo: "Endurgera",
     cut: "Klippa",
     copy: "Afrita",
+    copyHtml: "Afrita sem HTML",
     paste: "Líma",
     selectAll: "Velja allt",
     find: "Finna…",

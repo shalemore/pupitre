@@ -123,6 +123,7 @@ export const viVN = {
     redo: "Làm lại",
     cut: "Cắt",
     copy: "Sao chép",
+    copyHtml: "Sao chép dưới dạng HTML",
     paste: "Dán",
     selectAll: "Chọn tất cả",
     find: "Tìm...",

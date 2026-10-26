@@ -125,6 +125,7 @@ export const thTH = {
     redo: "ทำซ้ำ",
     cut: "ตัด",
     copy: "คัดลอก",
+    copyHtml: "คัดลอกเป็น HTML",
     paste: "วาง",
     selectAll: "เลือกทั้งหมด",
     find: "ค้นหา...",

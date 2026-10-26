@@ -118,6 +118,7 @@ export const zhTW = {
     redo: "重做",
     cut: "剪下",
     copy: "複製",
+    copyHtml: "複製為 HTML",
     paste: "貼上",
     selectAll: "全選",
     find: "尋找...",

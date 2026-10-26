@@ -121,6 +121,7 @@ export const esES = {
     redo: "Rehacer",
     cut: "Cortar",
     copy: "Copiar",
+    copyHtml: "Copiar como HTML",
     paste: "Pegar",
     selectAll: "Seleccionar todo",
     find: "Buscar...",

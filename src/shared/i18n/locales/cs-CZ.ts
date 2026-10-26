@@ -130,6 +130,7 @@ export const csCZ = {
     redo: "Znovu",
     cut: "Vyjmout",
     copy: "Kopírovat",
+    copyHtml: "Kopírovat jako HTML",
     paste: "Vložit",
     selectAll: "Vybrat vše",
     find: "Najít…",

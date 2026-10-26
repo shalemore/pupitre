@@ -132,6 +132,7 @@ export const plPL = {
     redo: "Ponów",
     cut: "Wytnij",
     copy: "Kopiuj",
+    copyHtml: "Kopiuj jako HTML",
     paste: "Wklej",
     selectAll: "Zaznacz wszystko",
     find: "Znajdź…",

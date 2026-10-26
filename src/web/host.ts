@@ -272,6 +272,13 @@ function menuItems(menu: TopMenu): DemoMenuEntry[] {
       ];
     case "edit":
       return [
+        // Ctrl+C stays the browser's own, so the demo draws only the copy the renderer builds
+        {
+          label: m.copyHtml,
+          shortcut: "CmdOrCtrl+Shift+C",
+          run: send({ id: "edit.copy-html" }),
+        },
+        divider,
         { label: m.find, run: send({ id: "edit.find" }) },
         { label: m.replace, run: send({ id: "edit.replace" }) },
         // The demo folder is searched like any other, but it is read in the page, so the search
@@ -448,6 +455,20 @@ const handlers: Handlers = {
   "app:set-default-markdown-app": () => "failed",
   "app:dispatch": dispatch,
   "clipboard:write-text": (text) => void navigator.clipboard.writeText(text),
+  "clipboard:write-rich": async (text, html) => {
+    try {
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          "text/plain": new Blob([text], { type: "text/plain" }),
+          "text/html": new Blob([html], { type: "text/html" }),
+        }),
+      ]);
+    } catch {
+      // A browser can refuse a rich clipboard write, a permission denied for instance; the text is
+      // still worth copying then, which is what a copy button does
+      await navigator.clipboard.writeText(text);
+    }
+  },
   "menu:items": menuSnapshot,
   "menu:click": (itemId) => menuRuns.get(itemId)?.(),
   "window:set-document-state": (state) => void (dirty = state.isDirty),

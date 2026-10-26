@@ -151,6 +151,12 @@ function buildTemplate(): MenuItemConstructorOptions[] {
         separator,
         { label: labels.cut, role: "cut" },
         { label: labels.copy, role: "copy" },
+        {
+          label: labels.copyHtml,
+          accelerator: "CmdOrCtrl+Shift+C",
+          enabled: hasDocument,
+          click: () => dispatchToMainWindow({ id: "edit.copy-html" }),
+        },
         { label: labels.paste, role: "paste" },
         { label: labels.pastePlain, role: "pasteAndMatchStyle" },
         { label: labels.selectAll, role: "selectAll" },

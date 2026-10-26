@@ -131,6 +131,7 @@ export const ukUA = {
     redo: "Повторити",
     cut: "Вирізати",
     copy: "Копіювати",
+    copyHtml: "Копіювати як HTML",
     paste: "Вставити",
     selectAll: "Вибрати все",
     find: "Знайти…",

@@ -122,6 +122,7 @@ export const ptBR = {
     redo: "Refazer",
     cut: "Recortar",
     copy: "Copiar",
+    copyHtml: "Copiar como HTML",
     paste: "Colar",
     selectAll: "Selecionar Tudo",
     find: "Localizar...",

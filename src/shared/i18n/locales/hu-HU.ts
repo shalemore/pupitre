@@ -126,6 +126,7 @@ export const huHU = {
     redo: "Mégis",
     cut: "Kivágás",
     copy: "Másolás",
+    copyHtml: "Másolás HTML-ként",
     paste: "Beillesztés",
     selectAll: "Összes kijelölése",
     find: "Keresés…",

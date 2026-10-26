@@ -123,6 +123,7 @@ export const hiIN = {
     redo: "फिर से करें",
     cut: "काटें",
     copy: "कॉपी करें",
+    copyHtml: "HTML के रूप में कॉपी करें",
     paste: "चिपकाएँ",
     selectAll: "सभी चुनें",
     find: "खोजें...",

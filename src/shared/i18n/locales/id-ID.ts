@@ -124,6 +124,7 @@ export const idID = {
     redo: "Ulangi",
     cut: "Potong",
     copy: "Salin",
+    copyHtml: "Salin sebagai HTML",
     paste: "Tempel",
     selectAll: "Pilih semua",
     find: "Cari...",

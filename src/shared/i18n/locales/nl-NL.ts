@@ -126,6 +126,7 @@ export const nlNL = {
     redo: "Opnieuw",
     cut: "Knippen",
     copy: "Kopiëren",
+    copyHtml: "Kopiëren als HTML",
     paste: "Plakken",
     selectAll: "Alles selecteren",
     find: "Zoeken…",

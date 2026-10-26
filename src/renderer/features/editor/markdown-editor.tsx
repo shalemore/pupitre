@@ -6,9 +6,7 @@ import {
   indentLess,
   indentMore,
 } from "@codemirror/commands";
-import { commonmarkLanguage, markdown } from "@codemirror/lang-markdown";
 import { syntaxTree } from "@codemirror/language";
-import { languages } from "@codemirror/language-data";
 import {
   closeSearchPanel,
   findNext,
@@ -24,7 +22,6 @@ import {
 } from "@codemirror/search";
 import { Compartment, EditorState, Prec } from "@codemirror/state";
 import { type Command, EditorView, keymap, placeholder } from "@codemirror/view";
-import { GFM, Subscript, Superscript } from "@lezer/markdown";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { debounce } from "@solid-primitives/scheduled";
 import { createEffect, on, onCleanup, onMount, type Component } from "solid-js";
@@ -42,7 +39,7 @@ import { fileNameOf } from "@/lib/file";
 import { settings } from "@/lib/settings";
 import { countText, type TextStats } from "@/lib/text-stats";
 import { themeApplied } from "@/lib/theme";
-import { documentHtml } from "../export/document-html";
+import { documentHtml, markdownFragment } from "../export/document-html";
 import { alertTitles } from "./alerts";
 import { codeHighlight } from "./code-highlight";
 import { cursorStyle, restartCursorBlink } from "./cursor";
@@ -53,19 +50,16 @@ import {
   type OutlineHeading,
   readableText,
 } from "./document-structure";
-import { emojiSyntax } from "./emoji";
-import { footnotes } from "./footnotes";
 import {
   formatKeymap,
   insertParagraphBreak,
   type MarkdownStyle,
   runFormatAction,
 } from "./format-commands";
-import { frontMatter } from "./front-matter";
-import { highlight } from "./highlight";
 import { createPendingImages, documentBaseUrl, imageInput } from "./images";
 import { livePreview, setPrinting } from "./live-preview";
-import { math, prerenderMath } from "./math";
+import { markdownLanguage } from "./markdown-language";
+import { prerenderMath } from "./math";
 import { diagramTheme, prerenderDiagrams, readDiagramTheme } from "./mermaid";
 import { pasteHtml } from "./paste-html";
 import { renderedBlocks } from "./rendered-blocks";
@@ -108,6 +102,11 @@ export interface MarkdownEditorHandle {
   persistImages: (documentPath: string) => Promise<void>;
   /** The document as a self-contained HTML page, see features/export/document-html.ts. */
   toHtml: () => Promise<string>;
+  /**
+   * The selection, or the whole document when nothing is selected, as the Markdown that was
+   * copied and as the HTML fragment that stands for it in another application.
+   */
+  toHtmlFragment: () => Promise<{ markdown: string; html: string }>;
 }
 
 export interface MarkdownEditorProps {
@@ -279,21 +278,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
             ...defaultKeymap,
             ...historyKeymap,
           ]),
-          markdown({
-            base: commonmarkLanguage,
-            extensions: [
-              GFM,
-              Subscript,
-              Superscript,
-              emojiSyntax,
-              highlight,
-              frontMatter,
-              math,
-              footnotes,
-            ],
-            codeLanguages: languages,
-            completeHTMLTags: false,
-          }),
+          markdownLanguage,
           codeHighlight,
           livePreview,
           renderedBlocks,
@@ -502,6 +487,12 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       },
       persistImages: (documentPath) => pendingImages.persist(view, documentPath),
       toHtml: () => documentHtml(view.state, documentTitle(props.documentPath)),
+      toHtmlFragment: async () => {
+        const { from, to } = view.state.selection.main;
+        // Nothing selected copies the whole document
+        const markdown = from === to ? view.state.sliceDoc(0) : view.state.sliceDoc(from, to);
+        return { markdown, html: await markdownFragment(view.state, markdown) };
+      },
     });
 
     onCleanup(() => {

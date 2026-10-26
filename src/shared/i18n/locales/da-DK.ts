@@ -125,6 +125,7 @@ export const daDK = {
     redo: "Annullér fortryd",
     cut: "Klip",
     copy: "Kopiér",
+    copyHtml: "Kopiér som HTML",
     paste: "Indsæt",
     selectAll: "Markér alt",
     find: "Find…",

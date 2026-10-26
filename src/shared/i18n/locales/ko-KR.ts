@@ -122,6 +122,7 @@ export const koKR = {
     redo: "다시 실행",
     cut: "잘라내기",
     copy: "복사",
+    copyHtml: "HTML로 복사",
     paste: "붙여넣기",
     selectAll: "모두 선택",
     find: "찾기...",

@@ -277,6 +277,13 @@ export const MainWindow: Component = () => {
     }
   };
 
+  /** Puts the selection, or the whole document when nothing is selected, on the clipboard as rich text. */
+  const copyAsHtml = async () => {
+    const fragment = await editor()?.toHtmlFragment();
+    if (fragment === undefined) return;
+    await desktop.invoke("clipboard:write-rich", fragment.markdown, fragment.html);
+  };
+
   const runCommand = (command: AppCommand) => {
     switch (command.id) {
       case "file.new":
@@ -305,6 +312,8 @@ export const MainWindow: Component = () => {
         return openFind("find");
       case "edit.replace":
         return openFind("replace");
+      case "edit.copy-html":
+        return void copyAsHtml();
       case "edit.search-workspace":
         return setWorkspaceSearchOpen(true);
       case "view.toggle-sidebar":

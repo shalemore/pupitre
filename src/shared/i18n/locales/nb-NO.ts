@@ -125,6 +125,7 @@ export const nbNO = {
     redo: "Gjør om",
     cut: "Klipp ut",
     copy: "Kopier",
+    copyHtml: "Kopier som HTML",
     paste: "Lim inn",
     selectAll: "Merk alt",
     find: "Finn…",

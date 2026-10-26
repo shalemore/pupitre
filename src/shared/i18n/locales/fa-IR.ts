@@ -125,6 +125,7 @@ export const faIR = {
     redo: "بازانجام",
     cut: "برش",
     copy: "رونوشت",
+    copyHtml: "رونوشت به‌صورت HTML",
     paste: "چسباندن",
     selectAll: "انتخاب همه",
     find: "یافتن...",

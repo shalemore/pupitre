@@ -3,6 +3,7 @@ import { basename, dirname, extname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
   BrowserWindow,
+  ClipboardItem,
   clipboard,
   dialog,
   ipcMain,
@@ -418,6 +419,11 @@ export function registerIpcHandlers(): void {
   handle("app:set-default-markdown-app", () => setAsDefaultMarkdownApp());
   handle("app:dispatch", (_event, command) => dispatchToMainWindow(command));
   handle("clipboard:write-text", (_event, text) => clipboard.writeText(text));
+  // Both formats go into one entry, so that a rich text application and a plain one each read
+  // what they understand from the same copy
+  handle("clipboard:write-rich", async (_event, text, html) => {
+    await clipboard.write([new ClipboardItem({ "text/plain": text, "text/html": html })]);
+  });
   handle("menu:items", () => menuSnapshot());
   handle("menu:click", (_event, itemId) => clickMenuItem(itemId));
   handle("window:set-document-state", (event, state) => {

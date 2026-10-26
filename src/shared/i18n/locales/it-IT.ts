@@ -122,6 +122,7 @@ export const itIT = {
     redo: "Ripeti",
     cut: "Taglia",
     copy: "Copia",
+    copyHtml: "Copia come HTML",
     paste: "Incolla",
     selectAll: "Seleziona tutto",
     find: "Trova...",

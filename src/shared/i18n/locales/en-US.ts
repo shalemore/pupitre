@@ -122,6 +122,7 @@ export const enUS = {
     redo: "Redo",
     cut: "Cut",
     copy: "Copy",
+    copyHtml: "Copy as HTML",
     paste: "Paste",
     selectAll: "Select All",
     find: "Find...",

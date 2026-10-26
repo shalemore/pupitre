@@ -138,6 +138,7 @@ export const ar = {
     redo: "إعادة",
     cut: "قص",
     copy: "نسخ",
+    copyHtml: "نسخ كـ HTML",
     paste: "لصق",
     selectAll: "تحديد الكل",
     find: "بحث...",

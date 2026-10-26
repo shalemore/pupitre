@@ -122,6 +122,7 @@ export const frFR = {
     redo: "Rétablir",
     cut: "Couper",
     copy: "Copier",
+    copyHtml: "Copier au format HTML",
     paste: "Coller",
     selectAll: "Tout sélectionner",
     find: "Rechercher...",

@@ -118,6 +118,7 @@ export const zhCN = {
     redo: "重做",
     cut: "剪切",
     copy: "复制",
+    copyHtml: "复制为 HTML",
     paste: "粘贴",
     selectAll: "全选",
     find: "查找...",

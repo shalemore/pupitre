@@ -163,6 +163,7 @@ export type AppCommand =
   | { id: "file.export-image" }
   | { id: "edit.find" }
   | { id: "edit.replace" }
+  | { id: "edit.copy-html" }
   | { id: "edit.search-workspace" }
   | { id: "view.toggle-sidebar" }
   | { id: "view.command-palette" }
@@ -297,6 +298,11 @@ export interface InvokeChannels {
   "app:dispatch": (command: AppCommand) => void;
   /** Puts plain text on the clipboard, for copy buttons; the renderer has no clipboard permission. */
   "clipboard:write-text": (text: string) => void;
+  /**
+   * Puts the same text on the clipboard in both formats, so that a rich text application keeps the
+   * markup it was given and a plain one still gets the text, see features/export/document-html.ts.
+   */
+  "clipboard:write-rich": (text: string, html: string) => void;
   /** The entries of every top-level menu; Windows and Linux draw them in the title bar, and the contents are asked for each time a menu opens because they follow the settings, the recent files and the document. */
   "menu:items": () => Menus;
   /** Runs the menu entry the window drew; the id is the one menu:items gave that entry. */

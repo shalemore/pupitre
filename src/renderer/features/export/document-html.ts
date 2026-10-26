@@ -1,5 +1,5 @@
 import { syntaxTree } from "@codemirror/language";
-import type { EditorState } from "@codemirror/state";
+import { EditorState } from "@codemirror/state";
 import type { SyntaxNode } from "@lezer/common";
 import { direction } from "direction";
 import DOMPurify from "dompurify";
@@ -10,6 +10,7 @@ import { footnoteLabel } from "../editor/footnotes";
 import { isRenderableHtml } from "../editor/html";
 import { documentBaseUrl } from "../editor/images";
 import { type InlineItem, inlineItems } from "../editor/inline-content";
+import { markdownLanguage } from "../editor/markdown-language";
 import { mathFence, mathOf } from "../editor/math";
 import { renderMath } from "../editor/mathjax";
 import { diagramTheme, readDiagramTheme, renderDiagram } from "../editor/mermaid";
@@ -19,7 +20,8 @@ import { escapeHtml } from "./escape-html";
 import { pageStyle } from "./page-style";
 
 /**
- * A document as one self-contained HTML page, for File › Export as HTML.
+ * A document as HTML: as one self-contained page for File › Export as HTML, and as a fragment of
+ * the same markup for Edit › Copy as HTML, which puts the selection in another application.
  *
  * The page is rendered from the editor's Lezer tree, the same nodes the live preview renders from,
  * so a construct that shows up in the editor shows up on the page; a code block is read by a second
@@ -52,6 +54,19 @@ interface ExportContext {
   readonly definitions: SyntaxNode[];
   /** Labels that already carry an anchor, so a second reference to a footnote needs no second id. */
   readonly referenced: Set<string>;
+  /**
+   * Whether the markup is going to another application, which has none of the stylesheets of this
+   * one: what a class alone cannot carry is then written inline.
+   */
+  readonly inlineStyles: boolean;
+}
+
+/** The font code keeps where no stylesheet of Pupitre's follows the markup. */
+const CODE_FONT = "font-family:Consolas,'Courier New',monospace";
+
+/** A style attribute for the markup, or nothing when the page's own stylesheet already does the work. */
+function styleOf(ctx: ExportContext, declaration: string): string {
+  return ctx.inlineStyles ? ` style="${declaration}"` : "";
 }
 
 /** A picture address as the document wrote it: the page is saved next to the document, so the file:// address the app resolves would not follow it. */
@@ -86,7 +101,8 @@ async function itemHtml(ctx: ExportContext, item: InlineItem): Promise<string> {
       return "<br>";
     case "element": {
       const attribute = item.class === undefined ? "" : ` class="${item.class}"`;
-      return `<${item.tag}${attribute}>${await itemsHtml(ctx, item.children)}</${item.tag}>`;
+      const style = item.tag === "code" ? styleOf(ctx, CODE_FONT) : "";
+      return `<${item.tag}${attribute}${style}>${await itemsHtml(ctx, item.children)}</${item.tag}>`;
     }
     case "link":
       return linkHtml(item.href, await itemsHtml(ctx, item.children));
@@ -131,7 +147,9 @@ async function codeBlock(ctx: ExportContext, block: SyntaxNode): Promise<string>
   const attribute = name === "" ? "" : ` class="language-${name}"`;
   const text = code.replace(/\n$/, "");
   const highlighted = await codeHtml(text, language);
-  return `<pre><code${attribute}>${highlighted ?? escapeHtml(text)}</code></pre>`;
+  // Markup that goes to another application carries the code font and keeps the code's own line breaks
+  const pre = styleOf(ctx, `${CODE_FONT};white-space:pre-wrap`);
+  return `<pre${pre}><code${attribute}${styleOf(ctx, CODE_FONT)}>${highlighted ?? escapeHtml(text)}</code></pre>`;
 }
 
 /** The number an ordered list starts at, when it does not start at one. */
@@ -330,12 +348,40 @@ function renderBlocks(ctx: ExportContext, blocks: readonly SyntaxNode[]): Promis
   return Promise.all(parts).then((html) => html.filter((part) => part !== "").join("\n"));
 }
 
-/** The document as a page of its own, titled `title` and styled by the theme in use. */
-export async function documentHtml(state: EditorState, title: string): Promise<string> {
-  const ctx: ExportContext = { state, definitions: [], referenced: new Set() };
-  const blocks = blocksOf(syntaxTree(state).topNode);
+/**
+ * The state a fragment is rendered from: the text on its own, read by the same tree. Only the
+ * titles are carried over from `source`, because without them a callout would render its marker
+ * line rather than its title.
+ */
+function fragmentState(source: EditorState, markdown: string): EditorState {
+  const titles = source.facet(alertTitles);
+  return EditorState.create({
+    doc: markdown,
+    extensions:
+      titles === undefined ? [markdownLanguage] : [markdownLanguage, alertTitles.of(titles)],
+  });
+}
+
+/**
+ * The blocks of a document and the footnotes they refer to, as the content of a page or of a
+ * fragment.
+ */
+async function contentOf(ctx: ExportContext): Promise<string> {
+  const blocks = blocksOf(syntaxTree(ctx.state).topNode);
   const body = await renderBlocks(ctx, blocks);
   const footnotes = ctx.definitions.length > 0 ? await footnoteSection(ctx) : "";
+  return [body, footnotes].filter((part) => part !== "").join("\n");
+}
+
+/** The document as a page of its own, titled `title` and styled by the theme in use. */
+export async function documentHtml(state: EditorState, title: string): Promise<string> {
+  const ctx: ExportContext = {
+    state,
+    definitions: [],
+    referenced: new Set(),
+    inlineStyles: false,
+  };
+  const body = await contentOf(ctx);
   const textDirection = direction(state.sliceDoc(0, DIRECTION_SAMPLE));
   const lang = document.documentElement.lang || "en";
   const dir = textDirection === "neutral" ? "" : ` dir="${textDirection}"`;
@@ -351,9 +397,23 @@ ${pageStyle()}</style>
 <body>
 <article class="md-document">
 ${body}
-${footnotes}
 </article>
 </body>
 </html>
 `;
+}
+
+/**
+ * `markdown` as an HTML fragment, for the clipboard: a selection is read as a document of its own,
+ * so a table or a list its bounds cut short renders as far as the parser can still tell and the
+ * rest of the page stays out of it. The state is the one the text was cut from.
+ */
+export async function markdownFragment(source: EditorState, markdown: string): Promise<string> {
+  const ctx: ExportContext = {
+    state: fragmentState(source, markdown),
+    definitions: [],
+    referenced: new Set(),
+    inlineStyles: true,
+  };
+  return `<div class="md-document">\n${await contentOf(ctx)}\n</div>`;
 }
