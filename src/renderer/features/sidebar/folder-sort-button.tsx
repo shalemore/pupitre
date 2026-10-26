@@ -1,5 +1,5 @@
 import { ArrowUpDown } from "lucide-solid";
-import { createSignal, Show, type Component } from "solid-js";
+import { createEffect, createSignal, on, onCleanup, Show, type Component } from "solid-js";
 import type { MenuEntry } from "@shared/menu";
 import type { Settings } from "@shared/settings";
 import { IconButton } from "@/components/ui";
@@ -27,8 +27,17 @@ function labelOf(sort: FolderSort): string {
  * The menu that orders the folder, beside its title: the order is a setting, so the main process
  * lists every folder again once it changes.
  */
-export const FolderSortButton: Component = () => {
+export const FolderSortButton: Component<{
+  /** Tells the window that a panel hangs out of the sidebar, so the immersive chrome stays put. */
+  onMenuOpen?: (open: boolean) => void;
+}> = (props) => {
   const [anchor, setAnchor] = createSignal<DOMRect>();
+  createEffect(
+    on(anchor, (place) => {
+      props.onMenuOpen?.(place !== undefined);
+      onCleanup(() => props.onMenuOpen?.(false));
+    }),
+  );
 
   const entries = (): MenuEntry[] =>
     SORTS.map((sort) => ({

@@ -51,6 +51,8 @@ interface FolderTreeProps {
   onOpenFile: (path: string) => Promise<string | undefined>;
   /** Tells the window that a document or a folder root moved, so the open document follows it. */
   onPathChanged?: (oldPath: string, newPath: string) => void;
+  /** Tells the window that a menu hangs out of the sidebar, so the immersive chrome stays put. */
+  onMenuOpen?: (open: boolean) => void;
 }
 
 const FolderChildren: Component<FolderChildrenProps> = (props) => {
@@ -255,6 +257,12 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
   const [renaming, setRenaming] = createSignal<string>();
   const [expanded, setExpanded] = createSignal<ReadonlySet<string>>(new Set());
   const [menu, setMenu] = createSignal<OpenMenu>();
+  createEffect(
+    on(menu, (open) => {
+      props.onMenuOpen?.(open !== undefined);
+      onCleanup(() => props.onMenuOpen?.(false));
+    }),
+  );
 
   const openFile = async (path: string) => {
     const message = await props.onOpenFile(path);
@@ -329,6 +337,8 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
     setMenu({ entries, actions, anchor: new DOMRect(event.clientX, event.clientY, 0, 0) });
   };
 
+  const closeMenu = () => setMenu(undefined);
+
   const tree: TreeContext = {
     activePath: () => props.activePath,
     failures,
@@ -363,10 +373,10 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
             anchor={open.anchor}
             onSelect={(entry) => {
               const action = open.actions.get(entry.id);
-              setMenu(undefined);
+              closeMenu();
               action?.();
             }}
-            onClose={() => setMenu(undefined)}
+            onClose={closeMenu}
           />
         )}
       </Show>
