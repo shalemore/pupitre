@@ -370,6 +370,11 @@ export function insertTable(view: EditorView, rows: number, columns: number): vo
   insertBlock(view, source, bodyStart + 2);
 }
 
+/** The table the keyboard shortcut has always written, with the caret in its header. */
+function insertShortcutTable(view: EditorView): void {
+  insertBlock(view, emptyTableSource(2, 3), 2);
+}
+
 /** The smallest positive footnote number the document does not use yet. */
 function nextFootnoteLabel(state: EditorState): number {
   const used = new Set<number>();
@@ -457,8 +462,8 @@ export function runFormatAction(
     case "mathBlock":
       return insertFencedBlock(view, "$$");
     case "table":
-      // The shortcut writes the size it always has: a header row and one body row
-      return insertTable(view, 2, 3);
+      // The shortcut keeps the caret in the header, as it always has; the dialog starts in the body
+      return insertShortcutTable(view);
     case "divider":
       return insertBlock(view, `${style.ruleMarker.repeat(3)}\n`, 4);
     default:
