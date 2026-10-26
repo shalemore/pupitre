@@ -162,7 +162,6 @@ export const ptPT = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "Separadores abertos",
-    close: "Fechar separador",
   },
   settings: {
     title: "Preferências",

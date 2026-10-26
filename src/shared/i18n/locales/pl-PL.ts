@@ -173,7 +173,6 @@ export const plPL = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "Otwarte karty",
-    close: "Zamknij kartę",
   },
   settings: {
     title: "Ustawienia",

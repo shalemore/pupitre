@@ -171,7 +171,6 @@ export const ruRU = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "Открытые вкладки",
-    close: "Закрыть вкладку",
   },
   settings: {
     title: "Настройки",

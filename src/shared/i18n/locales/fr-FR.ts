@@ -163,7 +163,6 @@ export const frFR = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "Onglets ouverts",
-    close: "Fermer l'onglet",
   },
   settings: {
     title: "Préférences",

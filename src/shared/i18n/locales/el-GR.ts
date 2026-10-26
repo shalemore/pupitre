@@ -167,7 +167,6 @@ export const elGR = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "Ανοιχτές καρτέλες",
-    close: "Κλείσιμο καρτέλας",
   },
   settings: {
     title: "Προτιμήσεις",

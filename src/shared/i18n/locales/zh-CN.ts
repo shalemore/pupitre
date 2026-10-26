@@ -159,7 +159,6 @@ export const zhCN = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "已打开的标签页",
-    close: "关闭标签页",
   },
   settings: {
     title: "偏好设置",

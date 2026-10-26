@@ -163,7 +163,6 @@ export const jaJP = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "開いているタブ",
-    close: "タブを閉じる",
   },
   settings: {
     title: "環境設定",

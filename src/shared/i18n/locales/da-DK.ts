@@ -166,7 +166,6 @@ export const daDK = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "Åbne faneblade",
-    close: "Luk faneblad",
   },
   settings: {
     title: "Indstillinger",

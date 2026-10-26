@@ -168,7 +168,6 @@ export const huHU = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "Megnyitott lapok",
-    close: "Lap bezárása",
   },
   settings: {
     title: "Beállítások",

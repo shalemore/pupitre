@@ -163,7 +163,6 @@ export const koKR = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "열린 탭",
-    close: "탭 닫기",
   },
   settings: {
     title: "환경설정",

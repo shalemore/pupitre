@@ -166,7 +166,6 @@ export const faIR = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "زبانه‌های باز",
-    close: "بستن زبانه",
   },
   settings: {
     title: "تنظیمات",

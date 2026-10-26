@@ -163,7 +163,6 @@ export const ptBR = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "Abas abertas",
-    close: "Fechar aba",
   },
   settings: {
     title: "Preferências",

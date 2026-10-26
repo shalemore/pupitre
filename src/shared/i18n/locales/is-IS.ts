@@ -167,7 +167,6 @@ export const isIS = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "Opnar flipar",
-    close: "Loka flipa",
   },
   settings: {
     title: "Forstillingar",

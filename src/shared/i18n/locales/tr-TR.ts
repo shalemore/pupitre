@@ -167,7 +167,6 @@ export const trTR = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "Açık Sekmeler",
-    close: "Sekmeyi Kapat",
   },
   settings: {
     title: "Tercihler",

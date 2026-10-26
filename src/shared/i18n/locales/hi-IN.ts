@@ -164,7 +164,6 @@ export const hiIN = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "खुले टैब",
-    close: "टैब बंद करें",
   },
   settings: {
     title: "प्राथमिकताएँ",

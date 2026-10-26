@@ -172,7 +172,6 @@ export const ukUA = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "Відкриті вкладки",
-    close: "Закрити вкладку",
   },
   settings: {
     title: "Параметри",

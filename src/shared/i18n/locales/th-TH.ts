@@ -166,7 +166,6 @@ export const thTH = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "แท็บที่เปิดอยู่",
-    close: "ปิดแท็บ",
   },
   settings: {
     title: "การตั้งค่า",

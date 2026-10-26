@@ -167,7 +167,6 @@ export const nbNO = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "Åpne faner",
-    close: "Lukk fane",
   },
   settings: {
     title: "Innstillinger",

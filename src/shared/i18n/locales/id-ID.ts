@@ -165,7 +165,6 @@ export const idID = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "Tab yang terbuka",
-    close: "Tutup tab",
   },
   settings: {
     title: "Preferensi",

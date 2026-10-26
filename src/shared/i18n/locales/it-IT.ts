@@ -163,7 +163,6 @@ export const itIT = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "Schede aperte",
-    close: "Chiudi scheda",
   },
   settings: {
     title: "Preferenze",

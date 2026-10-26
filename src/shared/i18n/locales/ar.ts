@@ -179,7 +179,6 @@ export const ar = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "علامات التبويب المفتوحة",
-    close: "إغلاق علامة التبويب",
   },
   settings: {
     title: "التفضيلات",

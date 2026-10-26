@@ -164,7 +164,6 @@ export const deDE = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "Geöffnete Tabs",
-    close: "Tab schließen",
   },
   settings: {
     title: "Einstellungen",

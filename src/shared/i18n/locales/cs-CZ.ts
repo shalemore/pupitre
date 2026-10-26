@@ -171,7 +171,6 @@ export const csCZ = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "Otevřené karty",
-    close: "Zavřít kartu",
   },
   settings: {
     title: "Předvolby",

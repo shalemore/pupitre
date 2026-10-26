@@ -168,7 +168,6 @@ export const nlNL = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "Geopende tabs",
-    close: "Tab sluiten",
   },
   settings: {
     title: "Voorkeuren",

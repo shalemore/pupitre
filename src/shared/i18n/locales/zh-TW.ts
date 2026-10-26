@@ -159,7 +159,6 @@ export const zhTW = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "已開啟的分頁",
-    close: "關閉分頁",
   },
   settings: {
     title: "偏好設定",

@@ -162,7 +162,6 @@ export const esES = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "Pestañas abiertas",
-    close: "Cerrar pestaña",
   },
   settings: {
     title: "Preferencias",

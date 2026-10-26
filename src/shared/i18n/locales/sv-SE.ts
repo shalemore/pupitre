@@ -167,7 +167,6 @@ export const svSE = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "Öppna flikar",
-    close: "Stäng flik",
   },
   settings: {
     title: "Inställningar",

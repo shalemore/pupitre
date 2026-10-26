@@ -42,7 +42,8 @@ function TabButton(props: TabButtonProps) {
     >
       <button
         type="button"
-        aria-current={props.active ? "true" : undefined}
+        role="tab"
+        aria-selected={props.active}
         title={props.name}
         onClick={props.onActivate}
         // A middle click closes the tab, as it does in every editor that has tabs
@@ -61,7 +62,7 @@ function TabButton(props: TabButtonProps) {
         </bdi>
       </button>
       <IconButton
-        label={t().tabs.close}
+        label={t().menu.closeTab}
         size="icon-2xs"
         class={cn(
           "me-1 transition-opacity duration-fast",

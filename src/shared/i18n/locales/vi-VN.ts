@@ -164,7 +164,6 @@ export const viVN = {
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */
     bar: "Tab đang mở",
-    close: "Đóng tab",
   },
   settings: {
     title: "Tùy chọn",
