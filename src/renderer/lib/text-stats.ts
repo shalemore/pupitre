@@ -1,6 +1,9 @@
 export interface TextStats {
   words: number;
   characters: number;
+  /** Counted over the selection; absent while nothing is selected. */
+  selectedWords?: number;
+  selectedCharacters?: number;
 }
 
 const wordSegmenter = new Intl.Segmenter(undefined, { granularity: "word" });

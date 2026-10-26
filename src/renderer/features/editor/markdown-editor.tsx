@@ -224,6 +224,23 @@ const inList: (command: Command) => Command = (command) => (view) => {
 
 const STATS_DEBOUNCE_MS = 200;
 
+/**
+ * The totals of the document, with the counts of the selection next to them while it is not empty:
+ * the title bar shows both, and readableText leaves out the syntax a reader does not see.
+ */
+function countStats(state: EditorState): TextStats {
+  const totals = countText(readableText(state));
+  const { main } = state.selection;
+  if (main.empty) return totals;
+  const selected = countText(readableText(state, main.from, main.to));
+  return {
+    words: totals.words,
+    characters: totals.characters,
+    selectedWords: selected.words,
+    selectedCharacters: selected.characters,
+  };
+}
+
 function matchStats(view: EditorView): MatchStats {
   const query = getSearchQuery(view.state);
   if (!query.valid) return { current: 0, total: 0 };
@@ -254,9 +271,9 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     // that is already the next one; what it showed itself is kept here instead
     let path = props.documentPath;
     let headings: OutlineHeading[] = [];
-    // Counting walks the whole text, so coalesce it while typing in long documents
+    // Counting walks the whole text, so coalesce it while typing or selecting in long documents
     const updateStats = debounce(
-      (state: EditorState) => props.onStatsChange(countText(readableText(state))),
+      (state: EditorState) => props.onStatsChange(countStats(state)),
       STATS_DEBOUNCE_MS,
     );
     const focusCompartment = new Compartment();
@@ -336,7 +353,10 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           }),
           EditorView.updateListener.of((update) => {
             if (update.docChanged) props.onMarkdownChange(update.state.doc.toString());
-            if (update.selectionSet) savePosition();
+            if (update.selectionSet) {
+              savePosition();
+              updateStats(update.state);
+            }
           }),
         ],
       }),

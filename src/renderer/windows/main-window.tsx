@@ -60,6 +60,19 @@ export const MainWindow: Component = () => {
   const [outline, setOutline] = createSignal<OutlineHeading[]>([]);
   const [activeHeading, setActiveHeading] = createSignal(-1);
   const [stats, setStats] = createSignal<TextStats>({ words: 0, characters: 0 });
+  // A selection is counted before the document totals, as "12 words / 300 words"
+  const wordsText = createMemo(() => {
+    const { words, selectedWords } = stats();
+    return selectedWords === undefined
+      ? t().common.wordsCount(words)
+      : `${t().common.wordsCount(selectedWords)} / ${t().common.wordsCount(words)}`;
+  });
+  const charsText = createMemo(() => {
+    const { characters, selectedCharacters } = stats();
+    return selectedCharacters === undefined
+      ? t().common.charsCount(characters)
+      : `${t().common.charsCount(selectedCharacters)} / ${t().common.charsCount(characters)}`;
+  });
   // A folder the user dropped in or opened; while the open file is outside of it, the file's own folder is shown instead
   const [openedFolder, setOpenedFolder] = createSignal<string>();
   const [preferredMode, setPreferredMode] = createSignal<SidebarMode>("outline");
@@ -446,9 +459,9 @@ export const MainWindow: Component = () => {
             data-bar-part="count"
             class="text-2xs text-muted-foreground tabular-nums flex shrink-0 items-center gap-1.5 whitespace-nowrap me-2"
           >
-            <span>{t().common.wordsCount(stats().words)}</span>
+            <span>{wordsText()}</span>
             <span>·</span>
-            <span>{t().common.charsCount(stats().characters)}</span>
+            <span>{charsText()}</span>
           </div>
         </Show>
       </TitleBar>
