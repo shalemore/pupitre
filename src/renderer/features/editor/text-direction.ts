@@ -1,5 +1,5 @@
 import { syntaxTree } from "@codemirror/language";
-import type { Extension, Range } from "@codemirror/state";
+import type { Extension, Range, Text } from "@codemirror/state";
 import {
   Decoration,
   type DecorationSet,
@@ -22,8 +22,17 @@ import { direction } from "direction";
  */
 
 const LTR_BLOCK = /^(?:FencedCode|CodeBlock|FrontMatter)$/;
-// The first strong character is almost always near the start; scanning a prefix keeps typing cheap
 const DIRECTION_SAMPLE = 4096;
+
+/**
+ * The base direction of `doc`, or undefined when its opening text holds no strong character. Only
+ * that opening text is read: the first strong character is almost always near the start, and
+ * typing must stay cheap.
+ */
+export function baseDirection(doc: Text): "ltr" | "rtl" | undefined {
+  const dir = direction(doc.sliceString(0, DIRECTION_SAMPLE));
+  return dir === "neutral" ? undefined : dir;
+}
 
 const autoLine = Decoration.line({ attributes: { dir: "auto" } });
 const ltrLine = Decoration.line({ attributes: { dir: "ltr" } });
@@ -56,8 +65,8 @@ function lineDirections(view: EditorView): DecorationSet {
 export const textDirection: Extension = [
   EditorView.perLineTextDirection.of(true),
   EditorView.contentAttributes.compute(["doc"], (state): Record<string, string> => {
-    const dir = direction(state.sliceDoc(0, DIRECTION_SAMPLE));
-    return dir === "neutral" ? {} : { dir };
+    const dir = baseDirection(state.doc);
+    return dir === undefined ? {} : { dir };
   }),
   ViewPlugin.fromClass(
     class {

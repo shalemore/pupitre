@@ -1,11 +1,9 @@
+import { escapeHtml } from "@/lib/html";
+
 /** Rendered formulas by display mode and source; widgets are rebuilt while scrolling and editing. */
 const cache = new Map<string, Promise<string>>();
 /** Enough for the formulas of a document, with room to spare: typing in one renders it per keystroke. */
 const MAX_FORMULAS = 100;
-
-function escapeHtml(text: string): string {
-  return text.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-}
 
 /**
  * The SVG of a formula, rendered once per source by mathjax-document, which is imported the first

@@ -1,8 +1,8 @@
 import { syntaxTree } from "@codemirror/language";
 import { EditorState } from "@codemirror/state";
 import type { SyntaxNode } from "@lezer/common";
-import { direction } from "direction";
 import DOMPurify from "dompurify";
+import { escapeHtml } from "@/lib/html";
 import { alertTitles, alertType } from "../editor/alerts";
 import { fencedText } from "../editor/block-text";
 import { detailsSection } from "../editor/details";
@@ -15,8 +15,8 @@ import { mathFence, mathOf } from "../editor/math";
 import { renderMath } from "../editor/mathjax";
 import { diagramTheme, readDiagramTheme, renderDiagram } from "../editor/mermaid";
 import { columnCount, readTable } from "../editor/table-model";
+import { baseDirection } from "../editor/text-direction";
 import { codeHtml } from "./code-html";
-import { escapeHtml } from "./escape-html";
 import { pageStyle } from "./page-style";
 
 /**
@@ -30,8 +30,6 @@ import { pageStyle } from "./page-style";
  * network to be read.
  */
 
-/** How much of the document decides its base direction, the same sample the editor reads. */
-const DIRECTION_SAMPLE = 4096;
 const HEADING = /^(?:ATX|Setext)Heading([1-6])$/;
 /** Links to the web open in a tab of their own; an address inside the page stays in it. */
 const EXTERNAL = /^https?:/i;
@@ -382,9 +380,9 @@ export async function documentHtml(state: EditorState, title: string): Promise<s
     inlineStyles: false,
   };
   const body = await contentOf(ctx);
-  const textDirection = direction(state.sliceDoc(0, DIRECTION_SAMPLE));
+  const textDirection = baseDirection(state.doc);
   const lang = document.documentElement.lang || "en";
-  const dir = textDirection === "neutral" ? "" : ` dir="${textDirection}"`;
+  const dir = textDirection === undefined ? "" : ` dir="${textDirection}"`;
   return `<!doctype html>
 <html lang="${escapeHtml(lang)}"${dir}>
 <head>

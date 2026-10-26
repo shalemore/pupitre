@@ -11,7 +11,7 @@ import {
   Show,
   type Component,
 } from "solid-js";
-import { DOCUMENT_FILE, type AppCommand } from "@shared/desktop-api";
+import type { AppCommand } from "@shared/desktop-api";
 import { TitleBar } from "@/components/title-bar";
 import { CommandPalette } from "@/features/command-palette/command-palette";
 import type { OutlineHeading } from "@/features/editor/document-structure";
@@ -41,7 +41,7 @@ import { desktop, isMacOS } from "@/lib/desktop";
 import { documentPosition } from "@/lib/document-positions";
 import { createDocumentSession } from "@/lib/document-session";
 import { messageOf, reportFailure } from "@/lib/errors";
-import { fileNameOf, isInsideFolder, isolateFileName } from "@/lib/file";
+import { fileNameOf, isInsideFolder, isolateFileName, withoutDocumentExtension } from "@/lib/file";
 import { createImmersiveChrome } from "@/lib/immersive-chrome";
 import { recentFiles } from "@/lib/recent-files";
 import { settings, updateSettings } from "@/lib/settings";
@@ -245,24 +245,24 @@ export const MainWindow: Component = () => {
     if (path !== null) showFolder(path);
   };
 
-  const exportPdf = async () => {
-    if (!session.activeDocument()) return;
-    const pdfName = session.fileName().replace(DOCUMENT_FILE, "") + ".pdf";
+  /** Runs `run` with the whole document rendered, which printing and exporting need, and puts it back. */
+  const whilePrinting = async (run: () => Promise<unknown>) => {
     const resume = await editor()?.prepareForPrint();
     try {
-      await desktop.invoke("document:export-pdf", pdfName);
+      await run();
     } finally {
       resume?.();
     }
   };
 
+  const exportPdf = async () => {
+    if (!session.activeDocument()) return;
+    const pdfName = withoutDocumentExtension(session.fileName()) + ".pdf";
+    await whilePrinting(() => desktop.invoke("document:export-pdf", pdfName));
+  };
+
   const printDocument = async () => {
-    const resume = await editor()?.prepareForPrint();
-    try {
-      await desktop.invoke("document:print");
-    } finally {
-      resume?.();
-    }
+    await whilePrinting(() => desktop.invoke("document:print"));
   };
 
   /** Writes the document as the page the editor would show, as a web page or as one tall image. */
@@ -272,7 +272,7 @@ export const MainWindow: Component = () => {
     const html = await editor()?.toHtml();
     if (html === undefined) return;
     const name =
-      session.fileName().replace(DOCUMENT_FILE, "") + (format === "html" ? ".html" : ".png");
+      withoutDocumentExtension(session.fileName()) + (format === "html" ? ".html" : ".png");
     try {
       await (format === "html"
         ? desktop.invoke("document:export-html", name, html)
