@@ -16,6 +16,7 @@
     "vite.shared.ts",
     "vite.web.config.ts",
     "vitest.config.ts",
+    "vitest.bench.config.ts",
     "scripts",
     "src/main",
     "src/preload",

@@ -17,5 +17,6 @@
       "@shared/*": ["./src/shared/*"]
     }
   },
-  "include": ["src/renderer", "src/shared", "src/web"]
+  // The benchmark parses through the renderer's language, so it is checked with the DOM lib
+  "include": ["src/renderer", "src/shared", "src/web", "bench"]
 }

@@ -10,5 +10,5 @@
     "types": ["node"],
     "noEmit": true
   },
-  "include": ["e2e", "playwright.config.ts", "src/shared"]
+  "include": ["e2e", "playwright.config.ts", "playwright.perf.config.ts", "src/shared"]
 }

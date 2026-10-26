@@ -1,0 +1,206 @@
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { expect, test } from "@playwright/test";
+import type { ElectronApplication, Page } from "@playwright/test";
+import { close, launch, run } from "./app";
+import type { TestApp } from "./app";
+
+/**
+ * What the app costs, measured on the built one: a cold start, opening documents of 200 KB, 5 MB
+ * and 20 MB up to their last line, the latency of typing, and the memory the main process holds.
+ * Absolute numbers belong to the machine that measured them; the assertions only catch a run that
+ * broke, so treat the report as the result and not this file passing.
+ */
+
+const TAIL_MARKER = "END-OF-PERF-DOCUMENT";
+
+/** A generated document of this many characters, all ASCII, so a char is a byte. */
+const SECTION = `## A section of the performance fixture
+
+Pupitre keeps the document on disk as the Markdown it shows, so every marker is a real character and the file is saved exactly as it was edited. A paragraph this long is the common case in a long note, and the editor decorates only the part of it that the viewport shows.
+
+- A list item that holds a sentence of its own, long enough to wrap in a narrow window
+- Another item, so the parser has a list to close before the paragraph after it
+
+A line with *emphasis*, **strong text**, a [link](https://example.com), a \`code span\` and an ==highlight== reads as text until the cursor touches it.
+`;
+
+/**
+ * `article` is the long note typing is measured on: a document of a few hundred kilobytes reads as
+ * a long article, and the keystroke cost there is the one a user meets all day. The two larger
+ * documents are about opening them, since typing at their end costs hundreds of milliseconds a key.
+ */
+const FILE_SIZE = { article: 200 * 1024, small: 5 * 1024 * 1024, large: 20 * 1024 * 1024 };
+
+/** Limits that only catch a broken run, not a slow machine. */
+const OPEN_LIMIT_MS = 180_000;
+const TYPING_P95_LIMIT_MS = 500;
+
+interface Measurement {
+  name: string;
+  value: number;
+  unit: string;
+}
+
+const measurements: Measurement[] = [];
+
+function record(name: string, value: number, unit: string): void {
+  measurements.push({ name, value: Math.round(value * 10) / 10, unit });
+}
+
+function documentOf(bytes: number, title: string): string {
+  const head = `# Performance fixture: ${title}\n\n`;
+  let text = head;
+  while (text.length < bytes) text += SECTION;
+  return `${text}\n${TAIL_MARKER}\n`;
+}
+
+interface GeneratedDocument {
+  folder: string;
+  file: string;
+}
+
+/** A folder for the generated files, kept out of the profile so a relaunch still finds them. */
+async function generateDocument(title: string, bytes: number): Promise<GeneratedDocument> {
+  const folder = await mkdtemp(join(tmpdir(), "pupitre-perf-"));
+  const file = join(folder, `${title}.md`);
+  await writeFile(file, documentOf(bytes, title));
+  return { folder, file };
+}
+
+/** Resident memory of the main process: the renderer holds the tree, this side holds the file. */
+async function mainRssMib(app: ElectronApplication): Promise<number> {
+  const rss = await app.evaluate(() => process.memoryUsage().rss);
+  return rss / (1024 * 1024);
+}
+
+/**
+ * The time from the launch to the last line on screen: the window paints, the main process reads
+ * the file, the renderer replaces the document, and a jump to the end makes it draw the tail.
+ */
+async function openToTail(testApp: TestApp, title: string, started: number): Promise<number> {
+  const { page } = testApp;
+  await expect(page.locator(".cm-content")).toContainText(`Performance fixture: ${title}`, {
+    timeout: OPEN_LIMIT_MS,
+  });
+  // The editor draws only the lines in the viewport, so the last line has to be scrolled to
+  await page.locator(".cm-line").first().click();
+  await page.keyboard.press("ControlOrMeta+End");
+  await expect(page.locator(".cm-content")).toContainText(TAIL_MARKER, { timeout: OPEN_LIMIT_MS });
+  return performance.now() - started;
+}
+
+/**
+ * Times a keystroke from its `keydown` to the first frame drawn after it, which is where the
+ * character becomes visible. The listener sits on the document in the capture phase, so it starts
+ * before CodeMirror handles the key rather than after it.
+ */
+async function measureTyping(page: Page, text: string): Promise<number[]> {
+  await page.locator(".cm-line").first().click();
+  await page.evaluate(() => {
+    document.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key.length !== 1) return;
+        performance.mark("typing-start");
+        requestAnimationFrame(() => performance.measure("typing-latency", "typing-start"));
+      },
+      true,
+    );
+  });
+  await page.keyboard.type(text);
+  await expect(page.locator(".cm-content")).toContainText(text);
+  return page.evaluate(() =>
+    performance
+      .getEntriesByType("measure")
+      .filter((entry) => entry.name === "typing-latency")
+      .map((entry) => entry.duration),
+  );
+}
+
+/** The latency that this share of the keystrokes stayed under. */
+function percentile(values: readonly number[], fraction: number): number {
+  const sorted = values.toSorted((a, b) => a - b);
+  const index = Math.min(sorted.length - 1, Math.ceil(sorted.length * fraction) - 1);
+  return sorted[index] ?? 0;
+}
+
+test("measures the cold start to the editor", async () => {
+  const started = performance.now();
+  const testApp = await launch();
+  try {
+    // A window without a document shows what to do next rather than an editor
+    await run(testApp.page, { id: "file.new" });
+    await testApp.page.locator(".cm-content").waitFor({ timeout: OPEN_LIMIT_MS });
+    const coldStart = performance.now() - started;
+    record("cold start to .cm-content", coldStart, "ms");
+    record("main process RSS after start", await mainRssMib(testApp.app), "MiB");
+    expect(coldStart).toBeLessThan(OPEN_LIMIT_MS);
+  } finally {
+    await close(testApp);
+  }
+});
+
+test("opens a 200 KB document and types into it", async () => {
+  const generated = await generateDocument("200 KB", FILE_SIZE.article);
+  const started = performance.now();
+  const testApp = await launch({ files: [generated.file] });
+  try {
+    const open = await openToTail(testApp, "200 KB", started);
+    record("open 200 KB to the tail", open, "ms");
+    record("main process RSS after 200 KB", await mainRssMib(testApp.app), "MiB");
+    expect(open).toBeLessThan(OPEN_LIMIT_MS);
+
+    // Twenty characters, a short phrase, typed one keystroke at a time
+    const latencies = await measureTyping(testApp.page, "typing latency check");
+    const p95 = percentile(latencies, 0.95);
+    record("typing latency median", percentile(latencies, 0.5), "ms");
+    record("typing latency p95", p95, "ms");
+    record("keystrokes measured", latencies.length, "keystrokes");
+    expect(p95).toBeLessThan(TYPING_P95_LIMIT_MS);
+  } finally {
+    await close(testApp);
+    await rm(generated.folder, { recursive: true, force: true });
+  }
+});
+
+test("opens a 5 MB document", async () => {
+  const generated = await generateDocument("5 MB", FILE_SIZE.small);
+  const started = performance.now();
+  const testApp = await launch({ files: [generated.file] });
+  try {
+    const open = await openToTail(testApp, "5 MB", started);
+    record("open 5 MB to the tail", open, "ms");
+    record("main process RSS after 5 MB", await mainRssMib(testApp.app), "MiB");
+    expect(open).toBeLessThan(OPEN_LIMIT_MS);
+  } finally {
+    await close(testApp);
+    await rm(generated.folder, { recursive: true, force: true });
+  }
+});
+
+test("opens a 20 MB document", async () => {
+  const generated = await generateDocument("20 MB", FILE_SIZE.large);
+  const started = performance.now();
+  const testApp = await launch({ files: [generated.file] });
+  try {
+    const open = await openToTail(testApp, "20 MB", started);
+    record("open 20 MB to the tail", open, "ms");
+    record("main process RSS after 20 MB", await mainRssMib(testApp.app), "MiB");
+    expect(open).toBeLessThan(OPEN_LIMIT_MS);
+  } finally {
+    await close(testApp);
+    await rm(generated.folder, { recursive: true, force: true });
+  }
+});
+
+test.afterAll(() => {
+  const report = Object.fromEntries(
+    measurements.map(({ name, value, unit }) => [name, `${value} ${unit}`]),
+  );
+  const date = new Date().toISOString().slice(0, 10);
+  console.log(`\nPerformance, measured ${date} on ${process.platform}/${process.arch}:`);
+  console.log("Absolute numbers belong to this machine and are not comparable across machines.");
+  console.log(JSON.stringify(report, null, 2));
+});
