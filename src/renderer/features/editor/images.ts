@@ -22,7 +22,7 @@ export function resolveUrl(state: EditorState, url: string): string {
 }
 
 /** The address inside an image's parentheses, without the optional angle brackets. */
-export function imageSource(destination: string): string {
+function imageSource(destination: string): string {
   return destination.replace(/^<(.*)>$/, "$1");
 }
 
