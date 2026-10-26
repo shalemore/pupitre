@@ -94,7 +94,14 @@ export class HtmlBlockWidget extends WidgetType {
   toDOM(view: EditorView): HTMLElement {
     const picture = parseImageTag(this.source);
     if (picture) {
-      return imageDom(view, resolveAgainst(this.base, picture.src), picture.alt, picture, true);
+      return imageDom(
+        view,
+        resolveAgainst(this.base, picture.src),
+        picture.alt,
+        picture.title,
+        picture,
+        true,
+      );
     }
     const block = document.createElement("div");
     block.className = "md-html-block";

@@ -157,6 +157,8 @@ export interface ImageSize {
 export interface TaggedImage extends ImageSize {
   readonly src: string;
   readonly alt: string;
+  /** The title Markdown or the tag wrote beside the picture, empty when it has none. */
+  readonly title: string;
 }
 
 /** A picture in the document, and the range its source covers. */
@@ -242,9 +244,16 @@ export function parseImageTag(source: string): TaggedImage | undefined {
   return {
     src,
     alt: attributes.get("alt") ?? "",
+    title: attributes.get("title") ?? "",
     width: width === undefined ? undefined : Number.parseInt(width, 10),
     alignment: alignmentOfStyle(attributes.get("style") ?? ""),
   };
+}
+
+/** The title of a Markdown image, whose node keeps the quotes it was written with. */
+function titleText(source: string): string {
+  const quote = source[0];
+  return (quote === '"' || quote === "'") && source.endsWith(quote) ? source.slice(1, -1) : source;
 }
 
 /** The picture a Markdown image node draws. */
@@ -252,11 +261,13 @@ function markdownImage(state: EditorState, node: SyntaxNode): DocumentImage | un
   const [open, close] = node.getChildren("LinkMark");
   const url = node.getChild("URL");
   if (!open || !close || !url) return undefined;
+  const title = node.getChild("LinkTitle");
   return {
     from: node.from,
     to: node.to,
     src: imageSource(state.sliceDoc(url.from, url.to)),
     alt: state.sliceDoc(open.to, close.from),
+    title: title === null ? "" : titleText(state.sliceDoc(title.from, title.to)),
     width: undefined,
     alignment: undefined,
   };
@@ -280,6 +291,26 @@ export function imageAt(state: EditorState, pos: number): DocumentImage | undefi
   syntaxTree(state).iterate({
     from: pos,
     to: line.to,
+    enter: (node) => {
+      if (found) return false;
+      const image = imageOf(state, node.node);
+      if (!image) return undefined;
+      found = image;
+      return false;
+    },
+  });
+  return found;
+}
+
+/**
+ * The first picture whose source lies in the range. A widget such as a table cell knows the range
+ * it renders, so it can offer the picture menu without asking where a pointer maps in the text.
+ */
+export function imageIn(state: EditorState, from: number, to: number): DocumentImage | undefined {
+  let found: DocumentImage | undefined;
+  syntaxTree(state).iterate({
+    from,
+    to,
     enter: (node) => {
       if (found) return false;
       const image = imageOf(state, node.node);
@@ -365,7 +396,8 @@ function imageMarkup(image: TaggedImage): string {
   if (image.width === undefined && style === "") return imageMarkdown(image.alt, image.src);
   const width = image.width === undefined ? "" : ` width="${image.width}"`;
   const declarations = style === "" ? "" : ` style="${style}"`;
-  return `<img src="${escapeHtml(image.src)}" alt="${escapeHtml(image.alt)}"${width}${declarations}>`;
+  const title = image.title === "" ? "" : ` title="${escapeHtml(image.title)}"`;
+  return `<img src="${escapeHtml(image.src)}" alt="${escapeHtml(image.alt)}"${title}${width}${declarations}>`;
 }
 
 /** A picture narrower than this cannot be grabbed by its handle again. */
@@ -391,7 +423,7 @@ function writeImage(
     changes: {
       from: image.from,
       to: image.to,
-      insert: imageMarkup({ src: image.src, alt: image.alt, ...size }),
+      insert: imageMarkup({ src: image.src, alt: image.alt, title: image.title, ...size }),
     },
     userEvent: "input.format",
   });
@@ -500,6 +532,7 @@ export function imageDom(
   /** The address the picture is shown from, resolved against the document's folder. */
   src: string,
   alt: string,
+  title: string,
   size: ImageSize,
   /** Whether the picture offers its controls; off while the selection shows its source. */
   controls: boolean,
@@ -517,6 +550,7 @@ export function imageDom(
   image.className = "md-image-preview";
   image.src = src;
   image.alt = alt;
+  image.title = title;
   if (size.width !== undefined) image.style.width = `${size.width}px`;
   // The line grows once the picture arrives; let CodeMirror measure it again
   image.addEventListener("load", () => view.requestMeasure());
@@ -535,6 +569,7 @@ export class ImageWidget extends WidgetType {
     /** The address the picture is shown from, resolved against the document's folder. */
     readonly src: string,
     readonly alt: string,
+    readonly title: string,
     readonly size: ImageSize,
     /** Whether the picture offers its controls; off while the selection shows its source. */
     readonly controls: boolean,
@@ -546,6 +581,7 @@ export class ImageWidget extends WidgetType {
     return (
       other.src === this.src &&
       other.alt === this.alt &&
+      other.title === this.title &&
       other.size.width === this.size.width &&
       other.size.alignment === this.size.alignment &&
       other.controls === this.controls
@@ -553,7 +589,7 @@ export class ImageWidget extends WidgetType {
   }
 
   toDOM(view: EditorView): HTMLElement {
-    return imageDom(view, this.src, this.alt, this.size, this.controls);
+    return imageDom(view, this.src, this.alt, this.title, this.size, this.controls);
   }
 
   // Clicking the picture places the cursor there, which reveals its source; its controls are not

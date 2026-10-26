@@ -32,6 +32,8 @@ import {
 import { Dynamic, render } from "solid-js/web";
 import { IconButton, Separator } from "@/components/ui";
 import { t } from "@/i18n";
+import { openImageMenu } from "./image-menu";
+import { imageIn } from "./images";
 import { InlineContent } from "./inline-content";
 import { openLink } from "./live-preview";
 import {
@@ -366,6 +368,8 @@ const TableView: Component<TableViewProps> = (props) => {
         component={cell.row === 0 ? "th" : "td"}
         style={{ "text-align": props.model().alignments[cell.column] }}
         onMouseDown={(event: MouseEvent) => {
+          // A right-click on a picture keeps the picture there for its own menu
+          if (event.button !== 0) return;
           const link = event.target instanceof Element ? event.target.closest(".md-link") : null;
           if ((event.ctrlKey || event.metaKey) && link instanceof HTMLElement && link.title) {
             openLink(link.title);
@@ -375,6 +379,21 @@ const TableView: Component<TableViewProps> = (props) => {
           if (isActive(cell.row, cell.column)) return;
           event.preventDefault();
           props.setActive({ row: cell.row, column: cell.column });
+        }}
+        onContextMenu={(event: MouseEvent) => {
+          if (
+            !(event.target instanceof Element) ||
+            event.target.closest("img.md-image-preview") === null
+          ) {
+            return;
+          }
+          const cellSource = source();
+          const image =
+            cellSource === undefined
+              ? undefined
+              : imageIn(props.view.state, cellSource.from, cellSource.to);
+          if (image === undefined || !openImageMenu(props.view, event, image)) return;
+          event.stopPropagation();
         }}
       >
         <Show

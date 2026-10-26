@@ -130,13 +130,19 @@ const PictureMenuPanel: Component<{
  * Opens the file menu of the picture under a right-click at the pointer; returns whether the click
  * was on a picture that has such a menu, so that every other click keeps what the window gives it.
  */
-export function openImageMenu(view: EditorView, event: MouseEvent): boolean {
+export function openImageMenu(
+  view: EditorView,
+  event: MouseEvent,
+  knownImage?: DocumentImage,
+): boolean {
   const target = event.target;
   if (!(target instanceof Element) || target.closest(".md-image-preview") === null) return false;
-  const pos = view.posAtCoords(event);
-  if (pos === null) return false;
-  // A picture whose source stands beside it is reached from the character before its widget
-  const image = imageAt(view.state, pos) ?? imageAt(view.state, Math.max(pos - 1, 0));
+  let image = knownImage;
+  if (image === undefined) {
+    const pos = view.posAtCoords(event);
+    if (pos === null) return false;
+    image = imageAt(view.state, pos) ?? imageAt(view.state, Math.max(pos - 1, 0));
+  }
   if (image === undefined) return false;
   const menu = pictureMenu(view, image);
   if (menu === undefined) return false;

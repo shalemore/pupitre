@@ -4,7 +4,7 @@ import { type Component, createResource, For, Match, Switch } from "solid-js";
 import { Dynamic } from "solid-js/web";
 import { emojiFor } from "./emoji";
 import { htmlTag, isFormattingTag } from "./html";
-import { type ImageAlignment, imageSource, imageStyle, parseImageTag, resolveUrl } from "./images";
+import { type ImageAlignment, imageOf, imageStyle, parseImageTag, resolveUrl } from "./images";
 import { markers } from "./live-preview";
 import { renderMath } from "./mathjax";
 
@@ -24,6 +24,7 @@ export type InlineItem =
       type: "image";
       src: string;
       alt: string;
+      title: string;
       width: number | undefined;
       alignment: ImageAlignment | undefined;
     }
@@ -96,9 +97,17 @@ export function inlineItems(
         break;
       }
       case "Image": {
-        const url = child.getChild("URL");
-        const src = url ? resolveUrl(state, imageSource(text(url.from, url.to))) : "";
-        push({ type: "image", src, alt: text(start, end), width: undefined, alignment: undefined });
+        const image = imageOf(state, child);
+        if (image) {
+          push({
+            type: "image",
+            src: resolveUrl(state, image.src),
+            alt: image.alt,
+            title: image.title,
+            width: image.width,
+            alignment: image.alignment,
+          });
+        }
         break;
       }
       case "FootnoteReference":
@@ -123,6 +132,7 @@ export function inlineItems(
             type: "image",
             src: resolveUrl(state, picture.src),
             alt: picture.alt,
+            title: picture.title,
             width: picture.width,
             alignment: picture.alignment,
           });
@@ -197,6 +207,7 @@ export const InlineContent: Component<{ items: InlineItem[] }> = (props) => (
               class="md-image-preview"
               src={image().src}
               alt={image().alt}
+              title={image().title}
               width={image().width}
               style={imageStyle(image())}
             />

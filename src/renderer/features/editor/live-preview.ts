@@ -441,7 +441,7 @@ function visitAlert(builder: DecorationBuilder, quote: SyntaxNode): void {
 function placeImage(builder: DecorationBuilder, image: DocumentImage): boolean {
   const active = touches(builder.ranges, image.from, image.to);
   const src = resolveUrl(builder.state, image.src);
-  const widget = new ImageWidget(src, image.alt, image, !active);
+  const widget = new ImageWidget(src, image.alt, image.title, image, !active);
   if (active) {
     builder.decorations.push(Decoration.widget({ widget, side: 1 }).range(image.to));
     return true;

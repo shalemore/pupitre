@@ -101,11 +101,18 @@ async function itemsHtml(ctx: ExportContext, items: readonly InlineItem[]): Prom
  * A picture as the page writes it. The width and the alignment are the declarations the document
  * carries, so the page reads the picture the way the editor shows it.
  */
-function imageHtml(ctx: ExportContext, src: string, alt: string, size: ImageSize): string {
+function imageHtml(
+  ctx: ExportContext,
+  src: string,
+  alt: string,
+  title: string,
+  size: ImageSize,
+): string {
   const width = size.width === undefined ? "" : ` width="${size.width}"`;
   const style = imageStyle(size);
   const declarations = style === "" ? "" : ` style="${style}"`;
-  return `<img src="${escapeHtml(documentAddress(ctx.state, src))}" alt="${escapeHtml(alt)}"${width}${declarations}>`;
+  const titleAttribute = title === "" ? "" : ` title="${escapeHtml(title)}"`;
+  return `<img src="${escapeHtml(documentAddress(ctx.state, src))}" alt="${escapeHtml(alt)}"${titleAttribute}${width}${declarations}>`;
 }
 
 async function itemHtml(ctx: ExportContext, item: InlineItem): Promise<string> {
@@ -122,7 +129,7 @@ async function itemHtml(ctx: ExportContext, item: InlineItem): Promise<string> {
     case "link":
       return linkHtml(item.href, await itemsHtml(ctx, item.children));
     case "image":
-      return imageHtml(ctx, item.src, item.alt, item);
+      return imageHtml(ctx, item.src, item.alt, item.title, item);
     case "math":
       return `<span class="md-math">${await renderMath(item.tex, item.display)}</span>`;
     case "footnote":
@@ -325,7 +332,7 @@ async function renderBlock(ctx: ExportContext, block: SyntaxNode): Promise<strin
       const picture = parseImageTag(source);
       // A block that holds one picture is the tag a resize writes, not raw HTML to sanitize
       if (picture) {
-        return imageHtml(ctx, resolveUrl(state, picture.src), picture.alt, picture);
+        return imageHtml(ctx, resolveUrl(state, picture.src), picture.alt, picture.title, picture);
       }
       return isRenderableHtml(source)
         ? `<div class="md-html-block">${DOMPurify.sanitize(source)}</div>`
