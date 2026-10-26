@@ -19,6 +19,18 @@ publish:
   owner: shalemore
   repo: pupitre
   releaseType: draft
+# Switches set in the Electron binary itself, so the packaged app only runs the code that was
+# built. The first three take away the ways the runtime can be steered from the environment it
+# starts in. The last two belong together: the integrity check only verifies the archive that is
+# loaded, and onlyLoadAppFromAsar is what makes Electron load app.asar alone, never an unpacked
+# app/ folder or default_app.asar that would go unchecked. grantFileProtocolExtraPrivileges stays
+# on, because the windows load their page from file://.
+electronFuses:
+  runAsNode: false
+  enableNodeOptionsEnvironmentVariable: false
+  enableNodeCliInspectArguments: false
+  enableEmbeddedAsarIntegrityValidation: true
+  onlyLoadAppFromAsar: true
 win:
   target: nsis
 nsis:
@@ -30,6 +42,9 @@ mac:
     - { target: dmg, arch: arm64 }
     - { target: zip, arch: arm64 }
   category: public.app-category.productivity
+# Notarizes the signed app when the Apple credentials are in the environment, and does nothing
+# without them; see docs/signing.md
+afterSign: scripts/notarize.cjs
 linux:
   target: [AppImage, deb]
   category: Office

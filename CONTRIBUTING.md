@@ -22,3 +22,6 @@ Change `version` in `package.json` on `main` and commit it as `chore(release): x
 ```sh
 gh workflow run import-manifest.yml --repo <owner>/scoop-bucket -f repo=<owner>/pupitre -f tag=vX.Y.Z
 ```
+
+Signing the installers and notarizing the macOS build take their own secrets, described in
+[docs/signing.md](docs/signing.md).

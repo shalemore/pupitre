@@ -70,8 +70,34 @@ jobs:
       - uses: ./.github/actions/setup-node
 
       # electron-builder finds the draft release named after the package.json version and uploads
-      # the installers and update metadata to it
-      - run: npm run build && npx electron-builder --publish always
+      # the installers and update metadata to it. A platform gets only the credentials it can use:
+      # a certificate exported for Windows never reaches the mac build, and the other way round.
+      # A repository without them builds the same installers, unsigned.
+      - name: Build and publish the macOS installers
+        if: matrix.platform == 'macos-latest'
+        run: |
+          # A missing secret arrives as an empty string; electron-builder would read it as a certificate path
+          [ -n "$CSC_LINK" ] || unset CSC_LINK CSC_KEY_PASSWORD
+          npm run build && npx electron-builder --publish always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+
+      - name: Build and publish the Windows installers
+        if: matrix.platform == 'windows-latest'
+        run: npm run build && npx electron-builder --publish always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
+
+      - name: Build and publish the Linux packages
+        if: matrix.platform == 'ubuntu-latest'
+        run: npm run build && npx electron-builder --publish always
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
