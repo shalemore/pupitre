@@ -1,6 +1,6 @@
 import type { AlertType } from "@/features/editor/alerts";
 import { CODE_COLOR_TOKENS, codeHighlightStyle } from "@/features/editor/code-highlight";
-import { toHex } from "@/lib/theme";
+import { isDarkColor, toHex } from "@/lib/theme";
 
 /**
  * The stylesheet of an exported page. The app's document CSS cannot be reused: it styles
@@ -8,14 +8,6 @@ import { toHex } from "@/lib/theme";
  * The colors and the typography are read from the theme the window is showing, so an export looks
  * like the page it was made from rather than like a browser default.
  */
-
-/** Whether the theme's canvas is dark, which the page tells the browser for form controls. */
-function isDark(hex: string): boolean {
-  const [r = 0, g = 0, b = 0] = [1, 3, 5].map((start) =>
-    Number.parseInt(hex.slice(start, start + 2), 16),
-  );
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b < 128;
-}
 
 /** The colors, fonts and measures of the page, taken from the variables the theme and the settings set. */
 function readTokens() {
@@ -75,7 +67,7 @@ export function pageStyle(): string {
   const tokens = readTokens();
   return `
 :root {
-  color-scheme: ${isDark(tokens.page) ? "dark" : "light"};
+  color-scheme: ${isDarkColor(tokens.page) ? "dark" : "light"};
   --page: ${tokens.page};
   --card: ${tokens.card};
   --text: ${tokens.text};

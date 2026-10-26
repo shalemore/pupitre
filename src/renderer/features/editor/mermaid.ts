@@ -2,19 +2,12 @@ import { syntaxTree } from "@codemirror/language";
 import { type EditorState, Facet } from "@codemirror/state";
 import { type EditorView, WidgetType } from "@codemirror/view";
 import { messageOf } from "@/lib/errors";
-import { toHex } from "@/lib/theme";
+import { isDarkColor, toHex } from "@/lib/theme";
 import { fencedText } from "./block-text";
 import { onReveal, onScrollbar } from "./widget-events";
 
 /** Mermaid's theme variables; only hex colors work, since Mermaid derives shades from them. */
 export type DiagramTheme = Readonly<Record<string, string | boolean>>;
-
-function isDark(hex: string): boolean {
-  const [r = 0, g = 0, b = 0] = [1, 3, 5].map((start) =>
-    Number.parseInt(hex.slice(start, start + 2), 16),
-  );
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b < 128;
-}
 
 /**
  * Reads the active theme's diagram colors (the --diagram-* tokens in app.css) into Mermaid's
@@ -31,7 +24,7 @@ export function readDiagramTheme(): DiagramTheme {
   const text = color("--diagram-text");
   const accent = color("--diagram-accent");
   return {
-    darkMode: isDark(canvas),
+    darkMode: isDarkColor(canvas),
     fontFamily:
       style.getPropertyValue("--pref-font-family") || style.getPropertyValue("--font-document"),
     background: canvas,

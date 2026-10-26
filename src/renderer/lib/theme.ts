@@ -81,6 +81,15 @@ export function toHex(color: string): string {
   return `#${[r, g, b].map((value) => value.toString(16).padStart(2, "0")).join("")}`;
 }
 
+/** Whether a #rrggbb color reads as dark: a page or a diagram takes its scheme from the color it sits on. */
+export function isDarkColor(hex: string): boolean {
+  const [r = 0, g = 0, b = 0] = [1, 3, 5].map((start) =>
+    Number.parseInt(hex.slice(start, start + 2), 16),
+  );
+  // Rec. 709 luma: the eye sees green as the brightest of the three, so plain brightness would not do
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b < 128;
+}
+
 /** The active theme's canvas and secondary text colors, for the window background and caption buttons. */
 export function readWindowColors(): { background: string; symbol: string } {
   const style = getComputedStyle(document.documentElement);
