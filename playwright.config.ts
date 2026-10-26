@@ -13,6 +13,9 @@ export default defineConfig({
   retries: process.env["CI"] ? 1 : 0,
   // The performance spec opens documents of megabytes and takes minutes, so it has a config of its own
   testIgnore: /performance\.spec\.ts$/,
+  // Electron only downloads its binary once something requires it, and the first test should not
+  // pay for that
+  globalSetup: "./e2e/global-setup.ts",
   reporter: process.env["CI"] ? "github" : "list",
   use: { trace: "retain-on-failure" },
 });
