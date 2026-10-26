@@ -426,6 +426,7 @@ const handlers: Handlers = {
     return target;
   },
   "path:trash": (path) => void files.delete(path),
+  "path:reveal": () => {},
   "path:locate": (path) => opened(path),
   "folder:watch": nothing,
   "folder:unwatch": nothing,

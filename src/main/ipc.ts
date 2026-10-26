@@ -341,6 +341,7 @@ export function registerIpcHandlers(): void {
   handle("folder:create", (_event, parent, name, kind) => createEntry(parent, name, kind));
   handle("path:rename", (_event, path, name) => renameEntry(path, name));
   handle("path:trash", (_event, path) => trashEntry(path));
+  handle("path:reveal", (_event, path) => shell.showItemInFolder(path));
   handle("path:locate", (_event, path) => locate(path));
   handle("folder:watch", (event, path) => watchPath(event.sender, "folder:changed", path));
   handle("folder:unwatch", (event, path) => unwatchPath(event.sender, "folder:changed", path));
