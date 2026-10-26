@@ -49,10 +49,14 @@ export function documentFolder(state: EditorState): string | undefined {
     return undefined;
   }
   if (url.protocol !== "file:") return undefined;
+  // A document on a network share has the server in the host, which a UNC path writes as its own
+  // leading doubled slash; a local file has no host at all
+  const host = decoded(url.host);
   // A file URL's path starts with a slash before a Windows drive letter
-  const folder = decoded(url.pathname)
+  const path = decoded(url.pathname)
     .replace(/\/+$/, "")
     .replace(/^\/(?=[A-Za-z]:)/, "");
+  const folder = host === "" ? path : `//${host}${path}`;
   return folder === "" ? "/" : folder;
 }
 
