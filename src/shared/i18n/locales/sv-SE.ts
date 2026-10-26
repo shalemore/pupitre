@@ -128,6 +128,7 @@ export const svSE = {
     copyHtml: "Kopiera som HTML",
     paste: "Klistra in",
     selectAll: "Markera allt",
+    addToDictionary: "Lägg till i ordlistan",
     find: "Sök…",
     searchInFolder: "Sök i mappen...",
     replace: "Ersätt…",

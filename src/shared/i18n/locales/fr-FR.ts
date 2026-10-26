@@ -125,6 +125,7 @@ export const frFR = {
     copyHtml: "Copier au format HTML",
     paste: "Coller",
     selectAll: "Tout sélectionner",
+    addToDictionary: "Ajouter au dictionnaire",
     find: "Rechercher...",
     searchInFolder: "Rechercher dans le dossier...",
     replace: "Remplacer...",

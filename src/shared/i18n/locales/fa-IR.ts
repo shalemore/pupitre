@@ -128,6 +128,7 @@ export const faIR = {
     copyHtml: "رونوشت به‌صورت HTML",
     paste: "چسباندن",
     selectAll: "انتخاب همه",
+    addToDictionary: "افزودن به واژه‌نامه",
     find: "یافتن...",
     searchInFolder: "جستجو در پوشه...",
     replace: "جایگزینی...",

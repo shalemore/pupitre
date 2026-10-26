@@ -128,6 +128,7 @@ export const fiFI = {
     copyHtml: "Kopioi HTML-muodossa",
     paste: "Liitä",
     selectAll: "Valitse kaikki",
+    addToDictionary: "Lisää sanakirjaan",
     find: "Etsi…",
     searchInFolder: "Etsi kansiosta...",
     replace: "Korvaa…",

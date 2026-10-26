@@ -133,6 +133,7 @@ export const csCZ = {
     copyHtml: "Kopírovat jako HTML",
     paste: "Vložit",
     selectAll: "Vybrat vše",
+    addToDictionary: "Přidat do slovníku",
     find: "Najít…",
     searchInFolder: "Hledat ve složce...",
     replace: "Nahradit…",

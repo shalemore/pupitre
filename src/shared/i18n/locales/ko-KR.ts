@@ -125,6 +125,7 @@ export const koKR = {
     copyHtml: "HTML로 복사",
     paste: "붙여넣기",
     selectAll: "모두 선택",
+    addToDictionary: "사전에 추가",
     find: "찾기...",
     searchInFolder: "폴더에서 검색...",
     replace: "바꾸기...",

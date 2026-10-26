@@ -128,6 +128,7 @@ export const daDK = {
     copyHtml: "Kopiér som HTML",
     paste: "Indsæt",
     selectAll: "Markér alt",
+    addToDictionary: "Føj til ordbog",
     find: "Find…",
     searchInFolder: "Søg i mappe...",
     replace: "Erstat…",

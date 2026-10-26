@@ -129,6 +129,7 @@ export const nlNL = {
     copyHtml: "Kopiëren als HTML",
     paste: "Plakken",
     selectAll: "Alles selecteren",
+    addToDictionary: "Toevoegen aan woordenboek",
     find: "Zoeken…",
     searchInFolder: "In map zoeken...",
     replace: "Vervangen…",

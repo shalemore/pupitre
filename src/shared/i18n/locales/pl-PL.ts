@@ -135,6 +135,7 @@ export const plPL = {
     copyHtml: "Kopiuj jako HTML",
     paste: "Wklej",
     selectAll: "Zaznacz wszystko",
+    addToDictionary: "Dodaj do słownika",
     find: "Znajdź…",
     searchInFolder: "Szukaj w folderze...",
     replace: "Zamień…",

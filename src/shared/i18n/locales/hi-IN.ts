@@ -126,6 +126,7 @@ export const hiIN = {
     copyHtml: "HTML के रूप में कॉपी करें",
     paste: "चिपकाएँ",
     selectAll: "सभी चुनें",
+    addToDictionary: "शब्दकोश में जोड़ें",
     find: "खोजें...",
     searchInFolder: "फ़ोल्डर में खोजें...",
     replace: "बदलें...",

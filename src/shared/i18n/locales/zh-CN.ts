@@ -121,6 +121,7 @@ export const zhCN = {
     copyHtml: "复制为 HTML",
     paste: "粘贴",
     selectAll: "全选",
+    addToDictionary: "添加到词典",
     find: "查找...",
     searchInFolder: "在文件夹中查找...",
     replace: "替换...",

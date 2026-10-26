@@ -124,6 +124,7 @@ export const ptPT = {
     copyHtml: "Copiar como HTML",
     paste: "Colar",
     selectAll: "Selecionar tudo",
+    addToDictionary: "Adicionar ao dicionário",
     find: "Localizar…",
     searchInFolder: "Pesquisar na pasta...",
     replace: "Substituir…",

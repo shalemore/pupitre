@@ -128,6 +128,7 @@ export const thTH = {
     copyHtml: "คัดลอกเป็น HTML",
     paste: "วาง",
     selectAll: "เลือกทั้งหมด",
+    addToDictionary: "เพิ่มในพจนานุกรม",
     find: "ค้นหา...",
     searchInFolder: "ค้นหาในโฟลเดอร์...",
     replace: "แทนที่...",

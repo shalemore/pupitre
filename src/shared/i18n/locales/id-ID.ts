@@ -127,6 +127,7 @@ export const idID = {
     copyHtml: "Salin sebagai HTML",
     paste: "Tempel",
     selectAll: "Pilih semua",
+    addToDictionary: "Tambahkan ke kamus",
     find: "Cari...",
     searchInFolder: "Cari di Folder...",
     replace: "Ganti...",

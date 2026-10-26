@@ -7,6 +7,7 @@ import { rebuildApplicationMenu } from "./menu";
 import { handleOpenFileRequests } from "./open-files";
 import { onRecentFilesChange } from "./recent-files";
 import { getSettings, onSettingsChange } from "./settings-store";
+import { applySpellCheck } from "./spellcheck";
 import { checkForUpdatesOnStartup, setupUpdater } from "./updater";
 import { flushWindowState } from "./window-state";
 import { createMainWindow } from "./windows";
@@ -36,7 +37,9 @@ if (!app.requestSingleInstanceLock()) {
     registerIpcHandlers();
     setupUpdater();
     rebuildApplicationMenu();
+    applySpellCheck();
     onSettingsChange(rebuildApplicationMenu);
+    onSettingsChange(applySpellCheck);
     onRecentFilesChange(rebuildApplicationMenu);
     createMainWindow();
     checkForUpdatesOnStartup();

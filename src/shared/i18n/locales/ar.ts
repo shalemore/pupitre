@@ -141,6 +141,7 @@ export const ar = {
     copyHtml: "نسخ كـ HTML",
     paste: "لصق",
     selectAll: "تحديد الكل",
+    addToDictionary: "أضف إلى القاموس",
     find: "بحث...",
     searchInFolder: "البحث في المجلد...",
     replace: "استبدال...",

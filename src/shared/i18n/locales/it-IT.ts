@@ -125,6 +125,7 @@ export const itIT = {
     copyHtml: "Copia come HTML",
     paste: "Incolla",
     selectAll: "Seleziona tutto",
+    addToDictionary: "Aggiungi al dizionario",
     find: "Trova...",
     searchInFolder: "Cerca nella cartella...",
     replace: "Sostituisci...",

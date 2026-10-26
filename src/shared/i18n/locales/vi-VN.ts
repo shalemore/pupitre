@@ -126,6 +126,7 @@ export const viVN = {
     copyHtml: "Sao chép dưới dạng HTML",
     paste: "Dán",
     selectAll: "Chọn tất cả",
+    addToDictionary: "Thêm vào từ điển",
     find: "Tìm...",
     searchInFolder: "Tìm trong thư mục...",
     replace: "Thay thế...",

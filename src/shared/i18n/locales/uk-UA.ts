@@ -134,6 +134,7 @@ export const ukUA = {
     copyHtml: "Копіювати як HTML",
     paste: "Вставити",
     selectAll: "Вибрати все",
+    addToDictionary: "Додати до словника",
     find: "Знайти…",
     searchInFolder: "Знайти в папці...",
     replace: "Замінити…",

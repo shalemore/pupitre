@@ -124,6 +124,7 @@ export const esES = {
     copyHtml: "Copiar como HTML",
     paste: "Pegar",
     selectAll: "Seleccionar todo",
+    addToDictionary: "Añadir al diccionario",
     find: "Buscar...",
     searchInFolder: "Buscar en la carpeta...",
     replace: "Reemplazar...",

@@ -125,6 +125,7 @@ export const ptBR = {
     copyHtml: "Copiar como HTML",
     paste: "Colar",
     selectAll: "Selecionar Tudo",
+    addToDictionary: "Adicionar ao dicionário",
     find: "Localizar...",
     searchInFolder: "Pesquisar na pasta...",
     replace: "Substituir...",

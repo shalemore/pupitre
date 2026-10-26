@@ -125,6 +125,7 @@ export const deDE = {
     copyHtml: "Als HTML kopieren",
     paste: "Einfügen",
     selectAll: "Alles auswählen",
+    addToDictionary: "Zum Wörterbuch hinzufügen",
     find: "Suchen...",
     searchInFolder: "Im Ordner suchen...",
     replace: "Ersetzen...",

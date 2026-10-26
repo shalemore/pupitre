@@ -125,6 +125,7 @@ export const jaJP = {
     copyHtml: "HTML としてコピー",
     paste: "貼り付け",
     selectAll: "すべて選択",
+    addToDictionary: "辞書に追加",
     find: "検索...",
     searchInFolder: "フォルダー内を検索...",
     replace: "置換...",

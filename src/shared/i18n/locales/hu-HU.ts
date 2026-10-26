@@ -129,6 +129,7 @@ export const huHU = {
     copyHtml: "Másolás HTML-ként",
     paste: "Beillesztés",
     selectAll: "Összes kijelölése",
+    addToDictionary: "Hozzáadás a szótárhoz",
     find: "Keresés…",
     searchInFolder: "Keresés a mappában...",
     replace: "Csere…",

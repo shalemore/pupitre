@@ -125,6 +125,7 @@ export const enUS = {
     copyHtml: "Copy as HTML",
     paste: "Paste",
     selectAll: "Select All",
+    addToDictionary: "Add to Dictionary",
     find: "Find...",
     searchInFolder: "Search in Folder...",
     replace: "Replace...",

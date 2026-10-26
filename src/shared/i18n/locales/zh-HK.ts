@@ -121,6 +121,7 @@ export const zhHK = {
     copyHtml: "複製為 HTML",
     paste: "貼上",
     selectAll: "全選",
+    addToDictionary: "加入詞典",
     find: "尋找...",
     searchInFolder: "在資料夾中尋找...",
     replace: "取代...",

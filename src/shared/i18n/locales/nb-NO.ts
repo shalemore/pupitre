@@ -128,6 +128,7 @@ export const nbNO = {
     copyHtml: "Kopier som HTML",
     paste: "Lim inn",
     selectAll: "Merk alt",
+    addToDictionary: "Legg til i ordlisten",
     find: "Finn…",
     searchInFolder: "Søk i mappen...",
     replace: "Erstatt…",

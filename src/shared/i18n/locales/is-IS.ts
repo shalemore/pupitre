@@ -129,6 +129,7 @@ export const isIS = {
     copyHtml: "Afrita sem HTML",
     paste: "Líma",
     selectAll: "Velja allt",
+    addToDictionary: "Bæta við orðabók",
     find: "Finna…",
     searchInFolder: "Leita í möppu...",
     replace: "Skipta út…",

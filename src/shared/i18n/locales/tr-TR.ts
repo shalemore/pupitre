@@ -129,6 +129,7 @@ export const trTR = {
     copyHtml: "HTML olarak kopyala",
     paste: "Yapıştır",
     selectAll: "Tümünü Seç",
+    addToDictionary: "Sözlüğe ekle",
     find: "Bul…",
     searchInFolder: "Klasörde Ara...",
     replace: "Değiştir…",

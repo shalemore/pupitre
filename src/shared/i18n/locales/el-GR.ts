@@ -128,6 +128,7 @@ export const elGR = {
     copyHtml: "Αντιγραφή ως HTML",
     paste: "Επικόλληση",
     selectAll: "Επιλογή όλων",
+    addToDictionary: "Προσθήκη στο λεξικό",
     find: "Εύρεση…",
     searchInFolder: "Αναζήτηση στον φάκελο...",
     replace: "Αντικατάσταση…",
