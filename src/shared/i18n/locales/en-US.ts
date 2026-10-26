@@ -174,6 +174,7 @@ export const enUS = {
     paragraphMenu: "Paragraph",
     focusMode: "Focus Mode",
     typewriterMode: "Typewriter Mode",
+    sourceMode: "Source Code Mode",
     commandPalette: "Command Palette",
     quickOpen: "Open Quickly…",
     versionHistory: "Version History…",

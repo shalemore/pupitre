@@ -287,6 +287,13 @@ function buildTemplate(): MenuItemConstructorOptions[] {
           checked: getSettings().typewriterMode,
           click: () => updateSettings({ typewriterMode: !getSettings().typewriterMode }),
         },
+        {
+          label: labels.sourceMode,
+          type: "checkbox",
+          accelerator: "CmdOrCtrl+/",
+          checked: getSettings().sourceMode,
+          click: () => updateSettings({ sourceMode: !getSettings().sourceMode }),
+        },
         separator,
         { label: labels.zoomIn, accelerator: "CmdOrCtrl+Plus", click: () => stepZoom("in") },
         // The same shortcut without Shift, which is what the key is on most keyboards

@@ -182,6 +182,7 @@ export const deDE = {
     insertImage: "Insert Image…",
 
     insertTable: "Insert Table…",
+    sourceMode: "Source Code Mode",
   },
   tabs: {
     /** Names the strip of open documents, read aloud by a screen reader. */

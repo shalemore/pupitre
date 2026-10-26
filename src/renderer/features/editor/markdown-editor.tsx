@@ -21,7 +21,7 @@ import {
   searchPanelOpen,
   setSearchQuery,
 } from "@codemirror/search";
-import { Compartment, EditorState, Prec } from "@codemirror/state";
+import { Compartment, EditorState, type Extension, Prec } from "@codemirror/state";
 import { type Command, EditorView, keymap, placeholder } from "@codemirror/view";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { debounce } from "@solid-primitives/scheduled";
@@ -179,6 +179,14 @@ function documentTitle(path: string | undefined): string {
 }
 
 /**
+ * What shows the document rendered, or nothing in source mode, where the source of every construct
+ * is the document: the markers, the tables, the images and the diagrams as they were written.
+ */
+function previewOf(sourceMode: boolean): Extension {
+  return sourceMode ? [] : [livePreview, renderedBlocks];
+}
+
+/**
  * CodeMirror injects its base styles outside every cascade layer, where they would beat the editor
  * layer, the theme and the preferences alike. `revert-layer` hands these properties back to the
  * layers (app.css), so the document is styled by CSS like the rest of the app.
@@ -257,6 +265,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     const cursorCompartment = new Compartment();
     const baseUrlCompartment = new Compartment();
     const diagramThemeCompartment = new Compartment();
+    const previewCompartment = new Compartment();
 
     // While the saved place is still on its way the editor must not save its own, or the top of
     // the document would replace the place it is about to go back to
@@ -299,8 +308,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           ]),
           markdownLanguage,
           codeHighlight,
-          livePreview,
-          renderedBlocks,
+          previewCompartment.of(previewOf(settings().sourceMode)),
           imageInput(uploadImage),
           pasteHtml(markdownStyle),
           baseUrlCompartment.of(documentBaseUrl.of(props.baseUrl)),
@@ -333,6 +341,19 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         ],
       }),
     });
+
+    // Source mode only swaps extensions, so the text, the caret, the scroll and the undo history stay
+    // as they are. The editor remembers the mode it is set to itself, because printing shows the
+    // rendered document even in source mode without the setting changing.
+    let sourceConfigured = settings().sourceMode;
+    const showSource = (sourceMode: boolean): void => {
+      if (sourceConfigured === sourceMode) return;
+      sourceConfigured = sourceMode;
+      view.dispatch({ effects: previewCompartment.reconfigure(previewOf(sourceMode)) });
+    };
+
+    // The setting may be changed from the View menu, the settings window or a folder's own file
+    createEffect(on(() => settings().sourceMode, showSource));
 
     createEffect(() => {
       const {
@@ -534,10 +555,16 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         const hadFocus = view.hasFocus;
         // The caret would be printed too
         view.contentDOM.blur();
+        // A printout is always the rendered document, so source mode gives the preview back for it
+        // and takes it out again afterwards. The extensions go in first: a printing field added by
+        // the same change would not see the effect that turns printing on.
+        const sourceMode = sourceConfigured;
+        showSource(false);
         view.dispatch({ effects: setPrinting.of(true) });
         await Promise.all([prerenderMath(view.state), prerenderDiagrams(view.state)]);
         return () => {
           view.dispatch({ effects: setPrinting.of(false) });
+          showSource(sourceMode);
           if (hadFocus) view.focus();
         };
       },
