@@ -268,6 +268,10 @@ function menuItems(menu: TopMenu): DemoMenuEntry[] {
         { label: m.exportHtml, run: send({ id: "file.export-html" }) },
         { label: m.exportImage, run: send({ id: "file.export-image" }) },
         divider,
+        // The demo folder lives in memory, so nothing is kept of what a save writes over; the
+        // panel still opens, and tells that no version was kept
+        { label: m.versionHistory, run: send({ id: "file.version-history" }) },
+        divider,
         { label: m.preferences, run: () => void handlers["window:open-settings"]() },
       ];
     case "edit":
@@ -434,6 +438,8 @@ const handlers: Handlers = {
   },
   // A browser has no window it could render a page in on its own, so the demo leaves the export out
   "document:export-image": () => null,
+  "history:list": () => [],
+  "history:read": () => null,
   "dialog:confirm-unsaved": (fileName) => {
     const { dialogs } = labels();
     if (confirm(`${dialogs.unsavedMessage(fileName)}\n\n${dialogs.save}?`)) return "save";

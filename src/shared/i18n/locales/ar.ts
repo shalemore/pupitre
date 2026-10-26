@@ -116,6 +116,12 @@ export const ar = {
     placeholder: "البحث عن أمر…",
     noResults: "لا توجد أوامر مطابقة",
   },
+  history: {
+    title: "سجل الإصدارات",
+    filterPlaceholder: "تصفية الإصدارات…",
+    empty: "لا توجد إصدارات سابقة لهذا المستند بعد",
+    restoreHint: "يعيد Enter الإصدار الذي تختاره إلى المحرر، ويستطيع التراجع أن يزيله من جديد",
+  },
   menu: {
     file: "ملف",
     edit: "تحرير",
@@ -165,6 +171,7 @@ export const ar = {
     typewriterMode: "وضع الآلة الكاتبة",
     commandPalette: "لوحة الأوامر",
     quickOpen: "فتح سريع...",
+    versionHistory: "سجل الإصدارات…",
   },
   settings: {
     title: "التفضيلات",

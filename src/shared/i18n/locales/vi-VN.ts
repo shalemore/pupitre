@@ -101,6 +101,12 @@ export const viVN = {
     placeholder: "Tìm lệnh…",
     noResults: "Không có lệnh phù hợp",
   },
+  history: {
+    title: "Lịch sử phiên bản",
+    filterPlaceholder: "Lọc phiên bản…",
+    empty: "Tài liệu này chưa có phiên bản nào trước đó",
+    restoreHint: "Enter đưa phiên bản đã chọn trở lại trình soạn thảo, và Hoàn tác lại bỏ nó đi",
+  },
   menu: {
     file: "Tệp",
     edit: "Chỉnh sửa",
@@ -150,6 +156,7 @@ export const viVN = {
     typewriterMode: "Chế độ máy đánh chữ",
     commandPalette: "Bảng lệnh",
     quickOpen: "Mở nhanh…",
+    versionHistory: "Lịch sử phiên bản…",
   },
   settings: {
     title: "Tùy chọn",

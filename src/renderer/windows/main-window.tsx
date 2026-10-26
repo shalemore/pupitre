@@ -21,6 +21,7 @@ import {
   type MarkdownEditorHandle,
   type MatchStats,
 } from "@/features/editor/markdown-editor";
+import { VersionHistory } from "@/features/history/version-history";
 import { MenuBar } from "@/features/menu/menu-bar";
 import { QuickOpen } from "@/features/quick-open/quick-open";
 import { FolderTree } from "@/features/sidebar/folder-tree";
@@ -62,6 +63,7 @@ export const MainWindow: Component = () => {
   const [preferredMode, setPreferredMode] = createSignal<SidebarMode>("outline");
   const [findMode, setFindMode] = createSignal<FindMode>("closed");
   const [paletteOpen, setPaletteOpen] = createSignal(false);
+  const [historyOpen, setHistoryOpen] = createSignal(false);
   const [quickOpenOpen, setQuickOpenOpen] = createSignal(false);
   const [workspaceSearchOpen, setWorkspaceSearchOpen] = createSignal(false);
   // A match to select once the editor holds the document it was found in
@@ -165,6 +167,7 @@ export const MainWindow: Component = () => {
   createEffect(() => {
     void desktop.invoke("window:set-document-state", {
       hasDocument: session.activeDocument() !== undefined,
+      hasPath: session.activeDocument()?.path !== undefined,
       isDirty: session.isDirty(),
     });
   });
@@ -308,6 +311,8 @@ export const MainWindow: Component = () => {
         return void exportDocument("html");
       case "file.export-image":
         return void exportDocument("image");
+      case "file.version-history":
+        return setHistoryOpen(true);
       case "edit.find":
         return openFind("find");
       case "edit.replace":
@@ -548,6 +553,17 @@ export const MainWindow: Component = () => {
 
       <Show when={paletteOpen()}>
         <CommandPalette onClose={() => setPaletteOpen(false)} />
+      </Show>
+
+      {/* The versions belong to a file, so a document that has none has no panel to offer */}
+      <Show when={historyOpen() && session.activeDocument()?.path}>
+        {(path) => (
+          <VersionHistory
+            path={path()}
+            onRestore={(markdown) => editor()?.replaceDocument(markdown)}
+            onClose={() => setHistoryOpen(false)}
+          />
+        )}
       </Show>
 
       <Show when={quickOpenOpen()}>

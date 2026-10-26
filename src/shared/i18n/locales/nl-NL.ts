@@ -104,6 +104,13 @@ export const nlNL = {
     placeholder: "Opdracht zoeken…",
     noResults: "Geen overeenkomende opdrachten",
   },
+  history: {
+    title: "Versiegeschiedenis",
+    filterPlaceholder: "Versies filteren…",
+    empty: "Dit document heeft nog geen eerdere versies",
+    restoreHint:
+      "Enter zet de gekozen versie terug in de editor en Ongedaan maken haalt hem er weer uit",
+  },
   menu: {
     file: "Bestand",
     edit: "Bewerken",
@@ -153,6 +160,7 @@ export const nlNL = {
     typewriterMode: "Typemachinemodus",
     commandPalette: "Opdrachtenpalet",
     quickOpen: "Snel openen…",
+    versionHistory: "Versiegeschiedenis…",
   },
   settings: {
     title: "Voorkeuren",

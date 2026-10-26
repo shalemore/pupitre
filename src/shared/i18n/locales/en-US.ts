@@ -101,6 +101,13 @@ export const enUS = {
     placeholder: "Type a command…",
     noResults: "No matching commands",
   },
+  history: {
+    title: "Version History",
+    filterPlaceholder: "Filter versions…",
+    empty: "No earlier versions of this document yet",
+    restoreHint:
+      "Enter puts the version you pick back into the editor, and Undo takes it away again",
+  },
   menu: {
     file: "File",
     edit: "Edit",
@@ -149,6 +156,7 @@ export const enUS = {
     typewriterMode: "Typewriter Mode",
     commandPalette: "Command Palette",
     quickOpen: "Open Quickly…",
+    versionHistory: "Version History…",
   },
   settings: {
     title: "Preferences",

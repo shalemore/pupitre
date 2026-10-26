@@ -100,6 +100,12 @@ export const esES = {
     placeholder: "Buscar un comando…",
     noResults: "No hay comandos coincidentes",
   },
+  history: {
+    title: "Historial de versiones",
+    filterPlaceholder: "Filtrar versiones…",
+    empty: "Este documento aún no tiene versiones anteriores",
+    restoreHint: "Intro devuelve la versión elegida al editor y Deshacer la quita otra vez",
+  },
   menu: {
     file: "Archivo",
     edit: "Edición",
@@ -148,6 +154,7 @@ export const esES = {
     typewriterMode: "Modo máquina de escribir",
     commandPalette: "Paleta de comandos",
     quickOpen: "Abrir rápidamente...",
+    versionHistory: "Historial de versiones…",
   },
   settings: {
     title: "Preferencias",

@@ -103,6 +103,13 @@ export const nbNO = {
     placeholder: "Søk etter kommando…",
     noResults: "Ingen kommandoer samsvarer",
   },
+  history: {
+    title: "Versjonslogg",
+    filterPlaceholder: "Filtrer versjoner…",
+    empty: "Dette dokumentet har ingen tidligere versjoner ennå",
+    restoreHint:
+      "Enter legger den valgte versjonen tilbake i redigereren, og Angre tar den ut igjen",
+  },
   menu: {
     file: "Fil",
     edit: "Rediger",
@@ -152,6 +159,7 @@ export const nbNO = {
     typewriterMode: "Skrivemaskinmodus",
     commandPalette: "Kommandopalett",
     quickOpen: "Åpne hurtig…",
+    versionHistory: "Versjonslogg…",
   },
   settings: {
     title: "Innstillinger",

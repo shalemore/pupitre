@@ -103,6 +103,13 @@ export const svSE = {
     placeholder: "Sök kommando…",
     noResults: "Inga kommandon matchar",
   },
+  history: {
+    title: "Versionshistorik",
+    filterPlaceholder: "Filtrera versioner…",
+    empty: "Det här dokumentet har ännu inga tidigare versioner",
+    restoreHint:
+      "Enter lägger tillbaka den valda versionen i redigeraren och Ångra tar bort den igen",
+  },
   menu: {
     file: "Arkiv",
     edit: "Redigera",
@@ -152,6 +159,7 @@ export const svSE = {
     typewriterMode: "Skrivmaskinsläge",
     commandPalette: "Kommandopalett",
     quickOpen: "Öppna snabbt…",
+    versionHistory: "Versionshistorik…",
   },
   settings: {
     title: "Inställningar",

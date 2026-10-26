@@ -110,6 +110,12 @@ export const plPL = {
     placeholder: "Szukaj polecenia…",
     noResults: "Brak pasujących poleceń",
   },
+  history: {
+    title: "Historia wersji",
+    filterPlaceholder: "Filtruj wersje…",
+    empty: "Ten dokument nie ma jeszcze wcześniejszych wersji",
+    restoreHint: "Enter przywraca wybraną wersję do edytora, a Cofnij znów ją usuwa",
+  },
   menu: {
     file: "Plik",
     edit: "Edycja",
@@ -159,6 +165,7 @@ export const plPL = {
     typewriterMode: "Tryb maszyny do pisania",
     commandPalette: "Paleta poleceń",
     quickOpen: "Otwórz szybko…",
+    versionHistory: "Historia wersji…",
   },
   settings: {
     title: "Ustawienia",

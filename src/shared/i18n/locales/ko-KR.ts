@@ -101,6 +101,12 @@ export const koKR = {
     placeholder: "명령 검색…",
     noResults: "일치하는 명령이 없습니다",
   },
+  history: {
+    title: "버전 기록",
+    filterPlaceholder: "버전 필터링…",
+    empty: "이 문서에는 아직 이전 버전이 없습니다",
+    restoreHint: "Enter를 누르면 선택한 버전이 편집기로 돌아오고, 실행 취소로 되돌릴 수 있습니다",
+  },
   menu: {
     file: "파일",
     edit: "편집",
@@ -149,6 +155,7 @@ export const koKR = {
     typewriterMode: "타자기 모드",
     commandPalette: "명령 팔레트",
     quickOpen: "빠르게 열기…",
+    versionHistory: "버전 기록…",
   },
   settings: {
     title: "환경설정",

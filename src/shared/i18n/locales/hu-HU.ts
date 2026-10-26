@@ -104,6 +104,13 @@ export const huHU = {
     placeholder: "Parancs keresése…",
     noResults: "Nincs megfelelő parancs",
   },
+  history: {
+    title: "Verziótörténet",
+    filterPlaceholder: "Verziók szűrése…",
+    empty: "Ennek a dokumentumnak még nincsenek korábbi verziói",
+    restoreHint:
+      "Az Enter visszateszi a kiválasztott verziót a szerkesztőbe, a Visszavonás pedig újra eltávolítja",
+  },
   menu: {
     file: "Fájl",
     edit: "Szerkesztés",
@@ -153,6 +160,7 @@ export const huHU = {
     typewriterMode: "Írógép mód",
     commandPalette: "Parancspaletta",
     quickOpen: "Gyors megnyitás…",
+    versionHistory: "Verziótörténet…",
   },
   settings: {
     title: "Beállítások",

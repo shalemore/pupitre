@@ -108,6 +108,12 @@ export const csCZ = {
     placeholder: "Hledat příkaz…",
     noResults: "Žádné odpovídající příkazy",
   },
+  history: {
+    title: "Historie verzí",
+    filterPlaceholder: "Filtrovat verze…",
+    empty: "Tento dokument zatím nemá žádné starší verze",
+    restoreHint: "Enter vrátí vybranou verzi do editoru a příkaz Zpět ji zase odebere",
+  },
   menu: {
     file: "Soubor",
     edit: "Úpravy",
@@ -157,6 +163,7 @@ export const csCZ = {
     typewriterMode: "Režim psacího stroje",
     commandPalette: "Paleta příkazů",
     quickOpen: "Rychle otevřít…",
+    versionHistory: "Historie verzí…",
   },
   settings: {
     title: "Předvolby",

@@ -109,6 +109,12 @@ export const ukUA = {
     placeholder: "Пошук команди…",
     noResults: "Немає відповідних команд",
   },
+  history: {
+    title: "Історія версій",
+    filterPlaceholder: "Фільтр версій…",
+    empty: "Цей документ ще не має попередніх версій",
+    restoreHint: "Enter повертає вибрану версію до редактора, а Скасувати знову її прибирає",
+  },
   menu: {
     file: "Файл",
     edit: "Редагувати",
@@ -158,6 +164,7 @@ export const ukUA = {
     typewriterMode: "Режим друкарської машинки",
     commandPalette: "Палітра команд",
     quickOpen: "Швидко відкрити…",
+    versionHistory: "Історія версій…",
   },
   settings: {
     title: "Параметри",

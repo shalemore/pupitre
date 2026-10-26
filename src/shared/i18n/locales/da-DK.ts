@@ -103,6 +103,12 @@ export const daDK = {
     placeholder: "Søg efter kommando…",
     noResults: "Ingen kommandoer matcher",
   },
+  history: {
+    title: "Versionshistorik",
+    filterPlaceholder: "Filtrér versioner…",
+    empty: "Dette dokument har endnu ingen tidligere versioner",
+    restoreHint: "Enter lægger den valgte version tilbage i editoren, og Fortryd tager den ud igen",
+  },
   menu: {
     file: "Filer",
     edit: "Rediger",
@@ -152,6 +158,7 @@ export const daDK = {
     typewriterMode: "Skrivemaskinetilstand",
     commandPalette: "Kommandopalet",
     quickOpen: "Åbn hurtigt…",
+    versionHistory: "Versionshistorik…",
   },
   settings: {
     title: "Indstillinger",

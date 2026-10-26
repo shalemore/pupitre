@@ -103,6 +103,12 @@ export const fiFI = {
     placeholder: "Hae komentoa…",
     noResults: "Ei vastaavia komentoja",
   },
+  history: {
+    title: "Versiohistoria",
+    filterPlaceholder: "Suodata versioita…",
+    empty: "Tästä asiakirjasta ei ole vielä aiempia versioita",
+    restoreHint: "Enter palauttaa valitun version editoriin ja Kumoa poistaa sen taas",
+  },
   menu: {
     file: "Tiedosto",
     edit: "Muokkaa",
@@ -152,6 +158,7 @@ export const fiFI = {
     typewriterMode: "Kirjoituskonetila",
     commandPalette: "Komentopaletti",
     quickOpen: "Avaa nopeasti…",
+    versionHistory: "Versiohistoria…",
   },
   settings: {
     title: "Asetukset",

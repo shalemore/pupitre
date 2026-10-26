@@ -97,6 +97,12 @@ export const zhCN = {
     placeholder: "搜索命令…",
     noResults: "没有匹配的命令",
   },
+  history: {
+    title: "版本历史",
+    filterPlaceholder: "筛选版本…",
+    empty: "此文档还没有以前的版本",
+    restoreHint: "按 Enter 把所选版本放回编辑器，撤销即可再次移除",
+  },
   menu: {
     file: "文件",
     edit: "编辑",
@@ -145,6 +151,7 @@ export const zhCN = {
     typewriterMode: "打字机模式",
     commandPalette: "命令面板",
     quickOpen: "快速打开…",
+    versionHistory: "版本历史…",
   },
   settings: {
     title: "偏好设置",

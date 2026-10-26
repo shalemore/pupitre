@@ -124,6 +124,19 @@ export type ExternalChangeChoice = "overwrite" | "reload" | "keep";
 /** The choice made when the file of an open document was deleted elsewhere; "keep" leaves the document open and unsaved. */
 export type DeletedFileChoice = "save" | "keep";
 
+/**
+ * A version of a document a save wrote over. The text itself stays in the history folder until it
+ * is asked for: a document can keep twenty of them and only a few are ever read.
+ */
+export interface HistoryEntry {
+  /** Names the snapshot within the versions of its document; the index keeps it unique. */
+  id: string;
+  /** When the version was overwritten, in milliseconds since the epoch. */
+  savedAt: number;
+  /** Size of the snapshot in bytes. */
+  bytes: number;
+}
+
 /** The choice made when closing or replacing a document with unsaved changes. */
 export type UnsavedChoice = "save" | "discard" | "cancel";
 
@@ -158,6 +171,7 @@ export type AppCommand =
   | { id: "file.save" }
   | { id: "file.save-as" }
   | { id: "file.print" }
+  | { id: "file.version-history" }
   | { id: "file.export-pdf" }
   | { id: "file.export-html" }
   | { id: "file.export-image" }
@@ -197,6 +211,8 @@ export interface SidebarWidths {
 /** Document state the renderer reports to the main process: enables or disables menu items and decides whether closing the window must ask to save first. */
 export interface DocumentState {
   hasDocument: boolean;
+  /** Whether a file is behind the document; only a document with a path has versions to show. */
+  hasPath: boolean;
   isDirty: boolean;
 }
 
@@ -277,6 +293,10 @@ export interface InvokeChannels {
     html: string,
     baseFolder: string | undefined,
   ) => string | null;
+  /** The versions kept of a document, newest first, from before its file was last written. */
+  "history:list": (path: string) => HistoryEntry[];
+  /** The text of one kept version, or null when the document has none by that id. */
+  "history:read": (path: string, id: string) => string | null;
   "dialog:confirm-unsaved": (fileName: string) => UnsavedChoice;
   /** The open file was changed on disk while the document has unsaved changes. */
   "dialog:confirm-external-change": (fileName: string) => ExternalChangeChoice;

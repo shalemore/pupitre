@@ -38,6 +38,7 @@ import {
 } from "./encoding";
 import { exportImage } from "./export-image";
 import { createEntry, renameEntry, trashEntry } from "./file-actions";
+import { listVersions, readVersion, recordVersion } from "./history";
 import { t } from "./i18n";
 import { clickMenuItem, menuSnapshot, setDocumentState } from "./menu";
 import { takeLaunchFile } from "./open-files";
@@ -230,6 +231,32 @@ function writeDocument(
   return writeFile(path, encodeDocument(text, encoding));
 }
 
+/**
+ * Keeps what the file holds before a save writes over it. This is the one place a document reaches
+ * its file, so every save — first, auto or Save As — leaves the version it replaced behind.
+ */
+async function keepPreviousVersion(
+  path: string,
+  content: string,
+  encoding: TextEncoding,
+): Promise<void> {
+  let previous: string;
+  try {
+    // Read the way the document reads it, so a version of a file in another encoding is kept as
+    // the text the editor showed rather than as its bytes
+    previous = normalizeText(decodeWith(await readFile(path), encoding));
+  } catch (error) {
+    // A file that does not exist yet is a first save, which has nothing to keep; anything else is
+    // worth a line in the log, but not worth failing the save over
+    if (error instanceof Error && "code" in error && error.code !== "ENOENT") {
+      console.error(`Could not read ${path} to keep its previous version:`, error);
+    }
+    return;
+  }
+  if (previous === content) return;
+  await recordVersion(path, previous);
+}
+
 export function registerIpcHandlers(): void {
   ipcMain.on(INITIAL_STATE_SYNC, (event) => {
     const state: InitialState = {
@@ -293,9 +320,12 @@ export function registerIpcHandlers(): void {
       () => false,
     ),
   );
-  handle("document:write", (_event, path, content, lineEnding, encoding) =>
-    writeDocument(path, content, lineEnding, encoding),
-  );
+  handle("document:write", async (_event, path, content, lineEnding, encoding) => {
+    await keepPreviousVersion(path, content, encoding);
+    await writeDocument(path, content, lineEnding, encoding);
+  });
+  handle("history:list", (_event, path) => listVersions(path));
+  handle("history:read", (_event, path, id) => readVersion(path, id));
   handle("dialog:choose-save-path", async (event, suggestedName) => {
     const path = await savePath(senderWindow(event), {
       defaultPath: suggestedName,

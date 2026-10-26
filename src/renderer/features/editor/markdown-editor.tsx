@@ -5,6 +5,7 @@ import {
   historyKeymap,
   indentLess,
   indentMore,
+  isolateHistory,
 } from "@codemirror/commands";
 import { syntaxTree } from "@codemirror/language";
 import {
@@ -83,6 +84,12 @@ export interface MatchStats {
 export interface MarkdownEditorHandle {
   getMarkdown: () => string;
   focus: () => void;
+  /**
+   * Replaces the whole text in one change, so a version picked from the history can be undone with
+   * the undo of an ordinary edit; the view's own state changes rather than being rebuilt, which is
+   * what keeps the caret, the scroll and the undo history around it.
+   */
+  replaceDocument: (text: string) => void;
   scrollTo: (pos: number) => void;
   getSelectedText: () => string;
   /** Selects a range of the text, scrolls it into view and gives the editor the focus; used to show a match found in the folder. */
@@ -441,6 +448,18 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     props.ref({
       getMarkdown: () => view.state.doc.toString(),
       focus: () => view.focus(),
+      replaceDocument: (text) => {
+        view.dispatch({
+          changes: { from: 0, to: view.state.doc.length, insert: text },
+          // A restored version starts at its own beginning, whatever was selected before
+          selection: { anchor: 0 },
+          scrollIntoView: true,
+          // A change made by the app rather than typed would otherwise fold into the typing just
+          // before it, and one Undo would take back more than the version that was restored
+          annotations: [isolateHistory.of("full")],
+        });
+        view.focus();
+      },
       scrollTo: (pos) => {
         view.dispatch({ effects: EditorView.scrollIntoView(pos, { y: "start" }) });
         view.focus();

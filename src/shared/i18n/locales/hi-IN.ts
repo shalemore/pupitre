@@ -101,6 +101,12 @@ export const hiIN = {
     placeholder: "कमांड खोजें…",
     noResults: "कोई मेल खाती कमांड नहीं",
   },
+  history: {
+    title: "संस्करण इतिहास",
+    filterPlaceholder: "संस्करण छाँटें…",
+    empty: "इस दस्तावेज़ के अभी कोई पुराने संस्करण नहीं हैं",
+    restoreHint: "Enter चुना गया संस्करण संपादक में वापस रखता है, और पूर्ववत करें उसे फिर हटा देता है",
+  },
   menu: {
     file: "फ़ाइल",
     edit: "संपादन",
@@ -150,6 +156,7 @@ export const hiIN = {
     typewriterMode: "टाइपराइटर मोड",
     commandPalette: "कमांड पैलेट",
     quickOpen: "त्वरित खोलें...",
+    versionHistory: "संस्करण इतिहास…",
   },
   settings: {
     title: "प्राथमिकताएँ",

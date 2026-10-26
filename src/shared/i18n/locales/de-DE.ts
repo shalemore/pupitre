@@ -101,6 +101,13 @@ export const deDE = {
     placeholder: "Befehl suchen…",
     noResults: "Keine passenden Befehle",
   },
+  history: {
+    title: "Versionsverlauf",
+    filterPlaceholder: "Versionen filtern…",
+    empty: "Von diesem Dokument gibt es noch keine früheren Versionen",
+    restoreHint:
+      "Enter setzt die gewählte Version wieder in den Editor ein, Rückgängig nimmt sie wieder heraus",
+  },
   menu: {
     file: "Datei",
     edit: "Bearbeiten",
@@ -149,6 +156,7 @@ export const deDE = {
     typewriterMode: "Schreibmaschinenmodus",
     commandPalette: "Befehlspalette",
     quickOpen: "Schnell öffnen...",
+    versionHistory: "Versionsverlauf…",
   },
   settings: {
     title: "Einstellungen",

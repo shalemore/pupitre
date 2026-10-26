@@ -20,6 +20,8 @@ export interface PaletteSheetProps<Item> {
   rows: (query: string) => readonly Item[];
   /** What an empty list means; undefined leaves the room to rows that are still on their way. */
   emptyMessage: string | undefined;
+  /** A line under the list, for what picking a row does when the rows themselves do not say. */
+  hint?: string | undefined;
   /** Runs the row that was picked, by Enter or by pointer; the sheet closes behind it. */
   onPick: (item: Item) => void;
   onClose: () => void;
@@ -157,6 +159,9 @@ export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
             <p role="status" class="px-2 py-1.5 text-muted-foreground">
               {props.emptyMessage}
             </p>
+          </Show>
+          <Show when={props.hint}>
+            {(hint) => <p class="px-2 pb-1 text-2xs text-muted-foreground">{hint()}</p>}
           </Show>
         </div>
       </div>

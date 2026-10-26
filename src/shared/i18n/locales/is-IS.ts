@@ -104,6 +104,12 @@ export const isIS = {
     placeholder: "Leita að skipun…",
     noResults: "Engar skipanir passa",
   },
+  history: {
+    title: "Útgáfusaga",
+    filterPlaceholder: "Sía útgáfur…",
+    empty: "Þetta skjal hefur engar fyrri útgáfur ennþá",
+    restoreHint: "Enter setur valda útgáfu aftur inn í ritilinn og Afturkalla tekur hana út aftur",
+  },
   menu: {
     file: "Skrá",
     edit: "Breyta",
@@ -153,6 +159,7 @@ export const isIS = {
     typewriterMode: "Skrifvélarhamur",
     commandPalette: "Skipanaspjald",
     quickOpen: "Opna fljótt…",
+    versionHistory: "Útgáfusaga…",
   },
   settings: {
     title: "Forstillingar",

@@ -103,6 +103,13 @@ export const elGR = {
     placeholder: "Αναζήτηση εντολής…",
     noResults: "Δεν βρέθηκαν εντολές",
   },
+  history: {
+    title: "Ιστορικό εκδόσεων",
+    filterPlaceholder: "Φιλτράρισμα εκδόσεων…",
+    empty: "Δεν υπάρχουν ακόμη προηγούμενες εκδόσεις αυτού του εγγράφου",
+    restoreHint:
+      "Το Enter επαναφέρει την έκδοση που επιλέξατε στον επεξεργαστή και η Αναίρεση την αφαιρεί ξανά",
+  },
   menu: {
     file: "Αρχείο",
     edit: "Επεξεργασία",
@@ -152,6 +159,7 @@ export const elGR = {
     typewriterMode: "Λειτουργία γραφομηχανής",
     commandPalette: "Παλέτα εντολών",
     quickOpen: "Γρήγορο άνοιγμα…",
+    versionHistory: "Ιστορικό εκδόσεων…",
   },
   settings: {
     title: "Προτιμήσεις",

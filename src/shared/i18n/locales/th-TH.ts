@@ -103,6 +103,12 @@ export const thTH = {
     placeholder: "ค้นหาคำสั่ง…",
     noResults: "ไม่พบคำสั่งที่ตรงกัน",
   },
+  history: {
+    title: "ประวัติเวอร์ชัน",
+    filterPlaceholder: "กรองเวอร์ชัน…",
+    empty: "เอกสารนี้ยังไม่มีเวอร์ชันก่อนหน้า",
+    restoreHint: "Enter นำเวอร์ชันที่เลือกกลับเข้าตัวแก้ไข และเลิกทำจะนำออกไปอีกครั้ง",
+  },
   menu: {
     file: "ไฟล์",
     edit: "แก้ไข",
@@ -152,6 +158,7 @@ export const thTH = {
     typewriterMode: "โหมดพิมพ์ดีด",
     commandPalette: "พาเลตคำสั่ง",
     quickOpen: "เปิดอย่างรวดเร็ว…",
+    versionHistory: "ประวัติเวอร์ชัน…",
   },
   settings: {
     title: "การตั้งค่า",

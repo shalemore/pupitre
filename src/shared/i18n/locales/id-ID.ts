@@ -102,6 +102,12 @@ export const idID = {
     placeholder: "Cari perintah…",
     noResults: "Tidak ada perintah yang cocok",
   },
+  history: {
+    title: "Riwayat Versi",
+    filterPlaceholder: "Saring versi…",
+    empty: "Dokumen ini belum memiliki versi sebelumnya",
+    restoreHint: "Enter mengembalikan versi yang dipilih ke editor, dan Urungkan mengambilnya lagi",
+  },
   menu: {
     file: "Berkas",
     edit: "Sunting",
@@ -151,6 +157,7 @@ export const idID = {
     typewriterMode: "Mode mesin tik",
     commandPalette: "Palet Perintah",
     quickOpen: "Buka dengan Cepat...",
+    versionHistory: "Riwayat Versi…",
   },
   settings: {
     title: "Preferensi",

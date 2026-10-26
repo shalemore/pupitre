@@ -104,6 +104,12 @@ export const trTR = {
     placeholder: "Komut ara…",
     noResults: "Eşleşen komut yok",
   },
+  history: {
+    title: "Sürüm Geçmişi",
+    filterPlaceholder: "Sürümleri süz…",
+    empty: "Bu belgenin henüz önceki sürümü yok",
+    restoreHint: "Enter seçilen sürümü düzenleyiciye geri koyar, Geri Al ise yeniden kaldırır",
+  },
   menu: {
     file: "Dosya",
     edit: "Düzen",
@@ -153,6 +159,7 @@ export const trTR = {
     typewriterMode: "Daktilo Modu",
     commandPalette: "Komut Paleti",
     quickOpen: "Hızlı Aç…",
+    versionHistory: "Sürüm Geçmişi…",
   },
   settings: {
     title: "Tercihler",

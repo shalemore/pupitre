@@ -97,6 +97,12 @@ export const zhHK = {
     placeholder: "搜尋命令…",
     noResults: "沒有符合的命令",
   },
+  history: {
+    title: "版本記錄",
+    filterPlaceholder: "篩選版本…",
+    empty: "此文件尚未有舊版本",
+    restoreHint: "按 Enter 會把所選版本放回編輯器，復原即可再次移除",
+  },
   menu: {
     file: "檔案",
     edit: "編輯",
@@ -145,6 +151,7 @@ export const zhHK = {
     typewriterMode: "打字機模式",
     commandPalette: "命令面板",
     quickOpen: "快速開啟…",
+    versionHistory: "版本記錄…",
   },
   settings: {
     title: "偏好設定",

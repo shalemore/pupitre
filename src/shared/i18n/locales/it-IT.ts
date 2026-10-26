@@ -101,6 +101,12 @@ export const itIT = {
     placeholder: "Cerca un comando…",
     noResults: "Nessun comando corrispondente",
   },
+  history: {
+    title: "Cronologia versioni",
+    filterPlaceholder: "Filtra le versioni…",
+    empty: "Questo documento non ha ancora versioni precedenti",
+    restoreHint: "Invio rimette nell'editor la versione scelta e Annulla la toglie di nuovo",
+  },
   menu: {
     file: "File",
     edit: "Modifica",
@@ -149,6 +155,7 @@ export const itIT = {
     typewriterMode: "Modalità macchina da scrivere",
     commandPalette: "Palette dei comandi",
     quickOpen: "Apri rapidamente...",
+    versionHistory: "Cronologia versioni…",
   },
   settings: {
     title: "Preferenze",

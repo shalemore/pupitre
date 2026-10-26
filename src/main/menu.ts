@@ -22,11 +22,13 @@ import { resetZoom, stepZoom } from "./zoom";
 const REPOSITORY_URL = "https://github.com/shalemore/pupitre";
 const separator: MenuItemConstructorOptions = { type: "separator" };
 
-let documentState: DocumentState = { hasDocument: false, isDirty: false };
+let documentState: DocumentState = { hasDocument: false, hasPath: false, isDirty: false };
 
 function buildTemplate(): MenuItemConstructorOptions[] {
   const labels = t().menu;
   const isMac = process.platform === "darwin";
+  // A document without a file has no versions kept of it
+  const hasFile = documentState.hasDocument && documentState.hasPath;
   const { hasDocument } = documentState;
   const recentFiles = getRecentFiles();
 
@@ -135,6 +137,12 @@ function buildTemplate(): MenuItemConstructorOptions[] {
           label: labels.exportImage,
           enabled: hasDocument,
           click: () => dispatchToMainWindow({ id: "file.export-image" }),
+        },
+        separator,
+        {
+          label: labels.versionHistory,
+          enabled: hasFile,
+          click: () => dispatchToMainWindow({ id: "file.version-history" }),
         },
         separator,
         ...(isMac ? [] : [preferences, separator]),
@@ -315,8 +323,10 @@ export function rebuildApplicationMenu(): void {
 }
 
 export function setDocumentState(state: DocumentState): void {
-  // The menu only cares whether a document is open; the dirty state can change on every keystroke and must not rebuild the menu
-  const menuChanged = state.hasDocument !== documentState.hasDocument;
+  // The menu only cares whether a document is open and whether a file is behind it; the dirty state
+  // can change on every keystroke and must not rebuild the menu
+  const menuChanged =
+    state.hasDocument !== documentState.hasDocument || state.hasPath !== documentState.hasPath;
   documentState = state;
   if (menuChanged) rebuildApplicationMenu();
 }

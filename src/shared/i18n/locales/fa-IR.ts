@@ -103,6 +103,12 @@ export const faIR = {
     placeholder: "جست‌وجوی فرمان…",
     noResults: "فرمانی مطابقت ندارد",
   },
+  history: {
+    title: "تاریخچهٔ نسخه‌ها",
+    filterPlaceholder: "پالایش نسخه‌ها…",
+    empty: "هنوز نسخهٔ پیشینی از این سند وجود ندارد",
+    restoreHint: "کلید Enter نسخهٔ برگزیده را به ویرایشگر بازمی‌گرداند و واگرد آن را دوباره برمی‌دارد",
+  },
   menu: {
     file: "پرونده",
     edit: "ویرایش",
@@ -152,6 +158,7 @@ export const faIR = {
     typewriterMode: "حالت ماشین تحریر",
     commandPalette: "پالت فرمان‌ها",
     quickOpen: "باز کردن سریع...",
+    versionHistory: "تاریخچهٔ نسخه‌ها…",
   },
   settings: {
     title: "تنظیمات",

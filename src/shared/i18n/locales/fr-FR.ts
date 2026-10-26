@@ -101,6 +101,12 @@ export const frFR = {
     placeholder: "Rechercher une commande…",
     noResults: "Aucune commande correspondante",
   },
+  history: {
+    title: "Historique des versions",
+    filterPlaceholder: "Filtrer les versions…",
+    empty: "Ce document n'a pas encore de versions antérieures",
+    restoreHint: "Entrée remet la version choisie dans l'éditeur, et Annuler la retire à nouveau",
+  },
   menu: {
     file: "Fichier",
     edit: "Édition",
@@ -149,6 +155,7 @@ export const frFR = {
     typewriterMode: "Mode machine à écrire",
     commandPalette: "Palette de commandes",
     quickOpen: "Ouvrir rapidement...",
+    versionHistory: "Historique des versions…",
   },
   settings: {
     title: "Préférences",

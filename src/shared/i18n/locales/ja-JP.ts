@@ -101,6 +101,12 @@ export const jaJP = {
     placeholder: "コマンドを検索…",
     noResults: "一致するコマンドがありません",
   },
+  history: {
+    title: "版の履歴",
+    filterPlaceholder: "版を絞り込む…",
+    empty: "この文書にはまだ以前の版がありません",
+    restoreHint: "Enter で選んだ版をエディターに戻し、元に戻すで取り消せます",
+  },
   menu: {
     file: "ファイル",
     edit: "編集",
@@ -149,6 +155,7 @@ export const jaJP = {
     typewriterMode: "タイプライターモード",
     commandPalette: "コマンドパレット",
     quickOpen: "クイックオープン…",
+    versionHistory: "版の履歴…",
   },
   settings: {
     title: "環境設定",

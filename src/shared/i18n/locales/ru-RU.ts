@@ -108,6 +108,12 @@ export const ruRU = {
     placeholder: "Поиск команды…",
     noResults: "Нет подходящих команд",
   },
+  history: {
+    title: "История версий",
+    filterPlaceholder: "Фильтр версий…",
+    empty: "У этого документа пока нет предыдущих версий",
+    restoreHint: "Enter возвращает выбранную версию в редактор, а Отменить снова её убирает",
+  },
   menu: {
     file: "Файл",
     edit: "Правка",
@@ -157,6 +163,7 @@ export const ruRU = {
     typewriterMode: "Режим пишущей машинки",
     commandPalette: "Палитра команд",
     quickOpen: "Быстро открыть…",
+    versionHistory: "История версий…",
   },
   settings: {
     title: "Настройки",

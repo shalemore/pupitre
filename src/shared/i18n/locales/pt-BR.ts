@@ -101,6 +101,12 @@ export const ptBR = {
     placeholder: "Pesquisar comando…",
     noResults: "Nenhum comando correspondente",
   },
+  history: {
+    title: "Histórico de versões",
+    filterPlaceholder: "Filtrar versões…",
+    empty: "Este documento ainda não tem versões anteriores",
+    restoreHint: "Enter devolve a versão escolhida ao editor e Desfazer a remove outra vez",
+  },
   menu: {
     file: "Arquivo",
     edit: "Editar",
@@ -149,6 +155,7 @@ export const ptBR = {
     typewriterMode: "Modo máquina de escrever",
     commandPalette: "Paleta de comandos",
     quickOpen: "Abrir rapidamente...",
+    versionHistory: "Histórico de versões…",
   },
   settings: {
     title: "Preferências",
