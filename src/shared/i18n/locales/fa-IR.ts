@@ -91,6 +91,8 @@ export const faIR = {
       alignLeft: "راست‌چین",
       alignCenter: "وسط‌چین",
       alignRight: "چپ‌چین",
+      failedFile: "پرونده تصویر وجود ندارد یا باز نمی‌شود.",
+      failedNetwork: "تصویر دانلود نشد. اتصال شبکه را بررسی کنید.",
     },
     imageFile: {
       reveal: "نمایش در پوشه",
@@ -133,7 +135,8 @@ export const faIR = {
     fileActionFailed: "تغییر انجام نشد.",
     imageFailed: "تصویر درج نشد.",
     imageTooLarge: (fileName: string) => `${fileName} برای درج بیش از حد بزرگ است.`,
-    imageTooLargeDetail: (limit: string) => `بیشترین اندازه تصویری که از دیسک انتخاب می‌شود ${limit} است.`,
+    imageTooLargeDetail: (limit: string) =>
+      `بیشترین اندازه تصویری که از دیسک انتخاب می‌شود ${limit} است.`,
   },
   about: {
     windowTitle: "درباره Pupitre",

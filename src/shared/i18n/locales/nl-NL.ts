@@ -92,6 +92,8 @@ export const nlNL = {
       alignLeft: "Links uitlijnen",
       alignCenter: "Centreren",
       alignRight: "Rechts uitlijnen",
+      failedFile: "Het afbeeldingsbestand ontbreekt of kan niet worden geopend.",
+      failedNetwork: "De afbeelding kon niet worden gedownload. Controleer je netwerkverbinding.",
     },
     imageFile: {
       reveal: "Toon in map",
@@ -136,7 +138,8 @@ export const nlNL = {
 
     imageFailed: "De afbeelding kon niet worden ingevoegd.",
     imageTooLarge: (fileName: string) => `${fileName} is te groot om in te voegen.`,
-    imageTooLargeDetail: (limit: string) => `Een afbeelding van schijf mag hoogstens ${limit} groot zijn.`,
+    imageTooLargeDetail: (limit: string) =>
+      `Een afbeelding van schijf mag hoogstens ${limit} groot zijn.`,
   },
   about: {
     windowTitle: "Over Pupitre",

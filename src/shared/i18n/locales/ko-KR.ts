@@ -91,6 +91,8 @@ export const koKR = {
       alignLeft: "왼쪽 정렬",
       alignCenter: "가운데 정렬",
       alignRight: "오른쪽 정렬",
+      failedFile: "이미지 파일이 없거나 열 수 없습니다.",
+      failedNetwork: "이미지를 다운로드할 수 없습니다. 네트워크 연결을 확인하세요.",
     },
     imageFile: {
       reveal: "폴더에서 보기",

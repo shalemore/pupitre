@@ -92,6 +92,8 @@ export const huHU = {
       alignLeft: "Balra igazítás",
       alignCenter: "Középre igazítás",
       alignRight: "Jobbra igazítás",
+      failedFile: "A képfájl hiányzik, vagy nem nyitható meg.",
+      failedNetwork: "A képet nem sikerült letölteni. Ellenőrizze a hálózati kapcsolatot.",
     },
     imageFile: {
       reveal: "Megjelenítés mappában",
@@ -136,7 +138,8 @@ export const huHU = {
 
     imageFailed: "A képet nem sikerült beszúrni.",
     imageTooLarge: (fileName: string) => `A(z) ${fileName} túl nagy a beszúráshoz.`,
-    imageTooLargeDetail: (limit: string) => `A lemezről kiválasztott kép legfeljebb ${limit} lehet.`,
+    imageTooLargeDetail: (limit: string) =>
+      `A lemezről kiválasztott kép legfeljebb ${limit} lehet.`,
   },
   about: {
     windowTitle: "A Pupitre névjegye",

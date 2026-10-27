@@ -91,6 +91,8 @@ export const frFR = {
       alignLeft: "Aligner à gauche",
       alignCenter: "Centrer",
       alignRight: "Aligner à droite",
+      failedFile: "Le fichier image est introuvable ou ne peut pas être ouvert.",
+      failedNetwork: "L'image n'a pas pu être téléchargée. Vérifiez votre connexion réseau.",
     },
     imageFile: {
       reveal: "Afficher dans le dossier",
@@ -134,7 +136,8 @@ export const frFR = {
 
     imageFailed: "Impossible d’insérer l’image.",
     imageTooLarge: (fileName: string) => `${fileName} est trop volumineux pour être inséré.`,
-    imageTooLargeDetail: (limit: string) => `Une image choisie sur le disque peut faire ${limit} au maximum.`,
+    imageTooLargeDetail: (limit: string) =>
+      `Une image choisie sur le disque peut faire ${limit} au maximum.`,
   },
   about: {
     windowTitle: "À propos de Pupitre",

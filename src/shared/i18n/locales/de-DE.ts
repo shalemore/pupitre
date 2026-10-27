@@ -91,6 +91,9 @@ export const deDE = {
       alignLeft: "Linksbündig",
       alignCenter: "Zentriert",
       alignRight: "Rechtsbündig",
+      failedFile: "Die Bilddatei fehlt oder kann nicht geöffnet werden.",
+      failedNetwork:
+        "Das Bild konnte nicht heruntergeladen werden. Prüfen Sie die Netzwerkverbindung.",
     },
     imageFile: {
       reveal: "Im Ordner zeigen",
@@ -134,7 +137,8 @@ export const deDE = {
 
     imageFailed: "Das Bild konnte nicht eingefügt werden.",
     imageTooLarge: (fileName: string) => `${fileName} ist zu groß zum Einfügen.`,
-    imageTooLargeDetail: (limit: string) => `Ein Bild von der Festplatte darf höchstens ${limit} groß sein.`,
+    imageTooLargeDetail: (limit: string) =>
+      `Ein Bild von der Festplatte darf höchstens ${limit} groß sein.`,
   },
   about: {
     windowTitle: "Über Pupitre",

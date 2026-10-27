@@ -92,6 +92,8 @@ export const svSE = {
       alignLeft: "Vänsterjustera",
       alignCenter: "Centrera",
       alignRight: "Högerjustera",
+      failedFile: "Bildfilen saknas eller kan inte öppnas.",
+      failedNetwork: "Bilden kunde inte hämtas. Kontrollera nätverksanslutningen.",
     },
     imageFile: {
       reveal: "Visa i mapp",
@@ -135,7 +137,8 @@ export const svSE = {
 
     imageFailed: "Bilden kunde inte infogas.",
     imageTooLarge: (fileName: string) => `${fileName} är för stor för att infogas.`,
-    imageTooLargeDetail: (limit: string) => `En bild som väljs från disken får vara högst ${limit}.`,
+    imageTooLargeDetail: (limit: string) =>
+      `En bild som väljs från disken får vara högst ${limit}.`,
   },
   about: {
     windowTitle: "Om Pupitre",

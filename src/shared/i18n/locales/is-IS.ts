@@ -93,6 +93,8 @@ export const isIS = {
       alignLeft: "Vinstrijafna",
       alignCenter: "Miðjujafna",
       alignRight: "Hægrijafna",
+      failedFile: "Myndskráin vantar eða er ekki hægt að opna hana.",
+      failedNetwork: "Ekki tókst að sækja myndina. Athugaðu nettenginguna.",
     },
     imageFile: {
       reveal: "Sýna í möppu",
@@ -136,7 +138,8 @@ export const isIS = {
 
     imageFailed: "Ekki tókst að setja inn myndina.",
     imageTooLarge: (fileName: string) => `${fileName} er of stór til að setja inn.`,
-    imageTooLargeDetail: (limit: string) => `Mynd sem valin er af diski má vera að hámarki ${limit}.`,
+    imageTooLargeDetail: (limit: string) =>
+      `Mynd sem valin er af diski má vera að hámarki ${limit}.`,
   },
   about: {
     windowTitle: "Um Pupitre",

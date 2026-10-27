@@ -92,6 +92,8 @@ export const elGR = {
       alignLeft: "Στοίχιση αριστερά",
       alignCenter: "Στοίχιση στο κέντρο",
       alignRight: "Στοίχιση δεξιά",
+      failedFile: "Το αρχείο εικόνας λείπει ή δεν μπορεί να ανοίξει.",
+      failedNetwork: "Δεν ήταν δυνατή η λήψη της εικόνας. Ελέγξτε τη σύνδεση δικτύου.",
     },
     imageFile: {
       reveal: "Εμφάνιση στον φάκελο",
@@ -135,7 +137,8 @@ export const elGR = {
 
     imageFailed: "Δεν ήταν δυνατή η εισαγωγή της εικόνας.",
     imageTooLarge: (fileName: string) => `Το ${fileName} είναι πολύ μεγάλο για εισαγωγή.`,
-    imageTooLargeDetail: (limit: string) => `Μια εικόνα από τον δίσκο μπορεί να έχει μέγεθος έως ${limit}.`,
+    imageTooLargeDetail: (limit: string) =>
+      `Μια εικόνα από τον δίσκο μπορεί να έχει μέγεθος έως ${limit}.`,
   },
   about: {
     windowTitle: "Σχετικά με το Pupitre",

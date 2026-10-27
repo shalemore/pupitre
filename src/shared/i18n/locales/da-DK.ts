@@ -92,6 +92,8 @@ export const daDK = {
       alignLeft: "Venstrejuster",
       alignCenter: "Centrer",
       alignRight: "Højrejuster",
+      failedFile: "Billedfilen mangler, eller den kan ikke åbnes.",
+      failedNetwork: "Billedet kunne ikke hentes. Kontroller din netværksforbindelse.",
     },
     imageFile: {
       reveal: "Vis i mappe",
@@ -135,7 +137,8 @@ export const daDK = {
 
     imageFailed: "Billedet kunne ikke indsættes.",
     imageTooLarge: (fileName: string) => `${fileName} er for stor til at blive indsat.`,
-    imageTooLargeDetail: (limit: string) => `Et billede, der vælges fra disken, kan højst være ${limit}.`,
+    imageTooLargeDetail: (limit: string) =>
+      `Et billede, der vælges fra disken, kan højst være ${limit}.`,
   },
   about: {
     windowTitle: "Om Pupitre",

@@ -91,6 +91,8 @@ export const ptPT = {
       alignLeft: "Alinhar à esquerda",
       alignCenter: "Centrar",
       alignRight: "Alinhar à direita",
+      failedFile: "O ficheiro de imagem não existe ou não pode ser aberto.",
+      failedNetwork: "Não foi possível transferir a imagem. Verifique a ligação de rede.",
     },
     imageFile: {
       reveal: "Mostrar na pasta",
@@ -132,7 +134,8 @@ export const ptPT = {
 
     imageFailed: "Não foi possível inserir a imagem.",
     imageTooLarge: (fileName: string) => `${fileName} é demasiado grande para ser inserido.`,
-    imageTooLargeDetail: (limit: string) => `Uma imagem escolhida do disco pode ter no máximo ${limit}.`,
+    imageTooLargeDetail: (limit: string) =>
+      `Uma imagem escolhida do disco pode ter no máximo ${limit}.`,
   },
   about: {
     windowTitle: "Acerca do Pupitre",

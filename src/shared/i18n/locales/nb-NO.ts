@@ -92,6 +92,8 @@ export const nbNO = {
       alignLeft: "Venstrejuster",
       alignCenter: "Midtstill",
       alignRight: "Høyrejuster",
+      failedFile: "Bildefilen mangler eller kan ikke åpnes.",
+      failedNetwork: "Bildet kunne ikke lastes ned. Kontroller nettverksforbindelsen.",
     },
     imageFile: {
       reveal: "Vis i mappe",
@@ -135,7 +137,8 @@ export const nbNO = {
 
     imageFailed: "Bildet kunne ikke settes inn.",
     imageTooLarge: (fileName: string) => `${fileName} er for stort til å settes inn.`,
-    imageTooLargeDetail: (limit: string) => `Et bilde som velges fra disken, kan være på høyst ${limit}.`,
+    imageTooLargeDetail: (limit: string) =>
+      `Et bilde som velges fra disken, kan være på høyst ${limit}.`,
   },
   about: {
     windowTitle: "Om Pupitre",

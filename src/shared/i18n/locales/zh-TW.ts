@@ -94,6 +94,8 @@ export const zhTW = {
       alignLeft: "靠左對齊",
       alignCenter: "置中",
       alignRight: "靠右對齊",
+      failedFile: "圖片檔案不存在或無法開啟。",
+      failedNetwork: "無法下載圖片，請檢查網路連線。",
     },
     imageFile: {
       reveal: "在資料夾中顯示",

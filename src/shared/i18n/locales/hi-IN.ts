@@ -90,6 +90,8 @@ export const hiIN = {
       alignLeft: "बाएँ संरेखित करें",
       alignCenter: "केंद्र में संरेखित करें",
       alignRight: "दाएँ संरेखित करें",
+      failedFile: "छवि फ़ाइल मौजूद नहीं है या खोली नहीं जा सकती।",
+      failedNetwork: "छवि डाउनलोड नहीं हो सकी। नेटवर्क कनेक्शन जाँचें।",
     },
     imageFile: {
       reveal: "फ़ोल्डर में दिखाएँ",

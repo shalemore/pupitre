@@ -90,6 +90,8 @@ export const viVN = {
       alignLeft: "Căn trái",
       alignCenter: "Căn giữa",
       alignRight: "Căn phải",
+      failedFile: "Tệp ảnh bị thiếu hoặc không thể mở.",
+      failedNetwork: "Không thể tải ảnh xuống. Hãy kiểm tra kết nối mạng.",
     },
     imageFile: {
       reveal: "Hiện trong thư mục",

@@ -98,6 +98,8 @@ export const ruRU = {
       alignLeft: "По левому краю",
       alignCenter: "По центру",
       alignRight: "По правому краю",
+      failedFile: "Файл изображения отсутствует или не открывается.",
+      failedNetwork: "Не удалось скачать изображение. Проверьте сетевое подключение.",
     },
     imageFile: {
       reveal: "Показать в папке",

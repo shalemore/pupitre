@@ -98,6 +98,8 @@ export const plPL = {
       alignLeft: "Wyrównaj do lewej",
       alignCenter: "Wyśrodkuj",
       alignRight: "Wyrównaj do prawej",
+      failedFile: "Plik obrazu nie istnieje lub nie można go otworzyć.",
+      failedNetwork: "Nie można pobrać obrazu. Sprawdź połączenie sieciowe.",
     },
     imageFile: {
       reveal: "Pokaż w folderze",

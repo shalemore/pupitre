@@ -105,6 +105,8 @@ export const ar = {
       alignLeft: "محاذاة إلى اليمين",
       alignCenter: "توسيط",
       alignRight: "محاذاة إلى اليسار",
+      failedFile: "ملف الصورة مفقود أو تعذّر فتحه.",
+      failedNetwork: "تعذّر تنزيل الصورة. تحقّق من اتصال الشبكة.",
     },
     imageFile: {
       reveal: "إظهار في المجلد",

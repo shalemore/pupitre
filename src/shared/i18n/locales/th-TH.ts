@@ -93,6 +93,8 @@ export const thTH = {
       alignLeft: "จัดชิดซ้าย",
       alignCenter: "จัดกึ่งกลาง",
       alignRight: "จัดชิดขวา",
+      failedFile: "ไม่พบไฟล์รูปภาพหรือเปิดไฟล์ไม่ได้",
+      failedNetwork: "ดาวน์โหลดรูปภาพไม่สำเร็จ ตรวจสอบการเชื่อมต่อเครือข่าย",
     },
     imageFile: {
       reveal: "แสดงในโฟลเดอร์",

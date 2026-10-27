@@ -436,7 +436,10 @@ function imageMarkup(image: TaggedImage): string {
 const MIN_IMAGE_WIDTH = 32;
 
 /** The controls of a picture are not places to type, so the editor leaves their events alone. */
-const CONTROLS = ".md-image-handle, .md-image-toolbar";
+const CONTROLS = ".md-image-handle, .md-image-toolbar, .md-image-retry";
+
+/** A picture fetched from the web, whose absence may be the network's fault rather than its own. */
+const WEB_IMAGE = /^https?:\/\//i;
 
 /**
  * Writes the width and alignment a control chose into the picture's source, as one change: the
@@ -591,11 +594,28 @@ export function imageDom(
 
   const image = document.createElement("img");
   image.className = "md-image-preview";
-  image.src = src;
   image.alt = alt;
   image.title = title;
   if (size.width !== undefined) image.style.width = `${size.width}px`;
+
+  const message = document.createElement("span");
+  message.className = "md-image-fallback-message";
+  const fallback = document.createElement("span");
+  fallback.className = "md-image-fallback";
+  fallback.append(message);
+
+  frame.setAttribute("data-state", "loading");
+  frame.append(image, fallback);
+
+  const remote = WEB_IMAGE.test(src);
+
+  const settle = (state: "ready" | "error") => {
+    frame.setAttribute("data-state", state);
+    view.requestMeasure();
+  };
+
   image.addEventListener("load", () => {
+    settle("ready");
     // A picture with a clear background, an icon for one, keeps its own outline instead of
     // standing in a frame that would box it in
     frame.toggleAttribute("data-alpha", hasTransparency(image));
@@ -603,7 +623,14 @@ export function imageDom(
     view.requestMeasure();
   });
 
-  frame.append(image);
+  image.addEventListener("error", () => {
+    if (!image.isConnected) return;
+    message.textContent = remote ? t().editor.image.failedNetwork : t().editor.image.failedFile;
+    settle("error");
+  });
+
+  image.src = src;
+
   if (controls) {
     const commit = write ?? ((change) => writeImage(view, block, change));
     frame.append(

@@ -91,6 +91,8 @@ export const esES = {
       alignLeft: "Alinear a la izquierda",
       alignCenter: "Centrar",
       alignRight: "Alinear a la derecha",
+      failedFile: "El archivo de imagen falta o no se puede abrir.",
+      failedNetwork: "No se pudo descargar la imagen. Comprueba la conexión de red.",
     },
     imageFile: {
       reveal: "Mostrar en la carpeta",
@@ -132,7 +134,8 @@ export const esES = {
 
     imageFailed: "No se pudo insertar la imagen.",
     imageTooLarge: (fileName: string) => `${fileName} es demasiado grande para insertarlo.`,
-    imageTooLargeDetail: (limit: string) => `Una imagen elegida del disco puede ocupar como máximo ${limit}.`,
+    imageTooLargeDetail: (limit: string) =>
+      `Una imagen elegida del disco puede ocupar como máximo ${limit}.`,
   },
   about: {
     windowTitle: "Acerca de Pupitre",

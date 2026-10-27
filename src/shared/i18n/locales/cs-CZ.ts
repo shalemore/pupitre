@@ -98,6 +98,8 @@ export const csCZ = {
       alignLeft: "Zarovnat vlevo",
       alignCenter: "Zarovnat na střed",
       alignRight: "Zarovnat vpravo",
+      failedFile: "Soubor obrázku chybí nebo ho nelze otevřít.",
+      failedNetwork: "Obrázek se nepodařilo stáhnout. Zkontrolujte připojení k síti.",
     },
     imageFile: {
       reveal: "Zobrazit ve složce",

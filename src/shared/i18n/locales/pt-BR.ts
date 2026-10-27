@@ -92,6 +92,8 @@ export const ptBR = {
       alignLeft: "Alinhar à esquerda",
       alignCenter: "Centralizar",
       alignRight: "Alinhar à direita",
+      failedFile: "O arquivo de imagem está ausente ou não pode ser aberto.",
+      failedNetwork: "Não foi possível baixar a imagem. Verifique sua conexão de rede.",
     },
     imageFile: {
       reveal: "Mostrar na pasta",
@@ -133,7 +135,8 @@ export const ptBR = {
 
     imageFailed: "Não foi possível inserir a imagem.",
     imageTooLarge: (fileName: string) => `${fileName} é grande demais para ser inserido.`,
-    imageTooLargeDetail: (limit: string) => `Uma imagem escolhida do disco pode ter no máximo ${limit}.`,
+    imageTooLargeDetail: (limit: string) =>
+      `Uma imagem escolhida do disco pode ter no máximo ${limit}.`,
   },
   about: {
     windowTitle: "Sobre o Pupitre",
