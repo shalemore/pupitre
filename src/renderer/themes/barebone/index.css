@@ -1,0 +1,77 @@
+/*
+ * Barebone: the app with its own look taken away, a starting point for a theme of your own. It
+ * exists in development only. See themes/pupitre/index.css for the tokens and the conventions.
+ */
+
+:root {
+  color-scheme: light dark;
+
+  /* The browser's own colors keep the window readable while everything else is gone */
+  --ui-surface-0: Canvas;
+  --ui-surface-1: Canvas;
+  --ui-surface-2: Canvas;
+  --ui-surface-3: Canvas;
+  --ui-text-primary: CanvasText;
+  --ui-text-secondary: GrayText;
+  --ui-text-muted: GrayText;
+  --ui-brand: LinkText;
+  --ui-brand-hover: LinkText;
+  --ui-danger: CanvasText;
+  --ui-success: CanvasText;
+  --ui-selection: Highlight;
+  --ui-alpha-1: color-mix(in srgb, CanvasText 5%, transparent);
+  --ui-alpha-2: color-mix(in srgb, CanvasText 10%, transparent);
+  --ui-alpha-3: color-mix(in srgb, CanvasText 20%, transparent);
+
+  --syntax-keyword: unset;
+  --syntax-string: unset;
+  --syntax-special-string: unset;
+  --syntax-number: unset;
+  --syntax-variable: unset;
+  --syntax-definition: unset;
+  --syntax-function: unset;
+  --syntax-type: unset;
+  --syntax-property: unset;
+  --syntax-comment: unset;
+  --syntax-operator: unset;
+  --syntax-punctuation: unset;
+  --syntax-invalid: unset;
+
+  --alert-note: currentColor;
+  --alert-tip: currentColor;
+  --alert-important: currentColor;
+  --alert-warning: currentColor;
+  --alert-caution: currentColor;
+  --md-highlight: unset;
+
+  --ui-radius-scale: 0;
+  --ui-shadow-near: transparent;
+  --ui-shadow-far: transparent;
+  --ui-shadow-float: transparent;
+
+  --font-sans: unset;
+  --font-mono: unset;
+  --font-document: unset;
+
+  --transition-duration-fast: 0ms;
+  --transition-duration-snap: 0ms;
+  --transition-duration-ui: 0ms;
+  --transition-duration-base: 0ms;
+  --transition-duration-sheet: 0ms;
+  --transition-duration-slow: 0ms;
+  --ease-out-expo: linear;
+  --ease-snap: linear;
+  --ease-enter: linear;
+  --ease-spring: linear;
+}
+
+*,
+::before,
+::after {
+  animation: none;
+  transition: none;
+}
+
+.md-text-cursor {
+  cursor: text;
+}

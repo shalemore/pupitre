@@ -40,10 +40,15 @@ function supportedSchemes(css: string): ColorScheme[] {
   return schemes.length > 0 ? schemes : ["light"];
 }
 
-const allThemes = Object.entries(themeStyles).map(([path, css]) => ({
-  name: themeName(path),
-  schemes: supportedSchemes(css),
-}));
+/** Themes that only exist while developing, such as the bare page a new theme starts from. */
+const DEVELOPMENT_THEMES = new Set(["barebone"]);
+
+const allThemes = Object.entries(themeStyles)
+  .filter(([path]) => import.meta.env.DEV || !DEVELOPMENT_THEMES.has(themeName(path)))
+  .map(([path, css]) => ({
+    name: themeName(path),
+    schemes: supportedSchemes(css),
+  }));
 
 /** The default theme first, the others by name. */
 export const THEMES: readonly ThemeInfo[] = [
