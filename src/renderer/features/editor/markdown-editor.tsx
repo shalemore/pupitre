@@ -435,40 +435,43 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           spellcheckCompartment.of([]),
           cursorCompartment.of([]),
           restartCursorBlink,
-          documentObserver({
-            onDocChange: (state, update) => {
-              const docChanged = state.doc !== observedDoc;
-              observedDoc = state.doc;
-              // The first outline is built as the editor opens, so its rows are not assembled
-              // under the first keystrokes; later changes wait for a pause, and prose edits that
-              // touch no heading only shift the positions of the headings below them
-              if (!outlineStarted) {
-                outlineStarted = true;
-                headings = collectHeadings(state);
-                props.onOutlineChange(headings);
-              } else {
-                if (
-                  !docChanged ||
-                  update === undefined ||
-                  outlineDirty ||
-                  !canShiftHeadings(headings, update)
-                ) {
-                  outlineDirty = true;
-                  pendingOutlineChanges = undefined;
+          documentObserver(
+            {
+              onDocChange: (state, update) => {
+                const docChanged = state.doc !== observedDoc;
+                observedDoc = state.doc;
+                // The first outline is built as the editor opens, so its rows are not assembled
+                // under the first keystrokes; later changes wait for a pause, and prose edits that
+                // touch no heading only shift the positions of the headings below them
+                if (!outlineStarted) {
+                  outlineStarted = true;
+                  headings = collectHeadings(state);
+                  props.onOutlineChange(headings);
                 } else {
-                  pendingOutlineChanges =
-                    pendingOutlineChanges === undefined
-                      ? update.changes.desc
-                      : pendingOutlineChanges.composeDesc(update.changes.desc);
+                  if (
+                    !docChanged ||
+                    update === undefined ||
+                    outlineDirty ||
+                    !canShiftHeadings(headings, update)
+                  ) {
+                    outlineDirty = true;
+                    pendingOutlineChanges = undefined;
+                  } else {
+                    pendingOutlineChanges =
+                      pendingOutlineChanges === undefined
+                        ? update.changes.desc
+                        : pendingOutlineChanges.composeDesc(update.changes.desc);
+                  }
+                  updateOutline(state);
                 }
-                updateOutline(state);
-              }
-              // Parsing the rest of a small document is not an edit, but it can make its count exact
-              if (!docChanged) stats.refresh(state);
+                // Parsing the rest of a small document is not an edit, but it can make its count exact
+                if (!docChanged) stats.refresh(state);
+              },
+              onPositionChange: (position) =>
+                props.onActiveHeadingChange(findActiveHeading(headings, position)),
             },
-            onSelectionChange: (cursor) =>
-              props.onActiveHeadingChange(findActiveHeading(headings, cursor)),
-          }),
+            scroller,
+          ),
           EditorView.updateListener.of((update) => {
             if (update.docChanged) {
               props.onMarkdownChange();
@@ -679,7 +682,12 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         view.focus();
       },
       scrollTo: (pos) => {
-        view.dispatch({ effects: EditorView.scrollIntoView(pos, { y: "start" }) });
+        // The caret goes with the scroll, so the outline marks the heading that was chosen even
+        // when the document is too short to bring it to the top
+        view.dispatch({
+          selection: { anchor: pos },
+          effects: EditorView.scrollIntoView(pos, { y: "start" }),
+        });
         view.focus();
       },
       revealRange: (from, to) => {

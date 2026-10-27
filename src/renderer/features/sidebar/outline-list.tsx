@@ -87,6 +87,7 @@ export const OutlineList: Component<OutlineListProps> = (props) => {
               <ListItem
                 dir="auto"
                 active={isActive(row().index)}
+                aria-current={isActive(row().index) ? "location" : undefined}
                 onClick={() => props.onSelectHeading(row().heading)}
                 style={rowIndent(row().heading.level - 1, 10)}
                 class={cn("min-w-0 flex-1", row().heading.level === 1 && "font-medium")}
