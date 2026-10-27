@@ -96,11 +96,19 @@ export const FindBar: Component<FindBarProps> = (props) => {
     if (e.isComposing) return;
     if (e.key === "Enter") {
       e.preventDefault();
+      if (!hasMatches()) return;
       (e.shiftKey ? onShiftEnter : onEnter)();
     } else if (e.key === "Escape") {
       e.preventDefault();
       props.onClose();
     }
+  };
+
+  const matchLabel = () => {
+    if (props.matchStats.pending) return "…";
+    const { current, total, capped } = props.matchStats;
+    if (capped && current === 0) return `${total}+`;
+    return `${current}/${total}${capped ? "+" : ""}`;
   };
 
   return (
@@ -153,9 +161,7 @@ export const FindBar: Component<FindBarProps> = (props) => {
         <div class="shrink-0 tabular-nums">
           <Show when={searchText()}>
             <Badge variant={hasMatches() ? "secondary" : "destructive"} size="sm" dir="ltr">
-              {props.matchStats.pending
-                ? "…"
-                : `${props.matchStats.current}/${props.matchStats.total}${props.matchStats.capped ? "+" : ""}`}
+              {matchLabel()}
             </Badge>
           </Show>
         </div>

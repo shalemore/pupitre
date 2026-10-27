@@ -250,6 +250,7 @@ const SYNC_MATCH_LIMIT = 512 * 1024;
 // A find bar does not need the exact number of matches in a book-length document
 const MAX_COUNTED_MATCHES = 1_000;
 const MATCH_COUNT_SLICE_MS = 8;
+const MAX_INITIAL_SEARCH_LENGTH = 200;
 
 function countMatches(state: EditorState, query: SearchQuery): MatchStats {
   const { from, to } = state.selection.main;
@@ -663,7 +664,9 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       },
       getSelectedText: () => {
         const { from, to } = view.state.selection.main;
-        return view.state.sliceDoc(from, to);
+        if (to === from || to - from > MAX_INITIAL_SEARCH_LENGTH) return "";
+        const selected = view.state.sliceDoc(from, to);
+        return selected.includes("\n") ? "" : selected;
       },
       setSearch: (options) => {
         // Matches are highlighted only while CodeMirror's search panel is open
