@@ -366,6 +366,7 @@ export function registerIpcHandlers(): void {
         setDefaultApp: true,
         systemFonts: true,
         zoom: true,
+        folderParent: true,
       },
       recentFiles: getRecentFiles(),
       captionSide: getCaptionSide(event.sender),

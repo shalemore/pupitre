@@ -19,6 +19,7 @@ export const frFR = {
     folder: "Dossier",
     folderUnreadable: "Impossible de lire ce dossier.",
     newFolder: "Nouveau dossier",
+    parentFolder: "Dossier parent",
     rename: "Renommer",
     moveToTrash: "Mettre à la corbeille",
     pinned: "Épinglés",

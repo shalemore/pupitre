@@ -20,6 +20,7 @@ export const elGR = {
     folder: "Φάκελος",
     folderUnreadable: "Δεν ήταν δυνατή η ανάγνωση αυτού του φακέλου.",
     newFolder: "Νέος φάκελος",
+    parentFolder: "Γονικός φάκελος",
     rename: "Μετονομασία",
     moveToTrash: "Μετακίνηση στον κάδο",
     pinned: "Καρφιτσωμένα",

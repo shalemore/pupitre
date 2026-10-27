@@ -26,6 +26,7 @@ export const plPL = {
     folder: "Folder",
     folderUnreadable: "Nie można odczytać tego folderu.",
     newFolder: "Nowy folder",
+    parentFolder: "Folder nadrzędny",
     rename: "Zmień nazwę",
     moveToTrash: "Przenieś do kosza",
     pinned: "Przypięte",

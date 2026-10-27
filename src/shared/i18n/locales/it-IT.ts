@@ -19,6 +19,7 @@ export const itIT = {
     folder: "Cartella",
     folderUnreadable: "Impossibile leggere questa cartella.",
     newFolder: "Nuova cartella",
+    parentFolder: "Cartella superiore",
     rename: "Rinomina",
     moveToTrash: "Sposta nel cestino",
     pinned: "Fissati",

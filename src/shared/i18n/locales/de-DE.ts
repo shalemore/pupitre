@@ -19,6 +19,7 @@ export const deDE = {
     folder: "Ordner",
     folderUnreadable: "Dieser Ordner kann nicht gelesen werden.",
     newFolder: "Neuer Ordner",
+    parentFolder: "Übergeordneter Ordner",
     rename: "Umbenennen",
     moveToTrash: "In den Papierkorb",
     pinned: "Angeheftet",

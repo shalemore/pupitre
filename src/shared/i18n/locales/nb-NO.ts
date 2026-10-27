@@ -20,6 +20,7 @@ export const nbNO = {
     folder: "Mappe",
     folderUnreadable: "Mappen kunne ikke leses.",
     newFolder: "Ny mappe",
+    parentFolder: "Overordnet mappe",
     rename: "Gi nytt navn",
     moveToTrash: "Flytt til papirkurven",
     pinned: "Festet",

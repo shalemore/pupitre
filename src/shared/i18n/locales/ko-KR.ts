@@ -20,6 +20,7 @@ export const koKR = {
     folder: "폴더",
     folderUnreadable: "이 폴더를 읽을 수 없습니다.",
     newFolder: "새 폴더",
+    parentFolder: "상위 폴더",
     rename: "이름 바꾸기",
     moveToTrash: "휴지통으로 이동",
     pinned: "고정됨",

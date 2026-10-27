@@ -29,6 +29,25 @@ export function isInsideFolder(folder: string, path: string): boolean {
   return slashed(path).startsWith(`${slashed(folder)}/`);
 }
 
+/**
+ * The folder that holds `path`, or undefined when it is the root of a file system or of a network
+ * share. The separator style of the path is kept, so a path read from a window and one made here
+ * still compare equal.
+ */
+export function parentFolder(path: string): string | undefined {
+  const trimmed = path.replace(/[\\/]+$/, "");
+  // A drive root ("C:"), a Unix root, or the server and share of a UNC path have nothing above
+  if (/^[A-Za-z]:$/.test(trimmed) || trimmed === "" || /^\\\\[^\\]+(?:\\[^\\]+)?$/.test(trimmed)) {
+    return undefined;
+  }
+  const cut = Math.max(trimmed.lastIndexOf("\\"), trimmed.lastIndexOf("/"));
+  if (cut < 0) return undefined;
+  // The folder just under a root keeps the root's own separator, "C:\" or "/"
+  if (cut === 0) return trimmed.startsWith("/") ? "/" : trimmed.slice(0, 1);
+  const parent = trimmed.slice(0, cut);
+  return /^[A-Za-z]:$/.test(parent) ? `${parent}${trimmed[cut] ?? "\\"}` : parent;
+}
+
 /** Where `path` sits under `folder`, or undefined when it is not inside it. */
 export function relativeToFolder(folder: string, path: string): string | undefined {
   const root = slashed(folder);

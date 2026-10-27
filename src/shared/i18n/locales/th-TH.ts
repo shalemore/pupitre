@@ -23,6 +23,7 @@ export const thTH = {
     folder: "โฟลเดอร์",
     folderUnreadable: "ไม่สามารถอ่านโฟลเดอร์นี้ได้",
     newFolder: "โฟลเดอร์ใหม่",
+    parentFolder: "โฟลเดอร์ระดับบน",
     rename: "เปลี่ยนชื่อ",
     moveToTrash: "ย้ายไปถังขยะ",
     pinned: "ปักหมุดแล้ว",

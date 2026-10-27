@@ -21,6 +21,7 @@ export const isIS = {
     folder: "Mappa",
     folderUnreadable: "Ekki tókst að lesa þessa möppu.",
     newFolder: "Ný mappa",
+    parentFolder: "Yfirmappa",
     rename: "Endurnefna",
     moveToTrash: "Færa í ruslatunnu",
     pinned: "Fest",

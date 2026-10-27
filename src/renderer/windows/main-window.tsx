@@ -1,6 +1,7 @@
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { debounce } from "@solid-primitives/scheduled";
 import { cn } from "cn";
+import { FolderUp } from "lucide-solid";
 import {
   createEffect,
   createMemo,
@@ -14,6 +15,7 @@ import {
 } from "solid-js";
 import type { AppCommand } from "@shared/desktop-api";
 import { TitleBar } from "@/components/title-bar";
+import { IconButton } from "@/components/ui";
 import { CommandPalette } from "@/features/command-palette/command-palette";
 import { FindBar } from "@/features/editor/find-bar";
 import type { MarkdownEditorHandle, MatchStats } from "@/features/editor/markdown-editor";
@@ -40,7 +42,13 @@ import { desktop, isMacOS } from "@/lib/desktop";
 import { documentPosition } from "@/lib/document-positions";
 import { createDocumentSession } from "@/lib/document-session";
 import { messageOf, reportFailure } from "@/lib/errors";
-import { fileNameOf, isInsideFolder, isolateFileName, withoutDocumentExtension } from "@/lib/file";
+import {
+  fileNameOf,
+  isInsideFolder,
+  isolateFileName,
+  parentFolder,
+  withoutDocumentExtension,
+} from "@/lib/file";
 import { createImmersiveChrome } from "@/lib/immersive-chrome";
 import { recentFiles } from "@/lib/recent-files";
 import { settings, updateSettings } from "@/lib/settings";
@@ -328,6 +336,31 @@ export const MainWindow: Component = () => {
     setPreferredMode("folder");
     if (!settings().sidebarVisible) void updateSettings({ sidebarVisible: true });
   };
+
+  const parentOfFolder = createMemo(() => {
+    const root = folderRoot();
+    return root === undefined ? undefined : parentFolder(root);
+  });
+
+  /** The controls the folder title carries: up to the folder that holds it, and its order. */
+  const folderAction = () => (
+    <>
+      <Show when={desktop.initialState.capabilities.folderParent && parentOfFolder()}>
+        <IconButton
+          label={t().sidebar.parentFolder}
+          size="icon-2xs"
+          class="shrink-0 text-tertiary opacity-50 transition-opacity hover:opacity-100 focus-visible:opacity-100"
+          onClick={() => {
+            const parent = parentOfFolder();
+            if (parent !== undefined) showFolder(parent);
+          }}
+        >
+          <FolderUp />
+        </IconButton>
+      </Show>
+      <FolderSortButton onHoldOpenChange={setStartSidebarHeld} />
+    </>
+  );
 
   const openFolder = async () => {
     const path = await desktop.invoke("folder:choose");
@@ -625,7 +658,7 @@ export const MainWindow: Component = () => {
                 hasOutline={session.activeDocument() !== undefined}
                 hasFolder={folderRoot() !== undefined}
                 folderName={fileNameOf(folderRoot() ?? "")}
-                folderAction={<FolderSortButton onHoldOpenChange={setStartSidebarHeld} />}
+                folderAction={folderAction()}
                 onModeChange={setPreferredMode}
                 outline={outlineList()}
                 folder={
@@ -641,7 +674,7 @@ export const MainWindow: Component = () => {
                 <SidebarPanel
                   side="start"
                   title={fileNameOf(root)}
-                  action={<FolderSortButton onHoldOpenChange={setStartSidebarHeld} />}
+                  action={folderAction()}
                   pinned={settings().sidebarPinnedStart}
                   onPinnedChange={onStartPinnedChange()}
                   class={cn(!immersive() && "border-e border-border")}

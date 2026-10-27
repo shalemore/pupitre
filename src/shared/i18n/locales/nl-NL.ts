@@ -20,6 +20,7 @@ export const nlNL = {
     folder: "Map",
     folderUnreadable: "Deze map kan niet worden gelezen.",
     newFolder: "Nieuwe map",
+    parentFolder: "Bovenliggende map",
     rename: "Naam wijzigen",
     moveToTrash: "Naar de prullenbak",
     pinned: "Vastgezet",

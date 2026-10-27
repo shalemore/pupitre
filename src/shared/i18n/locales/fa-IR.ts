@@ -21,6 +21,7 @@ export const faIR = {
     folder: "پوشه",
     folderUnreadable: "این پوشه خوانده نشد.",
     newFolder: "پوشهٔ جدید",
+    parentFolder: "پوشه والد",
     rename: "تغییر نام",
     moveToTrash: "انتقال به سطل زباله",
     pinned: "سنجاق‌شده",

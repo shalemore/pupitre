@@ -20,6 +20,7 @@ export const daDK = {
     folder: "Mappe",
     folderUnreadable: "Mappen kunne ikke læses.",
     newFolder: "Ny mappe",
+    parentFolder: "Overordnet mappe",
     rename: "Omdøb",
     moveToTrash: "Flyt til papirkurv",
     pinned: "Fastgjort",

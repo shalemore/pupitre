@@ -21,6 +21,7 @@ export const zhTW = {
     folder: "資料夾",
     folderUnreadable: "無法讀取該資料夾。",
     newFolder: "新增資料夾",
+    parentFolder: "上層資料夾",
     rename: "重新命名",
     moveToTrash: "移到資源回收筒",
     pinned: "已置頂",

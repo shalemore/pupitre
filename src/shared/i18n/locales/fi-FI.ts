@@ -20,6 +20,7 @@ export const fiFI = {
     folder: "Kansio",
     folderUnreadable: "Kansiota ei voitu lukea.",
     newFolder: "Uusi kansio",
+    parentFolder: "Ylähakemisto",
     rename: "Nimeä uudelleen",
     moveToTrash: "Siirrä roskakoriin",
     pinned: "Kiinnitetyt",

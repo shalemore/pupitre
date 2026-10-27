@@ -19,6 +19,7 @@ export const ptBR = {
     folder: "Pasta",
     folderUnreadable: "Não foi possível ler esta pasta.",
     newFolder: "Nova pasta",
+    parentFolder: "Pasta superior",
     rename: "Renomear",
     moveToTrash: "Mover para a lixeira",
     pinned: "Fixados",

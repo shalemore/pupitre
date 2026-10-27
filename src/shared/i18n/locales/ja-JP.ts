@@ -20,6 +20,7 @@ export const jaJP = {
     folder: "フォルダー",
     folderUnreadable: "このフォルダーを読み込めませんでした。",
     newFolder: "新規フォルダー",
+    parentFolder: "親フォルダー",
     rename: "名前を変更",
     moveToTrash: "ゴミ箱へ移動",
     pinned: "ピン留め済み",

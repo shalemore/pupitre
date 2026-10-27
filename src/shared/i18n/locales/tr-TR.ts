@@ -20,6 +20,7 @@ export const trTR = {
     folder: "Klasör",
     folderUnreadable: "Bu klasör okunamadı.",
     newFolder: "Yeni Klasör",
+    parentFolder: "Üst klasör",
     rename: "Yeniden Adlandır",
     moveToTrash: "Çöp Kutusuna Taşı",
     pinned: "Sabitlenenler",

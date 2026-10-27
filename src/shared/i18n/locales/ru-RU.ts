@@ -26,6 +26,7 @@ export const ruRU = {
     folder: "Папка",
     folderUnreadable: "Не удалось прочитать эту папку.",
     newFolder: "Новая папка",
+    parentFolder: "Родительская папка",
     rename: "Переименовать",
     moveToTrash: "Переместить в корзину",
     pinned: "Закреплённые",

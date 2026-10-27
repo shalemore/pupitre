@@ -701,6 +701,7 @@ const desktop: DesktopApi = {
       setDefaultApp: false,
       systemFonts: false,
       zoom: false,
+      folderParent: false,
     },
     recentFiles: [],
     captionSide: undefined,

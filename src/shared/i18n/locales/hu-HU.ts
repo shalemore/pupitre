@@ -20,6 +20,7 @@ export const huHU = {
     folder: "Mappa",
     folderUnreadable: "A mappa nem olvasható.",
     newFolder: "Új mappa",
+    parentFolder: "Szülőmappa",
     rename: "Átnevezés",
     moveToTrash: "Áthelyezés a kukába",
     pinned: "Rögzítve",

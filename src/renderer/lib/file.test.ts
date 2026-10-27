@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   fileNameOf,
   isInsideFolder,
+  parentFolder,
   pathFromFileUrl,
   relativeToFolder,
   withoutDocumentExtension,
@@ -48,5 +49,36 @@ describe("file helpers", () => {
   it("ends a file with one newline", () => {
     expect(withTrailingNewline("text")).toBe("text\n");
     expect(withTrailingNewline("text\n")).toBe("text\n");
+  });
+});
+
+describe("the folder that holds a path", () => {
+  it("keeps the separators of a Windows path", () => {
+    expect(parentFolder("C:\\Users\\me\\docs")).toBe("C:\\Users\\me");
+    expect(parentFolder("C:\\Users")).toBe("C:\\");
+    expect(parentFolder("C:/Users/me")).toBe("C:/Users");
+    expect(parentFolder("C:/Users")).toBe("C:/");
+  });
+
+  it("stops at a root, a drive or a network share", () => {
+    expect(parentFolder("C:\\")).toBeUndefined();
+    expect(parentFolder("C:")).toBeUndefined();
+    expect(parentFolder("/")).toBeUndefined();
+    expect(parentFolder("\\\\server\\share")).toBeUndefined();
+  });
+
+  it("walks a Unix path up to its root", () => {
+    expect(parentFolder("/home/me")).toBe("/home");
+    expect(parentFolder("/home")).toBe("/");
+    expect(parentFolder("/home/me/")).toBe("/home");
+  });
+
+  it("takes the folder under a network share", () => {
+    expect(parentFolder("\\\\server\\share\\docs")).toBe("\\\\server\\share");
+  });
+
+  it("has nothing above a path with no separator", () => {
+    expect(parentFolder("docs")).toBeUndefined();
+    expect(parentFolder("")).toBeUndefined();
   });
 });

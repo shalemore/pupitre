@@ -35,6 +35,7 @@ export const ar = {
     folder: "المجلد",
     folderUnreadable: "تعذّرت قراءة هذا المجلد.",
     newFolder: "مجلد جديد",
+    parentFolder: "المجلد الأصل",
     rename: "إعادة التسمية",
     moveToTrash: "نقل إلى سلة المحذوفات",
     pinned: "المثبتة",

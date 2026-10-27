@@ -19,6 +19,7 @@ export const esES = {
     folder: "Carpeta",
     folderUnreadable: "No se puede leer esta carpeta.",
     newFolder: "Nueva carpeta",
+    parentFolder: "Carpeta superior",
     rename: "Cambiar nombre",
     moveToTrash: "Mover a la papelera",
     pinned: "Fijados",

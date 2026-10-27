@@ -20,6 +20,7 @@ export const idID = {
     folder: "Folder",
     folderUnreadable: "Folder ini tidak dapat dibaca.",
     newFolder: "Folder Baru",
+    parentFolder: "Folder induk",
     rename: "Ganti Nama",
     moveToTrash: "Pindahkan ke Sampah",
     pinned: "Disematkan",

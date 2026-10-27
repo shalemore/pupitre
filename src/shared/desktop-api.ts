@@ -436,6 +436,8 @@ export interface HostCapabilities {
   systemFonts: boolean;
   /** Set the zoom of the window; a browser zooms the page itself, with its own shortcuts. */
   zoom: boolean;
+  /** Walk from an open folder to the one that holds it; the demo's folder has nothing above it. */
+  folderParent: boolean;
 }
 
 /** State a window needs before its first paint; fetched synchronously by the preload script. */

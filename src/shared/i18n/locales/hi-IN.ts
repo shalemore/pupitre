@@ -20,6 +20,7 @@ export const hiIN = {
     folder: "फ़ोल्डर",
     folderUnreadable: "यह फ़ोल्डर पढ़ा नहीं जा सका।",
     newFolder: "नया फ़ोल्डर",
+    parentFolder: "मूल फ़ोल्डर",
     rename: "नाम बदलें",
     moveToTrash: "रीसायकल बिन में भेजें",
     pinned: "पिन किए गए",

@@ -20,6 +20,7 @@ export const viVN = {
     folder: "Thư mục",
     folderUnreadable: "Không thể đọc thư mục này.",
     newFolder: "Thư mục mới",
+    parentFolder: "Thư mục cha",
     rename: "Đổi tên",
     moveToTrash: "Chuyển vào thùng rác",
     pinned: "Đã ghim",

@@ -26,6 +26,7 @@ export const ukUA = {
     folder: "Папка",
     folderUnreadable: "Не вдалося прочитати цю папку.",
     newFolder: "Нова папка",
+    parentFolder: "Батьківська папка",
     rename: "Перейменувати",
     moveToTrash: "Перемістити до кошика",
     pinned: "Закріплені",

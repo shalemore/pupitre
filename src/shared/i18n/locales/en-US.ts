@@ -23,6 +23,7 @@ export const enUS = {
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
     newFolder: "New Folder",
+    parentFolder: "Parent Folder",
     rename: "Rename",
     moveToTrash: "Move to Trash",
     pinned: "Pinned",

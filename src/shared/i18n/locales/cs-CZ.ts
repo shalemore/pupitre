@@ -26,6 +26,7 @@ export const csCZ = {
     folder: "Složka",
     folderUnreadable: "Tuto složku nelze přečíst.",
     newFolder: "Nová složka",
+    parentFolder: "Nadřazená složka",
     rename: "Přejmenovat",
     moveToTrash: "Přesunout do koše",
     pinned: "Připnuté",

@@ -20,6 +20,7 @@ export const svSE = {
     folder: "Mapp",
     folderUnreadable: "Mappen kunde inte läsas.",
     newFolder: "Ny mapp",
+    parentFolder: "Överordnad mapp",
     rename: "Byt namn",
     moveToTrash: "Flytta till papperskorgen",
     pinned: "Fästade",

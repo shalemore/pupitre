@@ -21,6 +21,7 @@ export const zhCN = {
     folder: "文件夹",
     folderUnreadable: "无法读取该文件夹。",
     newFolder: "新建文件夹",
+    parentFolder: "上级文件夹",
     rename: "重命名",
     moveToTrash: "移到回收站",
     pinned: "已置顶",
