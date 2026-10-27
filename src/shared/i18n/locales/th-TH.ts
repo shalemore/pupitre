@@ -111,6 +111,7 @@ export const thTH = {
     fold: "พับ",
     unfold: "ขยาย",
     foldedText: "ข้อความที่พับไว้",
+    footnoteBack: "กลับไปที่การอ้างอิง",
   },
   dialogs: {
     copyButton: "คัดลอก",

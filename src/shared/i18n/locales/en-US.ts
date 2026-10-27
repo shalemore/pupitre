@@ -118,6 +118,7 @@ export const enUS = {
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Save the document to work with its images",
     },
+    footnoteBack: "Back to reference",
   },
   dialogs: {
     copyButton: "Copy",

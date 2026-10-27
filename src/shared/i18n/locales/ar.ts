@@ -123,6 +123,7 @@ export const ar = {
     fold: "طيّ",
     unfold: "فرد",
     foldedText: "نص مطوي",
+    footnoteBack: "العودة إلى المرجع",
   },
   dialogs: {
     copyButton: "نسخ",

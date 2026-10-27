@@ -227,6 +227,18 @@
     color: var(--ui-brand);
     font-size: 0.75em;
     vertical-align: super;
+    /* A reference reads as a link by default; a theme can take the line away or redraw it */
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  /* A drawn reference keeps the brackets its source is written with */
+  .md-footnote-ref::before {
+    content: "[";
+  }
+
+  .md-footnote-ref::after {
+    content: "]";
   }
 
   .md-footnote {
@@ -247,9 +259,32 @@
     cursor: pointer;
   }
 
+  :is(.md-footnote-ref, .md-footnote-label):hover {
+    text-decoration: underline;
+  }
+
+  /* The arrows after a definition take the reader back to each reference, as on GitHub */
+  .md-footnote-backs {
+    white-space: nowrap;
+  }
+
+  .md-footnote-back {
+    margin-inline-start: 0.35em;
+    color: var(--ui-brand);
+    cursor: pointer;
+  }
+
+  .md-footnote-back sup {
+    font-size: 0.7em;
+  }
+
+  .md-footnote-back:hover {
+    text-decoration: underline;
+  }
+
   /* A rule above the first definition sets the footnotes apart from the text */
   .md-document > .md-footnotes-start {
-    padding-block-start: 1em;
+    padding-block-start: 1.5em;
     border-block-start: 1px solid var(--ui-alpha-2);
   }
 

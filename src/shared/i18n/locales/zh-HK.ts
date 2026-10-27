@@ -113,6 +113,7 @@ export const zhHK = {
     fold: "摺疊",
     unfold: "展開",
     foldedText: "已摺疊文字",
+    footnoteBack: "返回引用",
   },
   dialogs: {
     copyButton: "複製",

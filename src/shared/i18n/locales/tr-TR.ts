@@ -110,6 +110,7 @@ export const trTR = {
     fold: "Daralt",
     unfold: "Genişlet",
     foldedText: "Daraltılmış metin",
+    footnoteBack: "Başvuruya dön",
   },
   dialogs: {
     copyButton: "Kopyala",

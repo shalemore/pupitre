@@ -116,6 +116,7 @@ export const ruRU = {
     fold: "Свернуть",
     unfold: "Развернуть",
     foldedText: "Свёрнутый текст",
+    footnoteBack: "Вернуться к ссылке",
   },
   dialogs: {
     copyButton: "Копировать",

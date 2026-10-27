@@ -110,6 +110,7 @@ export const nlNL = {
     fold: "Inklappen",
     unfold: "Uitklappen",
     foldedText: "Ingeklapte tekst",
+    footnoteBack: "Terug naar de verwijzing",
   },
   dialogs: {
     copyButton: "Kopiëren",

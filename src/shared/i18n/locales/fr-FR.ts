@@ -109,6 +109,7 @@ export const frFR = {
     fold: "Plier",
     unfold: "Déplier",
     foldedText: "Texte replié",
+    footnoteBack: "Retour à la référence",
   },
   dialogs: {
     copyButton: "Copier",

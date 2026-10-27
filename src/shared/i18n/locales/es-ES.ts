@@ -109,6 +109,7 @@ export const esES = {
     fold: "Contraer",
     unfold: "Expandir",
     foldedText: "Texto contraído",
+    footnoteBack: "Volver a la referencia",
   },
   dialogs: {
     copyButton: "Copiar",

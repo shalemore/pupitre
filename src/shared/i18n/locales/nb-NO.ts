@@ -110,6 +110,7 @@ export const nbNO = {
     fold: "Brett sammen",
     unfold: "Brett ut",
     foldedText: "Brettet tekst",
+    footnoteBack: "Tilbake til referansen",
   },
   dialogs: {
     copyButton: "Kopier",

@@ -116,6 +116,7 @@ export const csCZ = {
     fold: "Sbalit",
     unfold: "Rozbalit",
     foldedText: "Sbalený text",
+    footnoteBack: "Zpět na odkaz",
   },
   dialogs: {
     copyButton: "Kopírovat",

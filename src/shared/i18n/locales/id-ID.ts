@@ -108,6 +108,7 @@ export const idID = {
     fold: "Lipat",
     unfold: "Buka lipatan",
     foldedText: "Teks Terlipat",
+    footnoteBack: "Kembali ke referensi",
   },
   dialogs: {
     copyButton: "Salin",

@@ -451,6 +451,16 @@ sup.md-footnote-ref {
   font-size: 0.75em;
   line-height: 0;
   vertical-align: super;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+sup.md-footnote-ref::before {
+  content: "[";
+}
+
+sup.md-footnote-ref::after {
+  content: "]";
 }
 
 sup.md-footnote-ref a {

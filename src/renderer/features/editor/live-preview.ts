@@ -17,13 +17,14 @@ import {
 } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
 import { DOCUMENT_EXTENSIONS } from "@shared/desktop-api";
+import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { pathFromFileUrl } from "@/lib/file";
 import { AlertTitleWidget, alertTitles, alertType } from "./alerts";
 import { CodeCornerWidget, type FenceInfo } from "./code-corner";
 import { collectHeadings, findHeadingByAnchor, HEADING_LEVEL } from "./document-structure";
 import { EmojiWidget, emojiFor } from "./emoji";
-import { footnoteTarget } from "./footnotes";
+import { footnoteReferences, footnoteTarget } from "./footnotes";
 import { htmlTag, isFormattingTag, LineBreakWidget } from "./html";
 import { openImageMenu } from "./image-menu";
 import {
@@ -534,9 +535,49 @@ function visitImage(builder: DecorationBuilder, node: SyntaxNode): boolean {
   return image ? placeImage(builder, image, node.name === "Image") : true;
 }
 
+/** The arrows after a definition that take the reader back to each of its references. */
+class FootnoteBacksWidget extends WidgetType {
+  constructor(readonly targets: readonly number[]) {
+    super();
+  }
+
+  override eq(other: FootnoteBacksWidget): boolean {
+    return (
+      other.targets.length === this.targets.length &&
+      other.targets.every((target, index) => target === this.targets[index])
+    );
+  }
+
+  toDOM(view: EditorView): HTMLElement {
+    const arrows = document.createElement("span");
+    arrows.className = "md-footnote-backs";
+    this.targets.forEach((target, index) => {
+      const link = document.createElement("span");
+      link.className = "md-footnote-back";
+      link.append("↩");
+      // The first arrow needs no counter; the others say which reference they return to
+      if (index > 0) {
+        const number = document.createElement("sup");
+        number.textContent = String(index + 1);
+        link.append(number);
+      }
+      link.title = t().editor.footnoteBack;
+      link.setAttribute("role", "link");
+      link.addEventListener("mousedown", (event) => {
+        if (event.button !== 0) return;
+        event.preventDefault();
+        view.focus();
+        view.dispatch({ selection: { anchor: target }, scrollIntoView: true });
+      });
+      arrows.append(link);
+    });
+    return arrows;
+  }
+}
+
 /**
- * A footnote reference reads as its label in superscript, a definition starts with its label;
- * the brackets show while the selection touches them.
+ * A footnote reference reads as its label in superscript, a definition starts with its label and
+ * ends with an arrow back to the reference; the brackets show while the selection touches them.
  */
 function visitFootnote(builder: DecorationBuilder, node: SyntaxNode): void {
   const reference = node.name === "FootnoteReference";
@@ -545,11 +586,19 @@ function visitFootnote(builder: DecorationBuilder, node: SyntaxNode): void {
   if (touches(builder.ranges, node.from, node.to)) {
     builder.mark(node.from, labelFrom, "md-mark");
     builder.mark(labelTo, node.to, "md-mark");
-    return;
+  } else {
+    builder.hide(node.from, labelFrom);
+    builder.hide(labelTo, node.to);
+    builder.mark(labelFrom, labelTo, reference ? "md-footnote-ref" : "md-footnote-label");
   }
-  builder.hide(node.from, labelFrom);
-  builder.hide(labelTo, node.to);
-  builder.mark(labelFrom, labelTo, reference ? "md-footnote-ref" : "md-footnote-label");
+  if (reference) return;
+  const targets = footnoteReferences(builder.state, builder.text(labelFrom, labelTo));
+  const end = node.parent?.lastChild?.to;
+  if (targets.length > 0 && end !== undefined) {
+    builder.decorations.push(
+      Decoration.widget({ widget: new FootnoteBacksWidget(targets), side: 1 }).range(end),
+    );
+  }
 }
 
 /** A `:name:` shortcode shows as its emoji away from the selection; names that are not emoji stay text. */

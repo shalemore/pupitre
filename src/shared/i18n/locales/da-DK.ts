@@ -110,6 +110,7 @@ export const daDK = {
     fold: "Fold sammen",
     unfold: "Fold ud",
     foldedText: "Sammenfoldet tekst",
+    footnoteBack: "Tilbage til referencen",
   },
   dialogs: {
     copyButton: "Kopiér",

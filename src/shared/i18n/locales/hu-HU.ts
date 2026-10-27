@@ -110,6 +110,7 @@ export const huHU = {
     fold: "Összecsukás",
     unfold: "Kinyitás",
     foldedText: "Összecsukott szöveg",
+    footnoteBack: "Vissza a hivatkozáshoz",
   },
   dialogs: {
     copyButton: "Másolás",

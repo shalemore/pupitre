@@ -108,6 +108,7 @@ export const viVN = {
     fold: "Thu gọn",
     unfold: "Mở rộng",
     foldedText: "Văn bản đã thu gọn",
+    footnoteBack: "Quay lại tham chiếu",
   },
   dialogs: {
     copyButton: "Sao chép",

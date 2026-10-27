@@ -110,6 +110,7 @@ export const koKR = {
     fold: "접기",
     unfold: "펼치기",
     foldedText: "접힌 텍스트",
+    footnoteBack: "참조로 돌아가기",
   },
   dialogs: {
     copyButton: "복사",

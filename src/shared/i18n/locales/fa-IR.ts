@@ -109,6 +109,7 @@ export const faIR = {
     fold: "جمع کردن",
     unfold: "باز کردن",
     foldedText: "متن جمع‌شده",
+    footnoteBack: "بازگشت به ارجاع",
   },
   dialogs: {
     copyButton: "رونوشت",

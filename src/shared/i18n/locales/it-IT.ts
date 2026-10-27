@@ -109,6 +109,7 @@ export const itIT = {
     fold: "Comprimi",
     unfold: "Espandi",
     foldedText: "Testo compresso",
+    footnoteBack: "Torna al riferimento",
   },
   dialogs: {
     copyButton: "Copia",

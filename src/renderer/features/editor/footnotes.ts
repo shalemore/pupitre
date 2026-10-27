@@ -75,6 +75,18 @@ export function footnoteLabel(state: EditorState, node: SyntaxNode): string {
   return state.sliceDoc(node.from, node.to).replace(/^\[\^|\]:?$/g, "");
 }
 
+/** The end of every reference to a footnote, in document order, where a back arrow lands. */
+export function footnoteReferences(state: EditorState, label: string): number[] {
+  const ends: number[] = [];
+  syntaxTree(state).iterate({
+    enter: (node) => {
+      if (node.name !== "FootnoteReference") return;
+      if (footnoteLabel(state, node.node) === label) ends.push(node.to);
+    },
+  });
+  return ends;
+}
+
 /**
  * Where a footnote jump lands: from a reference to the text of its definition, from a definition
  * to just after its first reference, like the links GitHub renders.

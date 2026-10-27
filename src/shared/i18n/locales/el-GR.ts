@@ -110,6 +110,7 @@ export const elGR = {
     fold: "Σύμπτυξη",
     unfold: "Ανάπτυξη",
     foldedText: "Συμπτυγμένο κείμενο",
+    footnoteBack: "Επιστροφή στην αναφορά",
   },
   dialogs: {
     copyButton: "Αντιγραφή",

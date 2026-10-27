@@ -56,8 +56,8 @@ interface ExportContext {
   readonly state: EditorState;
   /** Footnote definitions, rendered together at the foot of the page where they were written. */
   readonly definitions: SyntaxNode[];
-  /** Labels that already carry an anchor, so a second reference to a footnote needs no second id. */
-  readonly referenced: Set<string>;
+  /** How often each footnote has been referenced, for the anchors and arrows that return to them. */
+  readonly referenceCounts: Map<string, number>;
   /**
    * Whether the markup is going to another application, which has none of the stylesheets of this
    * one: what a class alone cannot carry is then written inline.
@@ -87,8 +87,10 @@ function linkHtml(href: string, inner: string): string {
 }
 
 function footnoteReference(ctx: ExportContext, label: string): string {
-  const id = ctx.referenced.has(label) ? "" : ` id="fnref-${escapeHtml(label)}"`;
-  ctx.referenced.add(label);
+  const count = (ctx.referenceCounts.get(label) ?? 0) + 1;
+  ctx.referenceCounts.set(label, count);
+  // The first reference carries the plain anchor; the others add their place, as GitHub does
+  const id = ` id="fnref-${escapeHtml(label)}${count === 1 ? "" : `-${count}`}"`;
   return `<sup class="md-footnote-ref"><a href="#fn-${escapeHtml(label)}"${id}>${escapeHtml(label)}</a></sup>`;
 }
 
@@ -288,9 +290,18 @@ async function footnoteSection(ctx: ExportContext): Promise<string> {
       const inline =
         leading === undefined ? "" : (await itemsHtml(ctx, inlineItems(ctx.state, leading))).trim();
       const nested = rest.length > 0 ? `\n${await renderBlocks(ctx, rest)}` : "";
-      const back = ctx.referenced.has(label)
-        ? ` <a class="md-footnote-back" href="#fnref-${escapeHtml(label)}">↩</a>`
-        : "";
+      // One arrow per reference, the later ones counted, so each way back has its own link
+      const references = ctx.referenceCounts.get(label) ?? 0;
+      const back =
+        references === 0
+          ? ""
+          : ` ${Array.from(
+              { length: references },
+              (_, index) =>
+                `<a class="md-footnote-back" href="#fnref-${escapeHtml(label)}${
+                  index === 0 ? "" : `-${index + 1}`
+                }">↩${index === 0 ? "" : `<sup>${index + 1}</sup>`}</a>`,
+            ).join(" ")}`;
       return `<li id="fn-${escapeHtml(label)}">${inline}${back}${nested}</li>`;
     }),
   );
@@ -402,7 +413,7 @@ export async function documentHtml(state: EditorState, title: string): Promise<s
   const ctx: ExportContext = {
     state,
     definitions: [],
-    referenced: new Set(),
+    referenceCounts: new Map(),
     inlineStyles: false,
   };
   const body = await contentOf(ctx);
@@ -436,7 +447,7 @@ export async function markdownFragment(source: EditorState, markdown: string): P
   const ctx: ExportContext = {
     state: fragmentState(source, markdown),
     definitions: [],
-    referenced: new Set(),
+    referenceCounts: new Map(),
     inlineStyles: true,
   };
   return `<div class="md-document">\n${await contentOf(ctx)}\n</div>`;

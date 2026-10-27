@@ -108,6 +108,7 @@ export const hiIN = {
     fold: "समेटें",
     unfold: "फैलाएँ",
     foldedText: "समेटा गया टेक्स्ट",
+    footnoteBack: "संदर्भ पर वापस जाएँ",
   },
   dialogs: {
     copyButton: "कॉपी करें",

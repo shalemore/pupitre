@@ -110,6 +110,7 @@ export const svSE = {
     fold: "Fäll ihop",
     unfold: "Fäll ut",
     foldedText: "Ihopfälld text",
+    footnoteBack: "Tillbaka till referensen",
   },
   dialogs: {
     copyButton: "Kopiera",

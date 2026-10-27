@@ -109,6 +109,7 @@ export const ptPT = {
     fold: "Recolher",
     unfold: "Expandir",
     foldedText: "Texto recolhido",
+    footnoteBack: "Voltar à referência",
   },
   dialogs: {
     copyButton: "Copiar",

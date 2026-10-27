@@ -113,6 +113,7 @@ export const zhCN = {
     fold: "折叠",
     unfold: "展开",
     foldedText: "已折叠文本",
+    footnoteBack: "返回引用",
   },
   dialogs: {
     copyButton: "复制",

@@ -116,6 +116,7 @@ export const plPL = {
     fold: "Zwiń",
     unfold: "Rozwiń",
     foldedText: "Zwinięty tekst",
+    footnoteBack: "Wróć do odnośnika",
   },
   dialogs: {
     copyButton: "Kopiuj",

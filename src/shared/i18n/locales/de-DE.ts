@@ -110,6 +110,7 @@ export const deDE = {
     fold: "Einklappen",
     unfold: "Ausklappen",
     foldedText: "Eingeklappter Text",
+    footnoteBack: "Zurück zur Referenz",
   },
   dialogs: {
     copyButton: "Kopieren",

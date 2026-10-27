@@ -110,6 +110,7 @@ export const fiFI = {
     fold: "Kutista",
     unfold: "Laajenna",
     foldedText: "Kutistettu teksti",
+    footnoteBack: "Palaa viitteeseen",
   },
   dialogs: {
     copyButton: "Kopioi",

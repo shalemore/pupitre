@@ -111,6 +111,7 @@ export const isIS = {
     fold: "Fella saman",
     unfold: "Opna",
     foldedText: "Falinn texti",
+    footnoteBack: "Aftur á tilvísun",
   },
   dialogs: {
     copyButton: "Afrita",

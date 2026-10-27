@@ -110,6 +110,7 @@ export const jaJP = {
     fold: "折りたたむ",
     unfold: "展開",
     foldedText: "折りたたまれたテキスト",
+    footnoteBack: "参照元に戻る",
   },
   dialogs: {
     copyButton: "コピー",

@@ -116,6 +116,7 @@ export const ukUA = {
     fold: "Згорнути",
     unfold: "Розгорнути",
     foldedText: "Згорнутий текст",
+    footnoteBack: "Повернутися до посилання",
   },
   dialogs: {
     copyButton: "Копіювати",
