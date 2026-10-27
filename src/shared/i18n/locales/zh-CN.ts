@@ -5,7 +5,8 @@ export const zhCN = {
     appName: "Pupitre",
     untitledFileName: "未命名.md",
     // text-stats.ts counts each Han character as one word, so the count reads as 字, not 词
-    wordsCount: (count: number) => `${count} 字`,
+    wordsCount: (count: number, kind?: "word" | "character") =>
+      kind === "word" ? `${count} 词` : `${count} 字`,
     charsCount: (count: number) => `${count} 字符`,
     copy: "复制",
     selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,

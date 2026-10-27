@@ -7,7 +7,7 @@ import { markdownState } from "./testing";
 describe("countRange", () => {
   it("counts the readable text of a range", () => {
     const state = markdownState("A **bold** word");
-    expect(countRange(state, 0, state.doc.length)).toEqual({ words: 3, characters: 9 });
+    expect(countRange(state, 0, state.doc.length)).toEqual({ words: 3, characters: 9, cjk: 0 });
   });
 });
 
@@ -33,11 +33,11 @@ describe("createStatsTracker", () => {
     const state = markdownState("One two\n\nThree four");
     tracker.start(state);
     await new Promise((resolve) => setTimeout(resolve, 0));
-    expect(reports.at(-1)).toEqual({ words: 4, characters: 15 });
+    expect(reports.at(-1)).toEqual({ words: 4, characters: 15, cjk: 0 });
 
     const update = state.update({ changes: { from: 3, insert: " more" } });
     tracker.changed(update);
-    expect(reports.at(-1)).toEqual({ words: 5, characters: 19 });
+    expect(reports.at(-1)).toEqual({ words: 5, characters: 19, cjk: 0 });
 
     const selectAll = update.state.update({
       selection: { anchor: 0, head: update.state.doc.length },
@@ -46,8 +46,10 @@ describe("createStatsTracker", () => {
     expect(reports.at(-1)).toEqual({
       words: 5,
       characters: 19,
+      cjk: 0,
       selectedWords: 5,
       selectedCharacters: 19,
+      selectedCjk: 0,
     });
   });
 });

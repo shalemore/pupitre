@@ -1,3 +1,4 @@
+import { ensureSyntaxTree } from "@codemirror/language";
 import type { ChangeSet, EditorState } from "@codemirror/state";
 import { countText, countTextFast, type TextStats } from "@/lib/text-stats";
 import { readableText } from "./document-structure";
@@ -31,14 +32,16 @@ export function countRange(state: EditorState, from: number, to: number): TextSt
   if (to - from > EXACT_DOCUMENT_LIMIT) {
     let words = 0;
     let characters = 0;
+    let cjk = 0;
     for (let pos = from; pos < to;) {
       const end = sliceEnd(state, pos, to);
       const stats = countTextRange(state, pos, end);
       words += stats.words;
       characters += stats.characters;
+      cjk += stats.cjk;
       pos = end < to ? end + 1 : to;
     }
-    return { words, characters };
+    return { words, characters, cjk };
   }
   const text = readableText(state, from, to);
   return text.length <= EXACT_TEXT_LIMIT ? countText(text) : countTextFast(text);
@@ -65,6 +68,7 @@ async function countRangeInSlices(
 
   let words = 0;
   let characters = 0;
+  let cjk = 0;
   let from = start;
 
   const runSlices = async (): Promise<TextStats | undefined> => {
@@ -77,6 +81,7 @@ async function countRangeInSlices(
         const stats = countTextRange(state, from, to);
         words += stats.words;
         characters += stats.characters;
+        cjk += stats.cjk;
         from = to < end ? to + 1 : end;
       }
       paused = from < end;
@@ -86,7 +91,7 @@ async function countRangeInSlices(
       if (cancelled()) return undefined;
       return runSlices();
     }
-    return { words, characters };
+    return { words, characters, cjk };
   };
 
   return runSlices();
@@ -166,7 +171,7 @@ export interface StatsTracker {
  * without a debounce and without copying the document.
  */
 export function createStatsTracker(report: (stats: TextStats) => void): StatsTracker {
-  let totals: TextStats = { words: 0, characters: 0 };
+  let totals: TextStats = { words: 0, characters: 0, cjk: 0 };
   /** The state the totals belong to, once the first count has finished. */
   let baseline: EditorState | undefined;
   let latest: EditorState | undefined;
@@ -182,8 +187,10 @@ export function createStatsTracker(report: (stats: TextStats) => void): StatsTra
     report({
       words: totals.words,
       characters: totals.characters,
+      cjk: totals.cjk,
       selectedWords: selected.words,
       selectedCharacters: selected.characters,
+      selectedCjk: selected.cjk,
     });
   };
 
@@ -253,6 +260,7 @@ export function createStatsTracker(report: (stats: TextStats) => void): StatsTra
       totals = {
         words: Math.max(0, totals.words + next.words - old.words),
         characters: Math.max(0, totals.characters + next.characters - old.characters),
+        cjk: Math.max(0, totals.cjk + next.cjk - old.cjk),
       };
     }
     return true;
@@ -287,14 +295,25 @@ export function createStatsTracker(report: (stats: TextStats) => void): StatsTra
 
   return {
     start: (state) => {
-      latest = state;
-      baseline = state;
       if (state.doc.length <= EXACT_DOCUMENT_LIMIT) {
-        totals = countRange(state, 0, state.doc.length);
+        // A document just opened or replaced has no syntax tree in its state yet, and counting it
+        // then would read Markdown markers as text; parse what this size allows and take the state
+        // the parse reached before the first count, so the title bar never shows a number the next
+        // count has to correct
+        let current = state;
+        if (state.doc.length <= EXACT_TEXT_LIMIT) {
+          ensureSyntaxTree(state, state.doc.length, 100);
+          current = state.update({}).state;
+        }
+        latest = current;
+        baseline = current;
+        totals = countRange(current, 0, current.doc.length);
         counting = false;
-        reportState(state);
+        reportState(current);
         return;
       }
+      latest = state;
+      baseline = state;
       countAll(state);
     },
     changed: (update) => {

@@ -1,9 +1,12 @@
 export interface TextStats {
   words: number;
   characters: number;
+  /** Han, Hiragana and Katakana characters, which are counted one by one as words. */
+  cjk: number;
   /** Counted over the selection; absent while nothing is selected. */
   selectedWords?: number;
   selectedCharacters?: number;
+  selectedCjk?: number;
 }
 
 const wordSegmenter = new Intl.Segmenter(undefined, { granularity: "word" });
@@ -121,8 +124,9 @@ function isCombiningMark(code: number, text: string, start: number, end: number)
  * `countText`; the dense scripts that need a dictionary still go through the segmenter, one run at
  * a time, so they stay correct without paying for the rest of the document.
  */
-function countWordsFast(text: string): number {
+function countWordsFast(text: string): { words: number; cjk: number } {
   let words = 0;
+  let cjk = 0;
   let inWord = false;
   for (let index = 0; index < text.length;) {
     const code = text.codePointAt(index) ?? 0;
@@ -147,6 +151,7 @@ function countWordsFast(text: string): number {
 
     if (isCjk(code)) {
       words++;
+      cjk++;
       inWord = false;
       continue;
     }
@@ -190,7 +195,7 @@ function countWordsFast(text: string): number {
     }
     inWord = false;
   }
-  return words;
+  return { words, cjk };
 }
 
 /**
@@ -270,19 +275,22 @@ function countCharactersFast(text: string): number {
 
 export function countText(text: string): TextStats {
   let words = 0;
+  let cjkTotal = 0;
   for (const segment of wordSegmenter.segment(text)) {
     if (!segment.isWordLike) continue;
     const cjk = segment.segment.match(CJK_CHARACTER)?.length ?? 0;
+    cjkTotal += cjk;
     words += cjk > 0 ? cjk : 1;
   }
   let characters = 0;
   for (const { segment } of graphemeSegmenter.segment(text)) {
     if (segment.trim()) characters++;
   }
-  return { words, characters };
+  return { words, characters, cjk: cjkTotal };
 }
 
 /** The counts for a range large enough that `countText` would stall the editor. */
 export function countTextFast(text: string): TextStats {
-  return { words: countWordsFast(text), characters: countCharactersFast(text) };
+  const { words, cjk } = countWordsFast(text);
+  return { words, characters: countCharactersFast(text), cjk };
 }

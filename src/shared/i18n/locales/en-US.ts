@@ -2,7 +2,9 @@ export const enUS = {
   common: {
     appName: "Pupitre",
     untitledFileName: "Untitled.md",
-    wordsCount: (count: number) => (count === 1 ? "1 word" : `${count} words`),
+    /** The kind of count: a page of words counts words, a page of CJK text counts characters. */
+    wordsCount: (count: number, _kind?: "word" | "character") =>
+      count === 1 ? "1 word" : `${count} words`,
     charsCount: (count: number) => (count === 1 ? "1 char" : `${count} chars`),
     copy: "Copy",
     // A count of the selection beside the count of the document, in the order this language reads

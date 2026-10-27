@@ -4,7 +4,8 @@ export const koKR = {
   common: {
     appName: "Pupitre",
     untitledFileName: "제목 없음.md",
-    wordsCount: (count: number) => `${count} 단어`,
+    wordsCount: (count: number, kind?: "word" | "character") =>
+      kind === "word" ? `${count} 단어` : `${count} 글자`,
     charsCount: (count: number) => `${count} 글자`,
     copy: "복사",
     selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,

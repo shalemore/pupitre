@@ -65,15 +65,21 @@ export const MainWindow: Component = () => {
   const session = createDocumentSession(() => editor());
   const [outline, setOutline] = createSignal<OutlineHeading[]>([]);
   const [activeHeading, setActiveHeading] = createSignal(-1);
-  const [stats, setStats] = createSignal<TextStats>({ words: 0, characters: 0 });
+  const [stats, setStats] = createSignal<TextStats>({ words: 0, characters: 0, cjk: 0 });
+  // A page written mostly in Han or kana counts its characters one by one, the way Word counts
+  // Chinese; a page of words counts the words between spaces. The CJK count says which of the two
+  // a document follows, and the dictionary names the number after that, whatever the interface
+  // language is
+  const countKind = (): "word" | "character" =>
+    stats().cjk * 2 >= stats().words ? "character" : "word";
   // A selection is counted before the document totals, as "12 words / 300 words"; the dictionary
   // decides the order and the separator
   const wordsText = createMemo(() => {
     const { words, selectedWords } = stats();
-    const total = t().common.wordsCount(words);
+    const total = t().common.wordsCount(words, countKind());
     return selectedWords === undefined
       ? total
-      : t().common.selectedOfTotal(t().common.wordsCount(selectedWords), total);
+      : t().common.selectedOfTotal(t().common.wordsCount(selectedWords, countKind()), total);
   });
   const charsText = createMemo(() => {
     const { characters, selectedCharacters } = stats();
@@ -573,11 +579,16 @@ export const MainWindow: Component = () => {
         <Show when={session.activeDocument() !== undefined && settings().showWordCount}>
           <div
             data-bar-part="count"
+            // The character count is a second reading of a dense page; a page of words needs only
+            // the words beside them, and shows both counts when pointed at
+            title={`${wordsText()} · ${charsText()}`}
             class="text-2xs text-muted-foreground tabular-nums flex shrink-0 items-center gap-1.5 whitespace-nowrap me-2"
           >
             <span>{wordsText()}</span>
-            <span>·</span>
-            <span>{charsText()}</span>
+            <Show when={countKind() === "character"}>
+              <span>·</span>
+              <span>{charsText()}</span>
+            </Show>
           </div>
         </Show>
       </TitleBar>

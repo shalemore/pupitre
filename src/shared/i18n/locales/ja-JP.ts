@@ -4,7 +4,8 @@ export const jaJP = {
   common: {
     appName: "Pupitre",
     untitledFileName: "名称未設定.md",
-    wordsCount: (count: number) => `${count} 語`,
+    wordsCount: (count: number, kind?: "word" | "character") =>
+      kind === "word" ? `${count} 語` : `${count} 字`,
     charsCount: (count: number) => `${count} 文字`,
     copy: "コピー",
     selectedOfTotal: (part: string, total: string) => `${part} / ${total}`,
