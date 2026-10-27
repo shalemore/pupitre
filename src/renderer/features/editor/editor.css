@@ -55,6 +55,7 @@
   }
 
   .md-document {
+    cursor: var(--ui-text-cursor, text);
     --md-quote-indent: 1em;
     --md-list-indent: 1.6em;
     --md-block-indent: 0px;
@@ -776,7 +777,7 @@
 
   .md-table-view {
     border-collapse: collapse;
-    cursor: text;
+    cursor: var(--ui-text-cursor, text);
   }
 
   .md-table-view :is(th, td) {
