@@ -10,6 +10,7 @@ Sätt markören i **fet text**, ett `kodstycke` eller en [länk](https://github.
 
 - Ta bort en markering för att ta bort formateringen; lägg till eller ta bort ett `#` framför en rubrik för att ändra nivån.
 - Markerad text visar sin syntax, och kopiering kopierar Markdown.
+- <kbd>Ctrl</kbd>+klick följer en länk: webbadresser öppnas i webbläsaren, `#rubrik`-länkar rullar till rubriken och länkar till en Markdown-fil bredvid dokumentet öppnar den.
 - Formatering finns i menyerna **Stycke** och **Format**, i snabbmenyn och i kortkommandona nedan.
 
 <details>
@@ -30,7 +31,7 @@ Sätt markören i **fet text**, ett `kodstycke` eller en [länk](https://github.
 | Tabell                       | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Sök / Ersätt                 | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
 | Öppna stängd flik igen       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
-| Disposition                  | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Sidofält                     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Källkodsläge                 | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Fokusläge / Skrivmaskinsläge | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Återställ zoom               | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
@@ -41,13 +42,13 @@ Sätt markören i **fet text**, ett `kodstycke` eller en [länk](https://github.
 ## Skrivlägen
 
 - **Fokusläge** dämpar allt utom stycket du skriver i.
-- **Skrivmaskinsläge** håller raden du skriver på i mitten av fönstret.
+- **Skrivmaskinsläge** håller raden du skriver på i mitten av fönstret eller nära dess över- eller underkant, enligt Inställningar › Redigerare.
 
 Båda finns i menyn **Visa** och under Inställningar › Redigerare och kan kombineras.
 
 ## Fönsterstil
 
-Inställningar › Utseende › Fönsterstil växlar mellan **Klassisk** och **Immersiv**. I den immersiva stilen ligger dokumentet på ett kort i fönstret; namnlisten och dispositionen flyttar undan så snart du skriver eller rullar och kommer tillbaka när pekaren når fönstrets överkant eller startkant.
+Inställningar › Utseende › Fönsterstil växlar mellan **Klassisk** och **Immersiv**. I den immersiva stilen visas dokumentet på ett kort i fönstret; titelraden och sidofälten döljs så snart du skriver eller rullar och kommer tillbaka när pekaren når fönstrets överkant eller sidokant. Fästa sidofält hålls öppna, och du ändrar bredden genom att dra i kanten på ett sidofält.
 
 ## Filer och bilder
 
@@ -55,6 +56,7 @@ Inställningar › Utseende › Fönsterstil växlar mellan **Klassisk** och **I
 - Inklistrade bilder sparas i en mapp bredvid dokumentet (`assets` som standard, Inställningar › Markdown). Ett dokument som ännu inte sparats behåller dem i minnet och skriver dem vid första sparningen.
 - Inställningar › Allmänt › Standardapp för Markdown gör att Pupitre öppnar `.md`-filer från filhanteraren.
 - Inställningarna sparas i `settings.json`; Inställningar › Om visar mappen. Bara värden som skiljer sig från standard skrivs, och ett fält som inte kan läsas faller tillbaka på standard utan att påverka de andra.
+- En mapp kan ha egna inställningar: när en mapp är öppen visar inställningarna en växel mellan **Globalt** och **Den här mappen**. Ändringar under **Den här mappen** sparas i `.pupitre/settings.json` i den; filen skapas vid den första ändringen och läggs över de globala inställningarna så länge mappen är öppen. Återställning av en inställning där ger den det globala värdet tillbaka.
 
 ## Teman
 
@@ -94,7 +96,7 @@ Teman följer med appen: varje tema är en mapp i `src/renderer/themes/<namn>/` 
 
 ### Text
 
-**Fet**, _kursiv_, ~~genomstruken~~, `infogad kod`, [länkar](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> och <mark>markeringar</mark>. Infogad HTML renderas när det är ett komplett element och visas som källkod annars.
+**Fet**, _kursiv_, ~~genomstruken~~, `infogad kod`, [länkar](https://commonmark.org), H~2~O, x^2^, ==markering==, :tada: och <kbd>Esc</kbd>. Infogad HTML renderas när det är ett komplett element och visas som källkod annars. Ett stycke som bara innehåller `[TOC]` blir en lista över dokumentets rubriker.
 
 > Ett citat.
 >
@@ -141,6 +143,8 @@ Infogad $e^{i\pi} + 1 = 0$ och som block:
 $$
 \int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
 $$
+
+Kemiska ekvationer skrivs med `\ce`: $\ce{2H2 + O2 -> 2H2O}$.
 
 ### Diagram
 

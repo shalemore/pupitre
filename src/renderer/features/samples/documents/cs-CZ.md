@@ -10,6 +10,7 @@ Umístěte kurzor do **tučného textu**, `vloženého kódu` nebo [odkazu](http
 
 - Smazáním značky formátování odstraníte; přidáním nebo smazáním `#` před nadpisem změníte jeho úroveň.
 - Výběr textu ukáže jeho syntaxi a kopírování kopíruje Markdown.
+- <kbd>Ctrl</kbd>+kliknutí otevře odkaz: webové adresy se otevřou v prohlížeči, odkazy `#nadpis` posunou na nadpis a odkazy na soubor Markdown vedle dokumentu jej otevřou.
 - Formátování je v nabídkách **Odstavec** a **Formát**, v místní nabídce a ve zkratkách níže.
 
 <details>
@@ -30,7 +31,7 @@ Umístěte kurzor do **tučného textu**, `vloženého kódu` nebo [odkazu](http
 | Tabulka                            | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Najít / Nahradit                   | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
 | Znovu otevřít zavřenou kartu       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
-| Osnova                             | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Postranní panely                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Režim zdrojového kódu              | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Režim soustředění / psacího stroje | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Obnovit zvětšení                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
@@ -41,13 +42,13 @@ Umístěte kurzor do **tučného textu**, `vloženého kódu` nebo [odkazu](http
 ## Režimy psaní
 
 - **Režim soustředění** ztlumí vše kromě odstavce, který píšete.
-- **Režim psacího stroje** udržuje psaný řádek uprostřed okna.
+- **Režim psacího stroje** udržuje psaný řádek uprostřed okna nebo blízko jeho horního či dolního okraje, jak určují Předvolby › Editor.
 
-Oba jsou v nabídce **Zobrazení** a v Předvolby › Editor a lze je kombinovat.
+Oba jsou v nabídce **Zobrazení** a v Předvolbách › Editor a lze je kombinovat.
 
 ## Styl okna
 
-Předvolby › Vzhled › Styl okna přepíná mezi **Klasickým** a **Imersivním**. V imersivním stylu leží dokument na kartě uvnitř okna; záhlaví a osnova ustoupí, jakmile začnete psát nebo rolovat, a vrátí se, když ukazatel dosáhne horního nebo počátečního okraje okna.
+Předvolby › Vzhled › Styl okna přepíná mezi **Klasickým** a **Imersivním**. V imersivním stylu je dokument na kartě uvnitř okna; záhlaví a postranní panely se skryjí, jakmile začnete psát nebo rolovat, a vrátí se, když ukazatel dosáhne horního nebo bočního okraje okna. Připnuté postranní panely zůstávají otevřené a přetažením okraje panelu změníte jeho šířku.
 
 ## Soubory a obrázky
 
@@ -55,6 +56,7 @@ Předvolby › Vzhled › Styl okna přepíná mezi **Klasickým** a **Imersivn�
 - Vložené obrázky se ukládají do složky vedle dokumentu (ve výchozím nastavení `assets`, Předvolby › Markdown). Neuložený dokument je drží v paměti a zapíše je při prvním uložení.
 - Předvolby › Obecné › Výchozí aplikace pro Markdown zajistí, že Pupitre otevírá soubory `.md` ze správce souborů.
 - Předvolby se ukládají do `settings.json`; Předvolby › O aplikaci zobrazí jeho složku. Ukládají se jen hodnoty odlišné od výchozích a pole, které nelze přečíst, se vrátí na výchozí, aniž by ovlivnilo ostatní.
+- Složka může mít vlastní předvolby: když je složka otevřená, zobrazí se v předvolbách přepínač mezi **Globální** a **Tato složka**. Změny v části **Tato složka** se ukládají do `.pupitre/settings.json` v ní; soubor vznikne při první změně a překrývá globální předvolby, dokud je tato složka otevřená. Obnovením předvolby tam se vrátí globální hodnota.
 
 ## Motivy
 
@@ -94,7 +96,7 @@ Motivy jsou součástí aplikace: každý je složka v `src/renderer/themes/<ná
 
 ### Text
 
-**Tučné**, _kurzíva_, ~~přeškrtnutí~~, `vložený kód`, [odkazy](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> a <mark>zvýraznění</mark>. Vložené HTML se vykreslí, když tvoří kompletní prvek, jinak se zobrazí jako zdrojový kód.
+**Tučně**, _kurzíva_, ~~přeškrtnutí~~, `vložený kód`, [odkazy](https://commonmark.org), H~2~O, x^2^, ==zvýraznění==, :tada: a <kbd>Esc</kbd>. Vložené HTML se vykreslí, když tvoří kompletní prvek, jinak se zobrazí jako zdrojový kód. Odstavec obsahující pouze `[TOC]` se změní na seznam nadpisů dokumentu.
 
 > Citace.
 >
@@ -141,6 +143,8 @@ V textu $e^{i\pi} + 1 = 0$ a jako blok:
 $$
 \int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
 $$
+
+Chemické rovnice se zapisují pomocí `\ce`: $\ce{2H2 + O2 -> 2H2O}$.
 
 ### Diagramy
 

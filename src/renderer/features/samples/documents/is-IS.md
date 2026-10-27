@@ -2,14 +2,15 @@
 
 ![Pupitre](./logo.svg)
 
-Pupitre er Markdown-ritill fyrir skjáborð. Skjölin eru venjulegar `.md`-skrár: það sem þú sér er birt á staðnum og Markdown-málfræðin birtist þar sem bendillinn stendur. Þessi leiðarvísir er líka dæmi um það sem ritillinn birtir; breyttu honum að vild, hann er aðeins vistaður ef þú velur **Vista sem**.
+Pupitre er Markdown-ritill fyrir skjáborð. Skjölin eru venjulegar `.md`-skrár: það sem þú sér er birt á staðnum og Markdown-málskipanin birtist þar sem bendillinn stendur. Þessi leiðarvísir er líka dæmi um það sem ritillinn birtir; breyttu honum að vild, hann er aðeins vistaður ef þú velur **Vista sem**.
 
 ## Breytingar
 
-Settu bendilinn inn í **feitletraðan texta**, `kóða í texta` eða [hlekk](https://github.com/shalemore/pupitre) og málfræðin birtist í kringum hann. Merkin hegða sér eins og texti:
+Settu bendilinn inn í **feitletraðan texta**, `kóða í texta` eða [hlekk](https://github.com/shalemore/pupitre) og málskipanin birtist í kringum hann. Merkin hegða sér eins og texti:
 
 - Eyddu merki til að fjarlægja sniðið; bættu við eða eyddu `#` framan við fyrirsögn til að breyta stigi hennar.
-- Valinn texti sýnir táknmál sitt og afritun afritar Markdown.
+- Valinn texti sýnir málskipan sína og afritun afritar Markdown.
+- <kbd>Ctrl</kbd>+smellur fylgir hlekki: vefslóðir opnast í vafranum, `#fyrirsögn`-hlekkir skruna að fyrirsögninni og hlekkir á Markdown-skrá við hlið skjalsins opna hana.
 - Snið er í valmyndunum **Málsgrein** og **Snið**, í hægrismellsvalmynd og í flýtileiðunum hér fyrir neðan.
 
 <details>
@@ -30,35 +31,36 @@ Settu bendilinn inn í **feitletraðan texta**, `kóða í texta` eða [hlekk](h
 | Tafla                               | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Finna / Skipta út                   | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
 | Opna lokaðan flipa aftur            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
-| Efnisyfirlit                        | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Hliðarstikur                        | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Frumkóðahamur                       | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Einbeitingarhamur / Skrifvélarhamur | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Endurstilla aðdrátt                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
-| Forstillingar                       | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
+| Stillingar                          | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>
 
 ## Rithemur
 
 - **Einbeitingarhamur** dempar allt nema málsgreinina sem þú ert að skrifa.
-- **Skrifvélarhamur** heldur línunni sem þú ert að skrifa í miðju gluggans.
+- **Skrifvélarhamur** heldur línunni sem þú ert að skrifa í miðju gluggans eða nálægt efri eða neðri brún hans, eins og tilgreint er í Stillingum › Ritill.
 
-Báðir eru í valmyndinni **Sýna** og í Forstillingar › Ritill, og þá má nota saman.
+Báðir eru í valmyndinni **Sýna** og í Stillingum › Ritill, og þá má nota saman.
 
 ## Stíll glugga
 
-Forstillingar › Útlit › Stíll glugga skiptir milli **Klassísks** og **Yfirgripsmikils**. Í yfirgripsmikla stílnum stendur skjalið á spjaldi inni í glugganum; titilstikan og efnisyfirlitið víkja um leið og þú skrifar eða skrunar og koma aftur þegar bendillinn nær efri eða upphafskanti gluggans.
+Stillingar › Útlit › Stíll glugga skiptir milli **Klassísks** og **Umlykjandi**. Í umlykjandi stílnum stendur skjalið á spjaldi inni í glugganum; titilstikan og hliðarstikurnar fara í felur um leið og þú skrifar eða skrunar og koma aftur þegar bendillinn nær efri eða hliðarkanti gluggans. Festar hliðarstikur haldast opnar, og þú breytir breidd þeirra með því að draga í brún stiku.
 
 ## Skrár og myndir
 
-- Pupitre heldur línulokum skrárinnar sem var opnuð, nema Forstillingar › Markdown segi annað. Táknmálið sem sniðskipanir setja inn er einnig stillt þar.
-- Límdar myndir eru vistaðar í möppu við skjalið (`assets` sjálfgefið, Forstillingar › Markdown). Skjal sem ekki hefur verið vistað heldur þeim í minni og skrifar þær við fyrstu vistun.
-- Forstillingar › Almennt › Sjálfgefna Markdown-forritið lætur Pupitre opna `.md`-skrár úr skráastjóranum.
-- Forstillingarnar eru geymdar í `settings.json`; Forstillingar › Um sýnir möppuna. Aðeins gildi sem víkja frá sjálfgefnum eru skrifuð, og reitur sem ekki er læsilegur fer aftur í sjálfgefið án þess að hafa áhrif á aðra.
+- Pupitre heldur línulokum skrárinnar sem var opnuð, nema Stillingar › Markdown segi annað. Táknmálið sem sniðskipanir setja inn er einnig stillt þar.
+- Límdar myndir eru vistaðar í möppu við skjalið (`assets` sjálfgefið, Stillingar › Markdown). Skjal sem ekki hefur verið vistað heldur þeim í minni og skrifar þær við fyrstu vistun.
+- Stillingar › Almennt › Sjálfgefna Markdown-forritið lætur Pupitre opna `.md`-skrár úr skráastjóranum.
+- Stillingarnar eru geymdar í `settings.json`; Stillingar › Um sýnir möppuna. Aðeins gildi sem víkja frá sjálfgefnum eru skrifuð, og reitur sem ekki er læsilegur fer aftur í sjálfgefið án þess að hafa áhrif á aðra.
+- Mappa getur haft eigin stillingar: þegar mappa er opin sýna stillingarnar rofa milli **Almennt** og **Þessi mappa**. Breytingar undir **Þessi mappa** fara í `.pupitre/settings.json` í henni; skráin verður til við fyrstu breytingu og leggst yfir almennu stillingarnar meðan mappan er opin. Endurstilling þar skilar stillingunni í almenna gildið.
 
 ## Þemu
 
-Þema skilgreinir stíl alls gluggans og skjalsins. Forstillingar › Útlit listar þau með litakerfunum sem þau styðja, og hægt er að velja sérstakt þema fyrir dökkan ham.
+Þema skilgreinir stíl alls gluggans og skjalsins. Stillingar › Útlit listar þau með litakerfunum sem þau styðja, og hægt er að velja sérstakt þema fyrir dökkan ham.
 
 Þemun fylgja forritinu: hvert þema er mappa í `src/renderer/themes/<nafn>/` með `index.css`, og nafn möppunnar er nafn þemans. Leturgerðir eða myndir sem þema notar eru í sömu möppu og vísað er til þeirra með afstæðum `url()`.
 
@@ -94,7 +96,7 @@ Forstillingar › Útlit › Stíll glugga skiptir milli **Klassísks** og **Yfi
 
 ### Texti
 
-**Feitletrað**, _skáletrað_, ~~yfirstrikað~~, `kóði í texta`, [hlekkir](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> og <mark>markanir</mark>. HTML í texta er birt þegar það er heil eining og birt sem frumkóði annars.
+**Feitletrað**, _skáletrað_, ~~yfirstrikað~~, `kóði í texta`, [hlekkir](https://commonmark.org), H~2~O, x^2^, ==auðkenning==, :tada: og <kbd>Esc</kbd>. HTML í texta er birt þegar það er heil eining og birt sem frumkóði annars. Málsgrein sem inniheldur aðeins `[TOC]` verður listi yfir fyrirsagnir skjalsins.
 
 > Tilvitnun.
 >
@@ -141,6 +143,8 @@ function countWords(text: string): number {
 $$
 \int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
 $$
+
+Efnajöfnur eru skrifaðar með `\ce`: $\ce{2H2 + O2 -> 2H2O}$.
 
 ### Skýringarmyndir
 

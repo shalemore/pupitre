@@ -6,11 +6,12 @@ Pupitre adalah editor Markdown untuk desktop. Dokumen berupa berkas `.md` biasa:
 
 ## Menyunting
 
-Letakkan kursor di dalam **teks tebal**, sebuah `rentang kode`, atau sebuah [tautan](https://github.com/shalemore/pupitre) dan sintaksnya muncul di sekelilingnya. Penandanya berperilaku seperti teks:
+Letakkan kursor di dalam **teks tebal**, sebuah `kode sebaris`, atau sebuah [tautan](https://github.com/shalemore/pupitre) dan sintaksnya muncul di sekelilingnya. Penandanya berperilaku seperti teks:
 
 - Hapus penanda untuk menghapus formatnya; tambah atau hapus `#` di depan judul untuk mengubah tingkatnya.
 - Memilih teks menampilkan sintaksnya, dan menyalin akan menyalin Markdown.
-- Pemformatan tersedia di menu **Paragraf** dan **Format**, menu klik kanan, serta pintasan di bawah.
+- <kbd>Ctrl</kbd>+klik mengikuti tautan: alamat web terbuka di peramban, tautan `#judul` menggulir ke judul tersebut, dan tautan ke berkas Markdown di samping dokumen akan membukanya.
+- Pemformatan tersedia di menu **Paragraf** dan **Format**, menu konteks, serta pintasan di bawah.
 
 <details>
 <summary>Pintasan papan ketik (Ctrl adalah ⌘ di macOS)</summary>
@@ -30,7 +31,7 @@ Letakkan kursor di dalam **teks tebal**, sebuah `rentang kode`, atau sebuah [tau
 | Tabel                         | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Cari / Ganti                  | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
 | Buka Kembali Tab yang Ditutup | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
-| Kerangka                      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Bilah samping                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Mode Kode Sumber              | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Mode fokus / mesin tik        | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Atur ulang perbesaran         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
@@ -41,13 +42,13 @@ Letakkan kursor di dalam **teks tebal**, sebuah `rentang kode`, atau sebuah [tau
 ## Mode menulis
 
 - **Mode fokus** meredupkan semua kecuali paragraf yang sedang Anda tulis.
-- **Mode mesin tik** menjaga baris yang sedang Anda tulis tetap di tengah jendela.
+- **Mode mesin tik** menjaga baris yang sedang Anda tulis tetap di tengah jendela, atau di dekat bagian atas atau bawah jendela, sesuai dengan Preferensi › Editor.
 
 Keduanya ada di menu **Tampilan** dan di Preferensi › Editor, serta dapat digabungkan.
 
 ## Gaya jendela
 
-Preferensi › Tampilan › Gaya jendela berganti antara **Klasik** dan **Imersif**. Pada gaya imersif dokumen berada dalam kartu di dalam jendela; bilah judul dan kerangka menyingkir begitu Anda mengetik atau menggulir, lalu kembali saat penunjuk mencapai bagian atas atau tepi awal jendela.
+Preferensi › Tampilan › Gaya jendela berganti antara **Klasik** dan **Imersif**. Pada gaya imersif dokumen berada dalam kartu di dalam jendela; bilah judul dan bilah samping menghilang begitu Anda mengetik atau menggulir, lalu kembali saat penunjuk mencapai bagian atas atau tepi samping jendela. Menyematkan bilah samping akan menjaganya tetap terbuka, dan menyeret tepi bilah samping mengubah ukurannya.
 
 ## Berkas dan gambar
 
@@ -55,6 +56,7 @@ Preferensi › Tampilan › Gaya jendela berganti antara **Klasik** dan **Imersi
 - Gambar yang ditempel disimpan di folder di samping dokumen (`assets` secara bawaan, Preferensi › Markdown). Dokumen yang belum disimpan menyimpannya di memori dan menuliskannya saat pertama kali disimpan.
 - Preferensi › Umum › Aplikasi Markdown bawaan membuat Pupitre membuka berkas `.md` dari pengelola berkas.
 - Preferensi disimpan di `settings.json`; Preferensi › Tentang menampilkan foldernya. Hanya nilai yang berbeda dari bawaannya yang ditulis, dan bidang yang tidak dapat dibaca kembali ke bawaannya tanpa memengaruhi yang lain.
+- Sebuah folder dapat memiliki pengaturannya sendiri: saat folder terbuka, Preferensi menampilkan tombol pilihan antara **Global** dan **Folder Ini**. Yang Anda ubah di bawah **Folder Ini** masuk ke `.pupitre/settings.json` di dalamnya, yang dibuat pada perubahan pertama dan dilapisi di atas pengaturan global setiap kali folder itu terbuka. Mengatur ulang pengaturan di sana mengembalikannya ke nilai global.
 
 ## Tema
 
@@ -94,14 +96,14 @@ Tema disertakan bersama aplikasi: masing-masing berupa folder di `src/renderer/t
 
 ### Teks
 
-**Tebal**, _miring_, ~~coret~~, `kode sebaris`, [tautan](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd>, dan <mark>sorotan</mark>. HTML sebaris dirender bila merupakan elemen yang utuh dan ditampilkan sebagai sumber bila tidak.
+**Tebal**, _miring_, ~~coret~~, `kode sebaris`, [tautan](https://commonmark.org), H~2~O, x^2^, ==sorotan==, :tada:, dan <kbd>Esc</kbd>. HTML sebaris dirender bila merupakan elemen yang utuh dan ditampilkan sebagai sumber bila tidak. Paragraf yang hanya berisi `[TOC]` menjadi daftar judul dokumen.
 
 > Sebuah kutipan.
 >
 > > Kutipan bersarang.
 
 > [!NOTE]
-> Peringatan GitHub: `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, dan `[!CAUTION]`.
+> Notifikasi GitHub: `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, dan `[!CAUTION]`.
 
 > [!WARNING]
 > Penandanya harus berada di baris pertama kutipan.
@@ -111,7 +113,7 @@ Tema disertakan bersama aplikasi: masing-masing berupa folder di `src/renderer/t
 1. Bernomor
    - Bersarang, berbutir
    - [x] Tugas dapat ditandai selesai
-   - [ ] Dan dibatalkan
+   - [ ] Dan tidak dicentang
 2. Daftar dapat memuat kode:
 
    ```sh
@@ -136,11 +138,13 @@ function countWords(text: string): number {
 
 ### Matematika
 
-Sebaris $e^{i\pi} + 1 = 0$ dan tampilan:
+Sebaris $e^{i\pi} + 1 = 0$ dan tampilan blok:
 
 $$
 \int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
 $$
+
+Persamaan kimia memakai `\ce`: $\ce{2H2 + O2 -> 2H2O}$.
 
 ### Diagram
 

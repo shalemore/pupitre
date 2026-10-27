@@ -10,6 +10,7 @@ Coloque o cursor dentro de **texto a negrito**, de um `trecho de código` ou de 
 
 - Apague um marcador para remover a formatação; acrescente ou apague um `#` antes de um título para mudar o nível.
 - Ao selecionar texto, a sua sintaxe fica visível, e copiar copia Markdown.
+- <kbd>Ctrl</kbd>+clique segue uma ligação: os endereços web abrem no navegador, as ligações `#título` levam ao título e as ligações para um ficheiro Markdown ao lado do documento abrem-no.
 - A formatação está nos menus **Parágrafo** e **Formato**, no menu de contexto e nos atalhos abaixo.
 
 <details>
@@ -30,7 +31,7 @@ Coloque o cursor dentro de **texto a negrito**, de um `trecho de código` ou de 
 | Tabela                              | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Localizar / Substituir              | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
 | Reabrir separador fechado           | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
-| Índice                              | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Barras laterais                     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Modo de código-fonte                | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Modo de concentração / de escrever  | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Repor zoom                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
@@ -41,13 +42,13 @@ Coloque o cursor dentro de **texto a negrito**, de um `trecho de código` ou de 
 ## Modos de escrita
 
 - O **modo de concentração** atenua tudo exceto o parágrafo em que está a escrever.
-- O **modo máquina de escrever** mantém a linha em escrita no centro da janela.
+- O **modo máquina de escrever** mantém a linha em escrita no centro da janela, ou perto do topo ou do fundo conforme Preferências › Editor.
 
 Ambos estão no menu **Ver** e em Preferências › Editor, e podem ser combinados.
 
 ## Estilo da janela
 
-Preferências › Aparência › Estilo da janela alterna entre **Clássico** e **Imersivo**. No estilo imersivo o documento fica num cartão dentro da janela; a barra de título e o índice afastam-se assim que escreve ou desloca, e voltam quando o ponteiro chega ao topo ou à margem inicial da janela.
+Preferências › Aparência › Estilo da janela alterna entre **Clássico** e **Imersivo**. No estilo imersivo o documento fica num cartão dentro da janela; a barra de título e as barras laterais recolhem-se quando escreve ou desloca e voltam quando o ponteiro chega ao topo ou a uma **borda** lateral da janela. A afixação de uma barra lateral mantém as barras laterais abertas, e arrastar a **borda** de uma barra lateral redimensiona-a.
 
 ## Ficheiros e imagens
 
@@ -55,6 +56,7 @@ Preferências › Aparência › Estilo da janela alterna entre **Clássico** e 
 - As imagens coladas são guardadas numa pasta ao lado do documento (`assets` por predefinição, Preferências › Markdown). Um documento ainda não guardado mantém-nas em memória e escreve-as no primeiro guardar.
 - Preferências › Geral › Aplicação Markdown predefinida faz com que o Pupitre abra ficheiros `.md` a partir do gestor de ficheiros.
 - As preferências ficam em `settings.json`; Preferências › Acerca mostra a sua pasta. Só são escritos os valores diferentes dos predefinidos, e um campo ilegível volta à predefinição sem afetar os outros.
+- Uma pasta pode ter preferências próprias: com uma pasta aberta, as Preferências mostram um seletor entre **Global** e **Esta pasta**. As alterações em **Esta pasta** vão para `.pupitre/settings.json`, criado na primeira alteração e sobreposto às preferências globais; repor um valor devolve o **valor global**.
 
 ## Temas
 
@@ -94,7 +96,7 @@ Os temas vêm com a aplicação: cada um é uma pasta em `src/renderer/themes/<n
 
 ### Texto
 
-**Negrito**, _itálico_, ~~rasurado~~, `código em linha`, [ligações](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> e <mark>destaques</mark>. O HTML em linha é renderizado quando é um elemento completo e mostrado como código caso contrário.
+**Negrito**, _itálico_, ~~rasurado~~, `código em linha`, [ligações](https://commonmark.org), H~2~O, x^2^, ==destaques==, :tada: e <kbd>Esc</kbd>. O HTML em linha é renderizado quando é um elemento completo e mostrado como código-fonte caso contrário. Um parágrafo que contém apenas `[TOC]` torna-se numa lista dos títulos do documento.
 
 > Uma citação.
 >
@@ -109,7 +111,7 @@ Os temas vêm com a aplicação: cada um é uma pasta em `src/renderer/themes/<n
 ### Listas
 
 1. Numerada
-   - Aninhada, com marcas
+   - Aninhada, com marcadores
    - [x] As tarefas podem ser marcadas
    - [ ] E desmarcadas
 2. As listas podem conter código:
@@ -120,10 +122,10 @@ Os temas vêm com a aplicação: cada um é uma pasta em `src/renderer/themes/<n
 
 ### Tabela
 
-| Esquerda | Centro | Direita |
-| :------- | :----: | ------: |
-| Célula   | Célula |    1.00 |
-| Mais     | Texto  |   10.50 |
+| Esquerda   | Centro | Direita |
+| :--------- | :----: | ------: |
+| Célula     | Célula |    1.00 |
+| Mais longa | Texto  |   10.50 |
 
 ### Código
 
@@ -141,6 +143,8 @@ Em linha $e^{i\pi} + 1 = 0$ e em bloco:
 $$
 \int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
 $$
+
+As equações químicas usam `\ce`: $\ce{2H2 + O2 -> 2H2O}$.
 
 ### Diagramas
 

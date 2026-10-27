@@ -6,10 +6,11 @@ O Pupitre é um editor de Markdown para desktop. Os documentos são arquivos `.m
 
 ## Edição
 
-Mova o cursor para dentro de um **texto em negrito**, um `trecho de código` ou um [link](https://github.com/shalemore/pupitre) e a sintaxe aparece ao redor. Os marcadores se comportam como texto:
+Mova o cursor para um **texto em negrito**, um `trecho de código` ou um [link](https://github.com/shalemore/pupitre) e a sintaxe aparece ao redor. Os marcadores se comportam como texto:
 
 - Apague um marcador para remover a formatação; acrescente ou apague um `#` antes de um título para mudar o nível.
 - Ao selecionar texto, a sintaxe dele aparece, e copiar copia Markdown.
+- <kbd>Ctrl</kbd>+clique segue um link: endereços web abrem no navegador, links `#título` rolam até o título e links para um arquivo Markdown ao lado do documento o abrem.
 - A formatação está nos menus **Parágrafo** e **Formatar**, no menu de contexto e nos atalhos abaixo.
 
 <details>
@@ -30,7 +31,7 @@ Mova o cursor para dentro de um **texto em negrito**, um `trecho de código` ou 
 | Tabela                               | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Localizar / Substituir               | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
 | Reabrir aba fechada                  | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
-| Estrutura                            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Barras laterais                      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Modo código-fonte                    | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Modo foco / Modo máquina de escrever | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Redefinir zoom                       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
@@ -41,13 +42,13 @@ Mova o cursor para dentro de um **texto em negrito**, um `trecho de código` ou 
 ## Modos de escrita
 
 - O **Modo foco** esmaece tudo, exceto o parágrafo que você está escrevendo.
-- O **Modo máquina de escrever** mantém a linha que você escreve no meio da janela.
+- O **Modo máquina de escrever** mantém a linha que você escreve no meio da janela, ou perto do topo ou da base conforme Preferências › Editor.
 
 Ambos estão no menu **Exibir** e em Preferências › Editor, e podem ser combinados.
 
 ## Estilo da janela
 
-Preferências › Aparência › Estilo da janela alterna entre **Clássico** e **Imersivo**. No estilo imersivo o documento fica em um cartão dentro da janela; a barra de título e a estrutura sai do caminho quando você digita ou rola e voltam quando o ponteiro chega ao topo ou à borda inicial da janela.
+Preferências › Aparência › Estilo da janela alterna entre **Clássico** e **Imersivo**. No estilo imersivo o documento fica em um cartão dentro da janela; a barra de título e as barras laterais se recolhem quando você digita ou rola e voltam quando o ponteiro chega ao topo ou a uma borda lateral da janela. A fixação de uma barra lateral mantém as barras laterais abertas, e arrastar a borda de uma barra lateral redimensiona-a.
 
 ## Arquivos e imagens
 
@@ -55,6 +56,7 @@ Preferências › Aparência › Estilo da janela alterna entre **Clássico** e 
 - As imagens coladas são salvas em uma pasta ao lado do documento (`assets` por padrão, Preferências › Markdown). Um documento ainda não salvo as mantém na memória e as grava no primeiro salvamento.
 - Preferências › Geral › App padrão para Markdown faz o Pupitre abrir arquivos `.md` a partir do gerenciador de arquivos.
 - As preferências ficam em `settings.json`; Preferências › Sobre mostra a pasta. Só são gravados os valores diferentes dos padrões, e um campo ilegível volta ao padrão sem afetar os outros.
+- Uma pasta pode ter preferências próprias: com uma pasta aberta, as Preferências mostram um seletor entre **Global** e **Esta pasta**. As alterações em **Esta pasta** vão para `.pupitre/settings.json`, criado na primeira alteração e sobreposto às preferências globais; restaurar um valor devolve o **valor global**.
 
 ## Temas
 
@@ -94,7 +96,7 @@ Os temas acompanham o app: cada um é uma pasta em `src/renderer/themes/<name>/`
 
 ### Texto
 
-**Negrito**, _itálico_, ~~tachado~~, `código embutido`, [links](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> e <mark>destaques</mark>. O HTML embutido é renderizado quando é um elemento completo e exibido como código-fonte caso contrário.
+**Negrito**, _itálico_, ~~tachado~~, `código embutido`, [links](https://commonmark.org), H~2~O, x^2^, ==destaques==, :tada: e <kbd>Esc</kbd>. O HTML embutido é renderizado quando é um elemento completo e mostrado como código-fonte caso contrário. Um parágrafo que contém apenas `[TOC]` vira uma lista dos títulos do documento.
 
 > Uma citação.
 >
@@ -141,6 +143,8 @@ Em linha $e^{i\pi} + 1 = 0$ e em bloco:
 $$
 \int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
 $$
+
+Equações químicas usam `\ce`: $\ce{2H2 + O2 -> 2H2O}$.
 
 ### Diagramas
 

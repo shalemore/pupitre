@@ -10,6 +10,7 @@ Sijoita kursori **lihavoituun tekstiin**, `rivinsisäiseen koodiin` tai [linkkii
 
 - Poista merkki poistaaksesi muotoilun; lisää tai poista `#` otsikon edestä muuttaaksesi sen tasoa.
 - Valittu teksti näyttää syntaksinsa, ja kopiointi kopioi Markdownia.
+- <kbd>Ctrl</kbd>+napsautus seuraa linkkiä: verkko-osoitteet avautuvat selaimessa, `#otsikko`-linkit vierittävät otsikkoon ja viereisen Markdown-tiedoston linkit avaavat tiedoston.
 - Muotoilu on **Kappale**- ja **Muoto**-valikoissa, pikavalikossa ja alla olevissa pikanäppäimissä.
 
 <details>
@@ -30,7 +31,7 @@ Sijoita kursori **lihavoituun tekstiin**, `rivinsisäiseen koodiin` tai [linkkii
 | Taulukko                             | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Etsi / Korvaa                        | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
 | Avaa suljettu välilehti uudelleen    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
-| Sisällysluettelo                     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Sivupalkit                           | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Lähdekooditila                       | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Keskittymistila / Kirjoituskonetila  | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Palauta zoomaus                      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
@@ -41,13 +42,13 @@ Sijoita kursori **lihavoituun tekstiin**, `rivinsisäiseen koodiin` tai [linkkii
 ## Kirjoitustilat
 
 - **Keskittymistila** himmentää kaiken paitsi kappaleen, jota kirjoitat.
-- **Kirjoituskonetila** pitää kirjoitettavan rivin ikkunan keskellä.
+- **Kirjoituskonetila** pitää kirjoitettavan rivin ikkunan keskellä tai lähellä sen ylä- tai alareunaa, kuten kohdassa Asetukset › Editori on määritetty.
 
 Molemmat ovat **Näytä**-valikossa ja kohdassa Asetukset › Editori, ja ne voi yhdistää.
 
 ## Ikkunatyyli
 
-Asetukset › Ulkoasu › Ikkunatyyli vaihtaa **Klassisen** ja **Immersiivisen** välillä. Immersiivisessä tyylissä asiakirja on ikkunan sisällä kortilla; otsikkorivi ja sisällysluettelo väistyvät heti, kun kirjoitat tai vierität, ja palaavat, kun osoitin saavuttaa ikkunan ylä- tai alkureunan.
+Asetukset › Ulkoasu › Ikkunatyyli vaihtaa **Klassisen** ja **Immersiivisen** välillä. Immersiivisessä tyylissä asiakirja näkyy kortilla ikkunan sisällä; otsikkorivi ja sivupalkit piiloutuvat heti, kun kirjoitat tai vierität, ja palaavat, kun osoitin saavuttaa ikkunan ylä- tai sivureunan. Kiinnitetyt sivupalkit pysyvät auki, ja palkin reunasta vetämällä muutat sen leveyttä.
 
 ## Tiedostot ja kuvat
 
@@ -55,6 +56,7 @@ Asetukset › Ulkoasu › Ikkunatyyli vaihtaa **Klassisen** ja **Immersiivisen**
 - Liitetyt kuvat tallennetaan asiakirjan viereen kansioon (oletuksena `assets`, Asetukset › Markdown). Tallentamaton asiakirja pitää ne muistissa ja kirjoittaa ne ensimmäisellä tallennuksella.
 - Asetukset › Yleiset › Oletus-Markdown-sovellus saa Pupitren avaamaan `.md`-tiedostot tiedostonhallinnasta.
 - Asetukset tallennetaan tiedostoon `settings.json`; Asetukset › Tietoja näyttää sen kansion. Vain oletuksista poikkeavat arvot kirjoitetaan, ja lukukelvoton kenttä palaa oletukseen vaikuttamatta muihin.
+- Kansiolla voi olla omat asetukset: kun kansio on auki, asetuksissa näkyy **Yleinen** / **Tämä kansio** -valitsin. Kohdassa **Tämä kansio** tehdyt muutokset kirjoitetaan sen sisällä olevaan `.pupitre/settings.json`-tiedostoon; tiedosto luodaan ensimmäisellä muutoksella, ja se asetetaan yleisten asetusten päälle, kun kansio on auki. Asetuksen palauttaminen siellä palauttaa sille yleisen arvon.
 
 ## Teemat
 
@@ -94,7 +96,7 @@ Teemat tulevat sovelluksen mukana: kukin teema on kansio polussa `src/renderer/t
 
 ### Teksti
 
-**Lihavointi**, _kursiivi_, ~~yliviivaus~~, `rivinsisäinen koodi`, [linkit](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> ja <mark>korostukset</mark>. Rivinsisäinen HTML renderöidään, kun se on täydellinen elementti, ja näytetään muuten lähdekoodina.
+**Lihavointi**, _kursiivi_, ~~yliviivaus~~, `rivinsisäinen koodi`, [linkit](https://commonmark.org), H~2~O, x^2^, ==korostus==, :tada: ja <kbd>Esc</kbd>. Rivinsisäinen HTML renderöidään, kun se on täydellinen elementti, ja näytetään muuten lähdekoodina. Kappale, joka sisältää vain `[TOC]`, muuttuu luetteloksi asiakirjan otsikoista.
 
 > Lainaus.
 >
@@ -141,6 +143,8 @@ Rivinsisäisesti $e^{i\pi} + 1 = 0$ ja lohkona:
 $$
 \int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
 $$
+
+Kemialliset yhtälöt kirjoitetaan `\ce`-merkinnällä: $\ce{2H2 + O2 -> 2H2O}$.
 
 ### Kaaviot
 

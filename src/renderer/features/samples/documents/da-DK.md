@@ -10,6 +10,7 @@ Sæt markøren inde i **fed tekst**, et `kodeafsnit` eller et [link](https://git
 
 - Slet en markør for at fjerne formateringen; tilføj eller slet et `#` foran en overskrift for at ændre niveauet.
 - Når du markerer tekst, vises syntaksen i den, og kopiering kopierer Markdown.
+- <kbd>Ctrl</kbd>+klik følger et link: webadresser åbnes i browseren, `#overskrift`-links ruller til overskriften, og links til en Markdown-fil ved siden af dokumentet åbner den.
 - Formatering findes i menuerne **Afsnit** og **Format**, i højrekliksmenuen og i genvejene nedenfor.
 
 <details>
@@ -30,7 +31,7 @@ Sæt markøren inde i **fed tekst**, et `kodeafsnit` eller et [link](https://git
 | Tabel                                 | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Søg / Erstat                          | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
 | Genåbn lukket faneblad                | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
-| Disposition                           | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Sidebjælker                           | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Kildekodetilstand                     | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Fokustilstand / Skrivemaskinetilstand | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Nulstil zoom                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
@@ -41,13 +42,13 @@ Sæt markøren inde i **fed tekst**, et `kodeafsnit` eller et [link](https://git
 ## Skrivetilstande
 
 - **Fokustilstand** dæmper alt undtagen det afsnit, du skriver i.
-- **Skrivemaskinetilstand** holder linjen, du skriver på, i midten af vinduet.
+- **Skrivemaskinetilstand** holder linjen, du skriver på, i midten af vinduet eller nær dets over- eller underkant, som angivet under Indstillinger › Editor.
 
 Begge findes i menuen **Vis** og under Indstillinger › Editor og kan kombineres.
 
 ## Vinduesstil
 
-Indstillinger › Udseende › Vinduesstil skifter mellem **Klassisk** og **Immersiv**. I immersiv stil ligger dokumentet på et kort i vinduet; titellinjen og dispositionen flytter sig, så snart du skriver eller ruller, og kommer tilbage, når markøren når vinduets overkant eller startkant.
+Indstillinger › Udseende › Vinduesstil skifter mellem **Klassisk** og **Immersiv**. I immersiv stil vises dokumentet på et kort i vinduet; titellinjen og sidepanelerne skjules, så snart du skriver eller ruller, og kommer tilbage, når markøren når vinduets overkant eller sidekant. Fastgjorte sidepaneler forbliver åbne, og du ændrer bredden ved at trække i kanten af et sidepanel.
 
 ## Filer og billeder
 
@@ -55,6 +56,7 @@ Indstillinger › Udseende › Vinduesstil skifter mellem **Klassisk** og **Imme
 - Indsatte billeder gemmes i en mappe ved siden af dokumentet (`assets` som standard, Indstillinger › Markdown). Et dokument, der endnu ikke er gemt, holder dem i hukommelsen og skriver dem ved første gemning.
 - Indstillinger › Generelt › Standard Markdown-app får Pupitre til at åbne `.md`-filer fra filhåndteringen.
 - Indstillingerne gemmes i `settings.json`; Indstillinger › Om viser mappen. Kun værdier, der afviger fra standard, skrives, og et felt, der ikke kan læses, falder tilbage til standard uden at påvirke de andre.
+- En mappe kan have sine egne indstillinger: når en mappe er åben, viser indstillingerne en skifteknap mellem **Globalt** og **Denne mappe**. Ændringer under **Denne mappe** gemmes i `.pupitre/settings.json` i den; filen oprettes ved den første ændring og lægges over de globale indstillinger, så længe mappen er åben. Nulstilling af en indstilling der genskaber den globale værdi.
 
 ## Temaer
 
@@ -94,7 +96,7 @@ Temaer følger med appen: hvert tema er en mappe i `src/renderer/themes/<navn>/`
 
 ### Tekst
 
-**Fed**, _kursiv_, ~~gennemstreget~~, `inline-kode`, [links](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> og <mark>markeringer</mark>. Inline-HTML gengives, når det er et komplet element, og vises ellers som kildekode.
+**Fed**, _kursiv_, ~~gennemstreget~~, `inline-kode`, [links](https://commonmark.org), H~2~O, x^2^, ==fremhævning==, :tada: og <kbd>Esc</kbd>. Inline-HTML gengives, når det er et komplet element, og vises ellers som kildekode. Et afsnit, der kun indeholder `[TOC]`, bliver til en liste over dokumentets overskrifter.
 
 > Et citat.
 >
@@ -141,6 +143,8 @@ Inline $e^{i\pi} + 1 = 0$ og som blok:
 $$
 \int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
 $$
+
+Kemiske ligninger skrives med `\ce`: $\ce{2H2 + O2 -> 2H2O}$.
 
 ### Diagrammer
 

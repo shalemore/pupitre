@@ -10,6 +10,7 @@ Zet de cursor in **vette tekst**, in een `inline code` of in een [link](https://
 
 - Verwijder een markering om de opmaak weg te halen; voeg een `#` toe voor een kop of verwijder er een om het niveau te wijzigen.
 - Geselecteerde tekst toont zijn syntaxis, en kopiëren kopieert Markdown.
+- <kbd>Ctrl</kbd>+klik volgt een link: webadressen openen in de browser, `#kop`-links springen naar de kop en links naar een Markdown-bestand naast het document openen dat bestand.
 - Opmaak staat in de menu's **Alinea** en **Opmaak**, in het contextmenu en in de sneltoetsen hieronder.
 
 <details>
@@ -30,7 +31,7 @@ Zet de cursor in **vette tekst**, in een `inline code` of in een [link](https://
 | Tabel                           | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Zoeken / Vervangen              | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
 | Gesloten tab opnieuw openen     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
-| Overzicht                       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Zijbalken                       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Broncodemodus                   | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Focusmodus / Typemachinemodus   | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Zoom herstellen                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
@@ -41,13 +42,13 @@ Zet de cursor in **vette tekst**, in een `inline code` of in een [link](https://
 ## Schrijfmodi
 
 - De **focusmodus** vervaagt alles behalve de alinea waarin u schrijft.
-- De **typemachinemodus** houdt de regel waarin u typt in het midden van het venster.
+- De **typemachinemodus** houdt de regel waarin u typt in het midden van het venster, of bij de boven- of onderkant zoals ingesteld in Voorkeuren › Editor.
 
 Beide staan in het menu **Beeld** en in Voorkeuren › Editor, en kunnen worden gecombineerd.
 
 ## Vensterstijl
 
-Voorkeuren › Weergave › Vensterstijl schakelt tussen **Klassiek** en **Immersief**. In de immersieve stijl staat het document in een kaart in het venster; de titelbalk en het overzicht wijken zodra u typt of scrolt en komen terug wanneer de aanwijzer de bovenkant of de beginrand van het venster bereikt.
+Voorkeuren › Weergave › Vensterstijl schakelt tussen **Klassiek** en **Immersief**. In de immersieve stijl staat het document in een kaart in het venster; de titelbalk en de zijbalken verdwijnen zodra u typt of scrolt en komen terug wanneer de aanwijzer de bovenkant of een zijkant van het venster bereikt. Het vastzetten van een zijbalk houdt de zijbalken open, en door aan de rand van een zijbalk te slepen wijzigt u de breedte.
 
 ## Bestanden en afbeeldingen
 
@@ -55,6 +56,7 @@ Voorkeuren › Weergave › Vensterstijl schakelt tussen **Klassiek** en **Immer
 - Geplakte afbeeldingen worden opgeslagen in een map naast het document (standaard `assets`, Voorkeuren › Markdown). Een document dat nog niet is opgeslagen houdt ze in het geheugen en schrijft ze bij de eerste keer opslaan.
 - Voorkeuren › Algemeen › Standaard Markdown-app zorgt ervoor dat Pupitre `.md`-bestanden opent vanuit de bestandsbeheerder.
 - Voorkeuren staan in `settings.json`; Voorkeuren › Over toont de map. Alleen waarden die van de standaard afwijken worden opgeslagen, en een veld dat niet kan worden gelezen valt terug op de standaard zonder de andere te beïnvloeden.
+- Een map kan eigen voorkeuren hebben: met een map geopend tonen de Voorkeuren een schakelaar tussen **Globaal** en **Deze map**. Wijzigingen onder **Deze map** gaan naar `.pupitre/settings.json`, dat bij de eerste wijziging wordt aangemaakt en boven op de globale voorkeuren ligt; herstellen geeft de globale waarde terug.
 
 ## Thema's
 
@@ -67,7 +69,7 @@ Thema's worden met de app meegeleverd: elk is een map in `src/renderer/themes/<n
   /* De kleurschema's die dit thema ondersteunt: licht, donker of beide */
   color-scheme: light dark;
 
-  /* Standaardlettertype voor de bodytekst; aan te passen in de instellingen */
+  /* Standaardlettertype voor de bodytekst; aan te passen in de voorkeuren */
   --font-document: Georgia, serif;
 
   /* Designtokens die in het hele venster gelden */
@@ -94,7 +96,7 @@ Thema's worden met de app meegeleverd: elk is een map in `src/renderer/themes/<n
 
 ### Tekst
 
-**Vet**, _cursief_, ~~doorhalen~~, `inline code`, [links](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> en <mark>markeringen</mark>. Inline HTML wordt weergegeven als het een compleet element is en anders als broncode getoond.
+**Vet**, _cursief_, ~~doorhalen~~, `inline code`, [links](https://commonmark.org), H~2~O, x^2^, ==markeringen==, :tada: en <kbd>Esc</kbd>. Inline HTML wordt weergegeven wanneer het een compleet element is en anders als bron getoond. Een alinea die alleen `[TOC]` bevat, wordt een lijst met de koppen van het document.
 
 > Een citaat.
 >
@@ -111,7 +113,7 @@ Thema's worden met de app meegeleverd: elk is een map in `src/renderer/themes/<n
 1. Genummerd
    - Genest, ongenummerd
    - [x] Taken kunnen worden aangevinkt
-   - [ ] En uitgevinkt
+   - [ ] en uitgevinkt
 2. Lijsten kunnen code bevatten:
 
    ```sh
@@ -141,6 +143,8 @@ Inline $e^{i\pi} + 1 = 0$ en als blok:
 $$
 \int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
 $$
+
+Chemische vergelijkingen gebruiken `\ce`: $\ce{2H2 + O2 -> 2H2O}$.
 
 ### Diagrammen
 

@@ -10,6 +10,7 @@ Setzen Sie den Cursor in **fetten Text**, einen `Codeausschnitt` oder einen [Lin
 
 - Löschen Sie eine Markierung, um die Formatierung zu entfernen; ein `#` mehr oder weniger vor einer Überschrift ändert ihre Ebene.
 - Markierter Text zeigt seine Syntax, und Kopieren kopiert Markdown.
+- <kbd>Strg</kbd>+Klicken folgt einem Link: Webadressen öffnen im Browser, Links auf `#Überschrift` springen zur Überschrift, und Links auf eine Markdown-Datei neben dem Dokument öffnen sie.
 - Die Formatierung finden Sie in den Menüs **Absatz** und **Format**, im Kontextmenü und in den Tastenkürzeln unten.
 
 <details>
@@ -17,37 +18,37 @@ Setzen Sie den Cursor in **fetten Text**, einen `Codeausschnitt` oder einen [Lin
 
 | Aktion                             | Kürzel                                                                                                      |
 | :--------------------------------- | :---------------------------------------------------------------------------------------------------------- |
-| Fett / Kursiv / Inline-Code        | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
+| Fett / Kursiv / Inline-Code        | <kbd>Strg</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
 | Durchgestrichen                    | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
-| Unterstrichen                      | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
-| Formatierung entfernen             | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
-| Link                               | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
-| Bild einfügen...                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
-| Überschrift 1–6 / Absatz           | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
-| Zitat                              | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
-| Nummerierte Liste / Aufzählung     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
-| Codeblock / Formelblock            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
-| Tabelle                            | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
-| Suchen / Ersetzen                  | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
-| Geschlossenen Tab wieder öffnen    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
-| Gliederung                         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
-| Quellcode-Modus                    | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
+| Unterstrichen                      | <kbd>Strg</kbd>+<kbd>U</kbd>                                                                                |
+| Formatierung entfernen             | <kbd>Strg</kbd>+<kbd>\\</kbd>                                                                               |
+| Link                               | <kbd>Strg</kbd>+<kbd>K</kbd>                                                                                |
+| Bild einfügen...                   | <kbd>Strg</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
+| Überschrift 1–6 / Absatz           | <kbd>Strg</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
+| Zitat                              | <kbd>Strg</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
+| Nummerierte Liste / Aufzählung     | <kbd>Strg</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
+| Codeblock / Formelblock            | <kbd>Strg</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
+| Tabelle                            | <kbd>Strg</kbd>+<kbd>T</kbd>                                                                                |
+| Suchen / Ersetzen                  | <kbd>Strg</kbd>+<kbd>F</kbd> / <kbd>Strg</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
+| Geschlossenen Tab wieder öffnen    | <kbd>Strg</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
+| Seitenleisten                      | <kbd>Strg</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Quellcode-Modus                    | <kbd>Strg</kbd>+<kbd>/</kbd>                                                                                |
 | Fokusmodus / Schreibmaschinenmodus | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| Zoom zurücksetzen                  | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
-| Einstellungen                      | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
+| Zoom zurücksetzen                  | <kbd>Strg</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| Einstellungen                      | <kbd>Strg</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>
 
 ## Schreibmodi
 
 - Der **Fokusmodus** blendet alles außer dem Absatz aus, an dem Sie schreiben.
-- Der **Schreibmaschinenmodus** hält die Zeile, in der Sie schreiben, in der Mitte des Fensters.
+- Der **Schreibmaschinenmodus** hält die Zeile, in der Sie schreiben, in der Mitte des Fensters – oder je nach Einstellungen › Editor am oberen oder unteren Rand.
 
 Beide finden Sie im Menü **Ansicht** und unter Einstellungen › Editor; sie lassen sich kombinieren.
 
 ## Fensterstil
 
-Unter Einstellungen › Darstellung › Fensterstil wechseln Sie zwischen **Klassisch** und **Immersiv**. Im immersiven Stil liegt das Dokument in einer Karte im Fenster; Titelleiste und Gliederung weichen, sobald Sie tippen oder scrollen, und kehren zurück, wenn der Zeiger den oberen oder den vorderen Fensterrand erreicht.
+Unter Einstellungen › Darstellung › Fensterstil wechseln Sie zwischen **Klassisch** und **Immersiv**. Im immersiven Stil liegt das Dokument in einer Karte im Fenster; Titelleiste und Seitenleisten klappen weg, sobald Sie tippen oder scrollen, und kehren zurück, wenn der Zeiger den oberen oder einen seitlichen Fensterrand erreicht. Das Anheften einer Seitenleiste hält die Seitenleisten offen; durch Ziehen am Rand einer Seitenleiste ändern Sie deren Breite.
 
 ## Dateien und Bilder
 
@@ -55,6 +56,7 @@ Unter Einstellungen › Darstellung › Fensterstil wechseln Sie zwischen **Klas
 - Eingefügte Bilder werden in einem Ordner neben dem Dokument gespeichert (standardmäßig `assets`, Einstellungen › Markdown). Ein noch nicht gespeichertes Dokument hält sie im Speicher und schreibt sie beim ersten Speichern.
 - Mit Einstellungen › Allgemein › Standard-App für Markdown öffnet Pupitre `.md`-Dateien aus dem Dateimanager.
 - Die Einstellungen liegen in `settings.json`; Einstellungen › Über zeigt den Ordner. Es werden nur Werte geschrieben, die vom Standard abweichen, und ein nicht lesbares Feld fällt auf seinen Standard zurück, ohne die anderen zu beeinflussen.
+- Ein Ordner kann eigene Einstellungen haben: Bei geöffnetem Ordner zeigen die Einstellungen einen Umschalter zwischen **Global** und **Dieser Ordner**. Änderungen unter **Dieser Ordner** landen in `.pupitre/settings.json`, werden beim ersten Ändern angelegt und überlagern die globalen Einstellungen; Zurücksetzen gibt den globalen Wert zurück.
 
 ## Designs
 
@@ -88,13 +90,13 @@ Designs werden mit der App ausgeliefert: Jedes ist ein Ordner `src/renderer/them
 
 - Farben werden über die Token `--ui-*` (Flächen, Text, Akzent) und `--syntax-*` für Code gesetzt. Ihre Standardwerte und die vollständige Liste stehen in `src/renderer/app.css` und im Design `pupitre`.
 - Zitatbalken sollten `var(--alert-color, …)` verwenden, damit Hinweise ihre Farben behalten.
-- Schriftgröße, Zeilenhöhe und Inhaltsbreite gehören dem Benutzer und haben immer Vorrang; verwenden Sie `em` für Größen im Dokument und logische Eigenschaften wie `padding-inline-start`, damit rechtsläufiger Text gespiegelt wird.
+- Schriftgröße, Zeilenhöhe und Inhaltsbreite gehören dem Benutzer und haben immer Vorrang; verwenden Sie `em` für Größen im Dokument und logische Eigenschaften wie `padding-inline-start`, damit Text von rechts nach links gespiegelt wird.
 
 ## Markdown-Referenz
 
 ### Text
 
-**Fett**, _kursiv_, ~~durchgestrichen~~, `Inline-Code`, [Links](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> und <mark>Hervorhebungen</mark>. Inline-HTML wird dargestellt, wenn es ein vollständiges Element ist, sonst als Quelltext angezeigt.
+**Fett**, _kursiv_, ~~durchgestrichen~~, `Inline-Code`, [Links](https://commonmark.org), H~2~O, x^2^, ==Hervorhebungen==, :tada: und <kbd>Esc</kbd>. Inline-HTML wird dargestellt, wenn es ein vollständiges Element ist, sonst als Quelltext angezeigt. Ein Absatz, der nur `[TOC]` enthält, wird zu einer Liste der Überschriften des Dokuments.
 
 > Ein Zitat.
 >
@@ -111,7 +113,7 @@ Designs werden mit der App ausgeliefert: Jedes ist ein Ordner `src/renderer/them
 1. Nummeriert
    - Verschachtelt, mit Aufzählungszeichen
    - [x] Aufgaben lassen sich abhaken
-   - [ ] und wieder öffnen
+   - [ ] und wieder abhaken
 2. Listen können Code enthalten:
 
    ```sh
@@ -141,6 +143,8 @@ Inline $e^{i\pi} + 1 = 0$ und abgesetzt:
 $$
 \int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
 $$
+
+Chemische Gleichungen verwenden `\ce`: $\ce{2H2 + O2 -> 2H2O}$.
 
 ### Diagramme
 

@@ -6,59 +6,61 @@ Pupitre 是一款桌面 Markdown 編輯器。文件就是一般的 `.md` 檔案�
 
 ## 編輯
 
-把游標移到**粗體文字**、`行內程式碼`或[連結](https://github.com/shalemore/pupitre)裡，周圍就會顯示它的語法。這些標記的行為和文字一樣：
+將游標移到**粗體文字**、`行內程式碼`或[連結](https://github.com/shalemore/pupitre)中，周圍就會顯示它的語法。這些標記的行為和文字一樣：
 
 - 刪掉標記就能取消對應格式；在標題前增減 `#` 就能改變層級。
 - 選取文字時會顯示其中的語法，複製得到的就是 Markdown。
+- <kbd>Ctrl</kbd>+按一下可開啟連結：網址會在瀏覽器中開啟，`#標題` 連結會捲動至該標題，指向文件旁 Markdown 檔案的連結則會開啟該檔案。
 - 格式指令在**段落**選單和**格式**選單、右鍵選單以及下面的快速鍵中。
 
 <details>
 <summary>鍵盤快速鍵（macOS 上 Ctrl 對應 ⌘）</summary>
 
-| 操作                     | 快速鍵                                                                                                      |
-| :----------------------- | :---------------------------------------------------------------------------------------------------------- |
-| 粗體 / 斜體 / 行內程式碼 | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                 |
-| 刪除線                   | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                |
-| 底線                     | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
-| 清除格式                 | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
-| 連結                     | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
-| 插入圖片…                | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
-| 標題 1–6 / 內文          | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
-| 引用                     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
-| 編號 / 項目符號清單      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
-| 程式碼區塊 / 公式區塊    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                |
-| 表格                     | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
-| 尋找 / 取代              | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
-| 重新開啟關閉的分頁       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
-| 大綱                     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
-| 原始碼模式               | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
-| 專注模式 / 打字機模式    | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| 重設縮放                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
-| 偏好設定                 | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
+| 操作                     | 快速鍵                                                                                                       |
+| :----------------------- | :----------------------------------------------------------------------------------------------------------- |
+| 粗體 / 斜體 / 行內程式碼 | <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>Shift</kbd>+<kbd>`</kbd>                                  |
+| 刪除線                   | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd>                                                                 |
+| 底線                     | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                 |
+| 清除格式                 | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                                |
+| 連結                     | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                 |
+| 插入圖片…                | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                                |
+| 標題 1–6 / 內文          | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                     |
+| 引用                     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                                |
+| 編號 / 項目符號清單      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                 |
+| 程式碼區塊 / 公式區塊    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> / <kbd>M</kbd>                                                 |
+| 表格                     | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                 |
+| 尋找 / 取代              | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd>（macOS：<kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>） |
+| 重新開啟關閉的分頁       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                                |
+| 側邊欄                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                                |
+| 原始碼模式               | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                 |
+| 專注模式 / 打字機模式    | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                                |
+| 重設縮放                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                                |
+| 偏好設定                 | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                 |
 
 </details>
 
 ## 寫作模式
 
 - **專注模式**會淡化正在編輯的段落以外的內容。
-- **打字機模式**讓正在輸入的行始終保持在視窗中央。
+- **打字機模式**讓正在輸入的行始終保持在視窗中央，也可以在偏好設定 › 編輯器中改為靠上或靠下。
 
 兩者都在**檢視**選單和偏好設定 › 編輯器中，可以同時開啟。
 
 ## 視窗樣式
 
-偏好設定 › 外觀 › 視窗樣式 可在**經典**和**沉浸式**之間切換。沉浸式下文件位於視窗內的卡片中；開始輸入或捲動時標題列和大綱會讓開，指標移到視窗頂部或起始邊緣時再回來。
+偏好設定 › 外觀 › 視窗樣式可在**經典**和**沉浸式**之間切換。沉浸式下，文件位於視窗內的卡片中；開始輸入或捲動後，標題列和側邊欄會自動收起，指標移到視窗頂部或任一側時再出現。釘選側邊欄後，側邊欄會保持開啟；拖曳側邊欄的邊緣則可調整寬度。
 
 ## 檔案和圖片
 
-- 除非在偏好設定 › Markdown 中另行設定，Pupitre 會保留所開啟檔案的換行符號。格式指令插入什麼寫法，也在那裡設定。
+- 除非在偏好設定 › Markdown 中另行設定，Pupitre 會保留所開啟檔案的換行字元。格式指令插入什麼寫法，也在那裡設定。
 - 貼上的圖片儲存在文件旁的資料夾中（預設 `assets`，見偏好設定 › Markdown）。尚未儲存的文件會把圖片放在記憶體裡，第一次儲存時再寫入。
-- 偏好設定 › 一般 › 預設 Markdown 應用程式 可以讓 Pupitre 從檔案管理員開啟 `.md` 檔案。
-- 偏好設定儲存在 `settings.json` 中，偏好設定 › 關於 可以顯示它所在的資料夾。只寫入與預設值不同的值，讀不出來的欄位會回到預設值，不影響其他欄位。
+- 偏好設定 › 一般 › 預設 Markdown 應用程式可以讓 Pupitre 從檔案管理員開啟 `.md` 檔案。
+- 偏好設定儲存在 `settings.json` 中，偏好設定 › 關於可以顯示它所在的資料夾。只寫入與預設值不同的值，讀不出來的欄位會回到預設值，不影響其他欄位。
+- 資料夾可以有自己的設定：開啟資料夾後，偏好設定會出現**全域**和**此資料夾**的切換。在**此資料夾**下所做的變更會存到其中的 `.pupitre/settings.json`，第一次變更時才會建立，之後只要開啟這個資料夾，就會疊加在全域設定之上。在那裡重設某項設定會還原為全域的值。
 
 ## 主題
 
-主題決定整個視窗和文件的樣式。偏好設定 › 外觀 會列出各主題及其支援的配色方案，深色模式可以另外選擇一個主題。
+主題決定整個視窗和文件的樣式。偏好設定 › 外觀會列出各主題及其支援的配色方案，深色模式可另外選擇一個主題。
 
 主題隨應用程式一起發佈：每個主題是 `src/renderer/themes/<name>/` 下帶有 `index.css` 的資料夾，資料夾名稱就是主題名稱。主題用到的字型或圖片放在同一資料夾裡，以相對 `url()` 引用。
 
@@ -94,7 +96,7 @@ Pupitre 是一款桌面 Markdown 編輯器。文件就是一般的 `.md` 檔案�
 
 ### 文字
 
-**粗體**、_斜體_、~~刪除線~~、`行內程式碼`、[連結](https://commonmark.org)、H~2~O、x^2^、<kbd>Esc</kbd> 和 <mark>醒目提示</mark>。行內 HTML 是完整元素時會被呈現，否則顯示為原始碼。
+**粗體**、_斜體_、~~刪除線~~、`行內程式碼`、[連結](https://commonmark.org)、H~2~O、x^2^、==醒目提示==、:tada: 和 <kbd>Esc</kbd>。行內 HTML 是完整元素時會被呈現，否則顯示為原始碼。只包含 `[TOC]` 的段落會變成文件的目錄，列出文件中的標題。
 
 > 一段引用。
 >
@@ -141,6 +143,8 @@ function countWords(text: string): number {
 $$
 \int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
 $$
+
+化學方程式使用 `\ce`：$\ce{2H2 + O2 -> 2H2O}$。
 
 ### 圖表
 

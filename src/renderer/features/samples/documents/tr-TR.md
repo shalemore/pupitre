@@ -6,10 +6,11 @@ Pupitre bir masaüstü Markdown düzenleyicisidir. Belgeler sıradan `.md` dosya
 
 ## Düzenleme
 
-İmleci **kalın metnin**, bir `satır içi kodun` ya da bir [bağlantının](https://github.com/shalemore/pupitre) içine getirin, sözdizimi çevresinde görünür. İşaretçiler metin gibi davranır:
+İmleci **kalın metnin**, bir `satır içi kodun` ya da bir [bağlantının](https://github.com/shalemore/pupitre) içine getirin, söz dizimi çevresinde görünür. İşaretler metin gibi davranır:
 
 - Bir işareti silmek biçimi kaldırır; bir başlığın önüne `#` eklemek ya da silmek düzeyini değiştirir.
 - Metin seçildiğinde içindeki söz dizimi görünür ve kopyalamak Markdown kopyalar.
+- Bir bağlantıyı <kbd>Ctrl</kbd>+tıklayarak açın: web adresleri tarayıcıda açılır, `#başlık` bağlantıları ilgili başlığa kaydırır ve belgenin yanındaki bir Markdown dosyasına verilen bağlantılar o dosyayı açar.
 - Biçimlendirme **Paragraf** ve **Biçim** menülerinde, sağ tık menüsünde ve aşağıdaki kısayollarda bulunur.
 
 <details>
@@ -30,7 +31,7 @@ Pupitre bir masaüstü Markdown düzenleyicisidir. Belgeler sıradan `.md` dosya
 | Tablo                           | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Bul / Değiştir                  | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
 | Kapatılan Sekmeyi Yeniden Aç    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
-| Anahat                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Kenar çubukları                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Kaynak Kodu Modu                | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Odak modu / Daktilo modu        | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Yakınlaştırmayı sıfırla         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
@@ -41,13 +42,13 @@ Pupitre bir masaüstü Markdown düzenleyicisidir. Belgeler sıradan `.md` dosya
 ## Yazma modları
 
 - **Odak modu**, yazdığınız paragraf dışındaki her şeyi soluklaştırır.
-- **Daktilo modu**, yazılan satırı pencerenin ortasında tutar.
+- **Daktilo modu**, yazılan satırı Tercihler › Düzenleyici ayarına göre pencerenin ortasında, üstüne veya altına yakın tutar.
 
 İkisi de **Görünüm** menüsünde ve Tercihler › Düzenleyici altında bulunur ve birlikte kullanılabilir.
 
 ## Pencere stili
 
-Tercihler › Görünüm › Pencere Stili, **Klasik** ile **Sürükleyici** arasında geçiş yapar. Sürükleyici stilde belge pencerenin içindeki bir kartta durur; yazmaya veya kaydırmaya başladığınızda başlık çubuğu ve anahat çekilir, işaretçi pencerenin üstüne ya da başlangıç kenarına geldiğinde geri döner.
+Tercihler › Görünüm › Pencere Stili, **Klasik** ile **Sürükleyici** arasında geçiş yapar. Sürükleyici stilde belge pencerenin içindeki bir kartta gösterilir; yazmaya veya kaydırmaya başladığınızda başlık çubuğu ve kenar çubukları gizlenir, işaretçi pencerenin üstüne ya da bir yan kenarına geldiğinde geri döner. Kenar çubuğundaki sabitleme kenar çubuklarını açık tutar ve bir kenar çubuğunun kenarını sürüklemek boyutunu değiştirir.
 
 ## Dosyalar ve resimler
 
@@ -55,6 +56,7 @@ Tercihler › Görünüm › Pencere Stili, **Klasik** ile **Sürükleyici** ara
 - Yapıştırılan resimler belgenin yanındaki bir klasöre kaydedilir (varsayılan olarak `assets`, bkz. Tercihler › Markdown). Henüz kaydedilmemiş bir belge onları bellekte tutar ve ilk kaydetmede yazar.
 - Tercihler › Genel › Varsayılan Markdown Uygulaması, Pupitre'nin `.md` dosyalarını dosya yöneticisinden açmasını sağlar.
 - Tercihler `settings.json` içinde saklanır; Tercihler › Hakkında klasörünü gösterir. Yalnızca varsayılandan farklı değerler yazılır ve okunamayan bir alan diğerlerini etkilemeden varsayılana döner.
+- Bir klasörün kendi ayarları olabilir: bir klasör açıkken Tercihler, **Global** ile **Bu Klasör** arasında bir geçiş gösterir. **Bu Klasör** altında değiştirdikleriniz içindeki `.pupitre/settings.json` dosyasına gider; bu dosya ilk değişiklikte oluşturulur ve o klasör açık olduğunda genel ayarların üzerine uygulanır. Buradaki bir ayarı sıfırlamak onu genel değere geri verir.
 
 ## Temalar
 
@@ -94,7 +96,7 @@ Temalar uygulamayla birlikte gelir: her biri `src/renderer/themes/<ad>/` altınd
 
 ### Metin
 
-**Kalın**, _italik_, ~~üstü çizili~~, `satır içi kod`, [bağlantılar](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> ve <mark>vurgular</mark>. Satır içi HTML tam bir öğe olduğunda işlenir, aksi halde kaynak olarak gösterilir.
+**Kalın**, _italik_, ~~üstü çizili~~, `satır içi kod`, [bağlantılar](https://commonmark.org), H~2~O, x^2^, ==vurgular==, :tada: ve <kbd>Esc</kbd>. Satır içi HTML tam bir öğe olduğunda işlenir, aksi halde kaynak olarak gösterilir. Yalnızca `[TOC]` yazan bir paragraf, belgenin başlıklarının listesine dönüşür.
 
 > Bir alıntı.
 >
@@ -141,6 +143,8 @@ Satır içi $e^{i\pi} + 1 = 0$ ve blok olarak:
 $$
 \int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
 $$
+
+Kimyasal denklemler `\ce` kullanır: $\ce{2H2 + O2 -> 2H2O}$.
 
 ### Diyagramlar
 

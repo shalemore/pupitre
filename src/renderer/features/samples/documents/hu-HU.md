@@ -10,6 +10,7 @@ Helyezze a kurzort **félkövér szövegbe**, egy `soron belüli kódba` vagy eg
 
 - Egy jelölő törlése megszünteti a formázást; egy `#` hozzáadása vagy törlése a címsor előtt megváltoztatja a szintjét.
 - A kijelölt szöveg megmutatja a szintaxisát, a másolás pedig Markdownt másol.
+- A <kbd>Ctrl</kbd>+kattintás követ egy hivatkozást: a webcímek a böngészőben nyílnak meg, a `#címsor` hivatkozások a címsorhoz görgetnek, a dokumentum melletti Markdown-fájlra mutató hivatkozások pedig megnyitják azt.
 - A formázás a **Bekezdés** és **Formátum** menüben, a helyi menüben és az alábbi gyorsbillentyűkben található.
 
 <details>
@@ -30,7 +31,7 @@ Helyezze a kurzort **félkövér szövegbe**, egy `soron belüli kódba` vagy eg
 | Táblázat                           | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Keresés / Csere                    | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
 | Bezárt lap újramegnyitása          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
-| Vázlat                             | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Oldalsávok                         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Forráskód mód                      | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Fókuszmód / Írógép mód             | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Nagyítás visszaállítása            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
@@ -41,13 +42,13 @@ Helyezze a kurzort **félkövér szövegbe**, egy `soron belüli kódba` vagy eg
 ## Írási módok
 
 - A **fókuszmód** elhalványít mindent, kivéve azt a bekezdést, amelyet éppen ír.
-- Az **írógép mód** a gépelt sort az ablak közepén tartja.
+- Az **írógép mód** a gépelt sort az ablak közepén, illetve a Beállítások › Szerkesztő beállításától függően a tetejéhez vagy az aljához közel tartja.
 
 Mindkettő a **Nézet** menüben és a Beállítások › Szerkesztő alatt található, és kombinálhatók egymással.
 
 ## Ablakstílus
 
-A Beállítások › Megjelenés › Ablakstílus a **Klasszikus** és az **Immerzív** között vált. Immerzív stílusban a dokumentum az ablakon belüli kártyán fekszik; a címsor és a vázlat visszahúzódik, amint gépelni vagy görgetni kezd, és visszatér, amikor a mutató eléri az ablak felső vagy kezdő szélét.
+A Beállítások › Megjelenés › Ablakstílus a **Klasszikus** és az **Immerzív** között vált. Immerzív stílusban a dokumentum az ablakon belüli kártyán jelenik meg; a címsor és az oldalsávok elrejtőznek, amint gépelni vagy görgetni kezd, és visszatérnek, amikor a mutató eléri az ablak felső vagy oldalsó szélét. Az oldalsávban lévő rögzítés nyitva tartja az oldalsávokat, az oldalsáv szélének húzásával pedig átméretezheti azt.
 
 ## Fájlok és képek
 
@@ -55,6 +56,7 @@ A Beállítások › Megjelenés › Ablakstílus a **Klasszikus** és az **Imme
 - A beillesztett képek a dokumentum melletti mappába kerülnek (alapértelmezés szerint `assets`, Beállítások › Markdown). A még nem mentett dokumentum a memóriában tartja őket, és az első mentéskor írja ki.
 - A Beállítások › Általános › Alapértelmezett Markdown-alkalmazás hatására a Pupitre a fájlkezelőből nyitja meg a `.md` fájlokat.
 - A beállítások a `settings.json` fájlban vannak; a Beállítások › Névjegy mutatja a mappáját. Csak az alapértéktől eltérő értékek íródnak ki, és egy olvashatatlan mező visszaáll az alapértékre anélkül, hogy érintené a többit.
+- Egy mappának saját beállításai lehetnek: nyitott mappa esetén a Beállítások **Globális** és **Ez a mappa** közötti kapcsolót mutat. Amit az **Ez a mappa** alatt módosít, az a mappában lévő `.pupitre/settings.json` fájlba kerül, amely az első módosításkor jön létre, és amikor a mappa nyitva van, a globális beállítások fölé kerül. Egy beállítás visszaállítása ott visszaadja a globális értéket.
 
 ## Témák
 
@@ -94,14 +96,14 @@ A témák az alkalmazással együtt érkeznek: mindegyik egy mappa a `src/render
 
 ### Szöveg
 
-**Félkövér**, _dőlt_, ~~áthúzott~~, `soron belüli kód`, [hivatkozások](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> és <mark>kiemelések</mark>. A soron belüli HTML akkor jelenik meg, ha teljes elemet alkot, máskülönben forráskódként látszik.
+**Félkövér**, _dőlt_, ~~áthúzott~~, `soron belüli kód`, [hivatkozások](https://commonmark.org), H~2~O, x^2^, ==kiemelések==, :tada: és <kbd>Esc</kbd>. A soron belüli HTML akkor jelenik meg, ha teljes elemet alkot, máskülönben forráskódként látszik. Az a bekezdés, amely csak `[TOC]` szöveget tartalmaz, a dokumentum címsorainak listájává válik.
 
 > Egy idézet.
 >
 > > Beágyazott idézet.
 
 > [!NOTE]
-> GitHub-figyelmeztetések: `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` és `[!CAUTION]`.
+> GitHub-értesítések: `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` és `[!CAUTION]`.
 
 > [!WARNING]
 > A jelölőnek az idézet első sorában kell lennie.
@@ -111,7 +113,7 @@ A témák az alkalmazással együtt érkeznek: mindegyik egy mappa a `src/render
 1. Számozott
    - Beágyazott, felsorolásos
    - [x] A feladatok kipipálhatók
-   - [ ] És visszavonhatók
+   - [ ] És kipipálatlanok
 2. A listák tartalmazhatnak kódot:
 
    ```sh
@@ -141,6 +143,8 @@ Soron belül $e^{i\pi} + 1 = 0$ és blokként:
 $$
 \int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
 $$
+
+A kémiai egyenletek `\ce` jelölést használnak: $\ce{2H2 + O2 -> 2H2O}$.
 
 ### Diagramok
 

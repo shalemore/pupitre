@@ -10,6 +10,7 @@ Sett markøren inne i **fet tekst**, et `kodeavsnitt` eller en [lenke](https://g
 
 - Slett en markør for å fjerne formateringen; legg til eller slett en `#` foran en overskrift for å endre nivået.
 - Når du merker tekst, vises syntaksen i den, og kopiering kopierer Markdown.
+- <kbd>Ctrl</kbd>+klikk følger en lenke: nettadresser åpnes i nettleseren, `#overskrift`-lenker ruller til overskriften, og lenker til en Markdown-fil ved siden av dokumentet åpner den.
 - Formatering finnes i menyene **Avsnitt** og **Format**, i hurtigmenyen og i hurtigtastene nedenfor.
 
 <details>
@@ -30,7 +31,7 @@ Sett markøren inne i **fet tekst**, et `kodeavsnitt` eller en [lenke](https://g
 | Tabell                         | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Finn / Erstatt                 | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
 | Åpne lukket fane på nytt       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
-| Innholdsfortegnelse            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Sidefelt                       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Kildekodemodus                 | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Fokusmodus / Skrivemaskinmodus | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Tilbakestill zoom              | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
@@ -41,13 +42,13 @@ Sett markøren inne i **fet tekst**, et `kodeavsnitt` eller en [lenke](https://g
 ## Skrivemoduser
 
 - **Fokusmodus** demper alt unntatt avsnittet du skriver i.
-- **Skrivemaskinmodus** holder linjen du skriver på midten av vinduet.
+- **Skrivemaskinmodus** holder linjen du skriver på midten av vinduet eller nær over- eller underkanten, slik Innstillinger › Redigerer angir.
 
 Begge finnes i menyen **Vis** og under Innstillinger › Redigerer, og kan brukes sammen.
 
 ## Vindustil
 
-Innstillinger › Utseende › Vindustil bytter mellom **Klassisk** og **Immersiv**. I immersiv stil ligger dokumentet på et kort i vinduet; tittellinjen og innholdsfortegnelsen flytter seg når du skriver eller ruller, og kommer tilbake når pekeren når toppen eller startkanten av vinduet.
+Innstillinger › Utseende › Vindustil bytter mellom **Klassisk** og **Immersiv**. I immersiv stil vises dokumentet på et kort i vinduet; tittellinjen og sidefeltene skjules når du skriver eller ruller, og kommer tilbake når pekeren når toppen eller sidekanten av vinduet. Festede sidefelt holdes åpne, og du endrer bredden ved å dra i kanten av et sidefelt.
 
 ## Filer og bilder
 
@@ -55,6 +56,7 @@ Innstillinger › Utseende › Vindustil bytter mellom **Klassisk** og **Immersi
 - Innlimte bilder lagres i en mappe ved siden av dokumentet (`assets` som standard, Innstillinger › Markdown). Et dokument som ikke er lagret ennå holder dem i minnet og skriver dem ved første lagring.
 - Innstillinger › Generelt › Standard Markdown-app gjør at Pupitre åpner `.md`-filer fra filbehandleren.
 - Innstillingene lagres i `settings.json`; Innstillinger › Om viser mappen. Bare verdier som avviker fra standard skrives, og et felt som ikke kan leses faller tilbake på standard uten å påvirke de andre.
+- En mappe kan ha egne innstillinger: når en mappe er åpen, viser innstillingene en veksler mellom **Globalt** og **Denne mappen**. Endringer under **Denne mappen** lagres i `.pupitre/settings.json` i den; filen opprettes ved den første endringen og legges over de globale innstillingene så lenge mappen er åpen. Tilbakestilling av en innstilling der gjenoppretter den globale verdien.
 
 ## Temaer
 
@@ -94,7 +96,7 @@ Temaer følger med appen: hvert tema er en mappe i `src/renderer/themes/<navn>/`
 
 ### Tekst
 
-**Fet**, _kursiv_, ~~gjennomstreket~~, `innebygd kode`, [lenker](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> og <mark>markeringer</mark>. Innebygd HTML gjengis når det er et komplett element, og vises som kildekode ellers.
+**Fet**, _kursiv_, ~~gjennomstreket~~, `innebygd kode`, [lenker](https://commonmark.org), H~2~O, x^2^, ==utheving==, :tada: og <kbd>Esc</kbd>. Innebygd HTML gjengis når det er et komplett element, og vises som kildekode ellers. Et avsnitt som bare inneholder `[TOC]`, blir en liste over dokumentets overskrifter.
 
 > Et sitat.
 >
@@ -141,6 +143,8 @@ Innebygd $e^{i\pi} + 1 = 0$ og som blokk:
 $$
 \int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
 $$
+
+Kjemiske ligninger skrives med `\ce`: $\ce{2H2 + O2 -> 2H2O}$.
 
 ### Diagrammer
 

@@ -2,7 +2,7 @@
 
 ![Pupitre](./logo.svg)
 
-Pupitre è un editor Markdown per desktop. I documenti sono semplici file `.md`: ciò che vedi viene mostrato già formattato sul posto, e la sintassi Markdown compare finché il cursore si trova su di essa. Questa guida è anche un esempio di ciò che l’editor mostra; modificala liberamente, non viene salvata a meno che tu scelga **Salva con nome**.
+Pupitre è un editor Markdown per desktop. I documenti sono semplici file `.md`: ciò che vedi viene mostrato direttamente nel documento, e la sintassi Markdown compare finché il cursore si trova su di essa. Questa guida è anche un esempio di ciò che l’editor mostra; modificala liberamente, non viene salvata a meno che tu scelga **Salva con nome**.
 
 ## Modifica
 
@@ -10,6 +10,7 @@ Sposta il cursore dentro un **testo in grassetto**, un `frammento di codice` o u
 
 - Elimina un marcatore per togliere la formattazione; aggiungi o elimina un `#` davanti a un titolo per cambiarne il livello.
 - Selezionando il testo se ne vede la sintassi, e copiare copia Markdown.
+- <kbd>Ctrl</kbd>+clic segue un link: gli indirizzi web si aprono nel browser, i link `#titolo` portano al titolo e i link a un file Markdown accanto al documento lo aprono.
 - La formattazione è nei menu **Paragrafo** e **Formato**, nel menu contestuale e nelle scorciatoie qui sotto.
 
 <details>
@@ -30,7 +31,7 @@ Sposta il cursore dentro un **testo in grassetto**, un `frammento di codice` o u
 | Tabella                                                 | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Trova / Sostituisci                                     | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
 | Riapri scheda chiusa                                    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
-| Struttura                                               | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Barre laterali                                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Modalità codice sorgente                                | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Modalità concentrazione / Modalità macchina da scrivere | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Reimposta zoom                                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
@@ -41,13 +42,13 @@ Sposta il cursore dentro un **testo in grassetto**, un `frammento di codice` o u
 ## Modalità di scrittura
 
 - La **Modalità concentrazione** attenua tutto tranne il paragrafo che stai scrivendo.
-- La **Modalità macchina da scrivere** tiene la riga che stai scrivendo al centro della finestra.
+- La **Modalità macchina da scrivere** tiene la riga che stai scrivendo al centro della finestra, oppure vicino al bordo superiore o inferiore come indicato in Preferenze › Editor.
 
 Entrambe sono nel menu **Visualizza** e in Preferenze › Editor, e si possono combinare.
 
 ## Stile finestra
 
-Preferenze › Aspetto › Stile finestra passa da **Classico** a **Immersivo**. Nello stile immersivo il documento sta in una scheda dentro la finestra; la barra del titolo e la struttura si spostano quando scrivi o scorri e tornano quando il puntatore raggiunge il bordo superiore o iniziale della finestra.
+Preferenze › Aspetto › Stile finestra passa tra **Classico** e **Immersivo**. Nello stile immersivo il documento sta in una scheda dentro la finestra; la barra del titolo e le barre laterali si nascondono quando scrivi o scorri e tornano quando il puntatore raggiunge il bordo superiore o un bordo laterale della finestra. Il fissaggio in una barra laterale tiene aperte le barre laterali, e trascinando il bordo di una barra laterale se ne cambia la larghezza.
 
 ## File e immagini
 
@@ -55,6 +56,7 @@ Preferenze › Aspetto › Stile finestra passa da **Classico** a **Immersivo**.
 - Le immagini incollate vengono salvate in una cartella accanto al documento (`assets` per impostazione predefinita, Preferenze › Markdown). Un documento non ancora salvato le tiene in memoria e le scrive al primo salvataggio.
 - Preferenze › Generale › App predefinita per Markdown fa aprire i file `.md` con Pupitre dal gestore file.
 - Le preferenze sono memorizzate in `settings.json`; Preferenze › Informazioni ne mostra la cartella. Vengono scritti solo i valori diversi da quelli predefiniti, e un campo illeggibile torna al valore predefinito senza toccare gli altri.
+- Una cartella può avere preferenze proprie: con una cartella aperta, Preferenze mostra un selettore tra **Globale** e **Questa cartella**. Le modifiche in **Questa cartella** vanno in `.pupitre/settings.json`, creato al primo cambiamento e sovrapposto alle preferenze globali; ripristinare un valore restituisce il **valore globale**.
 
 ## Temi
 
@@ -94,7 +96,7 @@ I temi sono inclusi nell’app: ognuno è una cartella in `src/renderer/themes/<
 
 ### Testo
 
-**Grassetto**, _corsivo_, ~~barrato~~, `codice in linea`, [link](https://commonmark.org), H~2~O, x^2^, <kbd>Esc</kbd> ed <mark>evidenziazioni</mark>. L’HTML in linea viene reso quando è un elemento completo, altrimenti è mostrato come sorgente.
+**Grassetto**, _corsivo_, ~~barrato~~, `codice in linea`, [link](https://commonmark.org), H~2~O, x^2^, ==evidenziazioni==, :tada: ed <kbd>Esc</kbd>. L'HTML in linea viene visualizzato quando è un elemento completo e altrimenti mostrato come sorgente. Un paragrafo che contiene solo `[TOC]` diventa un elenco dei titoli del documento.
 
 > Una citazione.
 >
@@ -141,6 +143,8 @@ In linea $e^{i\pi} + 1 = 0$ e in blocco:
 $$
 \int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
 $$
+
+Le equazioni chimiche usano `\ce`: $\ce{2H2 + O2 -> 2H2O}$.
 
 ### Diagrammi
 
