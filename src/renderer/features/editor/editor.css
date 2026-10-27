@@ -437,6 +437,34 @@
     box-shadow: var(--ui-shadow-popover);
   }
 
+  /*
+   * A picture too narrow to hold its bar puts the bar under itself, where it still reads as
+   * belonging to the picture. It grows from the edge the picture is aligned to, so that it stays
+   * on the line.
+   */
+  .md-image-frame[data-toolbar-outside] > .md-image-toolbar {
+    inset-block-start: calc(100% + 0.5rem);
+    inset-inline: auto;
+    inset-inline-start: 50%;
+    translate: -50% 0;
+    inline-size: max-content;
+  }
+
+  .md-image-block[data-alignment="left"]
+    > .md-image-frame[data-toolbar-outside]
+    > .md-image-toolbar {
+    inset-inline-start: 0;
+    translate: none;
+  }
+
+  .md-image-block[data-alignment="right"]
+    > .md-image-frame[data-toolbar-outside]
+    > .md-image-toolbar {
+    inset-inline-start: auto;
+    inset-inline-end: 0;
+    translate: none;
+  }
+
   .md-image-align {
     display: grid;
     place-items: center;

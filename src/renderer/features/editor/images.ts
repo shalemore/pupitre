@@ -441,6 +441,9 @@ const CONTROLS = ".md-image-handle, .md-image-toolbar, .md-image-retry";
 /** A picture fetched from the web, whose absence may be the network's fault rather than its own. */
 const WEB_IMAGE = /^https?:\/\//i;
 
+/** The room the bar of a picture keeps from the edges of its frame, in pixels at the root size. */
+const TOOLBAR_INSET = 6;
+
 /** How long a picture may take before a placeholder stands in for it. */
 const SLOW_LOAD_DELAY = 500;
 
@@ -716,10 +719,18 @@ export function imageDom(
 
   if (controls) {
     const commit = write ?? ((change) => writeImage(view, block, change));
-    frame.append(
-      resizeHandle(view, block, commit, frame, image),
-      alignmentToolbar(view, commit, size),
-    );
+    const toolbar = alignmentToolbar(view, commit, size);
+    frame.append(resizeHandle(view, block, commit, frame, image), toolbar);
+    // A picture narrower than its bar cannot hold the bar inside; the bar hangs under it instead
+    const placeToolbar = () => {
+      frame.toggleAttribute(
+        "data-toolbar-outside",
+        toolbar.offsetWidth > 0 && frame.clientWidth < toolbar.offsetWidth + 2 * TOOLBAR_INSET,
+      );
+    };
+    // The frame has its size once it is on the page, and the picture changes that size on load
+    requestAnimationFrame(placeToolbar);
+    image.addEventListener("load", placeToolbar);
   }
   block.append(frame);
   return block;
