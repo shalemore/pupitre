@@ -134,6 +134,23 @@ function pictureMenu(view: EditorView, image: DocumentImage): PictureMenu | unde
           if (copied !== null) linkTo(copied);
         }),
       ),
+      { type: "separator" },
+      // Removing the reference alone leaves the file behind in the image folder; this takes both,
+      // so a picture that is no longer wanted does not become an orphan
+      item("delete", t().sidebar.moveToTrash, () => {
+        const source = view.state.sliceDoc(image.from, image.to);
+        void desktop
+          .invoke("path:trash", path)
+          .then(() => {
+            // The text may have changed while the file was being moved
+            if (view.state.sliceDoc(image.from, image.to) !== source) return;
+            view.dispatch({
+              changes: { from: image.from, to: image.to },
+              userEvent: "delete",
+            });
+          })
+          .catch((error: unknown) => reportFailure(t().dialogs.fileActionFailed, messageOf(error)));
+      }),
     ],
     actions,
   };

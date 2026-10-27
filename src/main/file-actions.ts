@@ -1,5 +1,5 @@
 import { copyFile, mkdir, rename, stat, writeFile } from "node:fs/promises";
-import { basename, dirname, join, resolve } from "node:path";
+import { basename, dirname, join, normalize, resolve } from "node:path";
 import { net, shell } from "electron";
 import type { FolderEntry } from "@shared/desktop-api";
 import { decodeUriPart } from "@shared/uri";
@@ -65,7 +65,8 @@ export async function createEntry(
 }
 
 export function trashEntry(path: string): Promise<void> {
-  return shell.trashItem(path);
+  // The trash asks the system, which does not take the forward slashes an image address uses
+  return shell.trashItem(normalize(path));
 }
 
 /** A picture is linked rather than embedded, so one larger than this is already unusual. */
