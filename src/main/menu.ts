@@ -197,7 +197,21 @@ function buildTemplate(): MenuItemConstructorOptions[] {
           click: () => dispatchToMainWindow({ id: "edit.copy-html" }),
         },
         { label: labels.paste, role: "paste" },
-        { label: labels.pastePlain, role: "pasteAndMatchStyle" },
+        {
+          label: labels.pastePlain,
+          // Electron gives this role no accelerator outside macOS, and the main window inserts the
+          // clipboard's text itself so that the rich-text paste conversion does not see it; any
+          // other window pastes through the role as before
+          accelerator: "CmdOrCtrl+Shift+V",
+          click: () => {
+            const window = BrowserWindow.getFocusedWindow();
+            if (window !== null && window !== getMainWindow()) {
+              window.webContents.pasteAndMatchStyle();
+              return;
+            }
+            dispatchToMainWindow({ id: "edit.paste-plain" });
+          },
+        },
         { label: labels.selectAll, role: "selectAll" },
         separator,
         {

@@ -598,6 +598,7 @@ const handlers: Handlers = {
   "app:set-default-markdown-app": () => "failed",
   "app:dispatch": dispatch,
   "clipboard:write-text": (text) => void navigator.clipboard.writeText(text),
+  "clipboard:read-text": () => navigator.clipboard.readText(),
   "clipboard:write-rich": async (text, html) => {
     try {
       await navigator.clipboard.write([

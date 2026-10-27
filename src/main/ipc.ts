@@ -577,6 +577,7 @@ export function registerIpcHandlers(): void {
   handle("app:set-default-markdown-app", () => setAsDefaultMarkdownApp());
   handle("app:dispatch", (_event, command) => dispatchToMainWindow(command));
   handle("clipboard:write-text", (_event, text) => clipboard.writeText(text));
+  handle("clipboard:read-text", () => clipboard.readText());
   // Both formats go into one entry, so that a rich text application and a plain one each read
   // what they understand from the same copy
   handle("clipboard:write-rich", async (_event, text, html) => {

@@ -111,6 +111,8 @@ export interface MarkdownEditorHandle {
   replaceDocument: (text: string) => void;
   scrollTo: (pos: number) => void;
   getSelectedText: () => string;
+  /** Inserts the clipboard's text at the caret without the rich-text conversion a paste applies. */
+  pastePlainText: (text: string) => void;
   /** Selects a range of the text, scrolls it into view and gives the editor the focus; used to show a match found in the folder. */
   revealRange: (from: number, to: number) => void;
   setSearch: (options: SearchOptions) => MatchStats;
@@ -693,6 +695,13 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         if (to === from || to - from > MAX_INITIAL_SEARCH_LENGTH) return "";
         const selected = view.state.sliceDoc(from, to);
         return selected.includes("\n") ? "" : selected;
+      },
+      pastePlainText: (text) => {
+        view.focus();
+        view.dispatch(view.state.replaceSelection(text), {
+          scrollIntoView: true,
+          userEvent: "input.paste",
+        });
       },
       setSearch: (options) => {
         // Matches are highlighted only while CodeMirror's search panel is open

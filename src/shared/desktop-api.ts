@@ -201,6 +201,7 @@ export type AppCommand =
   | { id: "edit.find" }
   | { id: "edit.replace" }
   | { id: "edit.copy-html" }
+  | { id: "edit.paste-plain" }
   | { id: "edit.insert-image" }
   | { id: "edit.insert-table" }
   | { id: "edit.search-workspace" }
@@ -380,6 +381,8 @@ export interface InvokeChannels {
   "app:dispatch": (command: AppCommand) => void;
   /** Puts plain text on the clipboard, for copy buttons; the renderer has no clipboard permission. */
   "clipboard:write-text": (text: string) => void;
+  /** The clipboard's plain text, for Paste as Plain Text; the renderer cannot read it itself. */
+  "clipboard:read-text": () => string | Promise<string>;
   /**
    * Puts the same text on the clipboard in both formats, so that a rich text application keeps the
    * markup it was given and a plain one still gets the text, see features/export/document-html.ts.

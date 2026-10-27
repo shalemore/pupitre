@@ -363,6 +363,22 @@ export const MainWindow: Component = () => {
     }
   };
 
+  /** Inserts the clipboard's text where it is being typed, leaving its formatting behind. */
+  const pastePlainText = async () => {
+    // A browser can refuse the clipboard read; there is nothing to insert then
+    const text = await desktop.invoke("clipboard:read-text").catch(() => "");
+    if (text === "") return;
+    const active = document.activeElement;
+    if (active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement) {
+      const start = active.selectionStart ?? active.value.length;
+      const end = active.selectionEnd ?? start;
+      active.setRangeText(text, start, end, "end");
+      active.dispatchEvent(new Event("input", { bubbles: true }));
+      return;
+    }
+    editor()?.pastePlainText(text);
+  };
+
   /** Puts the selection, or the whole document when nothing is selected, on the clipboard as rich text. */
   const copyAsHtml = async () => {
     const fragment = await editor()?.toHtmlFragment();
@@ -431,6 +447,8 @@ export const MainWindow: Component = () => {
         return openFind("replace");
       case "edit.copy-html":
         return void copyAsHtml();
+      case "edit.paste-plain":
+        return void pastePlainText();
       case "edit.insert-image":
         return void editor()?.insertImage();
       case "edit.insert-table":
