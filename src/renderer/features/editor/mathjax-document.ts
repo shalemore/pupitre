@@ -1,9 +1,9 @@
-import "@mathjax/src/js/util/asyncLoad/esm.js";
 import "@mathjax/src/js/input/tex/base/BaseConfiguration.js";
 import "@mathjax/src/js/input/tex/action/ActionConfiguration.js";
 import "@mathjax/src/js/input/tex/ams/AmsConfiguration.js";
 import "@mathjax/src/js/input/tex/amscd/AmsCdConfiguration.js";
 import "@mathjax/src/js/input/tex/bbox/BboxConfiguration.js";
+import "@mathjax/src/js/input/tex/begingroup/BegingroupConfiguration.js";
 import "@mathjax/src/js/input/tex/boldsymbol/BoldsymbolConfiguration.js";
 import "@mathjax/src/js/input/tex/braket/BraketConfiguration.js";
 import "@mathjax/src/js/input/tex/bussproofs/BussproofsConfiguration.js";
@@ -11,7 +11,6 @@ import "@mathjax/src/js/input/tex/cancel/CancelConfiguration.js";
 import "@mathjax/src/js/input/tex/cases/CasesConfiguration.js";
 import "@mathjax/src/js/input/tex/centernot/CenternotConfiguration.js";
 import "@mathjax/src/js/input/tex/color/ColorConfiguration.js";
-import "@mathjax/src/js/input/tex/colorv2/ColorV2Configuration.js";
 import "@mathjax/src/js/input/tex/colortbl/ColortblConfiguration.js";
 import "@mathjax/src/js/input/tex/configmacros/ConfigMacrosConfiguration.js";
 import "@mathjax/src/js/input/tex/empheq/EmpheqConfiguration.js";
@@ -30,6 +29,7 @@ import "@mathjax/src/js/input/tex/tagformat/TagFormatConfiguration.js";
 import "@mathjax/src/js/input/tex/textcomp/TextcompConfiguration.js";
 import "@mathjax/src/js/input/tex/textmacros/TextMacrosConfiguration.js";
 import "@mathjax/src/js/input/tex/unicode/UnicodeConfiguration.js";
+import "@mathjax/src/js/input/tex/units/UnitsConfiguration.js";
 import "@mathjax/src/js/input/tex/upgreek/UpgreekConfiguration.js";
 import "@mathjax/src/js/input/tex/verb/VerbConfiguration.js";
 import { liteAdaptor } from "@mathjax/src/js/adaptors/liteAdaptor.js";
@@ -37,6 +37,24 @@ import { RegisterHTMLHandler } from "@mathjax/src/js/handlers/html.js";
 import { TeX } from "@mathjax/src/js/input/tex.js";
 import { mathjax } from "@mathjax/src/js/mathjax.js";
 import { SVG } from "@mathjax/src/js/output/svg.js";
+
+/**
+ * MathJax 4 splits the less-common TeX glyph ranges of its New Computer Modern font (`\mathbb`,
+ * `\mathcal`, `\mathfrak`, `\mathscr`, `\mathsf`, `\mathtt`, extra arrows, relations and symbols)
+ * into files loaded through `mathjax.asyncLoad`. Its built-in `asyncLoad/esm.js` calls
+ * `import(name)` with a bare package specifier that Vite cannot see at build time, so glob the
+ * TeX math ranges instead to turn each into an on-demand chunk; prose scripts outside TeX fall
+ * back to `<text>` in the document font.
+ */
+const dynamicFonts = import.meta.glob(
+  "../../../../node_modules/@mathjax/mathjax-newcm-font/mjs/svg/dynamic/{accents,arrows,calligraphic,double-struck,fraktur,math,monospace,sans-serif,script,shapes,symbols,variants}.js",
+);
+mathjax.asyncLoad = (name: string) => {
+  const file = name.slice(name.lastIndexOf("/") + 1);
+  const load =
+    dynamicFonts[`../../../../node_modules/@mathjax/mathjax-newcm-font/mjs/svg/dynamic/${file}`];
+  return load ? load() : Promise.resolve();
+};
 
 /**
  * The TeX packages this app reads. MathJax 4 dropped the AllPackages list, and its autoload and
@@ -49,6 +67,7 @@ const PACKAGES = [
   "ams",
   "amscd",
   "bbox",
+  "begingroup",
   "boldsymbol",
   "braket",
   "bussproofs",
@@ -73,8 +92,9 @@ const PACKAGES = [
   "tagformat",
   "textcomp",
   "textmacros",
-  "upgreek",
   "unicode",
+  "units",
+  "upgreek",
   "verb",
 ];
 
@@ -95,6 +115,6 @@ const document = mathjax.document("", {
   OutputJax: new SVG({ fontCache: "local" }),
 });
 
-export function texToSvg(tex: string, display: boolean): string {
-  return adaptor.innerHTML(document.convert(tex, { display }));
+export async function texToSvg(tex: string, display: boolean): Promise<string> {
+  return adaptor.innerHTML(await document.convertPromise(tex, { display }));
 }
