@@ -4,6 +4,11 @@ name: Release
 on:
   push:
     branches: [main]
+    # A release exists only when the version changes; running this on every main push made its
+    # completion trigger a second Pages deployment for no new tag.
+    paths:
+      - package.json
+      - package-lock.json
   workflow_dispatch:
     inputs:
       scoop:
