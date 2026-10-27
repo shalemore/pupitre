@@ -38,17 +38,18 @@ import {
 import { messageOf, reportFailure } from "@/lib/errors";
 import { fileNameOf, withoutDocumentExtension } from "@/lib/file";
 import { settings } from "@/lib/settings";
-import { countText, type TextStats } from "@/lib/text-stats";
+import { type TextStats } from "@/lib/text-stats";
 import { themeApplied } from "@/lib/theme";
 import { alertTitles } from "./alerts";
 import { codeHighlight } from "./code-highlight";
 import { cursorStyle, restartCursorBlink } from "./cursor";
+import { createStatsTracker } from "./document-stats";
 import {
   collectHeadings,
   documentObserver,
   findActiveHeading,
+  mergeHeadings,
   type OutlineHeading,
-  readableText,
 } from "./document-structure";
 import { folding, foldingKeymap } from "./folding";
 import {
@@ -90,10 +91,16 @@ export interface MatchStats {
   /** 1-based index of the selected match; 0 when no match is selected. */
   current: number;
   total: number;
+  /** The total is still being counted; the arrows can be used meanwhile. */
+  pending?: boolean;
+  /** The document has more matches than the count is willing to walk. */
+  capped?: boolean;
 }
 
 export interface MarkdownEditorHandle {
   getMarkdown: () => string;
+  /** The document length, which a caller can read without copying the text. */
+  getMarkdownLength: () => number;
   focus: () => void;
   /**
    * Replaces the whole text in one change, so a version picked from the history can be undone with
@@ -149,10 +156,12 @@ export interface MarkdownEditorProps {
   pendingImages: PendingImages;
   /** Called once the editor exists, with its content as the clean baseline. */
   onReady: (markdown: string) => void;
-  onMarkdownChange: (markdown: string) => void;
+  onMarkdownChange: () => void;
   onOutlineChange: (headings: OutlineHeading[]) => void;
   onActiveHeadingChange: (index: number) => void;
   onStatsChange: (stats: TextStats) => void;
+  /** A count that had to be made in the background, once it is ready. */
+  onMatchStatsChange: (stats: MatchStats) => void;
   ref: (handle: MarkdownEditorHandle) => void;
 }
 
@@ -232,37 +241,51 @@ const inList: (command: Command) => Command = (command) => (view) => {
   return false;
 };
 
-const STATS_DEBOUNCE_MS = 200;
+const OUTLINE_DEBOUNCE_MS = 150;
+// Counting every match of a large document is another walk through the whole text; below this
+// size it is cheap enough to do before returning, above it the count runs in slices
+const SYNC_MATCH_LIMIT = 512 * 1024;
+// A find bar does not need the exact number of matches in a book-length document
+const MAX_COUNTED_MATCHES = 1_000;
+const MATCH_COUNT_SLICE_MS = 8;
 
-/**
- * The totals of the document, with the counts of the selection next to them while it is not empty:
- * the title bar shows both, and readableText leaves out the syntax a reader does not see.
- */
-function countStats(state: EditorState): TextStats {
-  const totals = countText(readableText(state));
-  const { main } = state.selection;
-  if (main.empty) return totals;
-  const selected = countText(readableText(state, main.from, main.to));
-  return {
-    words: totals.words,
-    characters: totals.characters,
-    selectedWords: selected.words,
-    selectedCharacters: selected.characters,
-  };
-}
-
-function matchStats(view: EditorView): MatchStats {
-  const query = getSearchQuery(view.state);
-  if (!query.valid) return { current: 0, total: 0 };
-  const { from, to } = view.state.selection.main;
+function countMatches(state: EditorState, query: SearchQuery): MatchStats {
+  const { from, to } = state.selection.main;
   let total = 0;
   let current = 0;
-  const cursor = query.getCursor(view.state);
+  const cursor = query.getCursor(state);
   for (let match = cursor.next(); !match.done; match = cursor.next()) {
     total++;
     if (match.value.from === from && match.value.to === to) current = total;
   }
   return { current, total };
+}
+
+async function countMatchesInSlices(
+  state: EditorState,
+  query: SearchQuery,
+  cancelled: () => boolean,
+): Promise<MatchStats | undefined> {
+  const { from, to } = state.selection.main;
+  let total = 0;
+  let current = 0;
+  const cursor = query.getCursor(state);
+
+  const runSlice = async (): Promise<MatchStats | undefined> => {
+    const deadline = performance.now() + MATCH_COUNT_SLICE_MS;
+    while (performance.now() < deadline) {
+      const match = cursor.next();
+      if (match.done) return { current, total };
+      total++;
+      if (match.value.from === from && match.value.to === to) current = total;
+      if (total >= MAX_COUNTED_MATCHES) return { current, total, capped: true };
+    }
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    if (cancelled()) return undefined;
+    return runSlice();
+  };
+
+  return runSlice();
 }
 
 export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
@@ -281,11 +304,41 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     // that is already the next one; what it showed itself is kept here instead
     let path = props.documentPath;
     let headings: OutlineHeading[] = [];
-    // Counting walks the whole text, so coalesce it while typing or selecting in long documents
-    const updateStats = debounce(
-      (state: EditorState) => props.onStatsChange(countStats(state)),
-      STATS_DEBOUNCE_MS,
-    );
+    let outlineStarted = false;
+    let observedDoc: EditorState["doc"] | undefined;
+    const stats = createStatsTracker((next) => props.onStatsChange(next));
+    let matchRun = 0;
+
+    /**
+     * The match count the find bar shows. A small document is counted before the answer returns;
+     * a large one starts a cancelled-on-new-search background count and says it is pending.
+     */
+    const requestMatchStats = (view: EditorView): MatchStats => {
+      const query = getSearchQuery(view.state);
+      if (!query.valid || query.search === "") {
+        matchRun++;
+        return { current: 0, total: 0 };
+      }
+      if (view.state.doc.length <= SYNC_MATCH_LIMIT) {
+        matchRun++;
+        return countMatches(view.state, query);
+      }
+      const run = ++matchRun;
+      void countMatchesInSlices(view.state, query, () => run !== matchRun).then((counted) => {
+        if (counted !== undefined && run === matchRun) props.onMatchStatsChange(counted);
+      });
+      return { current: 0, total: 0, pending: true };
+    };
+
+    // The outline only changes when a heading does, but collecting it walks the parsed tree; let
+    // the keystrokes settle first so typing never waits for a list of thousands of rows
+    const updateOutline = debounce((state: EditorState) => {
+      const next = mergeHeadings(headings, collectHeadings(state));
+      if (next === headings) return;
+      headings = next;
+      props.onOutlineChange(headings);
+    }, OUTLINE_DEBOUNCE_MS);
+
     const focusCompartment = new Compartment();
     const typewriterCompartment = new Compartment();
     const spellcheckCompartment = new Compartment();
@@ -363,23 +416,38 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           restartCursorBlink,
           documentObserver({
             onDocChange: (state) => {
-              headings = collectHeadings(state);
-              props.onOutlineChange(headings);
-              updateStats(state);
+              const docChanged = state.doc !== observedDoc;
+              observedDoc = state.doc;
+              // The first outline is built as the editor opens, so its rows are not assembled
+              // under the first keystrokes; later changes wait for a pause
+              if (!outlineStarted) {
+                outlineStarted = true;
+                headings = collectHeadings(state);
+                props.onOutlineChange(headings);
+              } else {
+                updateOutline(state);
+              }
+              // Parsing the rest of a small document is not an edit, but it can make its count exact
+              if (!docChanged) stats.refresh(state);
             },
             onSelectionChange: (cursor) =>
               props.onActiveHeadingChange(findActiveHeading(headings, cursor)),
           }),
           EditorView.updateListener.of((update) => {
-            if (update.docChanged) props.onMarkdownChange(update.state.doc.toString());
+            if (update.docChanged) {
+              props.onMarkdownChange();
+              stats.changed(update);
+            }
             if (update.selectionSet) {
               savePosition();
-              updateStats(update.state);
+              if (!update.docChanged) stats.selection(update.state);
             }
           }),
         ],
       }),
     });
+
+    stats.start(view.state);
 
     // Source mode only swaps extensions, so the text, the caret, the scroll and the undo history stay
     // as they are. The editor remembers the mode it is set to itself, because printing shows the
@@ -487,8 +555,10 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       ),
     );
 
-    // CodeMirror normalizes line endings, so the baseline is the editor's text rather than the file's
-    props.onReady(view.state.doc.toString());
+    // CodeMirror keeps the text as a rope, so the string it was built from is the same text the
+    // editor holds; copying it back would duplicate a large document for no reason. A lone carriage
+    // return is the one character CodeMirror rewrites, so that case still reads the rope back.
+    props.onReady(props.markdown.includes("\r") ? view.state.doc.toString() : props.markdown);
     view.focus();
 
     // The place is put back from the text it was taken from: the caret, and the line that was at
@@ -530,7 +600,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
 
     const run = (command: Command): MatchStats => {
       if (getSearchQuery(view.state).valid) command(view);
-      return matchStats(view);
+      return requestMatchStats(view);
     };
 
     const insertImage = async () => {
@@ -554,6 +624,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
 
     props.ref({
       getMarkdown: () => view.state.doc.toString(),
+      getMarkdownLength: () => view.state.doc.length,
       focus: () => view.focus(),
       replaceDocument: (text) => {
         view.dispatch({
@@ -590,7 +661,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         if (options.search && !searchPanelOpen(view.state)) openSearchPanel(view);
         view.dispatch({ effects: setSearchQuery.of(new SearchQuery(options)) });
         if (!options.search) closeSearchPanel(view);
-        return matchStats(view);
+        return requestMatchStats(view);
       },
       findNext: () => run(findNext),
       findPrevious: () => run(findPrevious),
@@ -647,7 +718,9 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     });
 
     onCleanup(() => {
-      updateStats.clear();
+      updateOutline.clear();
+      matchRun++;
+      stats.dispose();
       // The view is gone once this returns, so the place has to be taken from it beforehand
       savePosition();
       flushDocumentPositions();

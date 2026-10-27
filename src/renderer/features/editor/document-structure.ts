@@ -1,22 +1,9 @@
 import { syntaxTree } from "@codemirror/language";
 import type { EditorState, Extension } from "@codemirror/state";
 import { ViewPlugin } from "@codemirror/view";
+import type { OutlineHeading } from "./outline-heading";
 
-export interface OutlineHeading {
-  level: number;
-  text: string;
-  /** Start of the heading in the document, used to scroll to it. */
-  pos: number;
-}
-
-/**
- * What tells one outline heading apart from another: its level and its text. A position would move
- * with every edit above the heading and open a collapsed section again while the document is
- * being written.
- */
-export function headingKey(heading: OutlineHeading): string {
-  return `${heading.level}:${heading.text}`;
-}
+export type { OutlineHeading } from "./outline-heading";
 
 /** A heading's node name, whose last character is its level: ATXHeading2, SetextHeading1. */
 export const HEADING_LEVEL = /^(?:ATX|Setext)Heading([1-6])$/;
@@ -123,7 +110,53 @@ export function findHeadingByAnchor(
 
 /** The section the cursor is in: the last heading at or before the cursor. */
 export function findActiveHeading(headings: readonly OutlineHeading[], cursor: number): number {
-  return headings.findLastIndex((heading) => heading.pos <= cursor);
+  let low = 0;
+  let high = headings.length - 1;
+  let active = -1;
+  while (low <= high) {
+    const middle = Math.floor((low + high) / 2);
+    const heading = headings[middle];
+    if (heading === undefined) break;
+    if (heading.pos <= cursor) {
+      active = middle;
+      low = middle + 1;
+    } else {
+      high = middle - 1;
+    }
+  }
+  return active;
+}
+
+/**
+ * Folds a freshly collected outline into the one the window shows. The positions of unchanged
+ * headings move with the text above them, but their rows do not have to be built again; keeping
+ * the old objects lets the outline render only when a heading is added, removed or reworded.
+ */
+export function mergeHeadings(
+  previous: OutlineHeading[],
+  next: readonly OutlineHeading[],
+): OutlineHeading[] {
+  if (previous.length === next.length) {
+    let unchanged = true;
+    for (let index = 0; index < next.length; index++) {
+      const before = previous[index];
+      const after = next[index];
+      if (!before || !after || before.level !== after.level || before.text !== after.text) {
+        unchanged = false;
+        break;
+      }
+      before.pos = after.pos;
+    }
+    if (unchanged) return previous;
+  }
+  return next.map((heading, index) => {
+    const before = previous[index];
+    if (before && before.level === heading.level && before.text === heading.text) {
+      before.pos = heading.pos;
+      return before;
+    }
+    return heading;
+  });
 }
 
 export interface DocumentObserver {
@@ -144,7 +177,9 @@ export function documentObserver(observer: DocumentObserver): Extension {
         if (update.docChanged || syntaxTree(update.state) !== syntaxTree(update.startState)) {
           observer.onDocChange(update.state);
         }
-        if (update.selectionSet) observer.onSelectionChange(update.state.selection.main.from);
+        if (update.selectionSet) {
+          observer.onSelectionChange(update.state.selection.main.from);
+        }
       },
     };
   });

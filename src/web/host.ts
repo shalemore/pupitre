@@ -39,7 +39,6 @@ import {
   settingsFileSchema,
   withoutSetting,
 } from "@shared/settings";
-import { getSampleDocument } from "@/features/samples/sample-document";
 import about from "./demo/about.md?raw";
 
 /**
@@ -53,6 +52,12 @@ const DRAFT_KEY = "pupitre:draft";
 /** A browser is closest to Linux: shortcuts are written with Ctrl and windows have no system menu bar. */
 const platform: DesktopPlatform = "linux";
 const DEMO_FOLDER = "/demo";
+// The demo has no bundle to keep small across launches, so its sample document is part of the page
+const SAMPLE_DOCUMENTS = import.meta.glob<string>("../renderer/features/samples/documents/*.md", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+});
 const isSettingsWindow = location.hash === "#settings";
 const siteUrl = new URL("./", location.href).href;
 
@@ -167,7 +172,10 @@ const labels = () => getDictionary(currentLocale());
 const ABOUT_PATH = `${DEMO_FOLDER}/About this demo.md`;
 const files = new Map([
   [ABOUT_PATH, about],
-  [`${DEMO_FOLDER}/Pupitre Guide.md`, getSampleDocument(currentLocale())],
+  [
+    `${DEMO_FOLDER}/Pupitre Guide.md`,
+    SAMPLE_DOCUMENTS[`../renderer/features/samples/documents/${currentLocale()}.md`] ?? "",
+  ],
 ]);
 // Files dropped on the page are read after the page asked for their path
 const dropped = new Map<string, Promise<string>>();
@@ -200,7 +208,8 @@ function opened(path: string): OpenedDocument {
     path,
     folder,
     baseUrl: siteUrl,
-    content: files.get(path) ?? "",
+    // The editor works on LF; the desktop host normalizes a file the same way before handing it over
+    content: (files.get(path) ?? "").replaceAll(/\r\n?/g, "\n"),
     lineEnding: "lf",
     // A browser hands over text that is already decoded, so the demo writes UTF-8
     encoding: "utf-8",

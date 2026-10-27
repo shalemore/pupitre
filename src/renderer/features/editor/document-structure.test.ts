@@ -3,6 +3,7 @@ import {
   collectHeadings,
   findActiveHeading,
   findHeadingByAnchor,
+  mergeHeadings,
   readableText,
 } from "./document-structure";
 import { markdownState } from "./testing";
@@ -56,5 +57,27 @@ describe("findActiveHeading", () => {
     expect(findActiveHeading(headings, 5)).toBe(0);
     expect(findActiveHeading(headings, 10)).toBe(1);
     expect(findActiveHeading([], 5)).toBe(-1);
+  });
+});
+
+describe("mergeHeadings", () => {
+  it("keeps the same list and its rows when only positions moved", () => {
+    const headings = [{ level: 1, text: "A", pos: 0 }];
+    const merged = mergeHeadings(headings, [{ level: 1, text: "A", pos: 20 }]);
+    expect(merged).toBe(headings);
+    expect(merged[0]?.pos).toBe(20);
+  });
+
+  it("builds a new list when a heading is added", () => {
+    const headings = [{ level: 1, text: "A", pos: 0 }];
+    expect(
+      mergeHeadings(headings, [
+        { level: 1, text: "A", pos: 0 },
+        { level: 2, text: "B", pos: 10 },
+      ]),
+    ).toEqual([
+      { level: 1, text: "A", pos: 0 },
+      { level: 2, text: "B", pos: 10 },
+    ]);
   });
 });

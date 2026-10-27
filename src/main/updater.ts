@@ -79,10 +79,13 @@ export async function checkForUpdates(): Promise<void> {
 /** Checks for updates once in the background at startup if the setting allows it; failures stay silent. */
 export function checkForUpdatesOnStartup(): void {
   if (!app.isPackaged || !canSelfUpdate || !getSettings().autoCheckUpdates) return;
-  notifyWhenAvailable = true;
-  autoUpdater.checkForUpdates().catch(() => {
-    notifyWhenAvailable = false;
-  });
+  // Let the window paint and the first document load before the update client uses the network
+  setTimeout(() => {
+    notifyWhenAvailable = true;
+    autoUpdater.checkForUpdates().catch(() => {
+      notifyWhenAvailable = false;
+    });
+  }, 4000);
 }
 
 export async function downloadUpdate(): Promise<void> {

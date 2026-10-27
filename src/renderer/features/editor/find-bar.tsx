@@ -55,7 +55,7 @@ export const FindBar: Component<FindBarProps> = (props) => {
   const [caseSensitive, setCaseSensitive] = createSignal(false);
   const [wholeWord, setWholeWord] = createSignal(false);
   const [regexp, setRegexp] = createSignal(false);
-  const hasMatches = () => props.matchStats.total > 0;
+  const hasMatches = () => props.matchStats.pending === true || props.matchStats.total > 0;
   let searchInput: HTMLInputElement | undefined;
   let replaceInput: HTMLInputElement | undefined;
 
@@ -153,7 +153,9 @@ export const FindBar: Component<FindBarProps> = (props) => {
         <div class="shrink-0 tabular-nums">
           <Show when={searchText()}>
             <Badge variant={hasMatches() ? "secondary" : "destructive"} size="sm" dir="ltr">
-              {props.matchStats.current}/{props.matchStats.total}
+              {props.matchStats.pending
+                ? "…"
+                : `${props.matchStats.current}/${props.matchStats.total}${props.matchStats.capped ? "+" : ""}`}
             </Badge>
           </Show>
         </div>

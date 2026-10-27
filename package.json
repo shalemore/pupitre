@@ -27,6 +27,7 @@
     "test:e2e": "playwright test",
     "test:perf": "offstage-windows playwright test --config=playwright.perf.config.ts",
     "bench": "vitest bench --config=vitest.bench.config.ts --run --reporter=verbose",
+    "perf:fixtures": "node scripts/perf-fixtures.ts",
     "check:bundle": "node scripts/check-bundle-size.ts",
     "postinstall": "patch-package",
     "typecheck": "tsrs -b",

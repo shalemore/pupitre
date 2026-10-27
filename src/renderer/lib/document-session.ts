@@ -42,6 +42,11 @@ export interface Tab {
   markdown: string;
   /** What the file or the tab last held; the tab is dirty while `markdown` differs from it. */
   savedMarkdown: string;
+  /**
+   * Whether the editor holds a change that is not saved. The text itself is read from the editor
+   * when it is needed, so a keystroke does not copy a whole document into the session.
+   */
+  edited: boolean;
   /** The file was deleted elsewhere; until the tab is saved again its text exists nowhere else. */
   missingOnDisk: boolean;
   /** What the file on disk is known to contain, so a change caused by the tab's own save is recognized. */
@@ -72,16 +77,23 @@ type ClosedTab = { kind: "file"; path: string } | { kind: "in-memory"; text: InM
 
 const SAMPLE_FILE_NAME = "Pupitre-Guide.md";
 const AUTO_SAVE_DELAY = 1500;
+// A dirty dot that an undo cleared should disappear without waiting for a save
+const SAVED_CHECK_DELAY = 400;
 // File › Reopen Closed Tab walks back through the tabs that were closed, and only so many are kept
 const CLOSED_TAB_LIMIT = 20;
 // A draft follows the pause after typing, not the keystrokes themselves; the main process writes it out a moment later
 const DRAFT_WRITE_DELAY = 1000;
+// A draft copies the text of every changed tab into the profile; a document this large would make
+// every pause and every close write hundreds of megabytes, so it is not drafted at all
+const MAX_DRAFT_CHARACTERS = 8 * 1024 * 1024;
+// Comparing the whole document with the saved version after an undo is only cheap while it is small
+const MAX_SAVED_CHECK_CHARACTERS = 8 * 1024 * 1024;
 // Saving compares the file on disk with what was last read or written; bigger files skip the comparison to keep saving fast
 const MAX_CONFLICT_CHECK_BYTES = 512 * 1024;
 let nextDocumentId = 1;
 let nextTabId = 1;
 
-export const isTabDirty = (tab: Tab) => tab.markdown !== tab.savedMarkdown || tab.missingOnDisk;
+export const isTabDirty = (tab: Tab) => tab.edited || tab.missingOnDisk;
 
 /**
  * The open tabs and the life cycle of the document in each: new, open, save, save as, close, and
@@ -89,7 +101,9 @@ export const isTabDirty = (tab: Tab) => tab.markdown !== tab.savedMarkdown || ta
  * the active tab; the caller provides it through getMarkdown.
  */
 export function createDocumentSession(
-  getEditor: () => Pick<MarkdownEditorHandle, "getMarkdown" | "persistImages"> | undefined,
+  getEditor: () =>
+    | Pick<MarkdownEditorHandle, "getMarkdown" | "getMarkdownLength" | "persistImages">
+    | undefined,
 ) {
   const [tabs, setTabs] = createSignal<Tab[]>([]);
   const [activeTabId, setActiveTabId] = createSignal<number>();
@@ -112,6 +126,20 @@ export function createDocumentSession(
 
   const patchTab = (id: number, patch: Partial<Tab>) =>
     setTabs(tabs().map((tab) => (tab.id === id ? Object.assign({}, tab, patch) : tab)));
+
+  /**
+   * Copies the text of the tab on show out of the editor, before another tab hides it. Reading a
+   * large document is expensive, so it happens when a tab is left or saved rather than on every
+   * keystroke; until then `edited` is what says the text has changed.
+   */
+  const rememberActiveText = () => {
+    const tab = activeTab();
+    if (tab === undefined || !tab.edited) return;
+    const editor = getEditor();
+    if (editor === undefined) return;
+    const markdown = editor.getMarkdown();
+    patchTab(tab.id, { markdown, edited: markdown !== tab.savedMarkdown });
+  };
 
   // "Keep as is" keeps the file's own line endings; otherwise the setting decides
   const lineEndingFor = (doc: OpenDocument): LineEnding => {
@@ -143,6 +171,7 @@ export function createDocumentSession(
     },
     pendingImages: PendingImages = createPendingImages(),
   ) => {
+    rememberActiveText();
     const id = nextTabId++;
     batch(() => {
       setTabs([
@@ -152,6 +181,7 @@ export function createDocumentSession(
           doc: { ...doc, id: nextDocumentId++ },
           markdown,
           savedMarkdown: text.savedMarkdown,
+          edited: markdown !== text.savedMarkdown,
           missingOnDisk: false,
           diskContent: text.diskContent,
           discarded: false,
@@ -176,6 +206,7 @@ export function createDocumentSession(
   const showOpened = (opened: OpenedDocument) => {
     const open = tabOfPath(opened.path);
     if (open !== undefined) {
+      rememberActiveText();
       setActiveTabId(open.id);
       return;
     }
@@ -191,6 +222,7 @@ export function createDocumentSession(
       doc: { ...tab.doc, ...opened, id: nextDocumentId++ },
       markdown: opened.content,
       savedMarkdown: opened.content,
+      edited: false,
       missingOnDisk: false,
       diskContent: opened.content,
       discarded: false,
@@ -228,7 +260,7 @@ export function createDocumentSession(
       await reportFailure(t().dialogs.saveFailed, path, message);
       return false;
     }
-    patchTab(tab.id, { markdown, savedMarkdown: markdown, missingOnDisk: false });
+    patchTab(tab.id, { markdown, savedMarkdown: markdown, edited: false, missingOnDisk: false });
     return true;
   };
 
@@ -291,41 +323,73 @@ export function createDocumentSession(
 
   const scheduleSave = debounce(() => void saveDirtyTabs(), AUTO_SAVE_DELAY);
 
+  // The dirty dot is normally cleared by a save; an undo can also bring the text back to the version
+  // on disk. Comparing a whole document on every key would defeat the point, so the check waits for
+  // the typing to stop and only runs for documents small enough to compare cheaply.
+  const checkSaved = debounce(() => {
+    const tab = activeTab();
+    const editor = getEditor();
+    if (tab === undefined || !tab.edited || editor === undefined) return;
+    if (editor.getMarkdownLength() > MAX_SAVED_CHECK_CHARACTERS) return;
+    if (editor.getMarkdown() === tab.savedMarkdown) patchTab(tab.id, { edited: false });
+  }, SAVED_CHECK_DELAY);
+
+  /** The text of a tab as a draft would keep it, or undefined when it is too large to copy. */
+  const draftText = (tab: Tab): string | undefined => {
+    const editor = tab.id === activeTabId() ? getEditor() : undefined;
+    if (editor !== undefined) {
+      if (editor.getMarkdownLength() > MAX_DRAFT_CHARACTERS) return undefined;
+      return editor.getMarkdown();
+    }
+    return tab.markdown.length <= MAX_DRAFT_CHARACTERS ? tab.markdown : undefined;
+  };
+
   /** One tab as a crash would leave it: the text being edited, and the version it is compared to. */
-  const draftOfTab = (tab: Tab): Draft => ({
-    path: tab.doc.path,
-    folder: tab.doc.folder,
-    baseUrl: tab.doc.baseUrl,
-    markdown: tab.markdown,
-    savedMarkdown: tab.savedMarkdown,
-    lineEnding: tab.doc.lineEnding,
-    encoding: tab.doc.encoding,
-    isSample: tab.doc.isSample,
-  });
+  const draftOfTab = (tab: Tab): Draft | undefined => {
+    const markdown = draftText(tab);
+    if (markdown === undefined) return undefined;
+    return {
+      path: tab.doc.path,
+      folder: tab.doc.folder,
+      baseUrl: tab.doc.baseUrl,
+      markdown,
+      savedMarkdown: tab.savedMarkdown,
+      lineEnding: tab.doc.lineEnding,
+      encoding: tab.doc.encoding,
+      isSample: tab.doc.isSample,
+    };
+  };
 
   /** What a crash would bring back: every tab with unsaved changes, and which of them was being edited. */
   const currentDraft = (): DraftSession | undefined => {
-    const unsaved = tabs().filter((tab) => !tab.discarded && isTabDirty(tab));
+    const unsaved = tabs()
+      .filter((tab) => !tab.discarded && isTabDirty(tab))
+      .map((tab) => ({ tab, draft: draftOfTab(tab) }))
+      .filter((entry): entry is { tab: Tab; draft: Draft } => entry.draft !== undefined);
     if (unsaved.length === 0) return undefined;
     // The active tab is only among them when it has changes of its own; the first one stands in otherwise
-    const active = unsaved.findIndex((tab) => tab.id === activeTabId());
-    return { tabs: unsaved.map(draftOfTab), active: Math.max(active, 0) };
+    const active = unsaved.findIndex(({ tab }) => tab.id === activeTabId());
+    return { tabs: unsaved.map(({ draft }) => draft), active: Math.max(active, 0) };
   };
 
-  const scheduleDraft = debounce(
-    (session: DraftSession) => void desktop.invoke("draft:write", session),
-    DRAFT_WRITE_DELAY,
-  );
+  const writeDraft = debounce(() => {
+    const draft = currentDraft();
+    if (draft === undefined) {
+      void desktop.invoke("draft:clear");
+      return;
+    }
+    void desktop.invoke("draft:write", draft);
+  }, DRAFT_WRITE_DELAY);
 
   const dropDraft = () => {
-    scheduleDraft.clear();
+    writeDraft.clear();
     void desktop.invoke("draft:clear");
   };
 
   /** Keeps what is unsaved right now, for a window that closes before the delay of the draft ends. */
   const flushDraft = () => {
     const draft = currentDraft();
-    scheduleDraft.clear();
+    writeDraft.clear();
     if (draft === undefined) return dropDraft();
     void desktop.invoke("draft:write", draft);
   };
@@ -394,8 +458,18 @@ export function createDocumentSession(
     const index = tabs().findIndex((tab) => tab.id === id);
     const tab = tabs()[index];
     if (tab === undefined) return;
+    // A text that exists nowhere else has to be captured before the editor stops showing it; a
+    // file-backed tab is saved from the editor or read again when it reopens. A small file is
+    // compared here as well, so an undo back to its saved version does not ask about changes.
+    const editor = tab.id === activeTabId() ? getEditor() : undefined;
+    const smallFile =
+      editor !== undefined && editor.getMarkdownLength() <= MAX_SAVED_CHECK_CHARACTERS;
+    if (tab.id === activeTabId() && (tab.doc.path === undefined || smallFile)) rememberActiveText();
+    // Copying the text may have shown an undo back to the saved version, so ask about the tab as it is now
+    const current = tabs().find((candidate) => candidate.id === id);
+    if (current === undefined) return;
     // A close the user cancelled leaves no tab behind to bring back
-    if (!(await confirmCloseTab(tab))) return;
+    if (!(await confirmCloseTab(current))) return;
     // The prompt may have saved the tab under a path it did not have before, which replaces the tab
     // it was asked about: what comes back is the one the signal holds now, file and all
     const closedTab = tabs().find((candidate) => candidate.id === id);
@@ -414,7 +488,11 @@ export function createDocumentSession(
   };
 
   const activateTab = (id: number) => {
-    if (tabs().some((tab) => tab.id === id)) setActiveTabId(id);
+    if (id === activeTabId()) return;
+    if (tabs().some((tab) => tab.id === id)) {
+      rememberActiveText();
+      setActiveTabId(id);
+    }
   };
 
   /**
@@ -454,7 +532,10 @@ export function createDocumentSession(
     if (open.length < 2) return;
     const index = open.findIndex((tab) => tab.id === activeTabId());
     const next = open[(index + step + open.length) % open.length];
-    if (next !== undefined) setActiveTabId(next.id);
+    if (next !== undefined) {
+      rememberActiveText();
+      setActiveTabId(next.id);
+    }
   };
 
   const nextTab = () => cycleTab(1);
@@ -471,6 +552,7 @@ export function createDocumentSession(
   const openPath = async (path: string, showError = true): Promise<string | undefined> => {
     const alreadyOpen = tabOfPath(path);
     if (alreadyOpen !== undefined) {
+      rememberActiveText();
       setActiveTabId(alreadyOpen.id);
       return undefined;
     }
@@ -488,13 +570,20 @@ export function createDocumentSession(
     }
   };
 
-  const openSample = () => {
+  const openSample = async () => {
     const sample = tabs().find((tab) => tab.doc.isSample);
     if (sample !== undefined) {
       setActiveTabId(sample.id);
       return;
     }
-    addTab(inMemoryDocument(true), getSampleDocument(currentLocale()));
+    const markdown = await getSampleDocument(currentLocale());
+    // Opening it twice while the document was loading still leaves one tab
+    const opened = tabs().find((tab) => tab.doc.isSample);
+    if (opened !== undefined) {
+      setActiveTabId(opened.id);
+      return;
+    }
+    addTab(inMemoryDocument(true), markdown);
   };
 
   /**
@@ -528,6 +617,7 @@ export function createDocumentSession(
           },
           markdown: draft.markdown,
           savedMarkdown: draft.savedMarkdown,
+          edited: draft.markdown !== draft.savedMarkdown,
           missingOnDisk: false,
           diskContent: onDisk ?? "",
           discarded: false,
@@ -573,10 +663,11 @@ export function createDocumentSession(
   };
 
   /** Called when the editor content changes; with auto save on, the files of every changed tab are written shortly after typing stops. */
-  const handleMarkdownChange = (markdown: string) => {
+  const handleMarkdownChange = () => {
     const tab = activeTab();
     if (tab === undefined) return;
-    patchTab(tab.id, { markdown, discarded: false });
+    patchTab(tab.id, { edited: true, discarded: false });
+    checkSaved();
     if (settings().autoSave) scheduleSave();
   };
 
@@ -676,15 +767,21 @@ export function createDocumentSession(
     on(
       currentLocale,
       (locale) => {
-        const markdown = getSampleDocument(locale);
-        for (const tab of tabs()) {
-          if (!tab.doc.isSample || isTabDirty(tab)) continue;
-          patchTab(tab.id, {
-            doc: { ...tab.doc, id: nextDocumentId++ },
-            markdown,
-            savedMarkdown: markdown,
-          });
-        }
+        void getSampleDocument(locale)
+          .then((markdown) => {
+            // A later language change has its own load; this one no longer describes it
+            if (currentLocale() !== locale) return;
+            for (const tab of tabs()) {
+              if (!tab.doc.isSample || isTabDirty(tab)) continue;
+              patchTab(tab.id, {
+                doc: { ...tab.doc, id: nextDocumentId++ },
+                markdown,
+                savedMarkdown: markdown,
+                edited: false,
+              });
+            }
+          })
+          .catch(() => undefined);
       },
       { defer: true },
     ),
@@ -694,9 +791,11 @@ export function createDocumentSession(
   // as no tab has any left, so a crash never brings back what is already on disk
   createEffect(() => {
     if (!startupDone()) return;
-    const draft = currentDraft();
-    if (draft === undefined) return dropDraft();
-    scheduleDraft(draft);
+    if (!tabs().some((tab) => !tab.discarded && isTabDirty(tab))) {
+      dropDraft();
+      return;
+    }
+    writeDraft();
   });
 
   return {
@@ -727,6 +826,7 @@ export function createDocumentSession(
     flushDraft,
     dispose: () => {
       scheduleSave.clear();
+      checkSaved.clear();
       flushDraft();
       for (const tab of tabs()) tab.pendingImages.dispose();
     },

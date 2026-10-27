@@ -68,20 +68,22 @@ export function undeclaredUtf16(buffer: Buffer): TextEncoding | undefined {
 }
 
 /**
- * Whether a character of a decoded file is one no document holds: a control character other than
- * the tab and the line breaks, or the replacement character a byte that is not UTF-8 becomes.
- * Binary content turns most of its bytes into one or the other.
+ * Characters no document holds: control characters other than the tab and the line breaks, and the
+ * replacement character a byte that is not UTF-8 becomes. A regular expression finds them over a
+ * large file without the JavaScript loop `mostlyUnreadable` used to run per character.
  */
-function isUnreadable(codePoint: number): boolean {
-  if (codePoint === 0x7f || codePoint === 0xfffd) return true;
-  return codePoint < 0x20 && codePoint !== 0x09 && codePoint !== 0x0a && codePoint !== 0x0d;
-}
+// Control characters are exactly what a file that is not text decodes to
+// eslint-disable-next-line no-control-regex
+const UNREADABLE_CHARACTERS = /[\x00-\x08\x0b\x0c\x0e-\x1f\x7f�]/g;
 
-/** How many characters of a decoded file are unreadable ones. */
+/** How many characters of a decoded file are unreadable ones; stops at the share that settles it. */
 function unreadableCharacters(text: string): number {
+  const settled = Math.floor(text.length * MAX_UNREADABLE_SHARE) + 1;
   let count = 0;
-  for (let index = 0; index < text.length; index++) {
-    if (isUnreadable(text.charCodeAt(index))) count += 1;
+  const matches = text.matchAll(UNREADABLE_CHARACTERS);
+  for (let result = matches.next(); !result.done; result = matches.next()) {
+    count++;
+    if (count >= settled) break;
   }
   return count;
 }

@@ -28,14 +28,21 @@ A line with *emphasis*, **strong text**, a [link](https://example.com), a \`code
 
 /**
  * `article` is the long note typing is measured on: a document of a few hundred kilobytes reads as
- * a long article, and the keystroke cost there is the one a user meets all day. The two larger
- * documents are about opening them, since typing at their end costs hundreds of milliseconds a key.
+ * a long article, and the keystroke cost there is the one a user meets all day. The larger
+ * documents are about opening them, scrolling to the end and counting them. A JavaScript string
+ * tops out below 512 MiB, so 500 MB is the practical ceiling for a document held whole.
  */
-const FILE_SIZE = { article: 200 * 1024, small: 5 * 1024 * 1024, large: 20 * 1024 * 1024 };
+const FILE_SIZE = {
+  article: 200 * 1024,
+  small: 5 * 1024 * 1024,
+  large: 100 * 1024 * 1024,
+  huge: 200 * 1024 * 1024,
+  maximum: 500 * 1024 * 1024,
+};
 
 /** Limits that only catch a broken run, not a slow machine. */
 const OPEN_LIMIT_MS = 180_000;
-const TYPING_P95_LIMIT_MS = 500;
+const TYPING_P95_LIMIT_MS = 250;
 
 interface Measurement {
   name: string;
@@ -91,6 +98,19 @@ async function openToTail(testApp: TestApp, title: string, started: number): Pro
   return performance.now() - started;
 }
 
+/** The time until the title bar shows a count for the document, from the launch. */
+async function counted(page: Page, started: number): Promise<number> {
+  await page.waitForFunction(
+    () => {
+      const count = document.querySelector('[data-bar-part="count"]')?.textContent ?? "";
+      return count.trim() !== "" && !/^\s*0\b/.test(count);
+    },
+    undefined,
+    { timeout: OPEN_LIMIT_MS },
+  );
+  return performance.now() - started;
+}
+
 /**
  * Times a keystroke from its `keydown` to the first frame drawn after it, which is where the
  * character becomes visible. The listener sits on the document in the capture phase, so it starts
@@ -120,6 +140,34 @@ async function measureTyping(page: Page, text: string): Promise<number[]> {
     performance
       .getEntriesByType("measure")
       .filter((entry) => entry.name === "typing-latency")
+      .map((entry) => entry.duration),
+  );
+}
+
+/** The latency of typing into the find field, where every character used to count the whole file. */
+async function measureFindTyping(page: Page, text: string): Promise<number[]> {
+  await run(page, { id: "edit.find" });
+  const input = page.locator('[data-slot="find-bar"] input').first();
+  await input.waitFor({ timeout: OPEN_LIMIT_MS });
+  await input.click();
+  await page.evaluate(() => {
+    performance.clearMeasures("find-latency");
+    document.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key.length !== 1) return;
+        requestAnimationFrame((frameTime) => {
+          performance.measure("find-latency", { start: event.timeStamp, end: frameTime });
+        });
+      },
+      true,
+    );
+  });
+  await page.keyboard.type(text);
+  return page.evaluate(() =>
+    performance
+      .getEntriesByType("measure")
+      .filter((entry) => entry.name === "find-latency")
       .map((entry) => entry.duration),
   );
 }
@@ -176,14 +224,62 @@ test("opens a 200 KB document and types into it", async () => {
   }
 });
 
-test("opens a 5 MB document", async () => {
+test("opens a 5 MB document, counts it and types into it", async () => {
   const generated = await generateDocument("5 MB", FILE_SIZE.small);
   const started = performance.now();
   const testApp = await launch({ files: [generated.file] });
   try {
     const open = await openToTail(testApp, "5 MB", started);
     record("open 5 MB to the tail", open, "ms");
+    record("counts 5 MB", await counted(testApp.page, started), "ms");
     record("main process RSS after 5 MB", await mainRssMib(testApp.app), "MiB");
+    expect(open).toBeLessThan(OPEN_LIMIT_MS);
+
+    const latencies = await measureTyping(testApp.page, "typing a large document");
+    expect(latencies.length).toBeGreaterThan(0);
+    const p95 = percentile(latencies, 0.95);
+    record("typing 5 MB median", percentile(latencies, 0.5), "ms");
+    record("typing 5 MB p95", p95, "ms");
+    expect(p95).toBeLessThan(TYPING_P95_LIMIT_MS);
+  } finally {
+    await close(testApp);
+    await rm(generated.folder, { recursive: true, force: true });
+  }
+});
+
+test("opens a 100 MB document", async () => {
+  const generated = await generateDocument("100 MB", FILE_SIZE.large);
+  const started = performance.now();
+  const testApp = await launch({ files: [generated.file] });
+  try {
+    const open = await openToTail(testApp, "100 MB", started);
+    record("open 100 MB to the tail", open, "ms");
+    record("counts 100 MB", await counted(testApp.page, started), "ms");
+    record("main process RSS after 100 MB", await mainRssMib(testApp.app), "MiB");
+    expect(open).toBeLessThan(OPEN_LIMIT_MS);
+
+    const findLatencies = await measureFindTyping(testApp.page, "Pupitre");
+    expect(findLatencies.length).toBeGreaterThan(0);
+    record("find typing 100 MB median", percentile(findLatencies, 0.5), "ms");
+    record("find typing 100 MB p95", percentile(findLatencies, 0.95), "ms");
+    const findStarted = performance.now();
+    await testApp.page.keyboard.press("Enter");
+    record("find next 100 MB", performance.now() - findStarted, "ms");
+  } finally {
+    await close(testApp);
+    await rm(generated.folder, { recursive: true, force: true });
+  }
+});
+
+test("opens a 200 MB document", async () => {
+  const generated = await generateDocument("200 MB", FILE_SIZE.huge);
+  const started = performance.now();
+  const testApp = await launch({ files: [generated.file] });
+  try {
+    const open = await openToTail(testApp, "200 MB", started);
+    record("open 200 MB to the tail", open, "ms");
+    record("counts 200 MB", await counted(testApp.page, started), "ms");
+    record("main process RSS after 200 MB", await mainRssMib(testApp.app), "MiB");
     expect(open).toBeLessThan(OPEN_LIMIT_MS);
   } finally {
     await close(testApp);
@@ -191,14 +287,15 @@ test("opens a 5 MB document", async () => {
   }
 });
 
-test("opens a 20 MB document", async () => {
-  const generated = await generateDocument("20 MB", FILE_SIZE.large);
+test("opens a 500 MB document", async () => {
+  const generated = await generateDocument("500 MB", FILE_SIZE.maximum);
   const started = performance.now();
   const testApp = await launch({ files: [generated.file] });
   try {
-    const open = await openToTail(testApp, "20 MB", started);
-    record("open 20 MB to the tail", open, "ms");
-    record("main process RSS after 20 MB", await mainRssMib(testApp.app), "MiB");
+    const open = await openToTail(testApp, "500 MB", started);
+    record("open 500 MB to the tail", open, "ms");
+    record("counts 500 MB", await counted(testApp.page, started), "ms");
+    record("main process RSS after 500 MB", await mainRssMib(testApp.app), "MiB");
     expect(open).toBeLessThan(OPEN_LIMIT_MS);
   } finally {
     await close(testApp);

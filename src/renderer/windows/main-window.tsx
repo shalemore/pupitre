@@ -5,6 +5,7 @@ import {
   createEffect,
   createMemo,
   createSignal,
+  lazy,
   on,
   onCleanup,
   onMount,
@@ -14,13 +15,9 @@ import {
 import type { AppCommand } from "@shared/desktop-api";
 import { TitleBar } from "@/components/title-bar";
 import { CommandPalette } from "@/features/command-palette/command-palette";
-import { headingKey, type OutlineHeading } from "@/features/editor/document-structure";
 import { FindBar } from "@/features/editor/find-bar";
-import {
-  MarkdownEditor,
-  type MarkdownEditorHandle,
-  type MatchStats,
-} from "@/features/editor/markdown-editor";
+import type { MarkdownEditorHandle, MatchStats } from "@/features/editor/markdown-editor";
+import { headingKey, type OutlineHeading } from "@/features/editor/outline-heading";
 import { TableSizeDialog } from "@/features/editor/table-size-dialog";
 import { VersionHistory } from "@/features/history/version-history";
 import { MenuBar } from "@/features/menu/menu-bar";
@@ -54,6 +51,12 @@ type FindMode = "closed" | "find" | "replace";
 const SIDEBAR_WIDTH_SAVE_DELAY = 300;
 /** The outline of a document nothing is folded in yet, and of no document at all. */
 const OPEN_SECTIONS: ReadonlySet<string> = new Set();
+
+/** CodeMirror and the editor around it load when a document is shown, not with the welcome screen. */
+const MarkdownEditor = lazy(async () => {
+  const { MarkdownEditor: Component } = await import("@/features/editor/markdown-editor");
+  return { default: Component };
+});
 
 export const MainWindow: Component = () => {
   // A signal rather than a variable: a new document brings a new editor, and a match found in the
@@ -423,6 +426,14 @@ export const MainWindow: Component = () => {
 
   onMount(() => {
     void session.restoreOnStartup();
+    // The editor is a chunk of its own; fetch it while the welcome screen is idle, so the first
+    // document does not wait for both the file and the code that shows it
+    const warmEditor = () => void import("@/features/editor/markdown-editor");
+    if (typeof requestIdleCallback === "function") {
+      requestIdleCallback(warmEditor, { timeout: 2000 });
+    } else {
+      setTimeout(warmEditor, 100);
+    }
     // A window that closes before the next write of the draft was due keeps the last typing all the same
     makeEventListener(window, "pagehide", session.flushDraft);
     // dragover's default behavior must be prevented, otherwise drop never fires
@@ -625,6 +636,7 @@ export const MainWindow: Component = () => {
                       onOutlineChange={setOutline}
                       onActiveHeadingChange={setActiveHeading}
                       onStatsChange={setStats}
+                      onMatchStatsChange={setMatchStats}
                       ref={setEditor}
                     />
                   </Show>

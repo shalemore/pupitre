@@ -7,7 +7,48 @@ directories:
   output: release
 files:
   - out/**
+  # The browser demo is built into out/web for GitHub Pages; the desktop app never loads it
+  - "!out/web/**"
+  # It travels as an extraResource next to app.asar, not twice inside it
+  - "!out/renderer/THIRD-PARTY-NOTICES.txt"
   - package.json
+# Spend the build time on a smaller installer; this does not affect the unpacked app
+compression: maximum
+# Chromium's own translations are for its native dialogs and menus. Ship the languages Pupitre
+# speaks; the app draws the rest of its interface from its own dictionaries. Electron has no
+# Icelandic or Hong Kong locale: Icelandic native dialogs fall back to English, and Hong Kong uses
+# zh-TW. en-GB is kept for English (United Kingdom) systems, and Spanish is one pak for es-ES.
+electronLanguages:
+  - ar
+  - cs
+  - da
+  - de
+  - el
+  - en-GB
+  - en-US
+  - es
+  - fa
+  - fi
+  - fr
+  - hi
+  - hu
+  - id
+  - it
+  - ja
+  - ko
+  - nb
+  - nl
+  - pl
+  - pt-BR
+  - pt-PT
+  - ru
+  - sv
+  - th
+  - tr
+  - uk
+  - vi
+  - zh-CN
+  - zh-TW
 # The licenses that travel with the app: Pupitre's own, and those of the packages bundled in it
 extraResources:
   - from: LICENSE
