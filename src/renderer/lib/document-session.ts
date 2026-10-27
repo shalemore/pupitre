@@ -667,7 +667,11 @@ export function createDocumentSession(
   const handleMarkdownChange = () => {
     const tab = activeTab();
     if (tab === undefined) return;
-    patchTab(tab.id, { edited: true, discarded: false });
+    if (!tab.edited || tab.discarded) {
+      patchTab(tab.id, { edited: true, discarded: false });
+    } else if (startupDone()) {
+      writeDraft();
+    }
     checkSaved();
     if (settings().autoSave) scheduleSave();
   };

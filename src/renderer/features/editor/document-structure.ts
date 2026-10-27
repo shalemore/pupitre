@@ -191,10 +191,13 @@ export interface HeadingUpdate {
 }
 
 /**
- * Shifts heading positions after an edit that neither touched an existing heading nor created one,
- * avoiding a walk of the whole syntax tree while typing ordinary prose.
+ * Whether an edit neither touched an existing heading nor created one, so the outline can shift
+ * existing heading positions instead of walking the whole syntax tree.
  */
-export function shiftHeadings(headings: OutlineHeading[], update: HeadingUpdate): boolean {
+export function canShiftHeadings(
+  headings: readonly OutlineHeading[],
+  update: HeadingUpdate,
+): boolean {
   if (!update.docChanged) return false;
   let ranges = 0;
   let canShift = true;
@@ -226,7 +229,15 @@ export function shiftHeadings(headings: OutlineHeading[], update: HeadingUpdate)
       canShift = false;
     }
   });
-  if (!canShift) return false;
+  return canShift;
+}
+
+/**
+ * Shifts heading positions after an edit that neither touched an existing heading nor created one,
+ * avoiding a walk of the whole syntax tree while typing ordinary prose.
+ */
+export function shiftHeadings(headings: OutlineHeading[], update: HeadingUpdate): boolean {
+  if (!canShiftHeadings(headings, update)) return false;
   for (const heading of headings) {
     heading.pos = update.changes.mapPos(heading.pos);
   }

@@ -1,5 +1,11 @@
 import { syntaxTree } from "@codemirror/language";
-import { type EditorState, type Extension, type Range, StateField } from "@codemirror/state";
+import {
+  type EditorState,
+  type Extension,
+  type Range,
+  StateField,
+  type Transaction,
+} from "@codemirror/state";
 import { Decoration, type DecorationSet, EditorView, type WidgetType } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
 import { fencedText } from "./block-text";
@@ -23,6 +29,16 @@ import { TOC_MARKER, TocWidget } from "./toc";
 
 /** Containers whose children can be rendered blocks; other blocks are never entered. */
 const CONTAINER = /^(?:Document|Blockquote|BulletList|OrderedList|ListItem)$/;
+const RENDERED_NODE = /^(?:Table|HTMLBlock|BlockMath|FencedCode)$/;
+const MAX_TOC_LENGTH = 64;
+
+function isTocParagraph(state: EditorState, node: SyntaxNode): boolean {
+  return (
+    node.name === "Paragraph" &&
+    node.to - node.from <= MAX_TOC_LENGTH &&
+    TOC_MARKER.test(state.sliceDoc(node.from, node.to))
+  );
+}
 
 /**
  * The end of the source of a rendered block, which is where a click on its rendering puts the
@@ -44,7 +60,7 @@ function blockWidget(state: EditorState, node: SyntaxNode): WidgetType | undefin
     return new TableWidget(state.sliceDoc(node.from, node.to), readTable(state, node));
   }
   if (node.name === "Paragraph") {
-    return TOC_MARKER.test(text(node)) ? new TocWidget(collectHeadings(state)) : undefined;
+    return isTocParagraph(state, node) ? new TocWidget(collectHeadings(state)) : undefined;
   }
   if (node.name === "HTMLBlock") {
     const source = text(node);
@@ -75,11 +91,13 @@ interface SensitiveRange {
 interface RenderedBlocksState {
   decorations: DecorationSet;
   sensitive: readonly SensitiveRange[];
+  hasToc: boolean;
 }
 
 function buildDecorations(state: EditorState): RenderedBlocksState {
   const decorations: Range<Decoration>[] = [];
   const sensitive: SensitiveRange[] = [];
+  let hasToc = false;
   const { doc } = state;
   const ranges = revealingRanges(state);
   const isTouched = (from: number, to: number): boolean => {
@@ -122,6 +140,7 @@ function buildDecorations(state: EditorState): RenderedBlocksState {
       }
       const widget = blockWidget(state, node.node);
       if (!widget) return false;
+      if (widget instanceof TocWidget) hasToc = true;
       // The block takes whole lines, the markers of a quote or a list around it included, so a
       // cursor anywhere on them reveals its source; a click on the rendering puts it on the first
       const [from, to] = lineRange(state, node.node);
@@ -138,19 +157,92 @@ function buildDecorations(state: EditorState): RenderedBlocksState {
       return false;
     },
   });
-  return { decorations: Decoration.set(decorations, true), sensitive };
+  return { decorations: Decoration.set(decorations, true), sensitive, hasToc };
+}
+
+function hasRenderedBlockOrSpill(state: EditorState, from: number, to: number): boolean {
+  let found = false;
+  syntaxTree(state).iterate({
+    from,
+    to,
+    enter: (node) => {
+      if (CONTAINER.test(node.name)) return true;
+      if (RENDERED_NODE.test(node.name) || isTocParagraph(state, node.node) || node.to > to) {
+        found = true;
+      }
+      return false;
+    },
+  });
+  return found;
+}
+
+function mapDecorations(
+  current: RenderedBlocksState,
+  tr: Transaction,
+): RenderedBlocksState | undefined {
+  if (current.hasToc) return undefined;
+  let ranges = 0;
+  let canMap = true;
+  tr.changes.iterChangedRanges((fromA, toA, fromB, toB) => {
+    if (!canMap || ++ranges > 8) {
+      canMap = false;
+      return;
+    }
+    const firstLineA = tr.startState.doc.lineAt(fromA);
+    const checkFromA =
+      firstLineA.number > 1 ? tr.startState.doc.line(firstLineA.number - 1).from : firstLineA.from;
+    const checkToA = tr.startState.doc.lineAt(toA).to;
+    current.decorations.between(checkFromA, checkToA, () => {
+      canMap = false;
+      return false;
+    });
+    if (!canMap || current.sensitive.some(({ from, to }) => from <= checkToA && to >= checkFromA)) {
+      canMap = false;
+      return;
+    }
+    const firstLineB = tr.state.doc.lineAt(fromB);
+    const checkFromB =
+      firstLineB.number > 1 ? tr.state.doc.line(firstLineB.number - 1).from : firstLineB.from;
+    const checkToB = tr.state.doc.lineAt(toB).to;
+    if (
+      hasRenderedBlockOrSpill(tr.startState, checkFromA, checkToA) ||
+      hasRenderedBlockOrSpill(tr.state, checkFromB, checkToB)
+    ) {
+      canMap = false;
+    }
+  });
+  if (!canMap) return undefined;
+  const decorations = current.decorations.map(tr.changes);
+  if (current.sensitive.length === 0) {
+    return decorations === current.decorations
+      ? current
+      : { decorations, sensitive: current.sensitive, hasToc: false };
+  }
+  const rangesAfter = revealingRanges(tr.state);
+  const sensitive: SensitiveRange[] = [];
+  for (const range of current.sensitive) {
+    const from = tr.changes.mapPos(range.from, 1);
+    const to = tr.changes.mapPos(range.to, -1);
+    if (touches(rangesAfter, from, to) !== range.touched) return undefined;
+    sensitive.push({ from, to, touched: range.touched });
+  }
+  return { decorations, sensitive, hasToc: false };
 }
 
 const renderedBlockDecorations = StateField.define<RenderedBlocksState>({
   create: buildDecorations,
   update: (current, tr) => {
     if (
-      tr.docChanged ||
       tr.effects.some((effect) => effect.is(toggleDetails)) ||
       printingChanged(tr.state, tr.startState) ||
-      tr.state.facet(diagramTheme) !== tr.startState.facet(diagramTheme) ||
-      syntaxTree(tr.state) !== syntaxTree(tr.startState)
+      tr.state.facet(diagramTheme) !== tr.startState.facet(diagramTheme)
     ) {
+      return buildDecorations(tr.state);
+    }
+    if (tr.docChanged) {
+      return mapDecorations(current, tr) ?? buildDecorations(tr.state);
+    }
+    if (syntaxTree(tr.state) !== syntaxTree(tr.startState)) {
       return buildDecorations(tr.state);
     }
     if (!tr.selection) return current;

@@ -426,12 +426,10 @@ export const MainWindow: Component = () => {
 
   onMount(() => {
     void session.restoreOnStartup();
-    // The editor is a chunk of its own; fetch it at once when a file was passed at launch, or
-    // while the welcome screen is idle so the first document does not wait for the code that shows it
+    // The editor is a chunk of its own; fetch it while the welcome screen is idle, so the first
+    // document does not wait for both the file and the code that shows it
     const warmEditor = () => void import("@/features/editor/markdown-editor");
-    if (desktop.initialState.launchFile !== undefined) {
-      warmEditor();
-    } else if (typeof requestIdleCallback === "function") {
+    if (typeof requestIdleCallback === "function") {
       requestIdleCallback(warmEditor, { timeout: 2000 });
     } else {
       setTimeout(warmEditor, 100);

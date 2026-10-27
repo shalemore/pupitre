@@ -21,7 +21,7 @@ import {
   searchPanelOpen,
   setSearchQuery,
 } from "@codemirror/search";
-import { Compartment, EditorState, type Extension, Prec } from "@codemirror/state";
+import { type ChangeDesc, Compartment, EditorState, type Extension, Prec } from "@codemirror/state";
 import { type Command, EditorView, keymap, placeholder } from "@codemirror/view";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { debounce } from "@solid-primitives/scheduled";
@@ -45,12 +45,12 @@ import { codeHighlight } from "./code-highlight";
 import { cursorStyle, restartCursorBlink } from "./cursor";
 import { createStatsTracker } from "./document-stats";
 import {
+  canShiftHeadings,
   collectHeadings,
   documentObserver,
   findActiveHeading,
   mergeHeadings,
   type OutlineHeading,
-  shiftHeadings,
 } from "./document-structure";
 import { folding, foldingKeymap } from "./folding";
 import {
@@ -333,9 +333,21 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       return { current: 0, total: 0, pending: true };
     };
 
+    let outlineDirty = false;
+    let pendingOutlineChanges: ChangeDesc | undefined;
     // The outline only changes when a heading does, but collecting it walks the parsed tree; let
     // the keystrokes settle first so typing never waits for a list of thousands of rows
     const updateOutline = debounce((state: EditorState) => {
+      if (!outlineDirty && pendingOutlineChanges !== undefined) {
+        const changes = pendingOutlineChanges;
+        pendingOutlineChanges = undefined;
+        for (const heading of headings) {
+          heading.pos = changes.mapPos(heading.pos);
+        }
+        return;
+      }
+      outlineDirty = false;
+      pendingOutlineChanges = undefined;
       const next = mergeHeadings(headings, collectHeadings(state));
       if (next === headings) return;
       headings = next;
@@ -430,7 +442,21 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
                 outlineStarted = true;
                 headings = collectHeadings(state);
                 props.onOutlineChange(headings);
-              } else if (update === undefined || !shiftHeadings(headings, update)) {
+              } else {
+                if (
+                  !docChanged ||
+                  update === undefined ||
+                  outlineDirty ||
+                  !canShiftHeadings(headings, update)
+                ) {
+                  outlineDirty = true;
+                  pendingOutlineChanges = undefined;
+                } else {
+                  pendingOutlineChanges =
+                    pendingOutlineChanges === undefined
+                      ? update.changes.desc
+                      : pendingOutlineChanges.composeDesc(update.changes.desc);
+                }
                 updateOutline(state);
               }
               // Parsing the rest of a small document is not an edit, but it can make its count exact
