@@ -441,14 +441,16 @@ function visitAlert(builder: DecorationBuilder, quote: SyntaxNode): void {
 
 /**
  * A picture takes the place of its source; while a selection touches that source, the source stays
- * and the picture follows it. Returns whether the source stays shown.
+ * and the picture stands above it, the way a rendered block shows its source underneath. The widget
+ * is a block of its own, so a picture never shares its line with the text around it. Returns whether
+ * the source stays shown.
  */
 function placeImage(builder: DecorationBuilder, image: DocumentImage): boolean {
   const active = touches(builder.ranges, image.from, image.to);
   const src = resolveUrl(builder.state, image.src);
   const widget = new ImageWidget(src, image.alt, image.title, image, !active);
   if (active) {
-    builder.decorations.push(Decoration.widget({ widget, side: 1 }).range(image.to));
+    builder.decorations.push(Decoration.widget({ widget, side: -1 }).range(image.from));
     return true;
   }
   builder.decorations.push(Decoration.replace({ widget }).range(image.from, image.to));

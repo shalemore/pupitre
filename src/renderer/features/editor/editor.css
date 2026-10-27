@@ -62,6 +62,12 @@
     --md-blank-gap: 0.75em;
     /* The surface a diagram stands on, which an edge label is masked with: the page itself */
     --md-diagram-label: var(--ui-surface-1);
+    /* The frame a picture stands in; a theme can restyle it through these */
+    --md-image-gap: 0.4em;
+    --md-image-padding: 0.25em;
+    --md-image-radius: var(--radius-sm);
+    --md-image-background: var(--ui-alpha-1);
+    --md-image-shadow: var(--ui-shadow-sm);
   }
 
   /* A blank line between blocks, away from the cursor, is only the gap between them (live-preview.ts) */
@@ -246,13 +252,13 @@
   }
 
   /*
-   * A picture with the handle and the bar that resize and align it (images.ts). The frame carries
-   * the declarations the source carries, so an aligned picture stands on the line the way it stands
-   * on an exported page.
+   * A picture with the handle and the bar that resize and align it (images.ts). It takes a line of
+   * its own, so text never sits beside it; the frame carries the declarations the source carries,
+   * so an aligned picture stands on the line the way it stands on an exported page.
    */
   .md-image-block {
-    display: inline-block;
-    vertical-align: bottom;
+    display: block;
+    padding-block: var(--md-image-gap);
   }
 
   /* An aligned picture takes the whole line, so that its margins can place it on that line */
@@ -265,11 +271,16 @@
     display: block;
     inline-size: fit-content;
     max-inline-size: 100%;
+    padding: var(--md-image-padding);
+    border-radius: var(--md-image-radius);
+    background: var(--md-image-background);
+    box-shadow: var(--md-image-shadow);
   }
 
   /* The picture is a block of its frame: the line's baseline would otherwise open a gap under it */
   .md-image-frame > .md-image-preview {
     display: block;
+    border-radius: max(0px, calc(var(--md-image-radius) - var(--md-image-padding)));
   }
 
   /*
