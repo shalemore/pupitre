@@ -608,6 +608,11 @@ export function imageDom(
   size: ImageSize,
   /** Whether the picture offers its controls; off while the selection shows its source. */
   controls: boolean,
+  /**
+   * The caption a picture that has none in its source shows under it, such as the alt text of an
+   * `<img>` tag; a Markdown image leaves it out, since its own alt text is the caption line.
+   */
+  caption?: string,
   /** Where a change goes; the default finds the picture from the DOM it replaced. */
   write?: (change: (image: DocumentImage) => ImageSize) => void,
 ): HTMLElement {
@@ -734,9 +739,16 @@ export function imageDom(
   }
   block.append(frame);
 
+  if (caption !== undefined && caption !== "") {
+    const label = document.createElement("span");
+    label.className = "md-image-caption";
+    label.textContent = caption;
+    block.append(label);
+  }
+
   // A picture with no caption gets a quiet offer to write one, shown once the pointer rests on it.
   // Writing it puts the caret between the brackets of the image, whose source then shows around it
-  if (controls && alt === "") {
+  if (controls && alt === "" && caption === undefined) {
     const hint = document.createElement("button");
     hint.type = "button";
     hint.className = "md-image-caption-hint";

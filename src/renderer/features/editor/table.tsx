@@ -73,7 +73,7 @@ const TableCellImage: Component<{ view: EditorView; image: InlineImage }> = (pro
     const image = imageIn(props.view.state, item.from, item.to);
     if (host === undefined || image === undefined) return;
     host.replaceChildren(
-      imageDom(props.view, item.src, item.alt, item.title, item, true, (change) => {
+      imageDom(props.view, item.src, item.alt, item.title, item, true, undefined, (change) => {
         const current = imageIn(props.view.state, item.from, item.to);
         if (current !== undefined) setImageLayout(props.view, current, change(current));
       }),

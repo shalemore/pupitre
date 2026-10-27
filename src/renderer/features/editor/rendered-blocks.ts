@@ -12,7 +12,7 @@ import { fencedText } from "./block-text";
 import { detailsSection, SummaryWidget, toggledDetails, toggleDetails } from "./details";
 import { collectHeadings } from "./document-structure";
 import { HtmlBlockWidget, isRenderableHtml } from "./html";
-import { documentBaseUrl } from "./images";
+import { documentBaseUrl, parseImageTag } from "./images";
 import { printingChanged, revealingRanges, touches, lineRange } from "./live-preview";
 import { mathFence, mathOf, MathWidget } from "./math";
 import { diagramTheme, MermaidWidget } from "./mermaid";
@@ -147,7 +147,13 @@ function buildDecorations(state: EditorState): RenderedBlocksState {
       // A table is edited in place (table.tsx), so its source never shows
       if (node.name === "Table" || !isTouched(from, to)) {
         hideLines(node.from, node.to, widget);
-      } else if (node.name === "BlockMath" || node.name === "FencedCode") {
+      } else if (
+        node.name === "BlockMath" ||
+        node.name === "FencedCode" ||
+        // An `<img>` tag reads like a Markdown image: the picture above, its source below
+        (node.name === "HTMLBlock" &&
+          parseImageTag(state.sliceDoc(node.from, node.to)) !== undefined)
+      ) {
         // Math and diagrams open in the first line of their source, which is a code card, so the
         // rendering and the source stay one piece instead of becoming two blocks of their own
         decorations.push(Decoration.widget({ widget, side: 1 }).range(from));

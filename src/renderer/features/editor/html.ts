@@ -101,6 +101,7 @@ export class HtmlBlockWidget extends WidgetType {
         picture.title,
         picture,
         true,
+        picture.alt,
       );
     }
     const block = document.createElement("div");
