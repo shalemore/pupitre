@@ -2,7 +2,14 @@ import { tests as specExamples } from "commonmark-spec";
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import { collectHeadings, readableText } from "./document-structure";
-import { fullTree, markdownState, treeShape, updated } from "./testing";
+import { firstNode, fullTree, markdownState, treeShape, updated } from "./testing";
+
+/** The text of the first URL node of `doc`, which is how far a bare autolink reaches. */
+function firstUrl(doc: string): string {
+  const state = markdownState(doc);
+  const url = firstNode(state, "URL");
+  return state.sliceDoc(url.from, url.to);
+}
 
 /** The names of the nodes the parser reads `doc` into, in document order. */
 function nodeNames(doc: string): string[] {
@@ -60,6 +67,17 @@ describe("the syntax Pupitre adds", () => {
   it("reads emoji shortcodes, subscripts, superscripts and task lists", () => {
     const names = nodeNames("- [x] H~2~O is 10^3^ :smile:");
     expect(names).toEqual(expect.arrayContaining(["Task", "Subscript", "Superscript", "Emoji"]));
+  });
+
+  it("ends a bare URL where Chinese prose begins", () => {
+    expect(firstUrl("看 https://example.com/，后面是中文")).toBe("https://example.com/");
+    expect(firstUrl("看 https://example.com/中文，后面")).toBe("https://example.com/中文");
+    expect(firstUrl("看 https://example.com/。")).toBe("https://example.com/");
+  });
+
+  it("leaves a URL without Chinese punctuation to the GFM autolink", () => {
+    expect(firstUrl("A https://example.com/path ends here")).toBe("https://example.com/path");
+    expect(firstUrl("See www.example.com,")).toBe("www.example.com");
   });
 });
 

@@ -1,5 +1,6 @@
 import { commonmarkLanguage, markdown } from "@codemirror/lang-markdown";
 import { GFM, Subscript, Superscript } from "@lezer/markdown";
+import { cjkAutolink } from "./autolink";
 import { codeLanguages } from "./code-languages";
 import { emojiSyntax } from "./emoji";
 import { footnotes } from "./footnotes";
@@ -14,7 +15,17 @@ import { math } from "./math";
  */
 export const markdownLanguage = markdown({
   base: commonmarkLanguage,
-  extensions: [GFM, Subscript, Superscript, emojiSyntax, highlight, frontMatter, math, footnotes],
+  extensions: [
+    GFM,
+    Subscript,
+    Superscript,
+    emojiSyntax,
+    highlight,
+    frontMatter,
+    math,
+    footnotes,
+    cjkAutolink,
+  ],
   codeLanguages,
   completeHTMLTags: false,
 });
