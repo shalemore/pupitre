@@ -266,11 +266,16 @@
     inline-size: 100%;
   }
 
+  /*
+   * A picture with an alignment of its own carries it in its source, which sets these margins; one
+   * without sits in the middle of its line, where a picture usually belongs on a page.
+   */
   .md-image-frame {
     position: relative;
     display: block;
     inline-size: fit-content;
     max-inline-size: 100%;
+    margin-inline: auto;
     padding: var(--md-image-padding);
     border-radius: var(--md-image-radius);
     background: var(--md-image-background);
