@@ -11,6 +11,11 @@ export const documentBaseUrl = Facet.define<string | undefined, string | undefin
   combine: (values) => values[0],
 });
 
+/** The path of the document on disk, for the file actions of its pictures; undefined if unsaved. */
+export const documentFilePath = Facet.define<string | undefined, string | undefined>({
+  combine: (values) => values[0],
+});
+
 /** `url` made absolute against the document's folder, when it is relative and there is one. */
 export function resolveAgainst(base: string | undefined, url: string): string {
   if (!base || URL.canParse(url)) return url;
@@ -150,6 +155,41 @@ export function imageMarkdown(alt: string, src: string): string {
 export function imageAlt(name: string): string {
   const dot = name.lastIndexOf(".");
   return dot > 0 ? name.slice(0, dot) : name;
+}
+
+/** The extension of the pictures a data: URL can carry, for a file saved from one. */
+const MIME_EXTENSIONS: Readonly<Record<string, string>> = {
+  "image/avif": ".avif",
+  "image/bmp": ".bmp",
+  "image/gif": ".gif",
+  "image/jpeg": ".jpg",
+  "image/png": ".png",
+  "image/svg+xml": ".svg",
+  "image/webp": ".webp",
+};
+
+/**
+ * The file a data: image carries, named after its alt text and its type, so it can be saved beside
+ * the document. undefined when the address is not a data: URL or its bytes cannot be read.
+ */
+export function dataImageFile(src: string, alt: string): File | undefined {
+  const header = /^data:([^,]*),(.*)$/s.exec(src);
+  if (!header) return undefined;
+  const [type = "application/octet-stream", ...parameters] = (header[1] ?? "").split(";");
+  const payload = header[2] ?? "";
+  let bytes: Uint8Array;
+  try {
+    bytes = parameters.includes("base64")
+      ? Uint8Array.from(atob(payload), (char) => char.charCodeAt(0))
+      : new TextEncoder().encode(decodeURIComponent(payload));
+  } catch {
+    return undefined;
+  }
+  const extension = MIME_EXTENSIONS[type.toLowerCase()] ?? "";
+  // File takes an ArrayBuffer, not the view the decode produced
+  const data = new Uint8Array(bytes.length);
+  data.set(bytes);
+  return new File([data], `${alt === "" ? "image" : alt}${extension}`, { type });
 }
 
 /**
@@ -424,14 +464,8 @@ const CONTROLS = ".md-image-handle, .md-image-toolbar";
  * Writes the width and alignment a control chose into the picture's source, as one change: the
  * caller says what changes, so a drag keeps the alignment and a button keeps the width.
  */
-function writeImage(
-  view: EditorView,
-  block: HTMLElement,
-  change: (image: DocumentImage) => ImageSize,
-): void {
-  const image = imageAt(view.state, view.posAtDOM(block));
-  if (!image) return;
-  const size = change(image);
+/** Writes a size a known picture was changed to into its source, as one undoable change. */
+export function setImageLayout(view: EditorView, image: DocumentImage, size: ImageSize): void {
   if (size.width === image.width && size.alignment === image.alignment) return;
   view.dispatch({
     changes: {
@@ -443,6 +477,16 @@ function writeImage(
   });
 }
 
+function writeImage(
+  view: EditorView,
+  block: HTMLElement,
+  change: (image: DocumentImage) => ImageSize,
+): void {
+  const image = imageAt(view.state, view.posAtDOM(block));
+  if (!image) return;
+  setImageLayout(view, image, change(image));
+}
+
 /**
  * The corner handle that sizes the picture. It drags the picture on the screen and writes the width
  * into its source once, when the pointer is released, so that one drag is one change to undo.
@@ -450,6 +494,7 @@ function writeImage(
 function resizeHandle(
   view: EditorView,
   block: HTMLElement,
+  write: (change: (image: DocumentImage) => ImageSize) => void,
   frame: HTMLElement,
   image: HTMLImageElement,
 ): HTMLElement {
@@ -486,7 +531,7 @@ function resizeHandle(
     };
     const released = () => {
       stop();
-      writeImage(view, block, (picture) => ({ width, alignment: picture.alignment }));
+      write((picture) => ({ width, alignment: picture.alignment }));
     };
     const cancelled = () => {
       stop();
@@ -506,7 +551,11 @@ function resizeHandle(
 }
 
 /** Left, center and right for the picture, the alignment it has reading as pressed. */
-function alignmentToolbar(view: EditorView, block: HTMLElement, size: ImageSize): HTMLElement {
+function alignmentToolbar(
+  view: EditorView,
+  write: (change: (image: DocumentImage) => ImageSize) => void,
+  size: ImageSize,
+): HTMLElement {
   const toolbar = document.createElement("span");
   toolbar.className = "md-image-toolbar";
   const labels = t().editor.image;
@@ -527,7 +576,7 @@ function alignmentToolbar(view: EditorView, block: HTMLElement, size: ImageSize)
     // A press keeps the cursor in the text; the button is not a place to type
     button.addEventListener("mousedown", (event) => event.preventDefault());
     button.addEventListener("click", () => {
-      writeImage(view, block, (image) => ({ width: image.width, alignment }));
+      write((image) => ({ width: image.width, alignment }));
       // The bar went away with the widget it was drawn in; the text takes the focus back
       view.focus();
     });
@@ -550,6 +599,8 @@ export function imageDom(
   size: ImageSize,
   /** Whether the picture offers its controls; off while the selection shows its source. */
   controls: boolean,
+  /** Where a change goes; the default finds the picture from the DOM it replaced. */
+  write?: (change: (image: DocumentImage) => ImageSize) => void,
 ): HTMLElement {
   const block = document.createElement("span");
   block.className = "md-image-block";
@@ -571,7 +622,11 @@ export function imageDom(
 
   frame.append(image);
   if (controls) {
-    frame.append(resizeHandle(view, block, frame, image), alignmentToolbar(view, block, size));
+    const commit = write ?? ((change) => writeImage(view, block, change));
+    frame.append(
+      resizeHandle(view, block, commit, frame, image),
+      alignmentToolbar(view, commit, size),
+    );
   }
   block.append(frame);
   return block;

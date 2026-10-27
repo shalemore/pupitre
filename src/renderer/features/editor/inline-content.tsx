@@ -1,6 +1,6 @@
 import type { EditorState } from "@codemirror/state";
 import type { SyntaxNode } from "@lezer/common";
-import { type Component, createResource, For, Match, Switch } from "solid-js";
+import { type Component, createResource, For, type JSX, Match, Switch } from "solid-js";
 import { Dynamic } from "solid-js/web";
 import { emojiFor } from "./emoji";
 import { htmlTag, isFormattingTag } from "./html";
@@ -27,9 +27,14 @@ export type InlineItem =
       title: string;
       width: number | undefined;
       alignment: ImageAlignment | undefined;
+      /** The source range of the picture, for the controls a table cell offers it. */
+      from: number;
+      to: number;
     }
   | { type: "math"; tex: string; display: boolean }
   | { type: "footnote"; label: string };
+
+export type InlineImage = Extract<InlineItem, { type: "image" }>;
 
 const ELEMENT_TAGS: Record<string, { tag: string; class: string }> = {
   StrongEmphasis: { tag: "strong", class: "md-strong" },
@@ -106,6 +111,8 @@ export function inlineItems(
             title: image.title,
             width: image.width,
             alignment: image.alignment,
+            from: image.from,
+            to: image.to,
           });
         }
         break;
@@ -135,6 +142,8 @@ export function inlineItems(
             title: picture.title,
             width: picture.width,
             alignment: picture.alignment,
+            from: child.from,
+            to: child.to,
           });
           break;
         }
@@ -178,7 +187,11 @@ const MathItem: Component<{ tex: string; display: boolean }> = (props) => {
   return <span class="md-math" innerHTML={svg() ?? ""} />;
 };
 
-export const InlineContent: Component<{ items: InlineItem[] }> = (props) => (
+export const InlineContent: Component<{
+  items: InlineItem[];
+  /** Draws a picture instead of the default tag, for a renderer that offers its controls. */
+  renderImage?: ((image: InlineImage) => JSX.Element) | undefined;
+}> = (props) => (
   <For each={props.items}>
     {(item) => (
       <Switch>
@@ -189,7 +202,7 @@ export const InlineContent: Component<{ items: InlineItem[] }> = (props) => (
         <Match when={item.type === "element" && item}>
           {(element) => (
             <Dynamic component={element().tag} class={element().class}>
-              <InlineContent items={element().children} />
+              <InlineContent items={element().children} renderImage={props.renderImage} />
             </Dynamic>
           )}
         </Match>
@@ -197,21 +210,25 @@ export const InlineContent: Component<{ items: InlineItem[] }> = (props) => (
           {(link) => (
             // A span, not an anchor: a click places the cursor and Ctrl+click follows the link
             <span class="md-link" title={link().href}>
-              <InlineContent items={link().children} />
+              <InlineContent items={link().children} renderImage={props.renderImage} />
             </span>
           )}
         </Match>
         <Match when={item.type === "image" && item}>
-          {(image) => (
-            <img
-              class="md-image-preview"
-              src={image().src}
-              alt={image().alt}
-              title={image().title}
-              width={image().width}
-              style={imageStyle(image())}
-            />
-          )}
+          {(image) =>
+            props.renderImage ? (
+              props.renderImage(image())
+            ) : (
+              <img
+                class="md-image-preview"
+                src={image().src}
+                alt={image().alt}
+                title={image().title}
+                width={image().width}
+                style={imageStyle(image())}
+              />
+            )
+          }
         </Match>
         <Match when={item.type === "math" && item}>
           {(math) => <MathItem tex={math().tex} display={math().display} />}

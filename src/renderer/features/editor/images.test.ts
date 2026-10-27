@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { imageMarkdown, imageOf, imageOrigin, parseImageTag } from "./images";
+import { dataImageFile, imageMarkdown, imageOf, imageOrigin, parseImageTag } from "./images";
 import { firstNode, markdownState } from "./testing";
 
 describe("image titles", () => {
@@ -44,5 +44,26 @@ describe("imageMarkdown", () => {
 
   it("puts an address with a space between angle brackets", () => {
     expect(imageMarkdown("Alt", "my picture.png")).toBe("![Alt](<my picture.png>)");
+  });
+});
+
+describe("dataImageFile", () => {
+  it("reads a base64 data: image into a file named after its alt text", () => {
+    const file = dataImageFile("data:image/png;base64,aGVsbG8=", "Pic");
+    expect(file?.name).toBe("Pic.png");
+    expect(file?.type).toBe("image/png");
+  });
+
+  it("reads a URI-encoded svg and gives an unknown type the plain name", () => {
+    const svg = dataImageFile(
+      "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%2F%3E",
+      "",
+    );
+    expect(svg?.name).toBe("image.svg");
+    expect(svg?.type).toBe("image/svg+xml");
+  });
+
+  it("rejects an address that is not a data: URL", () => {
+    expect(dataImageFile("pic.png", "Pic")).toBeUndefined();
   });
 });

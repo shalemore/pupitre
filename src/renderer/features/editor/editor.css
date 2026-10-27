@@ -237,6 +237,13 @@
     text-indent: 0;
   }
 
+  /* A picture in a table cell keeps its controls inside the cell */
+  .md-table-image {
+    display: block;
+    inline-size: 100%;
+    vertical-align: bottom;
+  }
+
   /*
    * A picture with the handle and the bar that resize and align it (images.ts). The frame carries
    * the declarations the source carries, so an aligned picture stands on the line the way it stands

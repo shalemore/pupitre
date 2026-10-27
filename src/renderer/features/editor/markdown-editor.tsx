@@ -61,6 +61,7 @@ import {
 import {
   type PendingImages,
   documentBaseUrl,
+  documentFilePath,
   imageAlt,
   imageInput,
   imageMarkdown,
@@ -290,6 +291,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     const spellcheckCompartment = new Compartment();
     const cursorCompartment = new Compartment();
     const baseUrlCompartment = new Compartment();
+    const documentPathCompartment = new Compartment();
     const diagramThemeCompartment = new Compartment();
     const previewCompartment = new Compartment();
     const pairingCompartment = new Compartment();
@@ -345,6 +347,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           imageInput(uploadImage),
           pasteHtml(markdownStyle),
           baseUrlCompartment.of(documentBaseUrl.of(props.baseUrl)),
+          documentPathCompartment.of(documentFilePath.of(props.documentPath)),
           diagramThemeCompartment.of(diagramTheme.of(readDiagramTheme())),
           alertTitles.of(t().editor.alerts),
           textDirection,
@@ -453,6 +456,9 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         () => props.documentPath,
         (nextPath) => {
           path = nextPath;
+          view.dispatch({
+            effects: documentPathCompartment.reconfigure(documentFilePath.of(nextPath)),
+          });
         },
         { defer: true },
       ),

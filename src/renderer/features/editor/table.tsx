@@ -23,9 +23,11 @@ import {
 import {
   type Accessor,
   type Component,
+  createEffect,
   createSignal,
   Index,
   type JSX,
+  onCleanup,
   type Setter,
   Show,
 } from "solid-js";
@@ -33,8 +35,8 @@ import { Dynamic, render } from "solid-js/web";
 import { IconButton, Separator } from "@/components/ui";
 import { t } from "@/i18n";
 import { openImageMenu } from "./image-menu";
-import { imageIn } from "./images";
-import { InlineContent } from "./inline-content";
+import { imageDom, imageIn, setImageLayout } from "./images";
+import { InlineContent, type InlineImage } from "./inline-content";
 import { openLink } from "./live-preview";
 import {
   type Alignment,
@@ -62,6 +64,31 @@ interface CellPosition {
   row: number;
   column: number;
 }
+
+/** A picture in a cell, with the handle and bar that write a size back into the cell's source. */
+const TableCellImage: Component<{ view: EditorView; image: InlineImage }> = (props) => {
+  let host: HTMLSpanElement | undefined;
+  createEffect(() => {
+    const item = props.image;
+    const image = imageIn(props.view.state, item.from, item.to);
+    if (host === undefined || image === undefined) return;
+    host.replaceChildren(
+      imageDom(props.view, item.src, item.alt, item.title, item, true, (change) => {
+        const current = imageIn(props.view.state, item.from, item.to);
+        if (current !== undefined) setImageLayout(props.view, current, change(current));
+      }),
+    );
+    onCleanup(() => host?.replaceChildren());
+  });
+  return (
+    <span
+      ref={(element) => {
+        host = element;
+      }}
+      class="md-table-image"
+    />
+  );
+};
 
 interface TableViewProps {
   view: EditorView;
@@ -368,6 +395,13 @@ const TableView: Component<TableViewProps> = (props) => {
         component={cell.row === 0 ? "th" : "td"}
         style={{ "text-align": props.model().alignments[cell.column] }}
         onMouseDown={(event: MouseEvent) => {
+          // The handle and the alignment bar keep the picture in place while they are used
+          if (
+            event.target instanceof Element &&
+            event.target.closest(".md-image-handle, .md-image-toolbar") !== null
+          ) {
+            return;
+          }
           // A right-click on a picture keeps the picture there for its own menu
           if (event.button !== 0) return;
           const link = event.target instanceof Element ? event.target.closest(".md-link") : null;
@@ -398,7 +432,12 @@ const TableView: Component<TableViewProps> = (props) => {
       >
         <Show
           when={isActive(cell.row, cell.column)}
-          fallback={<InlineContent items={source()?.items ?? []} />}
+          fallback={
+            <InlineContent
+              items={source()?.items ?? []}
+              renderImage={(image) => <TableCellImage view={props.view} image={image} />}
+            />
+          }
         >
           <input
             class="md-table-input"

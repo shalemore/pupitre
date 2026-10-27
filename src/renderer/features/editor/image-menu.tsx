@@ -8,11 +8,14 @@ import { desktop } from "@/lib/desktop";
 import { messageOf, reportFailure } from "@/lib/errors";
 import {
   type DocumentImage,
+  dataImageFile,
+  documentFilePath,
   documentFolder,
   imageAddress,
   imageAt,
   imageOrigin,
   relinkImage,
+  saveImageNextTo,
 } from "./images";
 
 /**
@@ -50,6 +53,30 @@ function pictureMenu(view: EditorView, image: DocumentImage): PictureMenu | unde
     // Without a file the document has no folder to move a picture into or out of
     return {
       entries: [{ type: "item", id: "unsaved", label: labels.unsaved, enabled: false }],
+      actions,
+    };
+  }
+  if (image.src.startsWith("data:")) {
+    const documentPath = view.state.facet(documentFilePath);
+    actions.set(
+      "save-data",
+      attempt(async () => {
+        if (documentPath === undefined) return;
+        const file = dataImageFile(image.src, image.alt);
+        if (file === undefined) return;
+        const saved = await saveImageNextTo(documentPath, file);
+        relinkImage(view, image, saved);
+      }),
+    );
+    return {
+      entries: [
+        {
+          type: "item",
+          id: "save-data",
+          label: labels.download,
+          enabled: documentPath !== undefined,
+        },
+      ],
       actions,
     };
   }
