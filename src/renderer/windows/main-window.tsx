@@ -121,17 +121,24 @@ export const MainWindow: Component = () => {
     on([startWidth, endWidth], ([start, end]) => saveWidthsSoon(start, end), { defer: true }),
   );
 
-  // A folder the user opened shows at once, whatever document is open; opening a document from
-  // outside it hands the sidebar back to the document's own folder
+  // A folder the user opened shows at once, whatever document is open; while none is open the
+  // sidebar keeps the folder it already shows, so opening a document further down the tree does not
+  // descend into the folder that document sits in. A document from outside the folder takes the
+  // sidebar to its own folder.
   const folderRoot = createMemo(() => openedFolder() ?? session.activeDocument()?.folder);
   createEffect(
     on(
       () => session.activeDocument()?.id,
       () => {
+        const doc = session.activeDocument();
+        if (doc?.folder === undefined) return;
         const folder = openedFolder();
-        const path = session.activeDocument()?.path;
-        if (folder !== undefined && path !== undefined && !isInsideFolder(folder, path)) {
-          setOpenedFolder(undefined);
+        if (folder === undefined) {
+          setOpenedFolder(doc.folder);
+          return;
+        }
+        if (doc.path !== undefined && !isInsideFolder(folder, doc.path)) {
+          setOpenedFolder(doc.folder);
         }
       },
       { defer: true },
