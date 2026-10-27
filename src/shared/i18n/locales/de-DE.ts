@@ -94,6 +94,7 @@ export const deDE = {
       failedFile: "Die Bilddatei fehlt oder kann nicht geöffnet werden.",
       failedNetwork:
         "Das Bild konnte nicht heruntergeladen werden. Prüfen Sie die Netzwerkverbindung.",
+      retry: "Wiederholen",
     },
     imageFile: {
       reveal: "Im Ordner zeigen",

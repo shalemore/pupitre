@@ -93,6 +93,7 @@ export const itIT = {
       alignRight: "Allinea a destra",
       failedFile: "Il file immagine manca o non può essere aperto.",
       failedNetwork: "Impossibile scaricare l'immagine. Controlla la connessione di rete.",
+      retry: "Riprova",
     },
     imageFile: {
       reveal: "Mostra nella cartella",

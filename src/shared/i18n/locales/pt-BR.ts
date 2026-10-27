@@ -94,6 +94,7 @@ export const ptBR = {
       alignRight: "Alinhar à direita",
       failedFile: "O arquivo de imagem está ausente ou não pode ser aberto.",
       failedNetwork: "Não foi possível baixar a imagem. Verifique sua conexão de rede.",
+      retry: "Tentar novamente",
     },
     imageFile: {
       reveal: "Mostrar na pasta",

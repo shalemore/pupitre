@@ -94,6 +94,7 @@ export const nlNL = {
       alignRight: "Rechts uitlijnen",
       failedFile: "Het afbeeldingsbestand ontbreekt of kan niet worden geopend.",
       failedNetwork: "De afbeelding kon niet worden gedownload. Controleer je netwerkverbinding.",
+      retry: "Opnieuw proberen",
     },
     imageFile: {
       reveal: "Toon in map",

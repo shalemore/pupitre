@@ -94,6 +94,7 @@ export const svSE = {
       alignRight: "Högerjustera",
       failedFile: "Bildfilen saknas eller kan inte öppnas.",
       failedNetwork: "Bilden kunde inte hämtas. Kontrollera nätverksanslutningen.",
+      retry: "Försök igen",
     },
     imageFile: {
       reveal: "Visa i mapp",

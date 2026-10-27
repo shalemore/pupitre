@@ -96,6 +96,7 @@ export const zhCN = {
       alignRight: "右对齐",
       failedFile: "图片文件不存在或无法打开。",
       failedNetwork: "图片无法下载，请检查网络连接。",
+      retry: "重试",
     },
     imageFile: {
       reveal: "在文件夹中显示",

@@ -92,6 +92,7 @@ export const idID = {
       alignRight: "Rata Kanan",
       failedFile: "File gambar tidak ada atau tidak dapat dibuka.",
       failedNetwork: "Gambar tidak dapat diunduh. Periksa koneksi jaringan.",
+      retry: "Coba lagi",
     },
     imageFile: {
       reveal: "Tampilkan di Folder",

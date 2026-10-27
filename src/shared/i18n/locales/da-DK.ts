@@ -94,6 +94,7 @@ export const daDK = {
       alignRight: "Højrejuster",
       failedFile: "Billedfilen mangler, eller den kan ikke åbnes.",
       failedNetwork: "Billedet kunne ikke hentes. Kontroller din netværksforbindelse.",
+      retry: "Prøv igen",
     },
     imageFile: {
       reveal: "Vis i mappe",

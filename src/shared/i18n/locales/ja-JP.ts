@@ -93,6 +93,7 @@ export const jaJP = {
       alignRight: "右揃え",
       failedFile: "画像ファイルが見つからないか、開けません。",
       failedNetwork: "画像をダウンロードできませんでした。ネットワーク接続を確認してください。",
+      retry: "再試行",
     },
     imageFile: {
       reveal: "フォルダーで表示",

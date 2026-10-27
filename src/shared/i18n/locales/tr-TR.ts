@@ -94,6 +94,7 @@ export const trTR = {
       alignRight: "Sağa hizala",
       failedFile: "Görsel dosyası eksik veya açılamıyor.",
       failedNetwork: "Görsel indirilemedi. Ağ bağlantınızı denetleyin.",
+      retry: "Yeniden dene",
     },
     imageFile: {
       reveal: "Klasörde göster",

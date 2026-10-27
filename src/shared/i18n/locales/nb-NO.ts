@@ -94,6 +94,7 @@ export const nbNO = {
       alignRight: "Høyrejuster",
       failedFile: "Bildefilen mangler eller kan ikke åpnes.",
       failedNetwork: "Bildet kunne ikke lastes ned. Kontroller nettverksforbindelsen.",
+      retry: "Prøv igjen",
     },
     imageFile: {
       reveal: "Vis i mappe",

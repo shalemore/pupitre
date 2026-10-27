@@ -93,6 +93,7 @@ export const ptPT = {
       alignRight: "Alinhar à direita",
       failedFile: "O ficheiro de imagem não existe ou não pode ser aberto.",
       failedNetwork: "Não foi possível transferir a imagem. Verifique a ligação de rede.",
+      retry: "Tentar novamente",
     },
     imageFile: {
       reveal: "Mostrar na pasta",

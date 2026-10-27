@@ -441,6 +441,28 @@ const CONTROLS = ".md-image-handle, .md-image-toolbar, .md-image-retry";
 /** A picture fetched from the web, whose absence may be the network's fault rather than its own. */
 const WEB_IMAGE = /^https?:\/\//i;
 
+/** How long a failed download waits before each of its three tries, longer every time. */
+const RETRY_DELAYS = [1000, 2000, 4000] as const;
+
+/** The pictures whose download failed and that wait for the network, by the retry they run. */
+const waitingForNetwork = new Set<() => boolean>();
+let watchesNetwork = false;
+
+/**
+ * Runs `retry` once the network comes back, for a picture that could not be downloaded. The retry
+ * gives back whether it still needs the network, so a picture that is gone or loaded leaves the set.
+ */
+function retryWhenNetworkReturns(retry: () => boolean): void {
+  waitingForNetwork.add(retry);
+  if (watchesNetwork) return;
+  watchesNetwork = true;
+  window.addEventListener("online", () => {
+    for (const waiting of waitingForNetwork) {
+      if (!waiting()) waitingForNetwork.delete(waiting);
+    }
+  });
+}
+
 /**
  * Writes the width and alignment a control chose into the picture's source, as one change: the
  * caller says what changes, so a drag keeps the alignment and a button keeps the width.
@@ -600,21 +622,48 @@ export function imageDom(
 
   const message = document.createElement("span");
   message.className = "md-image-fallback-message";
+  const retry = document.createElement("button");
+  retry.type = "button";
+  retry.className = "md-image-retry";
+  retry.textContent = t().editor.image.retry;
   const fallback = document.createElement("span");
   fallback.className = "md-image-fallback";
-  fallback.append(message);
+  fallback.append(message, retry);
 
   frame.setAttribute("data-state", "loading");
   frame.append(image, fallback);
 
   const remote = WEB_IMAGE.test(src);
+  let loaded = false;
+  let failed = false;
+  let attempts = 0;
 
   const settle = (state: "ready" | "error") => {
     frame.setAttribute("data-state", state);
     view.requestMeasure();
   };
 
+  const load = () => {
+    if (!image.isConnected) return;
+    loaded = false;
+    frame.setAttribute("data-state", "loading");
+    image.src = src;
+  };
+
+  // A download that failed once is tried again when the network comes back, without the user
+  // having to notice that it went away
+  const retryWhenOnline = () => {
+    if (!image.isConnected || !failed) return false;
+    failed = false;
+    attempts = 0;
+    load();
+    return false;
+  };
+
   image.addEventListener("load", () => {
+    loaded = true;
+    failed = false;
+    attempts = 0;
     settle("ready");
     // A picture with a clear background, an icon for one, keeps its own outline instead of
     // standing in a frame that would box it in
@@ -624,9 +673,24 @@ export function imageDom(
   });
 
   image.addEventListener("error", () => {
-    if (!image.isConnected) return;
+    if (loaded || !image.isConnected) return;
+    if (remote) retryWhenNetworkReturns(retryWhenOnline);
+    const delay = RETRY_DELAYS[attempts];
+    if (remote && delay !== undefined) {
+      attempts += 1;
+      window.setTimeout(load, delay);
+      return;
+    }
+    failed = true;
     message.textContent = remote ? t().editor.image.failedNetwork : t().editor.image.failedFile;
     settle("error");
+  });
+
+  retry.addEventListener("mousedown", (event) => event.preventDefault());
+  retry.addEventListener("click", () => {
+    failed = false;
+    attempts = 0;
+    load();
   });
 
   image.src = src;

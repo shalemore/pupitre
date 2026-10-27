@@ -94,6 +94,7 @@ export const huHU = {
       alignRight: "Jobbra igazítás",
       failedFile: "A képfájl hiányzik, vagy nem nyitható meg.",
       failedNetwork: "A képet nem sikerült letölteni. Ellenőrizze a hálózati kapcsolatot.",
+      retry: "Újrapróbálás",
     },
     imageFile: {
       reveal: "Megjelenítés mappában",

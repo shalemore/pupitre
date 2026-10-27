@@ -93,6 +93,7 @@ export const faIR = {
       alignRight: "چپ‌چین",
       failedFile: "پرونده تصویر وجود ندارد یا باز نمی‌شود.",
       failedNetwork: "تصویر دانلود نشد. اتصال شبکه را بررسی کنید.",
+      retry: "تلاش دوباره",
     },
     imageFile: {
       reveal: "نمایش در پوشه",

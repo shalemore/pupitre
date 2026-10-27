@@ -94,6 +94,7 @@ export const fiFI = {
       alignRight: "Tasaa oikealle",
       failedFile: "Kuvatiedosto puuttuu tai sitä ei voi avata.",
       failedNetwork: "Kuvan lataaminen epäonnistui. Tarkista verkkoyhteys.",
+      retry: "Yritä uudelleen",
     },
     imageFile: {
       reveal: "Näytä kansiossa",

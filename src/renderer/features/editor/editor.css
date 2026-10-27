@@ -355,6 +355,29 @@
     font-size: 0.875em;
   }
 
+  .md-image-retry {
+    padding: 0.125em 0.75em;
+    border: 1px solid var(--ui-alpha-2);
+    border-radius: var(--radius-full);
+    background: var(--ui-alpha-1);
+    color: var(--ui-text-secondary);
+    font-size: 0.75em;
+    cursor: pointer;
+    transition:
+      color var(--transition-duration-ui),
+      background-color var(--transition-duration-ui);
+  }
+
+  .md-image-retry:hover {
+    background: var(--ui-alpha-2);
+    color: var(--ui-text-primary);
+  }
+
+  .md-image-retry:focus-visible {
+    outline: none;
+    box-shadow: var(--ui-focus-shadow);
+  }
+
   /*
    * The handle and the bar are interface rather than document, so they are sized in rem like the
    * corner of a code block, and a drag or a press on them must not select the text of the line.

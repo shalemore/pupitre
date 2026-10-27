@@ -102,6 +102,7 @@ export const enUS = {
       alignRight: "Align Right",
       failedFile: "The image file is missing or can't be opened.",
       failedNetwork: "The picture couldn't be downloaded. Check your connection.",
+      retry: "Retry",
     },
     /** What a right-click on a picture offers for the file behind it. */
     imageFile: {

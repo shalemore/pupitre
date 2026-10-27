@@ -95,6 +95,7 @@ export const isIS = {
       alignRight: "Hægrijafna",
       failedFile: "Myndskráin vantar eða er ekki hægt að opna hana.",
       failedNetwork: "Ekki tókst að sækja myndina. Athugaðu nettenginguna.",
+      retry: "Reyna aftur",
     },
     imageFile: {
       reveal: "Sýna í möppu",

@@ -100,6 +100,7 @@ export const csCZ = {
       alignRight: "Zarovnat vpravo",
       failedFile: "Soubor obrázku chybí nebo ho nelze otevřít.",
       failedNetwork: "Obrázek se nepodařilo stáhnout. Zkontrolujte připojení k síti.",
+      retry: "Zkusit znovu",
     },
     imageFile: {
       reveal: "Zobrazit ve složce",
