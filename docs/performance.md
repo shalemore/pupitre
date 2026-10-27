@@ -59,7 +59,8 @@ What it measures, on the built app:
 - the time until the title bar shows a word count for each of them;
 - typing 20 characters at the end of the 5 MB document, and the resident memory of the main
   process after every open;
-- typing into the find field on the 100 MB document, then finding the next match.
+- selecting the whole 100 MB document, typing into the find field on it, then finding the next
+  match.
 
 A test run ends with the measurements as JSON. Its assertions are sanity limits only — 180 s for a
 start or an open and 250 ms for the typing p95 — so a run that is merely slow still passes; the
@@ -79,18 +80,32 @@ stored on disk:
   large document is therefore not turned into a new string on every key.
 - **The counts follow the edit, not the document.** Documents up to 512 KB are counted exactly with
   `Intl.Segmenter`. Larger ones are counted in slices without blocking the editor, and their words
-  are counted by a linear scanner: `Intl.Segmenter` is native but its dictionary segmentation costs
-  about 120 ms per megabyte, while the scanner is a few milliseconds. Above 512 KB the Markdown is
+  and characters are counted by a linear scanner that classifies ASCII and common non-ASCII ranges
+  (CJK, Latin, Cyrillic, punctuation and combining marks) by code point rather than allocating
+  per-character strings: `Intl.Segmenter` is native but its dictionary segmentation costs about
+  120 ms per megabyte, while the scanner is a few milliseconds. Above 512 KB the Markdown is
   counted as text rather than through the syntax tree, so markers and link addresses add a small
-  amount to the total. The first total of a 200 MB document takes under two seconds; every
-  keystroke afterwards recounts only the lines it touched, with no debounce.
-- **The outline waits for a pause.** Its first version is collected as the editor opens; while
-  typing, later changes are collected 150 ms after the last one, so a list of thousands of rows is
-  never rebuilt between two keystrokes.
-- **Drafts stop at 8 MB.** A draft copies the recovered text into the profile; above this size the
-  document is not drafted at all, not even on close, because writing hundreds of megabytes would
-  make quitting as slow as the session it is meant to save. Closing still asks to save a changed
-  tab, and auto-save, if it is on, still writes the file itself.
+  amount to the total. Selecting the whole document reuses the document total in $O(1)$, and any
+  other selection larger than 512 KB is counted in 2 MB slices across idle frames rather than
+  copying the selection into one string. The first total of a 200 MB document takes under two
+  seconds; every keystroke afterwards recounts only the lines it touched, with no debounce.
+- **The outline shifts in place and waits for a pause.** Its first version is collected as the
+  editor opens, reading plain ATX headings directly from their line text. While typing, prose edits
+  that do not touch a heading or add or remove lines shift existing heading offsets in place through
+  `ChangeDesc.mapPos` without walking the syntax tree; structural edits wait 150 ms after the last
+  keystroke, and moving the cursor between sections updates only the previous and next active row.
+- **Decorations and layout stay inside the viewport.** Block decorations map existing ranges in
+  place on ordinary prose edits and remember the ranges of rendered blocks and `<details>` sections
+  that depend on the cursor, so typing in prose or moving the caret returns in $O(1)$ without
+  walking the syntax tree or reparsing tables. Code-block copy buttons read their text from the
+  document only when clicked, Focus Mode clips its line decorations to the viewport, and
+  scroll-position persistence coalesces layout reads to a 150 ms timer.
+- **Encoding checks, drafts and version history are bounded.** Opening a file checks only the first
+  64 KB for unreadable characters and skips LF normalization when the buffer has no carriage
+  returns. A draft copies the recovered text into the profile only up to 8 MB, and version history
+  skips snapshots above 16 MB, so neither saving nor quitting writes hundreds of megabytes into the
+  profile. Closing still asks to save a changed tab, and auto-save, if it is on, still writes the
+  file itself.
 
 None of these needs WebAssembly, a native addon or a worker: the expensive parts were work done on
 the whole document synchronously, not the speed of the code doing it. A worker would add a copy of
@@ -201,36 +216,37 @@ closely: use them to see a change against a run of your own, not as a target.
 
 | End-to-end (`npm run test:perf`) |   Result |
 | :------------------------------- | -------: |
-| cold start to `.cm-content`      |   1.37 s |
-| open 200 KB to the tail          |   1.61 s |
-| typing 200 KB, median            |    13 ms |
-| typing 200 KB, p95               |    17 ms |
-| open 5 MB to the tail            |   1.48 s |
-| counts 5 MB, from launch         |   1.51 s |
-| typing 5 MB, median              |    42 ms |
-| typing 5 MB, p95                 |    51 ms |
-| main-process RSS after 5 MB      |  150 MiB |
-| open 100 MB to the tail          |   1.63 s |
-| counts 100 MB, from launch       |   2.25 s |
-| find typing 100 MB, median       |    19 ms |
+| cold start to `.cm-content`      |   1.32 s |
+| open 200 KB to the tail          |   1.55 s |
+| typing 200 KB, median            |    21 ms |
+| typing 200 KB, p95               |    30 ms |
+| open 5 MB to the tail            |   1.43 s |
+| counts 5 MB, from launch         |   1.45 s |
+| typing 5 MB, median              |    26 ms |
+| typing 5 MB, p95                 |    36 ms |
+| main-process RSS after 5 MB      |  151 MiB |
+| open 100 MB to the tail          |   1.73 s |
+| counts 100 MB, from launch       |   2.03 s |
+| select all 100 MB                |    22 ms |
+| find typing 100 MB, median       |    20 ms |
 | find typing 100 MB, p95          |    22 ms |
-| find next 100 MB                 |    29 ms |
+| find next 100 MB                 |    23 ms |
 | main-process RSS after 100 MB    |  349 MiB |
-| open 200 MB to the tail          |   1.89 s |
-| counts 200 MB, from launch       |   3.77 s |
+| open 200 MB to the tail          |   1.63 s |
+| counts 200 MB, from launch       |   3.28 s |
 | main-process RSS after 200 MB    |  548 MiB |
-| open 500 MB to the tail          |   3.36 s |
-| counts 500 MB, from launch       |   8.07 s |
-| main-process RSS after 500 MB    | 1148 MiB |
+| open 500 MB to the tail          |   2.72 s |
+| counts 500 MB, from launch       |   7.43 s |
+| main-process RSS after 500 MB    | 1149 MiB |
 
-The count includes the launch and the open: subtracting them leaves about 0.03 s for 5 MB, 0.6 s
-for 100 MB, 1.9 s for 200 MB and 4.7 s for 500 MB. That is one scan of the whole document; after
-it, a keystroke updates the total from the lines it changed and does not wait for a timer. Find
-counts the whole document only for small files now; on a large one it starts a background count
-and says `…` until the first thousand matches are known. The end-to-end numbers vary between runs
-of the same build: another run spent 1.5 s on the same 200 KB open and measured an 18 ms median
-there, and an earlier one measured a 129 ms p95 while the outline was still being built, so compare
-runs of the same machine rather than treating a single number as the app's speed.
+The count includes the launch and the open: subtracting them leaves about 0.02 s for 5 MB, 0.30 s
+for 100 MB, 1.65 s for 200 MB and 4.7 s for 500 MB. That is one scan of the whole document; after
+it, a keystroke updates the total from the lines it changed and does not wait for a timer, and
+selecting the whole document reuses that total immediately. Find counts the whole document only for
+small files now; on a large one it starts a background count and says `…` until the first thousand
+matches are known. The end-to-end numbers vary between runs of the same build: an earlier run spent
+1.61 s on the 200 KB open with a 13 ms typing median, so compare runs of the same machine rather
+than treating a single number as the app's speed.
 
 The bundle of the same build had 251 chunks, 15.53 MiB in total, the largest 2.50 MiB (elkjs, which
 Mermaid lays its diagrams out with), and the entry 0.77 MiB.

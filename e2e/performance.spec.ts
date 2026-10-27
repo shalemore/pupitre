@@ -7,10 +7,11 @@ import { close, launch, run } from "./app";
 import type { TestApp } from "./app";
 
 /**
- * What the app costs, measured on the built one: a cold start, opening documents of 200 KB, 5 MB
- * and 20 MB up to their last line, the latency of typing, and the memory the main process holds.
- * Absolute numbers belong to the machine that measured them; the assertions only catch a run that
- * broke, so treat the report as the result and not this file passing.
+ * What the app costs, measured on the built one: a cold start, opening documents of 200 KB, 5 MB,
+ * 100 MB, 200 MB and 500 MB up to their last line, the time to count them, the latency of typing,
+ * selecting all and searching, and the memory the main process holds. Absolute numbers belong to
+ * the machine that measured them; the assertions only catch a run that broke, so treat the report
+ * as the result and not this file passing.
  */
 
 const TAIL_MARKER = "END-OF-PERF-DOCUMENT";
@@ -144,6 +145,25 @@ async function measureTyping(page: Page, text: string): Promise<number[]> {
   );
 }
 
+/** The latency of selecting the whole document, from `keydown` to the frame that draws it. */
+async function measureSelectAll(page: Page): Promise<number> {
+  await page.evaluate(() => {
+    performance.clearMeasures("select-all-latency");
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key.toLowerCase() !== "a") return;
+      document.removeEventListener("keydown", onKeyDown, true);
+      requestAnimationFrame((frameTime) => {
+        performance.measure("select-all-latency", { start: event.timeStamp, end: frameTime });
+      });
+    };
+    document.addEventListener("keydown", onKeyDown, true);
+  });
+  await page.keyboard.press("ControlOrMeta+a");
+  await expect(page.locator('[data-bar-part="count"]')).toContainText(" / ");
+  await page.keyboard.press("End");
+  return page.evaluate(() => performance.getEntriesByName("select-all-latency")[0]?.duration ?? 0);
+}
+
 /** The latency of typing into the find field, where every character used to count the whole file. */
 async function measureFindTyping(page: Page, text: string): Promise<number[]> {
   await run(page, { id: "edit.find" });
@@ -257,6 +277,10 @@ test("opens a 100 MB document", async () => {
     record("counts 100 MB", await counted(testApp.page, started), "ms");
     record("main process RSS after 100 MB", await mainRssMib(testApp.app), "MiB");
     expect(open).toBeLessThan(OPEN_LIMIT_MS);
+
+    const selectAll = await measureSelectAll(testApp.page);
+    expect(selectAll).toBeGreaterThan(0);
+    record("select all 100 MB", selectAll, "ms");
 
     const findLatencies = await measureFindTyping(testApp.page, "Pupitre");
     expect(findLatencies.length).toBeGreaterThan(0);
