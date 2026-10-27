@@ -1,6 +1,6 @@
 import { codeFolding, foldCode, foldGutter, unfoldCode } from "@codemirror/language";
 import type { Extension } from "@codemirror/state";
-import type { KeyBinding } from "@codemirror/view";
+import { type EditorView, type KeyBinding, ViewPlugin } from "@codemirror/view";
 
 /** The words a fold is announced with: the marker in the gutter and the placeholder it leaves. */
 export interface FoldLabels {
@@ -16,6 +16,56 @@ function foldMarker(labels: FoldLabels, open: boolean): HTMLElement {
   if (!open) marker.dataset["folded"] = "";
   marker.title = open ? labels.fold : labels.unfold;
   return marker;
+}
+
+/**
+ * Keeps the margin quiet: the marker of a heading only shows while the pointer is on that heading,
+ * or once its section is folded and the marker is the way back to the text. The pointer can cross
+ * from the heading into the margin, where the marker lies, without the marker going away.
+ */
+function revealOnHover(): Extension {
+  return ViewPlugin.fromClass(
+    class {
+      private frame: number | undefined;
+
+      constructor(private readonly view: EditorView) {
+        view.dom.addEventListener("pointermove", this.move);
+        view.dom.addEventListener("pointerleave", this.clear);
+      }
+
+      private readonly move = (event: PointerEvent) => {
+        if (this.frame !== undefined) return;
+        const y = event.clientY;
+        this.frame = requestAnimationFrame(() => {
+          this.frame = undefined;
+          this.reveal(y);
+        });
+      };
+
+      private readonly clear = () => {
+        if (this.frame !== undefined) cancelAnimationFrame(this.frame);
+        this.frame = undefined;
+        for (const element of this.markers()) element.removeAttribute("data-revealed");
+      };
+
+      private reveal(y: number) {
+        for (const element of this.markers()) {
+          const rect = element.getBoundingClientRect();
+          element.toggleAttribute("data-revealed", y >= rect.top && y < rect.bottom);
+        }
+      }
+
+      private markers(): readonly HTMLElement[] {
+        return [...this.view.dom.querySelectorAll<HTMLElement>(".cm-foldGutter .cm-gutterElement")];
+      }
+
+      destroy() {
+        this.clear();
+        this.view.dom.removeEventListener("pointermove", this.move);
+        this.view.dom.removeEventListener("pointerleave", this.clear);
+      }
+    },
+  );
 }
 
 function foldPlaceholder(labels: FoldLabels, onclick: (event: Event) => void): HTMLElement {
@@ -48,6 +98,7 @@ export const foldingKeymap: KeyBinding[] = [
  */
 export function folding(labels: FoldLabels): Extension {
   return [
+    revealOnHover(),
     codeFolding({ placeholderDOM: (_view, onclick) => foldPlaceholder(labels, onclick) }),
     foldGutter({
       markerDOM: (open) => foldMarker(labels, open),

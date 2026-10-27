@@ -1012,13 +1012,22 @@
     place-items: center;
     inline-size: 1rem;
     block-size: 1rem;
+    border-radius: var(--radius-sm);
     color: var(--ui-text-muted);
-    opacity: 0.45;
+    /* The margin stays part of the page until the pointer reaches the heading (folding.ts) */
+    opacity: 0;
     pointer-events: auto;
     cursor: pointer;
     transition:
       opacity var(--transition-duration-ui),
-      color var(--transition-duration-ui);
+      color var(--transition-duration-ui),
+      background-color var(--transition-duration-ui);
+  }
+
+  /* A folded section keeps its marker in sight, since the marker is the way back to its text */
+  .md-fold-marker[data-folded],
+  .cm-gutterElement[data-revealed] .md-fold-marker {
+    opacity: 0.45;
   }
 
   /* An open section points its chevron down, a folded one towards the text */
@@ -1045,6 +1054,7 @@
   }
 
   .md-fold-marker:hover {
+    background: var(--ui-alpha-1);
     color: var(--ui-text-primary);
     opacity: 1;
   }
