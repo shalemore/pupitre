@@ -10,6 +10,7 @@ import type { Command, EditorView, KeyBinding } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
 import { FORMAT_ACTIONS, type FormatAction } from "@shared/format";
 import type { Settings } from "@shared/settings";
+import { footnoteLabel } from "./footnotes";
 import { htmlTag } from "./html";
 import { emptyTableSource } from "./table-model";
 
@@ -125,9 +126,13 @@ function enclosingUnderline(
   state: EditorState,
   range: SelectionRange,
 ): { open: SyntaxNode; close: SyntaxNode } | undefined {
+  let block = syntaxTree(state).resolveInner(range.from, 1);
+  while (block.parent && block.parent.name !== "Document") block = block.parent;
   const open: SyntaxNode[] = [];
   let pair: { open: SyntaxNode; close: SyntaxNode } | undefined;
   syntaxTree(state).iterate({
+    from: block.from,
+    to: Math.max(block.to, range.to),
     enter: (node) => {
       if (node.name !== "HTMLTag") return;
       const tag = htmlTag(state.sliceDoc(node.from, node.to));
@@ -378,13 +383,26 @@ function insertShortcutTable(view: EditorView): void {
 /** The smallest positive footnote number the document does not use yet. */
 function nextFootnoteLabel(state: EditorState): number {
   const used = new Set<number>();
-  for (const match of state.doc.toString().matchAll(/\[\^(\d+)\]/g)) {
-    const digits = match[1];
-    if (digits !== undefined) used.add(Number(digits));
-  }
+  syntaxTree(state).iterate({
+    enter: (node) => {
+      if (node.name !== "FootnoteReference" && node.name !== "FootnoteLabel") return true;
+      const text = footnoteLabel(state, node.node);
+      if (/^\d+$/.test(text)) used.add(Number(text));
+      return false;
+    },
+  });
   let label = 1;
   while (used.has(label)) label++;
   return label;
+}
+
+/** The end of the last non-empty line in the document, without copying the whole text. */
+function trimmedDocumentEnd(state: EditorState): number {
+  for (let number = state.doc.lines; number >= 1; number--) {
+    const line = state.doc.line(number);
+    if (line.length > 0) return line.to;
+  }
+  return 0;
 }
 
 /** A footnote reference at the caret, and its definition after the last line of the document. */
@@ -394,7 +412,7 @@ function insertFootnote(view: EditorView): void {
   const label = `[^${nextFootnoteLabel(state)}]`;
   // The definition is a block of its own, past the blank lines the document ends with; a last
   // line ending stays after it, as the file had one
-  const end = Math.max(to, state.doc.toString().replace(/\n+$/, "").length);
+  const end = Math.max(to, trimmedDocumentEnd(state));
   dispatchChanges(
     view,
     [

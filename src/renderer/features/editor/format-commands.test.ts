@@ -83,6 +83,9 @@ describe("the block actions", () => {
   it("inserts a table of contents and a footnote reference with its definition", () => {
     expect(format("|", "toc")).toBe("[TOC]\n|");
     expect(format("one|", "footnote")).toBe("one[^1]|\n\n[^1]: ");
+    expect(format("one[^1] and |\n\n[^1]: first\n", "footnote")).toBe(
+      "one[^1] and [^2]|\n\n[^1]: first\n\n[^2]: \n",
+    );
   });
 
   it("steps a heading up and down, and a paragraph becomes a heading", () => {
