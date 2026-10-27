@@ -12,6 +12,7 @@ import {
   type OpenedDocument,
   type PinnedEntry,
   type RendererEvents,
+  type UnsavedChoice,
 } from "@shared/desktop-api";
 import { readDraftSession } from "@shared/draft";
 import {
@@ -458,6 +459,59 @@ window.addEventListener("beforeunload", (event) => documentState.isDirty && even
 // Fonts would need a permission prompt and a browser that has the API; the demo keeps the defaults
 Object.defineProperty(window, "queryLocalFonts", { value: undefined });
 
+/**
+ * The question of unsaved changes. A browser's confirm offers two answers, while saving,
+ * discarding and going back are three, so the demo shows the same dialog the desktop window does.
+ */
+function askUnsaved(fileName: string): Promise<UnsavedChoice> {
+  const { dialogs } = labels();
+  const dialog = document.createElement("dialog");
+  dialog.className =
+    "floating-panel m-auto w-[min(24rem,calc(100vw_-_2rem))] p-6 text-sm text-foreground backdrop:bg-black/30";
+  dialog.setAttribute("aria-labelledby", "pupitre-unsaved-message");
+
+  const message = document.createElement("p");
+  message.id = "pupitre-unsaved-message";
+  message.className = "font-medium";
+  message.textContent = dialogs.unsavedMessage(fileName);
+  const detail = document.createElement("p");
+  detail.className = "mt-2 text-xs text-muted-foreground";
+  detail.textContent = dialogs.unsavedDetail;
+  const actions = document.createElement("div");
+  actions.className = "mt-6 flex justify-end gap-2";
+
+  return new Promise((resolve) => {
+    const finish = (choice: UnsavedChoice) => {
+      dialog.close();
+      dialog.remove();
+      resolve(choice);
+    };
+    const answer = (label: string, choice: UnsavedChoice, primary = false) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = label;
+      button.className = primary
+        ? "h-8 rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground"
+        : "h-8 rounded-md px-3 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground";
+      button.addEventListener("click", () => finish(choice));
+      actions.append(button);
+      return button;
+    };
+    const save = answer(dialogs.save, "save", true);
+    answer(dialogs.dontSave, "discard");
+    answer(dialogs.cancel, "cancel");
+
+    dialog.addEventListener("cancel", (event) => {
+      event.preventDefault();
+      finish("cancel");
+    });
+    dialog.append(message, detail, actions);
+    document.body.append(dialog);
+    dialog.showModal();
+    save.focus();
+  });
+}
+
 type Handlers = {
   [K in keyof InvokeChannels]: (
     ...args: Parameters<InvokeChannels[K]>
@@ -577,11 +631,7 @@ const handlers: Handlers = {
   "document:export-image": () => null,
   "history:list": () => [],
   "history:read": () => null,
-  "dialog:confirm-unsaved": (fileName) => {
-    const { dialogs } = labels();
-    if (confirm(`${dialogs.unsavedMessage(fileName)}\n\n${dialogs.save}?`)) return "save";
-    return confirm(`${dialogs.dontSave}?`) ? "discard" : "cancel";
-  },
+  "dialog:confirm-unsaved": askUnsaved,
   "dialog:confirm-external-change": () => "keep",
   "dialog:confirm-deleted": () => "keep",
   "dialog:show-error": (message, detail) => alert(`${message}\n\n${detail}`),
