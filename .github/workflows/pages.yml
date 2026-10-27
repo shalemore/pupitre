@@ -10,6 +10,12 @@ on:
     tags: ["v*"]
   release:
     types: [published]
+  # The release workflow creates its tag with the repository token, and that kind of event does not
+  # start another workflow. Run when Release finishes as well, so the root follows a new tag even
+  # when the release event itself is suppressed.
+  workflow_run:
+    workflows: [Release]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
@@ -39,12 +45,13 @@ jobs:
         id: stable
         shell: bash
         run: |
+          # The tag may have been created by the release workflow after this checkout
+          git fetch --tags --force
           tag="${{ github.event.release.tag_name }}"
           if [ -z "$tag" ] && [ "$GITHUB_REF_TYPE" = "tag" ]; then
             tag="$GITHUB_REF_NAME"
           fi
           if [ -z "$tag" ]; then
-            git fetch --tags --force
             tag="$(git describe --tags --abbrev=0 --match 'v*')"
           fi
           if [ -z "$tag" ]; then
