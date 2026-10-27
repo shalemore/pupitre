@@ -37,12 +37,12 @@ export const nlNL = {
   welcome: {
     dragDropHint: "Of sleep Markdown-bestanden naar dit venster",
     chooseLook: "Kies een weergave",
-    lookImmersiveDesc: "De titelbalk en zijbalken wijken terwijl je schrijft",
+    lookImmersiveDesc: "De titelbalk en zijbalken wijken terwijl u schrijft",
     lookClassicDesc: "De titelbalk en zijbalken blijven altijd zichtbaar",
-    lookHint: "Je kunt dit later wijzigen in Voorkeuren › Weergave",
+    lookHint: "U kunt dit later wijzigen in Voorkeuren › Weergave",
   },
   editor: {
-    toggleReplace: "Zoeken en vervangen",
+    toggleReplace: "Vervangen tonen/verbergen",
     findPlaceholder: "Zoeken",
     replacePlaceholder: "Vervangen",
     replaceOne: "Vervangen",
@@ -124,14 +124,14 @@ export const nlNL = {
     externalChangeMessage: (fileName: string) =>
       `${fileName} is door een ander programma gewijzigd.`,
     externalChangeDetail:
-      "Overschrijven vervangt het bestand door jouw versie. Opnieuw laden gooit je wijzigingen weg en laadt het bestand.",
+      "Overschrijven vervangt het bestand door uw versie. Opnieuw laden gooit uw wijzigingen weg en laadt het bestand.",
     overwrite: "Overschrijven",
     reload: "Opnieuw laden",
     keepEditing: "Doorgaan met bewerken",
     // TODO(i18n): unverified with native speakers
     fileDeletedMessage: (fileName: string) => `${fileName} is door een ander programma verwijderd.`,
     fileDeletedDetail:
-      "Sla het opnieuw op om dit document te behouden. Anders blijft het ongeopgeslagen geopend en word je bij het sluiten opnieuw gevraagd.",
+      "Sla het opnieuw op om dit document te behouden. Anders blijft het document ongeslagen open en wordt u bij het sluiten opnieuw gevraagd.",
     fileActionFailed: "De wijziging kon niet worden doorgevoerd.",
 
     imageFailed: "De afbeelding kon niet worden ingevoegd.",
@@ -188,7 +188,7 @@ export const nlNL = {
     selectAll: "Alles selecteren",
     addToDictionary: "Toevoegen aan woordenboek",
     find: "Zoeken…",
-    searchInFolder: "In map zoeken...",
+    searchInFolder: "In map zoeken…",
     replace: "Vervangen…",
     zoomIn: "Inzoomen",
     zoomOut: "Uitzoomen",
@@ -256,7 +256,7 @@ export const nlNL = {
     sidebarLayoutCombined: "Gecombineerd",
     pinSidebars: "Zijbalken vastzetten",
     pinSidebar: (name) => `${name}-zijbalk vastzetten`,
-    pinSidebarsDesc: "Een meeslepend venster houdt de zijbalken open terwijl je schrijft",
+    pinSidebarsDesc: "Een immersief venster houdt de zijbalken open terwijl u schrijft",
     filePreviews: "Bestandsvoorbeelden",
     filePreviewsDesc: "De eerste regels van elk bestand onder zijn naam in de map",
     showWordCount: "Woordaantal tonen",
@@ -276,7 +276,8 @@ export const nlNL = {
     widthWide: "Breed",
     widthFull: "Volledige breedte",
     spellcheck: "Spellingscontrole",
-    spellcheckDesc: "Fout gespelde woorden onderstrepen; klik met rechts voor suggesties",
+    spellcheckDesc:
+      "Fout gespelde woorden onderstrepen; klik met de rechtermuisknop voor suggesties",
     cursorShape: "Cursorstijl",
     cursorShapeBar: "Streep",
     cursorShapeBlock: "Blok",
@@ -356,7 +357,7 @@ export const nlNL = {
     defaultAppDone: "Pupitre opent nu Markdown-bestanden",
     defaultAppOpenedSettings: "Kies bij Standaard-apps Pupitre voor .md-bestanden",
     defaultAppManual:
-      "Selecteer in Finder een .md-bestand, kies Archief › Informatie, kies Pupitre bij Open met en klik op Alles wijzigen",
+      "Selecteer in Finder een .md-bestand, kies Archief › Toon info, kies Pupitre bij Open met en klik op Alles wijzigen",
     defaultAppFailed: "Kon de standaard-app niet wijzigen; stel deze in via de systeeminstellingen",
     smartQuotes: "Slimme aanhalingstekens",
     smartQuotesDesc:

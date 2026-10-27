@@ -43,7 +43,7 @@ export const plPL = {
   welcome: {
     dragDropHint: "Możesz też przeciągnąć pliki Markdown do tego okna",
     chooseLook: "Wybierz wygląd",
-    lookImmersiveDesc: "Pasek tytułu i paski boczne ustępują miejsca, gdy piszesz",
+    lookImmersiveDesc: "Pasek tytułu i paski boczne chowają się, gdy piszesz",
     lookClassicDesc: "Pasek tytułu i paski boczne są zawsze widoczne",
     lookHint: "Możesz to zmienić później w Ustawienia › Wygląd",
   },
@@ -193,7 +193,7 @@ export const plPL = {
     selectAll: "Zaznacz wszystko",
     addToDictionary: "Dodaj do słownika",
     find: "Znajdź…",
-    searchInFolder: "Szukaj w folderze...",
+    searchInFolder: "Szukaj w folderze…",
     replace: "Zamień…",
     zoomIn: "Powiększ",
     zoomOut: "Pomniejsz",
@@ -279,7 +279,7 @@ export const plPL = {
     widthCompact: "Kompaktowa",
     widthNormal: "Normalna",
     widthWide: "Szeroka",
-    widthFull: "Pełna",
+    widthFull: "Pełna szerokość",
     spellcheck: "Sprawdzanie pisowni",
     spellcheckDesc:
       "Podkreślaj błędnie zapisane słowa; kliknij prawym przyciskiem, aby zobaczyć propozycje",
@@ -326,7 +326,7 @@ export const plPL = {
     scopeGlobal: "Globalne",
     scopeFolder: "Ten folder",
     updateNotificationTitle: (version: string) => `Dostępne jest Pupitre ${version}`,
-    updateNotificationBody: "Otwórz ustawienia, aby je pobrać.",
+    updateNotificationBody: "Otwórz ustawienia, aby ją pobrać.",
     refreshFonts: "Odśwież listę czcionek",
     resetToDefault: "Przywróć domyślne",
     darkTheme: "Motyw trybu ciemnego",
@@ -426,7 +426,7 @@ export const plPL = {
   quickOpen: {
     title: "Szybkie otwieranie",
     placeholder: "Wpisz nazwę pliku…",
-    noFolder: "Otwórz folder, aby znaleźć jego dokumenty",
+    noFolder: "Otwórz folder, aby wyświetlić jego dokumenty",
     noResults: "Brak pasujących plików",
   },
   workspaceSearch: {
