@@ -9,6 +9,11 @@ import { readJsonFile, writeJsonFile } from "./json-file";
 
 const MAX_VERSIONS_PER_DOCUMENT = 20;
 const MAX_TOTAL_BYTES = 200 * 1024 * 1024;
+/**
+ * The largest document a save keeps a snapshot of. A file larger than this would crowd out the
+ * history of ordinary notes and spend seconds copying itself into the profile on every save.
+ */
+export const MAX_SNAPSHOT_BYTES = 16 * 1024 * 1024;
 
 /**
  * The id names the snapshot file, so it can hold neither a separator nor a dot: an index edited by
@@ -147,6 +152,8 @@ function enforceLimits(target: HistoryIndex): void {
  * version the user may never ask for is not worth failing the save they did ask for.
  */
 export async function recordVersion(path: string, markdown: string): Promise<void> {
+  const bytes = Buffer.byteLength(markdown, "utf8");
+  if (bytes > MAX_SNAPSHOT_BYTES) return;
   const key = keyOf(path);
   try {
     const savedAt = Date.now();
@@ -157,7 +164,7 @@ export async function recordVersion(path: string, markdown: string): Promise<voi
     // version reads back in any editor and needs no encoding of its own to be restored
     await mkdir(versionsFolder(key), { recursive: true });
     await writeFile(snapshotFile(key, id), markdown, "utf8");
-    document.entries.unshift({ id, savedAt, bytes: Buffer.byteLength(markdown, "utf8") });
+    document.entries.unshift({ id, savedAt, bytes });
     versions[key] = document;
     enforceLimits(versions);
     // The index is written last, so a version that never made it to the disk is never listed

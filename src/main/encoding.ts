@@ -33,6 +33,11 @@ const UTF16BE_BOM = Buffer.from([0xfe, 0xff]);
 
 /** How much of a decoded file may be unreadable before it is read as text in that encoding. */
 const MAX_UNREADABLE_SHARE = 0.1;
+/**
+ * How much of a decoded file is checked for unreadable characters. An encoding mismatch or binary
+ * stream shows up in the opening kilobytes, so a huge UTF-8 document is not scanned to its end.
+ */
+const UNREADABLE_SAMPLE = 64 * 1024;
 
 /** The encoding a file announces in its first bytes. */
 export function declaredEncoding(buffer: Buffer): TextEncoding | undefined {
@@ -94,7 +99,8 @@ function unreadableCharacters(text: string): number {
  * low bytes into control characters and its text into mojibake.
  */
 export function mostlyUnreadable(text: string): boolean {
-  return unreadableCharacters(text) > text.length * MAX_UNREADABLE_SHARE;
+  const sample = text.length > UNREADABLE_SAMPLE ? text.slice(0, UNREADABLE_SAMPLE) : text;
+  return unreadableCharacters(sample) > sample.length * MAX_UNREADABLE_SHARE;
 }
 
 function iconvName(encoding: TextEncoding): string {
@@ -123,8 +129,9 @@ export class LossyEncodingError extends Error {
  * original line ending is restored on save. This is the text the editor and the folder search both
  * see, so an offset found by one is an offset in the other.
  */
-export function normalizeText(raw: string): string {
-  return raw.replace(/^\uFEFF/, "").replaceAll("\r\n", "\n");
+export function normalizeText(raw: string, lineEnding: LineEnding = lineEndingOf(raw)): string {
+  const stripped = raw.startsWith("\uFEFF") ? raw.slice(1) : raw;
+  return lineEnding === "crlf" ? stripped.replaceAll("\r\n", "\n") : stripped;
 }
 
 /** The line ending a save restores for a file that was read as `raw`. */

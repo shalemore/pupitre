@@ -70,6 +70,7 @@ describe("encoding detection", () => {
   });
 
   it("refuses binary content", async () => {
+    expect(mostlyUnreadable(`${"plain text\n".repeat(10_000)}\u0001\u0002`)).toBe(false);
     const binary = Buffer.from([0x00, 0x01, 0x02, 0x03, 0xff, 0x00, 0xd8, 0x00, 0x10, 0x00]);
     await expect(decodeDocument(binary, "image.md", new BrowserWindow())).rejects.toThrow(
       "Not a text file",

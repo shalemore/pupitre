@@ -53,7 +53,7 @@ import {
   renameEntry,
   trashEntry,
 } from "./file-actions";
-import { listVersions, readVersion, recordVersion } from "./history";
+import { listVersions, MAX_SNAPSHOT_BYTES, readVersion, recordVersion } from "./history";
 import { t } from "./i18n";
 import { clickMenuItem, menuSnapshot, setDocumentState } from "./menu";
 import { nameCollator } from "./name-collator";
@@ -290,10 +290,11 @@ async function readDocument(path: string, window: BrowserWindow): Promise<Opened
     const decoded = await decodeDocument(await readFile(path), path, window);
     if (decoded === undefined) return null;
     addRecentFile(path);
+    const lineEnding = lineEndingOf(decoded.text);
     return {
       ...locate(path),
-      content: normalizeText(decoded.text),
-      lineEnding: lineEndingOf(decoded.text),
+      content: normalizeText(decoded.text, lineEnding),
+      lineEnding,
       encoding: decoded.encoding,
     };
   } catch (error) {
@@ -336,6 +337,7 @@ async function keepPreviousVersion(
 ): Promise<void> {
   let previous: string;
   try {
+    if ((await stat(path)).size > MAX_SNAPSHOT_BYTES) return;
     // Read the way the document reads it, so a version of a file in another encoding is kept as
     // the text the editor showed rather than as its bytes
     previous = normalizeText(decodeWith(await readFile(path), encoding));
