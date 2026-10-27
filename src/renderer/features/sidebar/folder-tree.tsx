@@ -22,6 +22,9 @@ import { messageOf, reportFailure } from "@/lib/errors";
 import { excerptOf } from "@/lib/markdown-excerpt";
 import { settings } from "@/lib/settings";
 
+/** The separator Windows paths use, which a pinned path may contain before it is normalized. */
+const WINDOWS_SEPARATOR = "\\";
+
 interface TreeContext {
   activePath: () => string | undefined;
   /** Why opening a file failed, by path. */
@@ -36,6 +39,9 @@ interface TreeContext {
   onRenameCancel: () => void;
   /** Opens the menu of a row at the pointer. */
   onMenu: (entry: FolderEntry, event: MouseEvent) => void;
+  /** The absolute paths pinned at the top of this tree. */
+  pinned: () => ReadonlySet<string>;
+  onTogglePin: (entry: FolderEntry) => void;
 }
 
 interface FolderChildrenProps {
@@ -99,7 +105,7 @@ const FolderChildren: Component<FolderChildrenProps> = (props) => {
         <p class="px-2.5 py-1.5 text-2xs text-destructive">{t().sidebar.folderUnreadable}</p>
       }
     >
-      <For each={entries()}>
+      <For each={(entries() ?? []).filter((entry) => !props.tree.pinned().has(entry.path))}>
         {(entry) => (
           <FolderRow entry={entry} depth={props.depth} tree={props.tree} previews={shownPreviews} />
         )}
@@ -257,6 +263,12 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
   const [renaming, setRenaming] = createSignal<string>();
   const [expanded, setExpanded] = createSignal<ReadonlySet<string>>(new Set());
   const [menu, setMenu] = createSignal<OpenMenu>();
+  const [pins, { refetch: refetchPins }] = createResource(
+    () => props.root,
+    (root) => desktop.invoke("folder:pins", root),
+  );
+  const pinnedPaths = createMemo(() => new Set((pins() ?? []).map((entry) => entry.path)));
+  const pinnedEntries = () => pins() ?? [];
   createEffect(
     on(menu, (open) => {
       props.onMenuOpen?.(open !== undefined);
@@ -285,7 +297,11 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
 
   const rename = (path: string, name: string) => {
     setRenaming(undefined);
-    void run(async () => ({ old: path, path: await desktop.invoke("path:rename", path, name) }));
+    void run(async () => {
+      const next = await desktop.invoke("path:rename", path, name);
+      await movePins(path, next);
+      return { old: path, path: next };
+    });
   };
 
   // A new entry is named right away, so the folder it went into is opened for its row to show the field
@@ -305,7 +321,68 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
       return undefined;
     });
 
-  const trash = (path: string) => perform(() => desktop.invoke("path:trash", path));
+  /** Where a path sits under the folder root, in the form the pins file keeps. */
+  const relativeOf = (path: string): string | undefined => {
+    const prefix = `${props.root}/`;
+    if (path.startsWith(prefix)) return path.slice(props.root.length + 1).replaceAll("\\", "/");
+    const windowsPrefix = props.root + WINDOWS_SEPARATOR;
+    if (!path.startsWith(windowsPrefix)) return undefined;
+    return path.slice(props.root.length + 1).replaceAll(WINDOWS_SEPARATOR, "/");
+  };
+
+  const setPins = async (paths: readonly string[]) => {
+    await desktop.invoke("folder:set-pins", props.root, paths);
+    await refetchPins();
+  };
+
+  const togglePin = (entry: FolderEntry) => {
+    const key = relativeOf(entry.path);
+    if (key === undefined) return;
+    const current = pins() ?? [];
+    const next = current.some((pin) => pin.path === entry.path)
+      ? current.filter((pin) => pin.path !== entry.path).map((pin) => pin.relative)
+      : [...current.map((pin) => pin.relative), key];
+    perform(() => setPins(next));
+  };
+
+  /** Keeps a pin on a file or folder that was renamed, and on the pins under a renamed folder. */
+  const movePins = async (oldPath: string, newPath: string) => {
+    const current = pins() ?? [];
+    let changed = false;
+    const next = current.flatMap((pin) => {
+      if (
+        pin.path !== oldPath &&
+        !pin.path.startsWith(`${oldPath}/`) &&
+        !pin.path.startsWith(oldPath + WINDOWS_SEPARATOR)
+      ) {
+        return [pin.relative];
+      }
+      changed = true;
+      const key = relativeOf(`${newPath}${pin.path.slice(oldPath.length)}`);
+      return key === undefined ? [] : [key];
+    });
+    if (changed) await setPins(next);
+  };
+
+  const removePins = async (path: string) => {
+    const current = pins() ?? [];
+    const next = current
+      .filter(
+        (pin) =>
+          pin.path !== path &&
+          !pin.path.startsWith(`${path}/`) &&
+          !pin.path.startsWith(path + WINDOWS_SEPARATOR),
+      )
+      .map((pin) => pin.relative);
+    if (next.length !== current.length) await setPins(next);
+  };
+
+  const trash = (path: string) =>
+    void run(async () => {
+      await desktop.invoke("path:trash", path);
+      await removePins(path);
+      return undefined;
+    });
   const reveal = (path: string) => perform(() => desktop.invoke("path:reveal", path));
   const copyPath = (path: string) => perform(() => desktop.invoke("clipboard:write-text", path));
 
@@ -315,25 +392,40 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
       actions.set(id, act);
       return { type: "item", id, label };
     };
+    const separator: MenuEntry = { type: "separator" };
     const renameItem = item("rename", t().sidebar.rename, () => setRenaming(entry.path));
     const trashItem = item("trash", t().sidebar.moveToTrash, () => trash(entry.path));
     const pathItems = [
       item("reveal", t().sidebar.showInFolder, () => reveal(entry.path)),
       item("copy-path", t().sidebar.copyPath, () => copyPath(entry.path)),
     ];
+    const pinItem =
+      entry.path === props.root
+        ? undefined
+        : item("pin", pinnedPaths().has(entry.path) ? t().sidebar.unpin : t().sidebar.pin, () =>
+            togglePin(entry),
+          );
     const entries: MenuEntry[] =
       entry.kind === "directory"
         ? [
             item("new-file", t().menu.newFile, () => create(entry.path, "file")),
             item("new-folder", t().sidebar.newFolder, () => create(entry.path, "directory")),
-            { type: "separator" },
+            separator,
+            ...(pinItem === undefined ? [] : [pinItem, separator]),
             renameItem,
-            { type: "separator" },
+            separator,
             ...pathItems,
-            { type: "separator" },
+            separator,
             trashItem,
           ]
-        : [renameItem, { type: "separator" }, ...pathItems, { type: "separator" }, trashItem];
+        : [
+            renameItem,
+            separator,
+            ...pathItems,
+            ...(pinItem === undefined ? [] : [separator, pinItem]),
+            separator,
+            trashItem,
+          ];
     setMenu({ entries, actions, anchor: new DOMRect(event.clientX, event.clientY, 0, 0) });
   };
 
@@ -354,6 +446,8 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
     onRename: rename,
     onRenameCancel: () => setRenaming(undefined),
     onMenu: openMenu,
+    pinned: pinnedPaths,
+    onTogglePin: togglePin,
   };
 
   return (
@@ -365,6 +459,19 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
         openMenu({ name: props.root, path: props.root, kind: "directory" }, event);
       }}
     >
+      <Show when={pinnedEntries().length > 0}>
+        <div class="space-y-0.5">
+          <div class="px-2.5 pt-1 text-2xs font-medium tracking-wider text-tertiary uppercase">
+            {t().sidebar.pinned}
+          </div>
+          <For each={pinnedEntries()}>
+            {(entry) => (
+              <FolderRow entry={entry} depth={0} tree={tree} previews={() => undefined} />
+            )}
+          </For>
+        </div>
+        <div class="mx-2.5 border-t border-border-subtle" />
+      </Show>
       <FolderChildren path={props.root} depth={0} tree={tree} />
       <Show when={menu()} keyed>
         {(open) => (

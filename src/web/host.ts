@@ -10,6 +10,7 @@ import {
   type FolderEntry,
   type InvokeChannels,
   type OpenedDocument,
+  type PinnedEntry,
   type RendererEvents,
 } from "@shared/desktop-api";
 import { readDraftSession } from "@shared/draft";
@@ -169,6 +170,8 @@ const files = new Map([
 ]);
 // Files dropped on the page are read after the page asked for their path
 const dropped = new Map<string, Promise<string>>();
+// Pinned entries live in the page as well; the demo folder has no settings file to keep them in
+const folderPins = new Map<string, PinnedEntry[]>();
 
 /** When the demo files were made and last written, for the folder orders that read times. */
 interface DemoTimes {
@@ -472,6 +475,28 @@ const handlers: Handlers = {
   "draft:write": writeDraft,
   "draft:clear": () => localStorage.removeItem(DRAFT_KEY),
   "folder:list": listFolder,
+  "folder:pins": (root) => folderPins.get(root) ?? [],
+  "folder:set-pins": (root, paths) => {
+    const entries: PinnedEntry[] = [];
+    for (const raw of paths) {
+      const key = raw.replaceAll("\\", "/").replace(/^\/+|\/+$/g, "");
+      if (
+        key === "" ||
+        key.split("/").some((part) => part === "" || part === "." || part === "..")
+      ) {
+        continue;
+      }
+      const path = `${root}/${key}`;
+      const kind = files.has(path)
+        ? "file"
+        : [...files.keys()].some((file) => file.startsWith(`${path}/`))
+          ? "directory"
+          : undefined;
+      if (kind === undefined) continue;
+      entries.push({ name: key.split("/").at(-1) ?? key, path, kind, relative: key });
+    }
+    folderPins.set(root, entries);
+  },
   // A browser has no folder to walk, so Quick Open has nothing to search in the demo
   "folder:files": () => [],
   "folder:previews": folderPreviews,

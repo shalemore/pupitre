@@ -124,6 +124,12 @@ export interface FolderEntry {
   kind: "directory" | "file";
 }
 
+/** A file or folder pinned to the top of the sidebar, with where it sits under the folder root. */
+export interface PinnedEntry extends FolderEntry {
+  /** The path relative to the folder root, with / between the segments. */
+  relative: string;
+}
+
 /** A document somewhere in a folder, found by walking it whole. */
 export interface FolderFile {
   path: string;
@@ -265,6 +271,10 @@ export interface InvokeChannels {
   "document:read": (path: string) => OpenedDocument | null;
   /** Lists one level of a folder: directories first, then by name, modified or created time as the folderSort setting says; hidden entries are left out. */
   "folder:list": (path: string) => FolderEntry[];
+  /** The entries pinned to the top of the folder, in the order they were pinned. */
+  "folder:pins": (root: string) => PinnedEntry[];
+  /** Replaces the pinned entries; each path is relative to the folder root. */
+  "folder:set-pins": (root: string, paths: readonly string[]) => void;
   /**
    * Every document inside a folder and its subfolders, sorted by relative path, for finding one by
    * name. Hidden files and folders, node_modules and symbolic links stay out of it.

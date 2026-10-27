@@ -60,6 +60,7 @@ import { nameCollator } from "./name-collator";
 import { takeLaunchFile } from "./open-files";
 import { unwatchPath, watchPath } from "./path-watcher";
 import { pdfPrintOptions } from "./pdf-print-options";
+import { readPins, writePins } from "./pins";
 import { addRecentFile, getRecentFiles, removeRecentFile } from "./recent-files";
 import {
   getSettings,
@@ -393,6 +394,8 @@ export function registerIpcHandlers(): void {
     openPath(senderWindow(event), { properties: ["openDirectory"] }),
   );
   handle("folder:list", (_event, path) => listFolder(path));
+  handle("folder:pins", (_event, root) => readPins(root));
+  handle("folder:set-pins", (_event, root, paths) => writePins(root, paths));
   handle("folder:files", (_event, root) => listWorkspaceFiles(root));
   handle("folder:previews", (_event, path) => folderPreviews(path));
   handle("folder:search", (_event, root, query, options) => searchWorkspace(root, query, options));
