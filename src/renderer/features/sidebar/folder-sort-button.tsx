@@ -29,13 +29,13 @@ function labelOf(sort: FolderSort): string {
  */
 export const FolderSortButton: Component<{
   /** Tells the window that a panel hangs out of the sidebar, so the immersive chrome stays put. */
-  onMenuOpen?: (open: boolean) => void;
+  onHoldOpenChange?: (open: boolean) => void;
 }> = (props) => {
   const [anchor, setAnchor] = createSignal<DOMRect>();
   createEffect(
     on(anchor, (place) => {
-      props.onMenuOpen?.(place !== undefined);
-      onCleanup(() => props.onMenuOpen?.(false));
+      props.onHoldOpenChange?.(place !== undefined);
+      onCleanup(() => props.onHoldOpenChange?.(false));
     }),
   );
 

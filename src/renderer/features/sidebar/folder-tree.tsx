@@ -55,8 +55,8 @@ interface FolderTreeProps {
   onOpenFile: (path: string) => Promise<string | undefined>;
   /** Tells the window that a document or a folder root moved, so the open document follows it. */
   onPathChanged?: (oldPath: string, newPath: string) => void;
-  /** Tells the window that a menu hangs out of the sidebar, so the immersive chrome stays put. */
-  onMenuOpen?: (open: boolean) => void;
+  /** Tells the window that a menu or the rename field holds the sidebar, so the immersive chrome stays put. */
+  onHoldOpenChange?: (open: boolean) => void;
 }
 
 const FolderChildren: Component<FolderChildrenProps> = (props) => {
@@ -267,10 +267,13 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
   );
   const pinnedPaths = createMemo(() => new Set((pins() ?? []).map((entry) => entry.path)));
   const pinnedEntries = () => pins() ?? [];
+  // The rename field lives in the sidebar too: folding it away under the field would drop the name
+  // being typed and cancel the rename
+  const heldOpen = () => menu() !== undefined || renaming() !== undefined;
   createEffect(
-    on(menu, (open) => {
-      props.onMenuOpen?.(open !== undefined);
-      onCleanup(() => props.onMenuOpen?.(false));
+    on(heldOpen, (open) => {
+      props.onHoldOpenChange?.(open);
+      onCleanup(() => props.onHoldOpenChange?.(false));
     }),
   );
 

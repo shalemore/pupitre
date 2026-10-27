@@ -103,8 +103,8 @@ export const MainWindow: Component = () => {
     ReadonlyMap<number, ReadonlySet<string>>
   >(new Map());
   const [menuOpen, setMenuOpen] = createSignal(false);
-  // A menu hanging out of the start sidebar keeps that sidebar (and the chrome) open under the pointer
-  const [startMenuOpen, setStartMenuOpen] = createSignal(false);
+  // A menu or the rename field in the start sidebar keeps that sidebar (and the chrome) open
+  const [startSidebarHeld, setStartSidebarHeld] = createSignal(false);
   const immersive = () => settings().windowStyle === "immersive";
   // Split, the folder has its own sidebar at the start edge and the outline one at the end edge; combined, one sidebar shows either
   const split = () => settings().sidebarLayout === "split";
@@ -149,7 +149,7 @@ export const MainWindow: Component = () => {
     split() && settings().sidebarVisible && session.activeDocument() !== undefined;
   const chrome = createImmersiveChrome({
     canFold: () => immersive() && session.activeDocument() !== undefined,
-    startPinned: () => settings().sidebarPinnedStart || startMenuOpen(),
+    startPinned: () => settings().sidebarPinnedStart || startSidebarHeld(),
     endPinned: () => settings().sidebarPinnedEnd,
     titleBarPinned: menuOpen,
     startRoom: () => (startSidebarWanted() ? startWidth() : 0),
@@ -206,7 +206,7 @@ export const MainWindow: Component = () => {
         if (openedFolder() === oldPath) setOpenedFolder(newPath);
         void session.handleRename(oldPath, newPath);
       }}
-      onMenuOpen={setStartMenuOpen}
+      onHoldOpenChange={setStartSidebarHeld}
     />
   );
 
@@ -544,7 +544,7 @@ export const MainWindow: Component = () => {
                 hasOutline={session.activeDocument() !== undefined}
                 hasFolder={folderRoot() !== undefined}
                 folderName={fileNameOf(folderRoot() ?? "")}
-                folderAction={<FolderSortButton onMenuOpen={setStartMenuOpen} />}
+                folderAction={<FolderSortButton onHoldOpenChange={setStartSidebarHeld} />}
                 onModeChange={setPreferredMode}
                 outline={outlineList()}
                 folder={
@@ -560,7 +560,7 @@ export const MainWindow: Component = () => {
                 <SidebarPanel
                   side="start"
                   title={fileNameOf(root)}
-                  action={<FolderSortButton onMenuOpen={setStartMenuOpen} />}
+                  action={<FolderSortButton onHoldOpenChange={setStartSidebarHeld} />}
                   pinned={settings().sidebarPinnedStart}
                   onPinnedChange={onStartPinnedChange()}
                   class={cn(!immersive() && "border-e border-border")}
