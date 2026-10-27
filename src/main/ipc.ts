@@ -29,6 +29,7 @@ import {
   DOCUMENT_FILE,
   PREVIEW_BYTES,
 } from "@shared/desktop-api";
+import { formatFileSize } from "@shared/file-size";
 import type { Settings } from "@shared/settings";
 import { showAboutDialog } from "./about";
 import { setAsDefaultMarkdownApp } from "./default-app";
@@ -54,7 +55,7 @@ import {
   trashEntry,
 } from "./file-actions";
 import { listVersions, MAX_SNAPSHOT_BYTES, readVersion, recordVersion } from "./history";
-import { t } from "./i18n";
+import { currentLocale, t } from "./i18n";
 import { clickMenuItem, menuSnapshot, setDocumentState } from "./menu";
 import { nameCollator } from "./name-collator";
 import { takeLaunchFile } from "./open-files";
@@ -446,7 +447,7 @@ export function registerIpcHandlers(): void {
       await dialog.showMessageBox(window, {
         type: "error",
         message: t().dialogs.imageTooLarge(name),
-        detail: t().dialogs.imageTooLargeDetail,
+        detail: t().dialogs.imageTooLargeDetail(formatFileSize(MAX_IMAGE_BYTES, currentLocale())),
         noLink: true,
       });
       return null;

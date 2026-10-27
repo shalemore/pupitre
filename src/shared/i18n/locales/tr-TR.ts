@@ -137,7 +137,7 @@ export const trTR = {
 
     imageFailed: "Resim eklenemedi.",
     imageTooLarge: (fileName: string) => `${fileName} dosyası eklemek için çok büyük.`,
-    imageTooLargeDetail: "Diskten seçilen bir resim en fazla 20 MiB olabilir.",
+    imageTooLargeDetail: (limit: string) => `Diskten seçilen bir resim en fazla ${limit} olabilir.`,
   },
   about: {
     windowTitle: "Pupitre Hakkında",

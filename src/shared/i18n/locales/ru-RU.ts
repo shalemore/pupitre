@@ -141,7 +141,7 @@ export const ruRU = {
 
     imageFailed: "Не удалось вставить изображение.",
     imageTooLarge: (fileName: string) => `${fileName} слишком велик для вставки.`,
-    imageTooLargeDetail: "Изображение с диска может быть не больше 20 MiB.",
+    imageTooLargeDetail: (limit: string) => `Изображение с диска может быть не больше ${limit}.`,
   },
   about: {
     windowTitle: "О программе Pupitre",

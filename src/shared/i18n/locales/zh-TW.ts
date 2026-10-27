@@ -133,7 +133,7 @@ export const zhTW = {
 
     imageFailed: "無法插入該圖片。",
     imageTooLarge: (fileName: string) => `${fileName} 過大，無法插入。`,
-    imageTooLargeDetail: "從磁碟選擇的圖片最大可為 20 MiB。",
+    imageTooLargeDetail: (limit: string) => `從磁碟選擇的圖片最大可為 ${limit}。`,
   },
   about: {
     windowTitle: "關於 Pupitre",

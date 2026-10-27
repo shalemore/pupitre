@@ -143,7 +143,7 @@ export const plPL = {
 
     imageFailed: "Nie udało się wstawić obrazu.",
     imageTooLarge: (fileName: string) => `${fileName} jest zbyt duży, aby go wstawić.`,
-    imageTooLargeDetail: "Obraz wybrany z dysku może mieć najwyżej 20 MiB.",
+    imageTooLargeDetail: (limit: string) => `Obraz wybrany z dysku może mieć najwyżej ${limit}.`,
   },
   about: {
     windowTitle: "O programie Pupitre",

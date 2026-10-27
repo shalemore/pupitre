@@ -134,7 +134,7 @@ export const deDE = {
 
     imageFailed: "Das Bild konnte nicht eingefügt werden.",
     imageTooLarge: (fileName: string) => `${fileName} ist zu groß zum Einfügen.`,
-    imageTooLargeDetail: "Ein Bild von der Festplatte darf höchstens 20 MiB groß sein.",
+    imageTooLargeDetail: (limit: string) => `Ein Bild von der Festplatte darf höchstens ${limit} groß sein.`,
   },
   about: {
     windowTitle: "Über Pupitre",

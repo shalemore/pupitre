@@ -146,7 +146,7 @@ export const ar = {
     fileActionFailed: "تعذّر إجراء التغيير.",
     imageFailed: "تعذّر إدراج الصورة.",
     imageTooLarge: (fileName: string) => `${fileName} أكبر من أن يُدرج.`,
-    imageTooLargeDetail: "أقصى حجم لصورة تُختار من القرص 20 MiB.",
+    imageTooLargeDetail: (limit: string) => `أقصى حجم لصورة تُختار من القرص ${limit}.`,
   },
   about: {
     windowTitle: "حول Pupitre",

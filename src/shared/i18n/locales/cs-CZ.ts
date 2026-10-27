@@ -141,7 +141,7 @@ export const csCZ = {
 
     imageFailed: "Obrázek se nepodařilo vložit.",
     imageTooLarge: (fileName: string) => `${fileName} je příliš velký na vložení.`,
-    imageTooLargeDetail: "Obrázek vybraný z disku může mít nejvýše 20 MiB.",
+    imageTooLargeDetail: (limit: string) => `Obrázek vybraný z disku může mít nejvýše ${limit}.`,
   },
   about: {
     windowTitle: "O aplikaci Pupitre",

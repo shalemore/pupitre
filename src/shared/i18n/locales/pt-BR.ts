@@ -133,7 +133,7 @@ export const ptBR = {
 
     imageFailed: "Não foi possível inserir a imagem.",
     imageTooLarge: (fileName: string) => `${fileName} é grande demais para ser inserido.`,
-    imageTooLargeDetail: "Uma imagem escolhida do disco pode ter no máximo 20 MiB.",
+    imageTooLargeDetail: (limit: string) => `Uma imagem escolhida do disco pode ter no máximo ${limit}.`,
   },
   about: {
     windowTitle: "Sobre o Pupitre",

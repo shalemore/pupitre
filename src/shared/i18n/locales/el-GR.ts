@@ -135,7 +135,7 @@ export const elGR = {
 
     imageFailed: "Δεν ήταν δυνατή η εισαγωγή της εικόνας.",
     imageTooLarge: (fileName: string) => `Το ${fileName} είναι πολύ μεγάλο για εισαγωγή.`,
-    imageTooLargeDetail: "Μια εικόνα από τον δίσκο μπορεί να έχει μέγεθος έως 20 MiB.",
+    imageTooLargeDetail: (limit: string) => `Μια εικόνα από τον δίσκο μπορεί να έχει μέγεθος έως ${limit}.`,
   },
   about: {
     windowTitle: "Σχετικά με το Pupitre",

@@ -136,7 +136,7 @@ export const nlNL = {
 
     imageFailed: "De afbeelding kon niet worden ingevoegd.",
     imageTooLarge: (fileName: string) => `${fileName} is te groot om in te voegen.`,
-    imageTooLargeDetail: "Een afbeelding van schijf mag hoogstens 20 MiB groot zijn.",
+    imageTooLargeDetail: (limit: string) => `Een afbeelding van schijf mag hoogstens ${limit} groot zijn.`,
   },
   about: {
     windowTitle: "Over Pupitre",

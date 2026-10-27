@@ -133,7 +133,7 @@ export const faIR = {
     fileActionFailed: "تغییر انجام نشد.",
     imageFailed: "تصویر درج نشد.",
     imageTooLarge: (fileName: string) => `${fileName} برای درج بیش از حد بزرگ است.`,
-    imageTooLargeDetail: "بیشترین اندازه تصویری که از دیسک انتخاب می‌شود 20 MiB است.",
+    imageTooLargeDetail: (limit: string) => `بیشترین اندازه تصویری که از دیسک انتخاب می‌شود ${limit} است.`,
   },
   about: {
     windowTitle: "درباره Pupitre",

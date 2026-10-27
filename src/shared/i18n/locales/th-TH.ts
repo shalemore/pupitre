@@ -133,7 +133,7 @@ export const thTH = {
     fileActionFailed: "ดำเนินการเปลี่ยนแปลงไม่สำเร็จ",
     imageFailed: "ไม่สามารถแทรกรูปภาพได้",
     imageTooLarge: (fileName: string) => `${fileName} มีขนาดใหญ่เกินกว่าจะแทรก`,
-    imageTooLargeDetail: "รูปภาพที่เลือกจากดิสก์มีขนาดได้ไม่เกิน 20 MiB",
+    imageTooLargeDetail: (limit: string) => `รูปภาพที่เลือกจากดิสก์มีขนาดได้ไม่เกิน ${limit}`,
   },
   about: {
     windowTitle: "เกี่ยวกับ Pupitre",

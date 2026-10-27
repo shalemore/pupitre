@@ -134,7 +134,7 @@ export const itIT = {
 
     imageFailed: "Impossibile inserire l'immagine.",
     imageTooLarge: (fileName: string) => `${fileName} è troppo grande per essere inserito.`,
-    imageTooLargeDetail: "Un'immagine scelta dal disco può essere grande al massimo 20 MiB.",
+    imageTooLargeDetail: (limit: string) => `Un'immagine scelta dal disco può essere grande al massimo ${limit}.`,
   },
   about: {
     windowTitle: "Informazioni su Pupitre",

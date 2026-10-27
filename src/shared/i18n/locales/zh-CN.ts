@@ -133,7 +133,7 @@ export const zhCN = {
 
     imageFailed: "无法插入该图片。",
     imageTooLarge: (fileName: string) => `${fileName} 过大，无法插入。`,
-    imageTooLargeDetail: "从磁盘选择的图片最大可为 20 MiB。",
+    imageTooLargeDetail: (limit: string) => `从磁盘选择的图片最大可为 ${limit}。`,
   },
   about: {
     windowTitle: "关于 Pupitre",

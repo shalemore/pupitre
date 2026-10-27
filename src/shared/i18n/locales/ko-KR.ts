@@ -134,7 +134,7 @@ export const koKR = {
 
     imageFailed: "이미지를 삽입할 수 없습니다.",
     imageTooLarge: (fileName: string) => `${fileName} 파일이 너무 커서 삽입할 수 없습니다.`,
-    imageTooLargeDetail: "디스크에서 고르는 이미지는 최대 20 MiB까지입니다.",
+    imageTooLargeDetail: (limit: string) => `디스크에서 고르는 이미지는 최대 ${limit}까지입니다.`,
   },
   about: {
     windowTitle: "Pupitre 정보",

@@ -135,7 +135,7 @@ export const daDK = {
 
     imageFailed: "Billedet kunne ikke indsættes.",
     imageTooLarge: (fileName: string) => `${fileName} er for stor til at blive indsat.`,
-    imageTooLargeDetail: "Et billede, der vælges fra disken, kan højst være 20 MiB.",
+    imageTooLargeDetail: (limit: string) => `Et billede, der vælges fra disken, kan højst være ${limit}.`,
   },
   about: {
     windowTitle: "Om Pupitre",

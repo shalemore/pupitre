@@ -134,7 +134,7 @@ export const jaJP = {
 
     imageFailed: "画像を挿入できませんでした。",
     imageTooLarge: (fileName: string) => `${fileName} は大きすぎて挿入できません。`,
-    imageTooLargeDetail: "ディスクから選べる画像は 20 MiB までです。",
+    imageTooLargeDetail: (limit: string) => `ディスクから選べる画像は ${limit} までです。`,
   },
   about: {
     windowTitle: "Pupitre について",

@@ -135,7 +135,7 @@ export const svSE = {
 
     imageFailed: "Bilden kunde inte infogas.",
     imageTooLarge: (fileName: string) => `${fileName} är för stor för att infogas.`,
-    imageTooLargeDetail: "En bild som väljs från disken får vara högst 20 MiB.",
+    imageTooLargeDetail: (limit: string) => `En bild som väljs från disken får vara högst ${limit}.`,
   },
   about: {
     windowTitle: "Om Pupitre",

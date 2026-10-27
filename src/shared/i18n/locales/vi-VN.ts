@@ -131,7 +131,7 @@ export const viVN = {
     fileActionFailed: "Không thể thực hiện thay đổi.",
     imageFailed: "Không thể chèn ảnh.",
     imageTooLarge: (fileName: string) => `${fileName} quá lớn để chèn.`,
-    imageTooLargeDetail: "Ảnh chọn từ đĩa chỉ có thể lớn tới 20 MiB.",
+    imageTooLargeDetail: (limit: string) => `Ảnh chọn từ đĩa chỉ có thể lớn tới ${limit}.`,
   },
   about: {
     windowTitle: "Giới thiệu Pupitre",

@@ -136,7 +136,7 @@ export const isIS = {
 
     imageFailed: "Ekki tókst að setja inn myndina.",
     imageTooLarge: (fileName: string) => `${fileName} er of stór til að setja inn.`,
-    imageTooLargeDetail: "Mynd sem valin er af diski má vera að hámarki 20 MiB.",
+    imageTooLargeDetail: (limit: string) => `Mynd sem valin er af diski má vera að hámarki ${limit}.`,
   },
   about: {
     windowTitle: "Um Pupitre",

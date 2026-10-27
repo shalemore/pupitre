@@ -132,7 +132,7 @@ export const esES = {
 
     imageFailed: "No se pudo insertar la imagen.",
     imageTooLarge: (fileName: string) => `${fileName} es demasiado grande para insertarlo.`,
-    imageTooLargeDetail: "Una imagen elegida del disco puede ocupar como máximo 20 MiB.",
+    imageTooLargeDetail: (limit: string) => `Una imagen elegida del disco puede ocupar como máximo ${limit}.`,
   },
   about: {
     windowTitle: "Acerca de Pupitre",

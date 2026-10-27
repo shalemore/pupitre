@@ -141,7 +141,7 @@ export const ukUA = {
 
     imageFailed: "Не вдалося вставити зображення.",
     imageTooLarge: (fileName: string) => `${fileName} завеликий для вставлення.`,
-    imageTooLargeDetail: "Зображення з диска може бути щонайбільше 20 MiB.",
+    imageTooLargeDetail: (limit: string) => `Зображення з диска може бути щонайбільше ${limit}.`,
   },
   about: {
     windowTitle: "Про Pupitre",

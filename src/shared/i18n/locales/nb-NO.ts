@@ -135,7 +135,7 @@ export const nbNO = {
 
     imageFailed: "Bildet kunne ikke settes inn.",
     imageTooLarge: (fileName: string) => `${fileName} er for stort til å settes inn.`,
-    imageTooLargeDetail: "Et bilde som velges fra disken, kan være på høyst 20 MiB.",
+    imageTooLargeDetail: (limit: string) => `Et bilde som velges fra disken, kan være på høyst ${limit}.`,
   },
   about: {
     windowTitle: "Om Pupitre",

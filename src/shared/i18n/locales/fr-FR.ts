@@ -134,7 +134,7 @@ export const frFR = {
 
     imageFailed: "Impossible d’insérer l’image.",
     imageTooLarge: (fileName: string) => `${fileName} est trop volumineux pour être inséré.`,
-    imageTooLargeDetail: "Une image choisie sur le disque peut faire 20 MiB au maximum.",
+    imageTooLargeDetail: (limit: string) => `Une image choisie sur le disque peut faire ${limit} au maximum.`,
   },
   about: {
     windowTitle: "À propos de Pupitre",

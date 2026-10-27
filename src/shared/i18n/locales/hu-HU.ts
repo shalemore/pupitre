@@ -136,7 +136,7 @@ export const huHU = {
 
     imageFailed: "A képet nem sikerült beszúrni.",
     imageTooLarge: (fileName: string) => `A(z) ${fileName} túl nagy a beszúráshoz.`,
-    imageTooLargeDetail: "A lemezről kiválasztott kép legfeljebb 20 MiB lehet.",
+    imageTooLargeDetail: (limit: string) => `A lemezről kiválasztott kép legfeljebb ${limit} lehet.`,
   },
   about: {
     windowTitle: "A Pupitre névjegye",

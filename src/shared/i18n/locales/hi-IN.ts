@@ -131,7 +131,7 @@ export const hiIN = {
     fileActionFailed: "बदलाव नहीं किया जा सका।",
     imageFailed: "छवि डाली नहीं जा सकी।",
     imageTooLarge: (fileName: string) => `${fileName} डालने के लिए बहुत बड़ा है।`,
-    imageTooLargeDetail: "डिस्क से चुनी गई छवि अधिकतम 20 MiB तक हो सकती है।",
+    imageTooLargeDetail: (limit: string) => `डिस्क से चुनी गई छवि अधिकतम ${limit} तक हो सकती है।`,
   },
   about: {
     windowTitle: "Pupitre के बारे में",

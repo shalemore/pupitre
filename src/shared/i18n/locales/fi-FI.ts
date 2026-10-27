@@ -136,7 +136,7 @@ export const fiFI = {
 
     imageFailed: "Kuvan lisääminen epäonnistui.",
     imageTooLarge: (fileName: string) => `${fileName} on liian suuri lisättäväksi.`,
-    imageTooLargeDetail: "Levyltä valittu kuva voi olla enintään 20 MiB.",
+    imageTooLargeDetail: (limit: string) => `Levyltä valittu kuva voi olla enintään ${limit}.`,
   },
   about: {
     windowTitle: "Tietoja Pupitresta",

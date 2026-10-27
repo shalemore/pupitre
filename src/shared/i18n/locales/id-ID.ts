@@ -132,7 +132,7 @@ export const idID = {
     fileActionFailed: "Perubahan tidak dapat dilakukan.",
     imageFailed: "Gambar tidak dapat disisipkan.",
     imageTooLarge: (fileName: string) => `${fileName} terlalu besar untuk disisipkan.`,
-    imageTooLargeDetail: "Gambar yang dipilih dari disk paling besar 20 MiB.",
+    imageTooLargeDetail: (limit: string) => `Gambar yang dipilih dari disk paling besar ${limit}.`,
   },
   about: {
     windowTitle: "Tentang Pupitre",
