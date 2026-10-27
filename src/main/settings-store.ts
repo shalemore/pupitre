@@ -44,11 +44,31 @@ export function getSettingsPath(): string {
   return join(app.getPath("userData"), "settings.json");
 }
 
+/**
+ * Keys an older version wrote into the settings file that are not settings. Recent files moved to
+ * a file of their own; the list changes with every document opened, so it must not sit among the
+ * preferences a user syncs or keeps in version control.
+ */
+const LEGACY_STATE_KEYS = ["recentFiles"] as const;
+
+/** Removes those keys from a settings file read from disk, and says whether one was there. */
+function dropLegacyState(settings: Record<string, unknown>): boolean {
+  let found = false;
+  for (const key of LEGACY_STATE_KEYS) {
+    if (!(key in settings)) continue;
+    delete settings[key];
+    found = true;
+  }
+  return found;
+}
+
 function settingsFile(): Record<string, unknown> {
   if (file === undefined) {
     const raw = readJsonFile(getSettingsPath());
     firstRun = raw === undefined;
     file = settingsFileSchema.parse(raw);
+    // Drop what an older version left behind before anything is synced again
+    if (raw !== undefined && dropLegacyState(file)) writeJsonFile(getSettingsPath(), file);
   }
   return file;
 }
@@ -158,7 +178,9 @@ export function setWorkspace(root: string | null): void {
   } else if (workspace?.root !== root) {
     const path = join(root, WORKSPACE_FILE);
     const raw = readJsonFile(path);
-    workspace = { root, path, exists: raw !== undefined, file: settingsFileSchema.parse(raw) };
+    const settings = settingsFileSchema.parse(raw);
+    if (raw !== undefined && dropLegacyState(settings)) writeJsonFile(path, settings);
+    workspace = { root, path, exists: raw !== undefined, file: settings };
     workspaceActive = workspace.exists;
   } else {
     return;
