@@ -174,14 +174,6 @@ async function codeBlock(ctx: ExportContext, block: SyntaxNode): Promise<string>
   return `<pre${pre}><code${attribute}${styleOf(ctx, CODE_FONT)}>${highlighted ?? escapeHtml(text)}</code></pre>`;
 }
 
-/** The number an ordered list starts at, when it does not start at one. */
-function orderedStart(state: EditorState, first: SyntaxNode | undefined): number | undefined {
-  const mark = first?.getChild("ListMark");
-  if (!mark) return undefined;
-  const number = Number.parseInt(state.sliceDoc(mark.from, mark.to), 10);
-  return number > 1 ? number : undefined;
-}
-
 function alignmentStyle(alignment: string | undefined): string {
   if (alignment === "center") return ' style="text-align:center"';
   if (alignment === "end") return ' style="text-align:end"';
@@ -244,10 +236,10 @@ async function listItem(ctx: ExportContext, item: SyntaxNode): Promise<string> {
 async function listBlock(ctx: ExportContext, block: SyntaxNode): Promise<string> {
   const tag = block.name === "OrderedList" ? "ol" : "ul";
   const items = blocksOf(block).filter((item) => item.name === "ListItem");
-  const start = tag === "ol" ? orderedStart(ctx.state, items[0]) : undefined;
-  const open = start === undefined ? `<${tag}>` : `<${tag} start="${start}">`;
   const html = await Promise.all(items.map((item) => listItem(ctx, item)));
-  return `${open}\n${html.join("\n")}\n</${tag}>`;
+  // An ordered list counts from one wherever it stands, as the editor shows it; the number an item
+  // carries in the source is only the place it had when it was written
+  return `<${tag}>\n${html.join("\n")}\n</${tag}>`;
 }
 
 /** The text of a quote's opening paragraph after its alert marker, when anything follows it. */

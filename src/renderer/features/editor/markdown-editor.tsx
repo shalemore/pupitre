@@ -76,6 +76,7 @@ import { prerenderMath } from "./math";
 import { diagramTheme, prerenderDiagrams, readDiagramTheme } from "./mermaid";
 import { pasteHtml } from "./paste-html";
 import { renderedBlocks } from "./rendered-blocks";
+import { renumberOrderedLists } from "./renumber-lists";
 import { markdownPairing, smartTyping } from "./smart-typing";
 import { textDirection } from "./text-direction";
 import { focusMode, holdLine, typewriterMode } from "./writing-modes";
@@ -415,6 +416,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
             foldedText: t().editor.foldedText,
           }),
           codeHighlight,
+          renumberOrderedLists(),
           previewCompartment.of(previewOf(settings().sourceMode)),
           imageInput(uploadImage),
           pasteHtml(markdownStyle),

@@ -116,6 +116,36 @@ class BulletWidget extends WidgetType {
   }
 }
 
+/**
+ * The number an ordered item shows: its place in the list, not the number written in its source,
+ * which stops matching as soon as an item before it is added or removed.
+ */
+class OrderedMarkWidget extends WidgetType {
+  constructor(readonly number: number) {
+    super();
+  }
+
+  override eq(other: OrderedMarkWidget): boolean {
+    return other.number === this.number;
+  }
+
+  toDOM(): HTMLElement {
+    const mark = document.createElement("span");
+    mark.className = "md-list-mark";
+    mark.textContent = `${this.number}. `;
+    return mark;
+  }
+}
+
+/** How many ordered items come before this one in its own list, from zero. */
+function itemIndex(node: SyntaxNode): number {
+  let before = 0;
+  for (let sibling = node.prevSibling; sibling; sibling = sibling.prevSibling) {
+    if (sibling.name === "ListItem") before++;
+  }
+  return before;
+}
+
 /** A task's checkbox; clicking it edits the `[ ]` or `[x]` it stands for. */
 class CheckboxWidget extends WidgetType {
   constructor(readonly checked: boolean) {
@@ -393,6 +423,17 @@ function visitListItem(builder: DecorationBuilder, node: SyntaxNode): void {
       markLine.from,
       markLine.from,
       checked ? "md-task md-task-checked" : "md-task",
+    );
+  } else if (node.parent?.name === "OrderedList" && !task) {
+    // An ordered item counts from its place in the list, so removing an item above renumbers the
+    // rest; the number written in the source is not shown, since it is only what the item was
+    // written as and would sit stale beside the others. The editor writes the count back into
+    // the source after an edit (renumber-lists.ts), so the file keeps the numbers it shows.
+    builder.decorations.push(
+      Decoration.replace({ widget: new OrderedMarkWidget(itemIndex(node) + 1) }).range(
+        mark.from,
+        marker,
+      ),
     );
   } else if (node.parent?.name === "BulletList" && !active && !task) {
     builder.decorations.push(bullet.range(mark.from, marker));
