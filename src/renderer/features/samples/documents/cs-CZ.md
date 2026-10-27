@@ -56,7 +56,7 @@ Předvolby › Vzhled › Styl okna přepíná mezi **Klasickým** a **Imersivn�
 - Vložené obrázky se ukládají do složky vedle dokumentu (ve výchozím nastavení `assets`, Předvolby › Markdown). Neuložený dokument je drží v paměti a zapíše je při prvním uložení.
 - Předvolby › Obecné › Výchozí aplikace pro Markdown zajistí, že Pupitre otevírá soubory `.md` ze správce souborů.
 - Předvolby se ukládají do `settings.json`; Předvolby › O aplikaci zobrazí jeho složku. Ukládají se jen hodnoty odlišné od výchozích a pole, které nelze přečíst, se vrátí na výchozí, aniž by ovlivnilo ostatní.
-- Složka může mít vlastní předvolby: když je složka otevřená, zobrazí se v předvolbách přepínač mezi **Globální** a **Tato složka**. Změny v části **Tato složka** se ukládají do `.pupitre/settings.json` v ní; soubor vznikne při první změně a překrývá globální předvolby, dokud je tato složka otevřená. Obnovením předvolby tam se vrátí globální hodnota.
+- Složka může mít vlastní předvolby: když je složka otevřená, zobrazí se v předvolbách přepínač mezi **Globálním** a **Touto složkou**. Změny v části **Tato složka** se ukládají do `.pupitre/settings.json` v ní; soubor vznikne při první změně a překrývá globální předvolby, dokud je tato složka otevřená. Obnovením předvolby tam se vrátí globální hodnota.
 
 ## Motivy
 

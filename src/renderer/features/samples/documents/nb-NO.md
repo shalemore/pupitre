@@ -66,7 +66,7 @@ Temaer følger med appen: hvert tema er en mappe i `src/renderer/themes/<navn>/`
 
 ```css
 :root {
-  /* Fargevalgene temaet støtter: lyst, mørkt eller begge */
+  /* Fargeskjemaene temaet støtter: lyst, mørkt eller begge */
   color-scheme: light dark;
 
   /* Standard skrift for brødteksten; kan endres i innstillingene */
@@ -100,7 +100,7 @@ Temaer følger med appen: hvert tema er en mappe i `src/renderer/themes/<navn>/`
 
 > Et sitat.
 >
-> > Et innebygd sitat.
+> > Et sitat i et sitat.
 
 > [!NOTE]
 > GitHub-varsler: `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` og `[!CAUTION]`.
@@ -111,7 +111,7 @@ Temaer følger med appen: hvert tema er en mappe i `src/renderer/themes/<navn>/`
 ### Lister
 
 1. Nummerert
-   - Innebygd, punktliste
+   - Punktliste i en liste
    - [x] Oppgaver kan krysses av
    - [ ] Og fjernes
 2. Lister kan inneholde kode:

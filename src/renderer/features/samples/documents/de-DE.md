@@ -23,7 +23,7 @@ Setzen Sie den Cursor in **fetten Text**, einen `Codeausschnitt` oder einen [Lin
 | Unterstrichen                      | <kbd>Strg</kbd>+<kbd>U</kbd>                                                                                |
 | Formatierung entfernen             | <kbd>Strg</kbd>+<kbd>\\</kbd>                                                                               |
 | Link                               | <kbd>Strg</kbd>+<kbd>K</kbd>                                                                                |
-| Bild einfügen...                   | <kbd>Strg</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
+| Bild einfügen…                     | <kbd>Strg</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | Überschrift 1–6 / Absatz           | <kbd>Strg</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | Zitat                              | <kbd>Strg</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | Nummerierte Liste / Aufzählung     | <kbd>Strg</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |
@@ -56,7 +56,7 @@ Unter Einstellungen › Darstellung › Fensterstil wechseln Sie zwischen **Klas
 - Eingefügte Bilder werden in einem Ordner neben dem Dokument gespeichert (standardmäßig `assets`, Einstellungen › Markdown). Ein noch nicht gespeichertes Dokument hält sie im Speicher und schreibt sie beim ersten Speichern.
 - Mit Einstellungen › Allgemein › Standard-App für Markdown öffnet Pupitre `.md`-Dateien aus dem Dateimanager.
 - Die Einstellungen liegen in `settings.json`; Einstellungen › Über zeigt den Ordner. Es werden nur Werte geschrieben, die vom Standard abweichen, und ein nicht lesbares Feld fällt auf seinen Standard zurück, ohne die anderen zu beeinflussen.
-- Ein Ordner kann eigene Einstellungen haben: Bei geöffnetem Ordner zeigen die Einstellungen einen Umschalter zwischen **Global** und **Dieser Ordner**. Änderungen unter **Dieser Ordner** landen in `.pupitre/settings.json`, werden beim ersten Ändern angelegt und überlagern die globalen Einstellungen; Zurücksetzen gibt den globalen Wert zurück.
+- Ein Ordner kann eigene Einstellungen haben: Bei geöffnetem Ordner zeigen die Einstellungen einen Umschalter zwischen **Global** und **Dieser Ordner**. Änderungen unter **Dieser Ordner** landen in `.pupitre/settings.json`; die Datei wird beim ersten Ändern angelegt und überlagert die globalen Einstellungen; Zurücksetzen gibt den globalen Wert zurück.
 
 ## Designs
 
@@ -113,7 +113,7 @@ Designs werden mit der App ausgeliefert: Jedes ist ein Ordner `src/renderer/them
 1. Nummeriert
    - Verschachtelt, mit Aufzählungszeichen
    - [x] Aufgaben lassen sich abhaken
-   - [ ] und wieder abhaken
+   - [ ] und wieder abwählen
 2. Listen können Code enthalten:
 
    ```sh

@@ -208,6 +208,7 @@ listed, change every occurrence, and update the table and its notes.
 | `tr` global             | `Genel`                                     | `Global`                                                   |
 | `tr` modified date      | `Değiştirme Tarihi`                         | `Değiştirilme Tarihi`                                      |
 | `ru` chemical equations | `формулы`                                   | `уравнения`                                                |
+| `ru`, `uk` global scope | `Общие` / `Загальні` (same as General)      | `Глобальные` / `Глобальні`                                 |
 | `pl` full width         | `Pełna`                                     | `Pełna szerokość`                                          |
 | `fi` sample             | `valitsin … välillä`                        | `Yleinen` / `Tämä kansio` -valitsin                        |
 | `da`, `nb` sample       | `giver den den` / `gir den den`             | `genskaber` / `gjenoppretter`                              |
@@ -251,6 +252,7 @@ listed, change every occurrence, and update the table and its notes.
 - `tr` global: `settings.scopeGlobal`; `Genel` is already General in the same window
 - `tr` modified date: `sidebar.sortModified`; The date something was modified
 - `ru` chemical equations: `samples/documents/ru-RU.md`; [Химическое уравнение](https://ru.wikipedia.org/wiki/Химическое_уравнение)
+- `ru`, `uk` global scope: `settings.scopeGlobal`; Microsoft ru uses `глобальные параметры` where `общие параметры` is the General page ([Visual Studio ru](https://learn.microsoft.com/ru-ru/visualstudio/python/python-support-options-and-settings-in-visual-studio?view=visualstudio)); the General tab in the same window already has the other word; [^1]
 - `pl` full width: `settings.widthFull`; Clarity
 - `fi` sample: `samples/documents/fi-FI.md`; The case pattern was incomplete
 - `da`, `nb` sample: `samples/documents/da-DK.md`, `samples/documents/nb-NO.md`; Two pronouns in a row; the verb already means “gives back”
@@ -296,7 +298,9 @@ These smaller repairs are easy to undo by accident:
 
 ### Japanese
 
-- No spaces between Japanese and Latin words.
+- Insert a half-width space between Japanese and Latin letters or digits (`Markdown ファイル`,
+  `20 MiB まで`), as Microsoft's Japanese style guide asks. Japanese punctuation takes no space
+  beside it, and neither does text inside 「 」 or parentheses.
 - Keep the long vowel mark `ー` and the small kana `ャ ュ ョ ッ`; a missing `ー` changes the word
   (`タイトルバー`, not `タイトルバ`). Do not use halfwidth katakana.
 - Use the katakana spelling the platform uses (`サイドバー`, `フォルダー`, `タイトルバー`).

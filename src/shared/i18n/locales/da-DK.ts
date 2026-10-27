@@ -330,7 +330,7 @@ export const daDK = {
     uiFontDesc: "Menuer, sidepanel og dialogbokse; manglende tegn bruger reserveskrifttypen",
     systemDefault: "Systemets standard",
     focusMode: "Fokustilstand",
-    focusModeDesc: "Dæmper alt undtagen det, du skriver i (F8)",
+    focusModeDesc: "Dæmper alt undtagen det, du skriver (F8)",
     focusModeGrain: "Fokusér på",
     focusModeGrainLine: "Aktuel linje",
     focusModeGrainBlock: "Aktuel blok",
@@ -357,7 +357,7 @@ export const daDK = {
     defaultAppFailed: "Kunne ikke ændre standardappen; angiv den i systemindstillingerne",
     smartQuotes: "Smarte citationstegn",
     smartQuotesDesc:
-      "Buer citationstegn under skrivning, undtagen i kode, matematik, HTML og linkadresser",
+      "Krumme citationstegn under skrivning, undtagen i kode, matematik, HTML og linkadresser",
     smartDashes: "Smarte tankestreger",
     smartDashesDesc:
       "Kort og lang tankestreg og en ellipse for --, --- og ..., undtagen i kode, matematik, HTML og linkadresser",

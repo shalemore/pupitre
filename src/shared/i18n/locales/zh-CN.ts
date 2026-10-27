@@ -153,7 +153,7 @@ export const zhCN = {
     title: "版本历史",
     filterPlaceholder: "筛选版本…",
     empty: "此文档还没有以前的版本",
-    restoreHint: "按 Enter 会将所选版本还原到编辑器，撤销即可取消这次还原",
+    restoreHint: "按 Enter 会将所选版本还原到编辑器，撤销即可撤回这次还原",
   },
   menu: {
     file: "文件",

@@ -10,7 +10,7 @@ Sijoita kursori **lihavoituun tekstiin**, `rivinsisäiseen koodiin` tai [linkkii
 
 - Poista merkki poistaaksesi muotoilun; lisää tai poista `#` otsikon edestä muuttaaksesi sen tasoa.
 - Valittu teksti näyttää syntaksinsa, ja kopiointi kopioi Markdownia.
-- <kbd>Ctrl</kbd>+napsautus seuraa linkkiä: verkko-osoitteet avautuvat selaimessa, `#otsikko`-linkit vierittävät otsikkoon ja viereisen Markdown-tiedoston linkit avaavat tiedoston.
+- <kbd>Ctrl</kbd>+napsautus seuraa linkkiä: verkko-osoitteet avautuvat selaimessa, `#otsikko`-linkit vierittävät otsikkoon ja linkit viereiseen Markdown-tiedostoon avaavat sen.
 - Muotoilu on **Kappale**- ja **Muoto**-valikoissa, pikavalikossa ja alla olevissa pikanäppäimissä.
 
 <details>

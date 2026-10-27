@@ -45,7 +45,7 @@ export const csCZ = {
     chooseLook: "Vyberte vzhled",
     lookImmersiveDesc: "Záhlaví okna a postranní panely se při psaní skryjí",
     lookClassicDesc: "Záhlaví okna a postranní panely jsou stále vidět",
-    lookHint: "Později to lze změnit v Předvolby › Vzhled",
+    lookHint: "Později to lze změnit v Předvolbách › Vzhled",
   },
   editor: {
     toggleReplace: "Zobrazit/skrýt nahrazení",

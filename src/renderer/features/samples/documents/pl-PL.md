@@ -42,7 +42,7 @@ Przenieś kursor do **pogrubionego tekstu**, `kodu w tekście` lub [łącza](htt
 ## Tryby pisania
 
 - **Tryb skupienia** przyciemnia wszystko poza akapitem, w którym piszesz.
-- **Tryb maszyny do pisania** utrzymuje pisaną linię na środku okna lub blisko jego góry albo dołu, zgodnie z Ustawienia › Edytor.
+- **Tryb maszyny do pisania** utrzymuje pisaną linię na środku okna lub blisko jego góry albo dołu, zgodnie z Ustawieniami › Edytor.
 
 Oba są w menu **Widok** i w Ustawieniach › Edytor i można je łączyć.
 
@@ -56,7 +56,7 @@ Ustawienia › Wygląd › Styl okna przełącza między **Klasycznym** a **Imme
 - Wklejone obrazy są zapisywane w folderze obok dokumentu (domyślnie `assets`, Ustawienia › Markdown). Dokument, który nie został jeszcze zapisany, trzyma je w pamięci i zapisze przy pierwszym zapisie.
 - Ustawienia › Ogólne › Domyślna aplikacja Markdown sprawia, że Pupitre otwiera pliki `.md` z menedżera plików.
 - Ustawienia są przechowywane w `settings.json`; Ustawienia › O programie pokazuje jego folder. Zapisywane są tylko wartości różne od domyślnych, a pole, którego nie da się odczytać, wraca do wartości domyślnej bez wpływu na pozostałe.
-- Folder może mieć własne ustawienia: gdy folder jest otwarty, w ustawieniach pojawia się przełącznik między **Globalne** i **Ten folder**. Zmiany w sekcji **Ten folder** trafiają do `.pupitre/settings.json` w nim; plik powstaje przy pierwszej zmianie i jest nakładany na ustawienia globalne, gdy ten folder jest otwarty. Przywrócenie ustawienia w tym miejscu przywraca wartość globalną.
+- Folder może mieć własne ustawienia: gdy folder jest otwarty, w ustawieniach pojawia się przełącznik między **Globalnymi** a **Tym folderem**. Zmiany w sekcji **Ten folder** trafiają do `.pupitre/settings.json` w nim; plik powstaje przy pierwszej zmianie i jest nakładany na ustawienia globalne, gdy ten folder jest otwarty. Przywrócenie ustawienia w tym miejscu przywraca wartość globalną.
 
 ## Motywy
 
@@ -66,7 +66,7 @@ Motywy są dostarczane z aplikacją: każdy to folder w `src/renderer/themes/<na
 
 ```css
 :root {
-  /* Motywy kolorystyczne obsługiwane przez ten motyw: jasny, ciemny lub oba */
+  /* Schematy kolorów obsługiwane przez ten motyw: jasny, ciemny lub oba */
   color-scheme: light dark;
 
   /* Domyślna czcionka tekstu głównego; można ją zmienić w ustawieniach */

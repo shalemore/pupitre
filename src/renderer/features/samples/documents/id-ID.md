@@ -122,10 +122,10 @@ Tema disertakan bersama aplikasi: masing-masing berupa folder di `src/renderer/t
 
 ### Tabel
 
-| Kiri  | Tengah  | Kanan |
-| :---- | :-----: | ----: |
-| Sel   |  Teks   |  1.00 |
-| Lebih | Panjang | 10.50 |
+| Kiri          | Tengah | Kanan |
+| :------------ | :----: | ----: |
+| Sel           |  Teks  |  1.00 |
+| Lebih panjang |  Teks  | 10.50 |
 
 ### Kode
 

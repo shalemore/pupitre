@@ -42,7 +42,7 @@ export const thTH = {
     chooseLook: "เลือกรูปลักษณ์",
     lookImmersiveDesc: "แถบชื่อเรื่องและแถบด้านข้างจะถูกซ่อนขณะที่คุณเขียน",
     lookClassicDesc: "แถบชื่อเรื่องและแถบด้านข้างแสดงอยู่เสมอ",
-    lookHint: "เปลี่ยนได้ภายหลังที่ การตั้งค่า › รูปลักษณ์",
+    lookHint: "เปลี่ยนได้ภายหลังที่การตั้งค่า › รูปลักษณ์",
   },
   editor: {
     toggleReplace: "แสดง/ซ่อนการแทนที่",
@@ -310,7 +310,7 @@ export const thTH = {
     updateErrorGeneric: "ตรวจหาการอัปเดตไม่ได้ โปรดลองใหม่ภายหลัง",
     settingsFile: "ไฟล์การตั้งค่า",
     revealSettingsFile: "แสดงในโฟลเดอร์",
-    scopeGlobal: "ทั้งหมด",
+    scopeGlobal: "ส่วนกลาง",
     scopeFolder: "โฟลเดอร์นี้",
     updateNotificationTitle: (version: string) => `มี Pupitre ${version} ให้ใช้งาน`,
     updateNotificationBody: "เปิดการตั้งค่าเพื่อดาวน์โหลด",

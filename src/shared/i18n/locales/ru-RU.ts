@@ -45,7 +45,7 @@ export const ruRU = {
     chooseLook: "Выберите внешний вид",
     lookImmersiveDesc: "Строка заголовка и боковые панели скрываются, пока вы пишете",
     lookClassicDesc: "Строка заголовка и боковые панели всегда на виду",
-    lookHint: "Позже это можно изменить в Настройки › Внешний вид",
+    lookHint: "Позже это можно изменить в Настройках › Внешний вид",
   },
   editor: {
     toggleReplace: "Показать или скрыть замену",
@@ -141,7 +141,7 @@ export const ruRU = {
 
     imageFailed: "Не удалось вставить изображение.",
     imageTooLarge: (fileName: string) => `${fileName} слишком велик для вставки.`,
-    imageTooLargeDetail: "Изображение с диска может быть не больше 20 МиБ.",
+    imageTooLargeDetail: "Изображение с диска может быть не больше 20 MiB.",
   },
   about: {
     windowTitle: "О программе Pupitre",
@@ -320,7 +320,7 @@ export const ruRU = {
     updateErrorGeneric: "Не удалось проверить обновления. Повторите попытку позже.",
     settingsFile: "Файл настроек",
     revealSettingsFile: "Показать в папке",
-    scopeGlobal: "Общие",
+    scopeGlobal: "Глобальные",
     scopeFolder: "Эта папка",
     updateNotificationTitle: (version: string) => `Доступен Pupitre ${version}`,
     updateNotificationBody: "Откройте настройки, чтобы скачать обновление.",

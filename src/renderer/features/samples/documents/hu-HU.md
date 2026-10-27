@@ -48,7 +48,7 @@ Mindkettő a **Nézet** menüben és a Beállítások › Szerkesztő alatt tal�
 
 ## Ablakstílus
 
-A Beállítások › Megjelenés › Ablakstílus a **Klasszikus** és az **Immerzív** között vált. Immerzív stílusban a dokumentum az ablakon belüli kártyán jelenik meg; a címsor és az oldalsávok elrejtőznek, amint gépelni vagy görgetni kezd, és visszatérnek, amikor a mutató eléri az ablak felső vagy oldalsó szélét. Az oldalsávban lévő rögzítés nyitva tartja az oldalsávokat, az oldalsáv szélének húzásával pedig átméretezheti azt.
+A Beállítások › Megjelenés › Ablakstílus a **Klasszikus** és az **Immerszív** között vált. Immerszív stílusban a dokumentum az ablakon belüli kártyán jelenik meg; a címsor és az oldalsávok elrejtőznek, amint gépelni vagy görgetni kezd, és visszatérnek, amikor a mutató eléri az ablak felső vagy oldalsó szélét. Az oldalsávban lévő rögzítés nyitva tartja az oldalsávokat, az oldalsáv szélének húzásával pedig átméretezheti azt.
 
 ## Fájlok és képek
 

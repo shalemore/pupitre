@@ -142,7 +142,7 @@ export const itIT = {
     osLabel: "SO:",
     openSampleDoc: "Apri documento di esempio",
     sampleDocTitle: "Documento di esempio",
-    sampleDocDesc: "Esplora la demo di Pupitre e la sintassi Markdown completa",
+    sampleDocDesc: "Esplora la demo di Pupitre e la guida completa alla sintassi Markdown",
   },
   commandPalette: {
     title: "Palette dei comandi",

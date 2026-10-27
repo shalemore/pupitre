@@ -326,7 +326,7 @@ export const nbNO = {
     darkThemeDesc: "Brukes mens det mørke fargeskjemaet er aktivt",
     sameTheme: "Samme som temaet",
     schemeBoth: "Lyst og mørkt",
-    uiFont: "Grensesnitt-skrifttype",
+    uiFont: "Grensesnittskrifttype",
     uiFontDesc: "Menyer, sidefelt og dialogbokser; manglende tegn bruker reserveskrifttypen",
     systemDefault: "Systemets standard",
     focusMode: "Fokusmodus",

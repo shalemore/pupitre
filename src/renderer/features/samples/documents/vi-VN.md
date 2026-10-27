@@ -56,17 +56,17 @@ Tùy chọn › Hiển thị › Kiểu cửa sổ chuyển giữa **Cổ điể
 - Ảnh được dán sẽ được lưu vào thư mục bên cạnh tài liệu (`assets` theo mặc định, xem Tùy chọn › Markdown). Tài liệu chưa được lưu sẽ giữ ảnh trong bộ nhớ và ghi chúng khi lưu lần đầu.
 - Tùy chọn › Chung › Ứng dụng Markdown mặc định cho phép Pupitre mở tệp `.md` từ trình quản lý tệp.
 - Tùy chọn được lưu trong `settings.json`; Tùy chọn › Giới thiệu hiển thị thư mục của tệp này. Chỉ những giá trị khác mặc định mới được ghi, và trường không đọc được sẽ trở về mặc định mà không ảnh hưởng đến các trường khác.
-- Mỗi thư mục có thể có cài đặt riêng: khi mở một thư mục, Tùy chọn hiển thị nút chuyển giữa **Toàn cục** và **Thư mục này**. Những gì bạn thay đổi trong **Thư mục này** được ghi vào `.pupitre/settings.json` trong thư mục đó, tệp này được tạo khi có thay đổi đầu tiên và được phủ lên cài đặt chung mỗi khi thư mục đó được mở. Đặt lại một cài đặt ở đó sẽ trả nó về giá trị chung.
+- Mỗi thư mục có thể có cài đặt riêng: khi mở một thư mục, Tùy chọn hiển thị nút chuyển giữa **Toàn cục** và **Thư mục này**. Những gì bạn thay đổi trong **Thư mục này** được ghi vào `.pupitre/settings.json` trong thư mục đó, tệp này được tạo khi có thay đổi đầu tiên và được phủ lên cài đặt toàn cục mỗi khi thư mục đó được mở. Đặt lại một cài đặt ở đó sẽ trả nó về giá trị toàn cục.
 
 ## Chủ đề
 
-Một chủ đề định dạng toàn bộ cửa sổ và tài liệu. Tùy chọn › Hiển thị liệt kê các chủ đề cùng bảng màu mà chúng hỗ trợ, và có thể chọn chủ đề riêng cho chế độ tối.
+Một chủ đề định dạng toàn bộ cửa sổ và tài liệu. Tùy chọn › Hiển thị liệt kê các chủ đề cùng lược đồ màu mà chúng hỗ trợ, và có thể chọn chủ đề riêng cho chế độ tối.
 
 Chủ đề đi kèm ứng dụng: mỗi chủ đề là một thư mục trong `src/renderer/themes/<name>/` có một tệp `index.css`, và tên thư mục chính là tên chủ đề. Phông chữ hoặc hình ảnh mà chủ đề dùng sẽ nằm trong cùng thư mục và được tham chiếu bằng `url()` tương đối.
 
 ```css
 :root {
-  /* Các bảng màu mà chủ đề này hỗ trợ: sáng, tối hoặc cả hai */
+  /* Các lược đồ màu mà chủ đề này hỗ trợ: sáng, tối hoặc cả hai */
   color-scheme: light dark;
 
   /* Phông chữ mặc định cho phần nội dung; có thể đổi trong Tùy chọn */

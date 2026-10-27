@@ -122,7 +122,7 @@ export const jaJP = {
     externalChangeMessage: (fileName: string) =>
       `${fileName} は他のプログラムによって変更されました。`,
     externalChangeDetail:
-      "「上書き」はファイルを現在の内容で置き換えます。「再読み込み」は変更を破棄してファイルを読み込みます。",
+      "「上書き」はファイルを編集中の内容で置き換えます。「再読み込み」は変更を破棄してファイルを読み込みます。",
     overwrite: "上書き",
     reload: "再読み込み",
     keepEditing: "編集を続ける",
@@ -246,7 +246,7 @@ export const jaJP = {
     animationsOff: "オフ",
     showOutline: "サイドバーを表示",
     sidebarLayout: "サイドバーのレイアウト",
-    sidebarLayoutDesc: "フォルダーとアウトラインを左右に分けるか、1つのサイドバーにまとめます",
+    sidebarLayoutDesc: "フォルダーとアウトラインを左右に分けるか、1 つのサイドバーにまとめます",
     sidebarLayoutSplit: "分割",
     sidebarLayoutCombined: "統合",
     pinSidebars: "サイドバーをピン留め",

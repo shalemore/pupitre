@@ -31,7 +31,7 @@ Sæt markøren inde i **fed tekst**, et `kodeafsnit` eller et [link](https://git
 | Tabel                                 | <kbd>Ctrl</kbd>+<kbd>T</kbd>                                                                                |
 | Søg / Erstat                          | <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>H</kbd> (macOS: <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd>) |
 | Genåbn lukket faneblad                | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
-| Sidebjælker                           | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
+| Sidepaneler                           | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Kildekodetilstand                     | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Fokustilstand / Skrivemaskinetilstand | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Nulstil zoom                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
@@ -69,7 +69,7 @@ Temaer følger med appen: hvert tema er en mappe i `src/renderer/themes/<navn>/`
   /* De farveskemaer, temaet understøtter: lyst, mørkt eller begge */
   color-scheme: light dark;
 
-  /* Standardteksttypen; den kan ændres i indstillingerne */
+  /* Standardskrifttypen for brødteksten; den kan ændres i indstillingerne */
   --font-document: Georgia, serif;
 
   /* Designtokens for hele vinduet */

@@ -45,7 +45,7 @@ export const ukUA = {
     chooseLook: "Оберіть вигляд",
     lookImmersiveDesc: "Рядок заголовка й бічні панелі ховаються, поки ви пишете",
     lookClassicDesc: "Рядок заголовка й бічні панелі завжди на виду",
-    lookHint: "Пізніше це можна змінити в Параметри › Вигляд",
+    lookHint: "Пізніше це можна змінити в Параметрах › Вигляд",
   },
   editor: {
     toggleReplace: "Показати/сховати заміну",
@@ -141,7 +141,7 @@ export const ukUA = {
 
     imageFailed: "Не вдалося вставити зображення.",
     imageTooLarge: (fileName: string) => `${fileName} завеликий для вставлення.`,
-    imageTooLargeDetail: "Зображення з диска може бути щонайбільше 20 МіБ.",
+    imageTooLargeDetail: "Зображення з диска може бути щонайбільше 20 MiB.",
   },
   about: {
     windowTitle: "Про Pupitre",
@@ -301,7 +301,7 @@ export const ukUA = {
     bulletMarker: "Маркер списку",
     emphasisMarker: "Маркер курсиву",
     strongMarker: "Маркер напівжирного",
-    fenceMarker: "Обгороджений блок коду",
+    fenceMarker: "Обгородження блоку коду",
     ruleMarker: "Горизонтальна лінія",
     orderedList: "Нумерований список",
     orderedListIncrement: "Зростаючий (1. 2. 3.)",
@@ -322,7 +322,7 @@ export const ukUA = {
     updateErrorGeneric: "Не вдалося перевірити оновлення. Спробуйте пізніше.",
     settingsFile: "Файл налаштувань",
     revealSettingsFile: "Показати в папці",
-    scopeGlobal: "Загальні",
+    scopeGlobal: "Глобальні",
     scopeFolder: "Ця папка",
     updateNotificationTitle: (version: string) => `Доступна версія Pupitre ${version}`,
     updateNotificationBody: "Відкрийте параметри, щоб завантажити її.",

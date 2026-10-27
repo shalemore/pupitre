@@ -23,7 +23,7 @@ Mova o cursor para um **texto em negrito**, um `trecho de código` ou um [link](
 | Sublinhado                           | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
 | Limpar formatação                    | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | Link                                 | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
-| Inserir imagem...                    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
+| Inserir imagem…                      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | Título 1–6 / Parágrafo               | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | Citação                              | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | Lista numerada / com marcadores      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |

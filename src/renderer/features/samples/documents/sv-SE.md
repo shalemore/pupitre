@@ -89,7 +89,7 @@ Teman följer med appen: varje tema är en mapp i `src/renderer/themes/<namn>/` 
 ```
 
 - Färger ställs in med `--ui-*`-token (ytor, text, accent) och `--syntax-*` för kod. Deras standardvärden och hela listan finns i `src/renderer/app.css` och temat `pupitre`.
-- Citatstaplar bör använda `var(--alert-color, …)` så att varningar behåller sina färger.
+- Citatstaplar bör använda `var(--alert-color, …)` så att notiserna behåller sina färger.
 - Brödtextens storlek, radavstånd och innehållsbredd tillhör användaren och vinner alltid; använd `em` för mått i dokumentet och logiska egenskaper som `padding-inline-start` så att text från höger till vänster speglas.
 
 ## Markdown-referens

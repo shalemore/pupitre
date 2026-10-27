@@ -98,7 +98,7 @@ export const huHU = {
       copyPath: "Útvonal másolása",
       saveAs: "Átnevezés / Mentés másként…",
       moveToImageFolder: "Áthelyezés a képek mappájába",
-      copyTo: "Kép másolása ide…",
+      copyTo: "Kép másolása másik mappába…",
       download: "Letöltés a képek mappájába",
       /** Stands in for those actions while the document has no folder of its own. */
       unsaved: "Mentse a dokumentumot, hogy a képeivel dolgozhasson",
@@ -124,14 +124,14 @@ export const huHU = {
     externalChangeMessage: (fileName: string) =>
       `A(z) ${fileName} fájlt egy másik program módosította.`,
     externalChangeDetail:
-      "A Felülírás a fájlt a te verziódra cseréli. Az Újratöltés elveti a módosításaidat, és betölti a fájlt.",
+      "A Felülírás a fájlt az Ön verziójára cseréli. Az Újratöltés elveti a módosításait, és betölti a fájlt.",
     overwrite: "Felülírás",
     reload: "Újratöltés",
     keepEditing: "Szerkesztés folytatása",
     // TODO(i18n): unverified with native speakers
     fileDeletedMessage: (fileName: string) => `A(z) ${fileName} fájlt egy másik program törölte.`,
     fileDeletedDetail:
-      "Mentsd újra, hogy megtartsd a dokumentumot. Ha nem mented, mentetlenül nyitva marad, és bezáráskor újra rákérdezünk.",
+      "Mentse újra, hogy megtartsa a dokumentumot. Ha nem menti, mentetlenül nyitva marad, és bezáráskor újra rákérdezünk.",
     fileActionFailed: "A módosítást nem sikerült végrehajtani.",
 
     imageFailed: "A képet nem sikerült beszúrni.",
@@ -256,7 +256,7 @@ export const huHU = {
     sidebarLayoutCombined: "Egyesített",
     pinSidebars: "Oldalsávok rögzítése",
     pinSidebar: (name) => `${name} oldalsáv rögzítése`,
-    pinSidebarsDesc: "Az immerzív ablak írás közben nyitva tartja az oldalsávokat",
+    pinSidebarsDesc: "Az immerszív ablak írás közben nyitva tartja az oldalsávokat",
     filePreviews: "Fájlelőnézetek",
     filePreviewsDesc: "Minden fájl első sorai a neve alatt a mappában",
     showWordCount: "Szószám megjelenítése",
@@ -347,7 +347,7 @@ export const huHU = {
     typewriterPositionBottom: "Lent",
     windowStyle: "Ablakstílus",
     windowStyleClassic: "Klasszikus",
-    windowStyleImmersive: "Immerzív",
+    windowStyleImmersive: "Immerszív",
     immersiveGap: "Rés",
     defaultApp: "Alapértelmezett Markdown-alkalmazás",
     defaultAppDesc: "A .md fájlok megnyitása a Pupitre-ben dupla kattintásra",
@@ -420,8 +420,8 @@ export const huHU = {
   },
   quickOpen: {
     title: "Gyors megnyitás",
-    placeholder: "Kezdj el gépelni egy fájlnevet…",
-    noFolder: "Nyiss meg egy mappát a dokumentumai megtalálásához",
+    placeholder: "Kezdjen el gépelni egy fájlnevet…",
+    noFolder: "Nyisson meg egy mappát a dokumentumai megtalálásához",
     noResults: "Nincs egyező fájl",
   },
   workspaceSearch: {

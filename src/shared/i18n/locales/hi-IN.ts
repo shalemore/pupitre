@@ -415,6 +415,6 @@ export const hiIN = {
     noFolder: "उसके दस्तावेज़ों में खोजने के लिए कोई फ़ोल्डर खोलें।",
     noResults: "कोई मेल नहीं मिला",
     invalidRegexp: "यह रेगुलर एक्सप्रेशन मान्य नहीं है।",
-    matchCount: (count: number) => `${count} मेल`,
+    matchCount: (count: number) => `${count} मिलान`,
   },
 } satisfies TranslationSchema;

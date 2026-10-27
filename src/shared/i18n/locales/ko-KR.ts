@@ -30,7 +30,7 @@ export const koKR = {
     sortName: "이름",
     sortModified: "수정한 날짜",
     sortCreated: "만든 날짜",
-    showInFolder: "폴더에서 표시",
+    showInFolder: "폴더에서 보기",
     copyPath: "경로 복사",
   },
   welcome: {
@@ -122,7 +122,7 @@ export const koKR = {
     externalChangeMessage: (fileName: string) =>
       `${fileName} 파일이 다른 프로그램에서 변경되었습니다.`,
     externalChangeDetail:
-      "‘덮어쓰기’는 파일을 현재 내용으로 바꾸고, ‘다시 불러오기’는 변경 내용을 버리고 파일을 불러옵니다.",
+      "‘덮어쓰기’는 파일을 편집 중인 내용으로 바꾸고, ‘다시 불러오기’는 변경 내용을 버리고 파일을 불러옵니다.",
     overwrite: "덮어쓰기",
     reload: "다시 불러오기",
     keepEditing: "계속 편집",
@@ -291,7 +291,7 @@ export const koKR = {
     markdownDesc: "서식 명령과 붙여넣은 텍스트에 쓰는 문법입니다.",
     bulletMarker: "글머리 기호",
     emphasisMarker: "기울임꼴 기호",
-    strongMarker: "굵게 기호",
+    strongMarker: "굵은 글씨 기호",
     fenceMarker: "코드 펜스",
     ruleMarker: "가로줄",
     orderedList: "번호 매기기 목록",

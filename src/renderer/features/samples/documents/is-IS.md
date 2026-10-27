@@ -2,7 +2,7 @@
 
 ![Pupitre](./logo.svg)
 
-Pupitre er Markdown-ritill fyrir skjáborð. Skjölin eru venjulegar `.md`-skrár: það sem þú sér er birt á staðnum og Markdown-málskipanin birtist þar sem bendillinn stendur. Þessi leiðarvísir er líka dæmi um það sem ritillinn birtir; breyttu honum að vild, hann er aðeins vistaður ef þú velur **Vista sem**.
+Pupitre er Markdown-ritill fyrir skjáborð. Skjölin eru venjulegar `.md`-skrár: það sem þú sérð er birt á staðnum og Markdown-málskipanin birtist þar sem bendillinn stendur. Þessi leiðarvísir er líka dæmi um það sem ritillinn birtir; breyttu honum að vild, hann er aðeins vistaður ef þú velur **Vista sem**.
 
 ## Breytingar
 
@@ -33,7 +33,7 @@ Settu bendilinn inn í **feitletraðan texta**, `kóða í texta` eða [hlekk](h
 | Opna lokaðan flipa aftur            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>                                                               |
 | Hliðarstikur                        | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Frumkóðahamur                       | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
-| Einbeitingarhamur / Skrifvélarhamur | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
+| Einbeitingarhamur / Ritvélarhamur   | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
 | Endurstilla aðdrátt                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
 | Stillingar                          | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
@@ -42,7 +42,7 @@ Settu bendilinn inn í **feitletraðan texta**, `kóða í texta` eða [hlekk](h
 ## Rithemur
 
 - **Einbeitingarhamur** dempar allt nema málsgreinina sem þú ert að skrifa.
-- **Skrifvélarhamur** heldur línunni sem þú ert að skrifa í miðju gluggans eða nálægt efri eða neðri brún hans, eins og tilgreint er í Stillingum › Ritill.
+- **Ritvélarhamur** heldur línunni sem þú ert að skrifa í miðju gluggans eða nálægt efri eða neðri brún hans, eins og tilgreint er í Stillingum › Ritill.
 
 Báðir eru í valmyndinni **Sýna** og í Stillingum › Ritill, og þá má nota saman.
 
@@ -52,7 +52,7 @@ Stillingar › Útlit › Stíll glugga skiptir milli **Klassísks** og **Umlykj
 
 ## Skrár og myndir
 
-- Pupitre heldur línulokum skrárinnar sem var opnuð, nema Stillingar › Markdown segi annað. Táknmálið sem sniðskipanir setja inn er einnig stillt þar.
+- Pupitre heldur línulokum skrárinnar sem var opnuð, nema Stillingar › Markdown segi annað. Málskipanin sem sniðskipanir setja inn er einnig stillt þar.
 - Límdar myndir eru vistaðar í möppu við skjalið (`assets` sjálfgefið, Stillingar › Markdown). Skjal sem ekki hefur verið vistað heldur þeim í minni og skrifar þær við fyrstu vistun.
 - Stillingar › Almennt › Sjálfgefna Markdown-forritið lætur Pupitre opna `.md`-skrár úr skráastjóranum.
 - Stillingarnar eru geymdar í `settings.json`; Stillingar › Um sýnir möppuna. Aðeins gildi sem víkja frá sjálfgefnum eru skrifuð, og reitur sem ekki er læsilegur fer aftur í sjálfgefið án þess að hafa áhrif á aðra.
@@ -88,7 +88,7 @@ Stillingar › Útlit › Stíll glugga skiptir milli **Klassísks** og **Umlykj
 }
 ```
 
-- Litir eru stilltir með `--ui-*`-tókunum (flöt, texti, áhersla) og `--syntax-*` fyrir kóða. Sjálfgefin gildi þeirra og allur listinn eru í `src/renderer/app.css` og þemanu `pupitre`.
+- Litir eru stilltir með `--ui-*`-breytunum (flöt, texti, áhersla) og `--syntax-*` fyrir kóða. Sjálfgefin gildi þeirra og allur listinn eru í `src/renderer/app.css` og þemanu `pupitre`.
 - Tilvitnanastikur eiga að nota `var(--alert-color, …)` svo tilkynningar haldi litum sínum.
 - Stærð megintexta, línubil og breidd innihalds tilheyra notandanum og vinna alltaf; notaðu `em` fyrir mál í skjalinu og rökleg eigindi eins og `padding-inline-start` svo texti frá hægri til vinstri speglist.
 
@@ -158,6 +158,6 @@ flowchart LR
 
 Setning með neðanmálsgrein[^1].
 
-[^1]: Neðanmálsgreinar eru listar í lok skjalsins.
+[^1]: Neðanmálsgreinar eru taldar upp í lok skjalsins.
 
 <!-- Athugasemdir haldast í skránni og eru birtar sem frumkóði. -->

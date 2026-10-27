@@ -268,7 +268,7 @@ export const esES = {
     contentWidth: "Ancho del contenido",
     widthCompact: "Compacto",
     widthNormal: "Normal",
-    widthWide: "Ancha",
+    widthWide: "Ancho",
     widthFull: "Ancho completo",
     spellcheck: "Revisión ortográfica",
     spellcheckDesc: "Subrayar palabras mal escritas; clic derecho para sugerencias",

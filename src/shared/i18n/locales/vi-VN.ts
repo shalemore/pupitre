@@ -316,7 +316,7 @@ export const viVN = {
     refreshFonts: "Tải lại danh sách phông chữ",
     resetToDefault: "Đặt lại về mặc định",
     darkTheme: "Chủ đề cho chế độ tối",
-    darkThemeDesc: "Dùng khi bảng màu tối được bật",
+    darkThemeDesc: "Dùng khi lược đồ màu tối được bật",
     sameTheme: "Giống chủ đề chính",
     schemeBoth: "Sáng và tối",
     uiFont: "Phông chữ giao diện",

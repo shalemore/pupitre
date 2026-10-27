@@ -23,7 +23,7 @@ Mueve el cursor dentro de **texto en negrita**, un `fragmento de código` o un [
 | Subrayado                                     | <kbd>Ctrl</kbd>+<kbd>U</kbd>                                                                                |
 | Borrar formato                                | <kbd>Ctrl</kbd>+<kbd>\\</kbd>                                                                               |
 | Enlace                                        | <kbd>Ctrl</kbd>+<kbd>K</kbd>                                                                                |
-| Insertar imagen...                            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
+| Insertar imagen…                              | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>                                                               |
 | Título 1–6 / Párrafo                          | <kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>6</kbd> / <kbd>0</kbd>                                                    |
 | Cita                                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd>                                                               |
 | Lista numerada / con viñetas                  | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> / <kbd>]</kbd>                                                |

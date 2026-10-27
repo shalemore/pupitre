@@ -131,7 +131,7 @@ export const nlNL = {
     // TODO(i18n): unverified with native speakers
     fileDeletedMessage: (fileName: string) => `${fileName} is door een ander programma verwijderd.`,
     fileDeletedDetail:
-      "Sla het opnieuw op om dit document te behouden. Anders blijft het document ongeslagen open en wordt u bij het sluiten opnieuw gevraagd.",
+      "Sla het opnieuw op om dit document te behouden. Anders blijft het document open zonder opgeslagen te zijn en wordt u bij het sluiten opnieuw gevraagd.",
     fileActionFailed: "De wijziging kon niet worden doorgevoerd.",
 
     imageFailed: "De afbeelding kon niet worden ingevoegd.",

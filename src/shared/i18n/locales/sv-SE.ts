@@ -259,7 +259,7 @@ export const svSE = {
     filePreviews: "Filförhandsgranskningar",
     filePreviewsDesc: "De första raderna i varje fil under dess namn i mappen",
     showWordCount: "Visa ordantal",
-    showWordCountDesc: "Antal ord och tecken i namnlisten",
+    showWordCountDesc: "Antal ord och tecken i titelraden",
     bodyFont: "Teckensnitt",
     fallbackFont: "Reservteckensnitt",
     fallbackFontDesc: "För tecken som huvudteckensnittet saknar, till exempel CJK",
@@ -353,7 +353,7 @@ export const svSE = {
     defaultAppDone: "Pupitre öppnar nu Markdown-filer",
     defaultAppOpenedSettings: "Välj Pupitre för .md-filer under Standardappar",
     defaultAppManual:
-      "Markera en .md-fil i Finder, välj Arkiv › Information, välj Pupitre under Öppna med och klicka på Ändra alla",
+      "Markera en .md-fil i Finder, välj Arkiv › Visa info, välj Pupitre under Öppna med och klicka på Ändra alla",
     defaultAppFailed: "Det gick inte att ändra standardappen; ange den i systeminställningarna",
     smartQuotes: "Smarta citattecken",
     smartQuotesDesc:

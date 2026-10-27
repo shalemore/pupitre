@@ -146,7 +146,7 @@ export const ar = {
     fileActionFailed: "تعذّر إجراء التغيير.",
     imageFailed: "تعذّر إدراج الصورة.",
     imageTooLarge: (fileName: string) => `${fileName} أكبر من أن يُدرج.`,
-    imageTooLargeDetail: "أقصى حجم لصورة تُختار من القرص 20 ميبيبايت.",
+    imageTooLargeDetail: "أقصى حجم لصورة تُختار من القرص 20 MiB.",
   },
   about: {
     windowTitle: "حول Pupitre",
@@ -355,12 +355,12 @@ export const ar = {
     windowStyleImmersive: "غامر",
     immersiveGap: "الفراغ",
     defaultApp: "تطبيق Markdown الافتراضي",
-    defaultAppDesc: "فتح ملفات ‎.md باستخدام Pupitre عند النقر عليها نقرًا مزدوجًا",
+    defaultAppDesc: "فتح ملفات .md باستخدام Pupitre عند النقر عليها نقرًا مزدوجًا",
     setAsDefault: "تعيين كافتراضي",
     defaultAppDone: "يفتح Pupitre الآن ملفات Markdown",
-    defaultAppOpenedSettings: "في التطبيقات الافتراضية، اختر Pupitre لملفات ‎.md",
+    defaultAppOpenedSettings: "في التطبيقات الافتراضية، اختر Pupitre لملفات .md",
     defaultAppManual:
-      "في Finder، حدد ملف ‎.md، واختر ملف › إظهار المعلومات، ثم اختر Pupitre ضمن الفتح باستخدام وانقر على تغيير الكل",
+      "في Finder، حدد ملف .md، واختر ملف › إظهار المعلومات، ثم اختر Pupitre ضمن الفتح باستخدام وانقر على تغيير الكل",
     defaultAppFailed: "تعذر تغيير التطبيق الافتراضي؛ عيّنه من إعدادات النظام",
     smartQuotes: "علامات الاقتباس الذكية",
     smartQuotesDesc:

@@ -45,7 +45,7 @@ export const plPL = {
     chooseLook: "Wybierz wygląd",
     lookImmersiveDesc: "Pasek tytułu i paski boczne chowają się, gdy piszesz",
     lookClassicDesc: "Pasek tytułu i paski boczne są zawsze widoczne",
-    lookHint: "Możesz to zmienić później w Ustawienia › Wygląd",
+    lookHint: "Możesz to zmienić później w Ustawieniach › Wygląd",
   },
   editor: {
     toggleReplace: "Pokaż/ukryj zamianę",
