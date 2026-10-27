@@ -1,5 +1,7 @@
+import { Menu } from "lucide-solid";
 import { createSignal, For, onCleanup, Show, type Component } from "solid-js";
 import { TOP_MENUS, type MenuEntry, type Menus, type TopMenu } from "@shared/menu";
+import { IconButton } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { MenuPopup } from "./menu-popup";
@@ -113,5 +115,90 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
         )}
       </Show>
     </nav>
+  );
+};
+
+interface MenuButtonProps {
+  /** Told whether the menu is open, so an immersive title bar can stay unfolded under it. */
+  onOpenChange: (open: boolean) => void;
+}
+
+/**
+ * Every top-level menu under one button, for a title bar that shares its room with the tabs. The
+ * entries are asked for when the menu opens, like the menu bar's, because they follow the settings
+ * and the open document.
+ */
+export const MenuButton: Component<MenuButtonProps> = (props) => {
+  const [open, setOpen] = createSignal<{
+    entries: readonly MenuEntry[];
+    anchor: DOMRect;
+  }>();
+  let button: HTMLButtonElement | undefined;
+  // Where the focus was before the button took it, so a command leaves the typing where it was
+  let previousFocus: HTMLElement | undefined;
+  // An answer to an earlier ask must not open a menu that was closed or switched meanwhile
+  let asked = 0;
+
+  const close = () => {
+    asked++;
+    setOpen(undefined);
+    props.onOpenChange(false);
+    previousFocus?.focus();
+    previousFocus = undefined;
+  };
+
+  const toggle = async () => {
+    if (open() !== undefined) {
+      close();
+      return;
+    }
+    if (button === undefined) return;
+    previousFocus ??=
+      document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
+    const request = ++asked;
+    const anchor = button.getBoundingClientRect();
+    const menus: Menus = await desktop.invoke("menu:items");
+    if (request !== asked) return;
+    setOpen({
+      entries: TOP_MENUS.map((menu): MenuEntry => ({
+        type: "item",
+        id: menu,
+        label: t().menu[menu],
+        submenu: menus[menu],
+      })),
+      anchor,
+    });
+    props.onOpenChange(true);
+  };
+
+  return (
+    <>
+      <IconButton
+        ref={(element) => (button = element)}
+        data-menu-bar
+        label={t().menu.menu}
+        aria-haspopup="menu"
+        aria-expanded={open() !== undefined}
+        class="text-muted-foreground"
+        // The button does not take the focus from the editor, so closing the menu gives typing back
+        onPointerDown={(event) => event.preventDefault()}
+        onClick={() => void toggle()}
+      >
+        <Menu />
+      </IconButton>
+      <Show when={open()} keyed>
+        {(state) => (
+          <MenuPopup
+            entries={state.entries}
+            anchor={state.anchor}
+            onSelect={(entry) => {
+              close();
+              void desktop.invoke("menu:click", entry.id);
+            }}
+            onClose={close}
+          />
+        )}
+      </Show>
+    </>
   );
 };

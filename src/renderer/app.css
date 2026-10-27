@@ -309,6 +309,15 @@
   box-shadow: var(--ui-shadow-popover);
 }
 
+/* A strip that scrolls without showing a scrollbar, such as the tabs in the title bar */
+@utility no-scrollbar {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* A panel that can be taller than a short window scrolls inside it, keeping every entry reachable */
 @utility floating-panel-scroll {
   max-height: calc(100dvh - 0.5rem);

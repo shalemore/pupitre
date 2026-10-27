@@ -161,6 +161,7 @@ export const huHU = {
       "Az Enter visszateszi a kiválasztott verziót a szerkesztőbe, a Visszavonás pedig újra eltávolítja",
   },
   menu: {
+    menu: "Menü",
     file: "Fájl",
     edit: "Szerkesztés",
     view: "Nézet",

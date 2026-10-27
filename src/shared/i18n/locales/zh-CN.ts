@@ -156,6 +156,7 @@ export const zhCN = {
     restoreHint: "按 Enter 会将所选版本还原到编辑器，撤销即可撤回这次还原",
   },
   menu: {
+    menu: "菜单",
     file: "文件",
     edit: "编辑",
     view: "视图",

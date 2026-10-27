@@ -165,6 +165,7 @@ export const enUS = {
       "Enter puts the version you pick back into the editor, and Undo takes it away again",
   },
   menu: {
+    menu: "Menu",
     file: "File",
     edit: "Edit",
     view: "View",

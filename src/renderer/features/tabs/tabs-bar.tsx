@@ -22,7 +22,7 @@ interface TabButtonProps {
   onClose: () => void;
 }
 
-/** A tab in the strip: the name, a dirty dot and a close button, over the active fill. */
+/** A tab as a title bar shows it: the name, a dirty dot and a close button, over the active fill. */
 function TabButton(props: TabButtonProps) {
   let element: HTMLDivElement | undefined;
 
@@ -34,7 +34,7 @@ function TabButton(props: TabButtonProps) {
   return (
     <div
       ref={(node) => (element = node)}
-      class="group relative flex h-7 min-w-0 max-w-48 shrink-0 items-center border-e border-border-subtle last:border-e-0"
+      class="group relative flex h-full min-w-0 max-w-48 shrink-0 items-center border-e border-border-subtle last:border-e-0"
     >
       <button
         type="button"
@@ -85,14 +85,15 @@ function TabButton(props: TabButtonProps) {
 }
 
 /**
- * The strip of open documents at the top of the document card. The title bar names the active tab,
- * so the strip only appears once a second document is open.
+ * The open documents, in the title bar, once a second document is open. The title bar already names
+ * the one document a single-tab window shows, so the strip only appears with more of them; sharing
+ * the bar keeps the tabs inside the part that unfolds with the immersive chrome.
  */
 export const TabsBar: Component<TabsBarProps> = (props) => (
   <div
     role="tablist"
     aria-label={t().tabs.bar}
-    class="flex shrink-0 items-center overflow-x-auto border-b border-border px-1 py-1 print:hidden"
+    class="no-scrollbar flex h-full min-w-0 flex-1 items-stretch overflow-x-auto print:hidden"
   >
     <For each={props.tabs}>
       {(tab) => (

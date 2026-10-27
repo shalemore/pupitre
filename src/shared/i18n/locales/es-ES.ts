@@ -156,6 +156,7 @@ export const esES = {
     restoreHint: "Intro devuelve la versión elegida al editor y Deshacer la quita otra vez",
   },
   menu: {
+    menu: "Menú",
     file: "Archivo",
     edit: "Edición",
     view: "Ver",

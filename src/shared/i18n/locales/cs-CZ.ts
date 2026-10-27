@@ -164,6 +164,7 @@ export const csCZ = {
     restoreHint: "Enter vrátí vybranou verzi do editoru a příkaz Zpět ji zase odebere",
   },
   menu: {
+    menu: "Nabídka",
     file: "Soubor",
     edit: "Úpravy",
     view: "Zobrazení",

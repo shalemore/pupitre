@@ -157,6 +157,7 @@ export const jaJP = {
     restoreHint: "Enter で選んだバージョンをエディターに戻し、「元に戻す」で取り消せます",
   },
   menu: {
+    menu: "メニュー",
     file: "ファイル",
     edit: "編集",
     view: "表示",

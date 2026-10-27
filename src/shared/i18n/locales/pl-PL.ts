@@ -166,6 +166,7 @@ export const plPL = {
     restoreHint: "Enter przywraca wybraną wersję do edytora, a Cofnij znów ją usuwa",
   },
   menu: {
+    menu: "Menu",
     file: "Plik",
     edit: "Edycja",
     view: "Widok",

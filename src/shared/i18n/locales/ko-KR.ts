@@ -157,6 +157,7 @@ export const koKR = {
     restoreHint: "Enter를 누르면 선택한 버전이 편집기로 돌아오고, 실행 취소로 되돌릴 수 있습니다",
   },
   menu: {
+    menu: "메뉴",
     file: "파일",
     edit: "편집",
     view: "보기",

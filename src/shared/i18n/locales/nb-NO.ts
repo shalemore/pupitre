@@ -160,6 +160,7 @@ export const nbNO = {
       "Enter legger den valgte versjonen tilbake i redigereren, og Angre tar den ut igjen",
   },
   menu: {
+    menu: "Meny",
     file: "Fil",
     edit: "Rediger",
     view: "Vis",

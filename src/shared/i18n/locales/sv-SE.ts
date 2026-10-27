@@ -160,6 +160,7 @@ export const svSE = {
       "Enter lägger tillbaka den valda versionen i redigeraren och Ångra tar bort den igen",
   },
   menu: {
+    menu: "Meny",
     file: "Arkiv",
     edit: "Redigera",
     view: "Visa",

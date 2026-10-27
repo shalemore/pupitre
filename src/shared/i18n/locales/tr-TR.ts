@@ -160,6 +160,7 @@ export const trTR = {
     restoreHint: "Enter seçilen sürümü düzenleyiciye geri koyar, Geri Al ise yeniden kaldırır",
   },
   menu: {
+    menu: "Menü",
     file: "Dosya",
     edit: "Düzen",
     view: "Görünüm",

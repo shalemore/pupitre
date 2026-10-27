@@ -157,6 +157,7 @@ export const frFR = {
     restoreHint: "Entrée remet la version choisie dans l’éditeur, et Annuler la retire à nouveau",
   },
   menu: {
+    menu: "Menu",
     file: "Fichier",
     edit: "Édition",
     view: "Affichage",

@@ -161,6 +161,7 @@ export const nlNL = {
       "Enter zet de gekozen versie terug in de editor en Ongedaan maken haalt hem er weer uit",
   },
   menu: {
+    menu: "Menu",
     file: "Bestand",
     edit: "Bewerken",
     view: "Beeld",

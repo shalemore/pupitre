@@ -157,6 +157,7 @@ export const itIT = {
     restoreHint: "Invio rimette nell'editor la versione scelta e Annulla la toglie di nuovo",
   },
   menu: {
+    menu: "Menu",
     file: "File",
     edit: "Modifica",
     view: "Visualizza",

@@ -156,6 +156,7 @@ export const zhHK = {
     restoreHint: "按 Enter 會將所選版本還原到編輯器，復原即可撤回這次還原",
   },
   menu: {
+    menu: "選單",
     file: "檔案",
     edit: "編輯",
     view: "檢視",

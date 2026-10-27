@@ -158,6 +158,7 @@ export const deDE = {
       "Enter setzt die gewählte Version wieder in den Editor ein, Rückgängig nimmt sie wieder heraus",
   },
   menu: {
+    menu: "Menü",
     file: "Datei",
     edit: "Bearbeiten",
     view: "Ansicht",

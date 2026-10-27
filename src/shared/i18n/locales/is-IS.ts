@@ -162,6 +162,7 @@ export const isIS = {
     restoreHint: "Enter setur valda útgáfu aftur inn í ritilinn og Afturkalla tekur hana út aftur",
   },
   menu: {
+    menu: "Valmynd",
     file: "Skrá",
     edit: "Breyta",
     view: "Sýna",

@@ -253,6 +253,9 @@ only make code generation easier.
   counts, then the app name, then the menu bar's own items clip. `GIVE_WAY` in
   `components/title-bar.tsx` sets the order and the windows mark those parts with `data-bar-part`;
   a part added to the bar without a mark never gives way.
+- A window with one document keeps the menu bar and names the document in the title bar. With
+  several, the tabs move into the title bar and the menus fold into one button beside them, so the
+  tabs unfold with the bar instead of sitting below it, where reaching for them would unfold it.
 - A control that hangs below the title bar and is used with the pointer below the top — the menu
   bar today, a dropdown or a popover on the bar later — has to keep the bar out through
   `titleBarPinned`, and anything hanging out of a sidebar through that sidebar's pin. Such a panel

@@ -159,6 +159,7 @@ export const daDK = {
     restoreHint: "Enter lægger den valgte version tilbage i editoren, og Fortryd tager den ud igen",
   },
   menu: {
+    menu: "Menu",
     file: "Filer",
     edit: "Rediger",
     view: "Vis",

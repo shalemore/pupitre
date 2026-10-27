@@ -20,7 +20,7 @@ import type { MarkdownEditorHandle, MatchStats } from "@/features/editor/markdow
 import { headingKey, type OutlineHeading } from "@/features/editor/outline-heading";
 import { TableSizeDialog } from "@/features/editor/table-size-dialog";
 import { VersionHistory } from "@/features/history/version-history";
-import { MenuBar } from "@/features/menu/menu-bar";
+import { MenuBar, MenuButton } from "@/features/menu/menu-bar";
 import { QuickOpen } from "@/features/quick-open/quick-open";
 import { FolderSortButton } from "@/features/sidebar/folder-sort-button";
 import { FolderTree } from "@/features/sidebar/folder-tree";
@@ -106,6 +106,8 @@ export const MainWindow: Component = () => {
   // A menu or the rename field in the start sidebar keeps that sidebar (and the chrome) open
   const [startSidebarHeld, setStartSidebarHeld] = createSignal(false);
   const immersive = () => settings().windowStyle === "immersive";
+  // One document is named by the title bar itself, so only several need a strip of their own
+  const manyTabs = () => session.tabs().length > 1;
   // Split, the folder has its own sidebar at the start edge and the outline one at the end edge; combined, one sidebar shows either
   const split = () => settings().sidebarLayout === "split";
   // A sidebar keeps the width the user dragged it to in an earlier run
@@ -524,29 +526,49 @@ export const MainWindow: Component = () => {
           !immersive() && "border-b border-border",
         )}
       >
-        <div data-bar-part="name" class="flex items-center gap-2 me-1 pointer-events-none">
-          <img src="./logo.svg" alt="" class="rounded-sm shadow-sm size-4" />
-          <span class="font-semibold text-muted-foreground tracking-wide">
-            {t().common.appName}
-          </span>
-        </div>
-        <Show when={!isMacOS}>
-          <MenuBar onOpenChange={setMenuOpen} />
-        </Show>
+        <Show
+          when={manyTabs()}
+          fallback={
+            <>
+              <div data-bar-part="name" class="flex items-center gap-2 me-1 pointer-events-none">
+                <img src="./logo.svg" alt="" class="rounded-sm shadow-sm size-4" />
+                <span class="font-semibold text-muted-foreground tracking-wide">
+                  {t().common.appName}
+                </span>
+              </div>
+              <Show when={!isMacOS}>
+                <MenuBar onOpenChange={setMenuOpen} />
+              </Show>
 
-        <div class="flex-1 min-w-0 px-4 flex items-center justify-center gap-2 font-medium text-foreground">
-          <Show when={session.activeDocument()}>
-            <Show when={session.isDirty()}>
-              <span
-                aria-hidden="true"
-                class="size-1.5 shrink-0 rounded-full bg-brand animate-in fade-in-0 zoom-in-50 duration-snap"
-              />
-            </Show>
-            <bdi dir="ltr" class="truncate">
-              {session.fileName()}
-            </bdi>
+              <div class="flex-1 min-w-0 px-4 flex items-center justify-center gap-2 font-medium text-foreground">
+                <Show when={session.activeDocument()}>
+                  <Show when={session.isDirty()}>
+                    <span
+                      aria-hidden="true"
+                      class="size-1.5 shrink-0 rounded-full bg-brand animate-in fade-in-0 zoom-in-50 duration-snap"
+                    />
+                  </Show>
+                  <bdi dir="ltr" class="truncate">
+                    {session.fileName()}
+                  </bdi>
+                </Show>
+              </div>
+            </>
+          }
+        >
+          {/* With several documents the bar holds the tabs; the menus fold into one button so the
+              strip does not sit under a bar that unfolds as the pointer reaches for it */}
+          <Show when={!isMacOS}>
+            <MenuButton onOpenChange={setMenuOpen} />
           </Show>
-        </div>
+          <TabsBar
+            tabs={session.tabs()}
+            activeId={session.activeTab()?.id}
+            nameOf={session.tabFileName}
+            onActivate={session.activateTab}
+            onClose={(id) => void session.closeTab(id)}
+          />
+        </Show>
 
         <Show when={session.activeDocument() !== undefined && settings().showWordCount}>
           <div
@@ -627,17 +649,6 @@ export const MainWindow: Component = () => {
             immersive() && "rounded-lg bg-surface-1 shadow-sm print:rounded-none print:shadow-none",
           )}
         >
-          {/* One document needs no strip: the title bar already names the one that is open */}
-          <Show when={session.tabs().length > 1}>
-            <TabsBar
-              tabs={session.tabs()}
-              activeId={session.activeTab()?.id}
-              nameOf={session.tabFileName}
-              onActivate={session.activateTab}
-              onClose={(id) => void session.closeTab(id)}
-            />
-          </Show>
-
           <div class="flex-1 min-h-0 flex overflow-hidden print:block print:overflow-visible">
             <Show
               when={session.activeTab()}

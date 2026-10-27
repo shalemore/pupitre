@@ -157,6 +157,7 @@ export const ptBR = {
     restoreHint: "Enter devolve a versão escolhida ao editor e Desfazer a remove outra vez",
   },
   menu: {
+    menu: "Menu",
     file: "Arquivo",
     edit: "Editar",
     view: "Exibir",

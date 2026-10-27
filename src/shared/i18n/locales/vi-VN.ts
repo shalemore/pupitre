@@ -154,6 +154,7 @@ export const viVN = {
     restoreHint: "Enter đưa phiên bản đã chọn trở lại trình soạn thảo, và Hoàn tác lại bỏ nó đi",
   },
   menu: {
+    menu: "Menu",
     file: "Tệp",
     edit: "Chỉnh sửa",
     view: "Xem",

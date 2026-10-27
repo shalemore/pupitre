@@ -155,6 +155,7 @@ export const idID = {
     restoreHint: "Enter mengembalikan versi yang dipilih ke editor, dan Urungkan mengambilnya lagi",
   },
   menu: {
+    menu: "Menu",
     file: "Berkas",
     edit: "Sunting",
     view: "Tampilan",

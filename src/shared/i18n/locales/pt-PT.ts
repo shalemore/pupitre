@@ -156,6 +156,7 @@ export const ptPT = {
     restoreHint: "Enter devolve a versão escolhida ao editor e Anular retira-a outra vez",
   },
   menu: {
+    menu: "Menu",
     file: "Ficheiro",
     edit: "Editar",
     view: "Ver",

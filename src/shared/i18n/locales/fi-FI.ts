@@ -159,6 +159,7 @@ export const fiFI = {
     restoreHint: "Enter palauttaa valitun version editoriin ja Kumoa poistaa sen taas",
   },
   menu: {
+    menu: "Valikko",
     file: "Tiedosto",
     edit: "Muokkaa",
     view: "Näytä",
