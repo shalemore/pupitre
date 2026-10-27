@@ -18,7 +18,7 @@ This file is the single source of project conventions for humans and coding agen
 | `npm run test:e2e`      | Drive the built app with Playwright (`build` first)  |
 | `npm run test:perf`     | Time the built app by hand, minutes long (`build`)   |
 | `npm run bench`         | Benchmark the parser by hand, a minute long          |
-| `npm run typecheck`     | Type-check every project (`tsc -b`)                  |
+| `npm run typecheck`     | Type-check every project (`tsrs -b`)                 |
 | `npm run lint`          | Check formatting (oxfmt) and lint (oxlint)           |
 | `npm run knip`          | Find dead files, unused exports and dependencies     |
 | `npm run fix`           | Apply formatting and safe lint fixes                 |
