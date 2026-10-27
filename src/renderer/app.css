@@ -309,6 +309,13 @@
   box-shadow: var(--ui-shadow-popover);
 }
 
+/* A panel that can be taller than a short window scrolls inside it, keeping every entry reachable */
+@utility floating-panel-scroll {
+  max-height: calc(100dvh - 0.5rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
 /*
  * Press feedback for buttons: a quick squeeze on press and a spring back on release. Colors keep
  * the regular hover timing; only the scale uses the spring.

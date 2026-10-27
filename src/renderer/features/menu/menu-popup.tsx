@@ -35,6 +35,8 @@ const MenuPanel: Component<PanelProps> = (props) => {
   const [active, setActive] = createSignal(-1);
   const [rightToLeft, setRightToLeft] = createSignal(false);
   const [submenu, setSubmenu] = createSignal<{
+    /** The entry the submenu belongs to, so the same entry does not reopen it under the pointer. */
+    index: number;
     entries: readonly MenuEntry[];
     anchor: DOMRect;
   }>();
@@ -58,24 +60,32 @@ const MenuPanel: Component<PanelProps> = (props) => {
   const barLeft = (width: number, mirrored: boolean): number =>
     mirrored ? props.anchor.right - width : props.anchor.left;
 
-  /** Puts the panel beside its anchor, then keeps it inside the window. */
+  /** Puts the panel beside its anchor and gives it the room left below, so a long menu scrolls. */
   const place = () => {
     if (!panel) return;
-    const { width, height } = panel.getBoundingClientRect();
+    // The entrance animation scales the panel, so its transformed width would put it past the edge
+    const width = panel.offsetWidth;
     // A submenu opens toward the end of its line, which is the left in a right-to-left menu
     const mirrored = getComputedStyle(panel).direction === "rtl";
     setRightToLeft(mirrored);
     const nested = props.nested === true;
     const left = nested ? submenuLeft(width, mirrored) : barLeft(width, mirrored);
-    const top = nested ? props.anchor.top - SUBMENU_LIFT : props.anchor.bottom + PANEL_GAP;
+    const top = Math.max(
+      VIEWPORT_MARGIN,
+      nested ? props.anchor.top - SUBMENU_LIFT : props.anchor.bottom + PANEL_GAP,
+    );
     setOffset({
       left: Math.max(VIEWPORT_MARGIN, Math.min(left, window.innerWidth - VIEWPORT_MARGIN - width)),
-      top: Math.max(VIEWPORT_MARGIN, Math.min(top, window.innerHeight - VIEWPORT_MARGIN - height)),
+      top,
     });
+    panel.style.maxHeight = `${Math.max(0, window.innerHeight - top - VIEWPORT_MARGIN)}px`;
   };
 
   onMount(() => {
     place();
+    // The panel is measured again once the browser has laid it out; on mount its width can still be
+    // the placeholder one, which would put a wide panel past the window edge
+    requestAnimationFrame(() => place());
     panel?.focus();
   });
 
@@ -85,7 +95,7 @@ const MenuPanel: Component<PanelProps> = (props) => {
       const target = event.target;
       if (!(target instanceof Element)) return;
       // A click in the bar is the bar's business: it switches or closes the menu itself
-      if (panel?.contains(target) === true || target.closest("[data-menu-bar]") !== null) return;
+      if (target.closest("[data-menu-panel], [data-menu-bar]") !== null) return;
       props.onClose();
     };
     const onKey = (event: KeyboardEvent) => {
@@ -110,9 +120,12 @@ const MenuPanel: Component<PanelProps> = (props) => {
     );
 
   const openSubmenu = (index: number, item: MenuItemEntry) => {
+    // A submenu that opens over the pointer makes the pointer leave and enter its entry again; the
+    // same entry must keep the one it opened instead of closing and reopening it on every round
+    if (submenu()?.index === index) return;
     const button = panel?.querySelector(`[data-index="${index}"]`);
     if (item.submenu === undefined || !(button instanceof HTMLElement)) return;
-    setSubmenu({ entries: item.submenu, anchor: button.getBoundingClientRect() });
+    setSubmenu({ index, entries: item.submenu, anchor: button.getBoundingClientRect() });
   };
 
   const pick = (index: number, item: MenuItemEntry) => {
@@ -179,13 +192,14 @@ const MenuPanel: Component<PanelProps> = (props) => {
       ref={(element) => {
         panel = element;
       }}
+      data-menu-panel
       role="menu"
       tabIndex={-1}
       onKeyDown={onKeyDown}
       onPointerOver={props.onPointerOver}
       onPointerLeave={props.onPointerLeave}
       style={{ left: `${offset().left}px`, top: `${offset().top}px` }}
-      class="floating-panel fixed z-50 flex min-w-52 flex-col p-1 text-xs text-foreground outline-none select-none animate-in fade-in-0 zoom-in-95 duration-base ease-enter"
+      class="floating-panel floating-panel-scroll fixed z-50 flex min-w-52 flex-col p-1 text-xs text-foreground outline-none select-none animate-in fade-in-0 zoom-in-95 duration-base ease-enter"
     >
       <For each={props.entries}>
         {(entry, index) => (
@@ -200,6 +214,9 @@ const MenuPanel: Component<PanelProps> = (props) => {
                 data-index={index()}
                 disabled={item().enabled === false}
                 onPointerEnter={() => {
+                  // The entry under an open submenu keeps it; reopening it would restart its
+                  // entrance animation as the pointer crosses it
+                  if (active() === index() && submenu()?.index === index()) return;
                   setActive(index());
                   setSubmenu(undefined);
                   if (item().submenu !== undefined) openSubmenu(index(), item());
@@ -241,22 +258,25 @@ const MenuPanel: Component<PanelProps> = (props) => {
         )}
       </For>
 
-      {/* Keyed: another entry means another submenu, with its own position and highlight */}
+      {/* Keyed: another entry means another submenu, with its own position and highlight. It is
+          drawn outside its parent, whose own scroll area would otherwise clip it */}
       <Show when={submenu()} keyed>
         {(nested) => (
-          <MenuPanel
-            nested
-            entries={nested.entries}
-            anchor={nested.anchor}
-            onSelect={props.onSelect}
-            onClose={props.onClose}
-            onPointerOver={props.onPointerOver}
-            onPointerLeave={props.onPointerLeave}
-            onCloseSelf={() => {
-              setSubmenu(undefined);
-              panel?.focus();
-            }}
-          />
+          <Portal>
+            <MenuPanel
+              nested
+              entries={nested.entries}
+              anchor={nested.anchor}
+              onSelect={props.onSelect}
+              onClose={props.onClose}
+              onPointerOver={props.onPointerOver}
+              onPointerLeave={props.onPointerLeave}
+              onCloseSelf={() => {
+                setSubmenu(undefined);
+                panel?.focus();
+              }}
+            />
+          </Portal>
         )}
       </Show>
     </div>
