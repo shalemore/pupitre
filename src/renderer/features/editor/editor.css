@@ -68,6 +68,9 @@
     --md-image-radius: var(--radius-sm);
     --md-image-background: var(--ui-alpha-1);
     --md-image-shadow: var(--ui-shadow-sm);
+    /* A frame's shadow falls behind its box, which a picture with a clear background has not */
+    --md-image-outline-shadow: drop-shadow(0 1px 2px var(--ui-shadow-near))
+      drop-shadow(0 2px 8px var(--ui-shadow-far));
   }
 
   /* A blank line between blocks, away from the cursor, is only the gap between them (live-preview.ts) */
@@ -282,10 +285,27 @@
     box-shadow: var(--md-image-shadow);
   }
 
+  /*
+   * A picture whose own parts are see-through, an icon or a logo for one, stands without the
+   * frame: a box and its shadow would paint over the shape it was drawn with. Its shadow follows
+   * its outline instead, and it keeps the corners of that outline rather than the frame's.
+   */
+  .md-image-frame[data-alpha] {
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+
   /* The picture is a block of its frame: the line's baseline would otherwise open a gap under it */
   .md-image-frame > .md-image-preview {
     display: block;
     border-radius: max(0px, calc(var(--md-image-radius) - var(--md-image-padding)));
+  }
+
+  .md-image-frame[data-alpha] > .md-image-preview {
+    border-radius: 0;
+    filter: var(--md-image-outline-shadow);
   }
 
   /*

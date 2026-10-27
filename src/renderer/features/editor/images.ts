@@ -7,6 +7,7 @@ import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { pathFromFileUrl } from "@/lib/file";
 import { escapeHtml } from "@/lib/html";
+import { hasTransparency } from "./image-alpha";
 
 /** file:// URL of the document's folder, to resolve relative image paths; undefined if unsaved. */
 export const documentBaseUrl = Facet.define<string | undefined, string | undefined>({
@@ -594,8 +595,13 @@ export function imageDom(
   image.alt = alt;
   image.title = title;
   if (size.width !== undefined) image.style.width = `${size.width}px`;
-  // The line grows once the picture arrives; let CodeMirror measure it again
-  image.addEventListener("load", () => view.requestMeasure());
+  image.addEventListener("load", () => {
+    // A picture with a clear background, an icon for one, keeps its own outline instead of
+    // standing in a frame that would box it in
+    frame.toggleAttribute("data-alpha", hasTransparency(image));
+    // The line changes as the picture arrives, or as its frame gives way to its outline
+    view.requestMeasure();
+  });
 
   frame.append(image);
   if (controls) {
