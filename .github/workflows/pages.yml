@@ -1,10 +1,15 @@
 name: Pages
 
-# Publishes the web demo, the renderer running on the browser host in src/web, to GitHub Pages.
-# The repository needs Settings > Pages > Source set to GitHub Actions.
+# Publishes the web demo at two addresses: the newest v tag at the root, and main under /test/.
+# A main push refreshes /test/ and rebuilds the root from that tag, so the default address only
+# changes when a release is tagged. The repository needs Settings > Pages > Source set to GitHub
+# Actions.
 on:
   push:
     branches: [main]
+    tags: ["v*"]
+  release:
+    types: [published]
   workflow_dispatch:
 
 permissions:
@@ -23,11 +28,52 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # Full history so the latest v tag can be found; the working tree is main, which is what
+      # /test/ is built from.
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Choose the stable release and check it out
+        id: stable
+        shell: bash
+        run: |
+          tag="${{ github.event.release.tag_name }}"
+          if [ -z "$tag" ] && [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            tag="$GITHUB_REF_NAME"
+          fi
+          if [ -z "$tag" ]; then
+            git fetch --tags --force
+            tag="$(git describe --tags --abbrev=0 --match 'v*')"
+          fi
+          if [ -z "$tag" ]; then
+            echo "::error::No v* release tag found to build the stable root from"
+            exit 1
+          fi
+          git worktree add --detach stable "$tag"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
       - uses: ./.github/actions/setup-node
       - run: npm run build:web
+
+      - name: Build the stable demo
+        working-directory: stable
+        run: |
+          npm ci
+          npm run build:web
+
+      # The demo uses relative asset URLs, so the same output works at / and at /test/.
+      - name: Assemble the two sites
+        shell: bash
+        run: |
+          mkdir -p site/test
+          cp -R stable/out/web/. site/
+          cp -R out/web/. site/test/
+
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
         with:
-          path: out/web
+          path: site
+
       - id: deployment
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
