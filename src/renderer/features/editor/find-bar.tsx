@@ -152,7 +152,7 @@ export const FindBar: Component<FindBarProps> = (props) => {
 
         <div class="shrink-0 tabular-nums">
           <Show when={searchText()}>
-            <Badge variant={hasMatches() ? "secondary" : "destructive"} size="sm">
+            <Badge variant={hasMatches() ? "secondary" : "destructive"} size="sm" dir="ltr">
               {props.matchStats.current}/{props.matchStats.total}
             </Badge>
           </Show>

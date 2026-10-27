@@ -141,13 +141,13 @@ const TableToolbar: Component<{
   return (
     <div class="absolute bottom-full inset-s-0 z-10 mb-1 flex items-center gap-0.5 rounded-lg bg-popover p-0.5 shadow-float animate-in fade-in-0 slide-in-from-bottom-1 duration-base print:hidden">
       <ToolButton label={labels().alignStart} onClick={() => align("start")}>
-        <TextAlignStart />
+        <TextAlignStart class="rtl:-scale-x-100" />
       </ToolButton>
       <ToolButton label={labels().alignCenter} onClick={() => align("center")}>
         <TextAlignCenter />
       </ToolButton>
       <ToolButton label={labels().alignEnd} onClick={() => align("end")}>
-        <TextAlignEnd />
+        <TextAlignEnd class="rtl:-scale-x-100" />
       </ToolButton>
       <Separator orientation="vertical" class="mx-0.5 h-4" />
       <Show when={row() > 0}>
@@ -173,7 +173,7 @@ const TableToolbar: Component<{
         label={labels().insertColumnBefore}
         onClick={() => props.run((model) => insertColumn(state(), model, column()), props.cell)}
       >
-        <BetweenVerticalStart />
+        <BetweenVerticalStart class="rtl:-scale-x-100" />
       </ToolButton>
       <ToolButton
         label={labels().insertColumnAfter}
@@ -184,7 +184,7 @@ const TableToolbar: Component<{
           })
         }
       >
-        <BetweenVerticalEnd />
+        <BetweenVerticalEnd class="rtl:-scale-x-100" />
       </ToolButton>
       {/* Only body rows move: the header line says what the columns hold and stays first */}
       <Show when={row() > 1}>
@@ -223,7 +223,7 @@ const TableToolbar: Component<{
             })
           }
         >
-          <ArrowLeft />
+          <ArrowLeft class="rtl:-scale-x-100" />
         </ToolButton>
       </Show>
       <Show when={column() < columnTotal() - 1}>
@@ -236,7 +236,7 @@ const TableToolbar: Component<{
             })
           }
         >
-          <ArrowRight />
+          <ArrowRight class="rtl:-scale-x-100" />
         </ToolButton>
       </Show>
       <Separator orientation="vertical" class="mx-0.5 h-4" />

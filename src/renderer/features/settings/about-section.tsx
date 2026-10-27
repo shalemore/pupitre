@@ -48,7 +48,12 @@ export const AboutSection: Component = () => (
       <div>
         <div class="mb-2 font-medium text-foreground">{t().settings.settingsFile}</div>
         <div class="flex items-center gap-2">
-          <Input readOnly value={desktop.initialState.settingsPath} class="font-mono text-2xs" />
+          <Input
+            readOnly
+            dir="ltr"
+            value={desktop.initialState.settingsPath}
+            class="font-mono text-2xs"
+          />
           <Button
             variant="outline"
             size="sm"

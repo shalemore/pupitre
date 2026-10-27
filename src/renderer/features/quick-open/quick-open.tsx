@@ -80,7 +80,7 @@ const QuickOpenRow: Component<{ file: FoundFile }> = (props) => {
   );
 
   return (
-    <span class="min-w-0 flex-1 truncate">
+    <span dir="auto" class="min-w-0 flex-1 truncate">
       <MatchedText text={name()} ranges={props.file.ranges} offset={folder().length} />
       <span class="opacity-60 ms-2">
         <MatchedText text={folder()} ranges={props.file.ranges} offset={0} />

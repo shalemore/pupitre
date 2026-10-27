@@ -356,6 +356,12 @@
     mask: var(--align-icon) center / contain no-repeat;
   }
 
+  /* Left and right are the start and end edges, so the two ragged alignments swap in RTL */
+  .md-image-align[data-alignment="left"]:dir(rtl)::before,
+  .md-image-align[data-alignment="right"]:dir(rtl)::before {
+    transform: scaleX(-1);
+  }
+
   .md-image-align[data-alignment="left"] {
     --align-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 5H3'/%3E%3Cpath d='M15 12H3'/%3E%3Cpath d='M17 19H3'/%3E%3C/svg%3E");
   }

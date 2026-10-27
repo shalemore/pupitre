@@ -184,7 +184,7 @@ function orderedStart(state: EditorState, first: SyntaxNode | undefined): number
 
 function alignmentStyle(alignment: string | undefined): string {
   if (alignment === "center") return ' style="text-align:center"';
-  if (alignment === "end") return ' style="text-align:right"';
+  if (alignment === "end") return ' style="text-align:end"';
   return "";
 }
 
