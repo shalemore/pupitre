@@ -120,6 +120,7 @@
 /* Quotes are set in from both sides in italics, without a bar */
 .md-quote {
   --md-quote-indent: 2em;
+  --md-quote-bar-width: 0px;
   padding-inline-end: 2em;
   border-inline-start: none;
   font-style: italic;

@@ -147,7 +147,9 @@
 
 .md-quote {
   color: var(--ui-text-secondary);
-  border-inline-start: 0.25em solid var(--alert-color, var(--ui-alpha-3));
+  --md-quote-bar: var(--alert-color, var(--ui-alpha-3));
+  --md-quote-bar-width: 0.25em;
+  border-inline-start: var(--md-quote-bar-width) solid var(--md-quote-bar);
 }
 
 .md-hr:not(:has(.md-mark)) {

@@ -176,7 +176,9 @@
 /* > Block quotes: a cinnabar stroke and a pale wash; alerts tint the stroke with --alert-color */
 .md-quote {
   color: var(--ui-text-secondary);
-  border-inline-start: 2px solid var(--alert-color, var(--danqing-cinnabar));
+  --md-quote-bar: var(--alert-color, var(--danqing-cinnabar));
+  --md-quote-bar-width: 2px;
+  border-inline-start: var(--md-quote-bar-width) solid var(--md-quote-bar);
   background: var(--ui-alpha-1);
 }
 

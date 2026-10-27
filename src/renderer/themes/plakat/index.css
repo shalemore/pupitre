@@ -222,7 +222,9 @@
 /* > Block quotes: a thick bar; GitHub alerts (> [!NOTE]) tint it with --alert-color */
 .md-quote {
   color: var(--ui-text-secondary);
-  border-inline-start: 0.25em solid var(--alert-color, var(--ui-brand));
+  --md-quote-bar: var(--alert-color, var(--ui-brand));
+  --md-quote-bar-width: 0.25em;
+  border-inline-start: var(--md-quote-bar-width) solid var(--md-quote-bar);
 }
 
 /* A horizontal rule away from the cursor is a band of diagonal stripes */

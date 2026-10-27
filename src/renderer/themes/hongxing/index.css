@@ -204,7 +204,9 @@
 /* > Block quotes: an olive bar on a faint olive wash, like a notice board */
 .md-quote {
   color: var(--ui-text-secondary);
-  border-inline-start: 3px solid var(--alert-color, var(--hongxing-olive));
+  --md-quote-bar: var(--alert-color, var(--hongxing-olive));
+  --md-quote-bar-width: 3px;
+  border-inline-start: var(--md-quote-bar-width) solid var(--md-quote-bar);
   background: oklch(from var(--hongxing-olive) l c h / 6%);
 }
 

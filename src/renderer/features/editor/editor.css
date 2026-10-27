@@ -68,6 +68,9 @@
 
   .md-document {
     --md-quote-indent: 1em;
+    /* The bar of a quote, which a nested quote repeats at each level; a theme may restyle both */
+    --md-quote-bar: var(--alert-color, var(--ui-alpha-3));
+    --md-quote-bar-width: 3px;
     --md-list-indent: 1.6em;
     --md-block-indent: 0px;
     --md-blank-gap: 0.75em;
@@ -604,7 +607,34 @@
   }
 
   .md-quote {
-    border-inline-start: 3px solid var(--alert-color, var(--ui-alpha-3));
+    position: relative;
+    border-inline-start: var(--md-quote-bar-width) solid var(--md-quote-bar);
+  }
+
+  /*
+   * A quote inside a quote draws the same bar at the start of each of its own levels, so the page
+   * shows the nesting the source writes with another `>`.
+   */
+  .md-quote[data-quote-depth]::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: var(--md-quote-indent);
+    inline-size: calc((var(--md-quote-depth) - 1) * var(--md-quote-indent));
+    background-image: repeating-linear-gradient(
+      to right,
+      var(--md-quote-bar) 0 var(--md-quote-bar-width),
+      transparent var(--md-quote-bar-width) var(--md-quote-indent)
+    );
+    pointer-events: none;
+  }
+
+  .md-quote[data-quote-depth]:dir(rtl)::before {
+    background-image: repeating-linear-gradient(
+      to left,
+      var(--md-quote-bar) 0 var(--md-quote-bar-width),
+      transparent var(--md-quote-bar-width) var(--md-quote-indent)
+    );
   }
 
   /*
