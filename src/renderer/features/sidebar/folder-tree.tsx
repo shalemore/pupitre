@@ -19,11 +19,9 @@ import { MenuPopup } from "@/features/menu/menu-popup";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { messageOf, reportFailure } from "@/lib/errors";
+import { isInsideFolder, relativeToFolder } from "@/lib/file";
 import { excerptOf } from "@/lib/markdown-excerpt";
 import { settings } from "@/lib/settings";
-
-/** The separator Windows paths use, which a pinned path may contain before it is normalized. */
-const WINDOWS_SEPARATOR = "\\";
 
 interface TreeContext {
   activePath: () => string | undefined;
@@ -321,22 +319,14 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
       return undefined;
     });
 
-  /** Where a path sits under the folder root, in the form the pins file keeps. */
-  const relativeOf = (path: string): string | undefined => {
-    const prefix = `${props.root}/`;
-    if (path.startsWith(prefix)) return path.slice(props.root.length + 1).replaceAll("\\", "/");
-    const windowsPrefix = props.root + WINDOWS_SEPARATOR;
-    if (!path.startsWith(windowsPrefix)) return undefined;
-    return path.slice(props.root.length + 1).replaceAll(WINDOWS_SEPARATOR, "/");
-  };
-
+  /** Replaces the pins of the folder, in the form the pins file keeps them. */
   const setPins = async (paths: readonly string[]) => {
     await desktop.invoke("folder:set-pins", props.root, paths);
     await refetchPins();
   };
 
   const togglePin = (entry: FolderEntry) => {
-    const key = relativeOf(entry.path);
+    const key = relativeToFolder(props.root, entry.path);
     if (key === undefined) return;
     const current = pins() ?? [];
     const next = current.some((pin) => pin.path === entry.path)
@@ -350,15 +340,11 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
     const current = pins() ?? [];
     let changed = false;
     const next = current.flatMap((pin) => {
-      if (
-        pin.path !== oldPath &&
-        !pin.path.startsWith(`${oldPath}/`) &&
-        !pin.path.startsWith(oldPath + WINDOWS_SEPARATOR)
-      ) {
+      if (pin.path !== oldPath && !isInsideFolder(oldPath, pin.path)) {
         return [pin.relative];
       }
       changed = true;
-      const key = relativeOf(`${newPath}${pin.path.slice(oldPath.length)}`);
+      const key = relativeToFolder(props.root, `${newPath}${pin.path.slice(oldPath.length)}`);
       return key === undefined ? [] : [key];
     });
     if (changed) await setPins(next);
@@ -367,12 +353,7 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
   const removePins = async (path: string) => {
     const current = pins() ?? [];
     const next = current
-      .filter(
-        (pin) =>
-          pin.path !== path &&
-          !pin.path.startsWith(`${path}/`) &&
-          !pin.path.startsWith(path + WINDOWS_SEPARATOR),
-      )
+      .filter((pin) => pin.path !== path && !isInsideFolder(path, pin.path))
       .map((pin) => pin.relative);
     if (next.length !== current.length) await setPins(next);
   };
