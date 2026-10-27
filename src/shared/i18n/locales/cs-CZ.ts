@@ -101,6 +101,7 @@ export const csCZ = {
       failedFile: "Soubor obrázku chybí nebo ho nelze otevřít.",
       failedNetwork: "Obrázek se nepodařilo stáhnout. Zkontrolujte připojení k síti.",
       retry: "Zkusit znovu",
+      addCaption: "Přidat popisek",
     },
     imageFile: {
       reveal: "Zobrazit ve složce",

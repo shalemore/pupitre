@@ -95,6 +95,7 @@ export const deDE = {
       failedNetwork:
         "Das Bild konnte nicht heruntergeladen werden. Prüfen Sie die Netzwerkverbindung.",
       retry: "Wiederholen",
+      addCaption: "Bildunterschrift hinzufügen",
     },
     imageFile: {
       reveal: "Im Ordner zeigen",

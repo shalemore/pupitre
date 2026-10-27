@@ -101,6 +101,7 @@ export const plPL = {
       failedFile: "Plik obrazu nie istnieje lub nie można go otworzyć.",
       failedNetwork: "Nie można pobrać obrazu. Sprawdź połączenie sieciowe.",
       retry: "Ponów",
+      addCaption: "Dodaj podpis",
     },
     imageFile: {
       reveal: "Pokaż w folderze",

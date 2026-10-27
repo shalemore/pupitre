@@ -95,6 +95,7 @@ export const trTR = {
       failedFile: "Görsel dosyası eksik veya açılamıyor.",
       failedNetwork: "Görsel indirilemedi. Ağ bağlantınızı denetleyin.",
       retry: "Yeniden dene",
+      addCaption: "Başlık ekle",
     },
     imageFile: {
       reveal: "Klasörde göster",

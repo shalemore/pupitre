@@ -319,6 +319,47 @@
     filter: var(--md-image-outline-shadow);
   }
 
+  /* The caption under a picture is its alt text: quiet, centered and smaller than the page */
+  .md-image-caption {
+    padding-block-start: 0.1em;
+    color: var(--ui-text-muted);
+    font-size: 0.85em;
+    text-align: center;
+  }
+
+  /*
+   * A picture without a caption offers to add one, but only once the pointer has rested on it:
+   * most pictures are never captioned, and a dashed line under each of them would be noise.
+   */
+  .md-image-caption-hint {
+    display: block;
+    margin: 0.25rem auto 0;
+    padding: 0.125em 0.75em;
+    border: 1px dashed var(--ui-alpha-3);
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--ui-text-muted);
+    font-size: 0.75em;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--transition-duration-ui),
+      color var(--transition-duration-ui),
+      visibility 0s var(--transition-duration-ui);
+  }
+
+  .md-image-block:hover .md-image-caption-hint,
+  .md-image-block:focus-within .md-image-caption-hint {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0.6s, 0s, 0s;
+  }
+
+  .md-image-caption-hint:hover {
+    color: var(--ui-text-primary);
+  }
+
   /*
    * A picture that takes a while shows a quiet placeholder rather than growing from nothing once
    * it arrives, and one that cannot be shown gives its reason in a control of ours: dashed rather

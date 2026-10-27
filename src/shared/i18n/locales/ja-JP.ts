@@ -94,6 +94,7 @@ export const jaJP = {
       failedFile: "画像ファイルが見つからないか、開けません。",
       failedNetwork: "画像をダウンロードできませんでした。ネットワーク接続を確認してください。",
       retry: "再試行",
+      addCaption: "キャプションを追加",
     },
     imageFile: {
       reveal: "フォルダーで表示",

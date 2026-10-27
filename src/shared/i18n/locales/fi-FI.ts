@@ -95,6 +95,7 @@ export const fiFI = {
       failedFile: "Kuvatiedosto puuttuu tai sitä ei voi avata.",
       failedNetwork: "Kuvan lataaminen epäonnistui. Tarkista verkkoyhteys.",
       retry: "Yritä uudelleen",
+      addCaption: "Lisää kuvateksti",
     },
     imageFile: {
       reveal: "Näytä kansiossa",

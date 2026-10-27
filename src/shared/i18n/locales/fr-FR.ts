@@ -94,6 +94,7 @@ export const frFR = {
       failedFile: "Le fichier image est introuvable ou ne peut pas être ouvert.",
       failedNetwork: "L'image n'a pas pu être téléchargée. Vérifiez votre connexion réseau.",
       retry: "Réessayer",
+      addCaption: "Ajouter une légende",
     },
     imageFile: {
       reveal: "Afficher dans le dossier",

@@ -93,6 +93,7 @@ export const idID = {
       failedFile: "File gambar tidak ada atau tidak dapat dibuka.",
       failedNetwork: "Gambar tidak dapat diunduh. Periksa koneksi jaringan.",
       retry: "Coba lagi",
+      addCaption: "Tambahkan keterangan",
     },
     imageFile: {
       reveal: "Tampilkan di Folder",

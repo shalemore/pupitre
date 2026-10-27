@@ -108,6 +108,7 @@ export const ar = {
       failedFile: "ملف الصورة مفقود أو تعذّر فتحه.",
       failedNetwork: "تعذّر تنزيل الصورة. تحقّق من اتصال الشبكة.",
       retry: "إعادة المحاولة",
+      addCaption: "إضافة تعليق",
     },
     imageFile: {
       reveal: "إظهار في المجلد",

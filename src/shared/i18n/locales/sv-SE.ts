@@ -95,6 +95,7 @@ export const svSE = {
       failedFile: "Bildfilen saknas eller kan inte öppnas.",
       failedNetwork: "Bilden kunde inte hämtas. Kontrollera nätverksanslutningen.",
       retry: "Försök igen",
+      addCaption: "Lägg till bildtext",
     },
     imageFile: {
       reveal: "Visa i mapp",

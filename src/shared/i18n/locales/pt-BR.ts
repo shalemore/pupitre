@@ -95,6 +95,7 @@ export const ptBR = {
       failedFile: "O arquivo de imagem está ausente ou não pode ser aberto.",
       failedNetwork: "Não foi possível baixar a imagem. Verifique sua conexão de rede.",
       retry: "Tentar novamente",
+      addCaption: "Adicionar legenda",
     },
     imageFile: {
       reveal: "Mostrar na pasta",

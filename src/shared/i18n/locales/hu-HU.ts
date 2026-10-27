@@ -95,6 +95,7 @@ export const huHU = {
       failedFile: "A képfájl hiányzik, vagy nem nyitható meg.",
       failedNetwork: "A képet nem sikerült letölteni. Ellenőrizze a hálózati kapcsolatot.",
       retry: "Újrapróbálás",
+      addCaption: "Képaláírás hozzáadása",
     },
     imageFile: {
       reveal: "Megjelenítés mappában",

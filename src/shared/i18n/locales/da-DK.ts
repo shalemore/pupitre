@@ -95,6 +95,7 @@ export const daDK = {
       failedFile: "Billedfilen mangler, eller den kan ikke åbnes.",
       failedNetwork: "Billedet kunne ikke hentes. Kontroller din netværksforbindelse.",
       retry: "Prøv igen",
+      addCaption: "Tilføj billedtekst",
     },
     imageFile: {
       reveal: "Vis i mappe",

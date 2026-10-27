@@ -440,15 +440,44 @@ function visitAlert(builder: DecorationBuilder, quote: SyntaxNode): void {
 }
 
 /**
- * A picture takes the place of its source; while a selection touches that source, the source stays
- * and the picture stands above it, the way a rendered block shows its source underneath. The widget
- * is a block of its own, so a picture never shares its line with the text around it. Returns whether
- * the source stays shown.
+ * A picture stands above its source, and the text of a Markdown image stands under it as its
+ * caption: the brackets and the address are hidden until a selection touches them, when they show
+ * as muted markers around the text, the way an inline format shows its own. A picture with no
+ * caption keeps its source away and offers to add one under the picture. Returns whether the source
+ * stays shown.
  */
-function placeImage(builder: DecorationBuilder, image: DocumentImage): boolean {
+function placeImage(builder: DecorationBuilder, image: DocumentImage, markdown: boolean): boolean {
   const active = touches(builder.ranges, image.from, image.to);
   const src = resolveUrl(builder.state, image.src);
   const widget = new ImageWidget(src, image.alt, image.title, image, !active);
+  if (markdown) {
+    const line = builder.lineAt(image.from);
+    const alone =
+      builder.text(line.from, image.from).trim() === "" &&
+      builder.text(image.to, line.to).trim() === "";
+    // `![` before the alt text, `](address)` after it
+    const close = image.from + 2 + image.alt.length;
+    if (image.alt !== "")
+      builder.decorations.push(Decoration.widget({ widget, side: -1 }).range(image.from));
+    if (active) {
+      builder.mark(image.from, image.from + 2, "md-mark");
+      builder.mark(close, image.to, "md-mark");
+    } else {
+      builder.hide(image.from, image.from + 2);
+      builder.hide(close, image.to);
+    }
+    if (image.alt !== "") {
+      if (alone) builder.lineClass(image.from, image.from, "md-image-caption");
+      return true;
+    }
+    if (!active) {
+      builder.decorations.push(Decoration.replace({ widget }).range(image.from, image.to));
+      return false;
+    }
+    builder.decorations.push(Decoration.widget({ widget, side: -1 }).range(image.from));
+    return true;
+  }
+  // An `<img>` tag keeps its whole source under the picture while it is edited
   if (active) {
     builder.decorations.push(Decoration.widget({ widget, side: -1 }).range(image.from));
     return true;
@@ -461,7 +490,7 @@ function placeImage(builder: DecorationBuilder, image: DocumentImage): boolean {
 function visitImage(builder: DecorationBuilder, node: SyntaxNode): boolean {
   const image = imageOf(builder.state, node);
   // Only source the parser could not read completely is left as it is
-  return image ? placeImage(builder, image) : true;
+  return image ? placeImage(builder, image, node.name === "Image") : true;
 }
 
 /**
@@ -521,7 +550,7 @@ function visitInlineHtml(builder: DecorationBuilder, node: SyntaxNode): void {
     const picture = parseImageTag(source);
     if (picture) {
       // The picture is not Markdown syntax, so showing its source leaves the tag as muted text
-      if (placeImage(builder, { ...picture, from: child.from, to: child.to })) {
+      if (placeImage(builder, { ...picture, from: child.from, to: child.to }, false)) {
         builder.mark(child.from, child.to, "md-mark");
       }
       continue;

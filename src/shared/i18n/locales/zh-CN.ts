@@ -97,6 +97,7 @@ export const zhCN = {
       failedFile: "图片文件不存在或无法打开。",
       failedNetwork: "图片无法下载，请检查网络连接。",
       retry: "重试",
+      addCaption: "添加注释",
     },
     imageFile: {
       reveal: "在文件夹中显示",

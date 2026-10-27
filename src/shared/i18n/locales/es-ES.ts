@@ -94,6 +94,7 @@ export const esES = {
       failedFile: "El archivo de imagen falta o no se puede abrir.",
       failedNetwork: "No se pudo descargar la imagen. Comprueba la conexión de red.",
       retry: "Reintentar",
+      addCaption: "Añadir una leyenda",
     },
     imageFile: {
       reveal: "Mostrar en la carpeta",

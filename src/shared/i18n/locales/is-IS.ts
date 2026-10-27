@@ -96,6 +96,7 @@ export const isIS = {
       failedFile: "Myndskráin vantar eða er ekki hægt að opna hana.",
       failedNetwork: "Ekki tókst að sækja myndina. Athugaðu nettenginguna.",
       retry: "Reyna aftur",
+      addCaption: "Bæta við myndatexta",
     },
     imageFile: {
       reveal: "Sýna í möppu",

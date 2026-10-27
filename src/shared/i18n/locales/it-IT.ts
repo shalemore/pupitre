@@ -94,6 +94,7 @@ export const itIT = {
       failedFile: "Il file immagine manca o non può essere aperto.",
       failedNetwork: "Impossibile scaricare l'immagine. Controlla la connessione di rete.",
       retry: "Riprova",
+      addCaption: "Aggiungi una didascalia",
     },
     imageFile: {
       reveal: "Mostra nella cartella",

@@ -95,6 +95,7 @@ export const nbNO = {
       failedFile: "Bildefilen mangler eller kan ikke åpnes.",
       failedNetwork: "Bildet kunne ikke lastes ned. Kontroller nettverksforbindelsen.",
       retry: "Prøv igjen",
+      addCaption: "Legg til bildetekst",
     },
     imageFile: {
       reveal: "Vis i mappe",

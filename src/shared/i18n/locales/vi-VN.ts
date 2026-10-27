@@ -93,6 +93,7 @@ export const viVN = {
       failedFile: "Tệp ảnh bị thiếu hoặc không thể mở.",
       failedNetwork: "Không thể tải ảnh xuống. Hãy kiểm tra kết nối mạng.",
       retry: "Thử lại",
+      addCaption: "Thêm chú thích",
     },
     imageFile: {
       reveal: "Hiện trong thư mục",

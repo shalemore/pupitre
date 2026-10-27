@@ -95,6 +95,7 @@ export const nlNL = {
       failedFile: "Het afbeeldingsbestand ontbreekt of kan niet worden geopend.",
       failedNetwork: "De afbeelding kon niet worden gedownload. Controleer je netwerkverbinding.",
       retry: "Opnieuw proberen",
+      addCaption: "Bijschrift toevoegen",
     },
     imageFile: {
       reveal: "Toon in map",

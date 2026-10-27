@@ -97,6 +97,7 @@ export const zhHK = {
       failedFile: "圖片檔案不存在或無法開啟。",
       failedNetwork: "無法下載圖片，請檢查網絡連接。",
       retry: "重試",
+      addCaption: "新增註解",
     },
     imageFile: {
       reveal: "在資料夾中顯示",

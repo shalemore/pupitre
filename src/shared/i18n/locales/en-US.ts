@@ -103,6 +103,7 @@ export const enUS = {
       failedFile: "The image file is missing or can't be opened.",
       failedNetwork: "The picture couldn't be downloaded. Check your connection.",
       retry: "Retry",
+      addCaption: "Add a caption",
     },
     /** What a right-click on a picture offers for the file behind it. */
     imageFile: {

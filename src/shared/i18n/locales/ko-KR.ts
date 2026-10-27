@@ -94,6 +94,7 @@ export const koKR = {
       failedFile: "이미지 파일이 없거나 열 수 없습니다.",
       failedNetwork: "이미지를 다운로드할 수 없습니다. 네트워크 연결을 확인하세요.",
       retry: "다시 시도",
+      addCaption: "캡션 추가",
     },
     imageFile: {
       reveal: "폴더에서 보기",

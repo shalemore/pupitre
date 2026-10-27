@@ -436,7 +436,7 @@ function imageMarkup(image: TaggedImage): string {
 const MIN_IMAGE_WIDTH = 32;
 
 /** The controls of a picture are not places to type, so the editor leaves their events alone. */
-const CONTROLS = ".md-image-handle, .md-image-toolbar, .md-image-retry";
+const CONTROLS = ".md-image-handle, .md-image-toolbar, .md-image-retry, .md-image-caption-hint";
 
 /** A picture fetched from the web, whose absence may be the network's fault rather than its own. */
 const WEB_IMAGE = /^https?:\/\//i;
@@ -733,6 +733,27 @@ export function imageDom(
     image.addEventListener("load", placeToolbar);
   }
   block.append(frame);
+
+  // A picture with no caption gets a quiet offer to write one, shown once the pointer rests on it.
+  // Writing it puts the caret between the brackets of the image, whose source then shows around it
+  if (controls && alt === "") {
+    const hint = document.createElement("button");
+    hint.type = "button";
+    hint.className = "md-image-caption-hint";
+    hint.textContent = t().editor.image.addCaption;
+    hint.addEventListener("mousedown", (event) => event.preventDefault());
+    hint.addEventListener("click", () => {
+      const picture = imageAt(view.state, view.posAtDOM(block));
+      if (picture === undefined) return;
+      view.focus();
+      view.dispatch({
+        selection: { anchor: picture.from + 2 },
+        scrollIntoView: true,
+      });
+    });
+    block.append(hint);
+  }
+
   return block;
 }
 
