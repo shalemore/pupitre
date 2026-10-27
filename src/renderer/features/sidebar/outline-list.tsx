@@ -1,6 +1,6 @@
 import { cn } from "cn";
 import { ChevronRight } from "lucide-solid";
-import { createMemo, Index, Show, type Component } from "solid-js";
+import { createMemo, createSelector, Index, Show, type Component } from "solid-js";
 import { ListItem, rowIndent } from "@/components/ui";
 import { headingKey, type OutlineHeading } from "@/features/editor/outline-heading";
 import { t } from "@/i18n";
@@ -45,6 +45,7 @@ export const OutlineList: Component<OutlineListProps> = (props) => {
   });
 
   const folded = (heading: OutlineHeading) => props.collapsed.has(headingKey(heading));
+  const isActive = createSelector(() => props.activeIndex);
 
   return (
     <div class="p-2 space-y-0.5">
@@ -85,7 +86,7 @@ export const OutlineList: Component<OutlineListProps> = (props) => {
               </Show>
               <ListItem
                 dir="auto"
-                active={props.activeIndex === row().index}
+                active={isActive(row().index)}
                 onClick={() => props.onSelectHeading(row().heading)}
                 style={rowIndent(row().heading.level - 1, 10)}
                 class={cn("min-w-0 flex-1", row().heading.level === 1 && "font-medium")}

@@ -5,8 +5,9 @@ import {
   findHeadingByAnchor,
   mergeHeadings,
   readableText,
+  shiftHeadings,
 } from "./document-structure";
-import { markdownState } from "./testing";
+import { fullTree, markdownState } from "./testing";
 
 describe("readableText", () => {
   it("leaves out syntax, link destinations, markup and front matter", () => {
@@ -79,5 +80,24 @@ describe("mergeHeadings", () => {
       { level: 1, text: "A", pos: 0 },
       { level: 2, text: "B", pos: 10 },
     ]);
+  });
+});
+
+describe("shiftHeadings", () => {
+  it("moves heading positions without rebuilding when prose is edited", () => {
+    const startState = markdownState("Paragraph\n\n# Section");
+    const headings = collectHeadings(startState);
+    const tr = startState.update({ changes: { from: 9, insert: " more" } });
+    fullTree(tr.state);
+    expect(shiftHeadings(headings, tr)).toBe(true);
+    expect(headings).toEqual([{ level: 1, text: "Section", pos: 16 }]);
+  });
+
+  it("declines to shift when a heading is edited or added", () => {
+    const startState = markdownState("Paragraph\n\n# Section");
+    const headings = collectHeadings(startState);
+    const tr = startState.update({ changes: { from: 20, insert: " two" } });
+    fullTree(tr.state);
+    expect(shiftHeadings(headings, tr)).toBe(false);
   });
 });

@@ -1,5 +1,5 @@
 import { syntaxTree } from "@codemirror/language";
-import type { EditorState, Extension } from "@codemirror/state";
+import type { ChangeSet, EditorState, Extension } from "@codemirror/state";
 import { ViewPlugin } from "@codemirror/view";
 import type { OutlineHeading } from "./outline-heading";
 
@@ -72,7 +72,12 @@ export function collectHeadings(state: EditorState): OutlineHeading[] {
       const level = HEADING_LEVEL.exec(node.name)?.[1];
       // Headings never sit inside leaf blocks, so their content need not be walked
       if (level === undefined) return !LEAF_BLOCK.test(node.name);
-      const text = readableText(state, node.from, node.to).trim();
+      const first = node.node.firstChild;
+      const plainAtx =
+        node.name.startsWith("ATX") && first?.name === "HeaderMark" && first.nextSibling === null;
+      const text = (
+        plainAtx ? state.sliceDoc(first.to, node.to) : readableText(state, node.from, node.to)
+      ).trim();
       headings.push({ level: Number(level), text, pos: node.from });
       return false;
     },
@@ -159,8 +164,77 @@ export function mergeHeadings(
   });
 }
 
+function hasHeadingOrSpill(state: EditorState, from: number, to: number): boolean {
+  let found = false;
+  syntaxTree(state).iterate({
+    from,
+    to,
+    enter: (node) => {
+      if (HEADING_LEVEL.test(node.name)) {
+        found = true;
+        return false;
+      }
+      if (!LEAF_BLOCK.test(node.name)) return true;
+      // A block that reaches past the edited lines (such as an unclosed fence) can hide or expose headings below
+      if (node.to > to) found = true;
+      return false;
+    },
+  });
+  return found;
+}
+
+export interface HeadingUpdate {
+  docChanged: boolean;
+  changes: ChangeSet;
+  startState: EditorState;
+  state: EditorState;
+}
+
+/**
+ * Shifts heading positions after an edit that neither touched an existing heading nor created one,
+ * avoiding a walk of the whole syntax tree while typing ordinary prose.
+ */
+export function shiftHeadings(headings: OutlineHeading[], update: HeadingUpdate): boolean {
+  if (!update.docChanged) return false;
+  let ranges = 0;
+  let canShift = true;
+  update.changes.iterChangedRanges((fromA, toA, fromB, toB) => {
+    if (!canShift || ++ranges > 8) {
+      canShift = false;
+      return;
+    }
+    const firstLineA = update.startState.doc.lineAt(fromA);
+    const checkFromA =
+      firstLineA.number > 1
+        ? update.startState.doc.line(firstLineA.number - 1).from
+        : firstLineA.from;
+    const checkToA = update.startState.doc.lineAt(toA).to;
+    const active = findActiveHeading(headings, checkToA);
+    const existing = headings[active];
+    if (existing !== undefined && existing.pos >= checkFromA) {
+      canShift = false;
+      return;
+    }
+    const firstLineB = update.state.doc.lineAt(fromB);
+    const checkFromB =
+      firstLineB.number > 1 ? update.state.doc.line(firstLineB.number - 1).from : firstLineB.from;
+    const checkToB = update.state.doc.lineAt(toB).to;
+    if (
+      hasHeadingOrSpill(update.startState, checkFromA, checkToA) ||
+      hasHeadingOrSpill(update.state, checkFromB, checkToB)
+    ) {
+      canShift = false;
+    }
+  });
+  if (!canShift) return false;
+  for (const heading of headings) {
+    heading.pos = update.changes.mapPos(heading.pos);
+  }
+  return true;
+}
+
 export interface DocumentObserver {
-  onDocChange: (state: EditorState) => void;
+  onDocChange: (state: EditorState, update?: HeadingUpdate) => void;
   onSelectionChange: (cursor: number) => void;
 }
 
@@ -175,7 +249,7 @@ export function documentObserver(observer: DocumentObserver): Extension {
     return {
       update: (update) => {
         if (update.docChanged || syntaxTree(update.state) !== syntaxTree(update.startState)) {
-          observer.onDocChange(update.state);
+          observer.onDocChange(update.state, update);
         }
         if (update.selectionSet) {
           observer.onSelectionChange(update.state.selection.main.from);

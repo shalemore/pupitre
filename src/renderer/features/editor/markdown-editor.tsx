@@ -50,6 +50,7 @@ import {
   findActiveHeading,
   mergeHeadings,
   type OutlineHeading,
+  shiftHeadings,
 } from "./document-structure";
 import { folding, foldingKeymap } from "./folding";
 import {
@@ -418,16 +419,17 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           cursorCompartment.of([]),
           restartCursorBlink,
           documentObserver({
-            onDocChange: (state) => {
+            onDocChange: (state, update) => {
               const docChanged = state.doc !== observedDoc;
               observedDoc = state.doc;
               // The first outline is built as the editor opens, so its rows are not assembled
-              // under the first keystrokes; later changes wait for a pause
+              // under the first keystrokes; later changes wait for a pause, and prose edits that
+              // touch no heading only shift the positions of the headings below them
               if (!outlineStarted) {
                 outlineStarted = true;
                 headings = collectHeadings(state);
                 props.onOutlineChange(headings);
-              } else {
+              } else if (update === undefined || !shiftHeadings(headings, update)) {
                 updateOutline(state);
               }
               // Parsing the rest of a small document is not an edit, but it can make its count exact
