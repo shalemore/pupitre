@@ -22,6 +22,7 @@
  *     accent, which a theme that fills blocks with the accent has to replace with something else.
  *   - Interface shape: --ui-radius-scale (corner roundness), --ui-shadow-near/far/float
  *     (transparent for flat), --font-sans (interface font).
+ *   - The text cursor: `.md-text-cursor` draws it; a theme replaces the whole cursor with one rule.
  *   - The front matter block is styled here, not by the app.
  *   - --font-document: the default body font (--font-mono is the code font).
  *   - Quote bars: draw them with `var(--alert-color, <quote color>)` so GitHub alerts keep
@@ -290,4 +291,23 @@
   background: var(--ui-alpha-1);
   color: var(--ui-text-secondary);
   font-size: 0.85em;
+}
+
+/*
+ * The cursor is an ink I-beam with the exercise book's red margin on its ends.
+ */
+.md-text-cursor {
+  cursor:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 3.5h7M8 3.5v9M4.5 12.5h7' fill='none' stroke='oklch(0.987 0.006 95)' stroke-width='3.5' stroke-linecap='round'/%3E%3Cpath d='M8 3.5v9' fill='none' stroke='oklch(0.24 0.03 262)' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M4.5 3.5h7M4.5 12.5h7' fill='none' stroke='oklch(0.62 0.17 20)' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E")
+      8 8,
+    text;
+}
+
+@media (prefers-color-scheme: dark) {
+  .md-text-cursor {
+    cursor:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 3.5h7M8 3.5v9M4.5 12.5h7' fill='none' stroke='oklch(0.22 0.016 252)' stroke-width='3.5' stroke-linecap='round'/%3E%3Cpath d='M8 3.5v9' fill='none' stroke='oklch(0.93 0.012 90)' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M4.5 3.5h7M4.5 12.5h7' fill='none' stroke='oklch(0.7 0.14 20)' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E")
+        8 8,
+      text;
+  }
 }

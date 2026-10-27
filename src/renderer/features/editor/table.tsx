@@ -488,7 +488,7 @@ const TableView: Component<TableViewProps> = (props) => {
         {(cell) => <TableToolbar cell={cell()} model={props.model} run={run} view={view} />}
       </Show>
       <div class="md-table-scroll">
-        <table class="md-table-view">
+        <table class="md-table-view md-text-cursor">
           <thead>
             <Index each={header()}>
               {() => (

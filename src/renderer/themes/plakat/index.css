@@ -291,3 +291,22 @@
   color: var(--ui-text-secondary);
   font-size: 0.85em;
 }
+
+/*
+ * A square I-beam: one red bar between two black end strokes, with no rounded corner anywhere.
+ */
+.md-text-cursor {
+  cursor:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 3.5h7M8 3.5v9M3.5 12.5h7' fill='none' stroke='oklch(0.975 0.002 80)' stroke-width='3.75' stroke-linecap='butt'/%3E%3Cpath d='M8 3.5v9' fill='none' stroke='oklch(0.56 0.22 28)' stroke-width='1.75' stroke-linecap='butt'/%3E%3Cpath d='M3.5 3.5h7M3.5 12.5h7' fill='none' stroke='oklch(0.16 0 0)' stroke-width='1.75' stroke-linecap='butt'/%3E%3C/svg%3E")
+      8 8,
+    text;
+}
+
+@media (prefers-color-scheme: dark) {
+  .md-text-cursor {
+    cursor:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 3.5h7M8 3.5v9M3.5 12.5h7' fill='none' stroke='oklch(0.165 0 0)' stroke-width='3.75' stroke-linecap='butt'/%3E%3Cpath d='M8 3.5v9' fill='none' stroke='oklch(0.64 0.21 28)' stroke-width='1.75' stroke-linecap='butt'/%3E%3Cpath d='M3.5 3.5h7M3.5 12.5h7' fill='none' stroke='oklch(0.94 0.002 80)' stroke-width='1.75' stroke-linecap='butt'/%3E%3C/svg%3E")
+        8 8,
+      text;
+  }
+}

@@ -54,8 +54,19 @@
     }
   }
 
+  /*
+   * The I-beam over the text. It is a class rather than a design token: a theme draws a cursor of
+   * its own with one rule on this class, and the default stays a plain I-beam whose light halo
+   * keeps it readable on any page. A table cell uses the same cursor.
+   */
+  .md-text-cursor {
+    cursor:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 3.5h7M8 3.5v9M4.5 12.5h7' fill='none' stroke='%23fff' stroke-width='3.5' stroke-linecap='round'/%3E%3Cpath d='M4.5 3.5h7M8 3.5v9M4.5 12.5h7' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E")
+        8 8,
+      text;
+  }
+
   .md-document {
-    cursor: var(--ui-text-cursor, text);
     --md-quote-indent: 1em;
     --md-list-indent: 1.6em;
     --md-block-indent: 0px;
@@ -925,7 +936,6 @@
 
   .md-table-view {
     border-collapse: collapse;
-    cursor: var(--ui-text-cursor, text);
   }
 
   .md-table-view :is(th, td) {

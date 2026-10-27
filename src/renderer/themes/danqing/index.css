@@ -234,3 +234,22 @@
   color: var(--ui-text-secondary);
   font-size: 0.85em;
 }
+
+/*
+ * The cursor is ink with cinnabar on its ends, after the seal red of the theme.
+ */
+.md-text-cursor {
+  cursor:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 3.5h7M8 3.5v9M4.5 12.5h7' fill='none' stroke='oklch(0.968 0.014 85)' stroke-width='3.6' stroke-linecap='round'/%3E%3Cpath d='M8 3.5v9' fill='none' stroke='oklch(0.22 0.008 70)' stroke-width='1.6' stroke-linecap='round'/%3E%3Cpath d='M4.5 3.5h7M4.5 12.5h7' fill='none' stroke='oklch(0.56 0.18 33)' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E")
+      8 8,
+    text;
+}
+
+@media (prefers-color-scheme: dark) {
+  .md-text-cursor {
+    cursor:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 3.5h7M8 3.5v9M4.5 12.5h7' fill='none' stroke='oklch(0.2 0.005 100)' stroke-width='3.6' stroke-linecap='round'/%3E%3Cpath d='M8 3.5v9' fill='none' stroke='oklch(0.9 0.018 85)' stroke-width='1.6' stroke-linecap='round'/%3E%3Cpath d='M4.5 3.5h7M4.5 12.5h7' fill='none' stroke='oklch(0.67 0.15 33)' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E")
+        8 8,
+      text;
+  }
+}

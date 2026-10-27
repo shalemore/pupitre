@@ -47,16 +47,6 @@
     --ui-shadow-far: oklch(0 0 0 / 8%);
     --ui-shadow-float: oklch(0 0 0 / 12%);
 
-    /*
-     * The I-beam over text. Windows draws it in the color of the system scheme, so a light page
-     * under a dark system shows a pale cursor on white; this one carries a light halo, which keeps
-     * it readable on any page and in any theme. A theme may replace it.
-     */
-    --ui-text-cursor:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 17 17'%3E%3Cpath d='M4 3.5h9M8.5 3.5v10M4 13.5h9' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M4 3.5h9M8.5 3.5v10M4 13.5h9' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E")
-        8 8,
-      text;
-
     /* Multiplies every corner radius: 0 gives square corners, 2 rounder ones */
     --ui-radius-scale: 1;
 

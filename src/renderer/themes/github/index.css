@@ -159,3 +159,22 @@
   color: var(--ui-text-secondary);
   font-size: 0.85em;
 }
+
+/*
+ * A plain I-beam whose ends take the blue of a link, as the READMEs this theme follows do.
+ */
+.md-text-cursor {
+  cursor:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 3.5h7M8 3.5v9M4.5 12.5h7' fill='none' stroke='%23ffffff' stroke-width='3.4' stroke-linecap='round'/%3E%3Cpath d='M8 3.5v9' fill='none' stroke='%231f2328' stroke-width='1.4' stroke-linecap='round'/%3E%3Cpath d='M4.5 3.5h7M4.5 12.5h7' fill='none' stroke='%230969da' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E")
+      8 8,
+    text;
+}
+
+@media (prefers-color-scheme: dark) {
+  .md-text-cursor {
+    cursor:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 3.5h7M8 3.5v9M4.5 12.5h7' fill='none' stroke='%230d1117' stroke-width='3.4' stroke-linecap='round'/%3E%3Cpath d='M8 3.5v9' fill='none' stroke='%23f0f6fc' stroke-width='1.4' stroke-linecap='round'/%3E%3Cpath d='M4.5 3.5h7M4.5 12.5h7' fill='none' stroke='%234493f8' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E")
+        8 8,
+      text;
+  }
+}

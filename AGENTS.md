@@ -296,6 +296,9 @@ only make code generation easier.
 - Themes style the whole app through the `--ui-*` design tokens (surfaces, text, accent) and the
   document through the `md-*` classes inside `.md-document` and `--syntax-*` colors. Document
   lines are spaced with padding, never margins, because CodeMirror measures line boxes.
+- A theme draws the text cursor with a `.md-text-cursor` rule of its own (`editor.css` holds the
+  default); the rule carries the whole cursor, image and hotspot, since a cursor has no parts to
+  set one by one.
 - Scrolling areas get the `.scroll-fade` class when the Edge Fade setting is on (`app.css` has the
   default look). A theme restyles it with a plain rule: its CSS sits in the `document-theme` layer,
   so it wins over the default without `!important`. Keep the `[data-overflow~="top"]` and

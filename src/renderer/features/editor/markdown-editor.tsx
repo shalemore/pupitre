@@ -425,7 +425,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           textDirection,
           search({ createPanel: () => ({ dom: document.createElement("div") }) }),
           EditorView.lineWrapping,
-          EditorView.contentAttributes.of({ class: "md-document" }),
+          EditorView.contentAttributes.of({ class: "md-document md-text-cursor" }),
           layeredStyles,
           placeholder(t().editor.placeholder),
           focusCompartment.of([]),
