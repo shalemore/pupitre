@@ -38,5 +38,16 @@ describe("createStatsTracker", () => {
     const update = state.update({ changes: { from: 3, insert: " more" } });
     tracker.changed(update);
     expect(reports.at(-1)).toEqual({ words: 5, characters: 19 });
+
+    const selectAll = update.state.update({
+      selection: { anchor: 0, head: update.state.doc.length },
+    });
+    tracker.selection(selectAll.state);
+    expect(reports.at(-1)).toEqual({
+      words: 5,
+      characters: 19,
+      selectedWords: 5,
+      selectedCharacters: 19,
+    });
   });
 });

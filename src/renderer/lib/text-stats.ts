@@ -37,7 +37,9 @@ function isCjk(code: number): boolean {
   );
 }
 
-function isWordCharacter(code: number, character: string): boolean {
+const WORD_CHARACTER = /[\p{L}\p{M}\p{N}\p{Pc}]/u;
+
+function isWordCharacter(code: number, text: string, start: number, end: number): boolean {
   if (code < 0x80) {
     return (
       (code >= 0x30 && code <= 0x39) ||
@@ -46,12 +48,39 @@ function isWordCharacter(code: number, character: string): boolean {
       code === 0x5f
     );
   }
-  return /[\p{L}\p{M}\p{N}\p{Pc}]/u.test(character);
+  // Common Latin, Greek and Cyrillic ranges avoid slicing a string for every non-ASCII letter
+  if (
+    (code >= 0x00c0 && code <= 0x024f && code !== 0x00d7 && code !== 0x00f7) ||
+    (code >= 0x0400 && code <= 0x04ff)
+  ) {
+    return true;
+  }
+  // General, CJK and full-width punctuation and spaces are never word characters
+  if (
+    (code >= 0x2000 && code <= 0x206f) ||
+    (code >= 0x3000 && code <= 0x303f) ||
+    (code >= 0xff00 && code <= 0xff0f) ||
+    (code >= 0xff1a && code <= 0xff20)
+  ) {
+    return false;
+  }
+  return WORD_CHARACTER.test(text.slice(start, end));
 }
 
-function isWhitespace(code: number, character: string): boolean {
-  if (code <= 0x20) return code === 0x20 || code === 0x09 || code === 0x0a || code === 0x0d;
-  return /\s/u.test(character);
+/** Unicode whitespace code points (ECMAScript `\s`), checked without allocating a substring. */
+function isWhitespace(code: number): boolean {
+  if (code <= 0x20) return code === 0x20 || (code >= 0x09 && code <= 0x0d);
+  if (code < 0x1680) return code === 0x0085 || code === 0x00a0;
+  return (
+    (code >= 0x2000 && code <= 0x200a) ||
+    code === 0x2028 ||
+    code === 0x2029 ||
+    code === 0x202f ||
+    code === 0x205f ||
+    code === 0x3000 ||
+    code === 0xfeff ||
+    code === 0x1680
+  );
 }
 
 const APOSTROPHE = 0x27;
@@ -69,6 +98,22 @@ const VIRAMA = new Set([
 ]);
 /** A spacing vowel that is written after the consonant but belongs to its cluster. */
 const TRAILING_VOWEL = (code: number) => code === 0x0e33 || code === 0x0eb3;
+
+function isCombiningMark(code: number, text: string, start: number, end: number): boolean {
+  // Combining marks start at U+0300; common letters, punctuation and CJK blocks hold none
+  if (
+    code < 0x0300 ||
+    (code >= 0x0400 && code <= 0x0482) ||
+    (code >= 0x048a && code <= 0x04ff) ||
+    (code >= 0x2000 && code <= 0x206f) ||
+    (code >= 0x3000 && code <= 0x303f) ||
+    (code >= 0xff00 && code <= 0xffef)
+  ) {
+    return false;
+  }
+  if (code <= 0x036f) return true;
+  return COMBINING_MARK.test(text.slice(start, end));
+}
 
 /**
  * Counts words without Intl.Segmenter, for documents large enough that segmenting every word
@@ -96,8 +141,8 @@ function countWordsFast(text: string): number {
       }
       continue;
     }
+    const start = index;
     const length = code > 0xffff ? 2 : 1;
-    const character = text.slice(index, index + length);
     index += length;
 
     if (isCjk(code)) {
@@ -110,22 +155,27 @@ function countWordsFast(text: string): number {
       inWord = false;
       continue;
     }
+    // An apostrophe or a zero-width joiner keeps a word together; a hyphen starts another one
+    if (code === 0x2019 || code === ZERO_WIDTH_NON_JOINER || code === ZERO_WIDTH_JOINER) {
+      continue;
+    }
 
-    if (isWordCharacter(code, character) && isDenseScript(code)) {
+    if (isDenseScript(code) && isWordCharacter(code, text, start, index)) {
       let end = index;
       while (end < text.length) {
         const next = text.codePointAt(end) ?? 0;
+        const nextEnd = end + (next > 0xffff ? 2 : 1);
         if (
-          isWordCharacter(next, text.slice(end, end + (next > 0xffff ? 2 : 1))) ||
+          isWordCharacter(next, text, end, nextEnd) ||
           next === ZERO_WIDTH_NON_JOINER ||
           next === ZERO_WIDTH_JOINER
         ) {
-          end += next > 0xffff ? 2 : 1;
+          end = nextEnd;
         } else {
           break;
         }
       }
-      for (const segment of wordSegmenter.segment(text.slice(index - length, end))) {
+      for (const segment of wordSegmenter.segment(text.slice(start, end))) {
         if (segment.isWordLike) words++;
       }
       inWord = false;
@@ -133,18 +183,9 @@ function countWordsFast(text: string): number {
       continue;
     }
 
-    if (isWordCharacter(code, character)) {
+    if (isWordCharacter(code, text, start, index)) {
       if (!inWord) words++;
       inWord = true;
-      continue;
-    }
-    // An apostrophe or a zero-width joiner keeps a word together; a hyphen starts another one
-    if (
-      code === APOSTROPHE ||
-      code === 0x2019 ||
-      code === ZERO_WIDTH_NON_JOINER ||
-      code === ZERO_WIDTH_JOINER
-    ) {
       continue;
     }
     inWord = false;
@@ -179,11 +220,17 @@ function countCharactersFast(text: string): number {
       previousWasRegionalIndicator = false;
       continue;
     }
+    const start = index;
     const length = code > 0xffff ? 2 : 1;
-    const character = text.slice(index, index + length);
     index += length;
 
-    if (isWhitespace(code, character)) {
+    if (isCjk(code)) {
+      if (joinNext) joinNext = false;
+      else characters++;
+      previousWasRegionalIndicator = false;
+      continue;
+    }
+    if (isWhitespace(code)) {
       previousWasRegionalIndicator = false;
       joinNext = false;
       continue;
@@ -193,7 +240,11 @@ function countCharactersFast(text: string): number {
       joinNext = true;
       continue;
     }
-    if (COMBINING_MARK.test(character) || VARIATION_SELECTOR(code) || EMOJI_MODIFIER(code)) {
+    if (
+      VARIATION_SELECTOR(code) ||
+      EMOJI_MODIFIER(code) ||
+      isCombiningMark(code, text, start, index)
+    ) {
       continue;
     }
     if (VIRAMA.has(code)) {

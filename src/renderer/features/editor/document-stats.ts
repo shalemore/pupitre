@@ -13,25 +13,35 @@ const EXACT_TEXT_LIMIT = 64 * 1024;
 const CHUNK = 2 * 1024 * 1024;
 const SLICE_MS = 20;
 
-/** The counts of a range, exact where it is small enough to afford the segmenter. */
-export function countRange(state: EditorState, from: number, to: number): TextStats {
-  // A selection of a large document is counted like the document itself rather than through the
-  // syntax tree, which would be a second copy of hundreds of megabytes
-  if (to - from > EXACT_DOCUMENT_LIMIT) {
-    return countTextFast(state.doc.sliceString(from, to));
-  }
-  const text = readableText(state, from, to);
-  return text.length <= EXACT_TEXT_LIMIT ? countText(text) : countTextFast(text);
-}
-
 function countTextRange(state: EditorState, from: number, to: number): TextStats {
   return countTextFast(state.doc.sliceString(from, to));
 }
 
 /** The end of a slice, kept on a line boundary so a word is never split between two counts. */
-function sliceEnd(state: EditorState, from: number): number {
-  const line = state.doc.lineAt(Math.min(from + CHUNK, state.doc.length));
-  return Math.max(line.to, from);
+function sliceEnd(state: EditorState, from: number, limit = state.doc.length): number {
+  if (from + CHUNK >= limit) return limit;
+  const line = state.doc.lineAt(from + CHUNK);
+  return Math.min(Math.max(line.to, from), limit);
+}
+
+/** The counts of a range, exact where it is small enough to afford the segmenter. */
+export function countRange(state: EditorState, from: number, to: number): TextStats {
+  // A selection of a large document is counted like the document itself rather than through the
+  // syntax tree, which would be a second copy of hundreds of megabytes
+  if (to - from > EXACT_DOCUMENT_LIMIT) {
+    let words = 0;
+    let characters = 0;
+    for (let pos = from; pos < to;) {
+      const end = sliceEnd(state, pos, to);
+      const stats = countTextRange(state, pos, end);
+      words += stats.words;
+      characters += stats.characters;
+      pos = end < to ? end + 1 : to;
+    }
+    return { words, characters };
+  }
+  const text = readableText(state, from, to);
+  return text.length <= EXACT_TEXT_LIMIT ? countText(text) : countTextFast(text);
 }
 
 function nextSlice(): Promise<void> {
@@ -41,34 +51,35 @@ function nextSlice(): Promise<void> {
 }
 
 /**
- * Counts the whole document, returning `undefined` when `cancelled` says a newer edit has made the
- * answer stale. A document small enough to count in one go still goes through `countRange`.
+ * Counts a range of the document in time-bounded slices, returning `undefined` when `cancelled`
+ * says a newer edit or selection has made the answer stale.
  */
-export async function countDocument(
+async function countRangeInSlices(
   state: EditorState,
+  start: number,
+  end: number,
   cancelled: () => boolean,
 ): Promise<TextStats | undefined> {
-  const length = state.doc.length;
   if (cancelled()) return undefined;
-  if (length <= EXACT_DOCUMENT_LIMIT) return countRange(state, 0, length);
+  if (end - start <= EXACT_DOCUMENT_LIMIT) return countRange(state, start, end);
 
   let words = 0;
   let characters = 0;
-  let from = 0;
+  let from = start;
 
   const runSlices = async (): Promise<TextStats | undefined> => {
     let paused = false;
-    while (from < length && !paused) {
+    while (from < end && !paused) {
       if (cancelled()) return undefined;
       const deadline = performance.now() + SLICE_MS;
-      while (from < length && performance.now() < deadline) {
-        const to = sliceEnd(state, from);
+      while (from < end && performance.now() < deadline) {
+        const to = sliceEnd(state, from, end);
         const stats = countTextRange(state, from, to);
         words += stats.words;
         characters += stats.characters;
-        from = to < length ? to + 1 : length;
+        from = to < end ? to + 1 : end;
       }
-      paused = from < length;
+      paused = from < end;
     }
     if (paused) {
       await nextSlice();
@@ -79,6 +90,17 @@ export async function countDocument(
   };
 
   return runSlices();
+}
+
+/**
+ * Counts the whole document, returning `undefined` when `cancelled` says a newer edit has made the
+ * answer stale. A document small enough to count in one go still goes through `countRange`.
+ */
+export async function countDocument(
+  state: EditorState,
+  cancelled: () => boolean,
+): Promise<TextStats | undefined> {
+  return countRangeInSlices(state, 0, state.doc.length, cancelled);
 }
 
 // A change this large is cheaper to count again than to take apart; smaller ones keep the totals
@@ -150,23 +172,45 @@ export function createStatsTracker(report: (stats: TextStats) => void): StatsTra
   let latest: EditorState | undefined;
   let counting = true;
   let run = 0;
+  let selectionRun = 0;
   let pending: ChangeSet | undefined;
   /** Whether the totals above the exact limit were read as raw Markdown, so an edit counts the same way. */
   let raw = false;
   let refreshTimer: ReturnType<typeof setTimeout> | undefined;
 
-  const reportState = (state: EditorState) => {
-    const { main } = state.selection;
-    if (main.empty) {
-      report(totals);
-      return;
-    }
-    const selected = countRange(state, main.from, main.to);
+  const reportWithSelection = (selected: TextStats) => {
     report({
       words: totals.words,
       characters: totals.characters,
       selectedWords: selected.words,
       selectedCharacters: selected.characters,
+    });
+  };
+
+  const reportState = (state: EditorState) => {
+    const { main } = state.selection;
+    const currentSelectionRun = ++selectionRun;
+    if (main.empty) {
+      report(totals);
+      return;
+    }
+    // Selecting the whole document needs no second scan once the document total is known
+    if (!counting && main.from === 0 && main.to === state.doc.length) {
+      reportWithSelection(totals);
+      return;
+    }
+    if (main.to - main.from <= EXACT_DOCUMENT_LIMIT) {
+      reportWithSelection(countRange(state, main.from, main.to));
+      return;
+    }
+    void countRangeInSlices(
+      state,
+      main.from,
+      main.to,
+      () => currentSelectionRun !== selectionRun,
+    ).then((selected) => {
+      if (selected === undefined || currentSelectionRun !== selectionRun) return;
+      reportWithSelection(selected);
     });
   };
 
@@ -177,15 +221,18 @@ export function createStatsTracker(report: (stats: TextStats) => void): StatsTra
     changes: ChangeSet,
   ): boolean => {
     const changed: ChangedRange[] = [];
+    let edited = 0;
+    let tooBroad = false;
     changes.iterChangedRanges((fromA, toA, fromB, toB) => {
+      if (tooBroad) return;
+      edited += toA - fromA + toB - fromB;
+      if (changed.length >= MAX_INCREMENTAL_RANGES || edited > MAX_INCREMENTAL_CHARACTERS) {
+        tooBroad = true;
+        return;
+      }
       changed.push({ fromA, toA, fromB, toB });
     });
-    const edited = changed.reduce(
-      (total, range) => total + range.toA - range.fromA + range.toB - range.fromB,
-      0,
-    );
-    if (changed.length === 0 || changed.length > MAX_INCREMENTAL_RANGES) return false;
-    if (edited > MAX_INCREMENTAL_CHARACTERS) return false;
+    if (tooBroad || changed.length === 0) return false;
 
     const beforeLines = mergeLines(
       changed.map((range) => changedLines(fromState, range.fromA, range.toA)),
@@ -281,6 +328,7 @@ export function createStatsTracker(report: (stats: TextStats) => void): StatsTra
     },
     dispose: () => {
       run++;
+      selectionRun++;
       if (refreshTimer !== undefined) clearTimeout(refreshTimer);
     },
   };
