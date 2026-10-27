@@ -441,6 +441,9 @@ const CONTROLS = ".md-image-handle, .md-image-toolbar, .md-image-retry";
 /** A picture fetched from the web, whose absence may be the network's fault rather than its own. */
 const WEB_IMAGE = /^https?:\/\//i;
 
+/** How long a picture may take before a placeholder stands in for it. */
+const SLOW_LOAD_DELAY = 500;
+
 /** How long a failed download waits before each of its three tries, longer every time. */
 const RETRY_DELAYS = [1000, 2000, 4000] as const;
 
@@ -620,6 +623,8 @@ export function imageDom(
   image.title = title;
   if (size.width !== undefined) image.style.width = `${size.width}px`;
 
+  const skeleton = document.createElement("span");
+  skeleton.className = "md-image-skeleton";
   const message = document.createElement("span");
   message.className = "md-image-fallback-message";
   const retry = document.createElement("button");
@@ -631,14 +636,24 @@ export function imageDom(
   fallback.append(message, retry);
 
   frame.setAttribute("data-state", "loading");
-  frame.append(image, fallback);
+  frame.append(image, skeleton, fallback);
 
   const remote = WEB_IMAGE.test(src);
   let loaded = false;
   let failed = false;
   let attempts = 0;
+  let slowTimer: number | undefined;
+
+  const showSkeleton = () => {
+    window.clearTimeout(slowTimer);
+    slowTimer = window.setTimeout(() => {
+      if (!loaded && image.isConnected) frame.setAttribute("data-slow", "");
+    }, SLOW_LOAD_DELAY);
+  };
 
   const settle = (state: "ready" | "error") => {
+    window.clearTimeout(slowTimer);
+    frame.removeAttribute("data-slow");
     frame.setAttribute("data-state", state);
     view.requestMeasure();
   };
@@ -646,7 +661,10 @@ export function imageDom(
   const load = () => {
     if (!image.isConnected) return;
     loaded = false;
+    window.clearTimeout(slowTimer);
+    frame.removeAttribute("data-slow");
     frame.setAttribute("data-state", "loading");
+    showSkeleton();
     image.src = src;
   };
 
@@ -693,6 +711,7 @@ export function imageDom(
     load();
   });
 
+  showSkeleton();
   image.src = src;
 
   if (controls) {

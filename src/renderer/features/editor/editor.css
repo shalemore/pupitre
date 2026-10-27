@@ -309,9 +309,23 @@
   }
 
   /*
-   * A picture that cannot be shown gives its reason in a control of ours: dashed rather than
-   * framed, without the shadow and the fill a picture has.
+   * A picture that takes a while shows a quiet placeholder rather than growing from nothing once
+   * it arrives, and one that cannot be shown gives its reason in a control of ours: dashed rather
+   * than framed, without the shadow and the fill a picture has.
    */
+  .md-image-skeleton {
+    display: none;
+    inline-size: 16em;
+    max-inline-size: 100%;
+    block-size: 9em;
+    border-radius: max(0px, calc(var(--md-image-radius) - var(--md-image-padding)));
+    background: var(--ui-alpha-1);
+  }
+
+  .md-image-frame[data-slow] > .md-image-skeleton {
+    display: block;
+  }
+
   .md-image-frame[data-state="error"] > .md-image-preview,
   .md-image-frame[data-state="error"] > :is(.md-image-handle, .md-image-toolbar) {
     display: none;
