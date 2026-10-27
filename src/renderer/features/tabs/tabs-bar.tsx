@@ -34,7 +34,11 @@ function TabButton(props: TabButtonProps) {
   return (
     <div
       ref={(node) => (element = node)}
-      class="group relative flex h-full min-w-0 max-w-48 shrink-0 items-center border-e border-border-subtle last:border-e-0"
+      class={cn(
+        "group relative flex h-full min-w-0 max-w-48 shrink-0 items-center border-e border-border-subtle last:border-e-0 transition-colors",
+        // The fill belongs to the whole tab: the close button is part of it, not a block beside it
+        props.active ? "bg-surface-1" : "hover:bg-accent",
+      )}
     >
       <button
         type="button"
@@ -49,10 +53,8 @@ function TabButton(props: TabButtonProps) {
           props.onClose();
         }}
         class={cn(
-          "flex h-full min-w-0 flex-1 cursor-pointer items-center gap-1.5 px-2.5 text-xs outline-none select-none transition-colors",
-          props.active
-            ? "bg-surface-1 text-foreground"
-            : "text-muted-foreground hover:bg-accent hover:text-foreground",
+          "flex h-full min-w-0 flex-1 cursor-pointer items-center gap-1.5 px-2.5 text-xs outline-none select-none",
+          props.active ? "text-foreground" : "text-muted-foreground hover:text-foreground",
         )}
       >
         <Show when={isTabDirty(props.tab)}>
