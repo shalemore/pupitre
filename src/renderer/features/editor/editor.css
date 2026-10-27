@@ -433,7 +433,13 @@
     border-radius: var(--radius-full);
     background: var(--ui-brand);
     box-shadow: var(--ui-shadow-sm);
-    cursor: ew-resize;
+    /* The handle sits at the corner, so it drags the picture along both axes */
+    cursor: nwse-resize;
+  }
+
+  /* In a right-to-left document the handle is at the other corner, and its diagonal turns over */
+  .md-image-handle:dir(rtl) {
+    cursor: nesw-resize;
   }
 
   /* It floats over the top corner of the picture, so that the pointer reaches it without a gap */
