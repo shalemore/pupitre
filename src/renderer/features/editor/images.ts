@@ -66,6 +66,8 @@ export type ImageOrigin =
   | { readonly kind: "remote"; readonly url: string };
 
 const WEB_ADDRESS = /^https?:\/\//i;
+/** A file the document names by its file:// address rather than a path. */
+const FILE_ADDRESS = /^file:\/\//i;
 /** The start of any other address that names a scheme of its own, such as data: or blob:. */
 const OTHER_ADDRESS = /^[a-z][a-z0-9+.-]*:/i;
 /** A path of this machine: a Windows drive, or the root of a Unix file system. */
@@ -78,7 +80,19 @@ const ABSOLUTE_PATH = /^(?:[a-z]:[\\/]|[\\/])/i;
  */
 export function imageOrigin(folder: string, src: string): ImageOrigin | undefined {
   if (WEB_ADDRESS.test(src)) return { kind: "remote", url: src };
-  // Any other scheme, file: included, names something other than a picture this machine holds
+  if (FILE_ADDRESS.test(src)) {
+    let url: URL;
+    try {
+      url = new URL(src);
+    } catch {
+      return undefined;
+    }
+    if (url.protocol !== "file:") return undefined;
+    const host = decoded(url.host);
+    const path = decoded(url.pathname).replace(/^\/(?=[A-Za-z]:)/, "");
+    return { kind: "file", path: host === "" ? path : `//${host}${path}` };
+  }
+  // Any other scheme names something other than a picture this machine holds
   if (OTHER_ADDRESS.test(src) && !ABSOLUTE_PATH.test(src)) return undefined;
   const path = src.split("/").map(decoded).join("/");
   return { kind: "file", path: ABSOLUTE_PATH.test(src) ? path : `${folder}/${path}` };

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { imageMarkdown, imageOf, parseImageTag } from "./images";
+import { imageMarkdown, imageOf, imageOrigin, parseImageTag } from "./images";
 import { firstNode, markdownState } from "./testing";
 
 describe("image titles", () => {
@@ -16,6 +16,24 @@ describe("image titles", () => {
     expect(imageOf(state, firstNode(state, "Image"))?.title).toBe("A title");
     const plain = markdownState("![Alt](pic.png)");
     expect(imageOf(plain, firstNode(plain, "Image"))?.title).toBe("");
+  });
+});
+
+describe("imageOrigin", () => {
+  it("reads a file: address as a path on this machine", () => {
+    expect(imageOrigin("C:/docs", "file:///C:/pics/a.png")).toEqual({
+      kind: "file",
+      path: "C:/pics/a.png",
+    });
+    expect(imageOrigin("C:/docs", "file://server/share/a.png")).toEqual({
+      kind: "file",
+      path: "//server/share/a.png",
+    });
+  });
+
+  it("leaves data: and blob: to the page", () => {
+    expect(imageOrigin("C:/docs", "data:image/png;base64,abc")).toBeUndefined();
+    expect(imageOrigin("C:/docs", "blob:file:///abc")).toBeUndefined();
   });
 });
 
