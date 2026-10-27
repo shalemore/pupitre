@@ -17,8 +17,12 @@ const COPIED_MS = 1500;
 export interface FenceInfo {
   /** The info string as written, empty when the fence names no language. */
   readonly language: string;
+  /** The range of the first word of the info string, or of the point it would start at. */
   readonly from: number;
   readonly to: number;
+  /** The whole tail after the opening mark, so Plain text can take its attributes away too. */
+  readonly tailFrom: number;
+  readonly tailTo: number;
 }
 
 interface LanguageChoice {
@@ -85,9 +89,17 @@ const CodeCorner: Component<{
   const pick = (tag: string) => {
     const fence = props.fence;
     if (!fence) return;
-    // The fence line is hidden, so the change is the only way the language is edited
+    // The fence line is hidden, so the change is the only way the language is edited. A language
+    // replaces only its word, leaving attributes such as title=x after it; Plain text drops the
+    // whole info string.
+    const change =
+      tag === ""
+        ? { from: fence.tailFrom, to: fence.tailTo, insert: "" }
+        : fence.language === ""
+          ? { from: fence.tailFrom, to: fence.tailTo, insert: ` ${tag}` }
+          : { from: fence.from, to: fence.to, insert: tag };
     props.view.dispatch({
-      changes: { from: fence.from, to: fence.to, insert: tag === "" ? "" : ` ${tag}` },
+      changes: change,
       userEvent: "input.format",
     });
     // The element the pick came from went away with the widget it was in; the text has the caret
@@ -138,7 +150,13 @@ const disposers = new WeakMap<HTMLElement, () => void>();
 /** Whether two corners stand for the same pick at the same place in the document. */
 function sameFence(a: FenceInfo | undefined, b: FenceInfo | undefined): boolean {
   if (!a || !b) return a === b;
-  return a.language === b.language && a.from === b.from && a.to === b.to;
+  return (
+    a.language === b.language &&
+    a.from === b.from &&
+    a.to === b.to &&
+    a.tailFrom === b.tailFrom &&
+    a.tailTo === b.tailTo
+  );
 }
 
 /**

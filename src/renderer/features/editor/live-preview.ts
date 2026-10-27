@@ -326,7 +326,16 @@ function fenceInfo(
   const mark = node.name === "FencedCode" ? node.getChild("CodeMark") : null;
   if (!mark || active) return undefined;
   const line = builder.lineAt(mark.from);
-  return { language: builder.text(mark.to, line.to).trim(), from: mark.to, to: line.to };
+  const tail = builder.text(mark.to, line.to);
+  const word = /\S+/.exec(tail);
+  const from = mark.to + (word?.index ?? 0);
+  return {
+    language: word?.[0] ?? "",
+    from,
+    to: from + (word?.[0].length ?? 0),
+    tailFrom: mark.to,
+    tailTo: line.to,
+  };
 }
 
 function visitCodeBlock(builder: DecorationBuilder, node: SyntaxNode): void {
