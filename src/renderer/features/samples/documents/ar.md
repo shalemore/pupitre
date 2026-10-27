@@ -34,7 +34,7 @@
 | الأشرطة الجانبية                    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | وضع المصدر                         | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | وضع التركيز / وضع الآلة الكاتبة     | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| إعادة ضبط التكبير                  | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| إعادة ضبط التكبير                  | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | التفضيلات                           | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>

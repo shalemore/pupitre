@@ -34,7 +34,7 @@ Umístěte kurzor do **tučného textu**, `vloženého kódu` nebo [odkazu](http
 | Postranní panely                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Režim zdrojového kódu              | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Režim soustředění / psacího stroje | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| Obnovit zvětšení                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| Obnovit zvětšení                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | Předvolby                          | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>

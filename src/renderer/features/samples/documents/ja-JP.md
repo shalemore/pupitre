@@ -34,7 +34,7 @@ Pupitre はデスクトップ向けの Markdown エディターです。ドキ�
 | サイドバー                              | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | ソースコードモード                      | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | フォーカスモード / タイプライターモード | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| ズームをリセット                        | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| ズームをリセット                        | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | 環境設定                                | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>

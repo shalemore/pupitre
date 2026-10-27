@@ -34,7 +34,7 @@ Sett markøren inne i **fet tekst**, et `kodeavsnitt` eller en [lenke](https://g
 | Sidefelt                       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Kildekodemodus                 | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Fokusmodus / Skrivemaskinmodus | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| Tilbakestill zoom              | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| Tilbakestill zoom              | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | Innstillinger                  | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>

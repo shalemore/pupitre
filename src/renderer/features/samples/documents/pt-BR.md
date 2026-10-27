@@ -34,7 +34,7 @@ Mova o cursor para um **texto em negrito**, um `trecho de código` ou um [link](
 | Barras laterais                      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Modo código-fonte                    | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Modo foco / Modo máquina de escrever | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| Redefinir zoom                       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| Redefinir zoom                       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | Preferências                         | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>

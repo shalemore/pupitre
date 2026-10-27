@@ -34,7 +34,7 @@ Pupitre bir masaüstü Markdown düzenleyicisidir. Belgeler sıradan `.md` dosya
 | Kenar çubukları                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Kaynak Kodu Modu                | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Odak modu / Daktilo modu        | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| Yakınlaştırmayı sıfırla         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| Yakınlaştırmayı sıfırla         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | Tercihler                       | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>

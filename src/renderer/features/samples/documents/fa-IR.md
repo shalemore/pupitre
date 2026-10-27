@@ -34,7 +34,7 @@
 | نوارهای کناری                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                                  |
 | حالت کد منبع                  | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                   |
 | حالت تمرکز / حالت ماشین تحریر | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                                  |
-| بازنشانی بزرگ‌نمایی            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                                  |
+| بازنشانی بزرگ‌نمایی            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                                  |
 | تنظیمات                       | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                   |
 
 </details>

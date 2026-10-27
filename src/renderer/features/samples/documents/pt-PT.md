@@ -34,7 +34,7 @@ Coloque o cursor dentro de **texto a negrito**, de um `trecho de código` ou de 
 | Barras laterais                                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Modo de código-fonte                            | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Modo de concentração / Modo máquina de escrever | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| Repor zoom                                      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| Repor zoom                                      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | Preferências                                    | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>

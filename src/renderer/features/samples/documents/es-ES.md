@@ -34,7 +34,7 @@ Mueve el cursor dentro de **texto en negrita**, un `fragmento de código` o un [
 | Barras laterales                              | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Modo código fuente                            | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Modo concentración / Modo máquina de escribir | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| Restablecer zoom                              | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| Restablecer zoom                              | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | Preferencias                                  | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>

@@ -34,7 +34,7 @@ Pupitre는 데스크톱용 Markdown 편집기입니다. 문서는 일반 `.md` �
 | 사이드바                       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | 소스 코드 모드                 | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | 집중 모드 / 타자기 모드        | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| 확대/축소 초기화               | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| 확대/축소 초기화               | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | 환경설정                       | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>

@@ -34,7 +34,7 @@ Pupitre เป็นโปรแกรมแก้ไข Markdown สำหร�
 | แถบด้านข้าง                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | โหมดโค้ดต้นฉบับ                | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | โหมดโฟกัส / โหมดพิมพ์ดีด        | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| รีเซ็ตการซูม                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| รีเซ็ตการซูม                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | การตั้งค่า                     | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>

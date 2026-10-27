@@ -34,7 +34,7 @@ Zet de cursor in **vette tekst**, in een `inline code` of in een [link](https://
 | Zijbalken                       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Broncodemodus                   | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Focusmodus / Typemachinemodus   | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| Zoom herstellen                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| Zoom herstellen                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | Voorkeuren                      | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>

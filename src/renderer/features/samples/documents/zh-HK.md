@@ -34,7 +34,7 @@ Pupitre 是一款桌面 Markdown 編輯器。文件就是一般的 `.md` 檔案�
 | 側邊欄                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                                |
 | 原始碼模式               | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                 |
 | 專注模式 / 打字機模式    | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                                |
-| 重設縮放                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                                |
+| 重設縮放                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                                |
 | 偏好設定                 | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                 |
 
 </details>

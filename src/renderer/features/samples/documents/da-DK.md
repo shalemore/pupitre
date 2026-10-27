@@ -34,7 +34,7 @@ Sæt markøren inde i **fed tekst**, et `kodeafsnit` eller et [link](https://git
 | Sidepaneler                           | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Kildekodetilstand                     | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Fokustilstand / Skrivemaskinetilstand | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| Nulstil zoom                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| Nulstil zoom                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | Indstillinger                         | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>

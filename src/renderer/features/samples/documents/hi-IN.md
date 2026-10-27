@@ -34,7 +34,7 @@ Pupitre एक डेस्कटॉप Markdown संपादक है। �
 | साइडबार                     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | स्रोत कोड मोड                | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | एकाग्रता मोड / टाइपराइटर मोड | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| ज़ूम रीसेट करें                  | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| ज़ूम रीसेट करें                  | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | प्राथमिकताएँ                  | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>

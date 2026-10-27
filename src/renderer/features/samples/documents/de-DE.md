@@ -34,7 +34,7 @@ Setzen Sie den Cursor in **fetten Text**, einen `Codeausschnitt` oder einen [Lin
 | Seitenleisten                      | <kbd>Strg</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Quellcode-Modus                    | <kbd>Strg</kbd>+<kbd>/</kbd>                                                                                |
 | Fokusmodus / Schreibmaschinenmodus | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| Zoom zurücksetzen                  | <kbd>Strg</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| Zoom zurücksetzen                  | <kbd>Strg</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | Einstellungen                      | <kbd>Strg</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>

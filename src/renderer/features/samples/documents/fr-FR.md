@@ -34,7 +34,7 @@ Placez le curseur dans du **texte en gras**, un `extrait de code` ou un [lien](h
 | Barres latérales                           | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                                |
 | Mode code source                           | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                 |
 | Mode concentration / Mode machine à écrire | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                                |
-| Réinitialiser le zoom                      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                                |
+| Réinitialiser le zoom                      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                                |
 | Préférences                                | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                 |
 
 </details>

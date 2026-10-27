@@ -34,7 +34,7 @@ Sätt markören i **fet text**, ett `kodstycke` eller en [länk](https://github.
 | Sidofält                     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Källkodsläge                 | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Fokusläge / Skrivmaskinsläge | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| Återställ zoom               | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| Återställ zoom               | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | Inställningar                | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>

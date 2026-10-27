@@ -34,7 +34,7 @@ Sposta il cursore dentro un **testo in grassetto**, un `frammento di codice` o u
 | Barre laterali                                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Modalità codice sorgente                                | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Modalità concentrazione / Modalità macchina da scrivere | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| Reimposta zoom                                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| Reimposta zoom                                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | Preferenze                                              | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>

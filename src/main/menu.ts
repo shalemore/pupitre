@@ -331,8 +331,9 @@ function buildTemplate(): MenuItemConstructorOptions[] {
           click: () => stepZoom("in"),
         },
         { label: labels.zoomOut, accelerator: "CmdOrCtrl+-", click: () => stepZoom("out") },
-        // Ctrl+0 belongs to "Paragraph", as in Typora
-        { label: labels.resetZoom, accelerator: "CmdOrCtrl+Shift+0", click: resetZoom },
+        // Ctrl+0 belongs to "Paragraph", as in Typora, and Ctrl+Shift+digit belongs to the
+        // keyboard layouts of Windows, which never passes it on; R carries the reset instead
+        { label: labels.resetZoom, accelerator: "CmdOrCtrl+Shift+R", click: resetZoom },
         separator,
         { label: labels.fullScreen, role: "togglefullscreen" },
         ...(app.isPackaged

@@ -34,7 +34,7 @@ Pupitre là trình soạn thảo Markdown trên máy tính. Tài liệu là các
 | Thanh bên                         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Chế độ mã nguồn                   | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Chế độ tập trung / máy đánh chữ   | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| Đặt lại thu phóng                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| Đặt lại thu phóng                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | Tùy chọn                          | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>

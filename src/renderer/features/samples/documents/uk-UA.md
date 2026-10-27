@@ -34,7 +34,7 @@ Pupitre — це настільний редактор Markdown. Докумен�
 | Бічні панелі                             | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Режим вихідного коду                     | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Режим зосередження / друкарської машинки | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| Скинути масштаб                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| Скинути масштаб                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | Параметри                                | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>

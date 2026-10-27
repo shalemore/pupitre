@@ -34,7 +34,7 @@ Move the cursor into **bold text**, a `code span` or a [link](https://github.com
 | Sidebars                     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Source code mode             | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Focus mode / Typewriter mode | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| Reset zoom                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| Reset zoom                   | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | Preferences                  | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>

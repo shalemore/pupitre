@@ -34,7 +34,7 @@ Letakkan kursor di dalam **teks tebal**, sebuah `kode sebaris`, atau sebuah [tau
 | Bilah samping                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Mode Kode Sumber              | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Mode fokus / mesin tik        | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| Atur ulang perbesaran         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| Atur ulang perbesaran         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | Preferensi                    | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>

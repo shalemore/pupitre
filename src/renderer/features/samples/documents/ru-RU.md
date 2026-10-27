@@ -34,7 +34,7 @@ Pupitre — настольный редактор Markdown. Документы �
 | Боковые панели                       | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Режим исходного кода                 | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Режим фокуса / Режим пишущей машинки | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| Сбросить масштаб                     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| Сбросить масштаб                     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | Настройки                            | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>

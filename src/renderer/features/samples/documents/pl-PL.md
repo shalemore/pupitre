@@ -34,7 +34,7 @@ Przenieś kursor do **pogrubionego tekstu**, `kodu w tekście` lub [łącza](htt
 | Paski boczne                          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Tryb kodu źródłowego                  | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Tryb skupienia / maszyny do pisania   | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| Przywróć powiększenie                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| Przywróć powiększenie                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | Ustawienia                            | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>

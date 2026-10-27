@@ -34,7 +34,7 @@ Settu bendilinn inn í **feitletraðan texta**, `kóða í texta` eða [hlekk](h
 | Hliðarstikur                        | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Frumkóðahamur                       | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Einbeitingarhamur / Ritvélarhamur   | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| Endurstilla aðdrátt                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| Endurstilla aðdrátt                 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | Stillingar                          | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>

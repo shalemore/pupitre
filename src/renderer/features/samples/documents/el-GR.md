@@ -34,7 +34,7 @@
 | Πλαϊνές γραμμές                         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>                                                               |
 | Λειτουργία πηγαίου κώδικα               | <kbd>Ctrl</kbd>+<kbd>/</kbd>                                                                                |
 | Λειτουργία συγκέντρωσης / γραφομηχανής  | <kbd>F8</kbd> / <kbd>F9</kbd>                                                                               |
-| Επαναφορά μεγέθυνσης                    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd>                                                               |
+| Επαναφορά μεγέθυνσης                    | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>                                                               |
 | Προτιμήσεις                             | <kbd>Ctrl</kbd>+<kbd>,</kbd>                                                                                |
 
 </details>
