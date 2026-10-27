@@ -435,9 +435,10 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
   };
 
   return (
-    // The empty space of the tree stands for the folder it shows, so a file can be created at its root
+    // The empty space of the tree stands for the folder it shows, so a file can be created at its
+    // root; it reaches the bottom of the sidebar, so the native menu does not take over there
     <div
-      class="p-2 space-y-0.5"
+      class="p-2 space-y-0.5 min-h-full"
       onContextMenu={(event) => {
         event.preventDefault();
         openMenu({ name: props.root, path: props.root, kind: "directory" }, event);
