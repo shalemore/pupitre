@@ -29,6 +29,7 @@ import {
   type TopMenu,
   withGroupSeparators,
 } from "@shared/menu";
+import { pinKeyOf } from "@shared/pins";
 import {
   DEFAULT_SETTINGS,
   patchSettingsFile,
@@ -479,13 +480,8 @@ const handlers: Handlers = {
   "folder:set-pins": (root, paths) => {
     const entries: PinnedEntry[] = [];
     for (const raw of paths) {
-      const key = raw.replaceAll("\\", "/").replace(/^\/+|\/+$/g, "");
-      if (
-        key === "" ||
-        key.split("/").some((part) => part === "" || part === "." || part === "..")
-      ) {
-        continue;
-      }
+      const key = pinKeyOf(raw);
+      if (key === undefined) continue;
       const path = `${root}/${key}`;
       const kind = files.has(path)
         ? "file"

@@ -2,6 +2,7 @@ import { stat } from "node:fs/promises";
 import { basename, isAbsolute, join, relative, resolve } from "node:path";
 import { z } from "zod";
 import type { PinnedEntry } from "@shared/desktop-api";
+import { pinKeyOf } from "@shared/pins";
 import { readJsonFile, writeJsonFile } from "./json-file";
 
 /** Where a folder keeps the entries pinned to the top of its sidebar. */
@@ -14,21 +15,24 @@ const pinsFileSchema = z
   })
   .catch({ version: 1, paths: [] });
 
-/** A path under the folder root, written the way the pins file and the Markdown links write it. */
-function keyOf(path: string): string | undefined {
-  const key = path.replaceAll("\\", "/").replace(/^\/+|\/+$/g, "");
-  if (key === "") return undefined;
-  const segments = key.split("/");
-  if (segments.some((segment) => segment === "" || segment === "." || segment === "..")) {
-    return undefined;
-  }
-  return key;
-}
-
 /** Whether `path` is inside `root`, and not root itself. */
 function isInside(root: string, path: string): boolean {
   const rel = relative(root, path);
   return rel !== "" && !rel.startsWith("..") && !isAbsolute(rel);
+}
+
+/** The keys of the paths a file holds: normalized, unique and inside `root`. */
+function keysIn(root: string, paths: readonly string[]): string[] {
+  const seen = new Set<string>();
+  const keys: string[] = [];
+  for (const raw of paths) {
+    const key = pinKeyOf(raw);
+    if (key === undefined || seen.has(key)) continue;
+    if (!isInside(root, resolve(root, key))) continue;
+    seen.add(key);
+    keys.push(key);
+  }
+  return keys;
 }
 
 /**
@@ -38,15 +42,7 @@ function isInside(root: string, path: string): boolean {
  */
 export async function readPins(root: string): Promise<PinnedEntry[]> {
   const file = pinsFileSchema.parse(readJsonFile(join(root, PINS_FILE)));
-  const seen = new Set<string>();
-  const keys: string[] = [];
-  for (const raw of file.paths) {
-    const key = keyOf(raw);
-    if (key === undefined || seen.has(key)) continue;
-    seen.add(key);
-    if (!isInside(root, resolve(root, key))) continue;
-    keys.push(key);
-  }
+  const keys = keysIn(root, file.paths);
   const pins = await Promise.all(
     keys.map(async (key): Promise<PinnedEntry | undefined> => {
       const path = resolve(root, key);
@@ -69,14 +65,5 @@ export async function readPins(root: string): Promise<PinnedEntry[]> {
 
 /** Replaces the pins of a folder; paths outside the folder are ignored. */
 export function writePins(root: string, paths: readonly string[]): void {
-  const seen = new Set<string>();
-  const keys: string[] = [];
-  for (const raw of paths) {
-    const key = keyOf(raw);
-    if (key === undefined || seen.has(key)) continue;
-    if (!isInside(root, resolve(root, key))) continue;
-    seen.add(key);
-    keys.push(key);
-  }
-  writeJsonFile(join(root, PINS_FILE), { version: 1, paths: keys });
+  writeJsonFile(join(root, PINS_FILE), { version: 1, paths: keysIn(root, paths) });
 }
