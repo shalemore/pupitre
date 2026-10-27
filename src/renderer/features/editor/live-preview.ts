@@ -20,7 +20,6 @@ import { DOCUMENT_EXTENSIONS } from "@shared/desktop-api";
 import { desktop } from "@/lib/desktop";
 import { pathFromFileUrl } from "@/lib/file";
 import { AlertTitleWidget, alertTitles, alertType } from "./alerts";
-import { fencedText } from "./block-text";
 import { CodeCornerWidget, type FenceInfo } from "./code-corner";
 import { collectHeadings, findHeadingByAnchor, HEADING_LEVEL } from "./document-structure";
 import { EmojiWidget, emojiFor } from "./emoji";
@@ -206,13 +205,14 @@ class DecorationBuilder {
   readonly decorations: Range<Decoration>[] = [];
   /** Starts of alert markers (`[!NOTE]`), which would otherwise read as links. */
   readonly alertMarkers = new Set<number>();
+  hasFootnoteDefinition = false;
   private readonly lines = new Map<number, LineStyle>();
   readonly state: EditorState;
 
   constructor(
     view: EditorView,
-    private readonly from: number,
-    private readonly to: number,
+    readonly from: number,
+    readonly to: number,
   ) {
     this.state = view.state;
   }
@@ -350,12 +350,7 @@ function visitCodeBlock(builder: DecorationBuilder, node: SyntaxNode): void {
   const active = touches(builder.ranges, ...lineRange(builder.state, node));
   const info = node.getChild("CodeInfo");
   if (node.name !== "BlockMath") {
-    // Indented code keeps its indentation in the source, not in what is copied
-    const code =
-      node.name === "CodeBlock"
-        ? builder.text(node.from, node.to).replace(/^(?: {4}|\t)/gm, "")
-        : fencedText(builder.state, node);
-    const widget = new CodeCornerWidget(code, fenceInfo(builder, node, active));
+    const widget = new CodeCornerWidget(fenceInfo(builder, node, active));
     builder.decorations.push(Decoration.widget({ widget, side: -1 }).range(node.from));
   }
   if (node.name === "CodeBlock") return;
@@ -571,6 +566,7 @@ export function markers(node: SyntaxNode): SyntaxNode[] {
 /** Decorates one node; returns false to skip its children. */
 function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
   const { name } = node;
+  if (name === "FootnoteDefinition") builder.hasFootnoteDefinition = true;
   const block = blockClass(name);
   // A setext underline is not part of the heading's text; it is styled as syntax below
   if (block) builder.lineClass(node.from, name.startsWith("Setext") ? node.from : node.to, block);
@@ -698,7 +694,9 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
 
 /** The footnote definitions are set off from the text by a rule above the first one. */
 function markFootnotesStart(builder: DecorationBuilder): void {
+  if (!builder.hasFootnoteDefinition) return;
   for (let block = syntaxTree(builder.state).topNode.firstChild; block; block = block.nextSibling) {
+    if (block.from > builder.to) return;
     if (block.name !== "FootnoteDefinition") continue;
     builder.lineClass(block.from, block.from, "md-footnotes-start");
     return;

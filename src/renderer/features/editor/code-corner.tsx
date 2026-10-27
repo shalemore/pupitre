@@ -1,10 +1,11 @@
-import { LanguageDescription } from "@codemirror/language";
+import { LanguageDescription, syntaxTree } from "@codemirror/language";
 import { type EditorView, WidgetType } from "@codemirror/view";
 import { Check, Copy } from "lucide-solid";
 import { createMemo, createSignal, For, onCleanup, Show, type Component } from "solid-js";
 import { render } from "solid-js/web";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
+import { fencedText } from "./block-text";
 import { codeLanguages } from "./code-languages";
 
 const COPIED_MS = 1500;
@@ -56,9 +57,29 @@ const LANGUAGE_CHOICES: readonly LanguageChoice[] = codeLanguages
   })
   .toSorted((a, b) => a.name.localeCompare(b.name));
 
+/** Reads the code of the block whose corner sits at `container`, only when the copy button is pressed. */
+function readBlockCode(view: EditorView, container: HTMLElement): string {
+  const pos = view.posAtDOM(container);
+  for (
+    let node: ReturnType<ReturnType<typeof syntaxTree>["resolveInner"]> | null = syntaxTree(
+      view.state,
+    ).resolveInner(pos, 1);
+    node;
+    node = node.parent
+  ) {
+    if (node.name === "CodeBlock") {
+      return view.state.sliceDoc(node.from, node.to).replace(/^(?: {4}|\t)/gm, "");
+    }
+    if (node.name === "FencedCode") {
+      return fencedText(view.state, node);
+    }
+  }
+  return "";
+}
+
 const CodeCorner: Component<{
   view: EditorView;
-  code: string;
+  container: HTMLElement;
   fence: FenceInfo | undefined;
 }> = (props) => {
   const [copied, setCopied] = createSignal(false);
@@ -130,7 +151,8 @@ const CodeCorner: Component<{
         // Keeps the editor's selection; the button is not a place to put the cursor
         onMouseDown={(event) => event.preventDefault()}
         onClick={() => {
-          void desktop.invoke("clipboard:write-text", props.code).then(() => {
+          const code = readBlockCode(props.view, props.container);
+          void desktop.invoke("clipboard:write-text", code).then(() => {
             setCopied(true);
             clearTimeout(timer);
             timer = setTimeout(() => setCopied(false), COPIED_MS);
@@ -164,15 +186,12 @@ function sameFence(a: FenceInfo | undefined, b: FenceInfo | undefined): boolean 
  * hidden, and a button that copies the code without the fences.
  */
 export class CodeCornerWidget extends WidgetType {
-  constructor(
-    readonly code: string,
-    readonly fence: FenceInfo | undefined,
-  ) {
+  constructor(readonly fence: FenceInfo | undefined) {
     super();
   }
 
   override eq(other: CodeCornerWidget): boolean {
-    return other.code === this.code && sameFence(other.fence, this.fence);
+    return sameFence(other.fence, this.fence);
   }
 
   toDOM(view: EditorView): HTMLElement {
@@ -180,7 +199,7 @@ export class CodeCornerWidget extends WidgetType {
     container.className = "md-code-corner";
     disposers.set(
       container,
-      render(() => <CodeCorner view={view} code={this.code} fence={this.fence} />, container),
+      render(() => <CodeCorner view={view} container={container} fence={this.fence} />, container),
     );
     return container;
   }

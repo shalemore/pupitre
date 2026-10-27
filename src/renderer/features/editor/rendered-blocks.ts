@@ -66,10 +66,27 @@ function blockWidget(state: EditorState, node: SyntaxNode): WidgetType | undefin
   return undefined;
 }
 
-function buildDecorations(state: EditorState): DecorationSet {
+interface SensitiveRange {
+  from: number;
+  to: number;
+  touched: boolean;
+}
+
+interface RenderedBlocksState {
+  decorations: DecorationSet;
+  sensitive: readonly SensitiveRange[];
+}
+
+function buildDecorations(state: EditorState): RenderedBlocksState {
   const decorations: Range<Decoration>[] = [];
+  const sensitive: SensitiveRange[] = [];
   const { doc } = state;
   const ranges = revealingRanges(state);
+  const isTouched = (from: number, to: number): boolean => {
+    const touched = touches(ranges, from, to);
+    sensitive.push({ from, to, touched });
+    return touched;
+  };
   // Block decorations cover whole lines, including the indentation of a nested block
   const hideLines = (from: number, to: number, widget?: WidgetType) =>
     decorations.push(
@@ -88,17 +105,17 @@ function buildDecorations(state: EditorState): DecorationSet {
       const details = node.name === "HTMLBlock" ? detailsSection(state, node.node) : undefined;
       if (details) {
         const { summary, open, closing } = details;
-        if (!touches(ranges, node.from, node.to)) {
+        if (!isTouched(node.from, node.to)) {
           hideLines(node.from, node.to, new SummaryWidget(summary, open, node.from));
         }
         const contentFrom = doc.lineAt(node.to).to + 1;
         const contentTo = closing ? doc.lineAt(closing.from).from - 1 : doc.length;
         // A closed section opens while the selection is inside it, such as a search match
-        if (!open && contentTo > contentFrom && !touches(ranges, contentFrom, contentTo)) {
+        if (!open && contentTo > contentFrom && !isTouched(contentFrom, contentTo)) {
           hideLines(contentFrom, contentTo);
           hiddenUntil = contentTo;
         }
-        if (closing && !touches(ranges, closing.from, closing.to)) {
+        if (closing && !isTouched(closing.from, closing.to)) {
           hideLines(closing.from, closing.to);
         }
         return false;
@@ -109,7 +126,7 @@ function buildDecorations(state: EditorState): DecorationSet {
       // cursor anywhere on them reveals its source; a click on the rendering puts it on the first
       const [from, to] = lineRange(state, node.node);
       // A table is edited in place (table.tsx), so its source never shows
-      if (node.name === "Table" || !touches(ranges, from, to)) {
+      if (node.name === "Table" || !isTouched(from, to)) {
         hideLines(node.from, node.to, widget);
       } else if (node.name === "BlockMath" || node.name === "FencedCode") {
         // Math and diagrams open in the first line of their source, which is a code card, so the
@@ -121,21 +138,29 @@ function buildDecorations(state: EditorState): DecorationSet {
       return false;
     },
   });
-  return Decoration.set(decorations, true);
+  return { decorations: Decoration.set(decorations, true), sensitive };
 }
 
-const renderedBlockDecorations = StateField.define<DecorationSet>({
+const renderedBlockDecorations = StateField.define<RenderedBlocksState>({
   create: buildDecorations,
-  update: (decorations, tr) =>
-    tr.docChanged ||
-    tr.selection ||
-    tr.effects.some((effect) => effect.is(toggleDetails)) ||
-    printingChanged(tr.state, tr.startState) ||
-    tr.state.facet(diagramTheme) !== tr.startState.facet(diagramTheme) ||
-    syntaxTree(tr.state) !== syntaxTree(tr.startState)
-      ? buildDecorations(tr.state)
-      : decorations,
-  provide: (field) => EditorView.decorations.from(field),
+  update: (current, tr) => {
+    if (
+      tr.docChanged ||
+      tr.effects.some((effect) => effect.is(toggleDetails)) ||
+      printingChanged(tr.state, tr.startState) ||
+      tr.state.facet(diagramTheme) !== tr.startState.facet(diagramTheme) ||
+      syntaxTree(tr.state) !== syntaxTree(tr.startState)
+    ) {
+      return buildDecorations(tr.state);
+    }
+    if (!tr.selection) return current;
+    const ranges = revealingRanges(tr.state);
+    const changed = current.sensitive.some(
+      ({ from, to, touched }) => touches(ranges, from, to) !== touched,
+    );
+    return changed ? buildDecorations(tr.state) : current;
+  },
+  provide: (field) => EditorView.decorations.from(field, (state) => state.decorations),
 });
 
 export const renderedBlocks: Extension = [toggledDetails, renderedBlockDecorations, tableCursor];

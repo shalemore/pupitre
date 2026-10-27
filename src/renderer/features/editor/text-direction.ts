@@ -1,5 +1,5 @@
 import { syntaxTree } from "@codemirror/language";
-import type { Extension, Range, Text } from "@codemirror/state";
+import { type Extension, type Range, StateField, type Text } from "@codemirror/state";
 import {
   Decoration,
   type DecorationSet,
@@ -62,10 +62,19 @@ function lineDirections(view: EditorView): DecorationSet {
   return Decoration.set(decorations);
 }
 
+const documentDirection = StateField.define<"ltr" | "rtl" | undefined>({
+  create: (state) => baseDirection(state.doc),
+  update: (dir, tr) =>
+    tr.docChanged && tr.changes.touchesRange(0, DIRECTION_SAMPLE)
+      ? baseDirection(tr.state.doc)
+      : dir,
+});
+
 export const textDirection: Extension = [
   EditorView.perLineTextDirection.of(true),
-  EditorView.contentAttributes.compute(["doc"], (state): Record<string, string> => {
-    const dir = baseDirection(state.doc);
+  documentDirection,
+  EditorView.contentAttributes.compute([documentDirection], (state): Record<string, string> => {
+    const dir = state.field(documentDirection);
     return dir === undefined ? {} : { dir };
   }),
   ViewPlugin.fromClass(

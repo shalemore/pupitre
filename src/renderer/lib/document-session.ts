@@ -138,7 +138,8 @@ export function createDocumentSession(
     const editor = getEditor();
     if (editor === undefined) return;
     const markdown = editor.getMarkdown();
-    patchTab(tab.id, { markdown, edited: markdown !== tab.savedMarkdown });
+    const edited = markdown.length > MAX_SAVED_CHECK_CHARACTERS || markdown !== tab.savedMarkdown;
+    patchTab(tab.id, { markdown, edited });
   };
 
   // "Keep as is" keeps the file's own line endings; otherwise the setting decides

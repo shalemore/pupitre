@@ -242,6 +242,7 @@ const inList: (command: Command) => Command = (command) => (view) => {
 };
 
 const OUTLINE_DEBOUNCE_MS = 150;
+const POSITION_SAVE_DEBOUNCE_MS = 150;
 // Counting every match of a large document is another walk through the whole text; below this
 // size it is cheap enough to do before returning, above it the count runs in slices
 const SYNC_MATCH_LIMIT = 512 * 1024;
@@ -367,6 +368,8 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         topOffset: top.top - height,
       });
     };
+    // Measuring the scroll position reads layout, so keystrokes and scroll frames coalesce it
+    const schedulePositionSave = debounce(savePosition, POSITION_SAVE_DEBOUNCE_MS);
 
     const view = new EditorView({
       parent: container,
@@ -439,7 +442,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
               stats.changed(update);
             }
             if (update.selectionSet) {
-              savePosition();
+              schedulePositionSave();
               if (!update.docChanged) stats.selection(update.state);
             }
           }),
@@ -594,9 +597,13 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     }
 
     // Scrolling does not change the document, so the update listener does not report it
-    makeEventListener(scroller, "scroll", savePosition, { passive: true });
+    makeEventListener(scroller, "scroll", schedulePositionSave, { passive: true });
     // A window that closes before the next write of the places was due keeps them all the same
-    makeEventListener(window, "pagehide", flushDocumentPositions);
+    makeEventListener(window, "pagehide", () => {
+      schedulePositionSave.clear();
+      savePosition();
+      flushDocumentPositions();
+    });
 
     const run = (command: Command): MatchStats => {
       if (getSearchQuery(view.state).valid) command(view);
@@ -719,6 +726,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
 
     onCleanup(() => {
       updateOutline.clear();
+      schedulePositionSave.clear();
       matchRun++;
       stats.dispose();
       // The view is gone once this returns, so the place has to be taken from it beforehand

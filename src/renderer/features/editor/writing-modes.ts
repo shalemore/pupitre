@@ -26,10 +26,18 @@ const FOCUS_BLOCK =
 
 const currentLine = Decoration.line({ class: "is-current" });
 
-/** The start of every line from the one holding `from` to the one holding `to`. */
-function lineStarts(state: EditorState, from: number, to: number): number[] {
+/** The start of every line in the viewport from the one holding `from` to the one holding `to`. */
+function lineStarts(
+  state: EditorState,
+  from: number,
+  to: number,
+  viewport: { from: number; to: number },
+): number[] {
+  const start = Math.max(from, viewport.from);
+  const end = Math.min(to, viewport.to);
+  if (start > end) return [];
   const starts: number[] = [];
-  for (let pos = from; pos <= to;) {
+  for (let pos = start; pos <= end;) {
     const line = state.doc.lineAt(pos);
     starts.push(line.from);
     pos = line.to + 1;
@@ -47,14 +55,15 @@ function blockAt(state: EditorState, pos: number, side: -1 | 1): { from: number;
 }
 
 /** The lines focus mode keeps sharp: those the selection covers, or those of the blocks it touches. */
-function focusedLines(state: EditorState, grain: Settings["focusModeGrain"]): number[] {
+function focusedLines(view: EditorView, grain: Settings["focusModeGrain"]): number[] {
+  const { state, viewport } = view;
   const { from, to, empty } = state.selection.main;
   // A selection that ends at the start of a line, as a triple-click leaves it, stops short of that line
   const end = empty || state.doc.lineAt(to).from !== to ? to : to - 1;
-  if (grain === "line") return lineStarts(state, from, end);
+  if (grain === "line") return lineStarts(state, from, end, viewport);
   const first = blockAt(state, from, empty ? -1 : 1);
   const last = blockAt(state, end, -1);
-  return lineStarts(state, first.from, Math.max(first.to, last.to));
+  return lineStarts(state, first.from, Math.max(first.to, last.to), viewport);
 }
 
 /** Where the caret's row sits in its line, when that line fills more than one row. */
@@ -110,17 +119,39 @@ function measureRow(view: EditorView): RowBand | undefined {
   return { from: line.from, row, pad: Number.isNaN(pad) ? 0 : pad };
 }
 
-/** Measures after the update, since the layout cannot be read during one. */
-function rowMeasure(grain: Settings["focusModeGrain"]): Extension {
+function focusDecorations(view: EditorView, grain: Settings["focusModeGrain"]): DecorationSet {
+  const band = grain === "line" ? view.state.field(rowBand) : undefined;
+  const decorations = focusedLines(view, grain).map((from) => {
+    if (band === undefined || band.from !== from) return currentLine.range(from);
+    return Decoration.line({
+      class: "is-current focus-row",
+      attributes: { style: `--focus-row: ${band.row}; --focus-pad: ${band.pad}px` },
+    }).range(from);
+  });
+  return Decoration.set(decorations);
+}
+
+/** Decorates the focused lines in the viewport and measures the active row after layout settles. */
+function focusPlugin(grain: Settings["focusModeGrain"]): Extension {
   return ViewPlugin.fromClass(
     class {
+      decorations: DecorationSet;
       private frame = 0;
 
       constructor(view: EditorView) {
+        this.decorations = focusDecorations(view, grain);
         this.measure(view);
       }
 
       update(update: ViewUpdate): void {
+        if (
+          update.docChanged ||
+          update.selectionSet ||
+          update.viewportChanged ||
+          update.state.field(rowBand) !== update.startState.field(rowBand)
+        ) {
+          this.decorations = focusDecorations(update.view, grain);
+        }
         if (
           update.docChanged ||
           update.selectionSet ||
@@ -146,19 +177,8 @@ function rowMeasure(grain: Settings["focusModeGrain"]): Extension {
         });
       }
     },
+    { decorations: (plugin) => plugin.decorations },
   );
-}
-
-function focusDecorations(state: EditorState, grain: Settings["focusModeGrain"]): DecorationSet {
-  const band = grain === "line" ? state.field(rowBand) : undefined;
-  const decorations = focusedLines(state, grain).map((from) => {
-    if (band === undefined || band.from !== from) return currentLine.range(from);
-    return Decoration.line({
-      class: "is-current focus-row",
-      attributes: { style: `--focus-row: ${band.row}; --focus-pad: ${band.pad}px` },
-    }).range(from);
-  });
-  return Decoration.set(decorations);
 }
 
 /**
@@ -167,14 +187,7 @@ function focusDecorations(state: EditorState, grain: Settings["focusModeGrain"])
  * dimming itself is CSS (editor.css), and so is the band that keeps that row.
  */
 export function focusMode(grain: Settings["focusModeGrain"]): Extension {
-  return [
-    EditorView.contentAttributes.of({ class: "focus-mode" }),
-    rowBand,
-    EditorView.decorations.compute([rowBand, "selection"], (state) =>
-      focusDecorations(state, grain),
-    ),
-    rowMeasure(grain),
-  ];
+  return [EditorView.contentAttributes.of({ class: "focus-mode" }), rowBand, focusPlugin(grain)];
 }
 
 /** Where typewriter mode holds the line, and how far from the window edge for the top and bottom. */
