@@ -155,6 +155,26 @@ export const MainWindow: Component = () => {
     startRoom: () => (startSidebarWanted() ? startWidth() : 0),
     endRoom: () => (endSidebarWanted() ? endWidth() : 0),
   });
+  // A menu pick is an interaction with the chrome; it stays unfolded until the pointer moves again,
+  // rather than folding under the pointer that is still where the picked entry was
+  createEffect(
+    on(
+      menuOpen,
+      (open) => {
+        if (!open) chrome.keepVisible();
+      },
+      { defer: true },
+    ),
+  );
+  createEffect(
+    on(
+      startSidebarHeld,
+      (held) => {
+        if (!held) chrome.keepVisible();
+      },
+      { defer: true },
+    ),
+  );
   // Only an immersive window folds its sidebars, so only there can they be pinned
   const onStartPinnedChange = () =>
     immersive()
@@ -228,7 +248,10 @@ export const MainWindow: Component = () => {
   createEffect(
     on(
       () => session.activeDocument()?.id,
-      () => {
+      (id, previous) => {
+        // A tab patch, such as a keystroke or a save, rebuilds the tabs array without changing the
+        // document; only another document is a reason to close these and unfold the chrome
+        if (id === previous) return;
         setFindMode("closed");
         setHistoryOpen(false);
         chrome.show();

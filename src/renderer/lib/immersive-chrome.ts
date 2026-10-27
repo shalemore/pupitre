@@ -42,6 +42,10 @@ export interface ChromeOptions {
 export function createImmersiveChrome(options: ChromeOptions) {
   const [writing, setWriting] = createSignal(false);
   const [near, setNear] = createSignal(NO_EDGE);
+  // A control the user just used may leave the pointer past the edge it belongs to, such as a menu
+  // item that hangs below the title bar; the chrome stays unfolded until the user goes back to
+  // writing or scrolling, rather than folding as soon as the pointer moves back into the text
+  const [kept, setKept] = createSignal(false);
   const [viewport, setViewport] = createSignal(window.innerWidth);
   makeEventListener(window, "resize", () => setViewport(window.innerWidth));
   let pushed = 0;
@@ -52,7 +56,7 @@ export function createImmersiveChrome(options: ChromeOptions) {
   const startFolded = () =>
     !options.startPinned() && cramped(options.startRoom() + (endFolded() ? 0 : options.endRoom()));
   const shown = (atEdge: boolean, folded = false) =>
-    !options.canFold() || atEdge || (!writing() && !folded);
+    !options.canFold() || kept() || atEdge || (!writing() && !folded);
   const titleBarVisible = () => options.titleBarPinned() || shown(near().top);
   const sidebarVisible = () => options.startPinned() || shown(near().start, startFolded());
   const endSidebarVisible = () => options.endPinned() || shown(near().end, endFolded());
@@ -64,6 +68,7 @@ export function createImmersiveChrome(options: ChromeOptions) {
 
   const hide = () => {
     setWriting(options.canFold());
+    setKept(false);
     setNear(NO_EDGE);
   };
   const show = () => setWriting(false);
@@ -74,6 +79,8 @@ export function createImmersiveChrome(options: ChromeOptions) {
     endSidebarVisible,
     hide,
     show,
+    /** Keeps the chrome unfolded until the user writes or scrolls, for a pick made in it. */
+    keepVisible: () => setKept(true),
     onWheel: (event: WheelEvent) => {
       const target = event.target instanceof Element ? event.target : null;
       // A sidebar scrolls on its own; folding the chrome under a pointer that reads it would move the list
