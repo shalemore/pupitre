@@ -2,6 +2,7 @@ import { copyFile, mkdir, rename, stat, writeFile } from "node:fs/promises";
 import { basename, dirname, join, resolve } from "node:path";
 import { net, shell } from "electron";
 import type { FolderEntry } from "@shared/desktop-api";
+import { decodeUriPart } from "@shared/uri";
 import { moveFile } from "./move-file";
 
 /**
@@ -106,18 +107,9 @@ const IMAGE_TYPES: Readonly<Record<string, string>> = {
   "image/avif": ".avif",
 };
 
-/** `text` with its percent escapes read back; as it is where they are not valid escape text. */
-function decoded(text: string): string {
-  try {
-    return decodeURIComponent(text);
-  } catch {
-    return text;
-  }
-}
-
 /** The name a downloaded picture is written under: the last part of its address, or a name of its own type. */
 function downloadName(url: URL, contentType: string | undefined): string {
-  const last = decoded(url.pathname.split("/").at(-1) ?? "");
+  const last = decodeUriPart(url.pathname.split("/").at(-1) ?? "");
   const name = last.replace(/[^\p{L}\p{N}._-]+/gu, "-");
   if (/\.[a-z0-9]{1,5}$/i.test(name)) return name;
   const type = (contentType ?? "").split(";")[0]?.trim().toLowerCase() ?? "";

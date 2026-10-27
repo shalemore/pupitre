@@ -18,6 +18,7 @@ import {
 import type { SyntaxNode } from "@lezer/common";
 import { DOCUMENT_EXTENSIONS } from "@shared/desktop-api";
 import { desktop } from "@/lib/desktop";
+import { pathFromFileUrl } from "@/lib/file";
 import { AlertTitleWidget, alertTitles, alertType } from "./alerts";
 import { fencedText } from "./block-text";
 import { CodeCornerWidget, type FenceInfo } from "./code-corner";
@@ -753,8 +754,7 @@ function followLink(view: EditorView, href: string): boolean {
   }
   const base = view.state.facet(documentBaseUrl);
   if (!base || !DOCUMENT_LINK.test(href)) return false;
-  // A file URL's path starts with a slash before a Windows drive letter
-  const path = decodeURIComponent(new URL(href, base).pathname).replace(/^\/(?=[A-Za-z]:)/, "");
+  const path = pathFromFileUrl(new URL(href, base));
   void desktop.invoke("app:dispatch", { id: "file.open-path", path });
   return true;
 }

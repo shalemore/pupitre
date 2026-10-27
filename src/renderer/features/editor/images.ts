@@ -2,8 +2,10 @@ import { syntaxTree } from "@codemirror/language";
 import { type EditorState, type Extension, Facet, Transaction } from "@codemirror/state";
 import { EditorView, WidgetType } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
+import { decodeUriPart } from "@shared/uri";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
+import { pathFromFileUrl } from "@/lib/file";
 import { escapeHtml } from "@/lib/html";
 
 /** file:// URL of the document's folder, to resolve relative image paths; undefined if unsaved. */
@@ -31,15 +33,6 @@ function imageSource(destination: string): string {
   return destination.replace(/^<(.*)>$/, "$1");
 }
 
-/** `text` with its percent escapes read back; as it is where they are not valid escape text. */
-function decoded(text: string): string {
-  try {
-    return decodeURIComponent(text);
-  } catch {
-    return text;
-  }
-}
-
 /**
  * The folder of the document on disk, read from the file:// address its relative paths resolve
  * against; undefined while the document has no file, or in a window that has no file system.
@@ -54,14 +47,7 @@ export function documentFolder(state: EditorState): string | undefined {
     return undefined;
   }
   if (url.protocol !== "file:") return undefined;
-  // A document on a network share has the server in the host, which a UNC path writes as its own
-  // leading doubled slash; a local file has no host at all
-  const host = decoded(url.host);
-  // A file URL's path starts with a slash before a Windows drive letter
-  const path = decoded(url.pathname)
-    .replace(/\/+$/, "")
-    .replace(/^\/(?=[A-Za-z]:)/, "");
-  const folder = host === "" ? path : `//${host}${path}`;
+  const folder = pathFromFileUrl(url).replace(/\/+$/, "");
   return folder === "" ? "/" : folder;
 }
 
@@ -93,13 +79,11 @@ export function imageOrigin(folder: string, src: string): ImageOrigin | undefine
       return undefined;
     }
     if (url.protocol !== "file:") return undefined;
-    const host = decoded(url.host);
-    const path = decoded(url.pathname).replace(/^\/(?=[A-Za-z]:)/, "");
-    return { kind: "file", path: host === "" ? path : `//${host}${path}` };
+    return { kind: "file", path: pathFromFileUrl(url) };
   }
   // Any other scheme names something other than a picture this machine holds
   if (OTHER_ADDRESS.test(src) && !ABSOLUTE_PATH.test(src)) return undefined;
-  const path = src.split("/").map(decoded).join("/");
+  const path = src.split("/").map(decodeUriPart).join("/");
   return { kind: "file", path: ABSOLUTE_PATH.test(src) ? path : `${folder}/${path}` };
 }
 

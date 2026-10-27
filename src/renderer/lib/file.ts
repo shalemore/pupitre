@@ -1,4 +1,5 @@
 import { DOCUMENT_FILE } from "@shared/desktop-api";
+import { decodeUriPart } from "@shared/uri";
 
 export function fileNameOf(path: string): string {
   return path.split(/[\\/]/).pop() ?? path;
@@ -19,9 +20,30 @@ export function isolateFileName(name: string): string {
   return `${LEFT_TO_RIGHT_ISOLATE}${name}${POP_ISOLATE}`;
 }
 
+/** A path written with forward slashes and without a trailing one, whatever it was written with. */
+function slashed(path: string): string {
+  return path.replaceAll("\\", "/").replace(/\/+$/, "");
+}
+
 export function isInsideFolder(folder: string, path: string): boolean {
-  const normalize = (value: string) => value.replaceAll("\\", "/").replace(/\/+$/, "");
-  return normalize(path).startsWith(`${normalize(folder)}/`);
+  return slashed(path).startsWith(`${slashed(folder)}/`);
+}
+
+/** Where `path` sits under `folder`, or undefined when it is not inside it. */
+export function relativeToFolder(folder: string, path: string): string | undefined {
+  const root = slashed(folder);
+  const full = slashed(path);
+  return full.startsWith(`${root}/`) ? full.slice(root.length + 1) : undefined;
+}
+
+/**
+ * The path a file: URL names. Its path starts with a slash before a Windows drive letter, and a
+ * network share carries its server in the host, which a UNC path writes as a leading doubled slash.
+ */
+export function pathFromFileUrl(url: URL): string {
+  const host = decodeUriPart(url.host);
+  const path = decodeUriPart(url.pathname).replace(/^\/(?=[A-Za-z]:)/, "");
+  return host === "" ? path : `//${host}${path}`;
 }
 
 /** Text files conventionally end with a newline; otherwise Git and similar tools warn "No newline at end of file". */
