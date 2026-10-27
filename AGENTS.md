@@ -230,7 +230,8 @@ only make code generation easier.
 - User-facing text never appears as a literal in components. Add it to every dictionary in
   `src/shared/i18n/locales/` (all locales, typed by `TranslationSchema`). The app is called
   `Pupitre` in every language: the name is never translated, transliterated or spelled in another
-  script, whatever grammar does around it.
+  script, whatever grammar does around it. How a dictionary is written, which sources settle a
+  term and what not to invent are in `docs/translation-guide.md`.
 - The project uses English for code, comments, documentation and commit messages.
 - Comments explain _why_ the code is the way it is (constraints, platform quirks, non-obvious
   decisions). Do not write changelog-style comments such as "added X" or "changed Y to Z";
