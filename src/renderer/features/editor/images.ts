@@ -319,32 +319,8 @@ export function imageOf(state: EditorState, node: SyntaxNode): DocumentImage | u
   return image && { ...image, from: node.from, to: node.to };
 }
 
-/**
- * The picture the widget that replaced its source stands for. The widget holds the place its source
- * begins, which is the picture itself unless a marker of a quote or a list comes first on the line.
- */
-export function imageAt(state: EditorState, pos: number): DocumentImage | undefined {
-  const line = state.doc.lineAt(pos);
-  let found: DocumentImage | undefined;
-  syntaxTree(state).iterate({
-    from: pos,
-    to: line.to,
-    enter: (node) => {
-      if (found) return false;
-      const image = imageOf(state, node.node);
-      if (!image) return undefined;
-      found = image;
-      return false;
-    },
-  });
-  return found;
-}
-
-/**
- * The first picture whose source lies in the range. A widget such as a table cell knows the range
- * it renders, so it can offer the picture menu without asking where a pointer maps in the text.
- */
-export function imageIn(state: EditorState, from: number, to: number): DocumentImage | undefined {
+/** The first picture whose source lies between `from` and `to`. */
+function findImage(state: EditorState, from: number, to: number): DocumentImage | undefined {
   let found: DocumentImage | undefined;
   syntaxTree(state).iterate({
     from,
@@ -358,6 +334,23 @@ export function imageIn(state: EditorState, from: number, to: number): DocumentI
     },
   });
   return found;
+}
+
+/**
+ * The picture the widget that replaced its source stands for. The widget holds the place its source
+ * begins, which is the picture itself unless a marker of a quote or a list comes first on the line.
+ */
+export function imageAt(state: EditorState, pos: number): DocumentImage | undefined {
+  const line = state.doc.lineAt(pos);
+  return findImage(state, pos, line.to);
+}
+
+/**
+ * The first picture whose source lies in the range. A widget such as a table cell knows the range
+ * it renders, so it can offer the picture menu without asking where a pointer maps in the text.
+ */
+export function imageIn(state: EditorState, from: number, to: number): DocumentImage | undefined {
+  return findImage(state, from, to);
 }
 
 /** The range of the value of the src attribute of the `<img>` tag written as `source`. */
