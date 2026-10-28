@@ -83,6 +83,7 @@ import { diagramTheme, prerenderDiagrams, readDiagramTheme } from "./mermaid";
 import { pasteHtml } from "./paste-html";
 import { renderedBlocks } from "./rendered-blocks";
 import { renumberOrderedLists } from "./renumber-lists";
+import { scrollToDocument } from "./scroll";
 import { markdownPairing, smartTyping } from "./smart-typing";
 import { textDirection } from "./text-direction";
 import { focusMode, holdLine, typewriterMode } from "./writing-modes";
@@ -690,10 +691,8 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       scrollTo: (pos) => {
         // The caret goes with the scroll, so the outline marks the heading that was chosen even
         // when the document is too short to bring it to the top
-        view.dispatch({
-          selection: { anchor: pos },
-          effects: EditorView.scrollIntoView(pos, { y: "start" }),
-        });
+        view.dispatch({ selection: { anchor: pos } });
+        scrollToDocument(view, pos);
         view.focus();
       },
       revealRange: (from, to) => {

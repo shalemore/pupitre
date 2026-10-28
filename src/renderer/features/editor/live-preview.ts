@@ -36,6 +36,7 @@ import {
   resolveUrl,
 } from "./images";
 import { mathOf, MathWidget } from "./math";
+import { scrollToDocument } from "./scroll";
 
 /**
  * Typora-style live preview over plain Markdown source.
@@ -870,10 +871,8 @@ function followLink(view: EditorView, href: string): boolean {
   if (href.startsWith("#")) {
     const heading = findHeadingByAnchor(collectHeadings(view.state), href.slice(1));
     if (!heading) return false;
-    view.dispatch({
-      selection: { anchor: heading.pos },
-      effects: EditorView.scrollIntoView(heading.pos, { y: "start" }),
-    });
+    view.dispatch({ selection: { anchor: heading.pos } });
+    scrollToDocument(view, heading.pos);
     return true;
   }
   const base = view.state.facet(documentBaseUrl);
