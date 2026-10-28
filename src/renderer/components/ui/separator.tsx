@@ -14,7 +14,8 @@ export function Separator(props: SeparatorProps) {
       orientation={local.orientation ?? "horizontal"}
       data-slot="separator"
       class={cn(
-        "shrink-0 bg-border",
+        // Kobalte draws a separator as <hr>, which the preflight gives a border in the text colour
+        "shrink-0 border-0 bg-border",
         local.orientation === "vertical" ? "h-full w-px self-stretch" : "h-px w-full",
         local.class,
       )}
