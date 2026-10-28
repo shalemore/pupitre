@@ -16,10 +16,6 @@ A cross-platform Markdown editor. Formatting is rendered while typing, and the s
 - **Themes are CSS.** Each has a light and a dark side, and any two can be paired.
 - [Try it in your browser](https://shalemore.github.io/pupitre/).
 
-<p align="left">
-  <img src="docs/preferences.png" width="450" alt="Preferences in dark mode" />
-</p>
-
 ## Install
 
 Download it from [Releases](https://github.com/shalemore/pupitre/releases), or on Windows install it with [Scoop](https://scoop.sh):
