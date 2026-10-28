@@ -562,32 +562,23 @@
   }
 
   /*
-   * The title is centered in the window, not in the room left beside the drawn caption buttons:
-   * the grid reaches under them on their side, and its end keeps its content clear of them.
+   * The title is centered in the window, not in the room left beside the caption buttons: the
+   * grid reaches under them on their side, and its end keeps its content clear of them.
    */
-  .app-title-bar[data-caption-buttons="right"] [data-title-grid] {
+  .app-title-bar[data-caption-side="right"] [data-title-grid] {
     margin-inline-end: calc(-1 * var(--caption-buttons-width));
   }
 
-  .app-title-bar[data-caption-buttons="right"] [data-title-grid] > :last-child {
+  .app-title-bar[data-caption-side="right"] [data-title-grid] > :last-child {
     padding-inline-end: var(--caption-buttons-width);
   }
 
-  .app-title-bar[data-caption-buttons="left"] [data-title-grid] {
+  .app-title-bar[data-caption-side="left"] [data-title-grid] {
     margin-inline-start: calc(-1 * var(--caption-buttons-width));
   }
 
-  .app-title-bar[data-caption-buttons="left"] [data-title-grid] > :first-child {
+  .app-title-bar[data-caption-side="left"] [data-title-grid] > :first-child {
     padding-inline-start: var(--caption-buttons-width);
-  }
-
-  /* macOS keeps its traffic lights in the native bar, inside the left padding */
-  :root[data-platform="darwin"] .app-title-bar [data-title-grid] {
-    margin-inline-start: -80px;
-  }
-
-  :root[data-platform="darwin"] .app-title-bar [data-title-grid] > :first-child {
-    padding-inline-start: 80px;
   }
 }
 
@@ -595,6 +586,11 @@
   :root {
     /* Three w-11.5 caption buttons; the title grid reaches under them to center on the window */
     --caption-buttons-width: 8.625rem;
+  }
+
+  :root[data-platform="darwin"] {
+    /* The traffic lights the native bar draws */
+    --caption-buttons-width: 80px;
   }
 
   /*

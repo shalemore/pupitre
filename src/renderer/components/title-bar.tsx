@@ -18,6 +18,8 @@ const GIVE_WAY = ["count", "name"];
  */
 export const TitleBar: ParentComponent<{ class?: string; inert?: boolean }> = (props) => {
   const side = desktop.initialState.captionSide;
+  // macOS keeps its traffic lights in the native bar, on the left, as the drawn buttons can
+  const layoutSide = side ?? (desktop.platform === "darwin" ? "left" : undefined);
   let bar: HTMLElement | undefined;
 
   /** Whether the title grid's side cells hold more than their columns can show. */
@@ -71,6 +73,7 @@ export const TitleBar: ParentComponent<{ class?: string; inert?: boolean }> = (p
       // The caption buttons stay on the window's physical side in every language, so the bar keeps one order; its texts follow their own script
       dir="ltr"
       data-caption-buttons={side}
+      data-caption-side={layoutSide}
       inert={props.inert}
       class={cn(
         // The horizontal padding comes from .app-title-bar, which leaves room for the caption buttons
