@@ -491,25 +491,25 @@ function visitAlert(builder: DecorationBuilder, quote: SyntaxNode): void {
 function placeImage(builder: DecorationBuilder, image: DocumentImage, markdown: boolean): boolean {
   const active = touches(builder.ranges, image.from, image.to);
   const src = resolveUrl(builder.state, image.src);
-  const widget = new ImageWidget(src, image.alt, image.title, image, !active);
   if (markdown) {
     const line = builder.lineAt(image.from);
     const alone =
       builder.text(line.from, image.from).trim() === "" &&
       builder.text(image.to, line.to).trim() === "";
+    const widget = new ImageWidget(src, image.alt, image.title, image, !active && alone, !alone);
     // `![` before the alt text, `](address)` after it
     const close = image.from + 2 + image.alt.length;
-    if (image.alt !== "")
+    // A picture with text around it stays in that line, as an inline picture does on a page
+    if (image.alt !== "" && alone) {
       builder.decorations.push(Decoration.widget({ widget, side: -1 }).range(image.from));
-    if (active) {
-      builder.mark(image.from, image.from + 2, "md-mark");
-      builder.mark(close, image.to, "md-mark");
-    } else {
-      builder.hide(image.from, image.from + 2);
-      builder.hide(close, image.to);
-    }
-    if (image.alt !== "") {
-      if (alone) builder.lineClass(image.from, image.from, "md-image-caption");
+      if (active) {
+        builder.mark(image.from, image.from + 2, "md-mark");
+        builder.mark(close, image.to, "md-mark");
+      } else {
+        builder.hide(image.from, image.from + 2);
+        builder.hide(close, image.to);
+      }
+      builder.lineClass(image.from, image.from, "md-image-caption");
       return true;
     }
     if (!active) {
@@ -517,8 +517,13 @@ function placeImage(builder: DecorationBuilder, image: DocumentImage, markdown: 
       return false;
     }
     builder.decorations.push(Decoration.widget({ widget, side: -1 }).range(image.from));
+    if (image.alt !== "") {
+      builder.mark(image.from, image.from + 2, "md-mark");
+      builder.mark(close, image.to, "md-mark");
+    }
     return true;
   }
+  const widget = new ImageWidget(src, image.alt, image.title, image, !active);
   // An `<img>` tag keeps its whole source under the picture while it is edited
   if (active) {
     builder.decorations.push(Decoration.widget({ widget, side: -1 }).range(image.from));

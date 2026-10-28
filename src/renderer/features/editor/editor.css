@@ -316,6 +316,21 @@
     padding-block: var(--md-image-gap);
   }
 
+  /* A picture with text around it stays in that line, without the frame a picture of its own has */
+  .md-image-block[data-inline] {
+    display: inline-block;
+    padding-block: 0;
+    vertical-align: middle;
+  }
+
+  .md-image-block[data-inline] > .md-image-frame {
+    margin-inline: 0;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+
   /* An aligned picture takes the whole line, so that its margins can place it on that line */
   .md-image-block[data-alignment] {
     inline-size: 100%;

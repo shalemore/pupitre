@@ -616,9 +616,12 @@ export function imageDom(
   caption?: string,
   /** Where a change goes; the default finds the picture from the DOM it replaced. */
   write?: (change: (image: DocumentImage) => ImageSize) => void,
+  /** Whether the picture shares its line with text instead of taking a line of its own. */
+  inline = false,
 ): HTMLElement {
   const block = document.createElement("span");
   block.className = "md-image-block";
+  if (inline) block.setAttribute("data-inline", "");
   // An aligned picture takes the whole line, so that its margins can place it on that line
   if (size.alignment !== undefined) block.setAttribute("data-alignment", size.alignment);
 
@@ -781,6 +784,8 @@ export class ImageWidget extends WidgetType {
     readonly size: ImageSize,
     /** Whether the picture offers its controls; off while the selection shows its source. */
     readonly controls: boolean,
+    /** Whether the picture shares its line with text instead of taking a line of its own. */
+    readonly inline = false,
   ) {
     super();
   }
@@ -792,12 +797,23 @@ export class ImageWidget extends WidgetType {
       other.title === this.title &&
       other.size.width === this.size.width &&
       other.size.alignment === this.size.alignment &&
-      other.controls === this.controls
+      other.controls === this.controls &&
+      other.inline === this.inline
     );
   }
 
   toDOM(view: EditorView): HTMLElement {
-    return imageDom(view, this.src, this.alt, this.title, this.size, this.controls);
+    return imageDom(
+      view,
+      this.src,
+      this.alt,
+      this.title,
+      this.size,
+      this.controls,
+      undefined,
+      undefined,
+      this.inline,
+    );
   }
 
   // Clicking the picture places the cursor there, which reveals its source; its controls are not
