@@ -81,20 +81,28 @@ export function createImmersiveChrome(options: ChromeOptions) {
     show,
     /** Keeps the chrome unfolded until the user writes or scrolls, for a pick made in it. */
     keepVisible: () => setKept(true),
-    onWheel: (event: WheelEvent) => {
+    /** Handles a wheel event; true when it folded the chrome, so the document did not scroll. */
+    onWheel: (event: WheelEvent): boolean => {
       const target = event.target instanceof Element ? event.target : null;
       // A sidebar scrolls on its own; folding the chrome under a pointer that reads it would move the list
-      if (target?.closest("[data-sidebar]")) return;
+      if (target?.closest("[data-sidebar]")) return false;
       const port = target?.closest<HTMLElement>("[data-scroll-view]");
       const pushing = event.deltaY < 0 && port != null && port.scrollTop <= 0;
       if (!pushing) {
         pushed = 0;
-        return hide();
+        const folded =
+          options.canFold() &&
+          ((titleBarVisible() && !options.titleBarPinned()) ||
+            (sidebarVisible() && !options.startPinned()) ||
+            (endSidebarVisible() && !options.endPinned()));
+        hide();
+        return folded;
       }
       const restart = event.timeStamp - lastWheelAt > PULL_PAUSE;
       lastWheelAt = event.timeStamp;
       pushed = (restart ? 0 : pushed) - event.deltaY;
       if (pushed >= PULL_DISTANCE) show();
+      return false;
     },
     onPointerMove: (event: PointerEvent) => {
       if (!(event.target instanceof Element)) return;

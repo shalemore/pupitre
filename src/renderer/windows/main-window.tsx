@@ -178,6 +178,7 @@ export const MainWindow: Component = () => {
     startRoom: () => (startSidebarWanted() ? startWidth() : 0),
     endRoom: () => (endSidebarWanted() ? endWidth() : 0),
   });
+  let contentArea: HTMLDivElement | undefined;
   // A menu pick is an interaction with the chrome; it stays unfolded until the pointer moves again,
   // rather than folding under the pointer that is still where the picked entry was
   createEffect(
@@ -514,6 +515,17 @@ export const MainWindow: Component = () => {
   };
 
   onMount(() => {
+    // Capture, so the wheel that folds the chrome does not also scroll the document under it
+    const area = contentArea;
+    if (area !== undefined) {
+      const onWheel = (event: WheelEvent) => {
+        if (!chrome.onWheel(event)) return;
+        event.preventDefault();
+        event.stopPropagation();
+      };
+      area.addEventListener("wheel", onWheel, { capture: true, passive: false });
+      onCleanup(() => area.removeEventListener("wheel", onWheel, { capture: true }));
+    }
     void session.restoreOnStartup();
     // The editor is a chunk of its own; fetch it while the welcome screen is idle, so the first
     // document does not wait for both the file and the code that shows it
@@ -627,10 +639,10 @@ export const MainWindow: Component = () => {
       </TitleBar>
 
       <div
+        ref={(element) => (contentArea = element)}
         onKeyDown={(event) => {
           if (!event.ctrlKey && !event.metaKey && !event.altKey) chrome.hide();
         }}
-        onWheel={(event) => chrome.onWheel(event)}
         class={cn(
           "flex-1 min-h-0 flex overflow-hidden print:block print:overflow-visible",
           // The card keeps an even gap to the window edges, the title bar and the sidebars
