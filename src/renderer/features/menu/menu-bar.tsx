@@ -1,3 +1,4 @@
+import { debounce } from "@solid-primitives/scheduled";
 import { Menu } from "lucide-solid";
 import { createSignal, For, onCleanup, Show, type Component } from "solid-js";
 import { TOP_MENUS, type MenuEntry, type Menus, type TopMenu } from "@shared/menu";
@@ -84,17 +85,8 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
   let previousFocus: HTMLElement | undefined;
   // Leaving the bar or a panel only folds the menu up if the pointer does not come back, which it
   // does when it crosses the gap between a button and its menu or between a menu and its submenu
-  let leaveTimer: number | undefined;
-
-  const cancelLeave = () => {
-    window.clearTimeout(leaveTimer);
-    leaveTimer = undefined;
-  };
-
-  const leave = () => {
-    cancelLeave();
-    leaveTimer = window.setTimeout(close, LEAVE_DELAY);
-  };
+  const leave = debounce(() => close(), LEAVE_DELAY);
+  const cancelLeave = () => leave.clear();
   onCleanup(cancelLeave);
 
   const show = async (menu: TopMenu, button: HTMLElement) => {

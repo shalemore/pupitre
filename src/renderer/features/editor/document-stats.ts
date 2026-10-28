@@ -1,5 +1,6 @@
 import { ensureSyntaxTree } from "@codemirror/language";
 import type { ChangeSet, EditorState } from "@codemirror/state";
+import { debounce } from "@solid-primitives/scheduled";
 import { countText, countTextFast, type TextStats } from "@/lib/text-stats";
 import { readableText } from "./document-structure";
 
@@ -13,6 +14,7 @@ const EXACT_DOCUMENT_LIMIT = 512 * 1024;
 const EXACT_TEXT_LIMIT = 64 * 1024;
 const CHUNK = 2 * 1024 * 1024;
 const SLICE_MS = 20;
+const REFRESH_DELAY = 250;
 
 function countTextRange(state: EditorState, from: number, to: number): TextStats {
   return countTextFast(state.doc.sliceString(from, to));
@@ -181,7 +183,6 @@ export function createStatsTracker(report: (stats: TextStats) => void): StatsTra
   let pending: ChangeSet | undefined;
   /** Whether the totals above the exact limit were read as raw Markdown, so an edit counts the same way. */
   let raw = false;
-  let refreshTimer: ReturnType<typeof setTimeout> | undefined;
 
   const reportWithSelection = (selected: TextStats) => {
     report({
@@ -293,6 +294,13 @@ export function createStatsTracker(report: (stats: TextStats) => void): StatsTra
     });
   };
 
+  const refreshSoon = debounce(() => {
+    if (counting || latest === undefined) return;
+    totals = countRange(latest, 0, latest.doc.length);
+    baseline = latest;
+    reportState(latest);
+  }, REFRESH_DELAY);
+
   return {
     start: (state) => {
       if (state.doc.length <= EXACT_DOCUMENT_LIMIT) {
@@ -336,19 +344,12 @@ export function createStatsTracker(report: (stats: TextStats) => void): StatsTra
     refresh: (state) => {
       if (state.doc.length > EXACT_DOCUMENT_LIMIT) return;
       latest = state;
-      if (refreshTimer !== undefined) clearTimeout(refreshTimer);
-      refreshTimer = setTimeout(() => {
-        refreshTimer = undefined;
-        if (counting || latest === undefined) return;
-        totals = countRange(latest, 0, latest.doc.length);
-        baseline = latest;
-        reportState(latest);
-      }, 250);
+      refreshSoon();
     },
     dispose: () => {
       run++;
       selectionRun++;
-      if (refreshTimer !== undefined) clearTimeout(refreshTimer);
+      refreshSoon.clear();
     },
   };
 }
