@@ -2,11 +2,16 @@ import { Select as KobalteSelect } from "@kobalte/core/select";
 import { cn } from "cn";
 import { Check, ChevronDown } from "lucide-solid";
 import { type JSX, Show } from "solid-js";
+import { Badge } from "./badge";
 import { ScrollView, type ScrollViewProps } from "./scroll-view";
 
 export interface SelectOption<T extends string = string> {
   value: T;
   label: string;
+  /** A dim suffix shown after the label, such as a folder when two themes share a name. */
+  hint?: string | undefined;
+  /** A small tag after the label, such as where a theme was found. */
+  badge?: string | undefined;
   /** Secondary text shown with the label, such as a localized font name; also searchable. */
   description?: string | undefined;
   /** Style of the label; the font list uses it to preview each font in its own face. */
@@ -41,16 +46,29 @@ export function Select<T extends string>(props: SelectProps<T>) {
       placement="bottom-end"
       itemComponent={(itemProps) => (
         <KobalteSelect.Item
+          data-slot="select-item"
           item={itemProps.item}
           class="group flex items-center justify-between gap-4 rounded-lg px-2.5 py-1.5 text-xs outline-none cursor-pointer data-highlighted:bg-accent"
         >
           <span class="flex min-w-0 flex-col">
-            <KobalteSelect.ItemLabel
-              class="truncate font-medium text-foreground group-data-selected:text-brand"
-              style={itemProps.item.rawValue.style}
-            >
-              {itemProps.item.rawValue.label}
-            </KobalteSelect.ItemLabel>
+            <span class="flex min-w-0 items-center gap-1.5">
+              <KobalteSelect.ItemLabel
+                class="min-w-0 truncate font-medium text-foreground group-data-selected:text-brand"
+                style={itemProps.item.rawValue.style}
+              >
+                {itemProps.item.rawValue.label}
+              </KobalteSelect.ItemLabel>
+              <Show when={itemProps.item.rawValue.hint}>
+                {(hint) => <span class="truncate text-2xs text-muted-foreground">/ {hint()}</span>}
+              </Show>
+              <Show when={itemProps.item.rawValue.badge}>
+                {(badge) => (
+                  <Badge variant="muted" size="sm">
+                    {badge()}
+                  </Badge>
+                )}
+              </Show>
+            </span>
             <Show when={itemProps.item.rawValue.description}>
               {(description) => (
                 <KobalteSelect.ItemDescription class="truncate text-2xs text-muted-foreground">
@@ -66,17 +84,32 @@ export function Select<T extends string>(props: SelectProps<T>) {
       )}
     >
       <KobalteSelect.Trigger
+        data-slot="select-trigger"
         aria-label={props["aria-label"]}
         class={cn(
           "flex h-8 min-w-36 items-center justify-between gap-2 rounded-md border border-input bg-field px-2.5 text-xs text-foreground outline-none cursor-pointer transition-colors hover:bg-surface-0 focus-visible:shadow-focus data-expanded:border-brand",
           props.class,
         )}
       >
-        <KobalteSelect.Value<SelectOption<T>> class="flex items-center gap-1.5 truncate">
+        <KobalteSelect.Value<
+          SelectOption<T>
+        > class="flex min-w-0 flex-1 items-center gap-1.5 truncate">
           {(state) => (
-            <span class="truncate" style={state.selectedOption().style}>
-              {state.selectedOption().label}
-            </span>
+            <>
+              <span class="truncate" style={state.selectedOption().style}>
+                {state.selectedOption().label}
+              </span>
+              <Show when={state.selectedOption().hint}>
+                {(hint) => <span class="truncate text-2xs text-muted-foreground">/ {hint()}</span>}
+              </Show>
+              <Show when={state.selectedOption().badge}>
+                {(badge) => (
+                  <Badge variant="muted" size="sm">
+                    {badge()}
+                  </Badge>
+                )}
+              </Show>
+            </>
           )}
         </KobalteSelect.Value>
         <KobalteSelect.Icon class="text-muted-foreground transition-transform duration-base data-expanded:rotate-180">
@@ -84,7 +117,10 @@ export function Select<T extends string>(props: SelectProps<T>) {
         </KobalteSelect.Icon>
       </KobalteSelect.Trigger>
       <KobalteSelect.Portal>
-        <KobalteSelect.Content class="floating-panel z-50 min-w-(--kb-popper-anchor-width) origin-(--kb-popper-content-transform-origin) p-1 animate-in fade-in-0 zoom-in-95 duration-base ease-enter data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-closed:duration-ui">
+        <KobalteSelect.Content
+          data-slot="select-content"
+          class="floating-panel z-50 min-w-(--kb-popper-anchor-width) origin-(--kb-popper-content-transform-origin) p-1"
+        >
           <KobalteSelect.Listbox
             as={(listboxProps: ScrollViewProps) => <ScrollView as="ul" {...listboxProps} />}
             class="max-h-72 outline-none"

@@ -3,7 +3,7 @@
  * condensed uppercase headings, square corners, a red banner for the title, a red block in front
  * of sections and diagonal stripes for breaks. The dark scheme inverts the page to near black and
  * keeps the same red.
- * See themes/pupitre/index.css for the token and selector conventions.
+ * How to write a theme: the `theming-pupitre` skill.
  */
 
 :root {
@@ -31,6 +31,8 @@
   --ui-text-muted: oklch(0.56 0 0);
   --ui-brand: oklch(0.56 0.22 28);
   --ui-brand-hover: oklch(0.5 0.21 28);
+  /* The brand is dark in this scheme, so white text stays readable on it */
+  --brand-foreground: oklch(1 0 0);
   --ui-danger: oklch(0.52 0.21 28);
   --ui-success: oklch(0.5 0.1 150);
   --ui-segmented-thumb: oklch(0.99 0.001 80);
@@ -51,15 +53,11 @@
   --syntax-string: oklch(0.45 0.07 250);
   --syntax-special-string: oklch(0.45 0.1 280);
   --syntax-number: oklch(0.56 0.15 50);
-  --syntax-variable: var(--ui-text-primary);
   --syntax-definition: oklch(0.38 0.12 260);
   --syntax-function: oklch(0.38 0.12 260);
   --syntax-type: oklch(0.56 0.15 50);
   --syntax-property: oklch(0.45 0.07 250);
-  --syntax-comment: var(--ui-text-muted);
   --syntax-operator: var(--ui-text-secondary);
-  --syntax-punctuation: var(--ui-text-secondary);
-  --syntax-invalid: var(--ui-danger);
 
   --diagram-stroke: var(--ui-text-secondary);
 
@@ -81,6 +79,8 @@
     --ui-text-muted: oklch(0.54 0 0);
     --ui-brand: oklch(0.64 0.21 28);
     --ui-brand-hover: oklch(0.7 0.19 29);
+    /* The brand is bright in this scheme, so text on it turns dark to stay readable */
+    --brand-foreground: oklch(0.18 0 0);
     --ui-danger: oklch(0.66 0.2 28);
     --ui-success: oklch(0.74 0.11 150);
     --ui-segmented-thumb: oklch(0.3 0 0);
@@ -191,7 +191,6 @@
 
 /* Links: red with a solid underline */
 .md-link {
-  color: var(--ui-brand);
   text-decoration: underline;
   text-decoration-thickness: 0.08em;
   text-underline-offset: 0.2em;
@@ -212,10 +211,9 @@
   background: var(--ui-alpha-1);
 }
 
-/* Fenced code blocks: a recessed slab with a red bar along the start edge */
+/* Fenced code blocks: a red bar along the start edge */
 .md-code-block {
   border-inline-start: 3px solid var(--ui-brand);
-  background: var(--ui-surface-0);
   line-height: 1.6;
 }
 
@@ -224,7 +222,6 @@
   color: var(--ui-text-secondary);
   --md-quote-bar: var(--alert-color, var(--ui-brand));
   --md-quote-bar-width: 0.25em;
-  border-inline-start: var(--md-quote-bar-width) solid var(--md-quote-bar);
 }
 
 /* A horizontal rule away from the cursor is a band of diagonal stripes */
@@ -283,15 +280,7 @@
 
 /* Footnote references */
 .md-footnote-ref {
-  color: var(--ui-brand);
   font-weight: 700;
-}
-
-/* The YAML front matter block at the very top of a file */
-.md-front-matter {
-  background: var(--ui-alpha-1);
-  color: var(--ui-text-secondary);
-  font-size: 0.85em;
 }
 
 /*

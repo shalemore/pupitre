@@ -3,11 +3,14 @@
  * charcoal ink like letters written on birch bark, a red star over the title, army olive as the
  * second color, the blue rim of an enamel mug on code blocks and birch-bark marks for breaks.
  * The dark scheme is an old army uniform: olive drab with enamel-white text and the same red.
- * See themes/pupitre/index.css for the token and selector conventions.
+ * How to write a theme: the `theming-pupitre` skill.
  */
 
 :root {
   color-scheme: light dark;
+
+  /* The document reads in the interface face; the headings carry the theme's own */
+  --font-document: var(--font-sans);
 
   /* Bold gothic for headings */
   --hongxing-heading-font:
@@ -25,6 +28,8 @@
   --ui-text-muted: oklch(0.58 0.01 250);
   --ui-brand: oklch(0.53 0.2 27);
   --ui-brand-hover: oklch(0.47 0.19 27);
+  /* The brand is dark in this scheme, so white text stays readable on it */
+  --brand-foreground: oklch(1 0 0);
   --ui-danger: oklch(0.52 0.2 27);
   --ui-success: oklch(0.52 0.1 140);
   --ui-segmented-thumb: oklch(0.995 0.001 230);
@@ -42,15 +47,11 @@
   --syntax-string: oklch(0.47 0.09 130);
   --syntax-special-string: oklch(0.48 0.1 220);
   --syntax-number: oklch(0.58 0.13 70);
-  --syntax-variable: var(--ui-text-primary);
   --syntax-definition: oklch(0.45 0.12 255);
   --syntax-function: oklch(0.45 0.12 255);
   --syntax-type: oklch(0.58 0.13 70);
   --syntax-property: oklch(0.48 0.1 220);
-  --syntax-comment: var(--ui-text-muted);
   --syntax-operator: var(--ui-text-secondary);
-  --syntax-punctuation: var(--ui-text-secondary);
-  --syntax-invalid: var(--ui-danger);
 
   --diagram-accent: var(--hongxing-olive);
 
@@ -74,6 +75,8 @@
     --ui-text-muted: oklch(0.58 0.018 120);
     --ui-brand: oklch(0.65 0.19 27);
     --ui-brand-hover: oklch(0.71 0.17 28);
+    /* The brand is bright in this scheme, so text on it turns dark to stay readable */
+    --brand-foreground: oklch(0.18 0 0);
     --ui-danger: oklch(0.67 0.19 27);
     --ui-success: oklch(0.74 0.1 140);
     --ui-segmented-thumb: oklch(0.32 0.026 125);
@@ -111,7 +114,6 @@
   padding-block: 0.7em 0.2em;
   font-family: var(--hongxing-heading-font);
   font-weight: 700;
-  line-height: 1.3;
 }
 
 /* h1: centered and spaced, under a red star */
@@ -128,12 +130,10 @@
 .md-h2 {
   padding-block-end: 0.2em;
   border-block-end: 2px solid var(--hongxing-olive);
-  font-size: 1.5em;
 }
 
 .md-h3 {
   color: var(--ui-brand);
-  font-size: 1.25em;
 }
 
 .md-h4 {
@@ -158,7 +158,6 @@
 }
 
 .md-link {
-  color: var(--ui-brand);
   text-decoration: underline;
   text-decoration-color: oklch(from var(--ui-brand) l c h / 40%);
   text-underline-offset: 0.2em;
@@ -206,7 +205,6 @@
   color: var(--ui-text-secondary);
   --md-quote-bar: var(--alert-color, var(--hongxing-olive));
   --md-quote-bar-width: 3px;
-  border-inline-start: var(--md-quote-bar-width) solid var(--md-quote-bar);
   background: oklch(from var(--hongxing-olive) l c h / 6%);
 }
 
@@ -258,14 +256,7 @@
 }
 
 .md-footnote-ref {
-  color: var(--ui-brand);
   font-weight: 700;
-}
-
-.md-front-matter {
-  background: var(--ui-alpha-1);
-  color: var(--ui-text-secondary);
-  font-size: 0.85em;
 }
 
 /*

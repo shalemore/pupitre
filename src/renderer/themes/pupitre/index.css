@@ -3,37 +3,7 @@
  * red margin line of a school exercise book; in dark, chalk on a slate board under a warm lamp.
  * Body text stays in the system face for long sessions, headings are set in a book serif.
  *
- * A theme is src/renderer/themes/<name>/index.css; the folder name is the name shown in settings.
- * Fonts or images a theme needs live in the same folder and are referenced with relative url()s.
- * This file doubles as the reference for writing themes.
- *
- * Color schemes
- *   Declare the schemes the theme supports with the standard `color-scheme` property on :root.
- *   `light dark` means the theme works in both: write the light values first and override what
- *   differs in `@media (prefers-color-scheme: dark)`. A theme that only declares `light` or
- *   `dark` is applied as is, and users can pair it with another theme for the other scheme.
- *
- * What a theme controls
- *   - Design tokens (--ui-*): colors shared by the title bar, sidebar, settings and the document.
- *   - Document typography: the `md-*` classes inside `.md-document`.
- *   - Code colors: --syntax-*.
- *   - Alert colors: --alert-note, --alert-tip, --alert-important, --alert-warning, --alert-caution.
- *   - Selection: --ui-selection, the wash painted over selected text; the default follows the
- *     accent, which a theme that fills blocks with the accent has to replace with something else.
- *   - Interface shape: --ui-radius-scale (corner roundness), --ui-shadow-near/far/float
- *     (transparent for flat), --font-sans (interface font).
- *   - The text cursor: `.md-text-cursor` draws it; a theme replaces the whole cursor with one rule.
- *   - The front matter block is styled here, not by the app.
- *   - --font-document: the default body font (--font-mono is the code font).
- *   - Quote bars: set --md-quote-bar and --md-quote-bar-width, and draw them with
- *     `var(--alert-color, <quote color>)` so GitHub alerts keep their color; a nested quote
- *     repeats the same bar at each of its levels.
- *
- * What a theme should leave alone
- *   Body font size, line height and content width belong to the user and are applied in a
- *   higher cascade layer. Use `em` for sizes inside the document so they scale with the user's
- *   font size, and logical properties (padding-inline-start, not padding-left) so right-to-left
- *   documents mirror correctly.
+ * How to write a theme: the `theming-pupitre` skill.
  */
 
 :root {
@@ -51,19 +21,6 @@
     "Sitka Heading", "Sitka", "Iowan Old Style", "Charter", "Palatino Linotype", Georgia,
     "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "Microsoft YaHei UI", serif;
 
-  /*
-   * Colors override the app's design tokens (app.css, base layer, neutral defaults):
-   *   --ui-surface-0..3  0 window chrome (title bar, sidebar), 1 document canvas, 2 cards,
-   *                      3 popovers
-   *   --ui-text-primary, --ui-text-secondary, --ui-text-muted
-   *   --ui-brand, --ui-brand-hover  the only accent: caret, links, the current item
-   *   --ui-danger, --ui-success
-   *   --ui-knob         thumbs of switches and sliders
-   *   --syntax-*         code colors (keyword, string, number, function, comment, ...)
-   *   --diagram-*        Mermaid diagram colors (fill, stroke, line, text, accent)
-   * Borders, shadows and translucent fills are derived from these and follow automatically.
-   * Tokens a theme adds for itself are prefixed with its name.
-   */
   --ui-surface-0: oklch(0.948 0.008 250);
   --ui-surface-1: oklch(0.987 0.006 95);
   --ui-surface-2: oklch(0.993 0.004 95);
@@ -73,6 +30,8 @@
   --ui-text-muted: oklch(0.6 0.022 252);
   --ui-brand: oklch(0.49 0.17 263);
   --ui-brand-hover: oklch(0.43 0.17 263);
+  /* The brand is dark in this scheme, so white text stays readable on it */
+  --brand-foreground: oklch(1 0 0);
   --ui-danger: oklch(0.55 0.2 25);
   --ui-success: oklch(0.55 0.12 155);
 
@@ -85,15 +44,11 @@
   --syntax-string: oklch(0.5 0.11 150);
   --syntax-special-string: oklch(0.52 0.1 200);
   --syntax-number: oklch(0.55 0.16 25);
-  --syntax-variable: var(--ui-text-primary);
   --syntax-definition: oklch(0.47 0.15 255);
   --syntax-function: oklch(0.47 0.15 255);
   --syntax-type: oklch(0.55 0.12 65);
   --syntax-property: oklch(0.5 0.09 225);
-  --syntax-comment: var(--ui-text-muted);
   --syntax-operator: var(--ui-text-secondary);
-  --syntax-punctuation: var(--ui-text-secondary);
-  --syntax-invalid: var(--ui-danger);
 
   /* Colors of GitHub alerts (> [!NOTE] and friends): the quote bar and the title line */
   --alert-note: var(--ui-brand);
@@ -114,6 +69,8 @@
     --ui-text-muted: oklch(0.58 0.02 245);
     --ui-brand: oklch(0.77 0.11 245);
     --ui-brand-hover: oklch(0.83 0.09 245);
+    /* The brand is bright in this scheme, so text on it turns dark to stay readable */
+    --brand-foreground: oklch(0.18 0 0);
     --ui-danger: oklch(0.7 0.17 22);
     --ui-success: oklch(0.76 0.12 155);
     --ui-segmented-thumb: oklch(0.34 0.02 252);
@@ -138,19 +95,7 @@
   }
 }
 
-/*
- * ---------- Document ----------
- *
- * The document is Markdown source laid out by the live preview. `.md-document` is the page; every
- * source line is a `.cm-line` with the classes of its block (`md-heading md-h2`, `md-quote`,
- * `md-list-item`, `md-code-block`, ...) and inline formats are spans (`md-strong`, `md-code`,
- * `md-link`, ...). `md-mark` is the Markdown syntax shown around the construct being edited.
- * Space lines with padding, never margins, and indent with the --md-*-indent variables;
- * features/editor/editor.css has the defaults and the full list of classes.
- *
- * Every rule below is commented with the part of the document it styles, so a copy of this file
- * can be edited by looking for the element you want to change.
- */
+/* ---------- Document ---------- */
 
 /* The page itself: top and bottom padding, body font, text color and the caret */
 .md-document {
@@ -210,15 +155,9 @@
 
 /* Links: accent ink with a faint underline */
 .md-link {
-  color: var(--ui-brand);
   text-decoration: underline;
   text-decoration-color: oklch(from var(--ui-brand) l c h / 40%);
   text-underline-offset: 0.2em;
-}
-
-/* **Bold** text */
-.md-strong {
-  font-weight: 650;
 }
 
 /* ~~Strikethrough~~ text */
@@ -236,7 +175,6 @@
 /* Fenced code blocks: a card with a hairline border, drawn line by line */
 .md-code-block {
   border-inline: 1px solid var(--ui-alpha-2);
-  background: var(--ui-surface-0);
   line-height: 1.6;
 }
 
@@ -253,7 +191,6 @@
   color: var(--ui-text-secondary);
   --md-quote-bar: var(--alert-color, var(--pupitre-margin));
   --md-quote-bar-width: 2px;
-  border-inline-start: var(--md-quote-bar-width) solid var(--md-quote-bar);
 }
 
 /* A horizontal rule away from the cursor is a red margin line laid across the page */
@@ -282,18 +219,6 @@
 .md-table-view th {
   border-block-end: 1.5px solid oklch(from var(--ui-brand) l c h / 45%);
   background: var(--ui-surface-0);
-}
-
-/* Footnote references */
-.md-footnote-ref {
-  color: var(--ui-brand);
-}
-
-/* The YAML front matter block at the very top of a file (--- … ---) */
-.md-front-matter {
-  background: var(--ui-alpha-1);
-  color: var(--ui-text-secondary);
-  font-size: 0.85em;
 }
 
 /*

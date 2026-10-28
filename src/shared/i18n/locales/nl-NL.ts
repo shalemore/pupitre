@@ -252,6 +252,8 @@ export const nlNL = {
     colorSchemeLight: "Licht",
     colorSchemeDark: "Donker",
     theme: "Thema",
+    themeMissing:
+      "Het geselecteerde thema is niet meer beschikbaar. Het standaardthema wordt gebruikt.",
     animations: "Animaties",
     animationsDesc: "Overgangen en vloeiend scrollen",
     zoom: "Zoom",
@@ -334,6 +336,8 @@ export const nlNL = {
     refreshFonts: "Lettertypelijst vernieuwen",
     resetToDefault: "Standaardwaarden herstellen",
     darkTheme: "Thema voor donkere modus",
+    darkThemeMissing:
+      "Het geselecteerde donkere thema is niet meer beschikbaar. Het lichte thema wordt gebruikt.",
     darkThemeDesc: "Wordt gebruikt terwijl het donkere kleurschema actief is",
     sameTheme: "Zelfde als thema",
     schemeBoth: "Licht en donker",

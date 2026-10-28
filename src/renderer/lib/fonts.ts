@@ -66,7 +66,8 @@ function quote(family: string): string {
   return JSON.stringify(family);
 }
 
-const GENERIC_FAMILIES = new Set([
+/** Font families that name a class of faces rather than a face, so they never identify a theme's font. */
+export const GENERIC_FAMILIES: ReadonlySet<string> = new Set([
   "serif",
   "sans-serif",
   "monospace",
@@ -83,17 +84,26 @@ const GENERIC_FAMILIES = new Set([
 ]);
 
 /**
+ * How a theme wants the fallback font placed. A monospace theme asks for `mono`, which puts the
+ * user's fallback after the generic families: a CJK fallback before `monospace` would take the
+ * Chinese text out of the grid the theme is built on.
+ */
+export type FontStackIntent = "text" | "mono";
+
+/**
  * A font stack with the user's choices put in front of the theme's: the chosen font replaces the
- * theme's specific families and the fallback font comes next. The fallback must come before the
- * generic families (sans-serif and so on): a generic family maps to a system font, which on a
- * Chinese system already has Chinese glyphs, so a fallback placed after it would never be reached.
- * Undefined when nothing is chosen, which leaves everything to the theme.
+ * theme's specific families and the fallback font comes next. In a text theme the fallback must
+ * come before the generic families (sans-serif and so on): a generic family maps to a system font,
+ * which on a Chinese system already has Chinese glyphs, so a fallback placed after it would never
+ * be reached. A `mono` theme reverses that, keeping the grid of the fallback face. Undefined when
+ * nothing is chosen, which leaves everything to the theme.
  */
 function userFontStack(
   font: string,
   fallbackFont: string,
   themeStack: string,
   defaultGeneric: string,
+  intent: FontStackIntent,
 ): string | undefined {
   if (!font && !fallbackFont) return undefined;
   const themeFamilies = themeStack
@@ -102,10 +112,12 @@ function userFontStack(
     .filter((family) => family !== "");
   const specific = themeFamilies.filter((family) => !GENERIC_FAMILIES.has(family));
   const generic = themeFamilies.filter((family) => GENERIC_FAMILIES.has(family));
+  const fallback = fallbackFont ? [quote(fallbackFont)] : [];
+  const genericFamilies = generic.length > 0 ? generic : [defaultGeneric];
   const families = [
     ...(font ? [quote(font)] : specific),
-    ...(fallbackFont ? [quote(fallbackFont)] : []),
-    ...(generic.length > 0 ? generic : [defaultGeneric]),
+    ...(intent === "mono" ? genericFamilies : fallback),
+    ...(intent === "mono" ? fallback : genericFamilies),
   ];
   return families.join(", ");
 }
@@ -115,12 +127,15 @@ export function documentFontFamily(
   bodyFont: string,
   fallbackFont: string,
   themeStack: string,
+  intent: FontStackIntent,
 ): string | undefined {
-  return userFontStack(bodyFont, fallbackFont, themeStack, "sans-serif");
+  return userFontStack(bodyFont, fallbackFont, themeStack, "sans-serif", intent);
 }
 
-/** The interface font; characters it lacks fall back to the editor's fallback font first. */
+/** The interface font; a chosen face comes first, then the fallback font, then the theme's stack. */
 export function interfaceFontFamily(uiFont: string, fallbackFont: string): string | undefined {
+  // With no choice of its own the interface stays on the theme's --font-sans, which a fallback
+  // font placed in front of it would replace rather than complement
   if (!uiFont) return undefined;
   const fallback = fallbackFont ? `${quote(fallbackFont)}, ` : "";
   return `${quote(uiFont)}, ${fallback}var(--font-sans)`;
@@ -128,12 +143,13 @@ export function interfaceFontFamily(uiFont: string, fallbackFont: string): strin
 
 /**
  * The code font stack; themeStack is the computed value of the theme's --font-mono. Code takes the
- * fallback font too, so Chinese in comments matches the body text.
+ * fallback font too, placed the way the document places it, so Chinese in comments matches the body.
  */
 export function codeFontFamily(
   codeFont: string,
   fallbackFont: string,
   themeStack: string,
+  intent: FontStackIntent,
 ): string | undefined {
-  return userFontStack(codeFont, fallbackFont, themeStack, "monospace");
+  return userFontStack(codeFont, fallbackFont, themeStack, "monospace", intent);
 }

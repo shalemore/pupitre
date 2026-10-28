@@ -1,9 +1,8 @@
 /*
- * Base editor styles in three layers (their order is declared at the top of app.css):
- * - editor: how the live preview (live-preview.ts) lays out Markdown source, with neutral defaults;
- * - document-theme: the active theme's typography and colors; a theme can override anything in the editor layer;
- * - preferences: the font, size, line height and content width chosen in the settings, which always beat the theme,
- *   so a badly written theme cannot make a setting stop working.
+ * The `editor` layer: how the live preview (live-preview.ts) lays out Markdown source, with the
+ * neutral defaults a theme overrides (the layer order is declared at the top of app.css). The
+ * active theme sits in `document-theme`, above this layer; the user's font, size, line height and
+ * content width sit in `preferences`, above both, and live in app.css.
  *
  * The document is CodeMirror's content element `.md-document`. Every source line is a `.cm-line`
  * that carries the `md-*` classes of the block it belongs to; inline formats are `md-*` spans.
@@ -15,6 +14,8 @@
 /*
  * Registered as lengths, the indents are computed where they are set (in the body font size) and
  * inherited as such, so lines in a smaller font, such as code, still line up with the text.
+ * `@property` is not a cascade layer and applies to the whole page, so these registrations are
+ * global even though the rules that set them live with the editor.
  */
 @property --md-quote-indent {
   syntax: "<length>";
@@ -85,6 +86,11 @@
     /* A frame's shadow falls behind its box, which a picture with a clear background has not */
     --md-image-outline-shadow: drop-shadow(0 1px 2px var(--ui-shadow-near))
       drop-shadow(0 2px 8px var(--ui-shadow-far));
+    font-family: var(--font-document);
+    color: var(--ui-text-primary);
+    caret-color: var(--ui-brand);
+    /* Room above the text and below it for the last lines to reach the middle of the window */
+    padding-block: var(--md-page-padding-block);
   }
 
   /* A blank line between blocks, away from the cursor, is only the gap between them (live-preview.ts) */
@@ -118,7 +124,7 @@
   }
 
   .md-strong {
-    font-weight: 650;
+    font-weight: var(--md-strong-weight);
   }
 
   .md-em {
@@ -131,6 +137,9 @@
 
   /* Inline code is isolated and takes the direction of its own first strong character */
   .md-code {
+    padding: var(--md-code-padding);
+    border-radius: var(--md-code-radius);
+    background: var(--ui-alpha-1);
     font-family: var(--font-mono);
     font-size: 0.875em;
     unicode-bidi: plaintext;
@@ -138,6 +147,7 @@
 
   .md-link {
     color: var(--ui-brand);
+    text-decoration-line: var(--md-link-underline);
   }
 
   /* The caret's shape and blinking, set by the cursor settings (cursor.ts); its color is the theme's caret-color */
@@ -167,7 +177,7 @@
   /* Inline formats without their markers: <kbd>, <mark>, <sub> and so on, and ==highlight==, ~sub~ and ^sup^ */
   .md-tag-kbd {
     padding: 0.1em 0.4em;
-    border: 1px solid var(--ui-alpha-3);
+    border: var(--ui-border-width) solid var(--ui-alpha-3);
     border-block-end-width: 2px;
     border-radius: var(--radius-sm);
     background: var(--ui-alpha-1);
@@ -194,7 +204,7 @@
   }
 
   :is(.md-tag-b, .md-tag-strong) {
-    font-weight: 650;
+    font-weight: var(--md-strong-weight);
   }
 
   :is(.md-tag-i, .md-tag-em) {
@@ -229,7 +239,7 @@
     vertical-align: super;
     /* A reference reads as a link by default; a theme can take the line away or redraw it */
     text-decoration: underline;
-    text-underline-offset: 0.15em;
+    text-underline-offset: var(--md-footnote-underline-offset);
   }
 
   /* A drawn reference keeps the brackets its source is written with */
@@ -285,7 +295,7 @@
   /* A rule above the first definition sets the footnotes apart from the text */
   .md-document > .md-footnotes-start {
     padding-block-start: 1.5em;
-    border-block-start: 1px solid var(--ui-alpha-2);
+    border-block-start: var(--ui-border-width) solid var(--ui-alpha-2);
   }
 
   /* A picture shown in place of its source, or under it while the source is edited */
@@ -294,12 +304,6 @@
     max-width: 100%;
     vertical-align: bottom;
     text-indent: 0;
-  }
-
-  /* A picture in a table cell keeps its controls inside the cell */
-  .md-table-image {
-    display: block;
-    inline-size: 100%;
   }
 
   /*
@@ -373,7 +377,7 @@
     display: block;
     margin: 0.25rem auto 0;
     padding: 0.125em 0.75em;
-    border: 1px dashed var(--ui-alpha-3);
+    border: var(--ui-border-width) dashed var(--ui-alpha-3);
     border-radius: var(--radius-sm);
     background: none;
     color: var(--ui-text-muted);
@@ -435,7 +439,7 @@
     gap: 0.5em;
     inline-size: min(16em, 100%);
     padding: 1.25em 1.5em;
-    border: 1px dashed var(--ui-alpha-3);
+    border: var(--ui-border-width) dashed var(--ui-alpha-3);
     border-radius: var(--md-image-radius);
     color: var(--ui-text-muted);
     text-align: center;
@@ -461,7 +465,7 @@
 
   .md-image-retry {
     padding: 0.125em 0.75em;
-    border: 1px solid var(--ui-alpha-2);
+    border: var(--ui-border-width) solid var(--ui-alpha-2);
     border-radius: var(--radius-full);
     background: var(--ui-alpha-1);
     color: var(--ui-text-secondary);
@@ -484,53 +488,26 @@
 
   /*
    * The handle and the bar are interface rather than document, so they are sized in rem like the
-   * corner of a code block, and a drag or a press on them must not select the text of the line.
+   * corner of a code block; most of their look lives in images.ts. Fading opacity and visibility
+   * together is one transition no utility expresses, so it stays on these selectors, which the
+   * frame's placement and hiding rules need anyway.
    */
   .md-image-handle,
   .md-image-toolbar {
-    position: absolute;
-    user-select: none;
-    opacity: 0;
-    visibility: hidden;
     transition:
       opacity var(--transition-duration-ui),
       visibility var(--transition-duration-ui);
   }
 
-  /* They belong to the picture, so they show while the pointer is on it and hide with it */
-  .md-image-frame:is(:hover, :focus-within) > :is(.md-image-handle, .md-image-toolbar) {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .md-image-handle {
-    inset-block-end: -0.25rem;
-    inset-inline-end: -0.25rem;
-    inline-size: 0.75rem;
-    block-size: 0.75rem;
-    border: 1px solid var(--ui-surface-1);
-    border-radius: var(--radius-full);
-    background: var(--ui-brand);
-    box-shadow: var(--ui-shadow-sm);
-    /* The handle sits at the corner, so it drags the picture along both axes */
-    cursor: nwse-resize;
-  }
-
-  /* In a right-to-left document the handle is at the other corner, and its diagonal turns over */
-  .md-image-handle:dir(rtl) {
-    cursor: nesw-resize;
-  }
-
-  /* It floats over the top corner of the picture, so that the pointer reaches it without a gap */
+  /*
+   * The bar keeps its display and its insets in this layer: a utility would sit above the rules
+   * that hide the bar when the picture cannot be shown or when it is printed, and above the ones
+   * that move it under a picture too narrow to hold it.
+   */
   .md-image-toolbar {
+    display: flex;
     inset-block-start: 0.375rem;
     inset-inline-end: 0.375rem;
-    display: flex;
-    gap: 0.125rem;
-    padding: 0.125rem;
-    border-radius: var(--radius-lg);
-    background: var(--ui-surface-3);
-    box-shadow: var(--ui-shadow-popover);
   }
 
   /*
@@ -561,37 +538,6 @@
     translate: none;
   }
 
-  .md-image-align {
-    display: grid;
-    place-items: center;
-    inline-size: 1.5rem;
-    block-size: 1.5rem;
-    padding: 0;
-    border: 0;
-    border-radius: var(--radius-md);
-    background: transparent;
-    color: var(--ui-text-muted);
-    cursor: pointer;
-    transition:
-      color var(--transition-duration-ui),
-      background-color var(--transition-duration-ui);
-  }
-
-  .md-image-align:hover {
-    background: var(--ui-alpha-1);
-    color: var(--ui-text-primary);
-  }
-
-  .md-image-align[aria-pressed="true"] {
-    background: var(--ui-alpha-2);
-    color: var(--ui-text-primary);
-  }
-
-  .md-image-align:focus-visible {
-    outline: none;
-    box-shadow: var(--ui-focus-shadow);
-  }
-
   /* The icon is the three bars of an alignment, masked so that it takes the color of its button */
   .md-image-align::before {
     content: "";
@@ -620,20 +566,32 @@
   }
 
   .md-heading {
-    font-weight: 650;
-    line-height: 1.3;
+    font-weight: var(--md-heading-weight);
+    line-height: var(--md-heading-line-height);
   }
 
   .md-h1 {
-    font-size: 2em;
+    font-size: var(--md-h1-size);
   }
 
   .md-h2 {
-    font-size: 1.5em;
+    font-size: var(--md-h2-size);
   }
 
   .md-h3 {
-    font-size: 1.25em;
+    font-size: var(--md-h3-size);
+  }
+
+  .md-h4 {
+    font-size: var(--md-h4-size);
+  }
+
+  .md-h5 {
+    font-size: var(--md-h5-size);
+  }
+
+  .md-h6 {
+    font-size: var(--md-h6-size);
   }
 
   /* A setext underline away from the cursor takes no room */
@@ -757,7 +715,7 @@
     margin-inline-end: calc(var(--md-list-indent) - 1em - 0.3em);
     vertical-align: -0.125em;
     text-indent: 0;
-    border: 1px solid var(--ui-alpha-3);
+    border: var(--ui-border-width) solid var(--ui-alpha-3);
     border-radius: var(--radius-xs);
     cursor: default;
   }
@@ -790,7 +748,7 @@
     padding-inline-end: 1em;
     background: var(--ui-surface-0);
     font-family: var(--font-mono);
-    font-size: 0.875em;
+    font-size: var(--md-code-block-size);
     unicode-bidi: isolate;
   }
 
@@ -809,101 +767,7 @@
     border-end-end-radius: var(--radius-lg);
   }
 
-  /*
-   * Language and copy button in the block's top corner (code-corner.tsx). They are interface rather
-   * than document, so they are sized in rem: the hidden fence line they sit on is shrunk.
-   */
-  .md-code-corner {
-    position: absolute;
-    /* Above the following code lines, which the corner overlaps while the fence line is shrunk */
-    z-index: 1;
-    inset-block-start: 0.375rem;
-    inset-inline-end: 0.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-    color: var(--ui-text-muted);
-    font-family: var(--font-sans);
-    font-size: 0.75rem;
-    line-height: 1;
-    user-select: none;
-  }
-
-  /*
-   * The language the fence names, picked in the corner. It is a select so it keeps the platform's
-   * keyboard, typeahead and screen reader behavior, and it is drawn as the plain label it replaces.
-   */
-  .md-code-language {
-    appearance: none;
-    /* As wide as the language it shows, not as the longest one the list holds */
-    field-sizing: content;
-    max-inline-size: 8rem;
-    min-inline-size: 0;
-    padding: 0.125rem 0.25rem;
-    /* The label stays where it was before it became a control */
-    margin-inline: -0.25rem;
-    overflow: hidden;
-    border: 0;
-    border-radius: var(--radius-sm);
-    background: transparent;
-    color: inherit;
-    font: inherit;
-    text-overflow: ellipsis;
-    cursor: pointer;
-    transition:
-      color var(--transition-duration-ui),
-      background-color var(--transition-duration-ui);
-  }
-
-  .md-code-language:hover {
-    background: var(--ui-alpha-1);
-    color: var(--ui-text-primary);
-  }
-
-  .md-code-language:focus-visible {
-    outline: none;
-    box-shadow: var(--ui-focus-shadow);
-  }
-
-  .md-code-copy {
-    display: grid;
-    place-items: center;
-    width: 1.5rem;
-    height: 1.5rem;
-    padding: 0;
-    border: 0;
-    border-radius: var(--radius-sm);
-    background: transparent;
-    color: inherit;
-    cursor: pointer;
-    opacity: 0.6;
-    transition:
-      opacity var(--transition-duration-ui),
-      background-color var(--transition-duration-ui),
-      color var(--transition-duration-ui);
-  }
-
-  .md-code-copy:hover {
-    background: var(--ui-alpha-1);
-    color: var(--ui-text-primary);
-    opacity: 1;
-  }
-
-  .md-code-copy[data-copied] {
-    color: var(--ui-success);
-    opacity: 1;
-  }
-
-  .md-code-copy svg {
-    width: 0.875rem;
-    height: 0.875rem;
-  }
-
   @media print {
-    .md-code-copy {
-      display: none;
-    }
-
     /* A handle and a bar act on the picture; a printout only shows the picture */
     .md-image-handle,
     .md-image-toolbar {
@@ -1042,21 +906,13 @@
     padding-block: 0.25em;
   }
 
-  .md-table-scroll {
-    overflow-x: auto;
-  }
-
-  .md-table-view {
-    border-collapse: collapse;
-  }
-
   .md-table-view :is(th, td) {
     padding: 0.4em 0.9em;
-    border: 1px solid var(--ui-alpha-2);
+    border: var(--ui-border-width) solid var(--ui-alpha-2);
   }
 
   .md-table-view th {
-    font-weight: 600;
+    font-weight: var(--md-table-heading-weight);
   }
 
   .md-table-view :is(th, td):has(.md-table-input) {
@@ -1084,6 +940,11 @@
     font-family: var(--font-mono);
     font-size: 0.875em;
     font-variant-ligatures: none;
+  }
+
+  .md-front-matter {
+    background: var(--ui-alpha-1);
+    font-size: 0.85em;
   }
 
   .md-front-matter,
@@ -1194,139 +1055,5 @@
   .md-fold-placeholder:hover {
     background: var(--ui-alpha-3);
     color: var(--ui-text-primary);
-  }
-}
-
-@layer preferences {
-  .md-document {
-    box-sizing: content-box;
-    max-width: var(--pref-content-width);
-    /*
-     * The document is centered by the two auto margins, its own and the one the fold gutter takes
-     * on the other side (editor.css): together they split the free room, which puts the document in
-     * the middle and the fold markers right at its edge.
-     */
-    margin-inline: 0 auto;
-    /* Room on both sides of the text; this is app layout and not left to themes */
-    padding-inline: 4.5rem;
-    /* Without a chosen font, fall back to the theme's own font */
-    font-family: var(--pref-font-family, revert-layer);
-    font-size: var(--pref-font-size);
-    line-height: var(--pref-line-height);
-  }
-
-  :is(.md-code, .md-code-block, .md-front-matter, .md-html) {
-    font-family: var(--pref-code-font, revert-layer);
-  }
-
-  /*
-   * Writing modes, see writing-modes.ts. Rendered blocks (tables, math, diagrams) are widgets
-   * rather than lines and are dimmed with the rest.
-   */
-  .md-document.focus-mode > :not(.is-current) {
-    opacity: 0.3;
-  }
-
-  /*
-   * A line that wraps over several rows dims like the rest except where the caret is: the band is
-   * the row it holds, one line height tall from the line's padding, so it covers the row whatever
-   * the fonts make of it. writing-modes.ts only says which row that is.
-   */
-  .md-document.focus-mode > .focus-row {
-    --focus-row-start: calc(var(--focus-pad, 0px) + var(--focus-row) * 1lh);
-    --focus-row-end: calc(var(--focus-row-start) + 1lh);
-    mask-image: linear-gradient(
-      to bottom,
-      rgb(0 0 0 / 0.3) 0 var(--focus-row-start),
-      #000 var(--focus-row-start) var(--focus-row-end),
-      rgb(0 0 0 / 0.3) var(--focus-row-end)
-    );
-  }
-
-  /* Room below the document for its last lines to reach the place the line is held at */
-  .md-document.typewriter-mode[data-typewriter="center"] {
-    padding-block-end: 50vh;
-  }
-
-  .md-document.typewriter-mode[data-typewriter="top"] {
-    padding-block-end: 100vh;
-  }
-
-  /*
-   * A held line keeps its place for the first and the last line too, which takes room above as
-   * well. --typewriter-edge is its edge margin (writing-modes.ts).
-   */
-  .md-document.typewriter-mode[data-typewriter-fixed="true"][data-typewriter="center"] {
-    padding-block: 50vh;
-  }
-
-  .md-document.typewriter-mode[data-typewriter-fixed="true"][data-typewriter="top"] {
-    padding-block-start: var(--typewriter-edge);
-  }
-
-  .md-document.typewriter-mode[data-typewriter-fixed="true"][data-typewriter="bottom"] {
-    padding-block-start: calc(100vh - var(--typewriter-edge));
-    padding-block-end: var(--typewriter-edge);
-  }
-
-  /*
-   * Printing. A page has no viewport to hold a line in, so the room typewriter mode and the theme
-   * leave above and below the document goes with it, and so does the dimming.
-   *
-   * These rules sit in this layer rather than after it on purpose: CodeMirror hands the padding
-   * back to the layers with revert-layer, which takes the value of the last layer that sets it, so
-   * an unlayered reset would be undone there. They also weigh as much as the rules they undo, since
-   * logical and physical padding count as one property when the cascade picks a winner.
-   */
-  @media print {
-    .md-document,
-    .md-document.typewriter-mode[data-typewriter][data-typewriter-fixed] {
-      max-width: none;
-      padding: 0;
-      padding-block: 0;
-    }
-
-    .md-document.focus-mode > :not(.is-current),
-    .md-document.focus-mode > .focus-row {
-      opacity: 1;
-      mask-image: none;
-    }
-
-    /* A heading at the foot of a page stays with the text it introduces */
-    .md-document > .md-heading {
-      break-after: avoid;
-    }
-
-    /* Blocks that only read as a whole stay on one page */
-    .md-document
-      > :is(.md-code-block, .md-image-preview, .md-math-block, .md-mermaid, .md-table-block) {
-      break-inside: avoid;
-    }
-
-    /* No page starts or ends with a stray line of a paragraph */
-    .md-document {
-      orphans: 3;
-      widows: 3;
-    }
-
-    /* A caret and a selection are interface, not paper */
-    .cm-cursorLayer,
-    .cm-selectionLayer {
-      display: none;
-    }
-
-    /*
-     * The gaps at the end of the document lead nowhere, and are what pushes a page of their own
-     * once the text ends near the page's edge: CodeMirror keeps the lines themselves blocks, so
-     * the padding that made the gaps is what gives way.
-     */
-    .md-document > .md-blank:last-child {
-      padding-block: 0;
-    }
-
-    .md-document > .cm-line:last-child,
-    .md-document > .cm-line:has(+ .md-blank:last-child) {
-      padding-block-end: 0;
-    }
   }
 }

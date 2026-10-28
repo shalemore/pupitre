@@ -523,6 +523,9 @@ const handlers: Handlers = {
   "settings:update": updateSettings,
   "settings:reset": resetSetting,
   "settings:reveal": nothing,
+  // A browser has no folders beside the page, so there are no imported themes to offer
+  "themes:list": () => [],
+  "themes:reveal": nothing,
   "workspace:set": nothing,
   "workspace:get": () => ({ root: null, active: false, exists: false, overrides: [] }),
   "workspace:use": nothing,
@@ -707,6 +710,7 @@ const desktop: DesktopApi = {
     captionSide: undefined,
     sidebarWidths: undefined,
     launchFile: isSettingsWindow ? undefined : ABOUT_PATH,
+    themes: [],
   },
   getPathForFile: (file) => {
     const path = `${DEMO_FOLDER}/${file.name}`;

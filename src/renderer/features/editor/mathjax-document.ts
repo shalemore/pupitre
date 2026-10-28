@@ -109,10 +109,14 @@ const PACKAGES = [
  */
 const adaptor = liteAdaptor();
 RegisterHTMLHandler(adaptor);
+const output = new SVG({ fontCache: "local" });
+// The mhchem marks ask for a -mhchem variant the New Computer Modern font does not carry;
+// creating it from normal keeps the fallback explicit instead of logging "Invalid variant".
+output.font.createVariant("-mhchem", "normal");
 const document = mathjax.document("", {
   // "ams" is what numbers equations and makes \label and \ref work
   InputJax: new TeX({ packages: PACKAGES, tags: "ams" }),
-  OutputJax: new SVG({ fontCache: "local" }),
+  OutputJax: output,
 });
 
 export async function texToSvg(tex: string, display: boolean): Promise<string> {

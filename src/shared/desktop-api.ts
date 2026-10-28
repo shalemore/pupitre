@@ -253,12 +253,32 @@ export interface PickedImage {
   data: Uint8Array;
 }
 
+/**
+ * A theme folder outside the app bundle: one from the user's global themes folder, or from the
+ * open project's `.pupitre/themes`. The stylesheet has its relative assets inlined as data URLs,
+ * so the renderer can apply it without reaching the file system.
+ */
+export interface ImportedTheme {
+  /** Where the folder was found. */
+  source: "global" | "project";
+  /** Folder name, and the name the theme falls back to when its `theme.json` gives none. */
+  folder: string;
+  /** The stylesheet, already inlined. */
+  css: string;
+  /** The parsed `theme.json`, or undefined when it is absent or not valid JSON. */
+  meta: unknown;
+}
+
 /** Channels the renderer calls through `ipcRenderer.invoke` and the main process implements with `ipcMain.handle`. */
 export interface InvokeChannels {
   "settings:update": (patch: Partial<Settings>) => void;
   /** Removes the key from the settings file so the default applies again. */
   "settings:reset": (key: SettingKey) => void;
   "settings:reveal": () => void;
+  /** The theme folders found outside the app bundle; `themes:changed` carries the same list after a change. */
+  "themes:list": () => readonly ImportedTheme[];
+  /** Opens the global or project theme folder, creating it when it does not exist yet. */
+  "themes:reveal": (source: ImportedTheme["source"]) => void;
   "document:open": () => OpenedDocument | null;
   /** The unsaved content left behind by a session that did not end cleanly, or null when there is none. */
   "draft:read": () => DraftSession | null;
@@ -411,6 +431,8 @@ export interface InvokeChannels {
 export interface RendererEvents {
   "settings:changed": Settings;
   "workspace:changed": WorkspaceState;
+  /** A theme folder was added, changed or removed in the global or project themes folder. */
+  "themes:changed": readonly ImportedTheme[];
   /** The file of an open document was modified, possibly by the document's own save. */
   "document:changed": string;
   /** The entries of a watched folder changed. */
@@ -453,6 +475,8 @@ export interface InitialState {
   sidebarWidths: SidebarWidths | undefined;
   /** A file the system asked to open when Pupitre started; only given to the main window. */
   launchFile: string | undefined;
+  /** Imported themes as they were when the window opened, so the first paint uses the chosen one. */
+  themes: readonly ImportedTheme[];
 }
 
 export const INITIAL_STATE_SYNC = "app:initial-state";

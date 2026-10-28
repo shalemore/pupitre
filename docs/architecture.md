@@ -97,7 +97,8 @@ it; the HTML export reads the same source.
 
 A theme is a folder `src/renderer/themes/<name>/` with an `index.css`, and the folder name is the
 name in settings. `src/renderer/lib/theme.ts` finds them with `import.meta.glob` and injects the
-active one into the `document-theme` layer at runtime, so a theme needs no build step.
+active one into the `document-theme` layer at runtime, so a theme needs no build step. How to write
+one is in the `theming-pupitre` skill.
 
 Settings live in the main process, in `settings.json` under `userData`, validated with the zod
 schema in `src/shared/settings.ts`. Every window gets the same snapshot through `settings:changed`,

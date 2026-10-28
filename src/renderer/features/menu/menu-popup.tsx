@@ -13,6 +13,8 @@ interface PanelProps {
   anchor: DOMRect;
   /** A submenu sits beside its entry instead of under the bar button that opened the menu. */
   nested?: boolean;
+  /** Whether the menu is folding away; the panel stays drawn until its exit animation has played. */
+  closing?: boolean | undefined;
   onSelect: (entry: MenuItemEntry) => void;
   /** Closes the whole menu. */
   onClose: () => void;
@@ -31,7 +33,11 @@ const SUBMENU_LIFT = 6;
 
 const MenuPanel: Component<PanelProps> = (props) => {
   let panel: HTMLDivElement | undefined;
-  const [offset, setOffset] = createSignal({ left: props.anchor.left, top: props.anchor.bottom });
+  const [offset, setOffset] = createSignal({
+    left: props.anchor.left,
+    top: props.anchor.bottom,
+    origin: "0 0",
+  });
   const [active, setActive] = createSignal(-1);
   const [rightToLeft, setRightToLeft] = createSignal(false);
   const [submenu, setSubmenu] = createSignal<{
@@ -45,15 +51,18 @@ const MenuPanel: Component<PanelProps> = (props) => {
     props.entries.some((entry) => entry.type === "item" && entry.checked !== undefined);
 
   /** Past the end of its entry, or on the other side of it when there is no room past the end. */
-  const submenuLeft = (width: number, mirrored: boolean): number => {
+  const submenuLeft = (width: number, mirrored: boolean): { left: number; towardEnd: boolean } => {
     const towardEnd = mirrored
       ? props.anchor.left - PANEL_GAP - width
       : props.anchor.right + PANEL_GAP;
     const endFits = mirrored
       ? towardEnd >= VIEWPORT_MARGIN
       : towardEnd + width <= window.innerWidth - VIEWPORT_MARGIN;
-    if (endFits) return towardEnd;
-    return mirrored ? props.anchor.right + PANEL_GAP : props.anchor.left - PANEL_GAP - width;
+    if (endFits) return { left: towardEnd, towardEnd: true };
+    return {
+      left: mirrored ? props.anchor.right + PANEL_GAP : props.anchor.left - PANEL_GAP - width,
+      towardEnd: false,
+    };
   };
 
   /** Under a bar button the panel lines up with the button's end edge, so it stays over the bar. */
@@ -69,14 +78,23 @@ const MenuPanel: Component<PanelProps> = (props) => {
     const mirrored = getComputedStyle(panel).direction === "rtl";
     setRightToLeft(mirrored);
     const nested = props.nested === true;
-    const left = nested ? submenuLeft(width, mirrored) : barLeft(width, mirrored);
+    // A bar menu always grows from the start of its button; a submenu from whichever side of its
+    // entry it found the room on
+    const { left, towardEnd } = nested
+      ? submenuLeft(width, mirrored)
+      : { left: barLeft(width, mirrored), towardEnd: true };
     const top = Math.max(
       VIEWPORT_MARGIN,
       nested ? props.anchor.top - SUBMENU_LIFT : props.anchor.bottom + PANEL_GAP,
     );
+    // Grow from the edge that touches the anchor: the start edge, or the end one when the panel
+    // opens the other way, at the top of the button or entry it hangs from
+    const originX = towardEnd === mirrored ? "100%" : "0";
+    const originY = nested ? Math.max(0, props.anchor.top - top) : 0;
     setOffset({
       left: Math.max(VIEWPORT_MARGIN, Math.min(left, window.innerWidth - VIEWPORT_MARGIN - width)),
       top,
+      origin: `${originX} ${originY}px`,
     });
     panel.style.maxHeight = `${Math.max(0, window.innerHeight - top - VIEWPORT_MARGIN)}px`;
   };
@@ -193,13 +211,18 @@ const MenuPanel: Component<PanelProps> = (props) => {
         panel = element;
       }}
       data-menu-panel
+      data-closed={props.closing ? "" : undefined}
       role="menu"
       tabIndex={-1}
       onKeyDown={onKeyDown}
       onPointerOver={props.onPointerOver}
       onPointerLeave={props.onPointerLeave}
-      style={{ left: `${offset().left}px`, top: `${offset().top}px` }}
-      class="floating-panel floating-panel-scroll fixed z-50 flex min-w-52 flex-col p-1 text-xs text-foreground outline-none select-none animate-in fade-in-0 zoom-in-95 duration-base ease-enter"
+      style={{
+        left: `${offset().left}px`,
+        top: `${offset().top}px`,
+        "--menu-origin": offset().origin,
+      }}
+      class="floating-panel floating-panel-scroll fixed z-50 flex min-w-52 flex-col p-1 text-xs text-foreground outline-none select-none"
     >
       <For each={props.entries}>
         {(entry, index) => (
@@ -265,6 +288,7 @@ const MenuPanel: Component<PanelProps> = (props) => {
           <Portal>
             <MenuPanel
               nested
+              closing={props.closing}
               entries={nested.entries}
               anchor={nested.anchor}
               onSelect={props.onSelect}
@@ -292,6 +316,7 @@ export const MenuPopup: Component<MenuPopupProps> = (props) => (
     <MenuPanel
       entries={props.entries}
       anchor={props.anchor}
+      closing={props.closing}
       onSelect={props.onSelect}
       onClose={props.onClose}
       onPointerOver={props.onPointerOver}

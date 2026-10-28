@@ -508,7 +508,9 @@ function resizeHandle(
   image: HTMLImageElement,
 ): HTMLElement {
   const handle = document.createElement("span");
-  handle.className = "md-image-handle";
+  // Interface rather than document, sized in rem like the corner of a code block
+  handle.className =
+    "md-image-handle absolute -inset-be-1 -inset-e-1 size-3 rounded-full border border-surface-1 bg-brand shadow-sm cursor-nwse-resize rtl:cursor-nesw-resize select-none opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible";
   handle.title = t().editor.image.resize;
 
   handle.addEventListener("pointerdown", (event) => {
@@ -566,7 +568,8 @@ function alignmentToolbar(
   size: ImageSize,
 ): HTMLElement {
   const toolbar = document.createElement("span");
-  toolbar.className = "md-image-toolbar";
+  toolbar.className =
+    "md-image-toolbar absolute gap-0.5 rounded-lg bg-surface-3 p-0.5 shadow-float select-none opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible";
   const labels = t().editor.image;
   const choices: readonly { alignment: ImageAlignment; label: string }[] = [
     { alignment: "left", label: labels.alignLeft },
@@ -577,7 +580,8 @@ function alignmentToolbar(
   for (const { alignment, label } of choices) {
     const button = document.createElement("button");
     button.type = "button";
-    button.className = "md-image-align";
+    button.className =
+      "md-image-align grid size-6 place-items-center rounded-md border-0 bg-transparent p-0 text-tertiary cursor-pointer transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:shadow-focus aria-pressed:bg-selected aria-pressed:text-foreground";
     button.setAttribute("data-alignment", alignment);
     button.title = label;
     button.setAttribute("aria-label", label);
@@ -622,7 +626,8 @@ export function imageDom(
   if (size.alignment !== undefined) block.setAttribute("data-alignment", size.alignment);
 
   const frame = document.createElement("span");
-  frame.className = "md-image-frame";
+  // The controls show while the pointer is on the frame, which its group variant marks
+  frame.className = "md-image-frame group";
   frame.style.cssText = imageStyle(size);
 
   const image = document.createElement("img");

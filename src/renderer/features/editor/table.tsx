@@ -85,7 +85,7 @@ const TableCellImage: Component<{ view: EditorView; image: InlineImage }> = (pro
       ref={(element) => {
         host = element;
       }}
-      class="md-table-image"
+      class="block w-full"
     />
   );
 };
@@ -487,8 +487,8 @@ const TableView: Component<TableViewProps> = (props) => {
       <Show when={props.active()}>
         {(cell) => <TableToolbar cell={cell()} model={props.model} run={run} view={view} />}
       </Show>
-      <div class="md-table-scroll">
-        <table class="md-table-view md-text-cursor">
+      <div class="overflow-x-auto">
+        <table class="md-table-view border-collapse md-text-cursor">
           <thead>
             <Index each={header()}>
               {() => (

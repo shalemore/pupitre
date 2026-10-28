@@ -125,6 +125,7 @@ export function ScrollView(props: ScrollViewProps) {
         element = node;
         if (typeof local.ref === "function") local.ref(node);
       }}
+      data-slot="scroll-view"
       data-overflow={overflow() || undefined}
       data-scroll-view
       class={cn(
@@ -159,6 +160,7 @@ export function ScrollView(props: ScrollViewProps) {
             }}
           >
             <div
+              data-slot="scroll-thumb"
               class={cn(
                 "absolute inset-e-0.5 w-(--ui-scrollbar-thickness) rounded-full bg-border transition-opacity duration-sheet hover:bg-border-strong",
                 visible() ? "opacity-100" : "opacity-0",

@@ -249,6 +249,8 @@ export const deDE = {
     colorSchemeLight: "Hell",
     colorSchemeDark: "Dunkel",
     theme: "Design",
+    themeMissing:
+      "Das ausgewählte Design ist nicht mehr verfügbar. Das Standarddesign wird verwendet.",
     animations: "Animationen",
     animationsDesc: "Übergänge und weiches Scrollen",
     zoom: "Zoom",
@@ -331,6 +333,8 @@ export const deDE = {
     refreshFonts: "Schriftliste aktualisieren",
     resetToDefault: "Auf Standard zurücksetzen",
     darkTheme: "Design im dunklen Modus",
+    darkThemeMissing:
+      "Das ausgewählte dunkle Design ist nicht mehr verfügbar. Das helle Design wird verwendet.",
     darkThemeDesc: "Wird im dunklen Farbschema verwendet",
     sameTheme: "Wie Design",
     schemeBoth: "Hell & Dunkel",

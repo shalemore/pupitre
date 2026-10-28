@@ -247,6 +247,7 @@ export const ptBR = {
     colorSchemeLight: "Claro",
     colorSchemeDark: "Escuro",
     theme: "Tema",
+    themeMissing: "O tema selecionado não está mais disponível. O tema padrão está sendo usado.",
     animations: "Animações",
     animationsDesc: "Transições e rolagem suave",
     zoom: "Zoom",
@@ -327,6 +328,8 @@ export const ptBR = {
     refreshFonts: "Atualizar lista de fontes",
     resetToDefault: "Restaurar padrão",
     darkTheme: "Tema do modo escuro",
+    darkThemeMissing:
+      "O tema escuro selecionado não está mais disponível. O tema claro está sendo usado.",
     darkThemeDesc: "Usado com o esquema de cores escuro",
     sameTheme: "Igual ao tema",
     schemeBoth: "Claro e escuro",

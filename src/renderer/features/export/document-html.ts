@@ -68,6 +68,9 @@ interface ExportContext {
 /** The font code keeps where no stylesheet of Pupitre's follows the markup. */
 const CODE_FONT = "font-family:Consolas,'Courier New',monospace";
 
+/** The card the editor draws around a code block, which a page shows around the block itself. */
+const CODE_BLOCK_CLASSES = "md-code-block md-code-block-start md-code-block-end";
+
 /** A style attribute for the markup, or nothing when the page's own stylesheet already does the work. */
 function styleOf(ctx: ExportContext, declaration: string): string {
   return ctx.inlineStyles ? ` style="${declaration}"` : "";
@@ -83,7 +86,7 @@ function linkHtml(href: string, inner: string): string {
   // A reference link without its definition has nowhere to go; its text still reads as a link
   if (href === "") return `<span class="md-link">${inner}</span>`;
   const target = EXTERNAL.test(href) ? ' target="_blank" rel="noreferrer"' : "";
-  return `<a href="${escapeHtml(href)}"${target}>${inner}</a>`;
+  return `<a class="md-link" href="${escapeHtml(href)}"${target}>${inner}</a>`;
 }
 
 function footnoteReference(ctx: ExportContext, label: string): string {
@@ -114,7 +117,7 @@ function imageHtml(
   const style = imageStyle(size);
   const declarations = style === "" ? "" : ` style="${style}"`;
   const titleAttribute = title === "" ? "" : ` title="${escapeHtml(title)}"`;
-  return `<img src="${escapeHtml(documentAddress(ctx.state, src))}" alt="${escapeHtml(alt)}"${titleAttribute}${width}${declarations}>`;
+  return `<img class="md-image-preview" src="${escapeHtml(documentAddress(ctx.state, src))}" alt="${escapeHtml(alt)}"${titleAttribute}${width}${declarations}>`;
 }
 
 async function itemHtml(ctx: ExportContext, item: InlineItem): Promise<string> {
@@ -173,7 +176,8 @@ async function codeBlock(ctx: ExportContext, block: SyntaxNode): Promise<string>
   const highlighted = await codeHtml(text, language);
   // Markup that goes to another application carries the code font and keeps the code's own line breaks
   const pre = styleOf(ctx, `${CODE_FONT};white-space:pre-wrap`);
-  return `<pre${pre}><code${attribute}${styleOf(ctx, CODE_FONT)}>${highlighted ?? escapeHtml(text)}</code></pre>`;
+  const classes = ctx.inlineStyles ? "" : ` class="${CODE_BLOCK_CLASSES}"`;
+  return `<pre${classes}${pre}><code${attribute}${styleOf(ctx, CODE_FONT)}>${highlighted ?? escapeHtml(text)}</code></pre>`;
 }
 
 function alignmentStyle(alignment: string | undefined): string {
@@ -200,7 +204,7 @@ async function tableHtml(ctx: ExportContext, block: SyntaxNode): Promise<string>
   const head = header ? `<thead>${await row(header.cells, "th")}</thead>` : "";
   const rows = await Promise.all(body.map((cells) => row(cells.cells, "td")));
   const foot = rows.length > 0 ? `<tbody>${rows.join("")}</tbody>` : "";
-  return `<div class="md-table-scroll"><table>${head}${foot}</table></div>`;
+  return `<div class="md-table-scroll"><table class="md-table-view">${head}${foot}</table></div>`;
 }
 
 /**
@@ -217,7 +221,12 @@ function leadingParagraph(blocks: readonly SyntaxNode[]): {
     : { leading: undefined, rest: [...blocks] };
 }
 
-async function listItem(ctx: ExportContext, item: SyntaxNode): Promise<string> {
+async function listItem(
+  ctx: ExportContext,
+  item: SyntaxNode,
+  depth: number,
+  number: number | undefined,
+): Promise<string> {
   const { state } = ctx;
   const blocks = blocksOf(item);
   // A task marker carries the item's own text; any other item reads as its first paragraph
@@ -227,20 +236,41 @@ async function listItem(ctx: ExportContext, item: SyntaxNode): Promise<string> {
   const inline = own === undefined ? "" : await itemsHtml(ctx, inlineItems(state, own));
   const marker = task?.getChild("TaskMarker") ?? undefined;
   const checked = marker !== undefined && /x/i.test(state.sliceDoc(marker.from, marker.to));
+  const nested = rest.length > 0 ? `\n${await renderBlocks(ctx, rest, depth)}` : "";
+  // A fragment for another application has no stylesheet to draw a marker, so it keeps the
+  // browser's list marker instead; the page draws one with the classes and the depth of the editor
+  if (ctx.inlineStyles) {
+    const box =
+      marker === undefined ? "" : `<input type="checkbox" disabled${checked ? " checked" : ""}>`;
+    return `<li>${box}${inline.trim()}${nested}</li>`;
+  }
   const box =
-    marker === undefined ? "" : `<input type="checkbox" disabled${checked ? " checked" : ""}>`;
-  const kind =
-    marker === undefined ? "" : checked ? ' class="md-task md-task-checked"' : ' class="md-task"';
-  const nested = rest.length > 0 ? `\n${await renderBlocks(ctx, rest)}` : "";
-  return `<li${kind}>${box}${inline.trim()}${nested}</li>`;
+    marker === undefined
+      ? ""
+      : `<input class="md-task-checkbox" type="checkbox" disabled${checked ? " checked" : ""}>`;
+  const classes =
+    marker === undefined
+      ? "md-list-item"
+      : `md-list-item ${checked ? "md-task md-task-checked" : "md-task"}`;
+  const bullet =
+    marker !== undefined
+      ? ""
+      : number === undefined
+        ? '<span class="md-list-bullet"></span>'
+        : `<span class="md-list-mark">${number}. </span>`;
+  return `<li class="${classes}" data-list-depth="${depth}">${box}${bullet}${inline.trim()}${nested}</li>`;
 }
 
-async function listBlock(ctx: ExportContext, block: SyntaxNode): Promise<string> {
+async function listBlock(ctx: ExportContext, block: SyntaxNode, depth: number): Promise<string> {
   const tag = block.name === "OrderedList" ? "ol" : "ul";
   const items = blocksOf(block).filter((item) => item.name === "ListItem");
-  const html = await Promise.all(items.map((item) => listItem(ctx, item)));
-  // An ordered list counts from one wherever it stands, as the editor shows it; the number an item
-  // carries in the source is only the place it had when it was written
+  const html = await Promise.all(
+    items.map((item, index) =>
+      // An ordered list counts from one wherever it stands, as the editor shows it; the number an
+      // item carries in the source is only the place it had when it was written
+      listItem(ctx, item, depth + 1, block.name === "OrderedList" ? index + 1 : undefined),
+    ),
+  );
   return `<${tag}>\n${html.join("\n")}\n</${tag}>`;
 }
 
@@ -259,24 +289,24 @@ function quoteAlert(ctx: ExportContext, paragraph: SyntaxNode | undefined) {
   return alertType(ctx.state.sliceDoc(paragraph.from, line.to));
 }
 
-async function quoteBlock(ctx: ExportContext, quote: SyntaxNode): Promise<string> {
+async function quoteBlock(ctx: ExportContext, quote: SyntaxNode, depth: number): Promise<string> {
   const blocks = blocksOf(quote);
   const first = blocks[0];
   const titles = ctx.state.facet(alertTitles);
   const type = quoteAlert(ctx, first);
   if (type === undefined || titles === undefined || first === undefined) {
-    return `<blockquote>\n${await renderBlocks(ctx, blocks)}\n</blockquote>`;
+    return `<blockquote class="md-quote">\n${await renderBlocks(ctx, blocks, depth)}\n</blockquote>`;
   }
   // The marker line reads as the title; the rest of the quote, and of that paragraph, follows it
   const body = await alertBody(ctx, first);
-  const rest = await renderBlocks(ctx, blocks.slice(1));
+  const rest = await renderBlocks(ctx, blocks.slice(1), depth);
   const title = `<p class="md-alert-title">${escapeHtml(titles[type])}</p>`;
-  return `<blockquote class="md-alert" data-alert="${type}">${title}${body}${rest}</blockquote>`;
+  return `<blockquote class="md-quote md-alert" data-alert="${type}">${title}${body}${rest}</blockquote>`;
 }
 
 async function headingBlock(ctx: ExportContext, block: SyntaxNode, level: string): Promise<string> {
   const items = inlineItems(ctx.state, block);
-  return `<h${level}>${(await itemsHtml(ctx, items)).trim()}</h${level}>`;
+  return `<h${level} class="md-heading md-h${level}">${(await itemsHtml(ctx, items)).trim()}</h${level}>`;
 }
 
 async function footnoteSection(ctx: ExportContext): Promise<string> {
@@ -309,7 +339,7 @@ async function footnoteSection(ctx: ExportContext): Promise<string> {
   return `<section class="md-footnotes">\n<ol>\n${html.join("\n")}\n</ol>\n</section>`;
 }
 
-async function renderBlock(ctx: ExportContext, block: SyntaxNode): Promise<string> {
+async function renderBlock(ctx: ExportContext, block: SyntaxNode, depth: number): Promise<string> {
   const { state } = ctx;
   const heading = HEADING_LEVEL.exec(block.name);
   if (heading) return headingBlock(ctx, block, heading[1] ?? "1");
@@ -317,10 +347,10 @@ async function renderBlock(ctx: ExportContext, block: SyntaxNode): Promise<strin
     case "Paragraph":
       return `<p>${await itemsHtml(ctx, inlineItems(state, block))}</p>`;
     case "Blockquote":
-      return quoteBlock(ctx, block);
+      return quoteBlock(ctx, block, depth);
     case "BulletList":
     case "OrderedList":
-      return listBlock(ctx, block);
+      return listBlock(ctx, block, depth);
     case "FencedCode":
     case "CodeBlock":
       return codeBlock(ctx, block);
@@ -329,7 +359,7 @@ async function renderBlock(ctx: ExportContext, block: SyntaxNode): Promise<strin
     case "Table":
       return tableHtml(ctx, block);
     case "HorizontalRule":
-      return "<hr>";
+      return '<hr class="md-hr">';
     case "HTMLBlock": {
       const source = state.sliceDoc(block.from, block.to);
       const picture = parseImageTag(source);
@@ -358,7 +388,11 @@ async function detailsBlock(
   return `<details${open}><summary>${escapeHtml(section.summary)}</summary>\n${await inner}</details>`;
 }
 
-function renderBlocks(ctx: ExportContext, blocks: readonly SyntaxNode[]): Promise<string> {
+function renderBlocks(
+  ctx: ExportContext,
+  blocks: readonly SyntaxNode[],
+  depth = 0,
+): Promise<string> {
   const parts: Promise<string>[] = [];
   let index = 0;
   while (index < blocks.length) {
@@ -373,12 +407,12 @@ function renderBlocks(ctx: ExportContext, blocks: readonly SyntaxNode[]): Promis
       const end =
         closing === null ? blocks.length : blocks.findIndex((other) => other.from >= closing.from);
       const stop = end < 0 ? blocks.length : end;
-      const inner = renderBlocks(ctx, blocks.slice(index, stop));
+      const inner = renderBlocks(ctx, blocks.slice(index, stop), depth);
       parts.push(detailsBlock(section, inner));
       index = stop + 1;
       continue;
     }
-    parts.push(renderBlock(ctx, block));
+    parts.push(renderBlock(ctx, block, depth));
   }
   return Promise.all(parts).then((html) => html.filter((part) => part !== "").join("\n"));
 }

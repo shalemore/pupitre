@@ -251,6 +251,7 @@ export const nbNO = {
     colorSchemeLight: "Lyst",
     colorSchemeDark: "Mørkt",
     theme: "Tema",
+    themeMissing: "Det valgte temaet er ikke lenger tilgjengelig. Standardtemaet brukes.",
     animations: "Animasjoner",
     animationsDesc: "Overganger og jevn rulling",
     zoom: "Zoom",
@@ -331,6 +332,8 @@ export const nbNO = {
     refreshFonts: "Oppdater skrifttypelisten",
     resetToDefault: "Tilbakestill til standard",
     darkTheme: "Tema for mørk modus",
+    darkThemeMissing:
+      "Det valgte mørke temaet er ikke lenger tilgjengelig. Det lyse temaet brukes.",
     darkThemeDesc: "Brukes mens det mørke fargeskjemaet er aktivt",
     sameTheme: "Samme som temaet",
     schemeBoth: "Lyst og mørkt",

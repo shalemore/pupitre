@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Keep the locale codes in sync with src/shared/i18n/types.ts.",
+  "title": "Pupitre theme metadata",
+  "description": "The optional theme.json next to a theme's index.css. The name and description are either one string for every language, or text keyed by the app's locale codes.",
+  "type": "object",
+  "$defs": {
+    "localizedText": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "object",
+          "propertyNames": {
+            "enum": [
+              "ar",
+              "cs-CZ",
+              "da-DK",
+              "de-DE",
+              "el-GR",
+              "en-US",
+              "es-ES",
+              "fa-IR",
+              "fi-FI",
+              "fr-FR",
+              "hi-IN",
+              "hu-HU",
+              "id-ID",
+              "is-IS",
+              "it-IT",
+              "ja-JP",
+              "ko-KR",
+              "nb-NO",
+              "nl-NL",
+              "pl-PL",
+              "pt-BR",
+              "pt-PT",
+              "ru-RU",
+              "sv-SE",
+              "th-TH",
+              "tr-TR",
+              "uk-UA",
+              "vi-VN",
+              "zh-CN",
+              "zh-HK",
+              "zh-TW"
+            ]
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      ]
+    }
+  },
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "name": {
+      "$ref": "#/$defs/localizedText"
+    },
+    "description": {
+      "$ref": "#/$defs/localizedText"
+    }
+  },
+  "required": ["name"],
+  "additionalProperties": false
+}

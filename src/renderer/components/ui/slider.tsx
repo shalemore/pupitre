@@ -12,6 +12,7 @@ export interface SliderProps {
 export function Slider(props: SliderProps) {
   return (
     <KobalteSlider
+      data-slot="slider"
       value={[props.value]}
       minValue={props.min}
       maxValue={props.max}
@@ -22,9 +23,15 @@ export function Slider(props: SliderProps) {
       aria-label={props["aria-label"]}
       class="relative flex w-36 touch-none select-none items-center"
     >
-      <KobalteSlider.Track class="relative h-1 w-full rounded-full bg-input">
-        <KobalteSlider.Fill class="absolute h-full rounded-full bg-brand" />
-        <KobalteSlider.Thumb class="-top-1.5 block size-4 rounded-full bg-knob shadow-segmented-thumb outline-none cursor-grab active:cursor-grabbing focus-visible:shadow-focus">
+      <KobalteSlider.Track
+        data-slot="slider-track"
+        class="relative h-1 w-full rounded-full bg-input"
+      >
+        <KobalteSlider.Fill data-slot="slider-fill" class="absolute h-full rounded-full bg-brand" />
+        <KobalteSlider.Thumb
+          data-slot="slider-thumb"
+          class="-top-1.5 block size-4 rounded-full bg-knob shadow-segmented-thumb outline-none cursor-grab active:cursor-grabbing focus-visible:shadow-focus"
+        >
           <KobalteSlider.Input />
         </KobalteSlider.Thumb>
       </KobalteSlider.Track>

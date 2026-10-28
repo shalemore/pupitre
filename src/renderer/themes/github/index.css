@@ -1,6 +1,6 @@
 /*
  * GitHub: close to how GitHub renders a README, with blue links and bordered code and tables.
- * See themes/pupitre/index.css for the token and selector conventions.
+ * How to write a theme: the `theming-pupitre` skill.
  */
 
 :root {
@@ -16,13 +16,14 @@
   --ui-text-muted: #818b98;
   --ui-brand: #0969da;
   --ui-brand-hover: #0550ae;
+  /* The brand is dark in this scheme, so white text stays readable on it */
+  --brand-foreground: oklch(1 0 0);
   --ui-danger: #d1242f;
 
   --syntax-keyword: #cf222e;
   --syntax-string: #0a3069;
   --syntax-special-string: #0550ae;
   --syntax-number: #0550ae;
-  --syntax-variable: #1f2328;
   --syntax-definition: #953800;
   --syntax-function: #8250df;
   --syntax-type: #953800;
@@ -50,13 +51,14 @@
     --ui-text-muted: #656c76;
     --ui-brand: #4493f8;
     --ui-brand-hover: #79b8ff;
+    /* The brand is bright in this scheme, so text on it turns dark to stay readable */
+    --brand-foreground: oklch(0.18 0 0);
     --ui-danger: #f85149;
 
     --syntax-keyword: #ff7b72;
     --syntax-string: #a5d6ff;
     --syntax-special-string: #79c0ff;
     --syntax-number: #79c0ff;
-    --syntax-variable: #f0f6fc;
     --syntax-definition: #ffa657;
     --syntax-function: #d2a8ff;
     --syntax-type: #ffa657;
@@ -88,18 +90,6 @@
   border-block-end: 1px solid var(--ui-alpha-2);
 }
 
-.md-h1 {
-  font-size: 2em;
-}
-
-.md-h2 {
-  font-size: 1.5em;
-}
-
-.md-h3 {
-  font-size: 1.25em;
-}
-
 .md-h4 {
   font-size: 1em;
 }
@@ -114,7 +104,6 @@
 }
 
 .md-link {
-  color: var(--ui-brand);
   text-decoration: none;
 }
 
@@ -130,7 +119,6 @@
 }
 
 .md-code-block {
-  background: var(--ui-surface-0);
   font-size: 85%;
   line-height: 1.45;
 }
@@ -149,17 +137,10 @@
   color: var(--ui-text-secondary);
   --md-quote-bar: var(--alert-color, var(--ui-alpha-3));
   --md-quote-bar-width: 0.25em;
-  border-inline-start: var(--md-quote-bar-width) solid var(--md-quote-bar);
 }
 
 .md-hr:not(:has(.md-mark)) {
   background: linear-gradient(var(--ui-alpha-2), var(--ui-alpha-2)) center / 100% 0.25em no-repeat;
-}
-
-.md-front-matter {
-  background: var(--ui-alpha-1);
-  color: var(--ui-text-secondary);
-  font-size: 0.85em;
 }
 
 /*

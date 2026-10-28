@@ -4,7 +4,7 @@ import { Select, Slider, Switch } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { settings, updateSettings } from "@/lib/settings";
-import { FontSelect, RefreshFontsButton } from "./font-select";
+import { FontSelect, RefreshFontsButton, themeFontLabel } from "./font-select";
 import { SettingField, SettingGroup, SettingsSection } from "./settings-section";
 
 export const EditorSection: Component = () => (
@@ -23,7 +23,7 @@ export const EditorSection: Component = () => (
           <FontSelect
             value={settings().bodyFont}
             onChange={(bodyFont) => void updateSettings({ bodyFont })}
-            emptyLabel={t().settings.themeDefault}
+            emptyLabel={themeFontLabel("--font-document")}
             aria-label={t().settings.bodyFont}
           />
         </SettingField>
@@ -45,7 +45,7 @@ export const EditorSection: Component = () => (
           <FontSelect
             value={settings().codeFont}
             onChange={(codeFont) => void updateSettings({ codeFont })}
-            emptyLabel={t().settings.themeDefault}
+            emptyLabel={themeFontLabel("--font-mono")}
             aria-label={t().settings.codeFont}
           />
         </SettingField>

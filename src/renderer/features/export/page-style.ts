@@ -1,19 +1,32 @@
 import type { AlertType } from "@/features/editor/alerts";
 import { CODE_COLOR_TOKENS, codeHighlightStyle } from "@/features/editor/code-highlight";
-import { isDarkColor, toHex } from "@/lib/theme";
+import editorCss from "@/features/editor/editor.css?raw";
+import { activeThemeCss, isDarkColor, toHex } from "@/lib/theme";
 
 /**
- * The stylesheet of an exported page. The app's document CSS cannot be reused: it styles
- * CodeMirror's `.cm-line` elements, while an export is ordinary HTML (`h1`, `p`, `ul`, `pre`).
- * The colors and the typography are read from the theme the window is showing, so an export looks
- * like the page it was made from rather than like a browser default.
+ * The stylesheet of an exported page. An export is ordinary HTML (`h1`, `p`, `ul`, `pre`), so the
+ * document's own line layout does not apply to it; the markup carries the editor's `md-*` classes
+ * instead, and the page takes the rules that style those classes: the editor's own and the active
+ * theme's, with the tokens resolved from the window. An export then looks like the page it was
+ * made from rather than like a browser default.
  */
 
 /** The colors, fonts and measures of the page, taken from the variables the theme and the settings set. */
 function readTokens() {
   const root = getComputedStyle(document.documentElement);
   const raw = (name: string) => root.getPropertyValue(name).trim();
-  const hex = (name: string, fallback = "") => toHex(raw(name) || fallback || "#000000");
+  /*
+   * A host without a canvas (a test, or a renderer that never draws) still gets a page: a color
+   * that cannot be converted stays as the theme wrote it, and CSS reads both forms.
+   */
+  const hex = (name: string, fallback = "") => {
+    const color = raw(name) || fallback || "#000000";
+    try {
+      return toHex(color);
+    } catch {
+      return color;
+    }
+  };
   return {
     page: hex("--ui-surface-1"),
     card: hex("--ui-surface-0"),
@@ -62,12 +75,119 @@ function alertIcon(path: string): string {
   return `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E${path}%3C/svg%3E")`;
 }
 
+/** The custom properties the editor and a theme read; a theme's own tokens come with its CSS. */
+const TOKEN_NAME = /^--(?:ui|md|font|radius|syntax|alert|diagram|shadow|brand)-/;
+
+/** The rules the exported markup can use, which all carry the `md-` classes the editor renders with. */
+const MD_SELECTOR = /\.md-/;
+
+/** The custom properties a computed style carries, when they are ones the document rules read. */
+function customPropertyNames(style: CSSStyleDeclaration): Set<string> {
+  const names = new Set<string>();
+  for (let index = 0; index < style.length; index++) {
+    const name = style.item(index);
+    if (TOKEN_NAME.test(name)) names.add(name);
+  }
+  return names;
+}
+
+/**
+ * The tokens as the window resolved them, including the theme and the color scheme in use. The
+ * export has no theme of its own, so it carries these values rather than the layers that derive
+ * them; a name with no value is one no rule of the page reads.
+ */
+function themeVariables(): string {
+  const root = getComputedStyle(document.documentElement);
+  const pageElement = document.querySelector(".md-document");
+  const page = pageElement === null ? undefined : getComputedStyle(pageElement);
+  const names = customPropertyNames(root);
+  if (page) for (const name of customPropertyNames(page)) names.add(name);
+  const declarations: string[] = [];
+  for (const name of names) {
+    // The --md-* indents live on the document element rather than on the root
+    const value = root.getPropertyValue(name).trim() || page?.getPropertyValue(name).trim() || "";
+    if (value !== "") declarations.push(`  ${name}: ${value};`);
+  }
+  return declarations.join("\n");
+}
+
+/** The rules of a stylesheet list that an exported element can match, wrapped as they were. */
+function mdRules(rules: CSSRuleList): string {
+  const parts: string[] = [];
+  for (const rule of Array.from(rules)) {
+    if (rule instanceof CSSStyleRule) {
+      if (MD_SELECTOR.test(rule.selectorText)) parts.push(rule.cssText);
+    } else if (rule instanceof CSSMediaRule) {
+      const inner = mdRules(rule.cssRules);
+      if (inner !== "") parts.push(`@media ${rule.conditionText} {\n${inner}\n}`);
+    } else if (rule instanceof CSSSupportsRule) {
+      const inner = mdRules(rule.cssRules);
+      if (inner !== "") parts.push(`@supports ${rule.conditionText} {\n${inner}\n}`);
+    }
+  }
+  return parts.join("\n");
+}
+
+/** The rules of a stylesheet list that belong to the editor layer and can match exported markup. */
+function editorRules(rules: CSSRuleList): string {
+  const layers: string[] = [];
+  const visit = (list: CSSRuleList): void => {
+    for (const rule of Array.from(list)) {
+      if (rule instanceof CSSLayerBlockRule) {
+        if (rule.name === "editor") layers.push(mdRules(rule.cssRules));
+        else visit(rule.cssRules);
+      } else if (rule instanceof CSSGroupingRule) {
+        visit(rule.cssRules);
+      }
+    }
+  };
+  visit(rules);
+  return layers.filter((layer) => layer !== "").join("\n");
+}
+
+/**
+ * The editor-layer rules the exported markup needs: the layout of a quote, a marker, a code card
+ * or a table sits there, not in the theme, so a theme alone would not draw them. They are parsed
+ * from the editor's own text rather than read from the window, because a packaged app loads its
+ * stylesheet from a file and the CSSOM of such a sheet cannot be read.
+ */
+function editorStyle(): string {
+  try {
+    const sheet = new CSSStyleSheet();
+    sheet.replaceSync(editorCss);
+    return editorRules(sheet.cssRules);
+  } catch {
+    // Without the editor layer the page falls back to the defaults written here
+    return "";
+  }
+}
+
+/**
+ * The active theme's CSS, with its color-scheme queries settled for the scheme of the exported
+ * page: a file opened elsewhere has no way to know the Color Scheme the app is set to.
+ */
+function themeRules(dark: boolean): string {
+  const css = activeThemeCss();
+  if (css === "") return "";
+  return css.replace(
+    /@media\s*\(\s*prefers-color-scheme:\s*(dark|light)\s*\)/gi,
+    (_query, scheme: string) =>
+      (scheme.toLowerCase() === "dark") === dark ? "@media all" : "@media not all",
+  );
+}
+
 /** The whole stylesheet of an exported document, as the text of a `<style>` element. */
 export function pageStyle(): string {
   const tokens = readTokens();
+  const dark = isDarkColor(tokens.page);
+  const theme = themeRules(dark);
+  const editor = editorStyle();
   return `
+@layer export-base, editor, document-theme, export-page;
+
+@layer export-base {
 :root {
-  color-scheme: ${isDarkColor(tokens.page) ? "dark" : "light"};
+  color-scheme: ${dark ? "dark" : "light"};
   --page: ${tokens.page};
   --card: ${tokens.card};
   --text: ${tokens.text};
@@ -81,6 +201,7 @@ export function pageStyle(): string {
   --warning: ${tokens.warning};
   --caution: ${tokens.caution};
 ${tokens.syntax.map((syntax) => `  ${syntax.name}: ${syntax.color};`).join("\n")}
+${themeVariables()}
   --hairline: color-mix(in oklab, var(--text) 14%, transparent);
   --hairline-strong: color-mix(in oklab, var(--text) 30%, transparent);
   --accent-line: color-mix(in oklab, var(--accent) 40%, transparent);
@@ -111,11 +232,17 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* The page: one column of text, wide enough to read and narrow enough to scan */
+/*
+ * The defaults the editor layer gives the document. The exported markup carries the editor's
+ * classes, so its quote bar, marker indent and quote indent are custom properties here too; the
+ * editor layer, where this window exposes it, replaces these with the same values.
+ */
 .md-document {
-  max-width: var(--page-width);
-  margin-inline: auto;
-  padding: clamp(1.5rem, 6vw, 4rem) clamp(1.1rem, 5vw, 3.5rem) 6rem;
+  --md-quote-indent: 1em;
+  --md-quote-bar: var(--alert-color, var(--hairline-strong));
+  --md-quote-bar-width: 3px;
+  --md-list-indent: 1.6em;
+  --md-block-indent: 0px;
   overflow-wrap: break-word;
 }
 
@@ -212,10 +339,14 @@ img {
   vertical-align: bottom;
 }
 
-/* Lists; a bullet or a number takes the accent ink, as in the editor */
+/*
+ * Lists. A marked-up page draws the bullet or the number itself, with the same span the editor
+ * uses, so a theme's marker shape and color reach it; a fragment for another application keeps the
+ * browser's own markers, since no stylesheet follows it there.
+ */
 ul,
 ol {
-  padding-inline-start: 1.5em;
+  padding-inline-start: var(--md-list-indent, 1.5em);
 }
 
 li {
@@ -224,6 +355,31 @@ li {
 
 li::marker {
   color: var(--accent);
+}
+
+.md-list-item {
+  list-style: none;
+  text-indent: calc(-1 * var(--md-list-indent, 1.6em));
+}
+
+.md-list-bullet,
+.md-list-mark {
+  display: inline-block;
+  min-width: var(--md-list-indent, 1.6em);
+  text-indent: 0;
+  color: var(--accent);
+}
+
+.md-list-bullet::before {
+  content: "•";
+}
+
+[data-list-depth="2"] .md-list-bullet::before {
+  content: "◦";
+}
+
+[data-list-depth="3"] .md-list-bullet::before {
+  content: "▪";
 }
 
 :is(ul, ol) :is(ul, ol) {
@@ -287,6 +443,7 @@ blockquote > :last-child {
 blockquote.md-alert {
   --alert-color: var(--accent);
   --alert-icon: none;
+  --md-quote-bar: var(--alert-color);
   border-inline-start-color: var(--alert-color);
 }
 
@@ -321,6 +478,16 @@ hr {
   background: var(--hairline-strong);
 }
 
+/*
+ * A rule on the page is a line like the others, and a theme paints it with a background as tall
+ * as its own motif; give it a line's height so that motif is not clipped to the base line.
+ */
+hr.md-hr {
+  height: 1.5em;
+  background: linear-gradient(var(--hairline-strong), var(--hairline-strong)) center / 100% 1px
+    no-repeat;
+}
+
 /* Code: a card for a block, a faint wash for what sits in a line */
 code,
 pre {
@@ -344,12 +511,14 @@ pre {
   border: 1px solid var(--hairline);
   border-radius: 10px;
   background: var(--card);
+  font-size: 0.9em;
   line-height: 1.55;
   overflow-x: auto;
 }
 
+/* The block sets the size of its code; a second reduction would make the text smaller than the editor's */
 pre code {
-  font-size: 0.9em;
+  font-size: inherit;
 }
 
 /*
@@ -495,11 +664,6 @@ sup.md-footnote-ref a {
 
 /* A printed page keeps its blocks whole */
 @media print {
-  .md-document {
-    max-width: none;
-    padding: 0;
-  }
-
   h1,
   h2,
   h3,
@@ -516,6 +680,36 @@ sup.md-footnote-ref a {
   .md-mermaid {
     break-inside: avoid;
   }
+}
+}
+${theme}
+${editor === "" ? "" : `@layer editor {\n${editor}\n}`}
+@layer export-page {
+:root {
+  color-scheme: ${dark ? "dark" : "light"};
+}
+
+/* The page: one column of text, wide enough to read and narrow enough to scan */
+.md-document {
+  max-width: var(--page-width);
+  margin-inline: auto;
+  padding: clamp(1.5rem, 6vw, 4rem) clamp(1.1rem, 5vw, 3.5rem) 6rem;
+}
+
+/*
+ * The editor draws a code block as a card around its lines; an exported block is the card itself,
+ * so it keeps the room its lines would have had instead of the editor's line padding.
+ */
+.md-code-block {
+  padding: 0.9em 1.1em;
+}
+
+@media print {
+  .md-document {
+    max-width: none;
+    padding: 0;
+  }
+}
 }
 `.trimStart();
 }

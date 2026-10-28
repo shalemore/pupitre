@@ -49,7 +49,7 @@ import { mathOf, MathWidget } from "./math";
  *
  * Inline formats and code fences use the whole construct as their scope, quote and list markers
  * the line they are on, so moving into a nested list item does not reveal its parents. The content
- * of each construct is styled through `md-*` classes (see the theme contract in themes/pupitre);
+ * of each construct is styled through `md-*` classes (see the `theming-pupitre` skill);
  * supporting a new syntax means adding its Lezer extension and handling its nodes in `visit`.
  */
 

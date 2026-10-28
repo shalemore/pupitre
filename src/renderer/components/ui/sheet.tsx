@@ -64,6 +64,7 @@ export const Sheet: Component<SheetProps> = (props) => {
   return (
     <Portal>
       <div
+        data-slot="sheet-backdrop"
         class={cn(
           "fixed inset-0 z-50 flex justify-center bg-surface-0/60 p-4 backdrop-blur-sm animate-in fade-in-0 duration-base",
           props.placement === "top" ? "items-start pt-16" : "items-center",
@@ -76,6 +77,7 @@ export const Sheet: Component<SheetProps> = (props) => {
         }}
       >
         <div
+          data-slot="sheet"
           ref={(element) => (panel = element)}
           role="dialog"
           aria-modal="true"
@@ -85,7 +87,7 @@ export const Sheet: Component<SheetProps> = (props) => {
             props.onKeyDown(event);
           }}
           class={cn(
-            "floating-panel flex max-h-full w-full flex-col gap-2 p-2 text-xs animate-in fade-in-0 zoom-in-95 duration-base ease-enter",
+            "floating-panel flex max-h-full w-full flex-col gap-2 p-2 text-xs",
             props.placement === "top" ? "max-w-xl" : "max-w-lg",
           )}
         >

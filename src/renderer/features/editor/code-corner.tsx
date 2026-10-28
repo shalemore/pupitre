@@ -131,7 +131,8 @@ const CodeCorner: Component<{
     <>
       <Show when={props.fence}>
         <select
-          class="md-code-language"
+          // Interface rather than document, sized in rem so the block's smaller em does not shrink it
+          class="field-sizing-content max-w-32 min-w-0 -mx-1 truncate appearance-none rounded-sm border-0 bg-transparent px-1 py-0.5 cursor-pointer transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:shadow-focus"
           aria-label={t().editor.codeLanguage}
           title={t().editor.codeLanguage}
           value={current()}
@@ -144,7 +145,7 @@ const CodeCorner: Component<{
       </Show>
       <button
         type="button"
-        class="md-code-copy"
+        class="grid size-6 place-items-center rounded-sm border-0 bg-transparent p-0 opacity-60 cursor-pointer transition hover:bg-accent hover:text-foreground hover:opacity-100 data-copied:opacity-100 data-copied:text-success [&_svg]:size-3.5 print:hidden"
         title={t().common.copy}
         aria-label={t().common.copy}
         data-copied={copied() ? "" : undefined}
@@ -196,7 +197,10 @@ export class CodeCornerWidget extends WidgetType {
 
   toDOM(view: EditorView): HTMLElement {
     const container = document.createElement("span");
-    container.className = "md-code-corner";
+    // Above the code lines it overlaps while the fence line is shrunk; interface rather than
+    // document, so it is sized in rem and does not shrink with the block's em
+    container.className =
+      "absolute z-1 top-1.5 end-2 flex items-center gap-1.5 font-sans text-xs leading-none text-tertiary select-none";
     disposers.set(
       container,
       render(() => <CodeCorner view={view} container={container} fence={this.fence} />, container),

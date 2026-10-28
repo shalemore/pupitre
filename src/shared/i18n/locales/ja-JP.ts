@@ -247,6 +247,7 @@ export const jaJP = {
     colorSchemeLight: "ライト",
     colorSchemeDark: "ダーク",
     theme: "テーマ",
+    themeMissing: "選択したテーマは利用できなくなりました。既定のテーマを使用しています。",
     animations: "アニメーション",
     animationsDesc: "トランジションとスムーズスクロール",
     zoom: "拡大率",
@@ -327,6 +328,8 @@ export const jaJP = {
     refreshFonts: "フォント一覧を更新",
     resetToDefault: "既定値に戻す",
     darkTheme: "ダーク配色のテーマ",
+    darkThemeMissing:
+      "選択したダークテーマは利用できなくなりました。ライトテーマを使用しています。",
     darkThemeDesc: "ダーク配色のときに使用",
     sameTheme: "テーマと同じ",
     schemeBoth: "ライトとダーク",

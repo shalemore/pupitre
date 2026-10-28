@@ -9,6 +9,7 @@ import { handleOpenFileRequests } from "./open-files";
 import { onRecentFilesChange } from "./recent-files";
 import { getSettings, onSettingsChange } from "./settings-store";
 import { applySpellCheck } from "./spellcheck";
+import { startThemeWatcher, stopThemeWatcher } from "./themes";
 import { checkForUpdatesOnStartup, setupUpdater } from "./updater";
 import { flushWindowState } from "./window-state";
 import { createMainWindow } from "./windows";
@@ -38,6 +39,7 @@ if (!app.requestSingleInstanceLock()) {
     if (!app.isPackaged) app.dock?.setIcon(join(app.getAppPath(), "build/icon.png"));
 
     registerIpcHandlers();
+    startThemeWatcher();
     setupUpdater();
     rebuildApplicationMenu();
     createMainWindow();
@@ -57,5 +59,6 @@ if (!app.requestSingleInstanceLock()) {
   app.on("will-quit", () => {
     flushDraft();
     flushWindowState();
+    stopThemeWatcher();
   });
 }

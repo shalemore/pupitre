@@ -246,6 +246,8 @@ export const esES = {
     colorSchemeLight: "Claro",
     colorSchemeDark: "Oscuro",
     theme: "Tema",
+    themeMissing:
+      "El tema seleccionado ya no está disponible. Se está usando el tema predeterminado.",
     animations: "Animaciones",
     animationsDesc: "Transiciones y desplazamiento suave",
     zoom: "Zoom",
@@ -327,6 +329,8 @@ export const esES = {
     refreshFonts: "Actualizar lista de fuentes",
     resetToDefault: "Restablecer valor predeterminado",
     darkTheme: "Tema del modo oscuro",
+    darkThemeMissing:
+      "El tema oscuro seleccionado ya no está disponible. Se está usando el tema claro.",
     darkThemeDesc: "Se usa con el esquema de color oscuro",
     sameTheme: "Igual que el tema",
     schemeBoth: "Claro y oscuro",

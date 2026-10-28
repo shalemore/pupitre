@@ -247,6 +247,7 @@ export const frFR = {
     colorSchemeLight: "Clair",
     colorSchemeDark: "Sombre",
     theme: "Thème",
+    themeMissing: "Le thème sélectionné n'est plus disponible. Le thème par défaut est utilisé.",
     animations: "Animations",
     animationsDesc: "Transitions et défilement fluide",
     zoom: "Zoom",
@@ -327,6 +328,8 @@ export const frFR = {
     refreshFonts: "Actualiser la liste des polices",
     resetToDefault: "Rétablir la valeur par défaut",
     darkTheme: "Thème du mode sombre",
+    darkThemeMissing:
+      "Le thème sombre sélectionné n'est plus disponible. Le thème clair est utilisé.",
     darkThemeDesc: "Utilisé avec le jeu de couleurs sombre",
     sameTheme: "Comme le thème",
     schemeBoth: "Clair et sombre",

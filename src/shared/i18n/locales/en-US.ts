@@ -255,6 +255,7 @@ export const enUS = {
     colorSchemeLight: "Light",
     colorSchemeDark: "Dark",
     theme: "Theme",
+    themeMissing: "The selected theme is no longer available. The default theme is being used.",
     animations: "Animations",
     animationsDesc: "Transitions and smooth scrolling",
     zoom: "Zoom",
@@ -353,6 +354,8 @@ export const enUS = {
     refreshFonts: "Refresh Font List",
     resetToDefault: "Reset to Default",
     darkTheme: "Dark Mode Theme",
+    darkThemeMissing:
+      "The selected dark theme is no longer available. The light theme is being used.",
     darkThemeDesc: "Used while the dark color scheme is active",
     sameTheme: "Same as Theme",
     schemeBoth: "Light & Dark",

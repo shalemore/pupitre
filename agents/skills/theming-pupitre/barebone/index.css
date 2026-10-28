@@ -1,6 +1,7 @@
 /*
- * Barebone: the app with its own look taken away, a starting point for a theme of your own. It
- * exists in development only. See themes/pupitre/index.css for the tokens and the conventions.
+ * Barebone: the app with its own look taken away, a starting point for a theme of your own.
+ * Copy this file to src/renderer/themes/<name>/index.css and add what makes the theme itself.
+ * See ../SKILL.md for the contract.
  */
 
 :root {

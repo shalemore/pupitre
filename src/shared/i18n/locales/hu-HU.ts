@@ -252,6 +252,8 @@ export const huHU = {
     colorSchemeLight: "Világos",
     colorSchemeDark: "Sötét",
     theme: "Téma",
+    themeMissing:
+      "A kiválasztott téma már nem érhető el. Az alapértelmezett téma van használatban.",
     animations: "Animációk",
     animationsDesc: "Átmenetek és sima görgetés",
     zoom: "Nagyítás",
@@ -332,6 +334,8 @@ export const huHU = {
     refreshFonts: "Betűtípuslista frissítése",
     resetToDefault: "Visszaállítás alapértékre",
     darkTheme: "Sötét mód témája",
+    darkThemeMissing:
+      "A kiválasztott sötét téma már nem érhető el. A világos téma van használatban.",
     darkThemeDesc: "A sötét színséma aktív állapotában használt téma",
     sameTheme: "Ugyanaz, mint a téma",
     schemeBoth: "Világos és sötét",

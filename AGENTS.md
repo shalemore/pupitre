@@ -5,23 +5,24 @@ This file is the single source of project conventions for humans and coding agen
 
 ## Commands
 
-| Command                 | Purpose                                              |
-| :---------------------- | :--------------------------------------------------- |
-| `npm run dev`           | Start Electron with the Vite dev server (HMR)        |
-| `npm run build`         | Bundle main, preload and renderer into `out/`        |
-| `npm run check:bundle`  | Fail when a renderer chunk passes its size budget    |
-| `npm run dev:web`       | Serve the web demo (renderer on the browser host)    |
-| `npm run build:web`     | Build the web demo into `out/web`                    |
-| `npm run dist`          | Build and package installers into `release/`         |
-| `npm test`              | Run the unit tests (Vitest)                          |
-| `npm run test:coverage` | Run the unit tests with coverage and check its floor |
-| `npm run test:e2e`      | Drive the built app with Playwright (`build` first)  |
-| `npm run test:perf`     | Time the built app by hand, minutes long (`build`)   |
-| `npm run bench`         | Benchmark the parser by hand, a minute long          |
-| `npm run typecheck`     | Type-check every project (`tsrs -b`)                 |
-| `npm run lint`          | Check formatting (oxfmt) and lint (oxlint)           |
-| `npm run knip`          | Find dead files, unused exports and dependencies     |
-| `npm run fix`           | Apply formatting and safe lint fixes                 |
+| Command                 | Purpose                                                       |
+| :---------------------- | :------------------------------------------------------------ |
+| `npm run dev`           | Start Electron with the Vite dev server (HMR)                 |
+| `npm run build`         | Bundle main, preload and renderer into `out/`                 |
+| `npm run check:bundle`  | Fail when a renderer chunk passes its size budget             |
+| `npm run dev:web`       | Serve the web demo (renderer on the browser host)             |
+| `npm run build:web`     | Build the web demo into `out/web`                             |
+| `npm run dist`          | Build and package installers into `release/`                  |
+| `npm test`              | Run the unit tests (Vitest)                                   |
+| `npm run test:coverage` | Run the unit tests with coverage and check its floor          |
+| `npm run test:e2e`      | Drive the built app with Playwright (`build` first)           |
+| `npm run test:perf`     | Time the built app by hand, minutes long (`build`)            |
+| `npm run bench`         | Benchmark the parser by hand, a minute long                   |
+| `npm run typecheck`     | Type-check every project (`tsrs -b`)                          |
+| `npm run lint`          | Check formatting (oxfmt), lint (oxlint) and CSS layers        |
+| `npm run check:css`     | Check that app.css rules sit in layers and theme tokens exist |
+| `npm run knip`          | Find dead files, unused exports and dependencies              |
+| `npm run fix`           | Apply formatting and safe lint fixes                          |
 
 Before considering a change done, `lint`, `typecheck`, `knip`, `test`, `build` and `check:bundle`
 must all pass. Run `npm run test:e2e` as well once the change touches the main process, the IPC
@@ -289,24 +290,12 @@ only make code generation easier.
 ## Themes
 
 - A theme is a folder `src/renderer/themes/<name>/` with an `index.css`; the folder name is the
-  name shown in settings. Fonts or images used by a theme live in the same folder and are
-  referenced with relative `url()`s. `themes/pupitre` is the default and documents the contract.
+  name shown in settings. `themes/pupitre` is the default.
 - `lib/theme.ts` discovers themes with `import.meta.glob` and injects the active one into the
   `document-theme` layer at runtime. Every window (main and settings) loads the same theme.
-- Themes style the whole app through the `--ui-*` design tokens (surfaces, text, accent) and the
-  document through the `md-*` classes inside `.md-document` and `--syntax-*` colors. Document
-  lines are spaced with padding, never margins, because CodeMirror measures line boxes.
-- A theme draws the text cursor with a `.md-text-cursor` rule of its own (`editor.css` holds the
-  default); the rule carries the whole cursor, image and hotspot, since a cursor has no parts to
-  set one by one.
-- Scrolling areas get the `.scroll-fade` class when the Edge Fade setting is on (`app.css` has the
-  default look). A theme restyles it with a plain rule: its CSS sits in the `document-theme` layer,
-  so it wins over the default without `!important`. Keep the `[data-overflow~="top"]` and
-  `[data-overflow~="bottom"]` selectors when setting `--scroll-fade-top` or `--scroll-fade-bottom`,
-  so the fade only shows on an edge that has more content.
-- A theme declares the color schemes it supports with `color-scheme` on `:root`. A `light dark`
-  theme overrides its dark values in `@media (prefers-color-scheme: dark)`; a single-scheme theme
-  is applied as is and can be paired with another theme through the `darkTheme` setting.
-- Body font size, line height and content width belong to the user. Themes set the default body
-  font through `--font-document`, use `em` for sizes inside the document and logical properties
-  (`padding-inline-start`) so right-to-left documents mirror correctly.
+- The app also reads `userData/themes` and the open project's `.pupitre/themes`, watches both,
+  and merges what it finds with the built-in list. An imported theme's setting value is
+  `global:<folder>` or `project:<folder>`, so folders with the same name stay apart; its relative
+  `url()`s are inlined before the CSS reaches the renderer.
+- How to write or change a theme, and what its CSS may touch, is the `theming-pupitre` skill
+  (`agents/skills/theming-pupitre/SKILL.md`); `.claude/skills` only points Claude at it.

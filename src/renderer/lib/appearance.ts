@@ -5,7 +5,7 @@ import { currentDirection, currentLocale } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { codeFontFamily, documentFontFamily, interfaceFontFamily } from "@/lib/fonts";
 import { settings } from "@/lib/settings";
-import { applyTheme, readWindowColors } from "@/lib/theme";
+import { applyTheme, DEFAULT_THEME, importedThemes, readWindowColors, themes } from "@/lib/theme";
 
 const CONTENT_WIDTHS: Record<ContentWidth, string> = {
   compact: "42rem",
@@ -33,11 +33,17 @@ export function setupAppearance(): void {
 
     const activeTheme = createMemo(() => {
       const { theme, darkTheme } = settings();
-      return isDark() && darkTheme !== "" ? darkTheme : theme;
+      const available = (id: string) => themes().some((candidate) => candidate.id === id);
+      // A theme folder removed since it was chosen gives the light theme back to the default
+      const light = available(theme) ? theme : DEFAULT_THEME;
+      if (isDark() && darkTheme !== "") return available(darkTheme) ? darkTheme : light;
+      return light;
     });
 
     // Effects run in creation order: the theme is applied before anything reads its values
     createEffect(() => {
+      // A theme folder added, changed or removed while the app runs replaces the active CSS too
+      importedThemes();
       applyTheme(activeTheme());
       void desktop.invoke("window:set-colors", { ...readWindowColors(), dark: isDark() });
     });
@@ -64,17 +70,24 @@ export function setupAppearance(): void {
       activeTheme();
       const themeStyle = getComputedStyle(root);
       const themeFonts = themeStyle.getPropertyValue("--font-document");
+      const fontStackIntent =
+        themeStyle.getPropertyValue("--font-stack-intent").trim() === "mono" ? "mono" : "text";
       root.style.setProperty("--pref-font-size", `${fontSize}px`);
       root.style.setProperty("--pref-line-height", String(lineHeight));
       root.style.setProperty("--pref-content-width", CONTENT_WIDTHS[contentWidth]);
       root.style.setProperty("--pref-immersive-gap", `${immersiveGap}px`);
       setOptionalProperty(
         "--pref-font-family",
-        documentFontFamily(bodyFont, fallbackFont, themeFonts),
+        documentFontFamily(bodyFont, fallbackFont, themeFonts, fontStackIntent),
       );
       setOptionalProperty(
         "--pref-code-font",
-        codeFontFamily(codeFont, fallbackFont, themeStyle.getPropertyValue("--font-mono")),
+        codeFontFamily(
+          codeFont,
+          fallbackFont,
+          themeStyle.getPropertyValue("--font-mono"),
+          fontStackIntent,
+        ),
       );
       setOptionalProperty("--pref-ui-font", interfaceFontFamily(uiFont, fallbackFont));
     });

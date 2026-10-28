@@ -1,13 +1,67 @@
 import { createSignal } from "solid-js";
+import { z } from "zod";
+import type { ImportedTheme } from "@shared/desktop-api";
+import { DEFAULT_LOCALE, LOCALE_CODES, type SupportedLocale } from "@shared/i18n";
 import { DEFAULT_SETTINGS } from "@shared/settings";
+import { desktop } from "@/lib/desktop";
 
 type ColorScheme = "light" | "dark";
 
+/**
+ * A theme's text: one string for every language, or text keyed by the app's locale codes. A
+ * language the theme leaves out falls back to the app's default locale, then to the first text
+ * it gives.
+ */
+export type LocalizedText = string | Readonly<Record<string, string>>;
+
+/** Where a theme comes from: the app bundle, the global themes folder, or the open project's. */
+type ThemeSource = "builtin" | "global" | "project";
+
 export interface ThemeInfo {
-  /** Folder name under src/renderer/themes, also shown in settings. */
+  /** Value stored in settings: the folder name for a built-in theme, `source:folder` otherwise. */
+  id: string;
+  /** Folder name under src/renderer/themes, or in an imported theme root. */
   name: string;
+  /** Where the theme was found. */
+  source: ThemeSource;
+  /** The name shown in settings, in the language of the window. */
+  names: LocalizedText;
+  /** What the theme is, for later use; the settings do not show it yet. */
+  descriptions: LocalizedText | undefined;
   /** Color schemes the theme provides, read from its `color-scheme` declaration. */
   schemes: readonly ColorScheme[];
+}
+
+const LOCALE_CODES_SET: ReadonlySet<string> = new Set(LOCALE_CODES);
+
+const localizedTextSchema = z.union([
+  z.string().min(1),
+  z
+    .record(z.string(), z.string().min(1))
+    .refine((text) => Object.keys(text).every((code) => LOCALE_CODES_SET.has(code)), {
+      message: "Use the locale codes from src/shared/i18n/types.ts",
+    }),
+]);
+
+/** The shape of a theme's optional `theme.json`, next to its `index.css`. */
+export const themeMetaSchema = z.object({
+  name: localizedTextSchema,
+  description: localizedTextSchema.optional(),
+});
+
+/** The text in the window's language: exact, then the default locale, then the first it gives. */
+export function localizedText(
+  text: LocalizedText | undefined,
+  locale: SupportedLocale,
+): string | undefined {
+  if (text === undefined) return undefined;
+  if (typeof text === "string") return text;
+  return text[locale] ?? text[DEFAULT_LOCALE] ?? Object.values(text).at(0);
+}
+
+/** The theme's name for the window's language, or its folder name when it gives none. */
+export function themeDisplayName(theme: ThemeInfo, locale: SupportedLocale): string {
+  return localizedText(theme.names, locale) ?? theme.name;
 }
 
 /**
@@ -21,42 +75,111 @@ const themeStyles = import.meta.glob<string>("../themes/*/index.css", {
   eager: true,
 });
 
-const DEFAULT_THEME = DEFAULT_SETTINGS.theme;
+/**
+ * A theme's optional metadata, next to its stylesheet. It carries the name shown in settings and
+ * the description kept for later use; a theme without one is named after its folder. The themes
+ * under src/renderer/themes ship with the app, and the tests require each of them to name and
+ * describe every locale; a theme installed from outside may leave languages out and falls back.
+ */
+const themeMeta = import.meta.glob<unknown>("../themes/*/theme.json", {
+  import: "default",
+  eager: true,
+});
+
+/** The built-in folder the default settings point at. */
+export const DEFAULT_THEME = DEFAULT_SETTINGS.theme;
 
 function themeName(path: string): string {
   return path.split("/").at(-2) ?? "";
 }
 
-/**
- * A theme states which schemes it supports with the standard `color-scheme` property on :root,
- * e.g. `color-scheme: light dark`. Without it the theme is treated as light only.
- */
-function supportedSchemes(css: string): ColorScheme[] {
-  const declared = /color-scheme\s*:\s*([^;}]+)/.exec(css)?.[1] ?? "";
-  const schemes = declared
-    .trim()
-    .split(/\s+/)
-    .filter((scheme): scheme is ColorScheme => scheme === "light" || scheme === "dark");
-  return schemes.length > 0 ? schemes : ["light"];
+interface ThemeMetadata {
+  names: LocalizedText;
+  descriptions: LocalizedText | undefined;
 }
 
-/** Themes that only exist while developing, such as the bare page a new theme starts from. */
-const DEVELOPMENT_THEMES = new Set(["barebone"]);
+function themeMetadata(name: string): ThemeMetadata {
+  const meta = themeMeta[`../themes/${name}/theme.json`];
+  const parsed = meta === undefined ? undefined : themeMetaSchema.safeParse(meta);
+  if (parsed === undefined || !parsed.success) {
+    return { names: name, descriptions: undefined };
+  }
+  return { names: parsed.data.name, descriptions: parsed.data.description };
+}
 
-const allThemes = Object.entries(themeStyles)
-  .filter(([path]) => import.meta.env.DEV || !DEVELOPMENT_THEMES.has(themeName(path)))
-  .map(([path, css]) => ({
-    name: themeName(path),
-    schemes: supportedSchemes(css),
-  }));
+/**
+ * Reads the schemes a theme declares with the standard `color-scheme` property on :root, e.g.
+ * `color-scheme: light dark`. Comments are removed first, because theme guides quote
+ * `@media (prefers-color-scheme: dark)` in prose and a comment must not count as a declaration.
+ * Values are kept in the order declared; a theme without one is treated as light only.
+ */
+export function readColorScheme(css: string): ColorScheme[] {
+  const source = css.replace(/\/\*[\s\S]*?\*\//g, "");
+  for (const [, body = ""] of source.matchAll(/:root[^{}]*\{([^{}]*)\}/g)) {
+    const declared = /(?:^|[^-a-z])color-scheme\s*:\s*([^;]+)/i.exec(body)?.[1];
+    if (declared === undefined) continue;
+    const schemes = declared
+      .trim()
+      .split(/\s+/)
+      .filter((scheme): scheme is ColorScheme => scheme === "light" || scheme === "dark");
+    if (schemes.length > 0) return schemes;
+  }
+  return ["light"];
+}
 
-/** The default theme first, the others by name. */
-export const THEMES: readonly ThemeInfo[] = [
-  ...allThemes.filter((theme) => theme.name === DEFAULT_THEME),
-  ...allThemes
-    .filter((theme) => theme.name !== DEFAULT_THEME)
-    .toSorted((a, b) => a.name.localeCompare(b.name)),
-];
+function supportedSchemes(css: string): ColorScheme[] {
+  return readColorScheme(css);
+}
+
+const builtInCss: Readonly<Record<string, string>> = Object.fromEntries(
+  Object.entries(themeStyles).map(([path, css]) => [themeName(path), css]),
+);
+
+const builtInThemes: readonly ThemeInfo[] = Object.entries(themeStyles).map(
+  ([path, css]): ThemeInfo => {
+    const name = themeName(path);
+    const meta = themeMetadata(name);
+    return {
+      id: name,
+      name,
+      source: "builtin",
+      names: meta.names,
+      descriptions: meta.descriptions,
+      schemes: supportedSchemes(css),
+    };
+  },
+);
+
+const [imported, setImported] = createSignal<readonly ImportedTheme[]>(desktop.initialState.themes);
+
+/** The folders the main process found in the global and project theme folders. */
+export const importedThemes = imported;
+
+void desktop.invoke("themes:list").then(setImported);
+desktop.on("themes:changed", (list) => setImported(list));
+
+function importedThemeInfo(theme: ImportedTheme): ThemeInfo {
+  const parsed = themeMetaSchema.safeParse(theme.meta);
+  return {
+    id: `${theme.source}:${theme.folder}`,
+    name: theme.folder,
+    source: theme.source,
+    names: parsed.success ? parsed.data.name : theme.folder,
+    descriptions: parsed.success ? parsed.data.description : undefined,
+    schemes: supportedSchemes(theme.css),
+  };
+}
+
+/** The built-in themes and the folders in the global and project theme folders. */
+export function themes(): readonly ThemeInfo[] {
+  const all = [...builtInThemes, ...imported().map(importedThemeInfo)];
+  return [
+    ...all.filter((theme) => theme.id === DEFAULT_THEME),
+    ...all
+      .filter((theme) => theme.id !== DEFAULT_THEME)
+      .toSorted((a, b) => a.id.localeCompare(b.id)),
+  ];
+}
 
 let styleElement: HTMLStyleElement | undefined;
 const [applied, setApplied] = createSignal(undefined, { equals: false });
@@ -67,13 +190,25 @@ const [applied, setApplied] = createSignal(undefined, { equals: false });
  */
 export const themeApplied = applied;
 
-export function applyTheme(name: string): void {
-  const css =
-    themeStyles[`../themes/${name}/index.css`] ??
-    themeStyles[`../themes/${DEFAULT_THEME}/index.css`];
+function cssFor(id: string): string | undefined {
+  const found = imported().find((theme) => `${theme.source}:${theme.folder}` === id);
+  return found?.css ?? builtInCss[id];
+}
+
+export function applyTheme(id: string): void {
+  const css = cssFor(id) ?? cssFor(DEFAULT_THEME) ?? "";
   styleElement ??= document.head.appendChild(document.createElement("style"));
-  styleElement.textContent = `@layer document-theme {\n${css ?? ""}\n}`;
+  styleElement.textContent = `@layer document-theme {\n${css}\n}`;
   setApplied();
+}
+
+/**
+ * The stylesheet of the theme in use, in the cascade layer it is applied in. A page built outside
+ * this window, such as an exported HTML file, has its own stylesheets; this gives it the theme
+ * without reading back through the document's CSSOM.
+ */
+export function activeThemeCss(): string {
+  return styleElement?.textContent ?? "";
 }
 
 /** Converts any CSS color (themes mostly use oklch) to #rrggbb, for APIs that only take hex. */

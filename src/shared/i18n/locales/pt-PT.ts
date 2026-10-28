@@ -246,6 +246,7 @@ export const ptPT = {
     colorSchemeLight: "Claro",
     colorSchemeDark: "Escuro",
     theme: "Tema",
+    themeMissing: "O tema selecionado já não está disponível. Está a ser usado o tema predefinido.",
     animations: "Animações",
     animationsDesc: "Transições e deslocamento suave",
     zoom: "Zoom",
@@ -327,6 +328,8 @@ export const ptPT = {
     refreshFonts: "Atualizar lista de tipos de letra",
     resetToDefault: "Repor predefinições",
     darkTheme: "Tema do modo escuro",
+    darkThemeMissing:
+      "O tema escuro selecionado já não está disponível. Está a ser usado o tema claro.",
     darkThemeDesc: "Utilizado quando o esquema de cores escuro está ativo",
     sameTheme: "Igual ao tema",
     schemeBoth: "Claro e escuro",

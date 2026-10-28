@@ -74,6 +74,7 @@ import {
   updateSettings,
   useWorkspace,
 } from "./settings-store";
+import { getImportedThemes, revealThemeFolder, setProjectThemeRoot } from "./themes";
 import {
   canSelfUpdate,
   checkForUpdates,
@@ -372,13 +373,19 @@ export function registerIpcHandlers(): void {
       captionSide: getCaptionSide(event.sender),
       sidebarWidths: readWindowState()?.sidebar,
       launchFile: event.sender === getMainWindow()?.webContents ? takeLaunchFile() : undefined,
+      themes: getImportedThemes(),
     };
     event.returnValue = state;
   });
   handle("settings:update", (_event, patch) => updateSettings(patch));
   handle("settings:reset", (_event, key) => resetSetting(key));
   handle("settings:reveal", () => shell.showItemInFolder(getSettingsPath()));
-  handle("workspace:set", (_event, root) => setWorkspace(root));
+  handle("themes:list", () => getImportedThemes());
+  handle("themes:reveal", (_event, source) => void revealThemeFolder(source));
+  handle("workspace:set", (_event, root) => {
+    setWorkspace(root);
+    setProjectThemeRoot(root);
+  });
   handle("workspace:get", () => getWorkspaceState());
   handle("workspace:use", (_event, active) => useWorkspace(active));
   handle("workspace:reveal", () => revealWorkspaceFile());

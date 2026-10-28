@@ -1,14 +1,7 @@
 /*
  * Academic: serif type, warm paper and centered section titles for long-form writing.
  * A light-only theme; pair it with another theme for dark mode in settings.
- * See themes/pupitre/index.css for the token and selector conventions.
- *
- * To bundle a font, put the file in this folder and declare it:
- *   @font-face {
- *     font-family: "Source Serif";
- *     src: url("./source-serif.woff2") format("woff2");
- *   }
- * then list it in --font-document. Make sure the font license allows redistribution.
+ * How to write a theme: the `theming-pupitre` skill.
  */
 
 :root {
@@ -26,21 +19,19 @@
   --ui-text-muted: oklch(0.62 0.012 60);
   --ui-brand: oklch(0.45 0.12 25);
   --ui-brand-hover: oklch(0.38 0.13 25);
+  /* The brand is dark in this scheme, so white text stays readable on it */
+  --brand-foreground: oklch(1 0 0);
   --ui-danger: oklch(0.55 0.2 25);
 
   --syntax-keyword: oklch(0.45 0.12 25);
   --syntax-string: oklch(0.45 0.09 145);
   --syntax-special-string: oklch(0.45 0.1 250);
   --syntax-number: oklch(0.45 0.1 250);
-  --syntax-variable: var(--ui-text-primary);
   --syntax-definition: oklch(0.45 0.1 60);
   --syntax-function: oklch(0.42 0.12 310);
   --syntax-type: oklch(0.45 0.1 60);
   --syntax-property: oklch(0.45 0.1 250);
-  --syntax-comment: var(--ui-text-muted);
   --syntax-operator: var(--ui-text-secondary);
-  --syntax-punctuation: var(--ui-text-secondary);
-  --syntax-invalid: var(--ui-danger);
 
   --alert-note: oklch(0.5 0.08 250);
   --alert-tip: oklch(0.5 0.08 150);
@@ -64,7 +55,6 @@
 .md-heading {
   padding-block: 0.8em 0.4em;
   font-weight: 600;
-  line-height: 1.3;
 }
 
 .md-document > .md-h1 {
@@ -89,7 +79,6 @@
 }
 
 .md-link {
-  color: var(--ui-brand);
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.18em;
@@ -137,12 +126,6 @@
   content: "* * *";
   color: var(--ui-text-muted);
   letter-spacing: 0.5em;
-}
-
-.md-front-matter {
-  background: var(--ui-alpha-1);
-  color: var(--ui-text-secondary);
-  font-size: 0.85em;
 }
 
 /*

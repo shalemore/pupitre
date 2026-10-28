@@ -1,11 +1,13 @@
-import { Show, type Component } from "solid-js";
+import { FolderOpen } from "lucide-solid";
+import { For, Show, type Component } from "solid-js";
 import { SETTING_RANGES, type Settings } from "@shared/settings";
-import { Select, Slider, Switch } from "@/components/ui";
-import { t } from "@/i18n";
+import { Callout, IconButton, Select, Slider, Switch } from "@/components/ui";
+import { currentLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { settings, updateSettings } from "@/lib/settings";
-import { type ThemeInfo, THEMES } from "@/lib/theme";
-import { FontSelect } from "./font-select";
+import { DEFAULT_THEME, type ThemeInfo, themeDisplayName, themes } from "@/lib/theme";
+import { workspace } from "@/lib/workspace";
+import { FontSelect, themeFontLabel } from "./font-select";
 import { SettingField, SettingGroup, SettingsSection } from "./settings-section";
 
 function schemeLabel(theme: ThemeInfo): string {
@@ -15,12 +17,59 @@ function schemeLabel(theme: ThemeInfo): string {
     : t().settings.colorSchemeLight;
 }
 
-function themeOption(theme: ThemeInfo) {
-  return { value: theme.name, label: theme.name, description: schemeLabel(theme) };
+function sourceBadge(theme: ThemeInfo): string | undefined {
+  if (theme.source === "global") return t().settings.scopeGlobal;
+  if (theme.source === "project") return t().settings.scopeFolder;
+  return undefined;
+}
+
+function themeOptions(onlyDark = false) {
+  const all = themes().filter((theme) => !onlyDark || theme.schemes.includes("dark"));
+  const labels = all.map((theme) => themeDisplayName(theme, currentLocale()));
+  const duplicated = new Set(labels.filter((label, index) => labels.indexOf(label) !== index));
+  return all.map((theme) => {
+    const label = themeDisplayName(theme, currentLocale());
+    return {
+      value: theme.id,
+      label,
+      hint: duplicated.has(label) ? theme.name : undefined,
+      badge: sourceBadge(theme),
+      description: schemeLabel(theme),
+    };
+  });
+}
+
+/** The stored theme may point at a folder that has since gone; the default stands in then. */
+function currentThemeId(): string {
+  const id = settings().theme;
+  return themes().some((theme) => theme.id === id) ? id : DEFAULT_THEME;
+}
+
+function currentDarkThemeId(): string {
+  const id = settings().darkTheme;
+  if (id === "") return "";
+  return themes().some((theme) => theme.id === id) ? id : "";
+}
+
+/** A stored theme may point at a folder that has since gone; say so instead of switching silently. */
+function missingThemeMessages(): string[] {
+  const available = (id: string) => themes().some((theme) => theme.id === id);
+  const messages: string[] = [];
+  if (!available(settings().theme)) messages.push(t().settings.themeMissing);
+  if (settings().darkTheme !== "" && !available(settings().darkTheme)) {
+    messages.push(t().settings.darkThemeMissing);
+  }
+  return messages;
 }
 
 export const AppearanceSection: Component = () => (
   <SettingsSection title={t().settings.appearance}>
+    <Show when={missingThemeMessages().length > 0}>
+      <Callout variant="destructive" class="space-y-1">
+        <For each={missingThemeMessages()}>{(message) => <p>{message}</p>}</For>
+      </Callout>
+    </Show>
+
     <SettingGroup>
       <SettingField name="colorScheme" title={t().settings.colorScheme}>
         <Select<Settings["colorScheme"]>
@@ -36,12 +85,30 @@ export const AppearanceSection: Component = () => (
       </SettingField>
 
       <SettingField name="theme" title={t().settings.theme}>
-        <Select
-          value={settings().theme}
-          onChange={(theme) => void updateSettings({ theme })}
-          options={THEMES.map(themeOption)}
-          aria-label={t().settings.theme}
-        />
+        <div class="flex items-center gap-1">
+          <Select
+            value={currentThemeId()}
+            onChange={(theme) => void updateSettings({ theme })}
+            options={themeOptions()}
+            aria-label={t().settings.theme}
+          />
+          <IconButton
+            label={`${t().settings.theme} · ${t().settings.scopeGlobal}`}
+            size="icon-xs"
+            onClick={() => void desktop.invoke("themes:reveal", "global")}
+          >
+            <FolderOpen />
+          </IconButton>
+          <Show when={workspace().root !== null}>
+            <IconButton
+              label={`${t().settings.theme} · ${t().settings.scopeFolder}`}
+              size="icon-xs"
+              onClick={() => void desktop.invoke("themes:reveal", "project")}
+            >
+              <FolderOpen />
+            </IconButton>
+          </Show>
+        </div>
       </SettingField>
 
       <SettingField
@@ -50,12 +117,9 @@ export const AppearanceSection: Component = () => (
         description={t().settings.darkThemeDesc}
       >
         <Select
-          value={settings().darkTheme}
+          value={currentDarkThemeId()}
           onChange={(darkTheme) => void updateSettings({ darkTheme })}
-          options={[
-            { value: "", label: t().settings.sameTheme },
-            ...THEMES.filter((theme) => theme.schemes.includes("dark")).map(themeOption),
-          ]}
+          options={[{ value: "", label: t().settings.sameTheme }, ...themeOptions(true)]}
           aria-label={t().settings.darkTheme}
         />
       </SettingField>
@@ -66,7 +130,7 @@ export const AppearanceSection: Component = () => (
         <FontSelect
           value={settings().uiFont}
           onChange={(uiFont) => void updateSettings({ uiFont })}
-          emptyLabel={t().settings.systemDefault}
+          emptyLabel={themeFontLabel("--font-sans")}
           aria-label={t().settings.uiFont}
         />
       </SettingField>
