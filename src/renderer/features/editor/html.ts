@@ -114,6 +114,12 @@ export class HtmlBlockWidget extends WidgetType {
       }
     }
     for (const anchor of block.querySelectorAll("a")) anchor.classList.add("md-link");
+    // The inline formats take the styles their Markdown counterparts have
+    for (const tag of FORMATTING_TAGS) {
+      for (const element of block.querySelectorAll(tag)) {
+        element.classList.add("md-tag", `md-tag-${tag}`);
+      }
+    }
     watchHtmlImages(view, block, this.base);
     return block;
   }

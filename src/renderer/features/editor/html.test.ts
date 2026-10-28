@@ -50,4 +50,17 @@ describe("the HTML blocks the editor shows rendered", () => {
     expect(block.querySelector("a")?.classList.contains("md-link")).toBe(true);
     view.destroy();
   });
+
+  it("gives the inline formats the classes their Markdown spellings use", () => {
+    const view = markdownView("");
+    const block = new HtmlBlockWidget(
+      "<p><b>bold</b> <em>italic</em> <kbd>Ctrl</kbd> <mark>hi</mark></p>",
+      undefined,
+    ).toDOM(view);
+    expect(block.querySelector("b")?.className).toBe("md-tag md-tag-b");
+    expect(block.querySelector("em")?.className).toBe("md-tag md-tag-em");
+    expect(block.querySelector("kbd")?.className).toBe("md-tag md-tag-kbd");
+    expect(block.querySelector("mark")?.className).toBe("md-tag md-tag-mark");
+    view.destroy();
+  });
 });
