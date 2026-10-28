@@ -91,9 +91,18 @@ export const OutlineList: Component<OutlineListProps> = (props) => {
                 onClick={() => props.onSelectHeading(row().heading)}
                 style={rowIndent(row().heading.level - 1, 10)}
                 class={cn("min-w-0 flex-1", row().heading.level === 1 && "font-medium")}
-                title={row().heading.text}
+                title={row().heading.text.trim() || t().sidebar.untitled}
               >
-                <span class="min-w-0 truncate">{row().heading.text}</span>
+                <Show
+                  when={row().heading.text.trim()}
+                  fallback={
+                    <span class="min-w-0 truncate italic text-tertiary">
+                      {t().sidebar.untitled}
+                    </span>
+                  }
+                >
+                  <span class="min-w-0 truncate">{row().heading.text}</span>
+                </Show>
               </ListItem>
             </div>
           )}

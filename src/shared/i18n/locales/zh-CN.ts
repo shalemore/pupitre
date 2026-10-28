@@ -17,6 +17,7 @@ export const zhCN = {
   },
   sidebar: {
     noHeadings: "还没有标题",
+    untitled: "未命名",
     outline: "大纲",
     folder: "文件夹",
     folderUnreadable: "无法读取该文件夹。",

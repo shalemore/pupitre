@@ -15,6 +15,7 @@ export const itIT = {
   },
   sidebar: {
     noHeadings: "Nessun titolo",
+    untitled: "Senza titolo",
     outline: "Struttura",
     folder: "Cartella",
     folderUnreadable: "Impossibile leggere questa cartella.",

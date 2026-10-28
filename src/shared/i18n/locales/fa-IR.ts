@@ -16,6 +16,7 @@ export const faIR = {
   },
   sidebar: {
     noHeadings: "هنوز عنوانی نیست",
+    untitled: "بدون‌عنوان",
     // TODO(i18n): unverified with native speakers
     outline: "طرح کلی",
     folder: "پوشه",

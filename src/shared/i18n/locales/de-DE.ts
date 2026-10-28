@@ -15,6 +15,7 @@ export const deDE = {
   },
   sidebar: {
     noHeadings: "Noch keine Überschriften",
+    untitled: "Unbenannt",
     outline: "Gliederung",
     folder: "Ordner",
     folderUnreadable: "Dieser Ordner kann nicht gelesen werden.",

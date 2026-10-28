@@ -15,6 +15,7 @@ export const hiIN = {
   },
   sidebar: {
     noHeadings: "अभी कोई शीर्षक नहीं",
+    untitled: "बिना शीर्षक",
     // TODO(i18n): unverified with native speakers
     outline: "रूपरेखा",
     folder: "फ़ोल्डर",

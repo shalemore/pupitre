@@ -15,6 +15,7 @@ export const elGR = {
   },
   sidebar: {
     noHeadings: "Δεν υπάρχουν ακόμη επικεφαλίδες",
+    untitled: "Χωρίς τίτλο",
     // TODO(i18n): unverified with native speakers
     outline: "Περίγραμμα",
     folder: "Φάκελος",

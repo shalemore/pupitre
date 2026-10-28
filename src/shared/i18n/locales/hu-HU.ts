@@ -15,6 +15,7 @@ export const huHU = {
   },
   sidebar: {
     noHeadings: "Még nincsenek címsorok",
+    untitled: "Névtelen",
     // TODO(i18n): unverified with native speakers
     outline: "Vázlat",
     folder: "Mappa",

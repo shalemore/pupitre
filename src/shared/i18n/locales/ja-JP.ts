@@ -16,6 +16,7 @@ export const jaJP = {
   },
   sidebar: {
     noHeadings: "見出しがまだありません",
+    untitled: "名称未設定",
     outline: "アウトライン",
     folder: "フォルダー",
     folderUnreadable: "このフォルダーを読み込めませんでした。",

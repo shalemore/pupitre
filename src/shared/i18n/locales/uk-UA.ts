@@ -21,6 +21,7 @@ export const ukUA = {
   },
   sidebar: {
     noHeadings: "Заголовків ще немає",
+    untitled: "Без назви",
     // TODO(i18n): unverified with native speakers
     outline: "Структура",
     folder: "Папка",

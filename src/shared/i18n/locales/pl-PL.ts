@@ -21,6 +21,7 @@ export const plPL = {
   },
   sidebar: {
     noHeadings: "Brak nagłówków",
+    untitled: "Bez nazwy",
     // TODO(i18n): unverified with native speakers
     outline: "Konspekt",
     folder: "Folder",

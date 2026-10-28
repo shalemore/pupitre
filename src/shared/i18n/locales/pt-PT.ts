@@ -15,6 +15,7 @@ export const ptPT = {
   },
   sidebar: {
     noHeadings: "Ainda sem títulos",
+    untitled: "Sem título",
     outline: "Estrutura",
     folder: "Pasta",
     folderUnreadable: "Não foi possível ler esta pasta.",

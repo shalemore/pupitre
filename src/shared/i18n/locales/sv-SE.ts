@@ -15,6 +15,7 @@ export const svSE = {
   },
   sidebar: {
     noHeadings: "Inga rubriker ännu",
+    untitled: "Namnlös",
     // TODO(i18n): unverified with native speakers
     outline: "Disposition",
     folder: "Mapp",

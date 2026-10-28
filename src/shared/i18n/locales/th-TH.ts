@@ -18,6 +18,7 @@ export const thTH = {
   },
   sidebar: {
     noHeadings: "ยังไม่มีหัวข้อ",
+    untitled: "ไม่มีชื่อ",
     // TODO(i18n): unverified with native speakers
     outline: "โครงร่าง",
     folder: "โฟลเดอร์",

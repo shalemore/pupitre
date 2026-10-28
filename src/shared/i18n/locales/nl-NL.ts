@@ -15,6 +15,7 @@ export const nlNL = {
   },
   sidebar: {
     noHeadings: "Nog geen koppen",
+    untitled: "Naamloos",
     // TODO(i18n): unverified with native speakers
     outline: "Overzicht",
     folder: "Map",

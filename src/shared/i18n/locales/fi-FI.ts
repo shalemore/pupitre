@@ -15,6 +15,7 @@ export const fiFI = {
   },
   sidebar: {
     noHeadings: "Ei vielä otsikoita",
+    untitled: "Nimetön",
     // TODO(i18n): unverified with native speakers
     outline: "Jäsennys",
     folder: "Kansio",

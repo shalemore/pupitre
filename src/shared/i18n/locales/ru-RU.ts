@@ -21,6 +21,7 @@ export const ruRU = {
   },
   sidebar: {
     noHeadings: "Заголовков пока нет",
+    untitled: "Без названия",
     // TODO(i18n): unverified with native speakers
     outline: "Структура",
     folder: "Папка",

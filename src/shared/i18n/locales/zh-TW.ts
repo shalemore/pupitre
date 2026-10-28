@@ -17,6 +17,7 @@ export const zhTW = {
   },
   sidebar: {
     noHeadings: "尚無標題",
+    untitled: "未命名",
     outline: "大綱",
     folder: "資料夾",
     folderUnreadable: "無法讀取該資料夾。",

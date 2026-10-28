@@ -15,6 +15,7 @@ export const trTR = {
   },
   sidebar: {
     noHeadings: "Henüz başlık yok",
+    untitled: "Adsız",
     // TODO(i18n): unverified with native speakers
     outline: "Ana Hat",
     folder: "Klasör",

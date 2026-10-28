@@ -16,6 +16,7 @@ export const koKR = {
   },
   sidebar: {
     noHeadings: "아직 제목이 없습니다",
+    untitled: "제목 없음",
     outline: "개요",
     folder: "폴더",
     folderUnreadable: "이 폴더를 읽을 수 없습니다.",

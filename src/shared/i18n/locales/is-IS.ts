@@ -16,6 +16,7 @@ export const isIS = {
   },
   sidebar: {
     noHeadings: "Engar fyrirsagnir ennþá",
+    untitled: "Ónefnt",
     // TODO(i18n): unverified with native speakers
     outline: "Yfirlit",
     folder: "Mappa",

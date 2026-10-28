@@ -15,6 +15,7 @@ export const viVN = {
   },
   sidebar: {
     noHeadings: "Chưa có tiêu đề nào",
+    untitled: "Không có tiêu đề",
     // TODO(i18n): unverified with native speakers
     outline: "Dàn ý",
     folder: "Thư mục",

@@ -15,6 +15,7 @@ export const daDK = {
   },
   sidebar: {
     noHeadings: "Ingen overskrifter endnu",
+    untitled: "Unavngivet",
     // TODO(i18n): unverified with native speakers
     outline: "Disposition",
     folder: "Mappe",

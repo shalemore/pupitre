@@ -15,6 +15,7 @@ export const frFR = {
   },
   sidebar: {
     noHeadings: "Aucun titre pour le moment",
+    untitled: "Sans titre",
     outline: "Plan",
     folder: "Dossier",
     folderUnreadable: "Impossible de lire ce dossier.",

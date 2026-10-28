@@ -15,6 +15,7 @@ export const idID = {
   },
   sidebar: {
     noHeadings: "Belum ada judul",
+    untitled: "Tanpa Judul",
     // TODO(i18n): unverified with native speakers
     outline: "Kerangka",
     folder: "Folder",

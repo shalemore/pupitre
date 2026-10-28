@@ -16,6 +16,7 @@ export const enUS = {
   },
   sidebar: {
     noHeadings: "No headings yet",
+    untitled: "Untitled",
     outline: "Outline",
     folder: "Folder",
     folderUnreadable: "This folder can't be read.",

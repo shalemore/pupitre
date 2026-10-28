@@ -30,6 +30,7 @@ export const ar = {
   },
   sidebar: {
     noHeadings: "لا توجد عناوين بعد",
+    untitled: "بلا عنوان",
     // TODO(i18n): unverified with native speakers
     outline: "المخطط التفصيلي",
     folder: "المجلد",

@@ -21,6 +21,7 @@ export const csCZ = {
   },
   sidebar: {
     noHeadings: "Zatím žádné nadpisy",
+    untitled: "Bez názvu",
     // TODO(i18n): unverified with native speakers
     outline: "Osnova",
     folder: "Složka",

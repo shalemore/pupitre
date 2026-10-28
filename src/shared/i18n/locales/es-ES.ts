@@ -15,6 +15,7 @@ export const esES = {
   },
   sidebar: {
     noHeadings: "Sin encabezados aún",
+    untitled: "Sin título",
     outline: "Esquema",
     folder: "Carpeta",
     folderUnreadable: "No se puede leer esta carpeta.",

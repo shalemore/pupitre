@@ -15,6 +15,7 @@ export const nbNO = {
   },
   sidebar: {
     noHeadings: "Ingen overskrifter ennå",
+    untitled: "Uten navn",
     // TODO(i18n): unverified with native speakers
     outline: "Disposisjon",
     folder: "Mappe",
