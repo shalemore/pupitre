@@ -41,6 +41,7 @@ import {
   withoutSetting,
 } from "@shared/settings";
 import about from "./demo/about.md?raw";
+import { showUnsavedDialog } from "./unsaved-dialog";
 
 /**
  * The window.desktop of the demo in a browser: what the desktop app gets from its main process,
@@ -465,51 +466,13 @@ Object.defineProperty(window, "queryLocalFonts", { value: undefined });
  */
 function askUnsaved(fileName: string): Promise<UnsavedChoice> {
   const { dialogs } = labels();
-  const dialog = document.createElement("dialog");
-  dialog.className =
-    "floating-panel m-auto w-[min(24rem,calc(100vw_-_2rem))] p-6 text-sm text-foreground backdrop:bg-black/30";
-  dialog.setAttribute("aria-labelledby", "pupitre-unsaved-message");
-
-  const message = document.createElement("p");
-  message.id = "pupitre-unsaved-message";
-  message.className = "font-medium";
-  message.textContent = dialogs.unsavedMessage(fileName);
-  const detail = document.createElement("p");
-  detail.className = "mt-2 text-xs text-muted-foreground";
-  detail.textContent = dialogs.unsavedDetail;
-  const actions = document.createElement("div");
-  actions.className = "mt-6 flex justify-end gap-2";
-
-  const { promise, resolve } = Promise.withResolvers<UnsavedChoice>();
-  const finish = (choice: UnsavedChoice) => {
-    dialog.close();
-    dialog.remove();
-    resolve(choice);
-  };
-  const answer = (label: string, choice: UnsavedChoice, primary = false) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.textContent = label;
-    button.className = primary
-      ? "h-8 rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground"
-      : "h-8 rounded-md px-3 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground";
-    button.addEventListener("click", () => finish(choice));
-    actions.append(button);
-    return button;
-  };
-  const save = answer(dialogs.save, "save", true);
-  answer(dialogs.dontSave, "discard");
-  answer(dialogs.cancel, "cancel");
-
-  dialog.addEventListener("cancel", (event) => {
-    event.preventDefault();
-    finish("cancel");
+  return showUnsavedDialog({
+    message: dialogs.unsavedMessage(fileName),
+    detail: dialogs.unsavedDetail,
+    save: dialogs.save,
+    dontSave: dialogs.dontSave,
+    cancel: dialogs.cancel,
   });
-  dialog.append(message, detail, actions);
-  document.body.append(dialog);
-  dialog.showModal();
-  save.focus();
-  return promise;
 }
 
 type Handlers = {
