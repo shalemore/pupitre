@@ -49,6 +49,7 @@ import {
   parentFolder,
   withoutDocumentExtension,
 } from "@/lib/file";
+import { withoutScripts } from "@/lib/html";
 import { createImmersiveChrome } from "@/lib/immersive-chrome";
 import { recentFiles } from "@/lib/recent-files";
 import { settings, updateSettings } from "@/lib/settings";
@@ -417,7 +418,7 @@ export const MainWindow: Component = () => {
     try {
       await (format === "html"
         ? desktop.invoke("document:export-html", name, html)
-        : desktop.invoke("document:export-image", name, html, doc.folder));
+        : desktop.invoke("document:export-image", name, withoutScripts(html), doc.folder));
     } catch (error) {
       await reportFailure(t().dialogs.saveFailed, name, messageOf(error));
     }

@@ -64,32 +64,13 @@ export async function exportImage({
   // to the document, so the page is written next to them when the caller knows the folder; the dot
   // keeps it out of the file listing a sidebar of that folder shows
   const pagePath = join(baseFolder ?? tmpdir(), `.pupitre-export-${randomUUID()}.html`);
-  await writeFile(pagePath, withoutScripts(html), "utf8");
+  // The page reaches this process without scripts: the renderer strips them as it builds it
+  await writeFile(pagePath, html, "utf8");
   try {
     await writeFile(filePath, await render(pagePath, DOCUMENT_WIDTH));
   } finally {
     await rm(pagePath, { force: true });
   }
-}
-
-/**
- * The page's own scripts are removed before it is loaded: the export only measures the page, so
- * nothing in the document has to run, and a page opened next to the user's files has no business
- * running code from them. The tags are what goes: `javascript: false` in the web preferences would
- * also stop the main process from running the script that measures the page.
- *
- * A match can leave another tag behind, so removal repeats until the page stops changing.
- */
-function withoutScripts(html: string): string {
-  let previous: string;
-  do {
-    previous = html;
-    html = html
-      // A browser ends a script at any end tag that starts with `</script`, attributes and all
-      .replace(/<script\b[^>]*>[\s\S]*?<\/script\b[^>]*>/gi, "")
-      .replace(/<script\b[^>]*>/gi, "");
-  } while (html !== previous);
-  return html;
 }
 
 /** The hidden window an export renders in, with the sizes it was laid out for. */
