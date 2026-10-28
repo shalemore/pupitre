@@ -107,6 +107,12 @@ export class HtmlBlockWidget extends WidgetType {
     const block = document.createElement("div");
     block.className = "md-html-block";
     block.append(DOMPurify.sanitize(this.source, { RETURN_DOM_FRAGMENT: true }));
+    // Preflight leaves headings without their size and weight, so give them the document's styles
+    for (const level of [1, 2, 3, 4, 5, 6] as const) {
+      for (const heading of block.querySelectorAll(`h${level}`)) {
+        heading.classList.add("md-heading", `md-h${level}`);
+      }
+    }
     for (const image of block.querySelectorAll("img")) {
       image.src = resolveAgainst(this.base, image.getAttribute("src") ?? "");
     }
