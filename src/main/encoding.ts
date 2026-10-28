@@ -74,8 +74,7 @@ export function undeclaredUtf16(buffer: Buffer): TextEncoding | undefined {
 
 /**
  * Characters no document holds: control characters other than the tab and the line breaks, and the
- * replacement character a byte that is not UTF-8 becomes. A regular expression finds them over a
- * large file without the JavaScript loop `mostlyUnreadable` used to run per character.
+ * replacement character a byte that is not UTF-8 becomes.
  */
 // Control characters are exactly what a file that is not text decodes to
 // eslint-disable-next-line no-control-regex

@@ -201,7 +201,7 @@ function buildTemplate(): MenuItemConstructorOptions[] {
           label: labels.pastePlain,
           // Electron gives this role no accelerator outside macOS, and the main window inserts the
           // clipboard's text itself so that the rich-text paste conversion does not see it; any
-          // other window pastes through the role as before
+          // other window pastes through the role
           accelerator: "CmdOrCtrl+Shift+V",
           click: () => {
             const window = BrowserWindow.getFocusedWindow();

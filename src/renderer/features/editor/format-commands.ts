@@ -375,7 +375,7 @@ export function insertTable(view: EditorView, rows: number, columns: number): vo
   insertBlock(view, source, bodyStart + 2);
 }
 
-/** The table the keyboard shortcut has always written, with the caret in its header. */
+/** The table the keyboard shortcut writes, with the caret in its header. */
 function insertShortcutTable(view: EditorView): void {
   insertBlock(view, emptyTableSource(2, 3), 2);
 }
@@ -480,7 +480,7 @@ export function runFormatAction(
     case "mathBlock":
       return insertFencedBlock(view, "$$");
     case "table":
-      // The shortcut keeps the caret in the header, as it always has; the dialog starts in the body
+      // The shortcut keeps the caret in the header; the dialog starts in the body
       return insertShortcutTable(view);
     case "divider":
       return insertBlock(view, `${style.ruleMarker.repeat(3)}\n`, 4);

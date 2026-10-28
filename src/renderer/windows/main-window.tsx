@@ -444,7 +444,7 @@ export const MainWindow: Component = () => {
     void desktop.invoke("window:close-confirmed");
   };
 
-  /** Closes the tab being shown; the last one takes the window with it, the way a single document always did. */
+  /** Closes the tab being shown; the last one closes the window. */
   const closeActiveTab = async () => {
     const tab = session.activeTab();
     if (tab === undefined) return;
