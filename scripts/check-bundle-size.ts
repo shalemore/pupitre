@@ -11,11 +11,9 @@ import { join } from "node:path";
 
 const ASSETS = "out/renderer/assets";
 
-/** 15.40 MiB of JavaScript at 0.7.2. */
 const TOTAL_BUDGET_BYTES = 17 * 1024 * 1024;
 
-/** The largest chunk was 2.50 MiB (elkjs, which mermaid lays its diagrams out with) and the entry 2.32 MiB. */
-const LARGEST_CHUNK_BUDGET_BYTES = 3 * 1024 * 1024;
+const LARGEST_CHUNK_BUDGET_BYTES = 3.5 * 1024 * 1024;
 
 /** How many of the largest chunks the report lists. */
 const LISTED_CHUNKS = 8;

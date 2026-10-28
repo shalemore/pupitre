@@ -32,29 +32,12 @@ import "@mathjax/src/js/input/tex/unicode/UnicodeConfiguration.js";
 import "@mathjax/src/js/input/tex/units/UnitsConfiguration.js";
 import "@mathjax/src/js/input/tex/upgreek/UpgreekConfiguration.js";
 import "@mathjax/src/js/input/tex/verb/VerbConfiguration.js";
+import { MathJaxTexFont } from "@mathjax/mathjax-tex-font/js/svg.js";
 import { liteAdaptor } from "@mathjax/src/js/adaptors/liteAdaptor.js";
 import { RegisterHTMLHandler } from "@mathjax/src/js/handlers/html.js";
 import { TeX } from "@mathjax/src/js/input/tex.js";
 import { mathjax } from "@mathjax/src/js/mathjax.js";
 import { SVG } from "@mathjax/src/js/output/svg.js";
-
-/**
- * MathJax 4 splits the less-common TeX glyph ranges of its New Computer Modern font (`\mathbb`,
- * `\mathcal`, `\mathfrak`, `\mathscr`, `\mathsf`, `\mathtt`, extra arrows, relations and symbols)
- * into files loaded through `mathjax.asyncLoad`. Its built-in `asyncLoad/esm.js` calls
- * `import(name)` with a bare package specifier that Vite cannot see at build time, so glob the
- * TeX math ranges instead to turn each into an on-demand chunk; prose scripts outside TeX fall
- * back to `<text>` in the document font.
- */
-const dynamicFonts = import.meta.glob(
-  "../../../../node_modules/@mathjax/mathjax-newcm-font/mjs/svg/dynamic/{accents,arrows,calligraphic,double-struck,fraktur,math,monospace,sans-serif,script,shapes,symbols,variants}.js",
-);
-mathjax.asyncLoad = (name: string) => {
-  const file = name.slice(name.lastIndexOf("/") + 1);
-  const load =
-    dynamicFonts[`../../../../node_modules/@mathjax/mathjax-newcm-font/mjs/svg/dynamic/${file}`];
-  return load ? load() : Promise.resolve();
-};
 
 /**
  * The TeX packages this app reads. MathJax 4 dropped the AllPackages list, and its autoload and
@@ -109,9 +92,9 @@ const PACKAGES = [
  */
 const adaptor = liteAdaptor();
 RegisterHTMLHandler(adaptor);
-const output = new SVG({ fontCache: "local" });
-// The mhchem marks ask for a -mhchem variant the New Computer Modern font does not carry;
-// creating it from normal keeps the fallback explicit instead of logging "Invalid variant".
+// The static font has every glyph, so no range has to load mid-formula.
+const output = new SVG({ fontCache: "local", fontData: MathJaxTexFont });
+// mhchem asks for a -mhchem variant the font lacks; map it to normal.
 output.font.createVariant("-mhchem", "normal");
 const document = mathjax.document("", {
   // "ams" is what numbers equations and makes \label and \ref work
