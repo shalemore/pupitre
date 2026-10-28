@@ -619,6 +619,10 @@ function watchImage(
   frame.append(skeleton, fallback);
 
   const remote = WEB_IMAGE.test(src);
+  const attributeWidth = Number(image.getAttribute("width"));
+  const styleWidth = Number.parseFloat(image.style.width);
+  let knownWidth = attributeWidth || (Number.isFinite(styleWidth) ? styleWidth : 0);
+  let knownHeight = Number(image.getAttribute("height")) || 0;
   let loaded = false;
   let failed = false;
   let attempts = 0;
@@ -638,13 +642,16 @@ function watchImage(
     view.requestMeasure();
   };
 
-  const load = () => {
+  /** Fetches the picture; a retry keeps the failure message up until the answer arrives. */
+  const load = (retrying = false) => {
     if (!image.isConnected) return;
     loaded = false;
     window.clearTimeout(slowTimer);
     frame.removeAttribute("data-slow");
-    frame.setAttribute("data-state", "loading");
-    showSkeleton();
+    if (!retrying) {
+      frame.setAttribute("data-state", "loading");
+      showSkeleton();
+    }
     image.src = src;
   };
 
@@ -654,7 +661,7 @@ function watchImage(
     if (!image.isConnected || !failed) return false;
     failed = false;
     attempts = 0;
-    load();
+    load(true);
     return false;
   };
 
@@ -662,6 +669,10 @@ function watchImage(
     loaded = true;
     failed = false;
     attempts = 0;
+    knownWidth = image.naturalWidth || knownWidth;
+    knownHeight = image.naturalHeight || knownHeight;
+    frame.style.removeProperty("inline-size");
+    frame.style.removeProperty("min-block-size");
     settle("ready");
     // A picture with a clear background, an icon for one, keeps its own outline instead of
     // standing in a frame that would box it in
@@ -676,11 +687,14 @@ function watchImage(
     const delay = RETRY_DELAYS[attempts];
     if (remote && delay !== undefined) {
       attempts += 1;
-      window.setTimeout(load, delay);
+      window.setTimeout(() => load(true), delay);
       return;
     }
     failed = true;
     message.textContent = remote ? t().editor.image.failedNetwork : t().editor.image.failedFile;
+    // Keep the space the picture would take, so retrying it does not move the page
+    if (knownWidth > 0) frame.style.inlineSize = `${knownWidth}px`;
+    if (knownHeight > 0) frame.style.minBlockSize = `${knownHeight}px`;
     settle("error");
   });
 
@@ -688,7 +702,7 @@ function watchImage(
   retry.addEventListener("click", () => {
     failed = false;
     attempts = 0;
-    load();
+    load(true);
   });
 
   showSkeleton();
