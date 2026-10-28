@@ -20,6 +20,11 @@ concurrency:
   group: release
   cancel-in-progress: false
 
+# The jobs that publish a release open it themselves and declare the write they need; the workflow
+# itself only reads.
+permissions:
+  contents: read
+
 jobs:
   check:
     name: Pre-flight & Version

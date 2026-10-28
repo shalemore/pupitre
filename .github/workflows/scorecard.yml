@@ -10,9 +10,9 @@ on:
   push:
     branches: [main]
 
+# The analysis reads the repository and writes nothing. Only its job uploads the results and signs
+# them, and a job's permissions replace these, so it declares its own.
 permissions:
-  security-events: write
-  id-token: write
   contents: read
   actions: read
 
@@ -20,6 +20,11 @@ jobs:
   analysis:
     name: Analyze
     runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      id-token: write
+      contents: read
+      actions: read
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:

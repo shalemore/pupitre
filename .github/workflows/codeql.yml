@@ -10,8 +10,9 @@ on:
   schedule:
     - cron: "27 2 * * 1"
 
+# The analysis reads the repository and writes nothing. Only the job that uploads its results needs
+# to write, and a job's permissions replace these, so it declares its own.
 permissions:
-  security-events: write
   contents: read
   actions: read
   packages: read
@@ -20,6 +21,11 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+      actions: read
+      packages: read
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
