@@ -1,7 +1,7 @@
 import { LanguageDescription } from "@codemirror/language";
-import { languages } from "@codemirror/language-data";
 import { highlightTree } from "@lezer/highlight";
 import { codeHighlightStyle } from "@/features/editor/code-highlight";
+import { codeLanguages } from "@/features/editor/code-languages";
 import { escapeHtml } from "@/lib/html";
 
 /**
@@ -10,13 +10,15 @@ import { escapeHtml } from "@/lib/html";
  * The colors are the tags of the editor's own highlight style, so a block reads on the page as it
  * reads on the screen; its CSS classes are the ones page-style.ts writes into the page. The
  * language is found the way lang-markdown finds it for the editor, from the fence's info string
- * through @codemirror/language-data, so a fence is colored on the page exactly when it is colored
+ * through the app's code languages, so a fence is colored on the page exactly when it is colored
  * in the window.
  */
 
 /** The language description for what a fence names, or `null` for a language this app does not know. */
 function languageOf(language: string): LanguageDescription | null {
-  return language === "" ? null : LanguageDescription.matchLanguageName(languages, language, true);
+  return language === ""
+    ? null
+    : LanguageDescription.matchLanguageName(codeLanguages, language, true);
 }
 
 /**
