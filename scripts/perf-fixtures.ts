@@ -32,18 +32,11 @@ async function git(args: readonly string[], cwd?: string): Promise<string> {
 }
 
 async function markdownFiles(folder: string): Promise<string[]> {
-  const entries = await readdir(folder, { withFileTypes: true });
-  const nested = await Promise.all(
-    entries
-      .filter((entry) => entry.isDirectory())
-      .map((entry) => markdownFiles(join(folder, entry.name))),
-  );
-  return [
-    ...entries
-      .filter((entry) => entry.isFile() && entry.name.endsWith(".md"))
-      .map((entry) => join(folder, entry.name)),
-    ...nested.flat(),
-  ].toSorted();
+  const entries = await readdir(folder, { recursive: true, withFileTypes: true });
+  return entries
+    .filter((entry) => entry.isFile() && entry.name.endsWith(".md"))
+    .map((entry) => join(entry.parentPath, entry.name))
+    .toSorted();
 }
 
 async function fetchMarkdown(): Promise<string> {

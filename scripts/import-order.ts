@@ -106,11 +106,9 @@ function ordered(source: string): string | undefined {
 }
 
 function modules(folder: string): string[] {
-  return readdirSync(folder, { withFileTypes: true }).flatMap((entry) => {
-    const path = join(folder, entry.name);
-    if (entry.isDirectory()) return modules(path);
-    return MODULE.test(entry.name) ? [path] : [];
-  });
+  return readdirSync(folder, { recursive: true, withFileTypes: true })
+    .filter((entry) => entry.isFile() && MODULE.test(entry.name))
+    .map((entry) => join(entry.parentPath, entry.name));
 }
 
 const check = process.argv.includes("--check");
