@@ -7,7 +7,13 @@ import {
   indentMore,
   isolateHistory,
 } from "@codemirror/commands";
-import { foldedRanges, foldEffect, syntaxTree, unfoldAll } from "@codemirror/language";
+import {
+  foldedRanges,
+  foldEffect,
+  forceParsing,
+  syntaxTree,
+  unfoldAll,
+} from "@codemirror/language";
 import {
   closeSearchPanel,
   findNext,
@@ -751,6 +757,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         const sourceMode = sourceConfigured;
         showSource(false);
         view.dispatch({ effects: setPrinting.of(true) });
+        forceParsing(view, view.state.doc.length, 5000);
         await Promise.all([prerenderMath(view.state), prerenderDiagrams(view.state)]);
         return () => {
           view.dispatch({ effects: setPrinting.of(false) });
@@ -765,7 +772,10 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       },
       persistImages: (documentPath) => props.pendingImages.persistView(view, documentPath),
       insertImage,
-      toHtml: () => documentHtml(view.state, documentTitle(props.documentPath)),
+      toHtml: () => {
+        forceParsing(view, view.state.doc.length, 5000);
+        return documentHtml(view.state, documentTitle(props.documentPath));
+      },
       toHtmlFragment: async () => {
         const { from, to } = view.state.selection.main;
         // Nothing selected copies the whole document

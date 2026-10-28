@@ -1,4 +1,4 @@
-import { syntaxTree } from "@codemirror/language";
+import { ensureSyntaxTree, syntaxTree } from "@codemirror/language";
 import { EditorState } from "@codemirror/state";
 import type { SyntaxNode } from "@lezer/common";
 import DOMPurify from "dompurify";
@@ -424,11 +424,13 @@ function renderBlocks(
  */
 function fragmentState(source: EditorState, markdown: string): EditorState {
   const titles = source.facet(alertTitles);
-  return EditorState.create({
+  const state = EditorState.create({
     doc: markdown,
     extensions:
       titles === undefined ? [markdownLanguage] : [markdownLanguage, alertTitles.of(titles)],
   });
+  ensureSyntaxTree(state, state.doc.length, 5000);
+  return state.update({}).state;
 }
 
 /**
