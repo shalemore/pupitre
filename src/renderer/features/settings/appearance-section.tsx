@@ -136,7 +136,13 @@ export const AppearanceSection: Component = () => (
       </SettingField>
 
       <Show when={desktop.initialState.capabilities.zoom}>
-        <SettingField name="zoom" title={t().settings.zoom} description={`${settings().zoom}%`}>
+        <SettingField
+          name="zoom"
+          title={t().settings.zoom}
+          description={new Intl.NumberFormat(currentLocale(), { style: "percent" }).format(
+            settings().zoom / 100,
+          )}
+        >
           <Slider
             value={settings().zoom}
             min={SETTING_RANGES.zoom.min}
