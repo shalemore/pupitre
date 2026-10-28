@@ -218,7 +218,7 @@ export function toHex(color: string): string {
   context.fillStyle = color;
   context.fillRect(0, 0, 1, 1);
   const [r = 0, g = 0, b = 0] = context.getImageData(0, 0, 1, 1).data;
-  return `#${[r, g, b].map((value) => value.toString(16).padStart(2, "0")).join("")}`;
+  return `#${Uint8Array.of(r, g, b).toHex()}`;
 }
 
 /** Whether a #rrggbb color reads as dark: a page or a diagram takes its scheme from the color it sits on. */

@@ -165,16 +165,13 @@ export function dataImageFile(src: string, alt: string): File | undefined {
   let bytes: Uint8Array;
   try {
     bytes = parameters.includes("base64")
-      ? Uint8Array.from(atob(payload), (char) => char.charCodeAt(0))
+      ? Uint8Array.fromBase64(payload)
       : new TextEncoder().encode(decodeURIComponent(payload));
   } catch {
     return undefined;
   }
   const extension = MIME_EXTENSIONS[type.toLowerCase()] ?? "";
-  // File takes an ArrayBuffer, not the view the decode produced
-  const data = new Uint8Array(bytes.length);
-  data.set(bytes);
-  return new File([data], `${alt === "" ? "image" : alt}${extension}`, { type });
+  return new File([bytes.slice()], `${alt === "" ? "image" : alt}${extension}`, { type });
 }
 
 /**
