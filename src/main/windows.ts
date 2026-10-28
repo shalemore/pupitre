@@ -153,22 +153,6 @@ function createWindow(view: View, options: BrowserWindowConstructorOptions): Bro
   return window;
 }
 
-/**
- * The work area of the display the window was last on. A monitor that was unplugged or whose
- * resolution changed leaves the saved bounds outside every display, where a window cannot be
- * reached with the pointer, so those come back on the primary display.
- */
-function workAreaFor({ x, y, width, height }: WindowBounds): WindowBounds {
-  const centerX = x + width / 2;
-  const centerY = y + height / 2;
-  const display = screen.getAllDisplays().find(({ workArea }) => {
-    const insideX = centerX >= workArea.x && centerX < workArea.x + workArea.width;
-    const insideY = centerY >= workArea.y && centerY < workArea.y + workArea.height;
-    return insideX && insideY;
-  });
-  return (display ?? screen.getPrimaryDisplay()).workArea;
-}
-
 function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
 }
@@ -180,7 +164,7 @@ function clamp(value: number, min: number, max: number): number {
  */
 function fitOnScreen(window: BrowserWindow): void {
   const bounds = window.getBounds();
-  const area = workAreaFor(bounds);
+  const area = screen.getDisplayMatching(bounds).workArea;
   const rightmost = Math.max(area.x, area.x + area.width - bounds.width);
   const lowest = Math.max(area.y, area.y + area.height - bounds.height);
   const x = clamp(bounds.x, area.x, rightmost);
@@ -195,7 +179,7 @@ function fitOnScreen(window: BrowserWindow): void {
  */
 function initialBounds(saved: WindowBounds | undefined): BrowserWindowConstructorOptions {
   if (saved === undefined) return MAIN_WINDOW_SIZE;
-  const area = workAreaFor(saved);
+  const area = screen.getDisplayMatching(saved).workArea;
   const width = Math.min(saved.width, area.width);
   const height = Math.min(saved.height, area.height);
   if (width < MAIN_WINDOW_MIN_SIZE.width || height < MAIN_WINDOW_MIN_SIZE.height) {
@@ -231,14 +215,12 @@ export function createMainWindow(): BrowserWindow {
     if (saved?.maximized === true) window.maximize();
     if (saved?.fullscreen === true) window.setFullScreen(true);
   });
-  // A maximized or full-screen window reports the whole work area, which must not replace the
-  // bounds it comes back to when it is restored
-  let normalBounds = window.getBounds();
   const rememberState = () => {
-    const maximized = window.isMaximized();
-    const fullscreen = window.isFullScreen();
-    if (!maximized && !fullscreen) normalBounds = window.getBounds();
-    updateWindowState({ bounds: normalBounds, maximized, fullscreen });
+    updateWindowState({
+      bounds: window.getNormalBounds(),
+      maximized: window.isMaximized(),
+      fullscreen: window.isFullScreen(),
+    });
   };
   window.on("move", rememberState);
   window.on("resize", rememberState);

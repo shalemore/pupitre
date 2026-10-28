@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { app, BrowserWindow, Notification } from "electron";
+import log from "electron-log/main";
 import electronUpdater from "electron-updater";
 import type { UpdateStatus } from "@shared/desktop-api";
 import { t } from "./i18n";
@@ -36,6 +37,7 @@ export const canSelfUpdate =
   existsSync(join(dirname(app.getPath("exe")), `Uninstall ${app.getName()}.exe`));
 
 export function setupUpdater(): void {
+  autoUpdater.logger = log;
   autoUpdater.autoDownload = false;
   autoUpdater.on("checking-for-update", () => setStatus({ kind: "checking" }));
   autoUpdater.on("update-available", (info) => {
