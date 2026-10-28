@@ -260,20 +260,20 @@ function folderPreviews(path: string): Record<string, string> {
 }
 
 function pickFile(): Promise<OpenedDocument | null> {
-  return new Promise((resolve) => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = DOCUMENT_EXTENSIONS.map((extension) => `.${extension}`).join(",");
-    input.addEventListener("cancel", () => resolve(null));
-    input.addEventListener("change", async () => {
-      const file = input.files?.[0];
-      if (!file) return resolve(null);
-      const path = `${DEMO_FOLDER}/${file.name}`;
-      files.set(path, await file.text());
-      resolve(opened(path));
-    });
-    input.click();
+  const { promise, resolve } = Promise.withResolvers<OpenedDocument | null>();
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = DOCUMENT_EXTENSIONS.map((extension) => `.${extension}`).join(",");
+  input.addEventListener("cancel", () => resolve(null));
+  input.addEventListener("change", async () => {
+    const file = input.files?.[0];
+    if (!file) return resolve(null);
+    const path = `${DEMO_FOLDER}/${file.name}`;
+    files.set(path, await file.text());
+    resolve(opened(path));
   });
+  input.click();
+  return promise;
 }
 
 // Menus: the window draws the menu bar itself, so the demo describes its entries the way the app's
@@ -480,36 +480,36 @@ function askUnsaved(fileName: string): Promise<UnsavedChoice> {
   const actions = document.createElement("div");
   actions.className = "mt-6 flex justify-end gap-2";
 
-  return new Promise((resolve) => {
-    const finish = (choice: UnsavedChoice) => {
-      dialog.close();
-      dialog.remove();
-      resolve(choice);
-    };
-    const answer = (label: string, choice: UnsavedChoice, primary = false) => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.textContent = label;
-      button.className = primary
-        ? "h-8 rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground"
-        : "h-8 rounded-md px-3 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground";
-      button.addEventListener("click", () => finish(choice));
-      actions.append(button);
-      return button;
-    };
-    const save = answer(dialogs.save, "save", true);
-    answer(dialogs.dontSave, "discard");
-    answer(dialogs.cancel, "cancel");
+  const { promise, resolve } = Promise.withResolvers<UnsavedChoice>();
+  const finish = (choice: UnsavedChoice) => {
+    dialog.close();
+    dialog.remove();
+    resolve(choice);
+  };
+  const answer = (label: string, choice: UnsavedChoice, primary = false) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = label;
+    button.className = primary
+      ? "h-8 rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground"
+      : "h-8 rounded-md px-3 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground";
+    button.addEventListener("click", () => finish(choice));
+    actions.append(button);
+    return button;
+  };
+  const save = answer(dialogs.save, "save", true);
+  answer(dialogs.dontSave, "discard");
+  answer(dialogs.cancel, "cancel");
 
-    dialog.addEventListener("cancel", (event) => {
-      event.preventDefault();
-      finish("cancel");
-    });
-    dialog.append(message, detail, actions);
-    document.body.append(dialog);
-    dialog.showModal();
-    save.focus();
+  dialog.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    finish("cancel");
   });
+  dialog.append(message, detail, actions);
+  document.body.append(dialog);
+  dialog.showModal();
+  save.focus();
+  return promise;
 }
 
 type Handlers = {
