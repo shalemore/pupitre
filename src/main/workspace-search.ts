@@ -44,14 +44,9 @@ function isFull(search: Search): boolean {
   return search.files.length >= MAX_FILES || search.matches >= MAX_MATCHES;
 }
 
-/** Escaped for a regular expression, so a query without the regexp option is read as the text it is. */
-function escapeRegExp(text: string): string {
-  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
 /** The query as a global pattern, or undefined when the user wrote a regular expression that is not one. */
 function searchPattern(query: string, options: WorkspaceSearchOptions): RegExp | undefined {
-  const source = options.regexp ? query : escapeRegExp(query);
+  const source = options.regexp ? query : RegExp.escape(query);
   try {
     return new RegExp(source, options.caseSensitive ? "g" : "gi");
   } catch {

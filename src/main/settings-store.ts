@@ -1,5 +1,6 @@
 import { statSync } from "node:fs";
 import { join } from "node:path";
+import { isDeepStrictEqual } from "node:util";
 import { app, BrowserWindow, nativeTheme, shell } from "electron";
 import type { WorkspaceState } from "@shared/desktop-api";
 import {
@@ -123,7 +124,7 @@ function saveGlobal(next: Record<string, unknown>): void {
 
 function saveWorkspace(next: Record<string, unknown>): void {
   if (!workspace) return;
-  const changed = JSON.stringify(next) !== JSON.stringify(workspace.file);
+  const changed = !isDeepStrictEqual(next, workspace.file);
   workspace.file = next;
   // The file appears with the first real change and stays, even if later values match the others
   if (!changed) return;

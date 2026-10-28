@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, readdirSync, watch, type FSWatcher } from "node:fs";
 import { basename, dirname, join } from "node:path";
+import { isDeepStrictEqual } from "node:util";
 import { app, BrowserWindow, shell } from "electron";
 import type { ImportedTheme } from "@shared/desktop-api";
 import { readThemesFromRoot } from "./theme-folders";
@@ -38,7 +39,7 @@ function broadcast(): void {
 
 function refresh(): void {
   const next = readAll();
-  const changed = JSON.stringify(next) !== JSON.stringify(current);
+  const changed = !isDeepStrictEqual(next, current);
   current = next;
   if (changed) broadcast();
   rewatch();
