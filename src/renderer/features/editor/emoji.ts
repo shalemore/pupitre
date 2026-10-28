@@ -7,7 +7,8 @@ export const emojiSyntax: MarkdownConfig = { ...Emoji, defineNodes: ["Emoji"] };
 
 /** The emoji a `:name:` shortcode stands for; names that are not emoji, such as the 30 in 12:30:45, give nothing. */
 export function emojiFor(shortcode: string): string | undefined {
-  return nameToEmoji[shortcode.slice(1, -1)];
+  const name = shortcode.slice(1, -1);
+  return Object.hasOwn(nameToEmoji, name) ? nameToEmoji[name] : undefined;
 }
 
 export class EmojiWidget extends WidgetType {
