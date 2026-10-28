@@ -2,6 +2,7 @@ import type { EditorView } from "@codemirror/view";
 import type { Component } from "solid-js";
 import { render } from "solid-js/web";
 import type { MenuEntry } from "@shared/menu";
+import { LocaleProvider } from "@/components/locale-provider";
 import { MenuPopup } from "@/features/menu/menu-popup";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
@@ -205,17 +206,19 @@ export function openImageMenu(
   };
   dispose = render(
     () => (
-      <PictureMenuPanel
-        menu={menu}
-        anchor={new DOMRect(event.clientX, event.clientY, 0, 0)}
-        onSelect={(id) => {
-          close();
-          // The menu took the focus with it; the caret belongs back in the text
-          view.focus();
-          menu.actions.get(id)?.();
-        }}
-        onClose={close}
-      />
+      <LocaleProvider>
+        <PictureMenuPanel
+          menu={menu}
+          anchor={new DOMRect(event.clientX, event.clientY, 0, 0)}
+          onSelect={(id) => {
+            close();
+            // The menu took the focus with it; the caret belongs back in the text
+            view.focus();
+            menu.actions.get(id)?.();
+          }}
+          onClose={close}
+        />
+      </LocaleProvider>
     ),
     container,
   );

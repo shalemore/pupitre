@@ -1,5 +1,6 @@
 import "@/app.css";
 import { render } from "solid-js/web";
+import { LocaleProvider } from "@/components/locale-provider";
 import { setupAppearance } from "@/lib/appearance";
 import { MainWindow } from "@/windows/main-window";
 
@@ -11,9 +12,23 @@ if (container) {
   // The settings window shares little with it and can load its sections when it is first opened.
   if (location.hash === "#settings") {
     void import("@/windows/settings-window").then(({ SettingsWindow }) =>
-      render(() => <SettingsWindow />, container),
+      render(
+        () => (
+          <LocaleProvider>
+            <SettingsWindow />
+          </LocaleProvider>
+        ),
+        container,
+      ),
     );
   } else {
-    render(() => <MainWindow />, container);
+    render(
+      () => (
+        <LocaleProvider>
+          <MainWindow />
+        </LocaleProvider>
+      ),
+      container,
+    );
   }
 }
