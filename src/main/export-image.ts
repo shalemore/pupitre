@@ -231,8 +231,8 @@ function scrollTo(top: number): string {
 }
 
 const scrollPositionSchema = z.object({
-  top: z.number().finite(),
-  visible: z.number().finite(),
+  top: z.number(),
+  visible: z.number(),
 });
 
 /** Where the page sits after a scroll: what it reports is checked before it is used. */
@@ -250,7 +250,7 @@ function runInPage(webContents: WebContents, script: string): Promise<unknown> {
 }
 
 function numberFromPage(value: unknown, what: string): number {
-  const parsed = z.number().finite().safeParse(value);
+  const parsed = z.number().safeParse(value);
   if (!parsed.success) {
     throw new Error(`The exported page reported ${String(value)} instead of ${what}`);
   }
