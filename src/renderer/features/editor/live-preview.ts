@@ -909,6 +909,14 @@ const livePreviewPlugin = ViewPlugin.fromClass(
       // Ctrl/Cmd+click follows a link; a plain click places the cursor to edit it. A rendered
       // footnote label follows on a plain click too, since its brackets hide the source to edit.
       mousedown(event, view) {
+        const htmlLink =
+          event.target instanceof Element ? event.target.closest(".md-html-block a") : null;
+        if (htmlLink) {
+          if (event.button !== 0 || !(event.ctrlKey || event.metaKey)) return false;
+          event.preventDefault();
+          followLink(view, htmlLink.getAttribute("href") ?? "");
+          return true;
+        }
         const renderedFootnote =
           event.target instanceof Element &&
           event.target.closest(".md-footnote-ref, .md-footnote-label") !== null;
@@ -930,6 +938,14 @@ const livePreviewPlugin = ViewPlugin.fromClass(
         }
         event.preventDefault();
         return true;
+      },
+      // A plain click on a link written as HTML must not navigate the window away from the document
+      click(event) {
+        if (event.target instanceof Element && event.target.closest(".md-html-block a") !== null) {
+          event.preventDefault();
+          return true;
+        }
+        return false;
       },
       // A right-click on a picture offers what can be done with the file behind it
       contextmenu(event, view) {

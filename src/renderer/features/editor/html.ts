@@ -113,6 +113,7 @@ export class HtmlBlockWidget extends WidgetType {
         heading.classList.add("md-heading", `md-h${level}`);
       }
     }
+    for (const anchor of block.querySelectorAll("a")) anchor.classList.add("md-link");
     watchHtmlImages(view, block, this.base);
     return block;
   }

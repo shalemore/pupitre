@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { isRenderableHtml } from "./html";
+import { HtmlBlockWidget, isRenderableHtml } from "./html";
+import { markdownView } from "./testing";
 
 describe("the HTML blocks the editor shows rendered", () => {
   it("renders an element whose content stays visible", () => {
@@ -38,5 +39,15 @@ describe("the HTML blocks the editor shows rendered", () => {
   it("leaves a details section to its own rule", () => {
     expect(isRenderableHtml("<details>\n<summary>More</summary>\ntext\n</details>")).toBe(false);
     expect(isRenderableHtml("<details open>")).toBe(false);
+  });
+
+  it("gives links in an HTML block the document's link class", () => {
+    const view = markdownView("");
+    const block = new HtmlBlockWidget(
+      '<p><a href="https://example.com">site</a></p>',
+      undefined,
+    ).toDOM(view);
+    expect(block.querySelector("a")?.classList.contains("md-link")).toBe(true);
+    view.destroy();
   });
 });
