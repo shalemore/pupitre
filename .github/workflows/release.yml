@@ -135,6 +135,7 @@ jobs:
       # this workflow run. They run after the build, so a run that cannot sign one fails the
       # release instead of publishing files nothing vouches for.
       - name: Attest the build provenance of the installers
+        id: provenance
         uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2
         with:
           subject-path: ${{ steps.installers.outputs.paths }}
@@ -149,6 +150,19 @@ jobs:
         shell: bash
         run: gh release upload "v$VERSION" "pupitre-${{ matrix.platform }}.cdx.json" --clobber
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ needs.check.outputs.version }}
+
+      # The attestation bundle is the file SLSA names `*.intoto.jsonl`, and a release that carries
+      # one counts as a signed release; a user checks it offline with
+      # `gh attestation verify --bundle`.
+      - name: Attach the provenance to the draft release
+        shell: bash
+        run: |
+          cp "$BUNDLE" "pupitre-${{ matrix.platform }}.intoto.jsonl"
+          gh release upload "v$VERSION" "pupitre-${{ matrix.platform }}.intoto.jsonl" --clobber
+        env:
+          BUNDLE: ${{ steps.provenance.outputs.bundle-path }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ needs.check.outputs.version }}
 
