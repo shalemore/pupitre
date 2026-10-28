@@ -73,6 +73,7 @@ function toggleInline(view: EditorView, name: string, marker: string): void {
   view.dispatch(
     state.update(
       state.changeByRange((range) => {
+        const size = marker.length;
         const node = enclosing(state, range, name);
         const open = node?.firstChild;
         const close = node?.lastChild;
@@ -83,7 +84,21 @@ function toggleInline(view: EditorView, name: string, marker: string): void {
           ]);
           return { changes, range: range.map(changes) };
         }
-        const size = marker.length;
+        // The parser has no node for an empty pair, so the markers the first press left are read
+        // from the text around the cursor
+        if (range.empty) {
+          const before = state.sliceDoc(Math.max(0, range.from - size), range.from);
+          const after = state.sliceDoc(range.from, Math.min(state.doc.length, range.from + size));
+          if (before === marker && after === marker) {
+            return {
+              changes: [
+                { from: range.from - size, to: range.from },
+                { from: range.from, to: range.from + size },
+              ],
+              range: EditorSelection.cursor(range.from - size),
+            };
+          }
+        }
         return {
           changes: [
             { from: range.from, insert: marker },
@@ -103,6 +118,17 @@ function toggleLink(view: EditorView): void {
   view.dispatch(
     state.update(
       state.changeByRange((range) => {
+        // An empty link the cursor sits in goes away on the next press, like an empty format
+        const empty =
+          range.empty &&
+          state.sliceDoc(Math.max(0, range.from - 1), range.from) === "[" &&
+          state.sliceDoc(range.from, Math.min(state.doc.length, range.from + 3)) === "]()";
+        if (empty) {
+          return {
+            changes: { from: range.from - 1, to: range.from + 3 },
+            range: EditorSelection.cursor(range.from - 1),
+          };
+        }
         const url = enclosing(state, range, "Link")?.getChild("URL");
         if (url) return { range: EditorSelection.range(url.from, url.to) };
         return {
@@ -331,7 +357,34 @@ function toggleList(view: EditorView, ordered: boolean, style: MarkdownStyle): v
 /** Wraps the selected lines in a fenced block, or opens an empty one with the cursor inside. */
 function insertFencedBlock(view: EditorView, fence: string): void {
   const { state } = view;
-  const { from, to, empty } = state.selection.main;
+  const range = state.selection.main;
+  // A blank line ends an unclosed `$$` block, so the empty block the shortcut writes is a pair of
+  // fences around the cursor rather than a BlockMath node
+  if (fence === "$$" && range.empty) {
+    const line = state.doc.lineAt(range.from);
+    const before = line.number > 1 ? state.doc.line(line.number - 1) : undefined;
+    const after = line.number < state.doc.lines ? state.doc.line(line.number + 1) : undefined;
+    if (line.text.trim() === "" && before?.text.trim() === "$$" && after?.text.trim() === "$$") {
+      dispatchChanges(
+        view,
+        { from: before.from, to: after.to },
+        EditorSelection.single(before.from),
+      );
+      return;
+    }
+  }
+  const block = enclosing(state, range, fence === "$$" ? "BlockMath" : "FencedCode");
+  if (block) {
+    const first = state.doc.lineAt(block.from);
+    const last = state.doc.lineAt(block.to);
+    const changes = state.changes([
+      { from: first.from, to: first.to + 1 },
+      { from: last.from - 1, to: last.to },
+    ]);
+    dispatchChanges(view, changes, state.selection.map(changes));
+    return;
+  }
+  const { from, to, empty } = range;
   const first = state.doc.lineAt(from);
   const last = state.doc.lineAt(to);
   if (empty && first.text.trim() === "") {

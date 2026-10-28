@@ -56,6 +56,23 @@ describe("inline formats", () => {
       "see [docs](|https://example.com|)",
     );
   });
+
+  it("takes an empty format away on the next press instead of nesting another", () => {
+    for (const action of [
+      "bold",
+      "italic",
+      "strikethrough",
+      "highlight",
+      "subscript",
+      "superscript",
+      "inlineCode",
+      "inlineMath",
+      "underline",
+      "link",
+    ] as const) {
+      expect(format(format("a |b", action), action)).toBe("a |b");
+    }
+  });
 });
 
 describe("the inline formats the live preview renders", () => {
@@ -158,5 +175,18 @@ describe("insertParagraphBreak", () => {
   it("leaves lists and quotes to the list continuation", () => {
     expect(enter("- item|")).toBe("- item|");
     expect(enter("> quote|")).toBe("> quote|");
+  });
+});
+
+describe("fenced blocks", () => {
+  it("opens an empty block and takes it away on the next press", () => {
+    expect(format("|", "codeBlock")).toBe("```\n|\n```");
+    expect(format("```\n|\n```", "codeBlock")).toBe("|");
+    expect(format("|", "mathBlock")).toBe("$$\n|\n$$");
+    expect(format("$$\n|\n$$", "mathBlock")).toBe("|");
+  });
+
+  it("takes the fences off a block that has content", () => {
+    expect(format("```\nco|de\n```", "codeBlock")).toBe("co|de");
   });
 });
