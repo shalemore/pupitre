@@ -32,6 +32,17 @@ describe("codeFontFamily", () => {
       '"JetBrains Mono", monospace, "Source Han Sans"',
     );
   });
+
+  it("keeps the theme's mono faces behind a chosen code font for the scripts they carry", () => {
+    expect(
+      codeFontFamily(
+        "Fira Code",
+        "",
+        '"JetBrains Mono", "Sarasa Mono SC", system-ui, monospace',
+        "text",
+      ),
+    ).toBe('"Fira Code", "JetBrains Mono", "Sarasa Mono SC", system-ui, monospace');
+  });
 });
 
 describe("interfaceFontFamily", () => {

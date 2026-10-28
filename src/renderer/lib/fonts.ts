@@ -104,6 +104,8 @@ function userFontStack(
   themeStack: string,
   defaultGeneric: string,
   intent: FontStackIntent,
+  /** Keep the theme's own faces behind the chosen one, for the scripts it covers better. */
+  keepSpecific = false,
 ): string | undefined {
   if (!font && !fallbackFont) return undefined;
   const themeFamilies = themeStack
@@ -115,7 +117,7 @@ function userFontStack(
   const fallback = fallbackFont ? [quote(fallbackFont)] : [];
   const genericFamilies = generic.length > 0 ? generic : [defaultGeneric];
   const families = [
-    ...(font ? [quote(font)] : specific),
+    ...(font ? [quote(font), ...(keepSpecific ? specific : [])] : specific),
     ...(intent === "mono" ? genericFamilies : fallback),
     ...(intent === "mono" ? fallback : genericFamilies),
   ];
@@ -143,7 +145,9 @@ export function interfaceFontFamily(uiFont: string, fallbackFont: string): strin
 
 /**
  * The code font stack; themeStack is the computed value of the theme's --font-mono. Code takes the
- * fallback font too, placed the way the document places it, so Chinese in comments matches the body.
+ * fallback font too, placed the way the document places it, so Chinese in comments matches the
+ * body. A chosen code font keeps the theme's own mono faces behind it: they are what carries
+ * Chinese in code when the chosen face has none.
  */
 export function codeFontFamily(
   codeFont: string,
@@ -151,5 +155,5 @@ export function codeFontFamily(
   themeStack: string,
   intent: FontStackIntent,
 ): string | undefined {
-  return userFontStack(codeFont, fallbackFont, themeStack, "monospace", intent);
+  return userFontStack(codeFont, fallbackFont, themeStack, "monospace", intent, true);
 }
