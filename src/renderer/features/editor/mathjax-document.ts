@@ -32,6 +32,7 @@ import "@mathjax/src/js/input/tex/unicode/UnicodeConfiguration.js";
 import "@mathjax/src/js/input/tex/units/UnitsConfiguration.js";
 import "@mathjax/src/js/input/tex/upgreek/UpgreekConfiguration.js";
 import "@mathjax/src/js/input/tex/verb/VerbConfiguration.js";
+import { MathJaxMhchemFontExtension } from "@mathjax/mathjax-mhchem-font-extension/js/svg.js";
 import { MathJaxTexFont } from "@mathjax/mathjax-tex-font/js/svg.js";
 import { liteAdaptor } from "@mathjax/src/js/adaptors/liteAdaptor.js";
 import { RegisterHTMLHandler } from "@mathjax/src/js/handlers/html.js";
@@ -92,10 +93,8 @@ const PACKAGES = [
  */
 const adaptor = liteAdaptor();
 RegisterHTMLHandler(adaptor);
-// The static font has every glyph, so no range has to load mid-formula.
 const output = new SVG({ fontCache: "local", fontData: MathJaxTexFont });
-// mhchem asks for a -mhchem variant the font lacks; map it to normal.
-output.font.createVariant("-mhchem", "normal");
+output.font.addExtension(MathJaxMhchemFontExtension);
 const document = mathjax.document("", {
   // "ams" is what numbers equations and makes \label and \ref work
   InputJax: new TeX({ packages: PACKAGES, tags: "ams" }),
