@@ -3,6 +3,7 @@ import { rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { BrowserWindow, nativeImage, screen, type NativeImage, type WebContents } from "electron";
+import { z } from "zod";
 
 /** Width of the exported document, in CSS pixels, before it is scaled up. */
 const DOCUMENT_WIDTH = 900;
@@ -214,7 +215,7 @@ async function measure(webContents: WebContents): Promise<number> {
       return Math.max(1, Math.ceil(body.getBoundingClientRect().bottom + window.scrollY));
     })()`,
   );
-  return Math.round(numberOrThrow(height, "a page height"));
+  return Math.round(numberFromPage(height, "a page height"));
 }
 
 /** Scrolls the page to a place in the document and reports where the window ended up. */
@@ -229,15 +230,18 @@ function scrollTo(top: number): string {
   })()`;
 }
 
+const scrollPositionSchema = z.object({
+  top: z.number().finite(),
+  visible: z.number().finite(),
+});
+
 /** Where the page sits after a scroll: what it reports is checked before it is used. */
 function placement(value: unknown): { top: number; visible: number } {
-  if (typeof value !== "object" || value === null || !("top" in value) || !("visible" in value)) {
+  const parsed = scrollPositionSchema.safeParse(value);
+  if (!parsed.success) {
     throw new Error(`The exported page reported ${String(value)} instead of its scroll position`);
   }
-  return {
-    top: numberOrThrow(value.top, "a scroll position"),
-    visible: numberOrThrow(value.visible, "the height of its window"),
-  };
+  return parsed.data;
 }
 
 /** Runs a script in the page: the result is what the document gave back, so it is checked before use. */
@@ -245,11 +249,12 @@ function runInPage(webContents: WebContents, script: string): Promise<unknown> {
   return webContents.executeJavaScript(script, true);
 }
 
-function numberOrThrow(value: unknown, what: string): number {
-  if (typeof value !== "number" || !Number.isFinite(value)) {
+function numberFromPage(value: unknown, what: string): number {
+  const parsed = z.number().finite().safeParse(value);
+  if (!parsed.success) {
     throw new Error(`The exported page reported ${String(value)} instead of ${what}`);
   }
-  return value;
+  return parsed.data;
 }
 
 /** Captures the page from `top` down, one slice per round: a round captures the place the round before it scrolled to. */
