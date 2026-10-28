@@ -13,3 +13,13 @@ const ESCAPES: Readonly<Record<string, string>> = {
 export function escapeHtml(text: string): string {
   return text.replace(/[&<>"']/g, (character) => ESCAPES[character] ?? character);
 }
+
+/**
+ * The text a reader sees in an HTML fragment: tags and comments drop out, and character references
+ * are decoded. The fragment is parsed in a `<template>`, whose content never runs.
+ */
+export function textOfHtml(html: string): string {
+  const template = document.createElement("template");
+  template.innerHTML = html;
+  return template.content.textContent ?? "";
+}

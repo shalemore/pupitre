@@ -1,6 +1,7 @@
 import { type EditorState, StateEffect, StateField } from "@codemirror/state";
 import { type EditorView, WidgetType } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
+import { textOfHtml } from "@/lib/html";
 
 /**
  * Collapsible `<details>` sections whose content is Markdown.
@@ -15,7 +16,6 @@ const OPENING = /^<details((?:\s[^>]*)?)>\s*<summary>([^]*?)<\/summary>\s*$/i;
 const OPENING_TAG = /^<details[\s>]/i;
 const CLOSING = /^<\/details\s*>\s*$/i;
 const OPEN_ATTRIBUTE = /\sopen(?:[\s=]|$)/i;
-const HTML_MARKUP = /<[^>]*>/g;
 
 /** Opens or closes the section whose opening block starts at the given position. */
 export const toggleDetails = StateEffect.define<number>({
@@ -61,7 +61,7 @@ export function detailsSection(
   }
   const toggled = state.field(toggledDetails).includes(opening.from);
   return {
-    summary: (match[2] ?? "").replace(HTML_MARKUP, "").trim(),
+    summary: textOfHtml(match[2] ?? "").trim(),
     open: OPEN_ATTRIBUTE.test(match[1] ?? "") !== toggled,
     closing,
   };

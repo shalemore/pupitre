@@ -2,6 +2,7 @@ import { syntaxTree } from "@codemirror/language";
 import type { ChangeSet, EditorState, Extension } from "@codemirror/state";
 import { EditorView, ViewPlugin } from "@codemirror/view";
 import type { Tree } from "@lezer/common";
+import { textOfHtml } from "@/lib/html";
 import type { OutlineHeading } from "./outline-heading";
 
 export type { OutlineHeading } from "./outline-heading";
@@ -9,7 +10,6 @@ export type { OutlineHeading } from "./outline-heading";
 /** A heading's node name, whose last character is its level: ATXHeading2, SetextHeading1. */
 export const HEADING_LEVEL = /^(?:ATX|Setext)Heading([1-6])$/;
 const LEAF_BLOCK = /^(?:Paragraph|FencedCode|CodeBlock|HTMLBlock|Table|FrontMatter)$/;
-const HTML_MARKUP = /<!--[^]*?-->|<[^>]*>/g;
 /** Source that a reader never sees: link destinations, code languages, markup, front matter. */
 const UNREAD_NODES = new Set([
   "FrontMatter",
@@ -59,7 +59,7 @@ export function readableTextFrom(
       }
       if (node.name === "HTMLBlock" || node.name === "CommentBlock") {
         skipTo(start, end);
-        text += slice(start, end).replace(HTML_MARKUP, "");
+        text += textOfHtml(slice(start, end));
         return false;
       }
       if (!isUnread(node.name, node.node.parent?.name)) return true;
