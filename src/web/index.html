@@ -9,8 +9,82 @@
     />
     <title>Pupitre - try it in your browser</title>
     <link rel="icon" href="./logo.svg" />
+    <style>
+      :root {
+        --boot-background: oklch(0.987 0.006 95);
+      }
+
+      :root[data-boot-scheme="dark"] {
+        --boot-background: oklch(0.22 0.016 252);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-boot-scheme]) {
+          --boot-background: oklch(0.22 0.016 252);
+        }
+      }
+
+      html {
+        background: var(--boot-background);
+      }
+
+      #boot-splash {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: grid;
+        place-items: center;
+        background: var(--boot-background);
+        transition: opacity 400ms ease;
+      }
+
+      #boot-splash img {
+        width: 72px;
+        height: 72px;
+        animation: boot-pulse 1.8s ease-in-out infinite;
+      }
+
+      #boot-splash[data-done] {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      @keyframes boot-pulse {
+        50% {
+          opacity: 0.7;
+          scale: 0.96;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #boot-splash {
+          transition: none;
+        }
+
+        #boot-splash img {
+          animation: none;
+        }
+      }
+    </style>
+    <script>
+      // The page is painted before the app reads its settings, so the splash takes the scheme the
+      // app will use: the stored choice, or the system's.
+      try {
+        const saved = JSON.parse(localStorage.getItem("pupitre:settings") || "{}");
+        const scheme = saved.colorScheme;
+        const dark =
+          scheme === "dark" ||
+          (scheme !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.dataset.bootScheme = dark ? "dark" : "light";
+      } catch {
+        // Without stored settings the stylesheet's media query still picks a background
+      }
+    </script>
   </head>
   <body>
+    <div id="boot-splash" aria-hidden="true">
+      <img src="./logo.svg" alt="" width="72" height="72" />
+    </div>
     <div id="root" class="h-screen w-screen flex flex-col"></div>
     <script type="module" src="./main.ts"></script>
   </body>

@@ -19,7 +19,10 @@ const RECENT_FILES_SHOWN = 5;
 
 export const WelcomeScreen: Component<WelcomeScreenProps> = (props) => {
   return (
-    <div class="h-full flex flex-col items-center justify-center text-center select-none px-4 py-12 animate-in fade-in-0 slide-in-from-bottom-2 duration-sheet ease-enter">
+    <div
+      data-slot="welcome"
+      class="h-full flex flex-col items-center justify-center text-center select-none px-4 py-12 animate-in fade-in-0 slide-in-from-bottom-2 duration-sheet ease-enter"
+    >
       <img src="./logo.svg" alt="" class="size-14 select-none mb-4 opacity-90 drop-shadow-sm" />
 
       <h1 class="text-xl font-semibold tracking-tight text-foreground mb-6">
