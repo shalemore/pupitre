@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
-import { extname, resolve, sep } from "node:path";
+import { extname, resolve } from "node:path";
 import type { ImportedTheme } from "@shared/desktop-api";
+import { isInside } from "./is-inside";
 
 const STYLE_FILE = "index.css";
 const META_FILE = "theme.json";
@@ -75,7 +76,7 @@ function readMeta(dir: string): unknown {
 /** Reads a file inside `dir`, never through a path that leaves it, and within `limit` bytes. */
 function fileWithin(dir: string, name: string, limit: number): string | undefined {
   const path = resolve(dir, name);
-  if (!path.startsWith(`${dir}${sep}`)) return undefined;
+  if (!isInside(dir, path)) return undefined;
   try {
     const stat = statSync(path);
     if (!stat.isFile() || stat.size > limit) return undefined;
@@ -112,7 +113,7 @@ function readAsset(dir: string, url: string): string | undefined {
   const path = url.split(/[?#]/, 1)[0] ?? "";
   if (path === "") return undefined;
   const asset = resolve(dir, path);
-  if (!asset.startsWith(`${dir}${sep}`)) return undefined;
+  if (!isInside(dir, asset)) return undefined;
   try {
     const stat = statSync(asset);
     if (!stat.isFile() || stat.size > MAX_ASSET_BYTES) return undefined;

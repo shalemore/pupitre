@@ -1,8 +1,9 @@
 import { stat } from "node:fs/promises";
-import { basename, isAbsolute, join, relative, resolve } from "node:path";
+import { basename, join, resolve } from "node:path";
 import { z } from "zod";
 import type { PinnedEntry } from "@shared/desktop-api";
 import { pinKeyOf } from "@shared/pins";
+import { isInside } from "./is-inside";
 import { readJsonFile, writeJsonFile } from "./json-file";
 
 /** Where a folder keeps the entries pinned to the top of its sidebar. */
@@ -14,12 +15,6 @@ const pinsFileSchema = z
     paths: z.array(z.string()),
   })
   .catch({ version: 1, paths: [] });
-
-/** Whether `path` is inside `root`, and not root itself. */
-function isInside(root: string, path: string): boolean {
-  const rel = relative(root, path);
-  return rel !== "" && !rel.startsWith("..") && !isAbsolute(rel);
-}
 
 /** The keys of the paths a file holds: normalized, unique and inside `root`. */
 function keysIn(root: string, paths: readonly string[]): string[] {

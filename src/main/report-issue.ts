@@ -1,3 +1,5 @@
+import { isAbsolute, join, relative } from "node:path";
+
 export const REPOSITORY_URL = "https://github.com/shalemore/pupitre";
 
 /** The app keeps its name in every language, so the report title does too. */
@@ -42,8 +44,8 @@ export function reportIssueUrl(info: DiagnosticsInfo): string {
  * outside the home folder — a temporary profile, a log directory on another drive — stays whole.
  */
 function relativeToHome(path: string, home: string): string {
-  if (!path.startsWith(home)) return path;
-  const rest = path.slice(home.length);
-  if (rest !== "" && !rest.startsWith("/") && !rest.startsWith("\\")) return path;
-  return `~${rest}`;
+  const rel = relative(home, path);
+  if (rel === "") return "~";
+  if (rel.startsWith("..") || isAbsolute(rel)) return path;
+  return join("~", rel);
 }
