@@ -1,5 +1,6 @@
 import { LanguageDescription, syntaxTree } from "@codemirror/language";
 import { type EditorView, WidgetType } from "@codemirror/view";
+import { debounce } from "@solid-primitives/scheduled";
 import { Check, Copy } from "lucide-solid";
 import { createMemo, createSignal, For, onCleanup, Show, type Component } from "solid-js";
 import { render } from "solid-js/web";
@@ -83,8 +84,8 @@ const CodeCorner: Component<{
   fence: FenceInfo | undefined;
 }> = (props) => {
   const [copied, setCopied] = createSignal(false);
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  onCleanup(() => clearTimeout(timer));
+  const resetCopied = debounce(() => setCopied(false), COPIED_MS);
+  onCleanup(resetCopied.clear);
 
   const language = createMemo(() => namedLanguage(props.fence?.language ?? ""));
 
@@ -155,8 +156,7 @@ const CodeCorner: Component<{
           const code = readBlockCode(props.view, props.container);
           void desktop.invoke("clipboard:write-text", code).then(() => {
             setCopied(true);
-            clearTimeout(timer);
-            timer = setTimeout(() => setCopied(false), COPIED_MS);
+            resetCopied();
           });
         }}
       >
