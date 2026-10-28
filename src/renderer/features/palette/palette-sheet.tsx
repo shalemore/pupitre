@@ -1,13 +1,4 @@
-import {
-  createMemo,
-  createSignal,
-  createUniqueId,
-  For,
-  type JSX,
-  onCleanup,
-  onMount,
-  Show,
-} from "solid-js";
+import { createMemo, createSignal, createUniqueId, For, type JSX, onMount, Show } from "solid-js";
 import { Input, ListItem, ScrollView, Sheet } from "@/components/ui";
 import { createListNavigation } from "@/lib/list-navigation";
 
@@ -41,7 +32,6 @@ export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
   const [query, setQuery] = createSignal("");
   let input: HTMLInputElement | undefined;
   let list: HTMLDivElement | undefined;
-  let opener: HTMLElement | undefined;
 
   const shown = createMemo(() => props.rows(query()));
   const navigation = createListNavigation(
@@ -50,14 +40,7 @@ export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
   );
   const active = navigation.active;
 
-  onMount(() => {
-    opener = document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
-    input?.focus();
-  });
-  // Whatever closed the sheet, the focus goes back to where it was before
-  onCleanup(() => {
-    if (opener?.isConnected === true) opener.focus();
-  });
+  onMount(() => input?.focus());
 
   const pick = (item: Item) => {
     props.onPick(item);
