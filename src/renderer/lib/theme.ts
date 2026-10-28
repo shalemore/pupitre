@@ -12,7 +12,7 @@ type ColorScheme = "light" | "dark";
  * language the theme leaves out falls back to the app's default locale, then to the first text
  * it gives.
  */
-export type LocalizedText = string | Readonly<Record<string, string>>;
+export type LocalizedText = string | Partial<Record<SupportedLocale, string>>;
 
 /** Where a theme comes from: the app bundle, the global themes folder, or the open project's. */
 type ThemeSource = "builtin" | "global" | "project";
@@ -32,15 +32,9 @@ export interface ThemeInfo {
   schemes: readonly ColorScheme[];
 }
 
-const LOCALE_CODES_SET: ReadonlySet<string> = new Set(LOCALE_CODES);
-
 const localizedTextSchema = z.union([
   z.string().min(1),
-  z
-    .record(z.string(), z.string().min(1))
-    .refine((text) => Object.keys(text).every((code) => LOCALE_CODES_SET.has(code)), {
-      message: "Use the locale codes from src/shared/i18n/types.ts",
-    }),
+  z.partialRecord(z.enum(LOCALE_CODES), z.string().min(1)),
 ]);
 
 /** The shape of a theme's optional `theme.json`, next to its `index.css`. */
