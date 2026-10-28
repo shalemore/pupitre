@@ -1,5 +1,5 @@
 import { commonmarkLanguage, markdown } from "@codemirror/lang-markdown";
-import { GFM, Subscript, Superscript } from "@lezer/markdown";
+import { GFM, parser, Subscript, Superscript } from "@lezer/markdown";
 import { cjkAutolink } from "./autolink";
 import { codeLanguages } from "./code-languages";
 import { emojiSyntax } from "./emoji";
@@ -8,6 +8,21 @@ import { frontMatter } from "./front-matter";
 import { highlight } from "./highlight";
 import { math } from "./math";
 
+const extensions = [
+  GFM,
+  Subscript,
+  Superscript,
+  emojiSyntax,
+  highlight,
+  frontMatter,
+  math,
+  footnotes,
+  cjkAutolink,
+];
+
+/** The editor's Markdown syntax without CodeMirror, for reading text outside it. */
+export const markdownParser = parser.configure(extensions);
+
 /**
  * The Markdown syntax of the editor. Everything that reads the document goes through this one
  * Lezer tree, so text that is not being edited — a selection copied out as HTML, for one — is
@@ -15,17 +30,7 @@ import { math } from "./math";
  */
 export const markdownLanguage = markdown({
   base: commonmarkLanguage,
-  extensions: [
-    GFM,
-    Subscript,
-    Superscript,
-    emojiSyntax,
-    highlight,
-    frontMatter,
-    math,
-    footnotes,
-    cjkAutolink,
-  ],
+  extensions,
   codeLanguages,
   completeHTMLTags: false,
 });

@@ -1,6 +1,7 @@
 import { syntaxTree } from "@codemirror/language";
 import type { ChangeSet, EditorState, Extension } from "@codemirror/state";
 import { EditorView, ViewPlugin } from "@codemirror/view";
+import type { Tree } from "@lezer/common";
 import type { OutlineHeading } from "./outline-heading";
 
 export type { OutlineHeading } from "./outline-heading";
@@ -34,14 +35,19 @@ function isUnread(name: string, parent: string | undefined): boolean {
  * matter are left out and raw HTML contributes the text between its tags, so markup does not count
  * as words or show up in the outline.
  */
-export function readableText(state: EditorState, from = 0, to = state.doc.length): string {
+export function readableTextFrom(
+  tree: Tree,
+  slice: (from: number, to: number) => string,
+  from = 0,
+  to = tree.length,
+): string {
   let text = "";
   let pos = from;
   const skipTo = (start: number, end: number) => {
-    if (start > pos) text += state.sliceDoc(pos, start);
+    if (start > pos) text += slice(pos, start);
     pos = Math.max(pos, end);
   };
-  syntaxTree(state).iterate({
+  tree.iterate({
     from,
     to,
     enter: (node) => {
@@ -53,7 +59,7 @@ export function readableText(state: EditorState, from = 0, to = state.doc.length
       }
       if (node.name === "HTMLBlock" || node.name === "CommentBlock") {
         skipTo(start, end);
-        text += state.sliceDoc(start, end).replace(HTML_MARKUP, "");
+        text += slice(start, end).replace(HTML_MARKUP, "");
         return false;
       }
       if (!isUnread(node.name, node.node.parent?.name)) return true;
@@ -63,6 +69,10 @@ export function readableText(state: EditorState, from = 0, to = state.doc.length
   });
   skipTo(to, to);
   return text;
+}
+
+export function readableText(state: EditorState, from = 0, to = state.doc.length): string {
+  return readableTextFrom(syntaxTree(state), (start, end) => state.sliceDoc(start, end), from, to);
 }
 
 export function collectHeadings(state: EditorState): OutlineHeading[] {
