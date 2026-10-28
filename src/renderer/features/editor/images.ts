@@ -596,46 +596,13 @@ function alignmentToolbar(
   return toolbar;
 }
 
-/**
- * A picture and its controls, as the widget that replaces its source draws it. The frame carries the
- * declarations its source carries, so the document reads the same here and on a page.
- */
-export function imageDom(
+/** Watches a picture load, showing the skeleton while it is slow and the retry when it fails. */
+function watchImage(
   view: EditorView,
-  /** The address the picture is shown from, resolved against the document's folder. */
+  image: HTMLImageElement,
+  frame: HTMLElement,
   src: string,
-  alt: string,
-  title: string,
-  size: ImageSize,
-  /** Whether the picture offers its controls; off while the selection shows its source. */
-  controls: boolean,
-  /**
-   * The caption a picture that has none in its source shows under it, such as the alt text of an
-   * `<img>` tag; a Markdown image leaves it out, since its own alt text is the caption line.
-   */
-  caption?: string,
-  /** Where a change goes; the default finds the picture from the DOM it replaced. */
-  write?: (change: (image: DocumentImage) => ImageSize) => void,
-  /** Whether the picture shares its line with text instead of taking a line of its own. */
-  inline = false,
-): HTMLElement {
-  const block = document.createElement("span");
-  block.className = "md-image-block";
-  if (inline) block.setAttribute("data-inline", "");
-  // An aligned picture takes the whole line, so that its margins can place it on that line
-  if (size.alignment !== undefined) block.setAttribute("data-alignment", size.alignment);
-
-  const frame = document.createElement("span");
-  // The controls show while the pointer is on the frame, which its group variant marks
-  frame.className = "md-image-frame group";
-  frame.style.cssText = imageStyle(size);
-
-  const image = document.createElement("img");
-  image.className = "md-image-preview";
-  image.alt = alt;
-  image.title = title;
-  if (size.width !== undefined) image.style.width = `${size.width}px`;
-
+): void {
   const skeleton = document.createElement("span");
   skeleton.className = "md-image-skeleton";
   const message = document.createElement("span");
@@ -649,7 +616,7 @@ export function imageDom(
   fallback.append(message, retry);
 
   frame.setAttribute("data-state", "loading");
-  frame.append(image, skeleton, fallback);
+  frame.append(skeleton, fallback);
 
   const remote = WEB_IMAGE.test(src);
   let loaded = false;
@@ -726,6 +693,50 @@ export function imageDom(
 
   showSkeleton();
   image.src = src;
+}
+
+/**
+ * A picture and its controls, as the widget that replaces its source draws it. The frame carries the
+ * declarations its source carries, so the document reads the same here and on a page.
+ */
+export function imageDom(
+  view: EditorView,
+  /** The address the picture is shown from, resolved against the document's folder. */
+  src: string,
+  alt: string,
+  title: string,
+  size: ImageSize,
+  /** Whether the picture offers its controls; off while the selection shows its source. */
+  controls: boolean,
+  /**
+   * The caption a picture that has none in its source shows under it, such as the alt text of an
+   * `<img>` tag; a Markdown image leaves it out, since its own alt text is the caption line.
+   */
+  caption?: string,
+  /** Where a change goes; the default finds the picture from the DOM it replaced. */
+  write?: (change: (image: DocumentImage) => ImageSize) => void,
+  /** Whether the picture shares its line with text instead of taking a line of its own. */
+  inline = false,
+): HTMLElement {
+  const block = document.createElement("span");
+  block.className = "md-image-block";
+  if (inline) block.setAttribute("data-inline", "");
+  // An aligned picture takes the whole line, so that its margins can place it on that line
+  if (size.alignment !== undefined) block.setAttribute("data-alignment", size.alignment);
+
+  const frame = document.createElement("span");
+  // The controls show while the pointer is on the frame, which its group variant marks
+  frame.className = "md-image-frame group";
+  frame.style.cssText = imageStyle(size);
+
+  const image = document.createElement("img");
+  image.className = "md-image-preview";
+  image.alt = alt;
+  image.title = title;
+  if (size.width !== undefined) image.style.width = `${size.width}px`;
+
+  frame.append(image);
+  watchImage(view, image, frame, src);
 
   if (controls) {
     const commit = write ?? ((change) => writeImage(view, block, change));
@@ -772,6 +783,32 @@ export function imageDom(
   }
 
   return block;
+}
+
+/** A picture written as HTML, keeping its element and attributes and adding the loading state. */
+function watchHtmlImage(view: EditorView, image: HTMLImageElement, src: string): void {
+  const block = document.createElement("span");
+  block.className = "md-image-block";
+  block.setAttribute("data-inline", "");
+  const frame = document.createElement("span");
+  frame.className = "md-image-frame";
+  block.append(frame);
+  image.classList.add("md-image-preview");
+  image.removeAttribute("src");
+  image.replaceWith(block);
+  frame.append(image);
+  watchImage(view, image, frame, src);
+}
+
+/** Gives every picture of a rendered HTML block the loading state a Markdown picture has. */
+export function watchHtmlImages(
+  view: EditorView,
+  root: ParentNode,
+  base: string | undefined,
+): void {
+  for (const image of root.querySelectorAll<HTMLImageElement>("img")) {
+    watchHtmlImage(view, image, resolveAgainst(base, image.getAttribute("src") ?? ""));
+  }
 }
 
 /** A picture in place of its source, with the handle and the bar that resize and align it. */

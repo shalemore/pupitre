@@ -1,6 +1,6 @@
 import { type EditorView, WidgetType } from "@codemirror/view";
 import DOMPurify from "dompurify";
-import { imageDom, parseImageTag, resolveAgainst } from "./images";
+import { imageDom, parseImageTag, resolveAgainst, watchHtmlImages } from "./images";
 
 /**
  * Raw HTML in Markdown. Inline formatting elements such as `<kbd>Ctrl</kbd>` are shown with
@@ -113,9 +113,7 @@ export class HtmlBlockWidget extends WidgetType {
         heading.classList.add("md-heading", `md-h${level}`);
       }
     }
-    for (const image of block.querySelectorAll("img")) {
-      image.src = resolveAgainst(this.base, image.getAttribute("src") ?? "");
-    }
+    watchHtmlImages(view, block, this.base);
     return block;
   }
 
