@@ -21,15 +21,17 @@ interface OutlineRow {
   index: number;
   /** Whether headings of its own follow it, which is what the chevron hides. */
   hasChildren: boolean;
+  /** Whether a section above it is folded, so its row shrinks away. */
+  hidden: boolean;
 }
 
 export const OutlineList: Component<OutlineListProps> = (props) => {
-  // The rows to show, with the ones a folded section hides left out. A heading belongs to the last
-  // one before it that is shallower, so the sections still open above it are the ones still on the
-  // stack once the deeper ones have gone.
+  // Every row stays mounted, even under a folded section, so its height can close and open with
+  // the list. A heading belongs to the last one before it that is shallower, so the sections still
+  // open above it are the ones still on the stack once the deeper ones have gone.
   const rows = createMemo(() => {
     const open: { level: number; folded: boolean }[] = [];
-    const shown: OutlineRow[] = [];
+    const all: OutlineRow[] = [];
     props.headings.forEach((heading, index) => {
       let enclosing = open.at(-1);
       while (enclosing !== undefined && enclosing.level >= heading.level) {
@@ -38,10 +40,10 @@ export const OutlineList: Component<OutlineListProps> = (props) => {
       }
       const hasChildren = (props.headings[index + 1]?.level ?? 0) > heading.level;
       const hidden = open.some((section) => section.folded);
-      if (!hidden) shown.push({ heading, index, hasChildren });
+      all.push({ heading, index, hasChildren, hidden });
       open.push({ level: heading.level, folded: props.collapsed.has(headingKey(heading)) });
     });
-    return shown;
+    return all;
   });
 
   const folded = (heading: OutlineHeading) => props.collapsed.has(headingKey(heading));
@@ -62,7 +64,12 @@ export const OutlineList: Component<OutlineListProps> = (props) => {
             whole list, while the heading itself stays the source of every label and action. */}
         <Index each={rows()}>
           {(row) => (
-            <div class="flex items-center">
+            <div
+              data-folded={row().hidden ? "" : undefined}
+              inert={row().hidden}
+              aria-hidden={row().hidden ? "true" : undefined}
+              class="outline-row flex items-center"
+            >
               <Show
                 when={row().hasChildren}
                 fallback={<span aria-hidden="true" class="size-4 shrink-0" />}

@@ -362,6 +362,26 @@
   }
 }
 
+/*
+ * An outline row under a folded section keeps its place in the list while it closes, so the rows
+ * below move up with it. `interpolate-size` lets the browser animate to and from `auto`; without
+ * it the row closes at once.
+ */
+@utility outline-row {
+  interpolate-size: allow-keywords;
+  block-size: auto;
+  overflow: clip;
+  transition:
+    block-size var(--transition-duration-sheet) var(--ease-out-expo),
+    opacity var(--transition-duration-sheet) var(--ease-out-expo);
+
+  &[data-folded] {
+    block-size: 0;
+    margin-block-start: 0;
+    opacity: 0;
+  }
+}
+
 /* A strip that scrolls without showing a scrollbar, such as the tabs in the title bar */
 @utility no-scrollbar {
   scrollbar-width: none;
