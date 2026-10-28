@@ -67,13 +67,12 @@ electron-builder signs the `.app` with it, importing the certificate into a keyc
 the build. `hardenedRuntime` is on by default for the mac target, which is what notarization
 requires; nothing has to set it.
 
-Once the app is signed, `scripts/notarize.cjs` runs as electron-builder's `afterSign` hook. With
-`APPLE_ID`, `APPLE_APP_SPECIFIC_PASSWORD` and `APPLE_TEAM_ID` in the environment it sends the app to
-`notarytool` through `@electron/notarize` and staples the ticket to it. Without all three it prints
-why and returns, so the build carries on.
+Once the app is signed, electron-builder sends it to `notarytool` and staples the ticket when
+`APPLE_ID`, `APPLE_APP_SPECIFIC_PASSWORD` and `APPLE_TEAM_ID` are in the environment. Without them
+it skips notarization and the build carries on.
 
-The hook runs once the `.app` is signed and before the `.dmg` and the `.zip` are packed from it, so
-the stapled ticket travels inside both.
+Notarization happens once the `.app` is signed and before the `.dmg` and the `.zip` are packed from
+it, so the stapled ticket travels inside both.
 
 The Apple credentials only mean something together with the signing certificate: they notarize the
 `.app` that certificate signed. `APPLE_ID`, `APPLE_APP_SPECIFIC_PASSWORD` and `APPLE_TEAM_ID` set

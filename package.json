@@ -53,7 +53,6 @@
     "@codemirror/state": "^6.7.6",
     "@codemirror/view": "^6.43.15",
     "@electron/fuses": "^1.8.0",
-    "@electron/notarize": "^3.1.2",
     "@joplin/turndown-plugin-gfm": "^1.0.68",
     "@kobalte/core": "^0.13.14",
     "@lezer/common": "^1.5.4",

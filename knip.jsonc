@@ -3,9 +3,6 @@
   // The electron-vite, Vite, Vitest and Playwright plugins read their own configs, so the entries
   // they cannot see are the ones listed here.
   "entry": [
-    // electron-builder's afterSign hook (electron-builder.yml); the builder loads the file, so
-    // nothing in the tree imports it
-    "scripts/notarize.cjs",
     // `npm run test:perf` runs this config; the Playwright plugin only reads playwright.config.ts
     "playwright.perf.config.ts",
   ],

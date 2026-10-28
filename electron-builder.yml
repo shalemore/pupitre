@@ -83,9 +83,6 @@ mac:
     - { target: dmg, arch: arm64 }
     - { target: zip, arch: arm64 }
   category: public.app-category.productivity
-# Notarizes the signed app when the Apple credentials are in the environment, and does nothing
-# without them; see docs/signing.md
-afterSign: scripts/notarize.cjs
 linux:
   target: [AppImage, deb]
   category: Office
