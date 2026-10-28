@@ -1,3 +1,4 @@
+import { Separator as KobalteSeparator } from "@kobalte/core/separator";
 import { cn } from "cn";
 import { type JSX, splitProps } from "solid-js";
 
@@ -7,16 +8,14 @@ export interface SeparatorProps extends JSX.HTMLAttributes<HTMLDivElement> {
 
 export function Separator(props: SeparatorProps) {
   const [local, rest] = splitProps(props, ["class", "orientation"]);
-  const isHorizontal = () => local.orientation !== "vertical";
 
   return (
-    <div
-      role="separator"
+    <KobalteSeparator
+      orientation={local.orientation ?? "horizontal"}
       data-slot="separator"
-      aria-orientation={local.orientation ?? "horizontal"}
       class={cn(
         "shrink-0 bg-border",
-        isHorizontal() ? "h-px w-full" : "h-full w-px self-stretch",
+        local.orientation === "vertical" ? "h-full w-px self-stretch" : "h-px w-full",
         local.class,
       )}
       {...rest}

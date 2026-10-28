@@ -13,9 +13,9 @@ export interface SheetProps {
 }
 
 /**
- * A panel over the window, holding a query and the rows it picks. Kobalte traps the focus and
- * gives it back, and a press beside the panel closes it. It is drawn outside the window's own tree,
- * because the title bar clips its children and the sheet covers them.
+ * A panel over the window, holding a query and the rows it picks. Kobalte traps the focus, gives it
+ * back, and closes the sheet on a press beside it or on Escape. It is drawn outside the window's
+ * own tree, because the title bar clips its children and the sheet covers them.
  */
 export const Sheet: Component<SheetProps> = (props) => (
   <Dialog
@@ -25,29 +25,22 @@ export const Sheet: Component<SheetProps> = (props) => (
     }}
   >
     <Dialog.Portal>
-      <Dialog.Content
+      <Dialog.Overlay
         data-slot="sheet-backdrop"
+        class="fixed inset-0 z-50 bg-surface-0/60 backdrop-blur-sm animate-in fade-in-0 duration-base"
+      />
+      <Dialog.Content
+        data-slot="sheet"
         class={cn(
-          "fixed inset-0 z-50 flex justify-center bg-surface-0/60 p-4 backdrop-blur-sm animate-in fade-in-0 duration-base",
-          props.placement === "top" ? "items-start pt-16" : "items-center",
+          "floating-panel fixed left-1/2 z-50 flex w-[calc(100%-2rem)] -translate-x-1/2 flex-col gap-2 p-2 text-xs",
+          props.placement === "top"
+            ? "top-16 max-h-[calc(100vh-5rem)] max-w-xl"
+            : "top-1/2 max-h-[calc(100vh-2rem)] max-w-lg -translate-y-1/2",
         )}
-        onPointerDown={(event) => {
-          if (event.target !== event.currentTarget) return;
-          event.preventDefault();
-          props.onClose();
-        }}
         onKeyDown={props.onKeyDown}
       >
         <Dialog.Title class="sr-only">{props.title}</Dialog.Title>
-        <div
-          data-slot="sheet"
-          class={cn(
-            "floating-panel flex max-h-full w-full flex-col gap-2 p-2 text-xs",
-            props.placement === "top" ? "max-w-xl" : "max-w-lg",
-          )}
-        >
-          {props.children}
-        </div>
+        {props.children}
       </Dialog.Content>
     </Dialog.Portal>
   </Dialog>
