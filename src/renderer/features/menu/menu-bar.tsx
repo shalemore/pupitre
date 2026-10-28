@@ -1,64 +1,11 @@
-import { debounce } from "@solid-primitives/scheduled";
 import { Menu } from "lucide-solid";
-import { createSignal, For, onCleanup, Show, type Component } from "solid-js";
+import { For, Show, type Component } from "solid-js";
 import { TOP_MENUS, type MenuEntry, type Menus, type TopMenu } from "@shared/menu";
 import { IconButton } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { MenuPopup } from "./menu-popup";
-
-/** How long the pointer may be away from the bar and its menus before they fold up. */
-const LEAVE_DELAY = 200;
-/** Used when the stylesheet cannot say how long the panel's exit takes. */
-const DEFAULT_EXIT_DURATION = 150;
-
-/** How long the panel's exit animation runs, from the duration token the closed state asks for. */
-function exitDuration(): number {
-  const value = getComputedStyle(document.documentElement)
-    .getPropertyValue("--transition-duration-ui")
-    .trim();
-  const length = Number.parseFloat(value);
-  if (!Number.isFinite(length)) return DEFAULT_EXIT_DURATION;
-  return value.endsWith("s") && !value.endsWith("ms") ? length * 1000 : length;
-}
-
-/**
- * Keeps the last panel on screen while it animates out: `shown` still renders once `closing`
- * starts, and is dropped when the exit animation has played. `open` is the state the pointer and
- * the keyboard work with, which goes away as soon as the menu closes.
- */
-function createPanelLifetime<T>() {
-  const [shown, setShown] = createSignal<T>();
-  const [closing, setClosing] = createSignal(false);
-  let exitTimer: number | undefined;
-
-  const cancelExit = () => {
-    window.clearTimeout(exitTimer);
-    exitTimer = undefined;
-  };
-  onCleanup(cancelExit);
-
-  return {
-    shown,
-    closing,
-    open: () => (closing() ? undefined : shown()),
-    show(state: T) {
-      cancelExit();
-      setClosing(false);
-      // The updater form sets the value even when T itself could be a function
-      setShown(() => state);
-    },
-    close() {
-      if (shown() === undefined || closing()) return;
-      setClosing(true);
-      exitTimer = window.setTimeout(() => {
-        exitTimer = undefined;
-        setClosing(false);
-        setShown(undefined);
-      }, exitDuration());
-    },
-  };
-}
+import { createMenu } from "./menu-state";
 
 interface OpenMenu {
   menu: TopMenu;
@@ -78,35 +25,20 @@ interface MenuBarProps {
  * menu opens instead of being kept in sync.
  */
 export const MenuBar: Component<MenuBarProps> = (props) => {
-  const panel = createPanelLifetime<OpenMenu>();
   // Answers to earlier asks must not reopen a menu that was switched or closed in the meantime
   let asked = 0;
-  // Where the focus was before a menu took it, so closing gives it back and typing continues where it did
-  let previousFocus: HTMLElement | undefined;
-  // Leaving the bar or a panel only folds the menu up if the pointer does not come back, which it
-  // does when it crosses the gap between a button and its menu or between a menu and its submenu
-  const leave = debounce(() => close(), LEAVE_DELAY);
-  const cancelLeave = () => leave.clear();
-  onCleanup(cancelLeave);
+  const panel = createMenu<OpenMenu>({
+    onOpenChange: props.onOpenChange,
+    onClose: () => {
+      asked++;
+    },
+  });
 
   const show = async (menu: TopMenu, button: HTMLElement) => {
     const request = ++asked;
-    // A menu opened by hovering another one keeps the focus the first menu took
-    previousFocus ??=
-      document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
     const menus: Menus = await desktop.invoke("menu:items");
     if (request !== asked) return;
     panel.show({ menu, entries: menus[menu], anchor: button.getBoundingClientRect() });
-    props.onOpenChange(true);
-  };
-
-  const close = () => {
-    cancelLeave();
-    asked++;
-    panel.close();
-    props.onOpenChange(false);
-    previousFocus?.focus();
-    previousFocus = undefined;
   };
 
   // Pointing at a menu opens it, and switching to the next one moves it along; a menu closes when
@@ -119,8 +51,8 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
   return (
     <nav
       data-menu-bar
-      onPointerOver={cancelLeave}
-      onPointerLeave={leave}
+      onPointerOver={panel.cancelLeave}
+      onPointerLeave={panel.leave}
       class="flex shrink-0 items-center text-xs select-none"
     >
       <For each={TOP_MENUS}>
@@ -148,12 +80,12 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
             anchor={state.anchor}
             closing={panel.closing()}
             onSelect={(entry) => {
-              close();
+              panel.close();
               void desktop.invoke("menu:click", entry.id);
             }}
-            onClose={close}
-            onPointerOver={cancelLeave}
-            onPointerLeave={leave}
+            onClose={panel.close}
+            onPointerOver={panel.cancelLeave}
+            onPointerLeave={panel.leave}
           />
         )}
       </Show>
@@ -172,32 +104,25 @@ interface MenuButtonProps {
  * and the open document.
  */
 export const MenuButton: Component<MenuButtonProps> = (props) => {
-  const panel = createPanelLifetime<{
-    entries: readonly MenuEntry[];
-    anchor: DOMRect;
-  }>();
   let button: HTMLButtonElement | undefined;
-  // Where the focus was before the button took it, so a command leaves the typing where it was
-  let previousFocus: HTMLElement | undefined;
   // An answer to an earlier ask must not open a menu that was closed or switched meanwhile
   let asked = 0;
-
-  const close = () => {
-    asked++;
-    panel.close();
-    props.onOpenChange(false);
-    previousFocus?.focus();
-    previousFocus = undefined;
-  };
+  const panel = createMenu<{
+    entries: readonly MenuEntry[];
+    anchor: DOMRect;
+  }>({
+    onOpenChange: props.onOpenChange,
+    onClose: () => {
+      asked++;
+    },
+  });
 
   const toggle = async () => {
     if (panel.open() !== undefined) {
-      close();
+      panel.close();
       return;
     }
     if (button === undefined) return;
-    previousFocus ??=
-      document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
     const request = ++asked;
     const anchor = button.getBoundingClientRect();
     const menus: Menus = await desktop.invoke("menu:items");
@@ -211,7 +136,6 @@ export const MenuButton: Component<MenuButtonProps> = (props) => {
       })),
       anchor,
     });
-    props.onOpenChange(true);
   };
 
   return (
@@ -236,10 +160,10 @@ export const MenuButton: Component<MenuButtonProps> = (props) => {
             anchor={state.anchor}
             closing={panel.closing()}
             onSelect={(entry) => {
-              close();
+              panel.close();
               void desktop.invoke("menu:click", entry.id);
             }}
-            onClose={close}
+            onClose={panel.close}
           />
         )}
       </Show>
