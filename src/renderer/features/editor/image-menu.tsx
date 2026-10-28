@@ -192,10 +192,17 @@ export function openImageMenu(
   if (menu === undefined) return false;
   event.preventDefault();
 
-  // The panel draws itself outside the editor, so a root of its own holds it until it closes
+  // The panel draws itself outside the editor, so a root of its own holds it until it closes. It
+  // has to sit in the document: the root measures the trigger to place the panel, and a detached
+  // one measures zero.
   const container = document.createElement("div");
+  document.body.append(container);
   let dispose: (() => void) | undefined;
-  const close = () => dispose?.();
+  const close = () => {
+    dispose?.();
+    dispose = undefined;
+    container.remove();
+  };
   dispose = render(
     () => (
       <PictureMenuPanel
