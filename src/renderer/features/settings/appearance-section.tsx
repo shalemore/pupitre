@@ -1,4 +1,4 @@
-import { FolderOpen } from "lucide-solid";
+import { FolderOpen, Globe } from "lucide-solid";
 import { For, Show, type Component } from "solid-js";
 import { SETTING_RANGES, type Settings } from "@shared/settings";
 import { Callout, IconButton, Select, Slider, Switch } from "@/components/ui";
@@ -7,7 +7,6 @@ import { desktop } from "@/lib/desktop";
 import { formatPercent } from "@/lib/format";
 import { settings, updateSettings } from "@/lib/settings";
 import { DEFAULT_THEME, type ThemeInfo, themeDisplayName, themes } from "@/lib/theme";
-import { workspace } from "@/lib/workspace";
 import { FontSelect, themeFontLabel } from "./font-select";
 import { SettingField, SettingGroup, SettingsSection } from "./settings-section";
 
@@ -44,6 +43,12 @@ function themeOptions(onlyDark = false) {
 function currentThemeId(): string {
   const id = settings().theme;
   return themes().some((theme) => theme.id === id) ? id : DEFAULT_THEME;
+}
+
+/** The folder the current theme lives in; a built-in theme opens the folder imported ones go in. */
+function themeFolder(): "global" | "project" {
+  const theme = themes().find((candidate) => candidate.id === currentThemeId());
+  return theme?.source === "project" ? "project" : "global";
 }
 
 function currentDarkThemeId(): string {
@@ -85,31 +90,31 @@ export const AppearanceSection: Component = () => (
         />
       </SettingField>
 
-      <SettingField name="theme" title={t().settings.theme}>
-        <div class="flex items-center gap-1">
-          <Select
-            value={currentThemeId()}
-            onChange={(theme) => void updateSettings({ theme })}
-            options={themeOptions()}
-            aria-label={t().settings.theme}
-          />
-          <IconButton
-            label={`${t().settings.theme} · ${t().settings.scopeGlobal}`}
-            size="icon-xs"
-            onClick={() => void desktop.invoke("themes:reveal", "global")}
-          >
-            <FolderOpen />
-          </IconButton>
-          <Show when={workspace().root !== null}>
+      <SettingField
+        name="theme"
+        title={
+          <>
+            {t().settings.theme}
             <IconButton
-              label={`${t().settings.theme} · ${t().settings.scopeFolder}`}
-              size="icon-xs"
-              onClick={() => void desktop.invoke("themes:reveal", "project")}
+              label={`${t().settings.theme} · ${
+                themeFolder() === "project" ? t().settings.scopeFolder : t().settings.scopeGlobal
+              }`}
+              size="icon-2xs"
+              onClick={() => void desktop.invoke("themes:reveal", themeFolder())}
             >
-              <FolderOpen />
+              <Show when={themeFolder() === "project"} fallback={<Globe />}>
+                <FolderOpen />
+              </Show>
             </IconButton>
-          </Show>
-        </div>
+          </>
+        }
+      >
+        <Select
+          value={currentThemeId()}
+          onChange={(theme) => void updateSettings({ theme })}
+          options={themeOptions()}
+          aria-label={t().settings.theme}
+        />
       </SettingField>
 
       <SettingField
