@@ -1,5 +1,5 @@
 import { commonmarkLanguage, markdown } from "@codemirror/lang-markdown";
-import { GFM, parser, Subscript, Superscript } from "@lezer/markdown";
+import { GFM, parser, Subscript, Superscript, type MarkdownExtension } from "@lezer/markdown";
 import { cjkAutolink } from "./autolink";
 import { codeLanguages } from "./code-languages";
 import { emojiSyntax } from "./emoji";
@@ -8,7 +8,10 @@ import { frontMatter } from "./front-matter";
 import { highlight } from "./highlight";
 import { math } from "./math";
 
-const extensions = [
+/** How long a full parse may take before a render keeps what it has. */
+export const FULL_PARSE_TIMEOUT_MS = 5000;
+
+const extensions: MarkdownExtension[] = [
   GFM,
   Subscript,
   Superscript,

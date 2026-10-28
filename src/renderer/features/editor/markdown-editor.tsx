@@ -77,7 +77,7 @@ import {
   saveImageNextTo,
 } from "./images";
 import { livePreview, setPrinting } from "./live-preview";
-import { markdownLanguage } from "./markdown-language";
+import { FULL_PARSE_TIMEOUT_MS, markdownLanguage } from "./markdown-language";
 import { prerenderMath } from "./math";
 import { diagramTheme, prerenderDiagrams, readDiagramTheme } from "./mermaid";
 import { pasteHtml } from "./paste-html";
@@ -757,7 +757,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         const sourceMode = sourceConfigured;
         showSource(false);
         view.dispatch({ effects: setPrinting.of(true) });
-        forceParsing(view, view.state.doc.length, 5000);
+        forceParsing(view, view.state.doc.length, FULL_PARSE_TIMEOUT_MS);
         await Promise.all([prerenderMath(view.state), prerenderDiagrams(view.state)]);
         return () => {
           view.dispatch({ effects: setPrinting.of(false) });
@@ -773,7 +773,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       persistImages: (documentPath) => props.pendingImages.persistView(view, documentPath),
       insertImage,
       toHtml: () => {
-        forceParsing(view, view.state.doc.length, 5000);
+        forceParsing(view, view.state.doc.length, FULL_PARSE_TIMEOUT_MS);
         return documentHtml(view.state, documentTitle(props.documentPath));
       },
       toHtmlFragment: async () => {

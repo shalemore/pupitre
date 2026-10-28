@@ -16,6 +16,7 @@ import {
   resolveUrl,
 } from "@/features/editor/images";
 import { type InlineItem, inlineItems } from "@/features/editor/inline-content";
+import { FULL_PARSE_TIMEOUT_MS } from "@/features/editor/markdown-language";
 import { markdownLanguage } from "@/features/editor/markdown-language";
 import { mathFence, mathOf } from "@/features/editor/math";
 import { renderMath } from "@/features/editor/mathjax";
@@ -429,7 +430,7 @@ function fragmentState(source: EditorState, markdown: string): EditorState {
     extensions:
       titles === undefined ? [markdownLanguage] : [markdownLanguage, alertTitles.of(titles)],
   });
-  ensureSyntaxTree(state, state.doc.length, 5000);
+  ensureSyntaxTree(state, state.doc.length, FULL_PARSE_TIMEOUT_MS);
   return state.update({}).state;
 }
 
