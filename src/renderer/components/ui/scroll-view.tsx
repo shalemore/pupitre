@@ -29,22 +29,30 @@ interface ThumbGeometry {
   height: number;
   /** Inline-end padding of the scroller; the overlay reaches back over it to the scroller's edge. */
   padding: number;
+  /** Block-start padding; the sticky child starts after it and is pulled back over it. */
+  paddingBlockStart: number;
 }
 
-const NO_THUMB: ThumbGeometry = { port: 0, top: 0, height: 0, padding: 0 };
+const NO_THUMB: ThumbGeometry = { port: 0, top: 0, height: 0, padding: 0, paddingBlockStart: 0 };
 
 function measure(element: HTMLDivElement): ThumbGeometry {
   const { scrollTop, scrollHeight, clientHeight } = element;
+  const style = getComputedStyle(element);
+  const padding = Number.parseFloat(style.paddingInlineEnd);
+  const paddingBlockStart = Number.parseFloat(style.paddingBlockStart);
   const range = scrollHeight - clientHeight;
   const track = clientHeight - 2 * TRACK_INSET;
-  if (range <= 0 || track < MIN_THUMB) return NO_THUMB;
+  if (range <= 0 || track < MIN_THUMB) {
+    return { port: 0, top: 0, height: 0, padding, paddingBlockStart };
+  }
 
   const height = Math.max(MIN_THUMB, (track * clientHeight) / scrollHeight);
   return {
     port: clientHeight,
     top: TRACK_INSET + ((track - height) * scrollTop) / range,
     height,
-    padding: Number.parseFloat(getComputedStyle(element).paddingInlineEnd),
+    padding,
+    paddingBlockStart,
   };
 }
 
@@ -150,7 +158,9 @@ export function ScrollView(props: ScrollViewProps) {
           <div
             ref={(node) => (track = node)}
             class="absolute inset-e-0 top-0 w-3"
-            style={{ height: `${thumb().port}px` }}
+            // The sticky child sits after the top padding; reach back over it so the track spans
+            // the port instead of adding the padding to the scroll range
+            style={{ top: `${-thumb().paddingBlockStart}px`, height: `${thumb().port}px` }}
             onPointerEnter={() => setHovering(true)}
             onPointerLeave={() => setHovering(false)}
             onPointerDown={(event) => {
