@@ -47,6 +47,17 @@ describe("reportIssueUrl", () => {
     );
   });
 
+  it("names a log inside a POSIX home folder, whatever machine runs the report", () => {
+    const profile: DiagnosticsInfo = {
+      ...INFO,
+      logFilePath: "/home/ana/.local/share/Pupitre/logs/main.log",
+      homeDirectory: "/home/ana",
+    };
+    expect(newIssuePage(profile).searchParams.get("log")).toBe(
+      "~/.local/share/Pupitre/logs/main.log",
+    );
+  });
+
   it("keeps a log path outside the home folder whole", () => {
     const profile: DiagnosticsInfo = {
       ...INFO,

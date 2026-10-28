@@ -1,4 +1,4 @@
-import { isAbsolute, join, relative } from "node:path";
+import { posix, win32 } from "node:path";
 
 export const REPOSITORY_URL = "https://github.com/shalemore/pupitre";
 
@@ -39,13 +39,19 @@ export function reportIssueUrl(info: DiagnosticsInfo): string {
   return `${REPOSITORY_URL}/issues/new?${query.toString()}`;
 }
 
+/** A Windows path starts with a drive letter or a UNC share, whatever machine reads it. */
+const WINDOWS_PATH = /^(?:[a-z]:[\\/]|\\\\)/i;
+
 /**
  * The path as the user knows it, so a public issue does not carry the name of their account. A path
  * outside the home folder — a temporary profile, a log directory on another drive — stays whole.
+ * The path is read in the dialect it was written in: the report is built from the machine the app
+ * runs on, not necessarily from the one that runs this code.
  */
 function relativeToHome(path: string, home: string): string {
-  const rel = relative(home, path);
+  const api = WINDOWS_PATH.test(home) || WINDOWS_PATH.test(path) ? win32 : posix;
+  const rel = api.relative(home, path);
   if (rel === "") return "~";
-  if (rel.startsWith("..") || isAbsolute(rel)) return path;
-  return join("~", rel);
+  if (rel.startsWith("..") || api.isAbsolute(rel)) return path;
+  return api.join("~", rel);
 }
