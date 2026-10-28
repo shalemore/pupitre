@@ -1,11 +1,15 @@
 import { resolve } from "node:path";
+import type { AliasOptions } from "vite";
 import tailwindcss from "@tailwindcss/vite";
 import solid from "vite-plugin-solid";
 import { thirdPartyNotices } from "./scripts/third-party-notices.js";
 
-export const alias = { "@shared": resolve("src/shared"), "@": resolve("src/renderer") };
+export const alias: AliasOptions = {
+  "@shared": resolve("src/shared"),
+  "@": resolve("src/renderer"),
+};
 
-export const sharedAlias = { "@shared": resolve("src/shared") };
+export const sharedAlias: AliasOptions = { "@shared": resolve("src/shared") };
 
 /**
  * The settings of the renderer, which both the app and the web demo build: the same bundle, with
