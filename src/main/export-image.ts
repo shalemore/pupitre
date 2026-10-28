@@ -77,11 +77,19 @@ export async function exportImage({
  * nothing in the document has to run, and a page opened next to the user's files has no business
  * running code from them. The tags are what goes: `javascript: false` in the web preferences would
  * also stop the main process from running the script that measures the page.
+ *
+ * A match can leave another tag behind, so removal repeats until the page stops changing.
  */
 function withoutScripts(html: string): string {
-  return html
-    .replace(/<script\b[^>]*>[\s\S]*?<\/script\s*>/gi, "")
-    .replace(/<script\b[^>]*\/?>/gi, "");
+  let previous: string;
+  do {
+    previous = html;
+    html = html
+      // A browser ends a script at any end tag that starts with `</script`, attributes and all
+      .replace(/<script\b[^>]*>[\s\S]*?<\/script\b[^>]*>/gi, "")
+      .replace(/<script\b[^>]*>/gi, "");
+  } while (html !== previous);
+  return html;
 }
 
 /** The hidden window an export renders in, with the sizes it was laid out for. */
