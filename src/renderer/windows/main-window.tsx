@@ -96,6 +96,24 @@ export const MainWindow: Component = () => {
       ? total
       : t().common.selectedOfTotal(t().common.charsCount(selectedCharacters), total);
   });
+  // The count ends the bar in either layout: beside the tabs, or at the end of the title's grid
+  const wordCount = () => (
+    <Show when={session.activeDocument() !== undefined && settings().showWordCount}>
+      <div
+        data-bar-part="count"
+        // The character count is a second reading of a dense page; a page of words needs only
+        // the words beside them, and shows both counts when pointed at
+        title={`${wordsText()} · ${charsText()}`}
+        class="text-2xs text-muted-foreground tabular-nums flex shrink-0 items-center gap-1.5 whitespace-nowrap me-2"
+      >
+        <span>{wordsText()}</span>
+        <Show when={countKind() === "character"}>
+          <span>·</span>
+          <span>{charsText()}</span>
+        </Show>
+      </div>
+    </Show>
+  );
   // A folder the user dropped in or opened; while the open file is outside of it, the file's own folder is shown instead
   const [openedFolder, setOpenedFolder] = createSignal<string>();
   const [preferredMode, setPreferredMode] = createSignal<SidebarMode>("outline");
@@ -580,18 +598,25 @@ export const MainWindow: Component = () => {
         <Show
           when={manyTabs()}
           fallback={
-            <>
-              <div data-bar-part="name" class="flex items-center gap-2 me-1 pointer-events-none">
-                <img src="./logo.svg" alt="" class="rounded-sm shadow-sm size-4" />
-                <span class="font-semibold text-muted-foreground tracking-wide">
-                  {t().common.appName}
-                </span>
+            // Equal side columns keep the document name in the middle of the bar, whatever the
+            // menus and the count take
+            <div
+              data-title-grid
+              class="flex-1 min-w-0 grid grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] items-center gap-2"
+            >
+              <div class="flex min-w-0 items-center gap-2 overflow-hidden">
+                <div data-bar-part="name" class="flex items-center gap-2 me-1 pointer-events-none">
+                  <img src="./logo.svg" alt="" class="rounded-sm shadow-sm size-4" />
+                  <span class="font-semibold text-muted-foreground tracking-wide">
+                    {t().common.appName}
+                  </span>
+                </div>
+                <Show when={!isMacOS}>
+                  <MenuBar onOpenChange={setMenuOpen} />
+                </Show>
               </div>
-              <Show when={!isMacOS}>
-                <MenuBar onOpenChange={setMenuOpen} />
-              </Show>
 
-              <div class="flex-1 min-w-0 px-4 flex items-center justify-center gap-2 font-medium text-foreground">
+              <div class="min-w-0 px-4 flex items-center justify-center gap-2 font-medium text-foreground">
                 <Show when={session.activeDocument()}>
                   <Show when={session.isDirty()}>
                     <span
@@ -604,7 +629,9 @@ export const MainWindow: Component = () => {
                   </bdi>
                 </Show>
               </div>
-            </>
+
+              <div class="flex min-w-0 items-center justify-end overflow-hidden">{wordCount()}</div>
+            </div>
           }
         >
           {/* With several documents the bar holds the tabs; the menus fold into one button so the
@@ -621,21 +648,7 @@ export const MainWindow: Component = () => {
           />
         </Show>
 
-        <Show when={session.activeDocument() !== undefined && settings().showWordCount}>
-          <div
-            data-bar-part="count"
-            // The character count is a second reading of a dense page; a page of words needs only
-            // the words beside them, and shows both counts when pointed at
-            title={`${wordsText()} · ${charsText()}`}
-            class="text-2xs text-muted-foreground tabular-nums flex shrink-0 items-center gap-1.5 whitespace-nowrap me-2"
-          >
-            <span>{wordsText()}</span>
-            <Show when={countKind() === "character"}>
-              <span>·</span>
-              <span>{charsText()}</span>
-            </Show>
-          </div>
-        </Show>
+        <Show when={manyTabs()}>{wordCount()}</Show>
       </TitleBar>
 
       <div

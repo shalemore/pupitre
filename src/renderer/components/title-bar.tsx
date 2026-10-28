@@ -20,6 +20,17 @@ export const TitleBar: ParentComponent<{ class?: string; inert?: boolean }> = (p
   const side = desktop.initialState.captionSide;
   let bar: HTMLElement | undefined;
 
+  /** Whether the title grid's side cells hold more than their columns can show. */
+  const crowded = (): boolean => {
+    if (!bar) return false;
+    if (bar.scrollWidth > bar.clientWidth) return true;
+    const grid = bar.querySelector("[data-title-grid]");
+    if (!(grid instanceof HTMLElement)) return false;
+    return [grid.firstElementChild, grid.lastElementChild].some(
+      (cell) => cell instanceof HTMLElement && cell.scrollWidth > cell.clientWidth,
+    );
+  };
+
   /**
    * Hides the parts that no longer fit, in GIVE_WAY order, and gives them back when they do. It
    * unhides everything first, so the answer does not depend on what is hidden now; the observer
@@ -30,7 +41,7 @@ export const TitleBar: ParentComponent<{ class?: string; inert?: boolean }> = (p
     const hidden: string[] = [];
     bar.removeAttribute("data-compact");
     for (const part of GIVE_WAY) {
-      if (bar.scrollWidth <= bar.clientWidth) break;
+      if (!crowded()) break;
       hidden.push(part);
       bar.setAttribute("data-compact", hidden.join(" "));
     }
@@ -43,6 +54,14 @@ export const TitleBar: ParentComponent<{ class?: string; inert?: boolean }> = (p
     const observer = new ResizeObserver(fit);
     observer.observe(bar);
     for (const child of bar.children) observer.observe(child);
+    // A side cell keeps its column's width, so the parts inside it are what grows
+    const grid = bar.querySelector("[data-title-grid]");
+    if (grid !== null) {
+      for (const cell of grid.children) {
+        observer.observe(cell);
+        for (const child of cell.children) observer.observe(child);
+      }
+    }
     onCleanup(() => observer.disconnect());
   });
 
