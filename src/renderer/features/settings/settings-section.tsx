@@ -1,4 +1,3 @@
-import { cn } from "cn";
 import { RotateCcw } from "lucide-solid";
 import { type JSX, type ParentComponent, Show } from "solid-js";
 import { isModified, isWorkspaceKey, type SettingKey } from "@shared/settings";
@@ -37,8 +36,8 @@ export interface SettingFieldProps {
 
 /**
  * A row bound to one setting. When the value differs from the default (from the global value, in
- * a folder's settings) the row gets an accent marker and a reset button that removes the key from
- * the settings file again.
+ * a folder's settings) the row gets a reset button that removes the key from the settings file
+ * again.
  */
 export const SettingField: ParentComponent<SettingFieldProps> = (props) => {
   // A folder's settings are compared with the global values, and the file is the folder's; what a folder cannot set stays global
@@ -47,15 +46,9 @@ export const SettingField: ParentComponent<SettingFieldProps> = (props) => {
     inFolder() ? workspace().overrides.includes(props.name) : isModified(settings(), props.name);
   return (
     <SettingRow
-      class={cn("relative", props.nested && "ps-4")}
+      class={props.nested ? "ps-4" : undefined}
       title={
         <span class="flex items-center gap-1.5">
-          <Show when={modified()}>
-            <span
-              aria-hidden="true"
-              class="absolute -inset-s-3 inset-y-3 w-0.5 rounded-full bg-brand animate-in fade-in-0 duration-ui"
-            />
-          </Show>
           {props.title}
           <Show when={modified()}>
             <IconButton
