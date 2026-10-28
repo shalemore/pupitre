@@ -90,11 +90,15 @@ export function createImmersiveChrome(options: ChromeOptions) {
       const pushing = event.deltaY < 0 && port != null && port.scrollTop <= 0;
       if (!pushing) {
         pushed = 0;
+        // Only the whole chrome, standing at the top of the document, takes the scroll itself;
+        // anywhere else the page moves and the chrome folds on the way
         const folded =
           options.canFold() &&
-          ((titleBarVisible() && !options.titleBarPinned()) ||
-            (sidebarVisible() && !options.startPinned()) ||
-            (endSidebarVisible() && !options.endPinned()));
+          titleBarVisible() &&
+          sidebarVisible() &&
+          endSidebarVisible() &&
+          port != null &&
+          port.scrollTop <= 0;
         hide();
         return folded;
       }
