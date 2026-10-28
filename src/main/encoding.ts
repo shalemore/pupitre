@@ -105,14 +105,7 @@ export function mostlyUnreadable(text: string): boolean {
 function iconvName(encoding: TextEncoding): string {
   if (encoding === "utf-16le") return "utf16-le";
   if (encoding === "utf-16be") return "utf16-be";
-  // The UTF-8 BOM is added by hand, so both UTF-8 flavours encode the same way
   return encoding === "utf-8-bom" ? "utf-8" : encoding;
-}
-
-function withoutBom(buffer: Buffer, encoding: TextEncoding): Buffer {
-  const declared = declaredEncoding(buffer);
-  if (declared !== encoding) return buffer;
-  return buffer.subarray(encoding === "utf-8-bom" ? 3 : 2);
 }
 
 /** Thrown when the text has characters that the encoding of the file cannot store. */
@@ -145,12 +138,13 @@ export function withLineEnding(text: string, lineEnding: LineEnding): string {
 
 /** Decodes a file whose encoding is known. */
 export function decodeWith(buffer: Buffer, encoding: TextEncoding): string {
-  return iconv.decode(withoutBom(buffer, encoding), iconvName(encoding));
+  return iconv.decode(buffer, iconvName(encoding));
 }
 
 /** Encodes the text the way the file was written, keeping its encoding and its BOM. */
 export function encodeDocument(text: string, encoding: TextEncoding): Buffer {
-  const body = iconv.encode(text, iconvName(encoding));
+  const withBom = encoding === "utf-8-bom" || encoding === "utf-16le" || encoding === "utf-16be";
+  const body = iconv.encode(text, iconvName(encoding), { addBOM: withBom });
   // iconv turns what an encoding cannot store into "?", so the text has to survive the round trip
   if (
     encoding !== "utf-8" &&
@@ -159,9 +153,6 @@ export function encodeDocument(text: string, encoding: TextEncoding): Buffer {
   ) {
     throw new LossyEncodingError(encoding);
   }
-  if (encoding === "utf-8-bom") return Buffer.concat([UTF8_BOM, body]);
-  if (encoding === "utf-16le") return Buffer.concat([UTF16LE_BOM, body]);
-  if (encoding === "utf-16be") return Buffer.concat([UTF16BE_BOM, body]);
   return body;
 }
 
