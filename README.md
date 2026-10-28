@@ -1,23 +1,22 @@
-<p align="center">English | <a href="README.zh-CN.md">简体中文</a></p>
+<p align="right">English | <a href="README.zh-CN.md">简体中文</a></p>
 
-<p align="center">
-  <img src="src/renderer/public/logo.svg" width="96" height="96" alt="Pupitre" />
+<p align="left">
+  <img src="src/renderer/public/logo.svg" width="180" height="180" alt="Pupitre" />
 </p>
 
-<h1 align="center">Pupitre</h1>
-
-<p align="center"><em>pupitre, French: the sloped desk where a professor lays out their notes before speaking.</em></p>
+<h1 align="left">Pupitre</h1>
 
 [![CI](https://github.com/shalemore/pupitre/actions/workflows/ci.yml/badge.svg)](https://github.com/shalemore/pupitre/actions/workflows/ci.yml) [![License](https://img.shields.io/github/license/shalemore/pupitre)](LICENSE)
 
-![Pupitre editing a French, a Russian and an Arabic document](docs/banner.png)
+A cross-platform Markdown editor. Formatting is rendered while typing, and the syntax under the cursor stays visible and editable.
 
-A cross-platform Markdown editor. Formatting is rendered while typing, and the syntax under the cursor stays visible and editable. [Try it in your browser](https://shalemore.github.io/pupitre/).
+![Pupitre editing a French, a Russian and an Arabic document](docs/banner.png)
 
 - **Everything renders.** GFM, front matter, GitHub alerts, math and chemistry formulas, Mermaid diagrams, footnotes, emoji, highlights, sub- and superscripts, and inline HTML.
 - **Themes are CSS.** Each has a light and a dark side, and any two can be paired.
+- [Try it in your browser](https://shalemore.github.io/pupitre/).
 
-<p align="center">
+<p align="left">
   <img src="docs/preferences.png" width="450" alt="Preferences in dark mode" />
 </p>
 
@@ -29,8 +28,6 @@ Download it from [Releases](https://github.com/shalemore/pupitre/releases), or o
 scoop bucket add shalemore https://github.com/shalemore/scoop-bucket
 scoop install pupitre
 ```
-
-_The browser demo cannot open a folder, and a document is lost when the tab closes._
 
 ## Features
 
