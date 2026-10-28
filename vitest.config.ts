@@ -1,8 +1,6 @@
-import { resolve } from "node:path";
 import solid from "vite-plugin-solid";
 import { defineConfig } from "vitest/config";
-
-const alias = { "@shared": resolve("src/shared"), "@": resolve("src/renderer") };
+import { alias } from "./vite.shared.js";
 
 // Unit tests sit next to the code they test. The main process and the shared code run in Node as
 // they do in the app; the renderer runs in jsdom, which is enough for CodeMirror's state, its

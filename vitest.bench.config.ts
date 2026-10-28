@@ -1,7 +1,5 @@
-import { resolve } from "node:path";
 import { defineConfig } from "vitest/config";
-
-const alias = { "@shared": resolve("src/shared"), "@": resolve("src/renderer") };
+import { alias } from "./vite.shared.js";
 
 /**
  * The benchmarks live apart from the unit tests: `npm test` collects `*.test.ts` only and never
