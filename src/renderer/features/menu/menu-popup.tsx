@@ -77,7 +77,7 @@ const MenuEntries: Component<{
                 <MenuItem
                   disabled={item().enabled === false}
                   onSelect={() => props.onSelect(item())}
-                  class="flex w-full items-center gap-6 rounded-md px-2.5 py-1.5 text-start transition-colors duration-fast data-disabled:text-tertiary data-highlighted:bg-accent data-highlighted:text-foreground"
+                  class="flex w-full items-center gap-6 rounded-md px-2.5 py-1.5 text-start outline-none transition-colors duration-fast data-disabled:text-tertiary data-highlighted:bg-accent data-highlighted:text-foreground"
                 >
                   <ItemContent item={item()} hasChecks={hasChecks()} />
                 </MenuItem>
@@ -86,7 +86,7 @@ const MenuEntries: Component<{
               <MenuSub>
                 <MenuSubTrigger
                   disabled={item().enabled === false}
-                  class="flex w-full items-center gap-6 rounded-md px-2.5 py-1.5 text-start transition-colors duration-fast data-disabled:text-tertiary data-highlighted:bg-accent data-highlighted:text-foreground"
+                  class="flex w-full items-center gap-6 rounded-md px-2.5 py-1.5 text-start outline-none transition-colors duration-fast data-disabled:text-tertiary data-highlighted:bg-accent data-highlighted:text-foreground"
                 >
                   <ItemContent item={item()} hasChecks={hasChecks()} />
                   <ChevronRight class="size-3.5 shrink-0 text-tertiary rtl:-scale-x-100" />
