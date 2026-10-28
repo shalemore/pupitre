@@ -1,8 +1,9 @@
 import { Show, type Component } from "solid-js";
 import { SETTING_RANGES, type Settings } from "@shared/settings";
 import { Select, Slider, Switch } from "@/components/ui";
-import { currentLocale, t } from "@/i18n";
+import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
+import { formatDecimal } from "@/lib/format";
 import { settings, updateSettings } from "@/lib/settings";
 import { FontSelect, RefreshFontsButton, themeFontLabel } from "./font-select";
 import { SettingField, SettingGroup, SettingsSection } from "./settings-section";
@@ -71,10 +72,7 @@ export const EditorSection: Component = () => (
       <SettingField
         name="lineHeight"
         title={t().settings.lineHeight}
-        description={new Intl.NumberFormat(currentLocale(), {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }).format(settings().lineHeight)}
+        description={formatDecimal(settings().lineHeight, 2)}
       >
         <Slider
           value={settings().lineHeight}

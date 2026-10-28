@@ -3,6 +3,7 @@ import type { HistoryEntry } from "@shared/desktop-api";
 import { PaletteSheet } from "@/features/palette/palette-sheet";
 import { currentLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
+import { formatNumber } from "@/lib/format";
 
 export interface VersionHistoryProps {
   /** The file whose kept versions are listed. */
@@ -22,14 +23,14 @@ interface VersionRow {
 function sizeOf(bytes: number): string {
   const unit = bytes < 1000 ? "byte" : bytes < 1_000_000 ? "kilobyte" : "megabyte";
   const value = unit === "byte" ? bytes : unit === "kilobyte" ? bytes / 1000 : bytes / 1_000_000;
-  return new Intl.NumberFormat(currentLocale(), {
+  return formatNumber(value, {
     style: "unit",
     unit,
     // Narrow units are symbols: "27B", "4.2kB". Their short forms take a plural the numbers a
     // version history holds would get wrong in some languages ("27 byte")
     unitDisplay: "narrow",
     maximumFractionDigits: 1,
-  }).format(value);
+  });
 }
 
 /**

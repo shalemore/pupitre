@@ -4,6 +4,7 @@ import { SETTING_RANGES, type Settings } from "@shared/settings";
 import { Callout, IconButton, Select, Slider, Switch } from "@/components/ui";
 import { currentLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
+import { formatPercent } from "@/lib/format";
 import { settings, updateSettings } from "@/lib/settings";
 import { DEFAULT_THEME, type ThemeInfo, themeDisplayName, themes } from "@/lib/theme";
 import { workspace } from "@/lib/workspace";
@@ -139,9 +140,7 @@ export const AppearanceSection: Component = () => (
         <SettingField
           name="zoom"
           title={t().settings.zoom}
-          description={new Intl.NumberFormat(currentLocale(), { style: "percent" }).format(
-            settings().zoom / 100,
-          )}
+          description={formatPercent(settings().zoom / 100)}
         >
           <Slider
             value={settings().zoom}
