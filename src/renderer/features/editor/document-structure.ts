@@ -75,10 +75,28 @@ export function readableText(state: EditorState, from = 0, to = state.doc.length
   return readableTextFrom(syntaxTree(state), (start, end) => state.sliceDoc(start, end), from, to);
 }
 
+/** The `<h1>`–`<h6>` elements written as raw HTML, with the place of each opening tag. */
+function htmlHeadings(state: EditorState, from: number, to: number): OutlineHeading[] {
+  const source = state.sliceDoc(from, to);
+  const template = document.createElement("template");
+  template.innerHTML = source;
+  const elements = template.content.querySelectorAll("h1, h2, h3, h4, h5, h6");
+  const tags = [...source.matchAll(/<h([1-6])\b[^>]*>/gi)];
+  return [...elements].map((element, index) => ({
+    level: Number(element.tagName.slice(1)),
+    text: element.textContent?.trim() ?? "",
+    pos: from + (tags[index]?.index ?? 0),
+  }));
+}
+
 export function collectHeadings(state: EditorState): OutlineHeading[] {
   const headings: OutlineHeading[] = [];
   syntaxTree(state).iterate({
     enter: (node) => {
+      if (node.name === "HTMLBlock") {
+        headings.push(...htmlHeadings(state, node.from, node.to));
+        return false;
+      }
       const level = HEADING_LEVEL.exec(node.name)?.[1];
       // Headings never sit inside leaf blocks, so their content need not be walked
       if (level === undefined) return !LEAF_BLOCK.test(node.name);

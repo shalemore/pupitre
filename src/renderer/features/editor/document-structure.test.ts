@@ -26,6 +26,14 @@ describe("collectHeadings", () => {
       { level: 2, text: "Two two", pos: 13 },
     ]);
   });
+
+  it("lists headings written as raw HTML", () => {
+    const source = '<h1 align="left">Pupitre</h1>\n\n<h2>Install <em>now</em></h2>';
+    expect(collectHeadings(markdownState(source))).toEqual([
+      { level: 1, text: "Pupitre", pos: 0 },
+      { level: 2, text: "Install now", pos: source.indexOf("<h2") },
+    ]);
+  });
 });
 
 describe("findHeadingByAnchor", () => {
