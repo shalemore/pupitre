@@ -336,7 +336,7 @@ kbd {
 img {
   max-width: 100%;
   height: auto;
-  border-radius: 8px;
+  border-radius: var(--md-image-radius, 0);
   vertical-align: bottom;
 }
 
