@@ -1,3 +1,4 @@
+import BezierEasing from "bezier-easing";
 import { settings } from "@/lib/settings";
 
 /**
@@ -41,25 +42,10 @@ function parseBezier(value: string): Bezier | undefined {
   if (x1 === undefined || y1 === undefined || x2 === undefined || y2 === undefined) {
     return undefined;
   }
+  // A curve's x controls must lie in [0, 1]. A theme owns the custom property this is read from,
+  // and the CSS parser does not validate a value it only stores.
+  if (x1 < 0 || x1 > 1 || x2 < 0 || x2 > 1) return undefined;
   return { x1, y1, x2, y2 };
-}
-
-function bezierValue(a: number, b: number, t: number): number {
-  const rest = 1 - t;
-  return 3 * rest * rest * t * a + 3 * rest * t * t * b + t * t * t;
-}
-
-/** The curve's height at `x`, solving the curve's own x for t first. */
-function bezierEase({ x1, y1, x2, y2 }: Bezier, x: number): number {
-  let t = x;
-  for (let step = 0; step < 8; step++) {
-    const error = bezierValue(x1, x2, t) - x;
-    if (Math.abs(error) < 1e-5) break;
-    const slope = 3 * (1 - t) * (1 - t) * x1 + 6 * (1 - t) * t * (x2 - x1) + 3 * t * t * (1 - x2);
-    if (Math.abs(slope) < 1e-6) break;
-    t -= error / slope;
-  }
-  return bezierValue(y1, y2, Math.min(1, Math.max(0, t)));
 }
 
 /**
@@ -70,5 +56,8 @@ export function scrollTiming(): Timing {
   const style = getComputedStyle(document.documentElement);
   const duration = readDuration(style.getPropertyValue("--transition-duration-sheet"), 300);
   const bezier = parseBezier(style.getPropertyValue("--ease-out-expo"));
-  return { duration, ease: bezier ? (t) => bezierEase(bezier, t) : (t) => t };
+  return {
+    duration,
+    ease: bezier ? BezierEasing(bezier.x1, bezier.y1, bezier.x2, bezier.y2) : (t) => t,
+  };
 }
