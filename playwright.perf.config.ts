@@ -1,4 +1,5 @@
 import { defineConfig } from "@playwright/test";
+import { sharedConfig } from "./playwright.shared.js";
 
 /**
  * The performance spec opens documents of megabytes and types into them, which takes minutes and
@@ -6,16 +7,10 @@ import { defineConfig } from "@playwright/test";
  * testIgnore, and this config runs only it.
  */
 export default defineConfig({
-  testDir: "./e2e",
+  ...sharedConfig,
   testMatch: /performance\.spec\.ts$/,
-  fullyParallel: false,
-  workers: 1,
   // A cold start and a 20 MB open have to fit, even where the disk is slow
   timeout: 600_000,
-  expect: { timeout: 10_000 },
-  // Electron only downloads its binary once something requires it, and the cold start below must
-  // not be the step that pays for the download
-  globalSetup: "./e2e/global-setup.ts",
   reporter: "list",
   use: { trace: "off" },
 });
