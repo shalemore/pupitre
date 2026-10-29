@@ -14,6 +14,7 @@ import {
   type Component,
 } from "solid-js";
 import type { AppCommand } from "@shared/desktop-api";
+import { isInsideFolder } from "@shared/paths";
 import { TitleBar } from "@/components/title-bar";
 import { IconButton } from "@/components/ui";
 import { CommandPalette } from "@/features/command-palette/command-palette";
@@ -42,13 +43,7 @@ import { desktop, isMacOS } from "@/lib/desktop";
 import { documentPosition } from "@/lib/document-positions";
 import { createDocumentSession } from "@/lib/document-session";
 import { messageOf, reportFailure } from "@/lib/errors";
-import {
-  fileNameOf,
-  isInsideFolder,
-  isolateFileName,
-  parentFolder,
-  withoutDocumentExtension,
-} from "@/lib/file";
+import { fileNameOf, isolateFileName, parentFolder, withoutDocumentExtension } from "@/lib/file";
 import { withoutScripts } from "@/lib/html";
 import { createImmersiveChrome } from "@/lib/immersive-chrome";
 import { recentFiles } from "@/lib/recent-files";

@@ -30,6 +30,7 @@ import {
   type TopMenu,
   withGroupSeparators,
 } from "@shared/menu";
+import { isInsideFolder } from "@shared/paths";
 import { pinKeyOf } from "@shared/pins";
 import {
   DEFAULT_SETTINGS,
@@ -222,7 +223,7 @@ function opened(path: string): OpenedDocument {
 function listFolder(path: string): FolderEntry[] {
   const entries = new Map<string, FolderEntry>();
   for (const file of files.keys()) {
-    if (!file.startsWith(`${path}/`)) continue;
+    if (!isInsideFolder(path, file)) continue;
     const [name = "", ...rest] = file.slice(path.length + 1).split("/");
     entries.set(name, {
       name,
@@ -246,7 +247,7 @@ function timeOf(entry: FolderEntry, sort: Exclude<Settings["folderSort"], "name"
   if (entry.kind === "file") return fileTimes.get(entry.path)?.[sort] ?? 0;
   let newest = 0;
   for (const [path, times] of fileTimes) {
-    if (path.startsWith(`${entry.path}/`)) newest = Math.max(newest, times[sort]);
+    if (isInsideFolder(entry.path, path)) newest = Math.max(newest, times[sort]);
   }
   return newest;
 }
@@ -255,7 +256,7 @@ function folderPreviews(path: string): Record<string, string> {
   const previews: Record<string, string> = {};
   for (const [file, text] of files) {
     const name = file.slice(path.length + 1);
-    if (!file.startsWith(`${path}/`) || name.includes("/") || !DOCUMENT_FILE.test(name)) continue;
+    if (!isInsideFolder(path, file) || name.includes("/") || !DOCUMENT_FILE.test(name)) continue;
     previews[file] = text.slice(0, PREVIEW_BYTES);
   }
   return previews;
@@ -515,7 +516,7 @@ const handlers: Handlers = {
       const path = `${root}/${key}`;
       const kind = files.has(path)
         ? "file"
-        : [...files.keys()].some((file) => file.startsWith(`${path}/`))
+        : [...files.keys()].some((file) => isInsideFolder(path, file))
           ? "directory"
           : undefined;
       if (kind === undefined) continue;
