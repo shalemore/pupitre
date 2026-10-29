@@ -31,6 +31,7 @@ import {
   PREVIEW_BYTES,
 } from "@shared/desktop-api";
 import { formatFileSize } from "@shared/file-size";
+import { intlLocale } from "@shared/i18n";
 import type { Settings } from "@shared/settings";
 import { showAboutDialog } from "./about";
 import { setAsDefaultMarkdownApp } from "./default-app";
@@ -456,7 +457,9 @@ export function registerIpcHandlers(): void {
       await dialog.showMessageBox(window, {
         type: "error",
         message: t().dialogs.imageTooLarge(name),
-        detail: t().dialogs.imageTooLargeDetail(formatFileSize(MAX_IMAGE_BYTES, currentLocale())),
+        detail: t().dialogs.imageTooLargeDetail(
+          formatFileSize(MAX_IMAGE_BYTES, intlLocale(currentLocale())),
+        ),
         noLink: true,
       });
       return null;

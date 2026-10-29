@@ -1,7 +1,7 @@
 import { type Component, createMemo, createResource } from "solid-js";
 import type { HistoryEntry } from "@shared/desktop-api";
 import { PaletteSheet } from "@/features/palette/palette-sheet";
-import { currentLocale, t } from "@/i18n";
+import { currentLocale, intlLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { formatNumber } from "@/lib/format";
 
@@ -44,7 +44,11 @@ export const VersionHistory: Component<VersionHistoryProps> = (props) => {
     (path) => desktop.invoke("history:list", path),
   );
   const timeFormat = createMemo(
-    () => new Intl.DateTimeFormat(currentLocale(), { dateStyle: "medium", timeStyle: "short" }),
+    () =>
+      new Intl.DateTimeFormat(intlLocale(currentLocale()), {
+        dateStyle: "medium",
+        timeStyle: "short",
+      }),
   );
   const rows = createMemo(() =>
     (versions() ?? []).map((entry): VersionRow => ({
