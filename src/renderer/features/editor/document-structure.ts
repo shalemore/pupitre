@@ -2,6 +2,7 @@ import { syntaxTree } from "@codemirror/language";
 import type { ChangeSet, EditorState, Extension } from "@codemirror/state";
 import { EditorView, ViewPlugin } from "@codemirror/view";
 import type { Tree } from "@lezer/common";
+import GithubSlugger from "github-slugger";
 import { textOfHtml } from "@/lib/html";
 import type { OutlineHeading } from "./outline-heading";
 
@@ -113,14 +114,6 @@ export function collectHeadings(state: EditorState): OutlineHeading[] {
   return headings;
 }
 
-/** The anchor a heading gets, written like GitHub does: lowercase, punctuation dropped, spaces as hyphens. */
-function headingAnchor(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^\p{L}\p{M}\p{N}\s_-]/gu, "")
-    .replaceAll(/\s/g, "-");
-}
-
 /** The heading a `#anchor` link points to; repeated headings are told apart by -1, -2… as on GitHub. */
 export function findHeadingByAnchor(
   headings: readonly OutlineHeading[],
@@ -132,13 +125,8 @@ export function findHeadingByAnchor(
   } catch {
     return undefined;
   }
-  const seen = new Map<string, number>();
-  return headings.find(({ text }) => {
-    const base = headingAnchor(text);
-    const count = seen.get(base) ?? 0;
-    seen.set(base, count + 1);
-    return (count === 0 ? base : `${base}-${count}`) === wanted;
-  });
+  const slugger = new GithubSlugger();
+  return headings.find(({ text }) => slugger.slug(text) === wanted);
 }
 
 /** The section the cursor is in: the last heading at or before the cursor. */
