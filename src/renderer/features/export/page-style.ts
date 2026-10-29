@@ -422,7 +422,7 @@ li.md-task input {
   height: 1em;
   margin: 0;
   margin-inline-end: 0.45em;
-  vertical-align: -0.1em;
+  vertical-align: -0.125em;
   border: 1px solid var(--hairline-strong);
   border-radius: var(--radius-xs);
 }
