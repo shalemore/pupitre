@@ -107,6 +107,14 @@
     );
   }
 
+  /*
+   * A heading is inset by the theme's --md-block-indent. The line in the editor carries it, and a
+   * heading on an exported page has no line of its own, so it takes the value itself.
+   */
+  .md-document > .md-heading:not(.cm-line) {
+    padding-inline-start: var(--md-block-indent, 0);
+  }
+
   /* A code block in a list starts at the item's text, card and all */
   .md-document > .md-code-block {
     margin-inline-start: calc(var(--md-list-depth, 0) * var(--md-list-indent));
