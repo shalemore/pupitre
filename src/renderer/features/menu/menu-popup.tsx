@@ -7,7 +7,6 @@ import {
   MenuSub,
   MenuSubContent,
   MenuSubTrigger,
-  MenuTrigger,
 } from "@kobalte/core/menu";
 import { cn } from "cn";
 import { Check, ChevronRight } from "lucide-solid";
@@ -131,23 +130,11 @@ export const MenuPopup: Component<MenuPopupProps> = (props) => (
     placement={document.documentElement.dir === "rtl" ? "bottom-end" : "bottom-start"}
     gutter={2}
     fitViewport
+    getAnchorRect={() => props.anchor}
     onOpenChange={(open) => {
       if (!open) props.onClose();
     }}
   >
-    <MenuTrigger
-      as="span"
-      aria-hidden="true"
-      tabIndex={-1}
-      style={{
-        position: "fixed",
-        left: `${props.anchor.left}px`,
-        top: `${props.anchor.top}px`,
-        width: `${props.anchor.width}px`,
-        height: `${props.anchor.height}px`,
-        "pointer-events": "none",
-      }}
-    />
     <MenuPortal>
       <MenuContent
         data-menu-panel=""
