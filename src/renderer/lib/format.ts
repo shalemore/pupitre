@@ -1,6 +1,6 @@
 import { currentLocale, intlLocale } from "@/i18n";
 
-export function formatNumber(value: number, options?: Intl.NumberFormatOptions): string {
+function formatNumber(value: number, options?: Intl.NumberFormatOptions): string {
   return new Intl.NumberFormat(intlLocale(currentLocale()), options).format(value);
 }
 

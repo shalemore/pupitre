@@ -1,9 +1,9 @@
 import { type Component, createMemo, createResource } from "solid-js";
 import type { HistoryEntry } from "@shared/desktop-api";
+import { formatFileSize } from "@shared/file-size";
 import { PaletteSheet } from "@/features/palette/palette-sheet";
 import { currentLocale, intlLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
-import { formatNumber } from "@/lib/format";
 
 export interface VersionHistoryProps {
   /** The file whose kept versions are listed. */
@@ -17,20 +17,6 @@ export interface VersionHistoryProps {
 interface VersionRow {
   entry: HistoryEntry;
   time: string;
-}
-
-/** A size in the units the language of the window writes, so a row needs no words of its own. */
-function sizeOf(bytes: number): string {
-  const unit = bytes < 1000 ? "byte" : bytes < 1_000_000 ? "kilobyte" : "megabyte";
-  const value = unit === "byte" ? bytes : unit === "kilobyte" ? bytes / 1000 : bytes / 1_000_000;
-  return formatNumber(value, {
-    style: "unit",
-    unit,
-    // Narrow units are symbols: "27B", "4.2kB". Their short forms take a plural the numbers a
-    // version history holds would get wrong in some languages ("27 byte")
-    unitDisplay: "narrow",
-    maximumFractionDigits: 1,
-  });
 }
 
 /**
@@ -86,7 +72,9 @@ export const VersionHistory: Component<VersionHistoryProps> = (props) => {
       {(row) => (
         <>
           <span class="min-w-0 flex-1 truncate">{row.time}</span>
-          <span class="shrink-0 tabular-nums opacity-60">{sizeOf(row.entry.bytes)}</span>
+          <span class="shrink-0 tabular-nums opacity-60">
+            {formatFileSize(row.entry.bytes, intlLocale(currentLocale()))}
+          </span>
         </>
       )}
     </PaletteSheet>
