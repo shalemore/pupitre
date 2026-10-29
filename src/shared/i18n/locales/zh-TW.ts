@@ -265,6 +265,8 @@ export const zhTW = {
     filePreviewsDesc: "在資料夾中每個檔案名稱下方顯示該檔案的前幾行",
     showWordCount: "顯示字數",
     showWordCountDesc: "在標題列顯示字數和字元數",
+    tabs: "分頁",
+    tabsDesc: "每個檔案在各自的分頁中開啟；關閉時，新檔案會取代目前顯示的檔案",
     bodyFont: "內文字型",
     fallbackFont: "後備字型",
     fallbackFontDesc: "內文字型缺字時使用，例如中日韓文字",

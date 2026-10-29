@@ -266,6 +266,9 @@ export const ptBR = {
     filePreviewsDesc: "As primeiras linhas de cada arquivo sob o nome dele na pasta",
     showWordCount: "Mostrar contagem de palavras",
     showWordCountDesc: "Palavras e caracteres na barra de título",
+    tabs: "Abas",
+    tabsDesc:
+      "Abrir cada documento em sua própria aba; desativado, um novo documento substitui o exibido",
     bodyFont: "Fonte",
     fallbackFont: "Fonte alternativa",
     fallbackFontDesc: "Para caracteres ausentes na fonte principal, como CJK",

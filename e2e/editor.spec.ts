@@ -53,7 +53,7 @@ test("opens a second file in its own tab and keeps each document apart", async (
   const second = join(folder, "two.md");
   await writeFile(first, "First\n");
   await writeFile(second, "Second\n");
-  const app = await launch({ files: [first] });
+  const app = await launch({ files: [first], settings: { tabs: true } });
   try {
     await run(app.page, { id: "file.open-path", path: second });
     await expect(app.page.getByRole("tab")).toHaveCount(2);
@@ -65,6 +65,44 @@ test("opens a second file in its own tab and keeps each document apart", async (
     await expect.poll(() => readFile(first, "utf8")).toBe("Changed one\n");
     await expect.poll(() => readFile(second, "utf8")).toBe("Second\n");
     expect(await editorText(app.page)).toContain("Changed one");
+  } finally {
+    await close(app);
+    await rm(folder, { recursive: true, force: true });
+  }
+});
+
+test("replaces the open document when tabs are off", async () => {
+  const folder = await workspace();
+  const first = join(folder, "one.md");
+  const second = join(folder, "two.md");
+  await writeFile(first, "First\n");
+  await writeFile(second, "Second\n");
+  const app = await launch({ files: [first] });
+  try {
+    await run(app.page, { id: "file.open-path", path: second });
+    await expect(app.page.locator(".cm-content")).toContainText("Second");
+    // The title bar names the only document; nothing is left to switch to
+    await expect(app.page.getByRole("tab")).toHaveCount(0);
+    await expect(app.page.locator("header")).toContainText("two.md");
+  } finally {
+    await close(app);
+    await rm(folder, { recursive: true, force: true });
+  }
+});
+
+test("turning tabs off returns to the one document on show", async () => {
+  const folder = await workspace();
+  const first = join(folder, "one.md");
+  const second = join(folder, "two.md");
+  await writeFile(first, "First\n");
+  await writeFile(second, "Second\n");
+  const app = await launch({ files: [first], settings: { tabs: true } });
+  try {
+    await run(app.page, { id: "file.open-path", path: second });
+    await expect(app.page.getByRole("tab")).toHaveCount(2);
+    await app.page.evaluate(() => window.desktop.invoke("settings:update", { tabs: false }));
+    await expect(app.page.getByRole("tab")).toHaveCount(0);
+    await expect(app.page.locator(".cm-content")).toContainText("Second");
   } finally {
     await close(app);
     await rm(folder, { recursive: true, force: true });

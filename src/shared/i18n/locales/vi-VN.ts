@@ -261,6 +261,9 @@ export const viVN = {
     filePreviewsDesc: "Vài dòng đầu của mỗi tệp dưới tên của nó trong thư mục",
     showWordCount: "Hiện số từ",
     showWordCountDesc: "Số từ và số ký tự trên thanh tiêu đề",
+    tabs: "Thẻ",
+    tabsDesc:
+      "Mở mỗi tài liệu trong thẻ riêng; khi tắt, tài liệu mới thay thế tài liệu đang hiển thị",
     bodyFont: "Phông chữ",
     fallbackFont: "Phông dự phòng",
     fallbackFontDesc: "Dùng cho ký tự không có trong phông chính, ví dụ CJK",

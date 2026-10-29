@@ -275,6 +275,9 @@ export const plPL = {
     filePreviewsDesc: "Pierwsze wiersze każdego pliku pod jego nazwą w folderze",
     showWordCount: "Pokaż liczbę słów",
     showWordCountDesc: "Liczba słów i znaków na pasku tytułu",
+    tabs: "Karty",
+    tabsDesc:
+      "Otwieraj każdy dokument na osobnej karcie; po wyłączeniu nowy dokument zastępuje wyświetlany",
     bodyFont: "Czcionka",
     fallbackFont: "Czcionka zapasowa",
     fallbackFontDesc: "Dla znaków, których brakuje w głównej czcionce, np. CJK",

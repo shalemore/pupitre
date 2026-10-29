@@ -267,6 +267,9 @@ export const itIT = {
     filePreviewsDesc: "Le prime righe di ogni file sotto il suo nome nella cartella",
     showWordCount: "Mostra conteggio parole",
     showWordCountDesc: "Parole e caratteri nella barra del titolo",
+    tabs: "Schede",
+    tabsDesc:
+      "Apri ogni documento nella propria scheda; disattivato, un nuovo documento sostituisce quello mostrato",
     bodyFont: "Carattere",
     fallbackFont: "Carattere di riserva",
     fallbackFontDesc: "Per i caratteri mancanti, come il CJK",

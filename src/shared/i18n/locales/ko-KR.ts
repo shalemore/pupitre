@@ -267,6 +267,8 @@ export const koKR = {
     filePreviewsDesc: "폴더에서 각 파일 이름 아래에 파일의 처음 몇 줄을 표시합니다",
     showWordCount: "단어 수 표시",
     showWordCountDesc: "제목 표시줄에 단어 수와 글자 수 표시",
+    tabs: "탭",
+    tabsDesc: "각 문서를 별도 탭으로 엽니다. 끄면 새 문서가 표시 중인 문서를 대체합니다",
     bodyFont: "글꼴",
     fallbackFont: "대체 글꼴",
     fallbackFontDesc: "기본 글꼴에 없는 문자(한중일 등)에 사용",

@@ -272,6 +272,9 @@ export const isIS = {
     filePreviewsDesc: "Fyrstu línur hverrar skráar undir nafni hennar í möppunni",
     showWordCount: "Sýna orðafjölda",
     showWordCountDesc: "Fjöldi orða og stafa í titilstikunni",
+    tabs: "Flipar",
+    tabsDesc:
+      "Opna hvert skjal í sínum eigin flipa; þegar slökkt er kemur nýtt skjal í stað þess sem sýnt er",
     bodyFont: "Leturgerð",
     fallbackFont: "Varaleturgerð",
     fallbackFontDesc: "Fyrir stafi sem aðal-leturgerðin skortir, t.d. CJK",

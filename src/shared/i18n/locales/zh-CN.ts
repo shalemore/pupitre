@@ -265,6 +265,8 @@ export const zhCN = {
     filePreviewsDesc: "在文件夹中每个文件名下方显示该文件的前几行",
     showWordCount: "显示字数",
     showWordCountDesc: "在标题栏显示字数和字符数",
+    tabs: "标签页",
+    tabsDesc: "每个文档在各自的标签页中打开；关闭时，新文档会替换当前文档",
     bodyFont: "正文字体",
     fallbackFont: "后备字体",
     fallbackFontDesc: "正文字体缺字时使用，例如中日韩文字",

@@ -268,6 +268,9 @@ export const fiFI = {
     filePreviewsDesc: "Jokaisen tiedoston ensimmäiset rivit nimen alla kansiossa",
     showWordCount: "Näytä sanamäärä",
     showWordCountDesc: "Sanojen ja merkkien määrä otsikkorivillä",
+    tabs: "Välilehdet",
+    tabsDesc:
+      "Avaa jokainen asiakirja omalle välilehdelleen; pois päältä uusi asiakirja korvaa näytetyn",
     bodyFont: "Kirjasin",
     fallbackFont: "Varakirjasin",
     fallbackFontDesc: "Merkkeihin, jotka pääkirjasimesta puuttuvat, esimerkiksi CJK",

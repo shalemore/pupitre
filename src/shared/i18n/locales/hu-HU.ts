@@ -272,6 +272,9 @@ export const huHU = {
     filePreviewsDesc: "Minden fájl első sorai a neve alatt a mappában",
     showWordCount: "Szószám megjelenítése",
     showWordCountDesc: "Szavak és karakterek száma a címsorban",
+    tabs: "Lapok",
+    tabsDesc:
+      "Minden dokumentum saját lapon nyílik meg; kikapcsolva az új dokumentum lecseréli a megjelenítettet",
     bodyFont: "Betűtípus",
     fallbackFont: "Tartalék betűtípus",
     fallbackFontDesc: "A fő betűtípusból hiányzó karakterekhez, például CJK",

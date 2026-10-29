@@ -218,6 +218,14 @@ export const AppearanceSection: Component = () => (
           aria-label={t().settings.showWordCount}
         />
       </SettingField>
+
+      <SettingField name="tabs" title={t().settings.tabs} description={t().settings.tabsDesc}>
+        <Switch
+          checked={settings().tabs}
+          onChange={(tabs) => void updateSettings({ tabs })}
+          aria-label={t().settings.tabs}
+        />
+      </SettingField>
     </SettingGroup>
 
     <SettingGroup>

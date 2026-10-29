@@ -275,6 +275,8 @@ export const enUS = {
     filePreviewsDesc: "The first lines of each file under its name in the folder",
     showWordCount: "Show Word Count",
     showWordCountDesc: "Word and character counts in the title bar",
+    tabs: "Tabs",
+    tabsDesc: "Open each document in its own tab; off, a document replaces the one on show",
     bodyFont: "Font",
     fallbackFont: "Fallback Font",
     fallbackFontDesc: "For characters the main font lacks, such as CJK",

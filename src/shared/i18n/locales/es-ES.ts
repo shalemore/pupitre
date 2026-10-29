@@ -267,6 +267,9 @@ export const esES = {
     filePreviewsDesc: "Las primeras líneas de cada archivo bajo su nombre en la carpeta",
     showWordCount: "Mostrar recuento de palabras",
     showWordCountDesc: "Palabras y caracteres en la barra de título",
+    tabs: "Pestañas",
+    tabsDesc:
+      "Abrir cada documento en su propia pestaña; desactivado, un documento nuevo sustituye al que se muestra",
     bodyFont: "Fuente",
     fallbackFont: "Fuente alternativa",
     fallbackFontDesc: "Para caracteres que faltan en la fuente principal, como CJK",

@@ -270,6 +270,9 @@ export const svSE = {
     filePreviewsDesc: "De första raderna i varje fil under dess namn i mappen",
     showWordCount: "Visa ordantal",
     showWordCountDesc: "Antal ord och tecken i titelraden",
+    tabs: "Flikar",
+    tabsDesc:
+      "Öppna varje dokument i sin egen flik; avstängt ersätter ett nytt dokument det visade",
     bodyFont: "Teckensnitt",
     fallbackFont: "Reservteckensnitt",
     fallbackFontDesc: "För tecken som huvudteckensnittet saknar, till exempel CJK",

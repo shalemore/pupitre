@@ -266,6 +266,9 @@ export const jaJP = {
     filePreviewsDesc: "フォルダー内の各ファイル名の下に、そのファイルの最初の数行を表示します",
     showWordCount: "語数を表示",
     showWordCountDesc: "タイトルバーに語数と文字数を表示",
+    tabs: "タブ",
+    tabsDesc:
+      "各ドキュメントを個別のタブで開きます。オフのときは、新しく開いたドキュメントが表示中のものを置き換えます",
     bodyFont: "フォント",
     fallbackFont: "代替フォント",
     fallbackFontDesc: "メインフォントにない文字（CJK など）に使用",

@@ -1,6 +1,6 @@
 import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { _electron as electron } from "@playwright/test";
@@ -23,6 +23,8 @@ export interface LaunchOptions {
   readonly files?: readonly string[];
   /** Reuse the profile of a launch that was killed, to bring its draft back. */
   readonly profile?: string;
+  /** Settings written into a fresh profile before the app starts, such as `{ tabs: true }`. */
+  readonly settings?: Readonly<Record<string, unknown>>;
 }
 
 /**
@@ -34,6 +36,10 @@ export async function launch(options: LaunchOptions = {}): Promise<TestApp> {
   if (!existsSync(MAIN)) throw new Error(`${MAIN} is missing; run \`npm run build\` first`);
   const temp = await mkdtemp(join(tmpdir(), "pupitre-e2e-"));
   const profile = options.profile ?? join(temp, "profile");
+  if (options.settings !== undefined) {
+    await mkdir(profile, { recursive: true });
+    await writeFile(join(profile, "settings.json"), JSON.stringify(options.settings), "utf8");
+  }
   const app = await electron.launch({
     cwd: ROOT,
     args: [

@@ -59,6 +59,11 @@ export const settingsSchema = z.object({
   zoom: z.number().min(SETTING_RANGES.zoom.min).max(SETTING_RANGES.zoom.max).catch(100),
   /** Read when a window is created, so a change applies to windows opened afterwards. */
   windowStyle: z.enum(["classic", "immersive"]).catch("classic"),
+  /**
+   * Whether each document opens in a tab of its own; off, opening a document replaces the one on
+   * show, after the prompt its unsaved changes ask for.
+   */
+  tabs: z.boolean().catch(false),
   /** Gap the document card keeps to the window edges, its title bar and its sidebars, in px. */
   immersiveGap: z
     .number()
@@ -143,7 +148,7 @@ export const WORKSPACE_FILE = ".pupitre/settings.json";
  * What belongs to the app and not to a folder: both are read before any folder is open, or have
  * nothing to do with one. Every other setting can be given a value of its own for a folder.
  */
-const APP_KEYS: readonly SettingKey[] = ["startup", "autoCheckUpdates", "sourceMode"];
+const APP_KEYS: readonly SettingKey[] = ["startup", "autoCheckUpdates", "sourceMode", "tabs"];
 
 export function isWorkspaceKey(key: string): boolean {
   return !APP_KEYS.some((appKey) => appKey === key);

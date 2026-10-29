@@ -204,14 +204,15 @@ export function createDocumentSession(
     isSample,
   });
 
-  /** Shows a file that was read: in the tab that already holds it, or in a new one. */
-  const showOpened = (opened: OpenedDocument) => {
+  /** Shows a file that was read: in the tab that already holds it, in a new one, or in place of the open document. */
+  const showOpened = async (opened: OpenedDocument) => {
     const open = tabOfPath(opened.path);
     if (open !== undefined) {
       rememberActiveText();
       setActiveTabId(open.id);
       return;
     }
+    if (!(await makeRoom())) return;
     addTab({ ...opened, isSample: false }, opened.content, {
       savedMarkdown: opened.content,
       diskContent: opened.content,
@@ -489,6 +490,26 @@ export function createDocumentSession(
     });
   };
 
+  /** Closes every tab but `keep`, asking about unsaved changes; false when the user keeps one. */
+  const closeTabsExcept = (keep: number | undefined): Promise<boolean> =>
+    // Closing shows a dialog for every document with unsaved changes, so they follow one another
+    tabs()
+      .filter((tab) => tab.id !== keep)
+      .map((tab) => tab.id)
+      .reduce<Promise<boolean>>(async (previous, id) => {
+        if (!(await previous)) return false;
+        const open = tabs().length;
+        await closeTab(id);
+        return tabs().length < open;
+      }, Promise.resolve(true));
+
+  /**
+   * With tabs off, the open documents give way to the one about to be shown. Closing asks about
+   * unsaved changes, and a cancel keeps both the document and the request to open another.
+   */
+  const makeRoom = (): Promise<boolean> =>
+    settings().tabs ? Promise.resolve(true) : closeTabsExcept(undefined);
+
   const activateTab = (id: number) => {
     if (id === activeTabId()) return;
     if (tabs().some((tab) => tab.id === id)) {
@@ -511,6 +532,7 @@ export function createDocumentSession(
       return;
     }
     const { text } = closed;
+    if (!(await makeRoom())) return;
     // Reopening brings the text of a discarded close back as unsaved work rather than as a file, and
     // the pictures it links come with it, so a save of it writes the images it shows
     addTab(
@@ -543,11 +565,13 @@ export function createDocumentSession(
   const nextTab = () => cycleTab(1);
   const previousTab = () => cycleTab(-1);
 
-  const newDocument = () => addTab(inMemoryDocument(false), "");
+  const newDocument = async () => {
+    if (await makeRoom()) addTab(inMemoryDocument(false), "");
+  };
 
   const open = async () => {
     const opened = await desktop.invoke("document:open");
-    if (opened) showOpened(opened);
+    if (opened) await showOpened(opened);
   };
 
   /** Returns the failure message when the file can't be opened; with `showError` the user is also told in a dialog. */
@@ -561,7 +585,7 @@ export function createDocumentSession(
     try {
       const opened = await desktop.invoke("document:read", path);
       // Null: the user gave up on the encoding of a file that is not UTF-8
-      if (opened !== null) showOpened(opened);
+      if (opened !== null) await showOpened(opened);
       return undefined;
     } catch (error) {
       const message = messageOf(error);
@@ -585,6 +609,7 @@ export function createDocumentSession(
       setActiveTabId(opened.id);
       return;
     }
+    if (!(await makeRoom())) return;
     addTab(inMemoryDocument(true), markdown);
   };
 
@@ -628,9 +653,22 @@ export function createDocumentSession(
         return tab;
       }),
     );
+    const active = restored[Math.min(session.active, restored.length - 1)];
+    if (settings().tabs || restored.length < 2) {
+      batch(() => {
+        setTabs(restored);
+        setActiveTabId(active?.id);
+      });
+      return;
+    }
+    // With tabs off only the document that was on show comes back; the others wait on the closed
+    // stack, so no unsaved work is lost and File › Reopen Closed Tab can still reach it
+    for (const tab of restored) {
+      if (tab !== active) rememberClosedTab(tab);
+    }
     batch(() => {
-      setTabs(restored);
-      setActiveTabId(restored[Math.min(session.active, restored.length - 1)]?.id);
+      setTabs(active === undefined ? [] : [active]);
+      setActiveTabId(active?.id);
     });
   };
 
@@ -648,7 +686,7 @@ export function createDocumentSession(
     // with the recovered tabs behind it rather than being dropped for them
     if (launchFile !== undefined) void openPath(launchFile);
     else if (draft === null) {
-      if (startup === "new-file") newDocument();
+      if (startup === "new-file") void newDocument();
       else if (startup === "last-file" && lastFile !== undefined) void openPath(lastFile);
     }
     // From here on, a session without tabs means the user closed them, so its drafts are gone too
@@ -821,6 +859,8 @@ export function createDocumentSession(
     openPath,
     openSample,
     closeTab,
+    /** Closes everything but the document on show, for when tabs are turned off. */
+    closeOtherTabs: () => closeTabsExcept(activeTabId()),
     canReopenTab,
     reopenTab,
     activateTab,

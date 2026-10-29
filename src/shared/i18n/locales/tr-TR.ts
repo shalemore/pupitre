@@ -270,6 +270,9 @@ export const trTR = {
     filePreviewsDesc: "Klasörde her dosyanın adının altında dosyanın ilk satırlarını gösterir",
     showWordCount: "Sözcük Sayısını Göster",
     showWordCountDesc: "Başlık çubuğunda sözcük ve karakter sayısı",
+    tabs: "Sekmeler",
+    tabsDesc:
+      "Her belgeyi kendi sekmesinde aç; kapalıyken yeni belge görüntülenen belgenin yerini alır",
     bodyFont: "Yazı Tipi",
     fallbackFont: "Yedek Yazı Tipi",
     fallbackFontDesc: "Ana yazı tipinde olmayan karakterler için, örneğin CJK",

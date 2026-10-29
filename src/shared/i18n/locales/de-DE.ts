@@ -270,6 +270,9 @@ export const deDE = {
     filePreviewsDesc: "Die ersten Zeilen jeder Datei unter ihrem Namen im Ordner",
     showWordCount: "Wortanzahl anzeigen",
     showWordCountDesc: "Wörter und Zeichen in der Titelleiste",
+    tabs: "Tabs",
+    tabsDesc:
+      "Jedes Dokument in einem eigenen Tab öffnen; aus, ersetzt ein neues Dokument das angezeigte",
     bodyFont: "Schriftart",
     fallbackFont: "Ersatzschrift",
     fallbackFontDesc: "Für Zeichen, die der Hauptschrift fehlen, z. B. CJK",

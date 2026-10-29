@@ -135,7 +135,9 @@ export const MainWindow: Component = () => {
   // A menu or the rename field in the start sidebar keeps that sidebar (and the chrome) open
   const [startSidebarHeld, setStartSidebarHeld] = createSignal(false);
   const immersive = () => settings().windowStyle === "immersive";
-  // One document is named by the title bar itself, so only several need a strip of their own
+  // One document is named by the title bar itself, so only several need a strip of their own. With
+  // tabs off there is never more than one except while the setting is being turned off with several
+  // documents open, and a strip keeps those reachable until they are closed
   const manyTabs = () => session.tabs().length > 1;
   // Split, the folder has its own sidebar at the start edge and the outline one at the end edge; combined, one sidebar shows either
   const split = () => settings().sidebarLayout === "split";
@@ -210,6 +212,20 @@ export const MainWindow: Component = () => {
       startSidebarHeld,
       (held) => {
         if (!held) chrome.keepVisible();
+      },
+      { defer: true },
+    ),
+  );
+  // Turning tabs off returns the window to one document. The others close after the usual save
+  // prompt, and a cancel keeps tabs on: there would be no strip to reach the tab it kept.
+  createEffect(
+    on(
+      () => settings().tabs,
+      (tabs) => {
+        if (tabs) return;
+        void session.closeOtherTabs().then((closed) => {
+          if (!closed) void updateSettings({ tabs: true });
+        });
       },
       { defer: true },
     ),

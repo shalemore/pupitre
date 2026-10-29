@@ -270,6 +270,9 @@ export const nbNO = {
     filePreviewsDesc: "De første linjene i hver fil under navnet i mappen",
     showWordCount: "Vis ordantall",
     showWordCountDesc: "Antall ord og tegn i tittellinjen",
+    tabs: "Faner",
+    tabsDesc:
+      "Åpne hvert dokument i sin egen fane; når det er av, erstatter et nytt dokument det viste",
     bodyFont: "Skrifttype",
     fallbackFont: "Reserveskrifttype",
     fallbackFontDesc: "For tegn hovedskrifttypen mangler, for eksempel CJK",

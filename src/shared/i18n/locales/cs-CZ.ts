@@ -273,6 +273,9 @@ export const csCZ = {
     filePreviewsDesc: "První řádky každého souboru pod jeho názvem ve složce",
     showWordCount: "Zobrazit počet slov",
     showWordCountDesc: "Počet slov a znaků v záhlaví",
+    tabs: "Karty",
+    tabsDesc:
+      "Otevírat každý dokument na vlastní kartě; při vypnutí nový dokument nahradí zobrazený",
     bodyFont: "Písmo",
     fallbackFont: "Záložní písmo",
     fallbackFontDesc: "Pro znaky, které hlavní písmo neobsahuje, například CJK",

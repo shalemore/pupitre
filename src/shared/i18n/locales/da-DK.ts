@@ -270,6 +270,9 @@ export const daDK = {
     filePreviewsDesc: "De første linjer af hver fil under dens navn i mappen",
     showWordCount: "Vis ordantal",
     showWordCountDesc: "Antal ord og tegn i titellinjen",
+    tabs: "Faner",
+    tabsDesc:
+      "Åbn hvert dokument i sin egen fane; når det er slået fra, erstatter et nyt dokument det viste",
     bodyFont: "Skrifttype",
     fallbackFont: "Reserveskrifttype",
     fallbackFontDesc: "Til tegn, som hovedskrifttypen mangler, fx CJK",

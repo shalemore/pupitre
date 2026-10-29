@@ -263,6 +263,9 @@ export const idID = {
     filePreviewsDesc: "Baris-baris pertama setiap berkas di bawah namanya di folder",
     showWordCount: "Tampilkan jumlah kata",
     showWordCountDesc: "Jumlah kata dan karakter di bilah judul",
+    tabs: "Tab",
+    tabsDesc:
+      "Buka setiap dokumen di tabnya sendiri; saat nonaktif, dokumen baru menggantikan dokumen yang ditampilkan",
     bodyFont: "Font",
     fallbackFont: "Font cadangan",
     fallbackFontDesc: "Untuk karakter yang tidak ada di font utama, misalnya CJK",

@@ -266,6 +266,9 @@ export const frFR = {
     filePreviewsDesc: "Les premières lignes de chaque fichier sous son nom dans le dossier",
     showWordCount: "Afficher le nombre de mots",
     showWordCountDesc: "Mots et caractères dans la barre de titre",
+    tabs: "Onglets",
+    tabsDesc:
+      "Ouvrir chaque document dans son propre onglet ; désactivé, un nouveau document remplace celui affiché",
     bodyFont: "Police",
     fallbackFont: "Police de secours",
     fallbackFontDesc: "Pour les caractères absents de la police principale, comme le CJK",

@@ -265,6 +265,9 @@ export const ptPT = {
     filePreviewsDesc: "As primeiras linhas de cada ficheiro sob o nome dele na pasta",
     showWordCount: "Mostrar contagem de palavras",
     showWordCountDesc: "Número de palavras e de caracteres na barra de título",
+    tabs: "Separadores",
+    tabsDesc:
+      "Abrir cada documento no seu próprio separador; desativado, um novo documento substitui o apresentado",
     bodyFont: "Tipo de letra",
     fallbackFont: "Tipo de letra de reserva",
     fallbackFontDesc: "Para caracteres que o tipo de letra principal não tem, como CJK",

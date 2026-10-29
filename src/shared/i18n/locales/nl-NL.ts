@@ -272,6 +272,9 @@ export const nlNL = {
     filePreviewsDesc: "De eerste regels van elk bestand onder zijn naam in de map",
     showWordCount: "Woordaantal tonen",
     showWordCountDesc: "Woorden en tekens in de titelbalk",
+    tabs: "Tabbladen",
+    tabsDesc:
+      "Open elk document in een eigen tabblad; uit, vervangt een nieuw document het getoonde",
     bodyFont: "Lettertype",
     fallbackFont: "Terugvallettertype",
     fallbackFontDesc: "Voor tekens die het hoofdlettertype mist, zoals CJK",
