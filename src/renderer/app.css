@@ -427,7 +427,7 @@
 @layer components {
   /* The menu grows from the corner of the button or entry it hangs from (menu-popup.tsx) */
   [data-menu-panel] {
-    transform-origin: var(--menu-origin, center);
+    transform-origin: var(--kb-popper-content-transform-origin, center);
   }
 
   .scroll-fade {
