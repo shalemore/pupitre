@@ -12,10 +12,11 @@ export function readJsonFile(path: string): unknown {
 
 /**
  * Writes to a temporary file and renames it over the target, so a crash mid-write never leaves a
- * truncated JSON file behind.
+ * truncated JSON file behind. The flush makes the data durable before the rename, so a power loss
+ * cannot leave the renamed file empty.
  */
 export function writeJsonFile(path: string, value: unknown): void {
   mkdirSync(dirname(path), { recursive: true });
-  writeFileSync(`${path}.tmp`, `${JSON.stringify(value, null, 2)}\n`);
+  writeFileSync(`${path}.tmp`, `${JSON.stringify(value, null, 2)}\n`, { flush: true });
   renameSync(`${path}.tmp`, path);
 }
