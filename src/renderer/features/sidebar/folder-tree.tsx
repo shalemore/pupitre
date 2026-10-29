@@ -111,14 +111,10 @@ const FolderChildren: Component<FolderChildrenProps> = (props) => {
   });
 
   // The main process orders the rows, so a new order has to be asked for; the rows stay on screen
-  // until it arrives, and every other open folder asks for its own again the same way
-  createEffect(
-    on(
-      () => settings().folderSort,
-      () => void refetch(),
-      { defer: true },
-    ),
-  );
+  // until it arrives, and every other open folder asks for its own again the same way. The memo
+  // keeps the settings broadcast, which replaces the whole object, from asking for the same order.
+  const folderSort = createMemo(() => settings().folderSort);
+  createEffect(on(folderSort, () => void refetch(), { defer: true }));
 
   return (
     <Show
