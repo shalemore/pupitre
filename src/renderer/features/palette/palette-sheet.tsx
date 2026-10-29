@@ -1,6 +1,6 @@
-import { createMemo, createSignal, createUniqueId, For, type JSX, onMount, Show } from "solid-js";
-import { Input, ListItem, ScrollView, Sheet } from "@/components/ui";
-import { createListNavigation } from "@/lib/list-navigation";
+import { Combobox as KobalteCombobox, useComboboxContext } from "@kobalte/core/combobox";
+import { createEffect, createMemo, createSignal, type JSX, onMount, Show } from "solid-js";
+import { Input, ScrollView, Sheet, type ScrollViewProps } from "@/components/ui";
 
 export interface PaletteSheetProps<Item> {
   /** Names the sheet and the list it holds, for anyone who cannot see it. */
@@ -19,89 +19,136 @@ export interface PaletteSheetProps<Item> {
   children: (item: Item) => JSX.Element;
 }
 
+/** A row with the key the list knows it by; the place in the list keeps the first row first as the query narrows. */
+interface Row<Item> {
+  key: string;
+  item: Item;
+}
+
+function isRowList<Item>(value: unknown): value is readonly Row<Item>[] {
+  return Array.isArray(value);
+}
+
+/**
+ * The row a selection change carries. A single selection is typed as one option, but the combobox
+ * hands the selected keys over as a list.
+ */
+function selectedRow<Item>(
+  selected: Row<Item> | readonly Row<Item>[] | null,
+): Row<Item> | undefined {
+  return isRowList<Item>(selected) ? selected[0] : (selected ?? undefined);
+}
+
+/**
+ * Starts the list on its first row and keeps a row pointed at as the query replaces the list. The
+ * input keeps the focus, so the list is walked through the combobox's own active descendant.
+ */
+function FocusFirstRow(): null {
+  const context = useComboboxContext();
+  onMount(() => context.open("first", "manual"));
+  createEffect(() => {
+    const collection = context.listState().collection();
+    const selection = context.listState().selectionManager();
+    const focused = selection.focusedKey();
+    if (focused != null && collection.getItem(focused) !== undefined) return;
+    const first = collection.getFirstKey();
+    if (first !== undefined) selection.setFocusedKey(first);
+  });
+  return null;
+}
+
+/** Keeps the highlighted row on show; the list scrolls, the focus stays in the input. */
+function ShowFocusedRow(): null {
+  const context = useComboboxContext();
+  createEffect(() => {
+    const selection = context.listState().selectionManager();
+    const key = selection.focusedKey();
+    const list = context.listboxId() ? document.getElementById(context.listboxId() ?? "") : null;
+    if (key == null || list === null) return;
+    list.querySelector(`[data-key="${key}"]`)?.scrollIntoView({ block: "nearest" });
+  });
+  return null;
+}
+
 /**
  * The panel a palette is: a query field over the rows it picks, walked with the arrow keys and run
  * with Enter. It covers the window and hands the focus back to whatever held it before, whichever
  * way it was closed. What the rows hold is the caller's business; picking one closes the sheet.
  */
 export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
-  // Two sheets are never open at once, but a window holding both still needs their rows told apart
-  const sheetId = createUniqueId();
-  const listId = `${sheetId}-list`;
-  const rowId = (index: number) => `${sheetId}-row-${index}`;
   const [query, setQuery] = createSignal("");
-  let input: HTMLInputElement | undefined;
-  let list: HTMLDivElement | undefined;
-
+  // The list is always open; the combobox closes it on Tab, and typing opens it again
+  const [open, setOpen] = createSignal(true);
   const shown = createMemo(() => props.rows(query()));
-  const navigation = createListNavigation(
-    () => shown().length,
-    () => list,
+  const options = createMemo<Row<Item>[]>(() =>
+    shown().map((item, index) => ({ key: String(index), item })),
   );
-  const active = navigation.active;
-  const isActive = navigation.isActive;
+  let input: HTMLInputElement | undefined;
 
-  onMount(() => input?.focus());
+  // An input method commits its candidate with Enter, which must not run the row under it
+  onMount(() => {
+    input?.focus();
+    // The key events are delegated at the document, so stopping the propagation here keeps the
+    // combobox from seeing a commit Enter at all
+    input?.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.isComposing) event.stopPropagation();
+      },
+      true,
+    );
+  });
 
-  const pick = (item: Item) => {
-    props.onPick(item);
+  const pick = (row: Row<Item> | undefined) => {
+    if (row === undefined) return;
+    props.onPick(row.item);
     props.onClose();
   };
 
   return (
-    <Sheet
-      title={props.title}
-      onClose={props.onClose}
-      onKeyDown={(event) =>
-        navigation.onKeyDown(event, {
-          pick: (index) => {
-            const item = shown()[index];
-            if (item !== undefined) pick(item);
-          },
-          close: props.onClose,
-        })
-      }
-    >
-      <Input
-        ref={(element) => (input = element)}
-        value={query()}
-        onInput={(event) => {
-          setQuery(event.currentTarget.value);
-          navigation.reset();
-        }}
-        placeholder={props.placeholder}
-        aria-label={props.title}
-        role="combobox"
-        aria-expanded={true}
-        aria-controls={listId}
-        aria-autocomplete="list"
-        aria-activedescendant={shown().length > 0 ? rowId(active()) : undefined}
-      />
-      <ScrollView
-        ref={(element) => (list = element)}
-        id={listId}
-        role="listbox"
-        aria-label={props.title}
-        class="flex max-h-80 min-h-0 flex-col gap-0.5"
+    <Sheet title={props.title} onClose={props.onClose}>
+      <KobalteCombobox<Row<Item>>
+        open={open()}
+        onOpenChange={setOpen}
+        options={options()}
+        optionValue={(row) => row.key}
+        optionTextValue={() => ""}
+        // Picking closes the sheet, and the query is what the field keeps until it does
+        optionLabel={() => query()}
+        defaultFilter={() => true}
+        allowsEmptyCollection
+        closeOnSelection={false}
+        triggerMode="input"
+        onInputChange={setQuery}
+        onChange={(selected) => pick(selectedRow(selected))}
+        itemComponent={(itemProps) => (
+          <KobalteCombobox.Item
+            item={itemProps.item}
+            class="flex w-full cursor-pointer items-center gap-3 rounded-md py-1.5 pe-2.5 text-start text-xs text-muted-foreground outline-none transition-colors data-highlighted:bg-selected data-highlighted:font-medium data-highlighted:text-foreground"
+          >
+            {props.children(itemProps.item.rawValue.item)}
+          </KobalteCombobox.Item>
+        )}
       >
-        <For each={shown()}>
-          {(item, index) => (
-            <ListItem
-              id={rowId(index())}
-              data-index={index()}
-              role="option"
-              aria-selected={isActive(index())}
-              active={isActive(index())}
-              tabIndex={-1}
-              onPointerEnter={() => navigation.pointAt(index())}
-              onClick={() => pick(item)}
-              class="gap-3"
-            >
-              {props.children(item)}
-            </ListItem>
+        <KobalteCombobox.Input
+          as={Input}
+          ref={(element) => (input = element)}
+          placeholder={props.placeholder}
+          aria-label={props.title}
+        />
+        <KobalteCombobox.Listbox
+          as={(listProps: ScrollViewProps) => (
+            <ScrollView
+              as="ul"
+              {...listProps}
+              aria-label={props.title}
+              class="flex max-h-80 min-h-0 flex-col gap-0.5"
+            />
           )}
-        </For>
-      </ScrollView>
+        />
+        <FocusFirstRow />
+        <ShowFocusedRow />
+      </KobalteCombobox>
       <Show when={shown().length === 0 && props.emptyMessage !== undefined}>
         <p role="status" class="px-2 py-1.5 text-muted-foreground">
           {props.emptyMessage}
