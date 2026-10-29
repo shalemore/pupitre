@@ -1,6 +1,5 @@
 import { Menubar } from "@kobalte/core/menubar";
 import { makeEventListener } from "@solid-primitives/event-listener";
-import { debounce } from "@solid-primitives/scheduled";
 import { Menu } from "lucide-solid";
 import { createSignal, For, Show, type Component } from "solid-js";
 import { TOP_MENUS, type MenuEntry, type Menus, type TopMenu } from "@shared/menu";
@@ -10,13 +9,8 @@ import { desktop } from "@/lib/desktop";
 import { MenuEntries, MenuPopup } from "./menu-popup";
 import { createMenu } from "./menu-state";
 
-/** How long the pointer may be away from the bar and its menus before they fold up. */
-const LEAVE_DELAY = 200;
-/**
- * A menu hands the focus back to its trigger while it closes, and the trigger opens its menu again
- * when it takes the focus; a value that arrives this soon after a close is that hand-back.
- */
-const CLOSE_GUARD_MS = 500;
+/** How soon after a menu closes the next one is still taking its place rather than arriving. */
+const SWITCH_WINDOW_MS = 100;
 
 interface MenuBarProps {
   /** Told whether a menu is open, so an immersive title bar can stay unfolded under it. */
@@ -37,15 +31,8 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
   let asked = 0;
   // Where the focus goes back to once the menu folds; the editor held it before
   let previousFocus: HTMLElement | undefined;
+  // When the last menu closed, so one opened at once after it takes its place instead of arriving
   let closedAt = 0;
-  // A bar that takes the tabs' place appears under a still pointer, and the browser then sends
-  // the trigger under it a mouseover. Until the pointer moves, that hover is the bar arriving,
-  // not a request for a menu.
-  let pointerMoved = false;
-  let hoverFromRest = false;
-  makeEventListener(document, "pointermove", () => {
-    pointerMoved = true;
-  });
 
   const load = async (menu: TopMenu) => {
     const request = ++asked;
@@ -55,14 +42,18 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
   };
 
   const show = (menu: TopMenu) => {
+    if (open() === menu) return;
     const current = open();
+    // A menu that takes the place of the one just closed appears at once, without replaying the
+    // arrival under the pointer
+    const replacing = current !== undefined || performance.now() - closedAt < SWITCH_WINDOW_MS;
     if (current === undefined) {
-      previousFocus =
+      // The pointer pre-captured the editor before the bar took the focus; only a menu opened
+      // without the pointer, such as from the keyboard, has to look for it now
+      previousFocus ??=
         document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
-      setInstant(undefined);
-    } else if (current !== menu) {
-      setInstant(menu);
     }
+    setInstant(replacing ? menu : undefined);
     setOpen(menu);
     props.onOpenChange(true);
     void load(menu);
@@ -71,70 +62,41 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
   const hide = () => {
     if (open() === undefined) return;
     closedAt = performance.now();
+    const target = previousFocus;
     setOpen(undefined);
     props.onOpenChange(false);
-    const target = previousFocus;
-    previousFocus = undefined;
-    // The menu gives the focus back to its trigger, so the editor takes it again afterwards
-    queueMicrotask(() => target?.focus());
+    // The menu gives the focus back to its trigger as it folds; the editor takes it again after,
+    // unless another menu has taken this one's place
+    window.setTimeout(() => {
+      if (open() === undefined) target?.focus();
+    }, 0);
   };
 
-  const change = (value: string | null | undefined) => {
-    // Kobalte switches the bar from the trigger's mouseover; the one the bar gets on arrival is
-    // dropped here, before it can open a menu
-    if (hoverFromRest) {
-      hoverFromRest = false;
-      return;
-    }
-    const menu = TOP_MENUS.find((candidate) => candidate === value);
-    if (menu === undefined) hide();
-    else if (performance.now() - closedAt > CLOSE_GUARD_MS) show(menu);
-  };
-
-  // A menu opened by pointing leaves the focus where it was, outside the panel the menu closes
-  // itself from; Escape closes it from here, and the panel handles it too when it has the focus
+  // A menu opened with the pointer leaves the focus in the editor, outside the panel that would
+  // otherwise handle the key
   makeEventListener(document, "keydown", (event) => {
     if (event.key === "Escape" && open() !== undefined) hide();
   });
 
-  // The bar and its panels fold away once the pointer is away from both; Kobalte keeps a menubar
-  // open until something is clicked, which a title bar does not.
-  const leave = debounce(() => change(undefined), LEAVE_DELAY);
-  makeEventListener(document, "pointermove", (event) => {
-    if (open() === undefined) return;
-    const target = event.target;
-    const inside =
-      target instanceof Element && target.closest('[data-menu-bar], [role="menu"]') !== null;
-    if (inside) leave.clear();
-    else leave();
-  });
-
-  // A press on the bar does not take the focus from the editor, and does not reach the menubar:
-  // pointing already opened the menu, so the press must not toggle it shut
-  const keepEditorFocus = (event: PointerEvent) => {
-    if (event.button !== 0) return;
-    event.preventDefault();
-    event.stopPropagation();
-  };
-
   return (
     <Menubar
       ref={(element) => {
-        element.addEventListener("pointerdown", keepEditorFocus, true);
-        // A closing menu hands the focus back to its trigger, and a trigger that takes the focus
-        // opens its menu again; with no menu open, a focus on the bar is that hand-back.
+        // A press on the bar does not take the focus from the document; the open menu does, and
+        // gives it back once it folds
+        element.addEventListener(
+          "pointerdown",
+          (event) => {
+            if (event.button === 0) event.preventDefault();
+          },
+          true,
+        );
+        // A trigger that takes the focus opens its menu; the bar opens menus from a press or the
+        // keyboard only. Without this, the focus a closing menu hands back to its trigger would
+        // open the menu again.
         element.addEventListener(
           "focusin",
           (event) => {
-            if (open() !== undefined) return;
-            event.stopPropagation();
-            // The menu hands the focus back to its trigger while it folds; the document takes it
-            if (
-              performance.now() - closedAt < CLOSE_GUARD_MS &&
-              event.target instanceof HTMLElement
-            ) {
-              document.querySelector<HTMLElement>(".cm-content")?.focus();
-            }
+            if (open() === undefined) event.stopPropagation();
           },
           true,
         );
@@ -147,43 +109,36 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
             document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
         }
       }}
-      value={open() ?? ""}
-      onValueChange={change}
-      // A pointer over a trigger opens its menu, which the bar reads from the value it controls
-      autoFocusMenu
       class="flex shrink-0 items-center text-xs select-none"
     >
       <For each={TOP_MENUS}>
         {(menu) => (
           <Menubar.Menu
             value={menu}
-            // Escape, a click beside the menu and a picked entry close it without changing the bar's
-            // value; this keeps the bar's own state with it
+            // Kobalte opens a menu when its trigger is pressed, and moves to the next one while a
+            // menu is open and the pointer is over the bar; the bar only follows it
             onOpenChange={(isOpen) => {
-              // Switching to another menu closes this one too, but the bar already points at the other
-              if (!isOpen && open() === menu) hide();
+              if (isOpen) show(menu);
+              else if (open() === menu) hide();
             }}
           >
-            <Menubar.Trigger
-              // Kobalte opens a menu from the trigger's mouseover; a bar that has just arrived
-              // under a still pointer gets one without the pointer asking for a menu
-              onMouseOver={() => {
-                hoverFromRest = !pointerMoved && open() === undefined;
-                // The change this hover causes comes synchronously; a flag that outlived it
-                // would swallow the next keyboard or focus change
-                queueMicrotask(() => {
-                  hoverFromRest = false;
-                });
-              }}
-              // Pointing opened it already; the click that follows must not toggle it shut
-              onClick={() => show(menu)}
-              class="shrink-0 whitespace-nowrap px-2.5 py-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent data-expanded:text-foreground data-expanded:bg-accent transition-colors cursor-pointer"
-            >
+            <Menubar.Trigger class="shrink-0 whitespace-nowrap px-2.5 py-1 rounded-md text-muted-foreground outline-none hover:text-foreground hover:bg-accent focus-visible:text-foreground focus-visible:bg-accent data-expanded:text-foreground data-expanded:bg-accent transition-colors cursor-pointer">
               {t().menu[menu]}
             </Menubar.Trigger>
             <Menubar.Portal>
               <Menubar.Content
                 data-instant={instant() === menu ? "" : undefined}
+                // A press on the bar is the bar's business: it switches or closes the menu itself.
+                // Without this, a press on another trigger folds the open menu first, and the menu
+                // the click brings up arrives with the rise instead of taking its place.
+                onInteractOutside={(event) => {
+                  if (
+                    event.target instanceof Element &&
+                    event.target.closest("[data-menu-bar]") !== null
+                  ) {
+                    event.preventDefault();
+                  }
+                }}
                 class="floating-panel z-50 flex min-w-52 max-h-(--kb-popper-content-available-height) flex-col overflow-y-auto overscroll-contain p-1 text-xs text-foreground outline-none select-none"
               >
                 <MenuEntries
