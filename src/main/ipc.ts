@@ -10,6 +10,7 @@ import {
   type IpcMainInvokeEvent,
   type FileFilter,
   type OpenDialogOptions,
+  nativeTheme,
   shell,
   type WebContents,
 } from "electron";
@@ -256,6 +257,36 @@ async function listFolder(path: string): Promise<FolderEntry[]> {
 /** Windows whose page layout has been warmed up, see the export handler. */
 const printWarmedUp = new WeakSet<WebContents>();
 
+/**
+ * Prints and exports with the color scheme the window shows. Chromium lays a printed page out with
+ * `prefers-color-scheme: light` whatever the window is set to, so a dark theme would print light.
+ * The media feature is emulated for the print and cleared afterwards; a window whose debugger is
+ * already taken keeps its own settings, and the print looks as it did before rather than failing.
+ */
+async function withPrintedColorScheme<T>(
+  webContents: WebContents,
+  run: () => Promise<T>,
+): Promise<T> {
+  const session = webContents.debugger;
+  if (session.isAttached()) return run();
+  try {
+    session.attach("1.3");
+  } catch {
+    return run();
+  }
+  try {
+    await session.sendCommand("Emulation.setEmulatedMedia", {
+      features: [
+        { name: "prefers-color-scheme", value: nativeTheme.shouldUseDarkColors ? "dark" : "light" },
+      ],
+    });
+    return await run();
+  } finally {
+    await session.sendCommand("Emulation.setEmulatedMedia", { features: [] }).catch(() => {});
+    session.detach();
+  }
+}
+
 /** The first bytes of a file as text; undefined when it cannot be read. */
 async function readHead(path: string): Promise<string | undefined> {
   try {
@@ -500,7 +531,11 @@ export function registerIpcHandlers(): void {
   // Printing goes through the system dialog, which also lets the user cancel; the callback reports
   // that cancel as a failure beside real failures, so its result is not worth handing to the window
   handle("document:print", async (event) => {
-    await new Promise<void>((done) => event.sender.print({ printBackground: true }, () => done()));
+    await withPrintedColorScheme(
+      event.sender,
+      () =>
+        new Promise<void>((done) => event.sender.print({ printBackground: true }, () => done())),
+    );
   });
 
   handle("document:export-pdf", async (event, suggestedName) => {
@@ -510,14 +545,16 @@ export function registerIpcHandlers(): void {
     });
     if (filePath === null) return null;
     const options = pdfPrintOptions(getSettings());
-    // The first page layout of a window renders the lines it showed and no others, which leaves a
-    // page carrying nothing but its number at the end; one thrown-away page settles that layout,
-    // and the next one is laid out whole
-    if (!printWarmedUp.has(event.sender)) {
-      await event.sender.printToPDF({ ...options, pageRanges: "1" });
-      printWarmedUp.add(event.sender);
-    }
-    const pdf = await event.sender.printToPDF(options);
+    const pdf = await withPrintedColorScheme(event.sender, async () => {
+      // The first page layout of a window renders the lines it showed and no others, which leaves a
+      // page carrying nothing but its number at the end; one thrown-away page settles that layout,
+      // and the next one is laid out whole
+      if (!printWarmedUp.has(event.sender)) {
+        await event.sender.printToPDF({ ...options, pageRanges: "1" });
+        printWarmedUp.add(event.sender);
+      }
+      return event.sender.printToPDF(options);
+    });
     await writeFile(filePath, pdf);
     return filePath;
   });
