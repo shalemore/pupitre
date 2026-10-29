@@ -4,7 +4,7 @@ import { close, launch } from "./app";
 test("opens a title-bar menu, switches it and runs an item", async () => {
   const app = await launch();
   try {
-    const bar = app.page.locator("nav[data-menu-bar]");
+    const bar = app.page.getByRole("menubar");
     await expect(bar).toBeVisible();
     const buttons = bar.locator("button");
 

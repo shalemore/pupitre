@@ -16,7 +16,7 @@ const LEAVE_DELAY = 200;
  * A menu hands the focus back to its trigger while it closes, and the trigger opens its menu again
  * when it takes the focus; a value that arrives this soon after a close is that hand-back.
  */
-const CLOSE_GUARD_MS = 150;
+const CLOSE_GUARD_MS = 500;
 
 interface MenuBarProps {
   /** Told whether a menu is open, so an immersive title bar can stay unfolded under it. */
@@ -71,6 +71,12 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
     else if (performance.now() - closedAt > CLOSE_GUARD_MS) show(menu);
   };
 
+  // A menu opened by pointing leaves the focus where it was, outside the panel the menu closes
+  // itself from; Escape closes it from here, and the panel handles it too when it has the focus
+  makeEventListener(document, "keydown", (event) => {
+    if (event.key === "Escape" && open() !== undefined) hide();
+  });
+
   // The bar and its panels fold away once the pointer is away from both; Kobalte keeps a menubar
   // open until something is clicked, which a title bar does not.
   const leave = debounce(() => change(undefined), LEAVE_DELAY);
@@ -95,8 +101,32 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
     <Menubar
       ref={(element) => {
         element.addEventListener("pointerdown", keepEditorFocus, true);
+        // A closing menu hands the focus back to its trigger, and a trigger that takes the focus
+        // opens its menu again; with no menu open, a focus on the bar is that hand-back.
+        element.addEventListener(
+          "focusin",
+          (event) => {
+            if (open() !== undefined) return;
+            event.stopPropagation();
+            // The menu hands the focus back to its trigger while it folds; the document takes it
+            if (
+              performance.now() - closedAt < CLOSE_GUARD_MS &&
+              event.target instanceof HTMLElement
+            ) {
+              document.querySelector<HTMLElement>(".cm-content")?.focus();
+            }
+          },
+          true,
+        );
       }}
       data-menu-bar
+      // The menu takes the focus with it; where it was belongs back to it once the menu folds
+      onPointerEnter={() => {
+        if (open() === undefined) {
+          previousFocus =
+            document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
+        }
+      }}
       value={open() ?? ""}
       onValueChange={change}
       // A pointer over a trigger opens its menu, which the bar reads from the value it controls
