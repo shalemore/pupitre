@@ -12,19 +12,12 @@ export const EditorSection: Component = () => (
   <SettingsSection title={t().settings.editor}>
     <Show when={desktop.initialState.capabilities.systemFonts}>
       <SettingGroup>
-        <SettingField
-          name="bodyFont"
-          title={
-            <span class="flex items-center gap-1.5">
-              {t().settings.bodyFont}
-              <RefreshFontsButton />
-            </span>
-          }
-        >
+        <SettingField name="bodyFont" title={t().settings.bodyFont}>
           <FontSelect
             value={settings().bodyFont}
             onChange={(bodyFont) => void updateSettings({ bodyFont })}
             emptyLabel={themeFontLabel("--font-document")}
+            leading={<RefreshFontsButton />}
             aria-label={t().settings.bodyFont}
           />
         </SettingField>

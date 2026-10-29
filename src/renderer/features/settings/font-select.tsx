@@ -1,6 +1,6 @@
 import { cn } from "cn";
 import { RefreshCw } from "lucide-solid";
-import { createResource, createRoot, type Component, Show } from "solid-js";
+import { createResource, createRoot, type Component, type JSX, Show } from "solid-js";
 import { Combobox, IconButton, type SelectOption } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
@@ -55,6 +55,8 @@ export interface FontSelectProps {
   onChange: (family: string) => void;
   /** Label for the empty-string value, such as "Theme default" or "None". */
   emptyLabel: string;
+  /** A control for the font list, such as the refresh that queries the system fonts again. */
+  leading?: JSX.Element | undefined;
   "aria-label": string;
 }
 
@@ -72,13 +74,18 @@ export const FontSelect: Component<FontSelectProps> = (props) => {
 
   return (
     <div>
-      <Combobox
-        value={props.value}
-        onChange={props.onChange}
-        options={options()}
-        placeholder={t().settings.searchFont}
-        aria-label={props["aria-label"]}
-      />
+      <div class="flex items-center gap-1.5">
+        {props.leading}
+        <div class="min-w-0 flex-1">
+          <Combobox
+            value={props.value}
+            onChange={props.onChange}
+            options={options()}
+            placeholder={t().settings.searchFont}
+            aria-label={props["aria-label"]}
+          />
+        </div>
+      </div>
       {/* What a chosen font overrides; the row's reset button gives the theme's own font back */}
       <Show when={props.value !== ""}>
         <p class="mt-1 text-2xs text-muted-foreground">{props.emptyLabel}</p>
