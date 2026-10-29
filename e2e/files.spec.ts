@@ -108,6 +108,18 @@ test("draws an HTML heading like a Markdown one", async () => {
     expect(html.class).toContain("md-heading");
     expect(html.padding).toBe(markdown.padding);
     expect(html.background).not.toBe("none");
+    // The tags shown under the caret take the heading's own colour, not the muted Markdown marker's
+    await app.page.locator(".cm-content .md-h1").nth(1).click();
+    await expect
+      .poll(() =>
+        app.page.evaluate(() => {
+          const line = document.querySelectorAll(".cm-content .md-h1")[1];
+          const tag = line?.querySelector(".md-html-mark");
+          if (line === undefined || tag === null || tag === undefined) return false;
+          return getComputedStyle(tag).color === getComputedStyle(line).color;
+        }),
+      )
+      .toBe(true);
     await app.app.evaluate(({ dialog }, target) => {
       dialog.showSaveDialog = async () => ({ canceled: false, filePath: target });
     }, out);

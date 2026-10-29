@@ -26,6 +26,7 @@ import { collectHeadings, findHeadingByAnchor, HEADING_LEVEL } from "./document-
 import { EmojiWidget, emojiFor } from "./emoji";
 import { footnoteReferences, footnoteTarget } from "./footnotes";
 import { htmlTag, isFormattingTag, LineBreakWidget } from "./html";
+import { htmlBlockPreview, type HtmlElement } from "./html-block";
 import { openImageMenu } from "./image-menu";
 import {
   documentBaseUrl,
@@ -181,6 +182,7 @@ const bullet = Decoration.replace({ widget: new BulletWidget() });
 const lineBreak = new LineBreakWidget();
 const hidden = Decoration.replace({});
 const syntax = Decoration.mark({ class: "md-mark" });
+const htmlSyntax = Decoration.mark({ class: "md-html-mark" });
 
 interface LineStyle {
   classes: Set<string>;
@@ -283,13 +285,27 @@ class DecorationBuilder {
     if (to > from) this.decorations.push(hidden.range(from, to));
   }
 
-  mark(from: number, to: number, className: string): void {
-    if (to > from) this.decorations.push(Decoration.mark({ class: className }).range(from, to));
+  mark(
+    from: number,
+    to: number,
+    className: string,
+    attributes?: Readonly<Record<string, string>>,
+  ): void {
+    if (to > from) {
+      this.decorations.push(
+        Decoration.mark({ class: className, ...(attributes && { attributes }) }).range(from, to),
+      );
+    }
   }
 
-  /** Shows the marker as muted source when `active`, hides it (and `extra` characters after it) otherwise. */
-  marker(node: { from: number; to: number }, active: boolean, extra = 0): void {
-    if (active) this.decorations.push(syntax.range(node.from, node.to));
+  /** Shows the marker as source when `active`, hides it (and `extra` characters after it) otherwise. */
+  marker(
+    node: { from: number; to: number },
+    active: boolean,
+    extra = 0,
+    mark: Decoration = syntax,
+  ): void {
+    if (active) this.decorations.push(mark.range(node.from, node.to));
     else this.hide(node.from, node.to + extra);
   }
 
@@ -690,11 +706,71 @@ export function markers(node: SyntaxNode): SyntaxNode[] {
   return found;
 }
 
+/** The class an inline HTML tag takes so it reads like the Markdown it stands for. */
+function htmlInlineClass(tag: string): string {
+  return tag === "a" ? "md-link" : `md-tag md-tag-${tag}`;
+}
+
+/** A tag of a native HTML block: shown as source while the selection touches it, hidden otherwise. */
+function htmlMarker(
+  builder: DecorationBuilder,
+  base: number,
+  range: { from: number; to: number },
+  active: boolean,
+): void {
+  builder.marker({ from: base + range.from, to: base + range.to }, active, 0, htmlSyntax);
+}
+
+function visitHtmlInline(builder: DecorationBuilder, base: number, element: HtmlElement): void {
+  const from = base + element.startTag.from;
+  const to = base + (element.endTag?.to ?? element.content.to);
+  const active = touches(builder.ranges, from, to);
+  htmlMarker(builder, base, element.startTag, active);
+  if (element.endTag !== undefined) htmlMarker(builder, base, element.endTag, active);
+  if (!active) {
+    builder.mark(
+      base + element.content.from,
+      base + element.content.to,
+      htmlInlineClass(element.tag),
+    );
+  }
+  for (const child of element.children) visitHtmlInline(builder, base, child);
+}
+
+/**
+ * A simple HTML block drawn in place: its tags hide unless the selection touches the element, its
+ * heading takes the heading line's classes, and its alignment and inline children read like their
+ * Markdown counterparts.
+ */
+function visitHtmlBlock(builder: DecorationBuilder, node: SyntaxNode, element: HtmlElement): void {
+  const base = node.from;
+  const from = base + element.startTag.from;
+  const to = base + (element.endTag?.to ?? element.content.to);
+  const active = touches(builder.ranges, from, to);
+  htmlMarker(builder, base, element.startTag, active);
+  if (element.endTag !== undefined) htmlMarker(builder, base, element.endTag, active);
+  const level = /^h([1-6])$/.exec(element.tag)?.[1];
+  if (level !== undefined) builder.lineClass(from, to, `md-heading md-h${level}`);
+  if (element.alignment !== undefined) {
+    builder.eachLine(from, to, (line) => {
+      const alignment = `text-align: ${element.alignment}`;
+      line.attributes["style"] =
+        line.attributes["style"] === undefined
+          ? alignment
+          : `${line.attributes["style"]}; ${alignment}`;
+    });
+  }
+  for (const child of element.children) visitHtmlInline(builder, base, child);
+}
+
 /** Decorates one node; returns false to skip its children. */
 function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
   const { name } = node;
   if (name === "FootnoteDefinition") builder.hasFootnoteDefinition = true;
-  const block = blockClass(name);
+  // A simple HTML heading or paragraph is drawn in place; anything else stays a rendered block
+  const html =
+    name === "HTMLBlock" ? htmlBlockPreview(builder.text(node.from, node.to)) : undefined;
+  const block = html === undefined ? blockClass(name) : undefined;
   // A setext underline is not part of the heading's text; it is styled as syntax below
   if (block) builder.lineClass(node.from, name.startsWith("Setext") ? node.from : node.to, block);
   if (INLINE_CONTAINER.test(name)) visitInlineHtml(builder, node);
@@ -732,6 +808,8 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
       return false;
     }
     case "HTMLBlock":
+      if (html !== undefined) visitHtmlBlock(builder, node, html.element);
+      return false;
     case "CommentBlock":
       return false;
     case "Blockquote": {
@@ -908,6 +986,14 @@ const livePreviewPlugin = ViewPlugin.fromClass(
       // Ctrl/Cmd+click follows a link; a plain click places the cursor to edit it. A rendered
       // footnote label follows on a plain click too, since its brackets hide the source to edit.
       mousedown(event, view) {
+        const nativeLink =
+          event.target instanceof Element ? event.target.closest("[data-html-href]") : null;
+        if (nativeLink) {
+          if (event.button !== 0 || !(event.ctrlKey || event.metaKey)) return false;
+          event.preventDefault();
+          followLink(view, nativeLink.getAttribute("data-html-href") ?? "");
+          return true;
+        }
         const htmlLink =
           event.target instanceof Element ? event.target.closest(".md-html-block a") : null;
         if (htmlLink) {

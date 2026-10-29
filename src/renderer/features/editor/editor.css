@@ -131,6 +131,20 @@
     text-decoration: none;
   }
 
+  /*
+   * The tags of an HTML block, shown as source around its content while it is edited. They take
+   * the colour of the text they stand in, so a long tag stays legible on a heading's own
+   * background, where the muted Markdown marker does not; the source keeps its own case under a
+   * theme that sets headings in capitals.
+   */
+  .md-html-mark {
+    color: inherit;
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: none;
+    text-transform: none;
+  }
+
   .md-strong {
     font-weight: var(--md-strong-weight);
   }

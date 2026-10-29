@@ -11,7 +11,7 @@ import { join } from "node:path";
 
 const ASSETS = "out/renderer/assets";
 
-const TOTAL_BUDGET_BYTES = 17 * 1024 * 1024;
+const TOTAL_BUDGET_BYTES = 17.0 * 1024 * 1024;
 
 const LARGEST_CHUNK_BUDGET_BYTES = 3.5 * 1024 * 1024;
 

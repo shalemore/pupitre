@@ -35,6 +35,12 @@ describe("inline formats", () => {
     expect(format("a *wo|rd* here", "italic")).toBe("a wo|rd here");
   });
 
+  it("keeps HTML tags out of a format that takes in the whole element", () => {
+    expect(format("|<h1>Heading</h1>|", "bold")).toBe("<h1>**|Heading|**</h1>");
+    expect(format('|<p align="right">Text</p>|', "italic")).toBe('<p align="right">*|Text|*</p>');
+    expect(format("x |<strong>word</strong>| y", "bold")).toBe("x <strong>**|word|**</strong> y");
+  });
+
   it("keeps the heading markers out of a format that takes in the whole heading", () => {
     expect(format("|# Heading|", "bold")).toBe("# **|Heading|**");
     expect(format("|## Heading|", "italic")).toBe("## *|Heading|*");

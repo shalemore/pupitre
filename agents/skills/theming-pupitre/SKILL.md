@@ -112,7 +112,8 @@ is applied as is, and users can pair it with another theme for the other scheme 
 
 - Headings `md-heading`, `md-h1`…`md-h6`; lines and paragraphs; quotes `md-quote`; lists; links
   `md-link`; inline code `md-code`; code blocks `md-code-block`; tables `md-table-view`; images
-  `md-image-*`; footnotes; front matter `md-front-matter`.
+  `md-image-*`; footnotes; front matter `md-front-matter`; HTML tags shown as source
+  `md-html-mark`.
 - Document defaults are tokens, so a theme need not restate the rule:
   `--md-page-padding-block`, `--md-link-underline`, `--md-heading-weight`,
   `--md-heading-line-height`, `--md-strong-weight`, `--md-h1-size`…`--md-h6-size`,

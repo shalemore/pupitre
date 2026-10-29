@@ -12,6 +12,7 @@ import { FORMAT_ACTIONS, type FormatAction } from "@shared/format";
 import type { Settings } from "@shared/settings";
 import { footnoteLabel } from "./footnotes";
 import { htmlTag } from "./html";
+import { htmlElementContent } from "./html-block";
 import { emptyTableSource } from "./table-model";
 
 /**
@@ -77,6 +78,10 @@ const ATX_HEADING = /^ATXHeading[1-6]$/;
  */
 function formattedRange(state: EditorState, range: SelectionRange): SelectionRange {
   if (range.empty) return range;
+  // A selection that is exactly one HTML element means its content: a tag is not text to format
+  const html = htmlElementContent(state.sliceDoc(range.from, range.to));
+  if (html !== undefined)
+    return EditorSelection.range(range.from + html.from, range.from + html.to);
   const line = state.doc.lineAt(range.from);
   if (range.from !== line.from) return range;
   let node = syntaxTree(state).resolveInner(range.from, 1);

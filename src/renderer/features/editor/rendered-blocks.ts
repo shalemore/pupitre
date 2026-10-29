@@ -12,6 +12,7 @@ import { fencedText } from "./block-text";
 import { detailsSection, SummaryWidget, toggledDetails, toggleDetails } from "./details";
 import { collectHeadings } from "./document-structure";
 import { HtmlBlockWidget, isRenderableHtml } from "./html";
+import { htmlBlockPreview } from "./html-block";
 import { documentBaseUrl, parseImageTag } from "./images";
 import { printingChanged, revealingRanges, touches, lineRange } from "./live-preview";
 import { mathFence, mathOf, MathWidget } from "./math";
@@ -64,9 +65,8 @@ function blockWidget(state: EditorState, node: SyntaxNode): WidgetType | undefin
   }
   if (node.name === "HTMLBlock") {
     const source = text(node);
-    return isRenderableHtml(source)
-      ? new HtmlBlockWidget(source, state.facet(documentBaseUrl))
-      : undefined;
+    if (!isRenderableHtml(source) || htmlBlockPreview(source) !== undefined) return undefined;
+    return new HtmlBlockWidget(source, state.facet(documentBaseUrl));
   }
   if (node.name === "BlockMath") {
     return new MathWidget(mathOf(state, node).tex, true, sourceEnd(state, node));
