@@ -1,3 +1,4 @@
+import { Tabs as KobalteTabs } from "@kobalte/core/tabs";
 import { cn } from "cn";
 import { X } from "lucide-solid";
 import { createEffect, For, Show, type Component } from "solid-js";
@@ -40,12 +41,11 @@ function TabButton(props: TabButtonProps) {
         props.active ? "bg-surface-1" : "hover:bg-accent",
       )}
     >
-      <button
-        type="button"
-        role="tab"
-        aria-selected={props.active}
+      <KobalteTabs.Trigger
+        value={String(props.tab.id)}
         title={props.name}
-        onClick={props.onActivate}
+        onClick={() => props.onActivate()}
+        onFocus={() => props.onActivate()}
         // A middle click closes the tab, as it does in every editor that has tabs
         onAuxClick={(event) => {
           if (event.button !== 1) return;
@@ -63,7 +63,7 @@ function TabButton(props: TabButtonProps) {
         <bdi dir="ltr" class="min-w-0 truncate">
           {props.name}
         </bdi>
-      </button>
+      </KobalteTabs.Trigger>
       <IconButton
         label={t().menu.closeTab}
         size="icon-2xs"
@@ -92,21 +92,25 @@ function TabButton(props: TabButtonProps) {
  * the bar keeps the tabs inside the part that unfolds with the immersive chrome.
  */
 export const TabsBar: Component<TabsBarProps> = (props) => (
-  <div
-    role="tablist"
-    aria-label={t().tabs.bar}
-    class="scrollbar-none flex h-full min-w-0 flex-1 items-stretch overflow-x-auto print:hidden"
+  <KobalteTabs
+    value={props.activeId === undefined ? "" : String(props.activeId)}
+    class="flex h-full min-w-0 flex-1 items-stretch"
   >
-    <For each={props.tabs}>
-      {(tab) => (
-        <TabButton
-          tab={tab}
-          name={props.nameOf(tab)}
-          active={tab.id === props.activeId}
-          onActivate={() => props.onActivate(tab.id)}
-          onClose={() => props.onClose(tab.id)}
-        />
-      )}
-    </For>
-  </div>
+    <KobalteTabs.List
+      aria-label={t().tabs.bar}
+      class="scrollbar-none flex h-full min-w-0 flex-1 items-stretch overflow-x-auto print:hidden"
+    >
+      <For each={props.tabs}>
+        {(tab) => (
+          <TabButton
+            tab={tab}
+            name={props.nameOf(tab)}
+            active={tab.id === props.activeId}
+            onActivate={() => props.onActivate(tab.id)}
+            onClose={() => props.onClose(tab.id)}
+          />
+        )}
+      </For>
+    </KobalteTabs.List>
+  </KobalteTabs>
 );
