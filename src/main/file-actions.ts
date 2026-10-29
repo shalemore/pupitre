@@ -1,5 +1,5 @@
 import { copyFile, mkdir, rename, stat, writeFile } from "node:fs/promises";
-import { basename, dirname, join, normalize, resolve } from "node:path";
+import { basename, dirname, format, join, normalize, parse, resolve } from "node:path";
 import { net, shell } from "electron";
 import type { FolderEntry } from "@shared/desktop-api";
 import { decodeUriPart } from "@shared/uri";
@@ -40,10 +40,8 @@ export async function renameEntry(path: string, name: string): Promise<string> {
 /** "Untitled.md" and then "Untitled 2.md", so creating twice in a row does not have to ask for a name. */
 function numbered(name: string, attempt: number): string {
   if (attempt === 0) return name;
-  const dot = name.lastIndexOf(".");
-  const base = dot > 0 ? name.slice(0, dot) : name;
-  const extension = dot > 0 ? name.slice(dot) : "";
-  return `${base} ${attempt + 1}${extension}`;
+  const { name: base, ext } = parse(name);
+  return format({ name: `${base} ${attempt + 1}`, ext });
 }
 
 /** The first name of this series that is still free. */
