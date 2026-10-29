@@ -46,6 +46,36 @@ test("renders the indentation of an HTML block as HTML", async () => {
   }
 });
 
+test("embeds the document's pictures in the exported HTML", async () => {
+  const folder = await workspace();
+  const picture = join(folder, "picture.png");
+  const note = join(folder, "note.md");
+  const out = join(folder, "export.html");
+  await writeFile(picture, PIXEL);
+  await writeFile(
+    note,
+    '# Note\n\n![shot](picture.png)\n\n<p align="left">\n  <img src="picture.png" width="20" height="20" />\n</p>\n',
+  );
+  const app = await launch({ files: [note] });
+  try {
+    await expect(app.page.locator(".cm-content")).toContainText("Note");
+    await app.app.evaluate(({ dialog }, target) => {
+      dialog.showSaveDialog = async () => ({ canceled: false, filePath: target });
+    }, out);
+    await run(app.page, { id: "file.export-html" });
+    await expect
+      .poll(() => readFile(out, "utf8").catch(() => ""))
+      .toContain("data:image/png;base64,");
+    const html = await readFile(out, "utf8");
+    // Both the Markdown picture and the one in the HTML block went into the page
+    expect(html).not.toContain('src="picture.png"');
+    expect(html.match(/data:image\/png;base64,/g) ?? []).toHaveLength(2);
+  } finally {
+    await close(app);
+    await rm(folder, { recursive: true, force: true });
+  }
+});
+
 test("opens a picture in a preview instead of the editor", async () => {
   const folder = await workspace();
   const note = join(folder, "note.md");

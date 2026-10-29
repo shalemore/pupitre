@@ -377,6 +377,8 @@ export interface InvokeChannels {
   "dialog:choose-save-path": (suggestedName: string) => DocumentLocation | null;
   /** Asks for an image file; null when the user dropped out of the dialog or the file was too large to insert. */
   "image:pick": () => PickedImage | null;
+  /** The picture at `path` as a data URL, for a page that has to carry it; null when it cannot be read as one. */
+  "image:data-url": (path: string) => string | null;
   /** Saves an image into the assets folder next to the document and returns a relative path ready for Markdown. */
   "document:save-image": (documentPath: string, fileName: string, data: Uint8Array) => string;
   /**

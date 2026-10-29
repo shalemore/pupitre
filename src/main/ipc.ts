@@ -254,6 +254,18 @@ async function listFolder(path: string): Promise<FolderEntry[]> {
   );
 }
 
+/** The type a data URL names for each picture extension the app can show. */
+const IMAGE_MIME_TYPES: Readonly<Record<string, string>> = {
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".gif": "image/gif",
+  ".webp": "image/webp",
+  ".svg": "image/svg+xml",
+  ".bmp": "image/bmp",
+  ".avif": "image/avif",
+};
+
 /** Windows whose page layout has been warmed up, see the export handler. */
 const printWarmedUp = new WeakSet<WebContents>();
 
@@ -509,6 +521,16 @@ export function registerIpcHandlers(): void {
   // The window names the picture it shows, and the main process checks that path before it touches
   // anything; where a picture goes is either a place the user picks or the image folder of the
   // document
+  handle("image:data-url", async (_event, path) => {
+    try {
+      const file = checkedPath(path);
+      const mime = IMAGE_MIME_TYPES[extname(file).toLowerCase()];
+      if (mime === undefined || (await stat(file)).size > MAX_IMAGE_BYTES) return null;
+      return `data:${mime};base64,${(await readFile(file)).toString("base64")}`;
+    } catch {
+      return null;
+    }
+  });
   handle("image:save-as", async (event, path) => {
     const source = checkedPath(path);
     const target = await savePath(senderWindow(event), source, {

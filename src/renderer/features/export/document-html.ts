@@ -22,6 +22,8 @@ import { renderMath } from "@/features/editor/mathjax";
 import { diagramTheme, readDiagramTheme, renderDiagram } from "@/features/editor/mermaid";
 import { columnCount, readTable } from "@/features/editor/table-model";
 import { baseDirection } from "@/features/editor/text-direction";
+import { desktop } from "@/lib/desktop";
+import { pathFromFileUrl } from "@/lib/file";
 import { escapeHtml } from "@/lib/html";
 import { codeHtml } from "./code-html";
 import { pageStyle } from "./page-style";
@@ -63,6 +65,11 @@ interface ExportContext {
    * one: what a class alone cannot carry is then written inline.
    */
   readonly inlineStyles: boolean;
+  /**
+   * Whether a local picture goes into the page as a data URL, so the page can be opened anywhere
+   * rather than only beside the document it came from.
+   */
+  readonly embedImages: boolean;
 }
 
 /** The font code keeps where no stylesheet of Pupitre's follows the markup. */
@@ -80,6 +87,30 @@ function styleOf(ctx: ExportContext, declaration: string): string {
 function documentAddress(state: EditorState, source: string): string {
   const base = state.facet(documentBaseUrl);
   return base !== undefined && source.startsWith(base) ? source.slice(base.length) : source;
+}
+
+/**
+ * A local picture as a data URL, or undefined when it is remote, has no file behind it, or could
+ * not be read: the page then keeps the address it would have written anyway.
+ */
+async function embeddedImage(ctx: ExportContext, source: string): Promise<string | undefined> {
+  if (!ctx.embedImages || /^(?:https?:|data:)/i.test(source)) return undefined;
+  const base = ctx.state.facet(documentBaseUrl);
+  if (base === undefined) return undefined;
+  let url: URL;
+  try {
+    url = new URL(source, base);
+  } catch {
+    return undefined;
+  }
+  if (url.protocol !== "file:") return undefined;
+  const data = await desktop.invoke("image:data-url", pathFromFileUrl(url)).catch(() => null);
+  return data ?? undefined;
+}
+
+/** The address an exported page should use for a picture. */
+async function imageSource(ctx: ExportContext, source: string): Promise<string> {
+  return (await embeddedImage(ctx, source)) ?? documentAddress(ctx.state, source);
 }
 
 function linkHtml(href: string, inner: string): string {
@@ -106,18 +137,18 @@ async function itemsHtml(ctx: ExportContext, items: readonly InlineItem[]): Prom
  * A picture as the page writes it. The width and the alignment are the declarations the document
  * carries, so the page reads the picture the way the editor shows it.
  */
-function imageHtml(
+async function imageHtml(
   ctx: ExportContext,
   src: string,
   alt: string,
   title: string,
   size: ImageSize,
-): string {
+): Promise<string> {
   const width = size.width === undefined ? "" : ` width="${size.width}"`;
   const style = imageStyle(size);
   const declarations = style === "" ? "" : ` style="${style}"`;
   const titleAttribute = title === "" ? "" : ` title="${escapeHtml(title)}"`;
-  return `<img class="md-image-preview" src="${escapeHtml(documentAddress(ctx.state, src))}" alt="${escapeHtml(alt)}"${titleAttribute}${width}${declarations}>`;
+  return `<img class="md-image-preview" src="${escapeHtml(await imageSource(ctx, src))}" alt="${escapeHtml(alt)}"${titleAttribute}${width}${declarations}>`;
 }
 
 async function itemHtml(ctx: ExportContext, item: InlineItem): Promise<string> {
@@ -339,6 +370,23 @@ async function footnoteSection(ctx: ExportContext): Promise<string> {
   return `<section class="md-footnotes">\n<ol>\n${html.join("\n")}\n</ol>\n</section>`;
 }
 
+/** Sanitized HTML, with the pictures it holds embedded when the page is a file of its own. */
+async function htmlBlockHtml(ctx: ExportContext, source: string): Promise<string> {
+  const clean = DOMPurify.sanitize(source);
+  if (!ctx.embedImages) return clean;
+  const holder = document.createElement("div");
+  holder.innerHTML = clean;
+  await Promise.all(
+    [...holder.querySelectorAll("img")].map(async (image) => {
+      const src = image.getAttribute("src");
+      if (src === null) return;
+      const embedded = await embeddedImage(ctx, src);
+      if (embedded !== undefined) image.setAttribute("src", embedded);
+    }),
+  );
+  return holder.innerHTML;
+}
+
 async function renderBlock(ctx: ExportContext, block: SyntaxNode, depth: number): Promise<string> {
   const { state } = ctx;
   const heading = HEADING_LEVEL.exec(block.name);
@@ -368,7 +416,7 @@ async function renderBlock(ctx: ExportContext, block: SyntaxNode, depth: number)
         return imageHtml(ctx, resolveUrl(state, picture.src), picture.alt, picture.title, picture);
       }
       return isRenderableHtml(source)
-        ? `<div class="md-html-block">${DOMPurify.sanitize(source)}</div>`
+        ? `<div class="md-html-block">${await htmlBlockHtml(ctx, source)}</div>`
         : "";
     }
     case "FootnoteDefinition":
@@ -451,6 +499,7 @@ export async function documentHtml(state: EditorState, title: string): Promise<s
     definitions: [],
     referenceCounts: new Map(),
     inlineStyles: false,
+    embedImages: true,
   };
   const body = await contentOf(ctx);
   const textDirection = baseDirection(state.doc);
@@ -485,6 +534,7 @@ export async function markdownFragment(source: EditorState, markdown: string): P
     definitions: [],
     referenceCounts: new Map(),
     inlineStyles: true,
+    embedImages: false,
   };
   return `<div class="md-document">\n${await contentOf(ctx)}\n</div>`;
 }

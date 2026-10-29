@@ -561,6 +561,7 @@ const handlers: Handlers = {
   "path:locate": (path) => opened(path),
   // A browser has no native file picker to hand an image to the editor
   "image:pick": () => null,
+  "image:data-url": () => null,
   "folder:watch": nothing,
   "folder:unwatch": nothing,
   "document:watch": nothing,
