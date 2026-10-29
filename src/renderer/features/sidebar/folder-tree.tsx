@@ -1,6 +1,6 @@
 import { ContextMenu } from "@kobalte/core/context-menu";
 import { cn } from "cn";
-import { ChevronRight, CircleAlert, FileText, Folder } from "lucide-solid";
+import { ArrowRight, ChevronRight, CircleAlert, FileText, Folder } from "lucide-solid";
 import {
   createEffect,
   createMemo,
@@ -19,7 +19,7 @@ import type { FolderEntry } from "@shared/desktop-api";
 import { messageOf } from "@shared/errors";
 import type { MenuEntry } from "@shared/menu";
 import { isInsideFolder, relativeToFolder } from "@shared/paths";
-import { ListItem, rowIndent } from "@/components/ui";
+import { IconButton, ListItem, rowIndent } from "@/components/ui";
 import { MenuEntries } from "@/features/menu/menu-popup";
 import { currentLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
@@ -49,6 +49,8 @@ interface TreeContext {
   /** Whether a folder row shows its children. */
   isExpanded: (path: string) => boolean;
   onToggleExpanded: (path: string) => void;
+  /** Opens a folder as the tree's root. */
+  onOpenFolder: (path: string) => void;
   /** The row whose name is being edited, if any. */
   renaming: () => string | undefined;
   onRename: (path: string, name: string) => void;
@@ -73,6 +75,8 @@ interface FolderTreeProps {
   activePath: string | undefined;
   /** Resolves to the failure message when the file can't be opened as text. */
   onOpenFile: (path: string) => Promise<string | undefined>;
+  /** Opens a folder as the tree's root. */
+  onOpenFolder: (path: string) => void;
   /** Tells the window that a document or a folder root moved, so the open document follows it. */
   onPathChanged?: (oldPath: string, newPath: string) => void;
   /** Tells the window that a menu or the rename field holds the sidebar, so the immersive chrome stays put. */
@@ -209,101 +213,118 @@ const FolderRow: Component<{
 
   return (
     <>
-      <Show
-        when={props.tree.renaming() === props.entry.path}
-        fallback={
-          <ContextMenu onOpenChange={props.tree.onMenuOpenChange}>
-            <ContextMenu.Trigger
-              as={ListItem}
-              dir="auto"
-              active={isActive()}
-              tone={failure() ? "danger" : "default"}
-              onClick={() =>
-                isDirectory()
-                  ? props.tree.onToggleExpanded(props.entry.path)
-                  : props.tree.onOpenFile(props.entry.path)
-              }
-              // A row's menu is its own; the empty space behind it has the folder's
-              onContextMenu={(event) => event.stopPropagation()}
-              style={rowIndent(props.depth, 6)}
-              title={failure() ?? props.entry.name}
-              class={cn((excerpt() || date()) && "items-start")}
-            >
-              <Show when={isDirectory()} fallback={<span class="size-3 shrink-0" />}>
-                <ChevronRight
-                  class={cn(
-                    "size-3 shrink-0 transition-transform duration-base rtl:-scale-x-100",
-                    expanded() && "rotate-90 rtl:rotate-90",
-                  )}
-                />
-              </Show>
-              <Show
-                when={isDirectory()}
-                fallback={
-                  <Show
-                    when={failure()}
-                    fallback={
-                      <FileText
+      <div class="group relative">
+        <Show
+          when={props.tree.renaming() === props.entry.path}
+          fallback={
+            <ContextMenu onOpenChange={props.tree.onMenuOpenChange}>
+              <ContextMenu.Trigger
+                as={ListItem}
+                dir="auto"
+                active={isActive()}
+                tone={failure() ? "danger" : "default"}
+                onClick={() =>
+                  isDirectory()
+                    ? props.tree.onToggleExpanded(props.entry.path)
+                    : props.tree.onOpenFile(props.entry.path)
+                }
+                // A row's menu is its own; the empty space behind it has the folder's
+                onContextMenu={(event) => event.stopPropagation()}
+                style={rowIndent(props.depth, 6)}
+                title={failure() ?? props.entry.name}
+                class={cn((excerpt() || date()) && "items-start", isDirectory() && "pe-8")}
+              >
+                <Show when={isDirectory()} fallback={<span class="size-3 shrink-0" />}>
+                  <ChevronRight
+                    class={cn(
+                      "size-3 shrink-0 transition-transform duration-base rtl:-scale-x-100",
+                      expanded() && "rotate-90 rtl:rotate-90",
+                    )}
+                  />
+                </Show>
+                <Show
+                  when={isDirectory()}
+                  fallback={
+                    <Show
+                      when={failure()}
+                      fallback={
+                        <FileText
+                          class={cn("size-3.5 shrink-0", (excerpt() || date()) && "mt-0.5")}
+                        />
+                      }
+                    >
+                      <CircleAlert
                         class={cn("size-3.5 shrink-0", (excerpt() || date()) && "mt-0.5")}
                       />
-                    }
-                  >
-                    <CircleAlert
-                      class={cn("size-3.5 shrink-0", (excerpt() || date()) && "mt-0.5")}
-                    />
+                    </Show>
+                  }
+                >
+                  <Folder class="size-3.5 shrink-0" />
+                </Show>
+                <span class={cn("min-w-0", excerpt() || date() ? "flex-1" : "truncate")}>
+                  <span class="block truncate">
+                    <bdi dir="ltr">{props.entry.name}</bdi>
+                  </span>
+                  <Show when={date()}>
+                    {(label) => (
+                      <span class="block text-2xs font-normal text-tertiary tabular-nums">
+                        {label()}
+                      </span>
+                    )}
                   </Show>
-                }
-              >
-                <Folder class="size-3.5 shrink-0" />
-              </Show>
-              <span class={cn("min-w-0", excerpt() || date() ? "flex-1" : "truncate")}>
-                <span class="block truncate">
-                  <bdi dir="ltr">{props.entry.name}</bdi>
+                  <Show when={excerpt()}>
+                    {/* Isolated, so an excerpt in another script never turns the row around */}
+                    <bdi
+                      dir="auto"
+                      aria-hidden="true"
+                      class="mt-0.5 line-clamp-2 text-2xs font-normal text-tertiary"
+                    >
+                      {excerpt()}
+                    </bdi>
+                  </Show>
                 </span>
-                <Show when={date()}>
-                  {(label) => (
-                    <span class="block text-2xs font-normal text-tertiary tabular-nums">
-                      {label()}
-                    </span>
-                  )}
-                </Show>
-                <Show when={excerpt()}>
-                  {/* Isolated, so an excerpt in another script never turns the row around */}
-                  <bdi
-                    dir="auto"
-                    aria-hidden="true"
-                    class="mt-0.5 line-clamp-2 text-2xs font-normal text-tertiary"
-                  >
-                    {excerpt()}
-                  </bdi>
-                </Show>
-              </span>
-            </ContextMenu.Trigger>
-            <ContextMenu.Portal>
-              <ContextMenu.Content class="floating-panel z-50 flex min-w-52 max-h-(--kb-popper-content-available-height) flex-col overflow-y-auto overscroll-contain p-1 text-xs text-foreground outline-none select-none">
-                {(() => {
-                  const menu = props.tree.menuOf(props.entry);
-                  return (
-                    <MenuEntries
-                      entries={menu.entries}
-                      onSelect={(item) => menu.actions.get(item.id)?.()}
-                    />
-                  );
-                })()}
-              </ContextMenu.Content>
-            </ContextMenu.Portal>
-          </ContextMenu>
-        }
-      >
-        <RenameField
-          initial={props.entry.name}
-          depth={props.depth}
-          directory={isDirectory()}
-          expanded={expanded()}
-          onCommit={(name) => props.tree.onRename(props.entry.path, name)}
-          onCancel={() => props.tree.onRenameCancel()}
-        />
-      </Show>
+              </ContextMenu.Trigger>
+              <ContextMenu.Portal>
+                <ContextMenu.Content class="floating-panel z-50 flex min-w-52 max-h-(--kb-popper-content-available-height) flex-col overflow-y-auto overscroll-contain p-1 text-xs text-foreground outline-none select-none">
+                  {(() => {
+                    const menu = props.tree.menuOf(props.entry);
+                    return (
+                      <MenuEntries
+                        entries={menu.entries}
+                        onSelect={(item) => menu.actions.get(item.id)?.()}
+                      />
+                    );
+                  })()}
+                </ContextMenu.Content>
+              </ContextMenu.Portal>
+            </ContextMenu>
+          }
+        >
+          <RenameField
+            initial={props.entry.name}
+            depth={props.depth}
+            directory={isDirectory()}
+            expanded={expanded()}
+            onCommit={(name) => props.tree.onRename(props.entry.path, name)}
+            onCancel={() => props.tree.onRenameCancel()}
+          />
+        </Show>
+        <Show when={isDirectory() && props.tree.renaming() !== props.entry.path}>
+          {/* A folder can be opened as the tree's root without leaving the pointer's row */}
+          <IconButton
+            label={t().menu.openFolder}
+            size="icon-2xs"
+            data-slot="folder-open"
+            class="absolute inset-e-1 top-1/2 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+            onClick={(event) => {
+              event.stopPropagation();
+              props.tree.onOpenFolder(props.entry.path);
+            }}
+          >
+            <ArrowRight class="size-3 rtl:-scale-x-100" />
+          </IconButton>
+        </Show>
+      </div>
       <Show when={expanded()}>
         <div class="space-y-0.5 animate-in fade-in-0 slide-in-from-top-1 duration-base ease-enter">
           <FolderChildren path={props.entry.path} depth={props.depth + 1} tree={props.tree} />
@@ -488,6 +509,7 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
         if (!next.delete(path)) next.add(path);
         return next;
       }),
+    onOpenFolder: (path) => props.onOpenFolder(path),
     renaming,
     onRename: rename,
     onRenameCancel: () => setRenaming(undefined),

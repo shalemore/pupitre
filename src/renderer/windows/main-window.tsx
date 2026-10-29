@@ -124,6 +124,8 @@ export const MainWindow: Component = () => {
   const [openedFolder, setOpenedFolder] = createSignal<string | undefined>(
     desktop.initialState.folder,
   );
+  // A folder just opened on purpose, shown even while a document outside it stays on show
+  const [folderView, setFolderView] = createSignal<string>();
   const [preferredMode, setPreferredMode] = createSignal<SidebarMode>("outline");
   const [findMode, setFindMode] = createSignal<FindMode>("closed");
   const [paletteOpen, setPaletteOpen] = createSignal(false);
@@ -172,12 +174,22 @@ export const MainWindow: Component = () => {
   // descend into the folder that document sits in. A document from outside the folder shows the
   // folder that holds it for as long as it is active, and the opened folder stays remembered.
   const folderRoot = createMemo(() => {
+    const viewed = folderView();
+    if (viewed !== undefined) return viewed;
     const opened = openedFolder();
     const doc = session.activeDocument();
     if (opened === undefined) return doc?.folder;
     if (doc?.path !== undefined && !isInsideFolder(opened, doc.path)) return doc.folder;
     return opened;
   });
+  // Choosing another document hands the sidebar back to that document's folder
+  createEffect(
+    on(
+      () => session.activeDocument()?.id,
+      () => setFolderView(undefined),
+      { defer: true },
+    ),
+  );
   createEffect(
     on(
       openedFolder,
@@ -292,9 +304,11 @@ export const MainWindow: Component = () => {
       root={root}
       activePath={session.activeDocument()?.path}
       onOpenFile={(path) => session.openPath(path, false)}
+      onOpenFolder={showFolder}
       onPathChanged={(oldPath, newPath) => {
         // A renamed folder keeps the sidebar showing it, and a renamed document keeps its editor
         if (openedFolder() === oldPath) setOpenedFolder(newPath);
+        if (folderView() === oldPath) setFolderView(newPath);
         void session.handleRename(oldPath, newPath);
       }}
       onHoldOpenChange={setStartSidebarHeld}
@@ -392,6 +406,7 @@ export const MainWindow: Component = () => {
 
   const showFolder = (path: string) => {
     setOpenedFolder(path);
+    setFolderView(path);
     setPreferredMode("folder");
     if (!settings().sidebarVisible) void updateSettings({ sidebarVisible: true });
   };

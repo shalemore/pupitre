@@ -149,6 +149,28 @@ test("opens a picture in a preview instead of the editor", async () => {
   }
 });
 
+test("opens a folder from its row", async () => {
+  const folder = await workspace();
+  const root = join(folder, "project");
+  const readme = join(root, "README.md");
+  await mkdir(join(root, "src", "app"), { recursive: true });
+  await writeFile(readme, "# Project\n");
+  await writeFile(join(root, "src", "app", "file.md"), "# Nested\n");
+  const app = await launch({ files: [readme] });
+  try {
+    const row = app.page
+      .locator("[data-sidebar=start] [data-slot=list-item]", { hasText: /^src$/ })
+      .first();
+    await row.hover();
+    await row.locator("xpath=..").locator("[data-slot=folder-open]").click();
+    // The active document is outside src, and the folder the user opened still comes up
+    await expect(app.page.locator(`[data-sidebar=start] [title="src"]`)).toBeVisible();
+  } finally {
+    await close(app);
+    await rm(folder, { recursive: true, force: true });
+  }
+});
+
 test("keeps the folder the sidebar showed across a restart", async () => {
   const folder = await workspace();
   const root = join(folder, "project");
