@@ -38,6 +38,14 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
   // Where the focus goes back to once the menu folds; the editor held it before
   let previousFocus: HTMLElement | undefined;
   let closedAt = 0;
+  // A bar that takes the tabs' place appears under a still pointer, and the browser then sends
+  // the trigger under it a mouseover. Until the pointer moves, that hover is the bar arriving,
+  // not a request for a menu.
+  let pointerMoved = false;
+  let hoverFromRest = false;
+  makeEventListener(document, "pointermove", () => {
+    pointerMoved = true;
+  });
 
   const load = async (menu: TopMenu) => {
     const request = ++asked;
@@ -72,6 +80,12 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
   };
 
   const change = (value: string | null | undefined) => {
+    // Kobalte switches the bar from the trigger's mouseover; the one the bar gets on arrival is
+    // dropped here, before it can open a menu
+    if (hoverFromRest) {
+      hoverFromRest = false;
+      return;
+    }
     const menu = TOP_MENUS.find((candidate) => candidate === value);
     if (menu === undefined) hide();
     else if (performance.now() - closedAt > CLOSE_GUARD_MS) show(menu);
@@ -151,8 +165,15 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
             }}
           >
             <Menubar.Trigger
-              onPointerEnter={() => {
-                if (open() === undefined) show(menu);
+              // Kobalte opens a menu from the trigger's mouseover; a bar that has just arrived
+              // under a still pointer gets one without the pointer asking for a menu
+              onMouseOver={() => {
+                hoverFromRest = !pointerMoved && open() === undefined;
+                // The change this hover causes comes synchronously; a flag that outlived it
+                // would swallow the next keyboard or focus change
+                queueMicrotask(() => {
+                  hoverFromRest = false;
+                });
               }}
               // Pointing opened it already; the click that follows must not toggle it shut
               onClick={() => show(menu)}

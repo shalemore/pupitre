@@ -1,5 +1,8 @@
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { expect, test } from "@playwright/test";
-import { close, launch } from "./app";
+import { close, launch, run } from "./app";
 
 test("opens a title-bar menu, switches it and runs an item", async () => {
   const app = await launch();
@@ -30,5 +33,26 @@ test("opens a title-bar menu, switches it and runs an item", async () => {
     await expect(app.page.locator(".cm-content")).toBeVisible();
   } finally {
     await close(app);
+  }
+});
+
+test("closing a tab leaves the menu bar closed", async () => {
+  const folder = await mkdtemp(join(tmpdir(), "pupitre-menu-"));
+  const first = join(folder, "one.md");
+  const second = join(folder, "two.md");
+  await writeFile(first, "First\n");
+  await writeFile(second, "Second\n");
+  const app = await launch({ files: [first], settings: { tabs: true } });
+  try {
+    await run(app.page, { id: "file.open-path", path: second });
+    await expect(app.page.getByRole("tab")).toHaveCount(2);
+    // The last tab closed gives the bar back to the menus while the pointer still sits over it
+    await app.page.locator('[role="tablist"] > div').first().locator("button").last().click();
+    await expect(app.page.getByRole("tab")).toHaveCount(0);
+    await expect(app.page.getByRole("menubar")).toBeVisible();
+    await expect(app.page.getByRole("menu")).toHaveCount(0);
+  } finally {
+    await close(app);
+    await rm(folder, { recursive: true, force: true });
   }
 });
