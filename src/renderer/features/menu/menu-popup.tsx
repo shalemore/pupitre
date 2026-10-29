@@ -1,4 +1,5 @@
 import {
+  MenuCheckboxItem,
   MenuContent,
   MenuItem,
   MenuPortal,
@@ -74,13 +75,27 @@ const MenuEntries: Component<{
             <Show
               when={item().submenu}
               fallback={
-                <MenuItem
-                  disabled={item().enabled === false}
-                  onSelect={() => props.onSelect(item())}
-                  class="flex w-full items-center gap-6 rounded-md px-2.5 py-1.5 text-start outline-none transition-colors duration-fast data-disabled:text-tertiary data-highlighted:bg-accent data-highlighted:text-foreground"
+                <Show
+                  when={item().checked !== undefined}
+                  fallback={
+                    <MenuItem
+                      disabled={item().enabled === false}
+                      onSelect={() => props.onSelect(item())}
+                      class="flex w-full items-center gap-6 rounded-md px-2.5 py-1.5 text-start outline-none transition-colors duration-fast data-disabled:text-tertiary data-highlighted:bg-accent data-highlighted:text-foreground"
+                    >
+                      <ItemContent item={item()} hasChecks={hasChecks()} />
+                    </MenuItem>
+                  }
                 >
-                  <ItemContent item={item()} hasChecks={hasChecks()} />
-                </MenuItem>
+                  <MenuCheckboxItem
+                    checked={item().checked === true}
+                    disabled={item().enabled === false}
+                    onSelect={() => props.onSelect(item())}
+                    class="flex w-full items-center gap-6 rounded-md px-2.5 py-1.5 text-start outline-none transition-colors duration-fast data-disabled:text-tertiary data-highlighted:bg-accent data-highlighted:text-foreground"
+                  >
+                    <ItemContent item={item()} hasChecks={hasChecks()} />
+                  </MenuCheckboxItem>
+                </Show>
               }
             >
               <MenuSub>
