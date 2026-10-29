@@ -1,5 +1,4 @@
-import { createMemo, createSignal, onMount, Show } from "solid-js";
-import type { Menus } from "@shared/menu";
+import { createMemo, createResource, Show } from "solid-js";
 import { Kbd } from "@/components/ui";
 import { PaletteSheet } from "@/features/palette/palette-sheet";
 import { t } from "@/i18n";
@@ -16,11 +15,11 @@ export interface CommandPaletteProps {
  * time the palette opens, because they follow the open document, the settings and the recent files.
  */
 export function CommandPalette(props: CommandPaletteProps) {
-  const [snapshot, setSnapshot] = createSignal<Menus>();
-
-  onMount(() => void desktop.invoke("menu:items").then(setSnapshot));
+  const [snapshot] = createResource(() => desktop.invoke("menu:items"));
 
   const commands = createMemo(() => {
+    // A menu that cannot be read lists nothing, which reads the same as no match
+    if (snapshot.state !== "ready") return [];
     const menus = snapshot();
     if (menus === undefined) return [];
     const dictionary = t();
@@ -37,7 +36,7 @@ export function CommandPalette(props: CommandPaletteProps) {
       placeholder={t().commandPalette.placeholder}
       rows={(query) => filterCommands(commands(), query)}
       // Nothing is listed before the menu answers, so an empty list here really is a miss
-      emptyMessage={snapshot() === undefined ? undefined : t().commandPalette.noResults}
+      emptyMessage={snapshot.state === "ready" ? t().commandPalette.noResults : undefined}
       // The menu runs the entry it holds, exactly as if it had been picked from the menu bar
       onPick={(command) => void desktop.invoke("menu:click", command.id)}
       onClose={props.onClose}
