@@ -876,6 +876,15 @@
     color: var(--ui-danger);
   }
 
+  /*
+   * An HTML block is rendered HTML: whitespace between its tags collapses as it does in a browser.
+   * The editor's own break-spaces would keep the indentation of the source, shifting what the block
+   * shows and adding a line to it.
+   */
+  .md-html-block {
+    white-space: normal;
+  }
+
   .md-html-block img {
     max-width: 100%;
   }

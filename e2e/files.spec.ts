@@ -15,6 +15,37 @@ const PIXEL = Buffer.from(
   "base64",
 );
 
+test("renders the indentation of an HTML block as HTML", async () => {
+  const folder = await workspace();
+  const picture = join(folder, "picture.png");
+  const file = join(folder, "block.md");
+  await writeFile(picture, PIXEL);
+  await writeFile(
+    file,
+    '<p align="left">\n  <img src="picture.png" width="40" height="40" />\n</p>\n',
+  );
+  const app = await launch({ files: [file] });
+  try {
+    const image = app.page.locator(".md-html-block img");
+    await expect(image).toBeVisible();
+    // The whitespace before the tag collapses, so the picture starts where the block does; the
+    // picture's frame settles once it has loaded
+    await expect
+      .poll(async () => {
+        const [imageBox, blockBox] = await Promise.all([
+          image.boundingBox(),
+          app.page.locator(".md-html-block").boundingBox(),
+        ]);
+        if (imageBox === null || blockBox === null) return Number.POSITIVE_INFINITY;
+        return Math.abs(imageBox.x - blockBox.x);
+      })
+      .toBeLessThan(1);
+  } finally {
+    await close(app);
+    await rm(folder, { recursive: true, force: true });
+  }
+});
+
 test("opens a picture in a preview instead of the editor", async () => {
   const folder = await workspace();
   const note = join(folder, "note.md");
