@@ -114,6 +114,7 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
     () => list,
   );
   const active = navigation.active;
+  const isActive = navigation.isActive;
   const noResults = () =>
     props.root !== undefined && query() !== "" && answer()?.kind === "ok" && rows().length === 0;
 
@@ -241,8 +242,8 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
                     id={optionId(row.index)}
                     data-index={row.index}
                     role="option"
-                    aria-selected={row.index === active()}
-                    active={row.index === active()}
+                    aria-selected={isActive(row.index)}
+                    active={isActive(row.index)}
                     tabIndex={-1}
                     onPointerEnter={() => navigation.pointAt(row.index)}
                     onClick={() => open({ path: group.file.path, ...row })}

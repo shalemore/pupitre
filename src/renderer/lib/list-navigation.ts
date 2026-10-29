@@ -1,8 +1,10 @@
-import { createEffect, createMemo, createSignal } from "solid-js";
+import { createEffect, createMemo, createSelector, createSignal } from "solid-js";
 
 export interface ListNavigation {
   /** The row the keyboard points at, clamped to the rows that exist. */
   active: () => number;
+  /** Whether the row at `index` is the one the keyboard points at. */
+  isActive: (index: number) => boolean;
   /** Points at a row, by index: the pointer says so when it enters one. */
   pointAt: (index: number) => void;
   /** Starts a new list at its first row. */
@@ -26,6 +28,8 @@ export function createListNavigation(
   const [wanted, setWanted] = createSignal(0);
   // Clamped rather than reset, so a list that narrows under the query never points past its end
   const active = createMemo(() => Math.min(wanted(), Math.max(count() - 1, 0)));
+  // Every row subscribes to its own boolean, so moving the highlight does not update the list
+  const isActive = createSelector(active);
 
   // The highlight follows the list; it has to be seen even when it moved past the port
   createEffect(() => {
@@ -40,6 +44,7 @@ export function createListNavigation(
 
   return {
     active,
+    isActive,
     pointAt: setWanted,
     reset: () => setWanted(0),
     onKeyDown: (event, { pick, close }) => {

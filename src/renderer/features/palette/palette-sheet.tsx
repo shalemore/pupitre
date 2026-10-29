@@ -39,6 +39,7 @@ export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
     () => list,
   );
   const active = navigation.active;
+  const isActive = navigation.isActive;
 
   onMount(() => input?.focus());
 
@@ -89,8 +90,8 @@ export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
               id={rowId(index())}
               data-index={index()}
               role="option"
-              aria-selected={index() === active()}
-              active={index() === active()}
+              aria-selected={isActive(index())}
+              active={isActive(index())}
               tabIndex={-1}
               onPointerEnter={() => navigation.pointAt(index())}
               onClick={() => pick(item)}
