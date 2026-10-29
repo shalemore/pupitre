@@ -1,10 +1,10 @@
 import { cn } from "cn";
 import { RefreshCw } from "lucide-solid";
-import { createResource, createRoot, createSignal, type Component, Show } from "solid-js";
+import { createResource, createRoot, type Component, Show } from "solid-js";
 import { Combobox, IconButton, type SelectOption } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
-import { GENERIC_FAMILIES, listFontFamilies } from "@/lib/fonts";
+import { GENERIC_FAMILIES, listFontFamilies, type FontFamily } from "@/lib/fonts";
 import { themeApplied } from "@/lib/theme";
 
 type ThemeFontToken = "--font-document" | "--font-mono" | "--font-sans";
@@ -43,9 +43,11 @@ export function themeFontLabel(token: ThemeFontToken): string {
 
 // The three font pickers share one font list that is queried once; the refresh button queries again
 const fonts = createRoot(() => {
-  const [refreshCount, setRefreshCount] = createSignal(0);
-  const [list] = createResource(refreshCount, (count) => listFontFamilies(count > 0));
-  return { list, refresh: () => setRefreshCount((count) => count + 1) };
+  const [list, { refetch }] = createResource(
+    () => 0,
+    async (_, info): Promise<FontFamily[]> => listFontFamilies(info.refetching === true),
+  );
+  return { list, refresh: () => void refetch(true) };
 });
 
 export interface FontSelectProps {
