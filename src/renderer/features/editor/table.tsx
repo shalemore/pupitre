@@ -24,6 +24,7 @@ import {
   type Accessor,
   type Component,
   createEffect,
+  createSelector,
   createSignal,
   Index,
   type JSX,
@@ -285,8 +286,12 @@ const TableView: Component<TableViewProps> = (props) => {
   const { view } = props;
   const columns = () => columnCount(props.model());
   const rows = () => props.model().rows.length;
-  const isActive = (row: number, column: number) =>
-    props.active()?.row === row && props.active()?.column === column;
+  // Each cell subscribes to its own boolean, so moving the editing touches two cells, not the table
+  const activeCell = createSelector(() => {
+    const cell = props.active();
+    return cell === undefined ? "" : `${cell.row}:${cell.column}`;
+  });
+  const isActive = (row: number, column: number) => activeCell(`${row}:${column}`);
 
   /** Applies an edit built from the current table, then moves the editing to `focus`. */
   const run = (edit: (model: TableModel) => ChangeSpec, focus?: CellPosition) => {
