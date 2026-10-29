@@ -502,6 +502,18 @@
     field-sizing: content;
   }
 
+  /*
+   * Lines break for reading: a heading keeps its lines balanced, and a paragraph does not end with
+   * a lone word. Chromium does both while it lays the text out, so this measures nothing.
+   */
+  :is(h1, h2, h3, h4) {
+    text-wrap: balance;
+  }
+
+  :is(p, li, dd, blockquote) {
+    text-wrap: pretty;
+  }
+
   ::-webkit-scrollbar {
     width: var(--ui-scrollbar-thickness);
     height: var(--ui-scrollbar-thickness);

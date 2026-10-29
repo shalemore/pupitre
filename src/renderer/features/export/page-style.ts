@@ -265,6 +265,14 @@ h6 {
   margin-block: 1.7em 0.55em;
   font-weight: var(--md-heading-weight, 650);
   line-height: var(--md-heading-line-height, 1.25);
+  text-wrap: balance;
+}
+
+p,
+li,
+dd,
+blockquote {
+  text-wrap: pretty;
 }
 
 h1 {

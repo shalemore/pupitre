@@ -107,6 +107,12 @@
     );
   }
 
+  /* Prose wraps for reading; code, tables, math and diagrams keep the wrapping their own rules ask for */
+  .md-document
+    > .cm-line:not(.md-heading, .md-code-block, .md-table-block, .md-math-block, .md-mermaid) {
+    text-wrap: pretty;
+  }
+
   /*
    * A heading is inset by the theme's --md-block-indent. The line in the editor carries it, and a
    * heading an HTML block or an exported page writes has no line of its own, so it takes the value.
@@ -603,6 +609,7 @@
   }
 
   .md-heading {
+    text-wrap: balance;
     font-weight: var(--md-heading-weight);
     line-height: var(--md-heading-line-height);
   }
