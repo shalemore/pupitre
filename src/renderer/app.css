@@ -332,21 +332,22 @@
 
 /*
  * The surface of a panel that floats over the window, such as a dropdown or a menu: every one of
- * them is the same card around the p-1 its items sit in, and they all arrive and leave the same
- * way. A theme replaces this one rule to restyle every popover, dropdown and menu at once; it may
- * also redefine the keyframes, which are global.
+ * them is the same card around the p-1 its items sit in, and they all arrive the same way. Only
+ * the opacity animates: a panel's shadow is large, and scaling the panel would sweep that shadow
+ * across whatever sits beside it, such as a title bar under the menu labels. A panel leaves at
+ * once: a menu swapped for the one beside it would otherwise keep its border and shadow next to
+ * its successor for a few frames. A theme replaces this one rule to restyle every popover,
+ * dropdown and menu at once; it may also redefine the keyframes, which are global.
  */
 @keyframes panel-enter {
   from {
     opacity: 0;
-    scale: 0.95;
-  }
-}
-
-@keyframes panel-exit {
-  to {
-    opacity: 0;
-    scale: 0.95;
+    /*
+     * The panel rises from two pixels below where it is laid out. Its own translate utilities,
+     * such as the ones that centre a sheet, are part of the value; replacing them with a bare
+     * `0 2px` would slide a centred sheet in from its uncentred corner.
+     */
+    translate: var(--tw-translate-x) calc(var(--tw-translate-y) + 2px);
   }
 }
 
@@ -354,11 +355,23 @@
   border-radius: var(--radius-xl);
   background-color: var(--popover);
   box-shadow: var(--ui-shadow-popover);
+  /*
+   * Every panel arrives the same way: a short fade with a two-pixel rise. The motion depends
+   * neither on the anchor nor on the panel's size, so a dropdown, a context menu, a title-bar menu
+   * or one that opens from a side all feel alike. Keeping the movement to two pixels leaves the
+   * panel's large shadow in place instead of sweeping it over whatever sits beside the panel.
+   */
   animation: panel-enter var(--transition-duration-base) var(--ease-enter);
 
-  /* A panel kept on screen by its owner while it folds away */
+  /* A panel that takes another's place, such as a menu swapped across the title bar, appears at
+     once: replaying the arrival under the pointer reads as a flicker */
+  &[data-instant] {
+    animation: none;
+  }
+
+  /* A theme may keep a closing panel on screen with an animation of its own; it takes no pointer
+     while it folds away */
   &[data-closed] {
-    animation: panel-exit var(--transition-duration-ui) var(--ease-out-expo) forwards;
     pointer-events: none;
   }
 }

@@ -11,11 +11,15 @@ test("opens a title-bar menu, switches it and runs an item", async () => {
     await buttons.first().click();
     const menu = app.page.getByRole("menu").first();
     await expect(menu).toBeVisible();
+    await expect(menu).toHaveCSS("animation-name", "panel-enter");
     await expect(menu.getByRole("menuitem").first()).toBeVisible();
 
     // Pointing at the next menu switches the panel instead of leaving the bar
     await buttons.nth(1).hover();
     await expect(app.page.getByRole("menu").first()).toBeVisible();
+    // The menu that takes its place is the only one, and it does not replay the arrival
+    await expect(app.page.getByRole("menu")).toHaveCount(1);
+    await expect(app.page.getByRole("menu").first()).toHaveCSS("animation-name", "none");
 
     await app.page.keyboard.press("Escape");
     await expect(app.page.getByRole("menu")).toHaveCount(0);

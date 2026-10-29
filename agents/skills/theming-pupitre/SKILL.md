@@ -149,9 +149,14 @@ Kobalte's own attributes.
 
 ### Floating panels
 
-Dropdowns, menus and sheets share the `.floating-panel` utility and its arrival animation. A panel
-kept on screen while it closes folds away through `[data-closed]`. A menu grows from the corner of
-its button through `[data-menu-panel]`. One rule restyles them all.
+Dropdowns, menus and sheets share the `.floating-panel` utility and its animation: every panel
+fades in with a two-pixel rise, the same whichever edge it opens from, and leaves at once, so a
+menu swapped for the one beside it never shows next to its successor. A menu that takes another's
+place arrives without the rise, through `data-instant`, since replaying it under the pointer reads
+as a flicker. A theme that redefines the keyframes keeps the panel's own `translate`, as the
+default does, so a centred sheet rises in place instead of sliding in from its uncentred corner.
+`[data-menu-panel]` carries the transform origin of the button a menu hangs from, for a theme that
+replaces the keyframes with a scale. One rule restyles them all.
 
 ## What to leave alone
 

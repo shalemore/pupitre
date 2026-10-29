@@ -30,6 +30,8 @@ interface MenuBarProps {
  */
 export const MenuBar: Component<MenuBarProps> = (props) => {
   const [open, setOpen] = createSignal<TopMenu>();
+  // The menu that takes another's place: it appears at once rather than arriving again
+  const [instant, setInstant] = createSignal<TopMenu>();
   const [entries, setEntries] = createSignal<Partial<Record<TopMenu, readonly MenuEntry[]>>>({});
   // Answers to earlier asks must not replace the entries of a menu opened after them
   let asked = 0;
@@ -45,9 +47,13 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
   };
 
   const show = (menu: TopMenu) => {
-    if (open() === undefined) {
+    const current = open();
+    if (current === undefined) {
       previousFocus =
         document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
+      setInstant(undefined);
+    } else if (current !== menu) {
+      setInstant(menu);
     }
     setOpen(menu);
     props.onOpenChange(true);
@@ -155,7 +161,10 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
               {t().menu[menu]}
             </Menubar.Trigger>
             <Menubar.Portal>
-              <Menubar.Content class="floating-panel z-50 flex min-w-52 max-h-(--kb-popper-content-available-height) flex-col overflow-y-auto overscroll-contain p-1 text-xs text-foreground outline-none select-none">
+              <Menubar.Content
+                data-instant={instant() === menu ? "" : undefined}
+                class="floating-panel z-50 flex min-w-52 max-h-(--kb-popper-content-available-height) flex-col overflow-y-auto overscroll-contain p-1 text-xs text-foreground outline-none select-none"
+              >
                 <MenuEntries
                   entries={entries()[menu] ?? []}
                   onSelect={(entry) => {
