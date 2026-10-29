@@ -1,7 +1,7 @@
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { debounce, scheduleIdle } from "@solid-primitives/scheduled";
 import { cn } from "cn";
-import { FolderUp } from "lucide-solid";
+import { CornerRightUp } from "lucide-solid";
 import {
   createEffect,
   createMemo,
@@ -374,25 +374,25 @@ export const MainWindow: Component = () => {
     return root === undefined ? undefined : parentFolder(root);
   });
 
-  /** The controls the folder title carries: up to the folder that holds it, and its order. */
-  const folderAction = () => (
-    <>
-      <Show when={desktop.initialState.capabilities.folderParent && parentOfFolder()}>
-        <IconButton
-          label={t().sidebar.parentFolder}
-          size="icon-2xs"
-          class="shrink-0 text-tertiary opacity-50 transition-opacity hover:opacity-100 focus-visible:opacity-100"
-          onClick={() => {
-            const parent = parentOfFolder();
-            if (parent !== undefined) showFolder(parent);
-          }}
-        >
-          <FolderUp />
-        </IconButton>
-      </Show>
-      <FolderSortButton onHoldOpenChange={setStartSidebarHeld} />
-    </>
+  /** The button up to the folder that holds the one on show, right beside its name. */
+  const parentAction = () => (
+    <Show when={desktop.initialState.capabilities.folderParent && parentOfFolder()}>
+      <IconButton
+        label={t().sidebar.parentFolder}
+        size="icon-2xs"
+        class="shrink-0 text-tertiary opacity-50 transition-opacity hover:opacity-100 focus-visible:opacity-100"
+        onClick={() => {
+          const parent = parentOfFolder();
+          if (parent !== undefined) showFolder(parent);
+        }}
+      >
+        <CornerRightUp class="rtl:-scale-x-100" />
+      </IconButton>
+    </Show>
   );
+
+  /** The folder's order menu, at the far end of the title row. */
+  const folderAction = () => <FolderSortButton onHoldOpenChange={setStartSidebarHeld} />;
 
   const openFolder = async () => {
     const path = await desktop.invoke("folder:choose");
@@ -691,6 +691,7 @@ export const MainWindow: Component = () => {
                 hasOutline={session.activeDocument() !== undefined}
                 hasFolder={folderRoot() !== undefined}
                 folderName={fileNameOf(folderRoot() ?? "")}
+                folderTitleAction={parentAction()}
                 folderAction={folderAction()}
                 onModeChange={setPreferredMode}
                 outline={outlineList()}
@@ -707,6 +708,7 @@ export const MainWindow: Component = () => {
                 <SidebarPanel
                   side="start"
                   title={fileNameOf(root)}
+                  titleAction={parentAction()}
                   action={folderAction()}
                   pinned={settings().sidebarPinnedStart}
                   onPinnedChange={onStartPinnedChange()}

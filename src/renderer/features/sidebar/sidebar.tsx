@@ -115,14 +115,25 @@ interface PinProps {
   onPinnedChange?: ((pinned: boolean) => void) | undefined;
 }
 
-const SidebarTitle: Component<{ title: string; action?: JSX.Element } & PinProps> = (props) => (
+const SidebarTitle: Component<
+  {
+    title: string;
+    /** A control that belongs to the name itself, such as the folder's parent button. */
+    titleAction?: JSX.Element;
+    /** A control at the far end of the row, such as the folder's sort menu. */
+    action?: JSX.Element;
+  } & PinProps
+> = (props) => (
   <div class="flex items-center gap-1 ps-4 pe-2 pt-2">
-    <div
-      dir="auto"
-      class="min-w-0 flex-1 truncate text-2xs font-medium text-muted-foreground"
-      title={props.title}
-    >
-      {props.title}
+    <div class="flex min-w-0 flex-1 items-center gap-1">
+      <div
+        dir="auto"
+        class="min-w-0 truncate text-2xs font-medium text-muted-foreground"
+        title={props.title}
+      >
+        {props.title}
+      </div>
+      {props.titleAction}
     </div>
     {props.action}
     <Show when={props.onPinnedChange}>
@@ -136,7 +147,9 @@ export const SidebarPanel: Component<
   {
     side: SidebarSide;
     title: string;
-    /** A control the title carries, such as the sort menu of the folder. */
+    /** A control that belongs to the name itself, such as the folder's parent button. */
+    titleAction?: JSX.Element;
+    /** A control at the far end of the row, such as the sort menu of the folder. */
     action?: JSX.Element;
     class?: string | undefined;
     children: JSX.Element;
@@ -145,6 +158,7 @@ export const SidebarPanel: Component<
   <SidebarFrame class={props.class}>
     <SidebarTitle
       title={props.title}
+      titleAction={props.titleAction}
       action={props.action}
       pinned={props.pinned}
       onPinnedChange={props.onPinnedChange}
@@ -160,7 +174,9 @@ interface SidebarProps extends PinProps {
   hasFolder: boolean;
   /** Name of the folder shown in folder mode. */
   folderName: string;
-  /** A control the folder title carries, such as the sort menu. */
+  /** A control that belongs to the folder name, such as its parent button. */
+  folderTitleAction?: JSX.Element;
+  /** A control at the far end of the folder title, such as the sort menu. */
   folderAction?: JSX.Element;
   onModeChange: (mode: SidebarMode) => void;
   outline: JSX.Element;
@@ -192,7 +208,12 @@ export const Sidebar: Component<SidebarProps> = (props) => {
         </div>
       </Show>
       <Show when={props.mode === "folder"}>
-        <SidebarTitle title={props.folderName} action={props.folderAction} pinned={props.pinned} />
+        <SidebarTitle
+          title={props.folderName}
+          titleAction={props.folderTitleAction}
+          action={props.folderAction}
+          pinned={props.pinned}
+        />
       </Show>
       {/* Both stay mounted so the expanded folders survive a switch to the outline */}
       <ScrollView class={cn("flex-1", props.mode !== "outline" && "hidden")}>
