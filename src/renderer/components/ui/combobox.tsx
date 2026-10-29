@@ -44,10 +44,16 @@ export function Combobox(props: ComboboxProps) {
   const changeOpen = (next: boolean) => {
     setOpen(next);
     if (next) {
-      // The list is mounted after the open state changes
-      requestAnimationFrame(() =>
-        listbox?.querySelector("[data-selected]")?.scrollIntoView({ block: "center" }),
-      );
+      // The list is mounted after the open state changes. The option is scrolled inside the list
+      // rather than with scrollIntoView, which would scroll the panel's ancestors — the settings
+      // window among them — to show a portaled option
+      requestAnimationFrame(() => {
+        const item = listbox?.querySelector<HTMLElement>("[data-selected]");
+        if (!listbox || !item) return;
+        const box = listbox.getBoundingClientRect();
+        const rect = item.getBoundingClientRect();
+        listbox.scrollTop += rect.top - box.top - (box.height - rect.height) / 2;
+      });
     } else {
       setQuery("");
     }
