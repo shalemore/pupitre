@@ -1,4 +1,4 @@
-import { Menu, type MenuItemConstructorOptions, type WebContents } from "electron";
+import { BrowserWindow, Menu, type MenuItemConstructorOptions, type WebContents } from "electron";
 import { CONTEXT_MENU_FORMAT_ACTIONS } from "@shared/format";
 import { withGroupSeparators } from "@shared/menu";
 import { formatItems } from "./format-menu";
@@ -58,6 +58,12 @@ export function setupContextMenu(webContents: WebContents, options: ContextMenuO
         : [];
     const groups = [spelling, formatting, editItems].filter((group) => group.length > 0);
     if (groups.length === 0) return;
-    Menu.buildFromTemplate(withGroupSeparators(groups, separator)).popup();
+    // The menu belongs to the frame that was right-clicked, not to whichever window has the focus
+    const window = BrowserWindow.fromWebContents(webContents);
+    Menu.buildFromTemplate(withGroupSeparators(groups, separator)).popup({
+      ...(window === null ? {} : { window }),
+      ...(params.frame === null ? {} : { frame: params.frame }),
+      sourceType: params.menuSourceType,
+    });
   });
 }
