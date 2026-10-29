@@ -67,6 +67,29 @@ function enclosing(
   return undefined;
 }
 
+const ATX_HEADING = /^ATXHeading[1-6]$/;
+
+/**
+ * The range an inline format wraps. A selection that takes in a whole heading, markers included,
+ * means the heading text, so the `#` does not end up inside the format. A selection that takes in
+ * only part of the heading is wrapped as it is; the test is deliberately forgiving rather than
+ * exact: the heading's line and its text have to be covered, and nothing else that reads as text.
+ */
+function formattedRange(state: EditorState, range: SelectionRange): SelectionRange {
+  if (range.empty) return range;
+  const line = state.doc.lineAt(range.from);
+  if (range.from !== line.from) return range;
+  let node = syntaxTree(state).resolveInner(range.from, 1);
+  while (!ATX_HEADING.test(node.name) && node.parent) node = node.parent;
+  if (!ATX_HEADING.test(node.name)) return range;
+  const prefix = HEADING_PREFIX.exec(state.sliceDoc(node.from, node.to))?.[0].length ?? 0;
+  const from = node.from + prefix;
+  // The selection may reach past the heading into the spaces or the line ending that follow it
+  if (from >= node.to || range.to < node.to) return range;
+  if (state.sliceDoc(node.to, range.to).trim() !== "") return range;
+  return EditorSelection.range(from, node.to);
+}
+
 /** Wraps each selection in `marker`, or removes the format when the selection is already inside it. */
 function toggleInline(view: EditorView, name: string, marker: string): void {
   const { state } = view;
@@ -74,7 +97,8 @@ function toggleInline(view: EditorView, name: string, marker: string): void {
     state.update(
       state.changeByRange((range) => {
         const size = marker.length;
-        const node = enclosing(state, range, name);
+        const wrapped = formattedRange(state, range);
+        const node = enclosing(state, wrapped, name);
         const open = node?.firstChild;
         const close = node?.lastChild;
         if (open && close && open.from !== close.from) {
@@ -101,10 +125,13 @@ function toggleInline(view: EditorView, name: string, marker: string): void {
         }
         return {
           changes: [
-            { from: range.from, insert: marker },
-            { from: range.to, insert: marker },
+            { from: wrapped.from, insert: marker },
+            { from: wrapped.to, insert: marker },
           ],
-          range: EditorSelection.range(range.anchor + size, range.head + size),
+          range: EditorSelection.range(
+            (range.anchor === range.from ? wrapped.from : wrapped.to) + size,
+            (range.head === range.from ? wrapped.from : wrapped.to) + size,
+          ),
         };
       }),
       { scrollIntoView: true, userEvent: "input.format" },

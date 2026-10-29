@@ -35,6 +35,15 @@ describe("inline formats", () => {
     expect(format("a *wo|rd* here", "italic")).toBe("a wo|rd here");
   });
 
+  it("keeps the heading markers out of a format that takes in the whole heading", () => {
+    expect(format("|# Heading|", "bold")).toBe("# **|Heading|**");
+    expect(format("|## Heading|", "italic")).toBe("## *|Heading|*");
+    expect(format("|# **Heading**|", "bold")).toBe("|# Heading|");
+    // A selection that takes in only part of the heading is wrapped as it is
+    expect(format("# H|eading|", "bold")).toBe("# H**|eading|**");
+    expect(format("#| Heading|", "bold")).toBe("#**| Heading|**");
+  });
+
   it("gives back the text it started from when applied twice", () => {
     const word = fc.stringMatching(/^[A-Za-z][A-Za-z ]{0,10}[A-Za-z]$/);
     const inline = fc.constantFrom<FormatAction>("bold", "italic", "strikethrough", "inlineCode");
