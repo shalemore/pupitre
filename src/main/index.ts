@@ -5,7 +5,7 @@ import { flushDraft } from "./drafts";
 import { registerIpcHandlers } from "./ipc";
 import { allowMacTypeInjection } from "./mactype";
 import { rebuildApplicationMenu } from "./menu";
-import { handleOpenFileRequests } from "./open-files";
+import { handleOpenFileRequests, launchFileFromArgv } from "./open-files";
 import { onRecentFilesChange } from "./recent-files";
 import { getSettings, onSettingsChange } from "./settings-store";
 import { applySpellCheck } from "./spellcheck";
@@ -20,7 +20,7 @@ app.setAppUserModelId("com.shalemore.pupitre");
 // The log and the crash dumps a report may point at, before a crash or a second instance can happen
 setupDiagnostics();
 
-if (!app.requestSingleInstanceLock()) {
+if (!app.requestSingleInstanceLock({ file: launchFileFromArgv() })) {
   app.quit();
 } else {
   handleOpenFileRequests();
