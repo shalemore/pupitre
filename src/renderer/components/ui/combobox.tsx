@@ -13,6 +13,8 @@ export interface ComboboxProps {
   placeholder?: string;
   class?: string;
   "aria-label"?: string;
+  /** Room the popped list keeps from the window edges, such as a title bar above it. */
+  overflowPadding?: number | undefined;
 }
 
 function matches(option: SelectOption, input: string): boolean {
@@ -97,6 +99,11 @@ export function Combobox(props: ComboboxProps) {
       placeholder={props.placeholder}
       triggerMode="manual"
       gutter={6}
+      // The panel slides back into the window when it would overflow, keeps the padding below,
+      // and hands its list the room left, so a long font list scrolls instead of leaving the window
+      slide
+      fitViewport
+      overflowPadding={props.overflowPadding ?? 8}
       itemComponent={(itemProps) => (
         <KobalteCombobox.Item
           data-slot="combobox-item"
@@ -178,7 +185,11 @@ export function Combobox(props: ComboboxProps) {
           <KobalteCombobox.Listbox
             ref={(element) => (listbox = element)}
             as={(listboxProps: ScrollViewProps) => <ScrollView as="ul" {...listboxProps} />}
-            class="max-h-80 outline-none"
+            class="outline-none"
+            style={{
+              "max-height":
+                "min(20rem, calc(var(--kb-popper-content-available-height, 40rem) - 0.5rem))",
+            }}
           />
         </KobalteCombobox.Content>
       </KobalteCombobox.Portal>

@@ -1,6 +1,7 @@
 import { cn } from "cn";
 import { RefreshCw } from "lucide-solid";
 import { createResource, createRoot, type Component, type JSX, Show } from "solid-js";
+import { TITLE_BAR_HEIGHT } from "@shared/desktop-api";
 import { Combobox, IconButton, type SelectOption } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
@@ -83,6 +84,8 @@ export const FontSelect: Component<FontSelectProps> = (props) => {
             options={options()}
             placeholder={t().settings.searchFont}
             aria-label={props["aria-label"]}
+            // The list must stay below the window's title bar, even when it opens near the top
+            overflowPadding={TITLE_BAR_HEIGHT + 8}
           />
         </div>
       </div>
