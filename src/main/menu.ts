@@ -367,8 +367,6 @@ function buildTemplate(): MenuItemConstructorOptions[] {
   ];
 }
 
-let applicationMenu: Menu | undefined;
-
 /**
  * Names every item under a top-level menu after its position, so a menu drawn by the window can
  * send back the entry that was picked. Separators are never picked, and one instance of them is
@@ -399,8 +397,7 @@ function buildApplicationMenu(): Menu {
 
 /** The menu depends on the language, recent files and document state; rebuilding it whole on any change is the simplest approach and fast enough. */
 export function rebuildApplicationMenu(): void {
-  applicationMenu = buildApplicationMenu();
-  Menu.setApplicationMenu(applicationMenu);
+  Menu.setApplicationMenu(buildApplicationMenu());
 }
 
 export function setDocumentState(state: DocumentState): void {
@@ -445,7 +442,7 @@ function entriesOf(items: readonly MenuItem[]): MenuEntry[] {
 /** The drawn menu bar asks for this each time it opens a menu, because the entries follow the settings, the recent files and the open document. */
 export function menuSnapshot(): Menus {
   return menusOf((menu) => {
-    const item = applicationMenu?.items.find((candidate) => candidate.id === menu);
+    const item = Menu.getApplicationMenu()?.items.find((candidate) => candidate.id === menu);
     const submenu: Menu | undefined = item?.submenu ?? undefined;
     return submenu === undefined ? [] : entriesOf(submenu.items);
   });
@@ -453,7 +450,7 @@ export function menuSnapshot(): Menus {
 
 /** Runs the entry the drawn menu bar reported; the id comes from the menu the snapshot was made of. */
 export function clickMenuItem(itemId: string): void {
-  const item = applicationMenu?.getMenuItemById(itemId);
+  const item = Menu.getApplicationMenu()?.getMenuItemById(itemId);
   if (!item) return;
   const window = BrowserWindow.getFocusedWindow() ?? getMainWindow();
   // Electron fills in what a role does; the app's own handlers take none of these arguments
