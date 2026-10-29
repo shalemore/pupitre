@@ -13,6 +13,7 @@ import {
   shell,
   type WebContents,
 } from "electron";
+import log from "electron-log/main";
 import {
   type DeletedFileChoice,
   type DocumentLocation,
@@ -347,7 +348,7 @@ async function keepPreviousVersion(
     // A file that does not exist yet is a first save, which has nothing to keep; anything else is
     // worth a line in the log, but not worth failing the save over
     if (error instanceof Error && "code" in error && error.code !== "ENOENT") {
-      console.error(`Could not read ${path} to keep its previous version:`, error);
+      log.error(`Could not read ${path} to keep its previous version:`, error);
     }
     return;
   }
