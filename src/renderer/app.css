@@ -653,6 +653,15 @@
     font-family: var(--pref-code-font, revert-layer);
   }
 
+  /*
+   * A file that is not Markdown shows its text as it is written: code takes the code font and the
+   * whole width rather than the reading column, with no block, card or background of its own.
+   */
+  .md-document[data-document-kind="code"] {
+    max-width: none;
+    font-family: var(--pref-code-font, var(--font-mono));
+  }
+
   /* The code font choice sets the interface's monospace too: shortcuts, kbd, versions */
   .font-mono {
     font-family: var(--pref-code-font, var(--font-mono));

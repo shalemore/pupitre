@@ -76,7 +76,7 @@ export interface OpenedDocument extends DocumentLocation {
  * Extensions the editor renders as Markdown. A file is Markdown only when its extension says so;
  * every other text file is shown as it is written.
  */
-export const MARKDOWN_EXTENSIONS = ["md", "markdown", "mdown", "mkd", "mdx"] as const;
+const MARKDOWN_EXTENSIONS = ["md", "markdown", "mdown", "mkd", "mdx"] as const;
 
 /** Those files, as a test for a path. */
 export const MARKDOWN_FILE = new RegExp(`\\.(?:${MARKDOWN_EXTENSIONS.join("|")})$`, "i");

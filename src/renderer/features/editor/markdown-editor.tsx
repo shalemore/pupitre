@@ -52,6 +52,7 @@ import { type TextStats } from "@/lib/text-stats";
 import { themeApplied } from "@/lib/theme";
 import { alertTitles } from "./alerts";
 import { codeHighlight } from "./code-highlight";
+import { codeLanguageFor } from "./code-languages";
 import { cursorStyle, restartCursorBlink } from "./cursor";
 import { createStatsTracker } from "./document-stats";
 import {
@@ -205,12 +206,13 @@ function documentTitle(path: string | undefined): string {
   return withoutDocumentExtension(path ? fileNameOf(path) : t().common.untitledFileName);
 }
 
-/** How a document's text is shown: Markdown rendered, or any other text as it is written. */
-type DocumentKind = "markdown" | "text";
+/** How a document's text is shown: Markdown rendered, any other text as it is, code by its grammar. */
+type DocumentKind = "markdown" | "text" | "code";
 
 /** Only a file whose extension is Markdown is rendered as Markdown; never guess from the text. */
 function documentKind(path: string | undefined): DocumentKind {
-  return path === undefined || MARKDOWN_FILE.test(path) ? "markdown" : "text";
+  if (path === undefined || MARKDOWN_FILE.test(path)) return "markdown";
+  return codeLanguageFor(path) === undefined ? "text" : "code";
 }
 
 /** A page that shows a text or code file as it is, for the HTML and image exports. */
@@ -342,6 +344,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     const scroller = container;
     const kind = documentKind(props.documentPath);
     const markdown = kind === "markdown";
+    let disposed = false;
     // The props follow the document the window shows, and by the time this editor is cleaned up
     // that is already the next one; what it showed itself is kept here instead
     let path = props.documentPath;
@@ -402,6 +405,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     const diagramThemeCompartment = new Compartment();
     const previewCompartment = new Compartment();
     const pairingCompartment = new Compartment();
+    const languageCompartment = new Compartment();
 
     // While the saved place is still on its way the editor must not save its own, or the top of
     // the document would replace the place it is about to go back to
@@ -451,7 +455,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
             ...foldingKeymap,
             ...historyKeymap,
           ]),
-          ...(markdown ? [markdownLanguage] : []),
+          languageCompartment.of(markdown ? markdownLanguage : []),
           folding({
             fold: t().editor.fold,
             unfold: t().editor.unfold,
@@ -472,7 +476,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           diagramThemeCompartment.of(markdown ? diagramTheme.of(readDiagramTheme()) : []),
           textDirection,
           search({ createPanel: () => ({ dom: document.createElement("div") }) }),
-          EditorView.lineWrapping,
+          ...(kind === "code" ? [] : [EditorView.lineWrapping]),
           EditorView.contentAttributes.of({
             class: "md-document md-text-cursor",
             "data-document-kind": kind,
@@ -536,6 +540,15 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     });
 
     stats.start(view.state);
+
+    // A code grammar is a module of its own, so the text shows at once and takes its colors when
+    // the grammar arrives. A text file has no grammar to wait for.
+    if (kind === "code" && props.documentPath !== undefined) {
+      const language = codeLanguageFor(props.documentPath);
+      void language?.load().then((support) => {
+        if (!disposed) view.dispatch({ effects: languageCompartment.reconfigure(support) });
+      });
+    }
 
     // Source mode only swaps extensions, so the text, the caret, the scroll and the undo history stay
     // as they are. The editor remembers the mode it is set to itself, because printing shows the
@@ -849,6 +862,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     });
 
     onCleanup(() => {
+      disposed = true;
       updateOutline.clear();
       schedulePositionSave.clear();
       matchRun++;

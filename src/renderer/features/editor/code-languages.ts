@@ -29,3 +29,12 @@ export const codeLanguages: readonly LanguageDescription[] = languages.map((lang
     load: () => language.load(),
   });
 });
+
+/**
+ * The grammar a file is written in, from its name and extension: `notes.ts` is TypeScript and a
+ * `Dockerfile` is the Docker language, while a name no grammar knows gives undefined.
+ */
+export function codeLanguageFor(path: string): LanguageDescription | undefined {
+  const name = path.slice(Math.max(path.lastIndexOf("/"), path.lastIndexOf("\\")) + 1);
+  return LanguageDescription.matchFilename(codeLanguages, name) ?? undefined;
+}

@@ -1,6 +1,6 @@
 import { LanguageDescription } from "@codemirror/language";
 import { describe, expect, it } from "vitest";
-import { codeLanguages } from "./code-languages";
+import { codeLanguageFor, codeLanguages } from "./code-languages";
 
 const SPACE_NAMES: readonly (readonly [name: string, alias: string])[] = [
   ["MariaDB SQL", "mariadb"],
@@ -28,5 +28,20 @@ describe("codeLanguages", () => {
     expect(lisp?.name).toBe("Common Lisp");
     const ini = LanguageDescription.matchLanguageName(codeLanguages, "ini", true);
     expect(ini?.name).toBe("Properties files");
+  });
+});
+
+describe("codeLanguageFor", () => {
+  it("finds the grammar of a file by its extension", () => {
+    expect(codeLanguageFor("D:/notes/script.ts")?.name).toBe("TypeScript");
+    expect(codeLanguageFor("/home/me/page.css")?.name).toBe("CSS");
+  });
+
+  it("finds the grammar of a file by its name", () => {
+    expect(codeLanguageFor("D:/repo/Dockerfile")?.name).toBe("Dockerfile");
+  });
+
+  it("gives nothing for a text file no grammar claims", () => {
+    expect(codeLanguageFor("D:/notes/plain.txt")).toBeUndefined();
   });
 });
