@@ -1,6 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { DEFAULT_LOCALE, LOCALE_CODES } from "@shared/i18n";
 import {
+  activeThemeCss,
+  applyTheme,
   localizedText,
   readColorScheme,
   themeDisplayName,
@@ -8,6 +10,19 @@ import {
   type LocalizedText,
   type ThemeInfo,
 } from "./theme";
+
+describe("activeThemeCss", () => {
+  it("reads the applied theme from the document, not from the module that applied it", async () => {
+    applyTheme("plakat");
+    const applied = activeThemeCss();
+    expect(applied).toContain("@layer document-theme");
+    // A hot update can leave two instances of the module behind; the export code may be given the
+    // one that never applied a theme
+    vi.resetModules();
+    const other = await import("./theme");
+    expect(other.activeThemeCss()).toBe(applied);
+  });
+});
 
 describe("readColorScheme", () => {
   it("ignores a declaration written inside a comment", () => {

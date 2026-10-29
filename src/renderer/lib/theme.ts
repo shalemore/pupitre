@@ -181,8 +181,21 @@ export function themes(): readonly ThemeInfo[] {
   return allThemes();
 }
 
-let styleElement: HTMLStyleElement | undefined;
 const [applied, setApplied] = createSignal(undefined, { equals: false });
+
+/**
+ * The element that carries the active theme, found in the document rather than kept in a module
+ * variable: a second instance of this module, such as one a hot update leaves behind, must still
+ * find the CSS the window is showing.
+ */
+function themeStyleElement(): HTMLStyleElement {
+  const found = document.querySelector<HTMLStyleElement>("style[data-theme-style]");
+  if (found !== null) return found;
+  const element = document.createElement("style");
+  element.dataset["themeStyle"] = "";
+  document.head.append(element);
+  return element;
+}
 
 /**
  * Notifies every time the theme is applied, including a switch of the color scheme. Read it to
@@ -197,8 +210,7 @@ function cssFor(id: string): string | undefined {
 
 export function applyTheme(id: string): void {
   const css = cssFor(id) ?? cssFor(DEFAULT_THEME) ?? "";
-  styleElement ??= document.head.appendChild(document.createElement("style"));
-  styleElement.textContent = `@layer document-theme {\n${css}\n}`;
+  themeStyleElement().textContent = `@layer document-theme {\n${css}\n}`;
   setApplied();
 }
 
@@ -208,7 +220,7 @@ export function applyTheme(id: string): void {
  * without reading back through the document's CSSOM.
  */
 export function activeThemeCss(): string {
-  return styleElement?.textContent ?? "";
+  return document.querySelector<HTMLStyleElement>("style[data-theme-style]")?.textContent ?? "";
 }
 
 /** Converts any CSS color (themes mostly use oklch) to #rrggbb, for APIs that only take hex. */
