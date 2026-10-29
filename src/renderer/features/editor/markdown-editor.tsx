@@ -32,6 +32,7 @@ import { type Command, EditorView, keymap, placeholder } from "@codemirror/view"
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { debounce } from "@solid-primitives/scheduled";
 import { createEffect, on, onCleanup, onMount, type Component } from "solid-js";
+import { messageOf } from "@shared/errors";
 import type { FormatAction } from "@shared/format";
 import { ScrollView } from "@/components/ui";
 import { documentHtml, markdownFragment } from "@/features/export/document-html";
@@ -41,7 +42,7 @@ import {
   flushDocumentPositions,
   rememberDocumentPosition,
 } from "@/lib/document-positions";
-import { messageOf, reportFailure } from "@/lib/errors";
+import { reportFailure } from "@/lib/errors";
 import { fileNameOf, withoutDocumentExtension } from "@/lib/file";
 import { settings } from "@/lib/settings";
 import { type TextStats } from "@/lib/text-stats";

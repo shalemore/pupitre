@@ -4,6 +4,7 @@ import { app, Notification } from "electron";
 import log from "electron-log/main";
 import electronUpdater from "electron-updater";
 import type { UpdateStatus } from "@shared/desktop-api";
+import { messageOf } from "@shared/errors";
 import { broadcast } from "./broadcast";
 import { t } from "./i18n";
 import { getSettings } from "./settings-store";
@@ -61,7 +62,7 @@ export function setupUpdater(): void {
   autoUpdater.on("update-downloaded", (info) =>
     setStatus({ kind: "ready", version: info.version }),
   );
-  autoUpdater.on("error", (error) => setStatus({ kind: "error", message: error.message }));
+  autoUpdater.on("error", (error) => setStatus({ kind: "error", message: messageOf(error) }));
 }
 
 export function getUpdateStatus(): UpdateStatus {

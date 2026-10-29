@@ -1,12 +1,13 @@
 import type { EditorView } from "@codemirror/view";
 import type { Component } from "solid-js";
 import { render } from "solid-js/web";
+import { messageOf } from "@shared/errors";
 import type { MenuEntry } from "@shared/menu";
 import { LocaleProvider } from "@/components/locale-provider";
 import { MenuPopup } from "@/features/menu/menu-popup";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
-import { messageOf, reportFailure } from "@/lib/errors";
+import { reportFailure } from "@/lib/errors";
 import {
   type DocumentImage,
   dataImageFile,

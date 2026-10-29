@@ -14,13 +14,14 @@ import {
   type Component,
 } from "solid-js";
 import type { FolderEntry } from "@shared/desktop-api";
+import { messageOf } from "@shared/errors";
 import type { MenuEntry } from "@shared/menu";
 import { isInsideFolder, relativeToFolder } from "@shared/paths";
 import { ListItem, rowIndent } from "@/components/ui";
 import { MenuPopup } from "@/features/menu/menu-popup";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
-import { messageOf, reportFailure } from "@/lib/errors";
+import { reportFailure } from "@/lib/errors";
 import { excerptOf } from "@/lib/markdown-excerpt";
 import { settings } from "@/lib/settings";
 
