@@ -267,16 +267,22 @@ export const AppearanceSection: Component = () => (
             />
           </SettingField>
         </Show>
-        <Show when={settings().sidebarVisible && settings().windowStyle === "immersive"}>
+        <Show when={settings().sidebarVisible}>
           <SettingField
             nested
             name="sidebarPinnedStart"
             title={
-              settings().sidebarLayout === "split"
-                ? t().settings.pinSidebar(t().sidebar.folder)
-                : t().settings.pinSidebars
+              settings().windowStyle === "immersive"
+                ? settings().sidebarLayout === "split"
+                  ? t().settings.pinSidebar(t().sidebar.folder)
+                  : t().settings.pinSidebars
+                : settings().sidebarLayout === "split"
+                  ? t().settings.collapseSidebarName(t().sidebar.folder)
+                  : t().sidebar.collapseSidebar
             }
-            description={t().settings.pinSidebarsDesc}
+            description={
+              settings().windowStyle === "immersive" ? t().settings.pinSidebarsDesc : undefined
+            }
           >
             <Switch
               checked={settings().sidebarPinnedStart}
@@ -288,7 +294,11 @@ export const AppearanceSection: Component = () => (
             <SettingField
               nested
               name="sidebarPinnedEnd"
-              title={t().settings.pinSidebar(t().sidebar.outline)}
+              title={
+                settings().windowStyle === "immersive"
+                  ? t().settings.pinSidebar(t().sidebar.outline)
+                  : t().settings.collapseSidebarName(t().sidebar.outline)
+              }
             >
               <Switch
                 checked={settings().sidebarPinnedEnd}

@@ -29,6 +29,8 @@ export const viVN = {
     unpin: "Bỏ ghim",
     collapseSection: "Thu gọn mục",
     expandSection: "Mở rộng mục",
+    collapseSidebar: "Thu gọn thanh bên",
+    expandSidebar: "Mở rộng thanh bên",
     sort: "Sắp xếp",
     sortName: "Tên",
     sortModified: "Ngày sửa đổi",
@@ -256,6 +258,8 @@ export const viVN = {
     sidebarLayoutCombined: "Gộp chung",
     pinSidebars: "Ghim thanh bên",
     pinSidebar: (name) => `Ghim thanh bên ${name}`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `Thu gọn thanh bên ${name}`,
     pinSidebarsDesc: "Cửa sổ đắm chìm giữ các thanh bên mở khi bạn viết",
     filePreviews: "Bản xem trước tệp",
     filePreviewsDesc: "Vài dòng đầu của mỗi tệp dưới tên của nó trong thư mục",

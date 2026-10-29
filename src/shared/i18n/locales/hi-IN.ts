@@ -29,6 +29,8 @@ export const hiIN = {
     unpin: "अनपिन करें",
     collapseSection: "अनुभाग समेटें",
     expandSection: "अनुभाग फैलाएँ",
+    collapseSidebar: "साइडबार समेटें",
+    expandSidebar: "साइडबार फैलाएँ",
     sort: "क्रमबद्ध करें",
     sortName: "नाम",
     sortModified: "संशोधन तिथि",
@@ -256,6 +258,8 @@ export const hiIN = {
     sidebarLayoutCombined: "संयुक्त",
     pinSidebars: "साइडबार पिन करें",
     pinSidebar: (name) => `${name} साइडबार पिन करें`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `${name} साइडबार समेटें`,
     pinSidebarsDesc: "इमर्सिव विंडो लिखते समय साइडबार को खुला रखती है",
     filePreviews: "फ़ाइल पूर्वावलोकन",
     filePreviewsDesc: "फ़ोल्डर में हर फ़ाइल के नाम के नीचे उसकी पहली पंक्तियाँ",

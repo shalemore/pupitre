@@ -32,6 +32,8 @@ export const thTH = {
     unpin: "เลิกปักหมุด",
     collapseSection: "ย่อส่วน",
     expandSection: "ขยายส่วน",
+    collapseSidebar: "ย่อแถบด้านข้าง",
+    expandSidebar: "ขยายแถบด้านข้าง",
     sort: "เรียงลำดับ",
     sortName: "ชื่อ",
     sortModified: "วันที่แก้ไข",
@@ -258,6 +260,8 @@ export const thTH = {
     sidebarLayoutCombined: "รวม",
     pinSidebars: "ปักหมุดแถบด้านข้าง",
     pinSidebar: (name) => `ปักหมุดแถบด้านข้าง ${name}`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `ย่อแถบด้านข้าง ${name}`,
     pinSidebarsDesc: "หน้าต่างแบบดื่มด่ำจะทำให้แถบด้านข้างเปิดค้างไว้ขณะที่คุณเขียน",
     filePreviews: "ตัวอย่างไฟล์",
     filePreviewsDesc: "บรรทัดแรก ๆ ของแต่ละไฟล์ใต้ชื่อไฟล์ในโฟลเดอร์",

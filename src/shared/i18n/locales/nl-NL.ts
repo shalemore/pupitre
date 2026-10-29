@@ -29,6 +29,8 @@ export const nlNL = {
     unpin: "Losmaken",
     collapseSection: "Sectie inklappen",
     expandSection: "Sectie uitklappen",
+    collapseSidebar: "Zijbalk samenvouwen",
+    expandSidebar: "Zijbalk uitvouwen",
     sort: "Sorteren",
     sortName: "Naam",
     sortModified: "Datum gewijzigd",
@@ -267,6 +269,8 @@ export const nlNL = {
     sidebarLayoutCombined: "Gecombineerd",
     pinSidebars: "Zijbalken vastzetten",
     pinSidebar: (name) => `${name}-zijbalk vastzetten`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `Zijbalk ${name} samenvouwen`,
     pinSidebarsDesc: "Een immersief venster houdt de zijbalken open terwijl u schrijft",
     filePreviews: "Bestandsvoorbeelden",
     filePreviewsDesc: "De eerste regels van elk bestand onder zijn naam in de map",

@@ -188,9 +188,13 @@ export const MainWindow: Component = () => {
   const endSidebarWanted = () =>
     split() && settings().sidebarVisible && session.activeDocument() !== undefined;
   const chrome = createImmersiveChrome({
+    immersive,
     canFold: () => immersive() && session.activeDocument() !== undefined,
-    startPinned: () => settings().sidebarPinnedStart || startSidebarHeld(),
-    endPinned: () => settings().sidebarPinnedEnd,
+    // In a classic window the same value means the sidebar is collapsed, so it is "open" when unset
+    startPinned: () =>
+      (immersive() ? settings().sidebarPinnedStart : !settings().sidebarPinnedStart) ||
+      startSidebarHeld(),
+    endPinned: () => (immersive() ? settings().sidebarPinnedEnd : !settings().sidebarPinnedEnd),
     titleBarPinned: menuOpen,
     startRoom: () => (startSidebarWanted() ? startWidth() : 0),
     endRoom: () => (endSidebarWanted() ? endWidth() : 0),
@@ -230,15 +234,17 @@ export const MainWindow: Component = () => {
       { defer: true },
     ),
   );
-  // Only an immersive window folds its sidebars, so only there can they be pinned
-  const onStartPinnedChange = () =>
-    immersive()
-      ? (sidebarPinnedStart: boolean) => void updateSettings({ sidebarPinnedStart })
-      : undefined;
-  const onEndPinnedChange = () =>
-    immersive()
-      ? (sidebarPinnedEnd: boolean) => void updateSettings({ sidebarPinnedEnd })
-      : undefined;
+  // An immersive window pins a sidebar open; a classic one uses the same value to keep it collapsed
+  const onStartPinnedChange = () => (sidebarPinnedStart: boolean) => {
+    void updateSettings({ sidebarPinnedStart });
+    // A classic sidebar folds at once rather than waiting for the pointer to leave the sidebar it
+    // is still over; the edge brings it back when the pointer asks for it
+    if (!immersive() && sidebarPinnedStart) chrome.hide();
+  };
+  const onEndPinnedChange = () => (sidebarPinnedEnd: boolean) => {
+    void updateSettings({ sidebarPinnedEnd });
+    if (!immersive() && sidebarPinnedEnd) chrome.hide();
+  };
   const startSidebarShown = () => startSidebarWanted() && chrome.sidebarVisible();
   const endSidebarShown = () => endSidebarWanted() && chrome.endSidebarVisible();
   const sidebarMode = (): SidebarMode => {
@@ -688,6 +694,7 @@ export const MainWindow: Component = () => {
                 mode={sidebarMode()}
                 pinned={settings().sidebarPinnedStart}
                 onPinnedChange={onStartPinnedChange()}
+                collapsing={!immersive()}
                 hasOutline={session.activeDocument() !== undefined}
                 hasFolder={folderRoot() !== undefined}
                 folderName={fileNameOf(folderRoot() ?? "")}
@@ -712,6 +719,7 @@ export const MainWindow: Component = () => {
                   action={folderAction()}
                   pinned={settings().sidebarPinnedStart}
                   onPinnedChange={onStartPinnedChange()}
+                  collapsing={!immersive()}
                   class={cn(!immersive() && "border-e border-border")}
                 >
                   {folderTree(root)}
@@ -796,6 +804,7 @@ export const MainWindow: Component = () => {
               title={t().sidebar.outline}
               pinned={settings().sidebarPinnedEnd}
               onPinnedChange={onEndPinnedChange()}
+              collapsing={!immersive()}
               class={cn(!immersive() && "border-s border-border")}
             >
               {outlineList()}

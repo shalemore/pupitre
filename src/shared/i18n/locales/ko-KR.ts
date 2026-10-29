@@ -29,6 +29,8 @@ export const koKR = {
     unpin: "고정 해제",
     collapseSection: "섹션 접기",
     expandSection: "섹션 펼치기",
+    collapseSidebar: "사이드바 접기",
+    expandSidebar: "사이드바 펼치기",
     sort: "정렬",
     sortName: "이름",
     sortModified: "수정한 날짜",
@@ -262,6 +264,8 @@ export const koKR = {
     sidebarLayoutCombined: "통합",
     pinSidebars: "사이드바 고정",
     pinSidebar: (name) => `${name} 사이드바 고정`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `${name} 사이드바 접기`,
     pinSidebarsDesc: "몰입형 창에서 글을 쓰는 동안에도 사이드바를 열어 둡니다",
     filePreviews: "파일 미리보기",
     filePreviewsDesc: "폴더에서 각 파일 이름 아래에 파일의 처음 몇 줄을 표시합니다",

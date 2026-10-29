@@ -29,6 +29,8 @@ export const elGR = {
     unpin: "Αποκαρφίτσωμα",
     collapseSection: "Σύμπτυξη ενότητας",
     expandSection: "Ανάπτυξη ενότητας",
+    collapseSidebar: "Σύμπτυξη πλαϊνής στήλης",
+    expandSidebar: "Ανάπτυξη πλαϊνής στήλης",
     sort: "Ταξινόμηση",
     sortName: "Όνομα",
     sortModified: "Ημερομηνία τροποποίησης",
@@ -267,6 +269,8 @@ export const elGR = {
     pinSidebars: "Καρφίτσωμα πλαϊνών γραμμών",
     pinSidebarsDesc: "Ένα εμβυθιστικό παράθυρο κρατά τις πλαϊνές γραμμές ανοιχτές ενώ γράφετε",
     pinSidebar: (name) => `Καρφίτσωμα της πλαϊνής γραμμής «${name}»`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `Σύμπτυξη πλαϊνής στήλης ${name}`,
     filePreviews: "Προεπισκοπήσεις αρχείων",
     filePreviewsDesc: "Οι πρώτες γραμμές κάθε αρχείου κάτω από το όνομά του στον φάκελο",
     showWordCount: "Εμφάνιση πλήθους λέξεων",

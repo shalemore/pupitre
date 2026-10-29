@@ -35,6 +35,8 @@ export const plPL = {
     unpin: "Odepnij",
     collapseSection: "Zwiń sekcję",
     expandSection: "Rozwiń sekcję",
+    collapseSidebar: "Zwiń pasek boczny",
+    expandSidebar: "Rozwiń pasek boczny",
     sort: "Sortuj",
     sortName: "Nazwa",
     sortModified: "Data modyfikacji",
@@ -270,6 +272,8 @@ export const plPL = {
     sidebarLayoutCombined: "Połączony",
     pinSidebars: "Przypnij paski boczne",
     pinSidebar: (name) => `Przypnij pasek boczny: ${name}`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `Zwiń pasek boczny ${name}`,
     pinSidebarsDesc: "Okno immersyjne zostawia paski boczne otwarte podczas pisania",
     filePreviews: "Podgląd plików",
     filePreviewsDesc: "Pierwsze wiersze każdego pliku pod jego nazwą w folderze",

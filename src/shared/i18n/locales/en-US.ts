@@ -23,6 +23,8 @@ export const enUS = {
     /** The chevron of an outline heading, which hides or shows the headings under it. */
     collapseSection: "Collapse Section",
     expandSection: "Expand Section",
+    collapseSidebar: "Collapse Sidebar",
+    expandSidebar: "Expand Sidebar",
     newFolder: "New Folder",
     parentFolder: "Parent Folder",
     rename: "Rename",
@@ -271,6 +273,8 @@ export const enUS = {
     pinSidebarsDesc: "An immersive window keeps its sidebars open while you write",
     /** Pin the sidebar that holds `name`, as the layout names it. */
     pinSidebar: (name: string) => `Pin the ${name} Sidebar`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `Collapse the ${name} Sidebar`,
     filePreviews: "File Previews",
     filePreviewsDesc: "The first lines of each file under its name in the folder",
     showWordCount: "Show Word Count",

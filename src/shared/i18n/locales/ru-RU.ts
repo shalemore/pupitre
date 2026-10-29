@@ -35,6 +35,8 @@ export const ruRU = {
     unpin: "Открепить",
     collapseSection: "Свернуть раздел",
     expandSection: "Развернуть раздел",
+    collapseSidebar: "Свернуть боковую панель",
+    expandSidebar: "Развернуть боковую панель",
     sort: "Сортировка",
     sortName: "Имя",
     sortModified: "Дата изменения",
@@ -268,6 +270,8 @@ export const ruRU = {
     sidebarLayoutCombined: "Вместе",
     pinSidebars: "Закрепить боковые панели",
     pinSidebar: (name) => `Закрепить боковую панель: ${name}`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `Свернуть боковую панель «${name}»`,
     pinSidebarsDesc: "Иммерсивное окно не скрывает боковые панели во время набора",
     filePreviews: "Предпросмотр файлов",
     filePreviewsDesc: "Первые строки каждого файла под его именем в папке",

@@ -30,6 +30,8 @@ export const faIR = {
     unpin: "برداشتن سنجاق",
     collapseSection: "بستن بخش",
     expandSection: "باز کردن بخش",
+    collapseSidebar: "جمع کردن نوار کناری",
+    expandSidebar: "باز کردن نوار کناری",
     sort: "مرتب‌سازی",
     sortName: "نام",
     sortModified: "تاریخ ویرایش",
@@ -259,6 +261,8 @@ export const faIR = {
     sidebarLayoutCombined: "ترکیبی",
     pinSidebars: "سنجاق کردن نوارهای کناری",
     pinSidebar: (name) => `سنجاق کردن نوار کناری ${name}`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `جمع کردن نوار کناری ${name}`,
     pinSidebarsDesc: "پنجرهٔ غوطه‌ور هنگام نوشتن نوارهای کناری را باز نگه می‌دارد",
     filePreviews: "پیش‌نمایش پرونده‌ها",
     filePreviewsDesc: "نخستین سطرهای هر پرونده زیر نامش در پوشه",

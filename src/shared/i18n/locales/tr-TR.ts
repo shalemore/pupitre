@@ -29,6 +29,8 @@ export const trTR = {
     unpin: "Sabitlemeyi kaldır",
     collapseSection: "Bölümü Daralt",
     expandSection: "Bölümü Genişlet",
+    collapseSidebar: "Kenar çubuğunu daralt",
+    expandSidebar: "Kenar çubuğunu genişlet",
     sort: "Sırala",
     sortName: "Ad",
     sortModified: "Değiştirilme Tarihi",
@@ -265,6 +267,8 @@ export const trTR = {
     sidebarLayoutCombined: "Birleşik",
     pinSidebars: "Kenar Çubuklarını Sabitle",
     pinSidebar: (name) => `${name} Kenar Çubuğunu Sabitle`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `${name} kenar çubuğunu daralt`,
     pinSidebarsDesc: "Sürükleyici bir pencere, siz yazarken kenar çubuklarını açık tutar",
     filePreviews: "Dosya önizlemeleri",
     filePreviewsDesc: "Klasörde her dosyanın adının altında dosyanın ilk satırlarını gösterir",

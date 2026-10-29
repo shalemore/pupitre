@@ -28,6 +28,8 @@ export const itIT = {
     unpin: "Rimuovi dai fissati",
     collapseSection: "Comprimi sezione",
     expandSection: "Espandi sezione",
+    collapseSidebar: "Comprimi barra laterale",
+    expandSidebar: "Espandi barra laterale",
     sort: "Ordina",
     sortName: "Nome",
     sortModified: "Data di modifica",
@@ -262,6 +264,8 @@ export const itIT = {
     sidebarLayoutCombined: "Combinato",
     pinSidebars: "Fissa le barre laterali",
     pinSidebar: (name) => `Fissa la barra laterale ${name}`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `Comprimi la barra laterale ${name}`,
     pinSidebarsDesc: "Una finestra immersiva tiene aperte le barre laterali mentre scrivi",
     filePreviews: "Anteprime dei file",
     filePreviewsDesc: "Le prime righe di ogni file sotto il suo nome nella cartella",

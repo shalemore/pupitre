@@ -28,6 +28,8 @@ export const deDE = {
     unpin: "Lösen",
     collapseSection: "Bereich einklappen",
     expandSection: "Bereich ausklappen",
+    collapseSidebar: "Seitenleiste einklappen",
+    expandSidebar: "Seitenleiste ausklappen",
     sort: "Sortieren",
     sortName: "Name",
     sortModified: "Änderungsdatum",
@@ -266,6 +268,8 @@ export const deDE = {
     pinSidebars: "Seitenleisten anheften",
     pinSidebarsDesc: "Ein immersives Fenster lässt die Seitenleisten beim Schreiben geöffnet",
     pinSidebar: (name) => `${name}-Seitenleiste anheften`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `Seitenleiste „${name}“ einklappen`,
     filePreviews: "Dateivorschauen",
     filePreviewsDesc: "Die ersten Zeilen jeder Datei unter ihrem Namen im Ordner",
     showWordCount: "Wortanzahl anzeigen",

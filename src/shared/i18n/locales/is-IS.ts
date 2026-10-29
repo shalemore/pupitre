@@ -30,6 +30,8 @@ export const isIS = {
     unpin: "Losa",
     collapseSection: "Fella kafla saman",
     expandSection: "Opna kafla",
+    collapseSidebar: "Fella hliðarstiku",
+    expandSidebar: "Opna hliðarstiku",
     sort: "Raða",
     sortName: "Nafn",
     sortModified: "Breytingardagur",
@@ -267,6 +269,8 @@ export const isIS = {
     sidebarLayoutCombined: "Sameinað",
     pinSidebars: "Festa hliðarstikur",
     pinSidebar: (name) => `Festa hliðarstikuna „${name}“`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `Fella hliðarstiku ${name}`,
     pinSidebarsDesc: "Umlykjandi gluggi heldur hliðarstikum opnum meðan þú skrifar",
     filePreviews: "Forskoðun skráa",
     filePreviewsDesc: "Fyrstu línur hverrar skráar undir nafni hennar í möppunni",

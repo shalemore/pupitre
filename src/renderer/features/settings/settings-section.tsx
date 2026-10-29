@@ -29,7 +29,7 @@ export const SettingGroup: ParentComponent = (props) => (
 export interface SettingFieldProps {
   name: SettingKey;
   title: JSX.Element;
-  description?: string;
+  description?: string | undefined;
   /** The row depends on the one above it and is indented under it. */
   nested?: boolean;
 }

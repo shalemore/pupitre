@@ -28,6 +28,8 @@ export const frFR = {
     unpin: "Désépingler",
     collapseSection: "Réduire la section",
     expandSection: "Développer la section",
+    collapseSidebar: "Réduire la barre latérale",
+    expandSidebar: "Développer la barre latérale",
     sort: "Trier",
     sortName: "Nom",
     sortModified: "Date de modification",
@@ -261,6 +263,8 @@ export const frFR = {
     sidebarLayoutCombined: "Combiné",
     pinSidebars: "Épingler les barres latérales",
     pinSidebar: (name) => `Épingler la barre latérale ${name}`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `Réduire la barre latérale ${name}`,
     pinSidebarsDesc: "Une fenêtre immersive garde ses barres latérales ouvertes pendant l’écriture",
     filePreviews: "Aperçus des fichiers",
     filePreviewsDesc: "Les premières lignes de chaque fichier sous son nom dans le dossier",

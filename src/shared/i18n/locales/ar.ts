@@ -44,6 +44,8 @@ export const ar = {
     unpin: "إلغاء التثبيت",
     collapseSection: "طيّ القسم",
     expandSection: "توسيع القسم",
+    collapseSidebar: "طيّ الشريط الجانبي",
+    expandSidebar: "توسيع الشريط الجانبي",
     sort: "ترتيب",
     sortName: "الاسم",
     sortModified: "تاريخ التعديل",
@@ -272,6 +274,8 @@ export const ar = {
     pinSidebars: "تثبيت الأشرطة الجانبية",
     pinSidebarsDesc: "تُبقي النافذة الغامرة الأشرطة الجانبية مفتوحة أثناء الكتابة",
     pinSidebar: (name) => `تثبيت شريط ${name} الجانبي`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `طيّ الشريط الجانبي لـ${name}`,
     filePreviews: "معاينات الملفات",
     filePreviewsDesc: "الأسطر الأولى من كل ملف تحت اسمه في المجلد",
     showWordCount: "إظهار عدد الكلمات",

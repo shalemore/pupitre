@@ -29,6 +29,8 @@ export const svSE = {
     unpin: "Lossa",
     collapseSection: "Fäll ihop avsnitt",
     expandSection: "Fäll ut avsnitt",
+    collapseSidebar: "Fäll ihop sidopanelen",
+    expandSidebar: "Fäll ut sidopanelen",
     sort: "Sortera",
     sortName: "Namn",
     sortModified: "Ändringsdatum",
@@ -265,6 +267,8 @@ export const svSE = {
     sidebarLayoutCombined: "Samlad",
     pinSidebars: "Fäst sidofält",
     pinSidebar: (name) => `Fäst ${name}-sidofältet`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `Fäll ihop sidopanelen ${name}`,
     pinSidebarsDesc: "Ett immersivt fönster håller sidofälten öppna medan du skriver",
     filePreviews: "Filförhandsgranskningar",
     filePreviewsDesc: "De första raderna i varje fil under dess namn i mappen",

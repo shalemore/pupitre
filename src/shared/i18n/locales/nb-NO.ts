@@ -29,6 +29,8 @@ export const nbNO = {
     unpin: "Løsne",
     collapseSection: "Skjul seksjon",
     expandSection: "Vis seksjon",
+    collapseSidebar: "Slå sammen sidepanelet",
+    expandSidebar: "Utvid sidepanelet",
     sort: "Sorter",
     sortName: "Navn",
     sortModified: "Endringsdato",
@@ -265,6 +267,8 @@ export const nbNO = {
     sidebarLayoutCombined: "Samlet",
     pinSidebars: "Fest sidefelt",
     pinSidebar: (name) => `Fest ${name}-sidefeltet`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `Slå sammen ${name}-sidepanelet`,
     pinSidebarsDesc: "Et immersivt vindu holder sidefeltene åpne mens du skriver",
     filePreviews: "Filforhåndsvisninger",
     filePreviewsDesc: "De første linjene i hver fil under navnet i mappen",

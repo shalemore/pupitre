@@ -31,6 +31,8 @@ const NO_EDGE = { top: false, start: false, end: false };
  * it.
  */
 export interface ChromeOptions {
+  /** Whether the window is an immersive one; a classic window keeps its title bar and only folds sidebars the user collapsed. */
+  immersive: () => boolean;
   canFold: () => boolean;
   startPinned: () => boolean;
   endPinned: () => boolean;
@@ -58,9 +60,16 @@ export function createImmersiveChrome(options: ChromeOptions) {
     !options.startPinned() && cramped(options.startRoom() + (endFolded() ? 0 : options.endRoom()));
   const shown = (atEdge: boolean, folded = false) =>
     !options.canFold() || kept() || atEdge || (!writing() && !folded);
-  const titleBarVisible = () => options.titleBarPinned() || shown(near().top);
-  const sidebarVisible = () => options.startPinned() || shown(near().start, startFolded());
-  const endSidebarVisible = () => options.endPinned() || shown(near().end, endFolded());
+  const titleBarVisible = () =>
+    !options.immersive() || options.titleBarPinned() || shown(near().top);
+  // A classic window only folds a sidebar the user collapsed, and brings it back near its edge;
+  // it never folds while writing, so the immersive writing and room tests do not apply to it
+  const sidebarShown = (atEdge: boolean, pinned: () => boolean, immersiveShown: () => boolean) =>
+    options.immersive() ? pinned() || immersiveShown() : pinned() || atEdge || kept();
+  const sidebarVisible = () =>
+    sidebarShown(near().start, options.startPinned, () => shown(near().start, startFolded()));
+  const endSidebarVisible = () =>
+    sidebarShown(near().end, options.endPinned, () => shown(near().end, endFolded()));
 
   // The traffic lights belong to the title bar
   if (isMacOS) {

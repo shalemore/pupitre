@@ -1,5 +1,5 @@
 import { cn } from "cn";
-import { Folder, ListTree, Pin } from "lucide-solid";
+import { ChevronRight, Folder, ListTree, Pin } from "lucide-solid";
 import { createSignal, type Component, type JSX, Show } from "solid-js";
 import { ScrollView, SegmentedControl, ToggleIconButton } from "@/components/ui";
 import { t } from "@/i18n";
@@ -109,10 +109,37 @@ const PinButton: Component<{ pinned: boolean; onChange: (pinned: boolean) => voi
   </ToggleIconButton>
 );
 
+/**
+ * Collapses the sidebar of a classic window, or brings it back. The chevron points the way the
+ * sidebar goes: at the window edge while it is open, back into the window while it is folded away.
+ */
+const CollapseButton: Component<{
+  side: SidebarSide;
+  collapsed: boolean;
+  onChange: (collapsed: boolean) => void;
+}> = (props) => (
+  <ToggleIconButton
+    pressed={props.collapsed}
+    onChange={props.onChange}
+    label={props.collapsed ? t().sidebar.expandSidebar : t().sidebar.collapseSidebar}
+    size="icon-2xs"
+    class="text-tertiary opacity-50 transition-opacity hover:opacity-100 focus-visible:opacity-100 data-pressed:opacity-100"
+  >
+    <ChevronRight
+      class={cn("rtl:-scale-x-100", (props.side === "start") !== props.collapsed && "rotate-180")}
+    />
+  </ToggleIconButton>
+);
+
 interface PinProps {
+  /**
+   * The stored pin value. An immersive window keeps the sidebar open while it is set; a classic
+   * window, where the same value is reused, keeps the sidebar collapsed instead.
+   */
   pinned: boolean;
-  /** Only an immersive window folds its sidebars, so only there is there something to pin. */
   onPinnedChange?: ((pinned: boolean) => void) | undefined;
+  /** Whether the button collapses the sidebar rather than pinning it, as a classic window does. */
+  collapsing?: boolean | undefined;
 }
 
 const SidebarTitle: Component<
@@ -122,6 +149,7 @@ const SidebarTitle: Component<
     titleAction?: JSX.Element;
     /** A control at the far end of the row, such as the folder's sort menu. */
     action?: JSX.Element;
+    side: SidebarSide;
   } & PinProps
 > = (props) => (
   <div class="flex items-center gap-1 ps-4 pe-2 pt-2">
@@ -137,7 +165,13 @@ const SidebarTitle: Component<
     </div>
     {props.action}
     <Show when={props.onPinnedChange}>
-      {(onChange) => <PinButton pinned={props.pinned} onChange={onChange()} />}
+      {(onChange) =>
+        props.collapsing ? (
+          <CollapseButton side={props.side} collapsed={props.pinned} onChange={onChange()} />
+        ) : (
+          <PinButton pinned={props.pinned} onChange={onChange()} />
+        )
+      }
     </Show>
   </div>
 );
@@ -160,8 +194,10 @@ export const SidebarPanel: Component<
       title={props.title}
       titleAction={props.titleAction}
       action={props.action}
+      side={props.side}
       pinned={props.pinned}
       onPinnedChange={props.onPinnedChange}
+      collapsing={props.collapsing}
     />
     <ScrollView class="flex-1">{props.children}</ScrollView>
   </SidebarFrame>
@@ -203,7 +239,13 @@ export const Sidebar: Component<SidebarProps> = (props) => {
             />
           </Show>
           <Show when={props.onPinnedChange}>
-            {(onChange) => <PinButton pinned={props.pinned} onChange={onChange()} />}
+            {(onChange) =>
+              props.collapsing ? (
+                <CollapseButton side="start" collapsed={props.pinned} onChange={onChange()} />
+              ) : (
+                <PinButton pinned={props.pinned} onChange={onChange()} />
+              )
+            }
           </Show>
         </div>
       </Show>
@@ -212,6 +254,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
           title={props.folderName}
           titleAction={props.folderTitleAction}
           action={props.folderAction}
+          side="start"
           pinned={props.pinned}
         />
       </Show>

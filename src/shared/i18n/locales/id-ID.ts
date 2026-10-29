@@ -29,6 +29,8 @@ export const idID = {
     unpin: "Lepas sematan",
     collapseSection: "Ciutkan Bagian",
     expandSection: "Perluas Bagian",
+    collapseSidebar: "Ciutkan bilah samping",
+    expandSidebar: "Perluas bilah samping",
     sort: "Urutkan",
     sortName: "Nama",
     sortModified: "Tanggal Diubah",
@@ -258,6 +260,8 @@ export const idID = {
     sidebarLayoutCombined: "Gabungan",
     pinSidebars: "Sematkan Bilah Samping",
     pinSidebar: (name) => `Sematkan Bilah Samping ${name}`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `Ciutkan bilah samping ${name}`,
     pinSidebarsDesc: "Jendela imersif menjaga bilah samping tetap terbuka saat Anda menulis",
     filePreviews: "Pratinjau berkas",
     filePreviewsDesc: "Baris-baris pertama setiap berkas di bawah namanya di folder",

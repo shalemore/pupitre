@@ -35,6 +35,8 @@ export const csCZ = {
     unpin: "Odepnout",
     collapseSection: "Sbalit sekci",
     expandSection: "Rozbalit sekci",
+    collapseSidebar: "Sbalit postranní panel",
+    expandSidebar: "Rozbalit postranní panel",
     sort: "Seřadit",
     sortName: "Název",
     sortModified: "Datum změny",
@@ -269,6 +271,8 @@ export const csCZ = {
     pinSidebars: "Připnout postranní panely",
     pinSidebarsDesc: "Imersivní okno nechává postranní panely při psaní otevřené",
     pinSidebar: (name) => `Připnout panel ${name}`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `Sbalit postranní panel ${name}`,
     filePreviews: "Náhledy souborů",
     filePreviewsDesc: "První řádky každého souboru pod jeho názvem ve složce",
     showWordCount: "Zobrazit počet slov",

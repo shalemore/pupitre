@@ -29,6 +29,8 @@ export const fiFI = {
     unpin: "Irrota",
     collapseSection: "Kutista osio",
     expandSection: "Laajenna osio",
+    collapseSidebar: "Kutista sivupalkki",
+    expandSidebar: "Laajenna sivupalkki",
     sort: "Lajittele",
     sortName: "Nimi",
     sortModified: "Muokkauspäivä",
@@ -263,6 +265,8 @@ export const fiFI = {
     sidebarLayoutCombined: "Yhdistetty",
     pinSidebars: "Kiinnitä sivupalkit",
     pinSidebar: (name) => `Kiinnitä ${name}-sivupalkki`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `Kutista sivupalkki ${name}`,
     pinSidebarsDesc: "Immersiivinen ikkuna pitää sivupalkit auki kirjoittaessasi",
     filePreviews: "Tiedostojen esikatselut",
     filePreviewsDesc: "Jokaisen tiedoston ensimmäiset rivit nimen alla kansiossa",

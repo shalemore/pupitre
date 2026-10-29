@@ -29,6 +29,8 @@ export const huHU = {
     unpin: "Rögzítés feloldása",
     collapseSection: "Szakasz összecsukása",
     expandSection: "Szakasz kinyitása",
+    collapseSidebar: "Oldalsáv összecsukása",
+    expandSidebar: "Oldalsáv kinyitása",
     sort: "Rendezés",
     sortName: "Név",
     sortModified: "Módosítás dátuma",
@@ -267,6 +269,8 @@ export const huHU = {
     sidebarLayoutCombined: "Egyesített",
     pinSidebars: "Oldalsávok rögzítése",
     pinSidebar: (name) => `${name} oldalsáv rögzítése`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `${name} oldalsáv összecsukása`,
     pinSidebarsDesc: "Az immerszív ablak írás közben nyitva tartja az oldalsávokat",
     filePreviews: "Fájlelőnézetek",
     filePreviewsDesc: "Minden fájl első sorai a neve alatt a mappában",

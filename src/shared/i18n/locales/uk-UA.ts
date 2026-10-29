@@ -35,6 +35,8 @@ export const ukUA = {
     unpin: "Відкріпити",
     collapseSection: "Згорнути розділ",
     expandSection: "Розгорнути розділ",
+    collapseSidebar: "Згорнути бічну панель",
+    expandSidebar: "Розгорнути бічну панель",
     sort: "Сортувати",
     sortName: "Назва",
     sortModified: "Дата зміни",
@@ -269,6 +271,8 @@ export const ukUA = {
     sidebarLayoutCombined: "Разом",
     pinSidebars: "Закріпити бічні панелі",
     pinSidebar: (name) => `Закріпити бічну панель: ${name}`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `Згорнути бічну панель «${name}»`,
     pinSidebarsDesc: "Імерсивне вікно не приховує бічні панелі під час набору",
     filePreviews: "Попередній перегляд файлів",
     filePreviewsDesc: "Перші рядки кожного файлу під його назвою в папці",

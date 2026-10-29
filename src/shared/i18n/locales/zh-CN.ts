@@ -30,6 +30,8 @@ export const zhCN = {
     unpin: "取消置顶",
     collapseSection: "折叠小节",
     expandSection: "展开小节",
+    collapseSidebar: "收起侧边栏",
+    expandSidebar: "展开侧边栏",
     sort: "排序",
     sortName: "名称",
     sortModified: "修改日期",
@@ -260,6 +262,8 @@ export const zhCN = {
     sidebarLayoutCombined: "合并",
     pinSidebars: "固定侧边栏",
     pinSidebar: (name) => `固定${name}侧边栏`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `收起${name}侧边栏`,
     pinSidebarsDesc: "沉浸式窗口在书写时保持侧边栏打开",
     filePreviews: "文件预览",
     filePreviewsDesc: "在文件夹中每个文件名下方显示该文件的前几行",

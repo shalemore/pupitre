@@ -29,6 +29,8 @@ export const jaJP = {
     unpin: "ピン留めを解除",
     collapseSection: "セクションを折りたたむ",
     expandSection: "セクションを展開する",
+    collapseSidebar: "サイドバーを折りたたむ",
+    expandSidebar: "サイドバーを展開",
     sort: "並べ替え",
     sortName: "名前",
     sortModified: "変更日時",
@@ -261,6 +263,8 @@ export const jaJP = {
     sidebarLayoutCombined: "統合",
     pinSidebars: "サイドバーをピン留め",
     pinSidebar: (name) => `${name}サイドバーをピン留め`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `${name}サイドバーを折りたたむ`,
     pinSidebarsDesc: "没入型ウィンドウで、書いている間もサイドバーを開いたままにします",
     filePreviews: "ファイルのプレビュー",
     filePreviewsDesc: "フォルダー内の各ファイル名の下に、そのファイルの最初の数行を表示します",

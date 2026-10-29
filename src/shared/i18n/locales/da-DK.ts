@@ -29,6 +29,8 @@ export const daDK = {
     unpin: "Frigør",
     collapseSection: "Fold sektion sammen",
     expandSection: "Fold sektion ud",
+    collapseSidebar: "Skjul sidepanelet",
+    expandSidebar: "Vis sidepanelet",
     sort: "Sortér",
     sortName: "Navn",
     sortModified: "Ændringsdato",
@@ -266,6 +268,8 @@ export const daDK = {
     pinSidebars: "Fastgør sidepaneler",
     pinSidebarsDesc: "Et immersivt vindue holder sidepanelerne åbne, mens du skriver",
     pinSidebar: (name) => `Fastgør ${name}-sidepanelet`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `Skjul ${name}-sidepanelet`,
     filePreviews: "Filforhåndsvisninger",
     filePreviewsDesc: "De første linjer af hver fil under dens navn i mappen",
     showWordCount: "Vis ordantal",

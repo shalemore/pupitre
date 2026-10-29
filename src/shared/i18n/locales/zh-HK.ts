@@ -30,6 +30,8 @@ export const zhHK = {
     unpin: "取消置頂",
     collapseSection: "摺疊小節",
     expandSection: "展開小節",
+    collapseSidebar: "收起側邊欄",
+    expandSidebar: "展開側邊欄",
     sort: "排序",
     sortName: "名稱",
     sortModified: "修改日期",
@@ -260,6 +262,8 @@ export const zhHK = {
     sidebarLayoutCombined: "合併",
     pinSidebars: "釘選側邊欄",
     pinSidebar: (name) => `釘選${name}側邊欄`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `收起${name}側邊欄`,
     pinSidebarsDesc: "沉浸式視窗在書寫時保持側邊欄開啟",
     filePreviews: "檔案預覽",
     filePreviewsDesc: "在資料夾中每個檔案名稱下方顯示該檔案的前幾行",

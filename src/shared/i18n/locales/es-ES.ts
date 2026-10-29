@@ -28,6 +28,8 @@ export const esES = {
     unpin: "Desfijar",
     collapseSection: "Contraer sección",
     expandSection: "Expandir sección",
+    collapseSidebar: "Contraer barra lateral",
+    expandSidebar: "Expandir barra lateral",
     sort: "Ordenar",
     sortName: "Nombre",
     sortModified: "Fecha de modificación",
@@ -261,6 +263,8 @@ export const esES = {
     sidebarLayoutCombined: "Combinado",
     pinSidebars: "Fijar las barras laterales",
     pinSidebar: (name) => `Fijar la barra lateral de ${name}`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `Contraer la barra lateral ${name}`,
     pinSidebarsDesc:
       "Una ventana inmersiva mantiene abiertas las barras laterales mientras escribes",
     filePreviews: "Vistas previas de los archivos",

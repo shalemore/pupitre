@@ -28,6 +28,8 @@ export const ptBR = {
     unpin: "Desafixar",
     collapseSection: "Recolher seção",
     expandSection: "Expandir seção",
+    collapseSidebar: "Recolher barra lateral",
+    expandSidebar: "Expandir barra lateral",
     sort: "Ordenar",
     sortName: "Nome",
     sortModified: "Data de modificação",
@@ -261,6 +263,8 @@ export const ptBR = {
     sidebarLayoutCombined: "Combinado",
     pinSidebars: "Fixar barras laterais",
     pinSidebar: (name) => `Fixar a barra lateral de ${name}`,
+    /** Collapse the sidebar that holds `name`, in a classic window. */
+    collapseSidebarName: (name: string) => `Recolher a barra lateral ${name}`,
     pinSidebarsDesc: "Uma janela imersiva mantém as barras laterais abertas enquanto você escreve",
     filePreviews: "Pré-visualizações dos arquivos",
     filePreviewsDesc: "As primeiras linhas de cada arquivo sob o nome dele na pasta",
