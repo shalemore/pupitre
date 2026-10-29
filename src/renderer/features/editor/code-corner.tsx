@@ -2,7 +2,7 @@ import { LanguageDescription, syntaxTree } from "@codemirror/language";
 import { type EditorView, WidgetType } from "@codemirror/view";
 import { debounce } from "@solid-primitives/scheduled";
 import { Check, Copy } from "lucide-solid";
-import { createMemo, createSignal, For, onCleanup, Show, type Component } from "solid-js";
+import { createMemo, createSignal, For, Show, type Component } from "solid-js";
 import { render } from "solid-js/web";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
@@ -85,7 +85,6 @@ const CodeCorner: Component<{
 }> = (props) => {
   const [copied, setCopied] = createSignal(false);
   const resetCopied = debounce(() => setCopied(false), COPIED_MS);
-  onCleanup(resetCopied.clear);
 
   const language = createMemo(() => namedLanguage(props.fence?.language ?? ""));
 

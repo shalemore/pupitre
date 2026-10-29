@@ -6,7 +6,6 @@ import {
   createSignal,
   For,
   on,
-  onCleanup,
   onMount,
   Show,
   type Component,
@@ -136,7 +135,6 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
     navigation.reset();
   };
   const searchSoon = debounce(() => void search(), SEARCH_DELAY_MS);
-  onCleanup(() => searchSoon.clear());
 
   createEffect(
     on([() => props.root, query, caseSensitive, wholeWord, regexp], () => searchSoon(), {
