@@ -1,8 +1,9 @@
-import { copyFile, mkdir, rename, stat, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, rename, writeFile } from "node:fs/promises";
 import { basename, dirname, format, join, normalize, parse, resolve } from "node:path";
 import { net, shell } from "electron";
 import type { FolderEntry } from "@shared/desktop-api";
 import { decodeUriPart } from "@shared/uri";
+import { exists } from "./exists";
 import { moveFile } from "./move-file";
 
 /**
@@ -15,13 +16,6 @@ function checkedName(name: string): string {
     throw new Error(`"${name}" cannot name a file`);
   }
   return trimmed;
-}
-
-async function exists(path: string): Promise<boolean> {
-  return stat(path).then(
-    () => true,
-    () => false,
-  );
 }
 
 /** Refuses to replace something that is already there; renaming onto a file the user cannot see would lose it. */

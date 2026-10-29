@@ -1,4 +1,4 @@
-import { access, mkdir, open, readdir, readFile, stat, writeFile } from "node:fs/promises";
+import { mkdir, open, readdir, readFile, stat, writeFile } from "node:fs/promises";
 import { basename, dirname, extname, isAbsolute, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
@@ -47,6 +47,7 @@ import {
   normalizeText,
   withLineEnding,
 } from "./encoding";
+import { exists } from "./exists";
 import { exportImage } from "./export-image";
 import {
   MAX_IMAGE_BYTES,
@@ -419,12 +420,7 @@ export function registerIpcHandlers(): void {
   handle("document:peek", (_event, path, maxBytes, encoding) =>
     peekDocument(path, maxBytes, encoding),
   );
-  handle("document:exists", (_event, path) =>
-    access(path).then(
-      () => true,
-      () => false,
-    ),
-  );
+  handle("document:exists", (_event, path) => exists(path));
   handle("document:write", async (_event, path, content, lineEnding, encoding) => {
     await keepPreviousVersion(path, content, encoding);
     await writeDocument(path, content, lineEnding, encoding);
