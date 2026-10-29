@@ -1,6 +1,7 @@
-import { existsSync, mkdirSync, watch, type FSWatcher } from "node:fs";
-import { basename, dirname, join } from "node:path";
+import { mkdirSync } from "node:fs";
+import { join } from "node:path";
 import { isDeepStrictEqual } from "node:util";
+import { watch, type FSWatcher } from "chokidar";
 import { app, shell } from "electron";
 import type { ImportedTheme } from "@shared/desktop-api";
 import { broadcast } from "./broadcast";
@@ -42,38 +43,18 @@ const refreshLater = createDebouncedTask(refresh, REFRESH_DELAY);
 
 /**
  * Watches `root` and every folder below it, so an asset edited in a nested folder is noticed too.
- * A root that does not exist yet is found by watching its deepest existing ancestor for the folder
- * that leads to it; once it appears, the next refresh watches the root itself.
+ * A root that does not exist yet is still watched through its parent, and the watch moves to the
+ * root once it appears.
  */
 function watchRoot(root: string): void {
-  let existing = root;
-  let missing = "";
-  while (!existsSync(existing)) {
-    missing = basename(existing);
-    const parent = dirname(existing);
-    if (parent === existing) return;
-    existing = parent;
-  }
-  const child = missing === "" ? undefined : missing;
-  try {
-    const watcher = watch(
-      existing,
-      { persistent: false, recursive: child === undefined },
-      (_event, filename) => {
-        // An ancestor is watched only for the folder that leads to the theme root
-        if (child !== undefined && filename !== null && filename !== child) return;
-        refreshLater.schedule();
-      },
-    );
-    watcher.on("error", refreshLater.schedule);
-    watchers.push(watcher);
-  } catch {
-    // A path that cannot be watched is tried again on the next refresh
-  }
+  const watcher = watch(root, { ignoreInitial: true, persistent: false });
+  watcher.on("all", () => refreshLater.schedule());
+  watcher.on("error", () => refreshLater.schedule());
+  watchers.push(watcher);
 }
 
 function rewatch(): void {
-  for (const watcher of watchers) watcher.close();
+  for (const watcher of watchers) void watcher.close();
   watchers = [];
   const roots = [globalRoot(), projectThemes()].filter(
     (root): root is string => root !== undefined,
@@ -110,6 +91,6 @@ export async function revealThemeFolder(source: ImportedTheme["source"]): Promis
 export function stopThemeWatcher(): void {
   started = false;
   refreshLater.cancel();
-  for (const watcher of watchers) watcher.close();
+  for (const watcher of watchers) void watcher.close();
   watchers = [];
 }

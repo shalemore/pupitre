@@ -1,5 +1,4 @@
-import { watch, type FSWatcher } from "node:fs";
-import { basename, dirname } from "node:path";
+import { watch, type FSWatcher } from "chokidar";
 import type { WebContents } from "electron";
 import { createDebouncedTask, type DebouncedTask } from "./debounced-task";
 
@@ -17,7 +16,7 @@ const watchesBySender = new Map<WebContents, Map<string, Watch>>();
 
 function close(entry: Watch): void {
   entry.task.cancel();
-  entry.watcher.close();
+  void entry.watcher.close();
 }
 
 function keyOf(event: WatchEvent, path: string): string {
@@ -27,8 +26,8 @@ function keyOf(event: WatchEvent, path: string): string {
 /**
  * Tells the window, through `event`, when `path` changes. A folder is watched without its
  * subfolders: a recursive watch would be expensive on large trees, and the sidebar only shows
- * folders the user has expanded. A file is watched through its folder, because editors that save
- * by replacing the file would otherwise leave a watch on the old file behind.
+ * folders the user has expanded. A file is watched as itself, and a save that replaces it with a
+ * temporary file and a rename still counts as one change.
  */
 export function watchPath(sender: WebContents, event: WatchEvent, path: string): void {
   let watches = watchesBySender.get(sender);
@@ -44,21 +43,25 @@ export function watchPath(sender: WebContents, event: WatchEvent, path: string):
   const key = keyOf(event, path);
   if (watches.has(key)) return;
 
-  const watchedFile = event === "document:changed" ? basename(path) : undefined;
   try {
     const entry: Watch = {
-      watcher: watch(event === "document:changed" ? dirname(path) : path),
+      watcher: watch(path, {
+        ignoreInitial: true,
+        atomic: true,
+        ...(event === "folder:changed" ? { depth: 0 } : {}),
+      }),
       task: createDebouncedTask(() => {
         if (!sender.isDestroyed()) sender.send(event, path);
       }, DEBOUNCE_MS),
     };
-    entry.watcher.on("change", (_type, name) => {
-      // The file name is not always reported; then any change in the folder counts
-      if (watchedFile !== undefined && name !== null && name.toString() !== watchedFile) return;
-      entry.task.schedule();
-    });
-    // The folder was removed or became unreadable; the window finds out the next time it reads it
-    entry.watcher.on("error", () => unwatchPath(sender, event, path));
+    const changed = () => entry.task.schedule();
+    entry.watcher
+      .on("add", changed)
+      .on("change", changed)
+      .on("unlink", changed)
+      .on("addDir", changed)
+      .on("unlinkDir", changed)
+      .on("error", () => unwatchPath(sender, event, path));
     watches.set(key, entry);
   } catch {
     // Reading the path reports the same problem to the user
