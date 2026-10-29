@@ -2,6 +2,7 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { extname, resolve } from "node:path";
 import type { ImportedTheme } from "@shared/desktop-api";
 import { isInside } from "./is-inside";
+import { nameCollator } from "./name-collator";
 
 const STYLE_FILE = "index.css";
 const META_FILE = "theme.json";
@@ -35,7 +36,7 @@ export function readThemesFromRoot(root: string, source: ImportedTheme["source"]
     folders = readdirSync(root, { withFileTypes: true })
       .filter((entry) => entry.isDirectory())
       .map((entry) => entry.name)
-      .toSorted((a, b) => a.localeCompare(b));
+      .toSorted((a, b) => nameCollator.compare(a, b));
   } catch {
     return [];
   }
