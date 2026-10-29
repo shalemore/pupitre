@@ -1,6 +1,23 @@
 import { useComboboxContext } from "@kobalte/core/combobox";
 import { createEffect, onMount } from "solid-js";
 
+/** The part of the combobox collection this walks. */
+interface RowCollection {
+  getFirstKey: () => string | undefined;
+  getKeyAfter: (key: string) => string | undefined;
+  getItem: (key: string) => { type: "item" | "section" } | undefined;
+}
+
+/** The key of the first row that can be picked; a grouped list starts with a section header. */
+function firstItemKey(collection: RowCollection): string | undefined {
+  let key = collection.getFirstKey();
+  while (key !== undefined) {
+    if (collection.getItem(key)?.type === "item") return key;
+    key = collection.getKeyAfter(key);
+  }
+  return undefined;
+}
+
 /**
  * Starts the list on its first row and keeps a row pointed at as the query replaces the list. The
  * input keeps the focus, so the list is walked through the combobox's own active descendant.
@@ -12,8 +29,8 @@ export function FocusFirstRow(): null {
     const collection = context.listState().collection();
     const selection = context.listState().selectionManager();
     const focused = selection.focusedKey();
-    if (focused != null && collection.getItem(focused) !== undefined) return;
-    const first = collection.getFirstKey();
+    if (focused != null && collection.getItem(focused)?.type === "item") return;
+    const first = firstItemKey(collection);
     if (first !== undefined) selection.setFocusedKey(first);
   });
   return null;

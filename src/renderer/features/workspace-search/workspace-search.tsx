@@ -1,41 +1,48 @@
+import { Combobox as KobalteCombobox } from "@kobalte/core/combobox";
 import { debounce } from "@solid-primitives/scheduled";
 import { CaseSensitive, Regex, WholeWord } from "lucide-solid";
 import {
   createEffect,
   createMemo,
   createSignal,
-  For,
+  type Component,
+  type JSX,
   on,
   onMount,
   Show,
-  type Component,
-  type JSX,
 } from "solid-js";
 import type {
+  WorkspaceFileMatches,
   WorkspaceMatch,
   WorkspaceSearchOptions,
   WorkspaceSearchResponse,
 } from "@shared/desktop-api";
-import { Badge, Input, ListItem, ScrollView, Sheet, ToggleIconButton } from "@/components/ui";
+import {
+  Badge,
+  Input,
+  ScrollView,
+  Sheet,
+  ToggleIconButton,
+  type ScrollViewProps,
+} from "@/components/ui";
 import { t } from "@/i18n";
+import { FocusFirstRow, ShowFocusedRow } from "@/lib/combobox-rows";
 import { desktop } from "@/lib/desktop";
-import { createListNavigation } from "@/lib/list-navigation";
 
 /** Typing must not ask the main process for the whole folder once per keystroke. */
 const SEARCH_DELAY_MS = 150;
 
-/** The list the input points at, which keeps the results reachable while the input holds the focus. */
-const LISTBOX_ID = "workspace-search-list";
-
-function optionId(index: number): string {
-  return `workspace-search-option-${index}`;
-}
-
-/** One match with the index it has in the whole list, which the arrow keys move through. */
-interface ResultRow {
+/** One match with the index it has in the whole list, which the keyboard moves through. */
+interface MatchRow {
   path: string;
   match: WorkspaceMatch;
   index: number;
+}
+
+/** A document of the folder with the matches found in it. */
+interface MatchGroup {
+  file: WorkspaceFileMatches;
+  matches: MatchRow[];
 }
 
 export interface WorkspaceSearchProps {
@@ -89,30 +96,21 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
   const [regexp, setRegexp] = createSignal(false);
   const [answer, setAnswer] = createSignal<WorkspaceSearchResponse>();
   let input: HTMLInputElement | undefined;
-  let list: HTMLDivElement | undefined;
 
-  const groups = createMemo(() => {
+  const groups = createMemo<MatchGroup[]>(() => {
     const found = answer();
     if (found?.kind !== "ok") return [];
     let index = 0;
     return found.files.map((file) => ({
       file,
-      matches: file.matches.map((match) => ({ match, index: index++ })),
+      matches: file.matches.map((match) => ({ path: file.path, match, index: index++ })),
     }));
   });
-  const rows = createMemo(() =>
-    groups().flatMap((group) =>
-      group.matches.map(({ match, index }): ResultRow => ({ path: group.file.path, match, index })),
-    ),
+  const matchCount = createMemo(() =>
+    groups().reduce((count, group) => count + group.matches.length, 0),
   );
-  const navigation = createListNavigation(
-    () => rows().length,
-    () => list,
-  );
-  const active = navigation.active;
-  const isActive = navigation.isActive;
   const noResults = () =>
-    props.root !== undefined && query() !== "" && answer()?.kind === "ok" && rows().length === 0;
+    props.root !== undefined && query() !== "" && answer()?.kind === "ok" && matchCount() === 0;
 
   // Counts the questions asked, so that only the answer to the last one is shown
   let latest = 0;
@@ -132,7 +130,6 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
     // A slower answer must not replace the one of a question asked after it
     if (request !== latest) return;
     setAnswer(found);
-    navigation.reset();
   };
   const searchSoon = debounce(() => void search(), SEARCH_DELAY_MS);
 
@@ -142,121 +139,126 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
     }),
   );
 
-  onMount(() => input?.focus());
+  // An input method commits its candidate with Enter, which must not open the match under it
+  onMount(() => {
+    input?.focus();
+    // The key events are delegated at the document, so stopping the propagation here keeps the
+    // combobox from seeing a commit Enter at all
+    input?.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.isComposing) event.stopPropagation();
+      },
+      true,
+    );
+  });
 
-  const open = (row: ResultRow) => props.onOpenMatch(row.path, row.match.from, row.match.to);
+  const open = (row: MatchRow) => props.onOpenMatch(row.path, row.match.from, row.match.to);
 
   return (
-    <Sheet
-      title={t().workspaceSearch.title}
-      placement="top"
-      onClose={props.onClose}
-      onKeyDown={(event) =>
-        navigation.onKeyDown(event, {
-          pick: (index) => {
-            const row = rows()[index];
-            if (row !== undefined) open(row);
-          },
-          close: props.onClose,
-        })
-      }
-    >
-      <div class="flex items-center gap-1.5">
-        <Input
-          ref={(element) => (input = element)}
-          dir="auto"
-          value={query()}
-          onInput={(event) => setQuery(event.currentTarget.value)}
-          placeholder={t().workspaceSearch.placeholder}
-          aria-label={t().workspaceSearch.title}
-          role="combobox"
-          aria-expanded={true}
-          aria-controls={LISTBOX_ID}
-          aria-autocomplete="list"
-          aria-activedescendant={rows().length > 0 ? optionId(active()) : undefined}
-        />
-        <div class="flex shrink-0 items-center gap-0.5">
-          <OptionButton
-            pressed={caseSensitive()}
-            onChange={setCaseSensitive}
-            label={t().editor.matchCase}
+    <Sheet title={t().workspaceSearch.title} placement="top" onClose={props.onClose}>
+      <KobalteCombobox<MatchRow, MatchGroup>
+        open
+        options={groups()}
+        optionGroupChildren="matches"
+        optionValue={(row) => String(row.index)}
+        optionTextValue={() => ""}
+        // Picking closes the sheet, and the query is what the field keeps until it does
+        optionLabel={() => query()}
+        defaultFilter={() => true}
+        allowsEmptyCollection
+        closeOnSelection={false}
+        triggerMode="input"
+        onInputChange={setQuery}
+        onChange={(row) => {
+          if (row !== null) open(row);
+        }}
+        itemComponent={(itemProps) => (
+          <KobalteCombobox.Item
+            item={itemProps.item}
+            class="flex w-full cursor-pointer items-center gap-2 rounded-md py-1.5 pe-2.5 ps-6 text-start text-xs text-muted-foreground outline-none transition-colors data-highlighted:bg-selected data-highlighted:font-medium data-highlighted:text-foreground"
           >
-            <CaseSensitive />
-          </OptionButton>
-          <OptionButton pressed={wholeWord()} onChange={setWholeWord} label={t().editor.wholeWord}>
-            <WholeWord />
-          </OptionButton>
-          <OptionButton pressed={regexp()} onChange={setRegexp} label={t().editor.useRegex}>
-            <Regex />
-          </OptionButton>
-        </div>
-      </div>
-
-      <Show when={props.root === undefined}>
-        <p role="status" class="px-2.5 py-1.5 text-muted-foreground">
-          {t().workspaceSearch.noFolder}
-        </p>
-      </Show>
-      <Show when={answer()?.kind === "invalid-regexp"}>
-        <p role="status" class="px-2.5 py-1.5 text-destructive">
-          {t().workspaceSearch.invalidRegexp}
-        </p>
-      </Show>
-      <Show when={noResults()}>
-        <p role="status" class="px-2.5 py-1.5 text-muted-foreground">
-          {t().workspaceSearch.noResults}
-        </p>
-      </Show>
-      <Show when={rows().length > 0}>
-        <p role="status" class="px-2.5 text-2xs text-tertiary tabular-nums">
-          {t().workspaceSearch.matchCount(rows().length)}
-        </p>
-      </Show>
-
-      <ScrollView
-        ref={(element) => (list = element)}
-        id={LISTBOX_ID}
-        role="listbox"
-        aria-label={t().workspaceSearch.title}
-        class="flex min-h-0 flex-col gap-0.5"
+            <span class="w-6 shrink-0 text-end text-2xs text-tertiary tabular-nums">
+              {itemProps.item.rawValue.match.line}
+            </span>
+            <span dir="auto" class="min-w-0 flex-1 truncate">
+              <MatchLine match={itemProps.item.rawValue.match} />
+            </span>
+          </KobalteCombobox.Item>
+        )}
+        sectionComponent={(sectionProps) => (
+          <KobalteCombobox.Section class="flex items-center gap-1.5 px-2.5 pt-1.5">
+            <span dir="auto" class="min-w-0 flex-1 truncate font-medium">
+              {sectionProps.section.rawValue.file.relative}
+            </span>
+            <Badge variant="muted" size="sm">
+              {sectionProps.section.rawValue.matches.length}
+            </Badge>
+          </KobalteCombobox.Section>
+        )}
       >
-        <For each={groups()}>
-          {(group) => (
-            <div role="presentation" class="flex flex-col gap-0.5">
-              <div class="flex items-center gap-1.5 px-2.5 pt-1.5">
-                <span dir="auto" class="min-w-0 flex-1 truncate font-medium">
-                  {group.file.relative}
-                </span>
-                <Badge variant="muted" size="sm">
-                  {group.matches.length}
-                </Badge>
-              </div>
-              <For each={group.matches}>
-                {(row) => (
-                  <ListItem
-                    id={optionId(row.index)}
-                    data-index={row.index}
-                    role="option"
-                    aria-selected={isActive(row.index)}
-                    active={isActive(row.index)}
-                    tabIndex={-1}
-                    onPointerEnter={() => navigation.pointAt(row.index)}
-                    onClick={() => open({ path: group.file.path, ...row })}
-                    class="gap-2 ps-6"
-                  >
-                    <span class="w-6 shrink-0 text-end text-2xs text-tertiary tabular-nums">
-                      {row.match.line}
-                    </span>
-                    <span dir="auto" class="min-w-0 flex-1 truncate">
-                      <MatchLine match={row.match} />
-                    </span>
-                  </ListItem>
-                )}
-              </For>
-            </div>
+        <KobalteCombobox.Control class="flex items-center gap-1.5">
+          <KobalteCombobox.Input
+            as={Input}
+            ref={(element) => (input = element)}
+            dir="auto"
+            placeholder={t().workspaceSearch.placeholder}
+            aria-label={t().workspaceSearch.title}
+          />
+          <div class="flex shrink-0 items-center gap-0.5">
+            <OptionButton
+              pressed={caseSensitive()}
+              onChange={setCaseSensitive}
+              label={t().editor.matchCase}
+            >
+              <CaseSensitive />
+            </OptionButton>
+            <OptionButton
+              pressed={wholeWord()}
+              onChange={setWholeWord}
+              label={t().editor.wholeWord}
+            >
+              <WholeWord />
+            </OptionButton>
+            <OptionButton pressed={regexp()} onChange={setRegexp} label={t().editor.useRegex}>
+              <Regex />
+            </OptionButton>
+          </div>
+        </KobalteCombobox.Control>
+
+        <Show when={props.root === undefined}>
+          <p role="status" class="px-2.5 py-1.5 text-muted-foreground">
+            {t().workspaceSearch.noFolder}
+          </p>
+        </Show>
+        <Show when={answer()?.kind === "invalid-regexp"}>
+          <p role="status" class="px-2.5 py-1.5 text-destructive">
+            {t().workspaceSearch.invalidRegexp}
+          </p>
+        </Show>
+        <Show when={noResults()}>
+          <p role="status" class="px-2.5 py-1.5 text-muted-foreground">
+            {t().workspaceSearch.noResults}
+          </p>
+        </Show>
+        <Show when={matchCount() > 0}>
+          <p role="status" class="px-2.5 text-2xs text-tertiary tabular-nums">
+            {t().workspaceSearch.matchCount(matchCount())}
+          </p>
+        </Show>
+
+        <KobalteCombobox.Listbox
+          as={(listProps: ScrollViewProps) => (
+            <ScrollView
+              {...listProps}
+              aria-label={t().workspaceSearch.title}
+              class="flex min-h-0 flex-col gap-0.5"
+            />
           )}
-        </For>
-      </ScrollView>
+        />
+        <FocusFirstRow />
+        <ShowFocusedRow />
+      </KobalteCombobox>
     </Sheet>
   );
 };
