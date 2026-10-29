@@ -143,21 +143,7 @@ export function findHeadingByAnchor(
 
 /** The section the cursor is in: the last heading at or before the cursor. */
 export function findActiveHeading(headings: readonly OutlineHeading[], cursor: number): number {
-  let low = 0;
-  let high = headings.length - 1;
-  let active = -1;
-  while (low <= high) {
-    const middle = Math.floor((low + high) / 2);
-    const heading = headings[middle];
-    if (heading === undefined) break;
-    if (heading.pos <= cursor) {
-      active = middle;
-      low = middle + 1;
-    } else {
-      high = middle - 1;
-    }
-  }
-  return active;
+  return headings.findLastIndex((heading) => heading.pos <= cursor);
 }
 
 /**
