@@ -2,6 +2,7 @@ import { isUtf8 } from "node:buffer";
 import { type BrowserWindow, dialog } from "electron";
 import iconv from "iconv-lite";
 import type { LineEnding, TextEncoding } from "@shared/desktop-api";
+import { toLf } from "@shared/text";
 import { t } from "./i18n";
 
 /**
@@ -123,7 +124,7 @@ export class LossyEncodingError extends Error {
  */
 export function normalizeText(raw: string, lineEnding: LineEnding = lineEndingOf(raw)): string {
   const stripped = raw.startsWith("\uFEFF") ? raw.slice(1) : raw;
-  return lineEnding === "crlf" ? stripped.replaceAll("\r\n", "\n") : stripped;
+  return lineEnding === "crlf" ? toLf(stripped) : stripped;
 }
 
 /** The line ending a save restores for a file that was read as `raw`. */
