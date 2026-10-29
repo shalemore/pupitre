@@ -231,6 +231,8 @@ body {
   font-size: 1rem;
   line-height: ${tokens.lineHeight};
   -webkit-font-smoothing: antialiased;
+  /* Chinese and Latin have no space character between them; the browser adds the quarter em */
+  text-autospace: normal;
 }
 
 /*

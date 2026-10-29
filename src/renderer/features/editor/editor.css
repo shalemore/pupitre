@@ -89,6 +89,8 @@
     font-family: var(--font-document);
     color: var(--ui-text-primary);
     caret-color: var(--ui-brand);
+    /* Chinese and Latin have no space character between them; the browser adds the quarter em */
+    text-autospace: normal;
     /* Room above the text and below it for the last lines to reach the middle of the window */
     padding-block: var(--md-page-padding-block);
   }
