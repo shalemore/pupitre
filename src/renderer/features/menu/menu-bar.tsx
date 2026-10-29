@@ -1,18 +1,22 @@
+import { Menubar } from "@kobalte/core/menubar";
+import { makeEventListener } from "@solid-primitives/event-listener";
+import { debounce } from "@solid-primitives/scheduled";
 import { Menu } from "lucide-solid";
-import { For, Show, type Component } from "solid-js";
+import { createSignal, For, Show, type Component } from "solid-js";
 import { TOP_MENUS, type MenuEntry, type Menus, type TopMenu } from "@shared/menu";
 import { IconButton } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
-import { MenuPopup } from "./menu-popup";
+import { MenuEntries, MenuPopup } from "./menu-popup";
 import { createMenu } from "./menu-state";
 
-interface OpenMenu {
-  menu: TopMenu;
-  entries: readonly MenuEntry[];
-  /** The button the menu hangs from, in viewport coordinates. */
-  anchor: DOMRect;
-}
+/** How long the pointer may be away from the bar and its menus before they fold up. */
+const LEAVE_DELAY = 200;
+/**
+ * A menu hands the focus back to its trigger while it closes, and the trigger opens its menu again
+ * when it takes the focus; a value that arrives this soon after a close is that hand-back.
+ */
+const CLOSE_GUARD_MS = 150;
 
 interface MenuBarProps {
   /** Told whether a menu is open, so an immersive title bar can stay unfolded under it. */
@@ -25,71 +29,116 @@ interface MenuBarProps {
  * menu opens instead of being kept in sync.
  */
 export const MenuBar: Component<MenuBarProps> = (props) => {
-  // Answers to earlier asks must not reopen a menu that was switched or closed in the meantime
+  const [open, setOpen] = createSignal<TopMenu>();
+  const [entries, setEntries] = createSignal<Partial<Record<TopMenu, readonly MenuEntry[]>>>({});
+  // Answers to earlier asks must not replace the entries of a menu opened after them
   let asked = 0;
-  const panel = createMenu<OpenMenu>({
-    onOpenChange: props.onOpenChange,
-    onClose: () => {
-      asked++;
-    },
-  });
+  // Where the focus goes back to once the menu folds; the editor held it before
+  let previousFocus: HTMLElement | undefined;
+  let closedAt = 0;
 
-  const show = async (menu: TopMenu, button: HTMLElement) => {
+  const load = async (menu: TopMenu) => {
     const request = ++asked;
     const menus: Menus = await desktop.invoke("menu:items");
     if (request !== asked) return;
-    panel.show({ menu, entries: menus[menu], anchor: button.getBoundingClientRect() });
+    setEntries((current) => ({ ...current, [menu]: menus[menu] }));
   };
 
-  // Pointing at a menu opens it, and switching to the next one moves it along; a menu closes when
-  // the pointer leaves it, so a click only has to open one that is not open yet
-  const openMenu = (menu: TopMenu, button: HTMLElement) => {
-    if (panel.open()?.menu === menu) return;
-    void show(menu, button);
+  const show = (menu: TopMenu) => {
+    if (open() === undefined) {
+      previousFocus =
+        document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
+    }
+    setOpen(menu);
+    props.onOpenChange(true);
+    void load(menu);
+  };
+
+  const hide = () => {
+    if (open() === undefined) return;
+    closedAt = performance.now();
+    setOpen(undefined);
+    props.onOpenChange(false);
+    const target = previousFocus;
+    previousFocus = undefined;
+    // The menu gives the focus back to its trigger, so the editor takes it again afterwards
+    queueMicrotask(() => target?.focus());
+  };
+
+  const change = (value: string | null | undefined) => {
+    const menu = TOP_MENUS.find((candidate) => candidate === value);
+    if (menu === undefined) hide();
+    else if (performance.now() - closedAt > CLOSE_GUARD_MS) show(menu);
+  };
+
+  // The bar and its panels fold away once the pointer is away from both; Kobalte keeps a menubar
+  // open until something is clicked, which a title bar does not.
+  const leave = debounce(() => change(undefined), LEAVE_DELAY);
+  makeEventListener(document, "pointermove", (event) => {
+    if (open() === undefined) return;
+    const target = event.target;
+    const inside =
+      target instanceof Element && target.closest('[data-menu-bar], [role="menu"]') !== null;
+    if (inside) leave.clear();
+    else leave();
+  });
+
+  // A press on the bar does not take the focus from the editor, and does not reach the menubar:
+  // pointing already opened the menu, so the press must not toggle it shut
+  const keepEditorFocus = (event: PointerEvent) => {
+    if (event.button !== 0) return;
+    event.preventDefault();
+    event.stopPropagation();
   };
 
   return (
-    <nav
+    <Menubar
+      ref={(element) => {
+        element.addEventListener("pointerdown", keepEditorFocus, true);
+      }}
       data-menu-bar
-      onPointerOver={panel.cancelLeave}
-      onPointerLeave={panel.leave}
+      value={open() ?? ""}
+      onValueChange={change}
+      // A pointer over a trigger opens its menu, which the bar reads from the value it controls
+      autoFocusMenu
       class="flex shrink-0 items-center text-xs select-none"
     >
       <For each={TOP_MENUS}>
         {(menu) => (
-          <button
-            type="button"
-            // The bar does not take the focus from the editor, so closing the menu gives typing back
-            onPointerDown={(event) => event.preventDefault()}
-            onClick={(event) => openMenu(menu, event.currentTarget)}
-            onPointerEnter={(event) => openMenu(menu, event.currentTarget)}
-            class="shrink-0 whitespace-nowrap px-2.5 py-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent aria-expanded:text-foreground aria-expanded:bg-accent transition-colors cursor-pointer"
-            aria-haspopup="menu"
-            aria-expanded={panel.open()?.menu === menu}
+          <Menubar.Menu
+            value={menu}
+            // Escape, a click beside the menu and a picked entry close it without changing the bar's
+            // value; this keeps the bar's own state with it
+            onOpenChange={(isOpen) => {
+              // Switching to another menu closes this one too, but the bar already points at the other
+              if (!isOpen && open() === menu) hide();
+            }}
           >
-            {t().menu[menu]}
-          </button>
+            <Menubar.Trigger
+              onPointerEnter={() => {
+                if (open() === undefined) show(menu);
+              }}
+              // Pointing opened it already; the click that follows must not toggle it shut
+              onClick={() => show(menu)}
+              class="shrink-0 whitespace-nowrap px-2.5 py-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent data-expanded:text-foreground data-expanded:bg-accent transition-colors cursor-pointer"
+            >
+              {t().menu[menu]}
+            </Menubar.Trigger>
+            <Menubar.Portal>
+              <Menubar.Content class="floating-panel z-50 flex min-w-52 max-h-(--kb-popper-content-available-height) flex-col overflow-y-auto overscroll-contain p-1 text-xs text-foreground outline-none select-none">
+                <MenuEntries
+                  entries={entries()[menu] ?? []}
+                  onSelect={(entry) => {
+                    hide();
+                    void desktop.invoke("menu:click", entry.id);
+                  }}
+                />
+              </Menubar.Content>
+            </Menubar.Portal>
+          </Menubar.Menu>
         )}
       </For>
-
-      {/* Keyed: another menu is another panel, with its own position, highlight and submenu */}
-      <Show when={panel.shown()} keyed>
-        {(state) => (
-          <MenuPopup
-            entries={state.entries}
-            anchor={state.anchor}
-            closing={panel.closing()}
-            onSelect={(entry) => {
-              panel.close();
-              void desktop.invoke("menu:click", entry.id);
-            }}
-            onClose={panel.close}
-            onPointerOver={panel.cancelLeave}
-            onPointerLeave={panel.leave}
-          />
-        )}
-      </Show>
-    </nav>
+    </Menubar>
   );
 };
 

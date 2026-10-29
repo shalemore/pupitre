@@ -57,7 +57,7 @@ const ItemContent: Component<{ item: MenuItemEntry; hasChecks: boolean }> = (pro
   </>
 );
 
-const MenuEntries: Component<{
+export const MenuEntries: Component<{
   entries: readonly MenuEntry[];
   onSelect: (entry: MenuItemEntry) => void;
 }> = (props) => {
