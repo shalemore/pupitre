@@ -1,4 +1,4 @@
-import { createSignal } from "solid-js";
+import { createMemo, createRoot, createSignal } from "solid-js";
 import { z } from "zod";
 import type { ImportedTheme } from "@shared/desktop-api";
 import { DEFAULT_LOCALE, LOCALE_CODES, type SupportedLocale } from "@shared/i18n";
@@ -160,15 +160,25 @@ function importedThemeInfo(theme: ImportedTheme): ThemeInfo {
   };
 }
 
-/** The built-in themes and the folders in the global and project theme folders. */
+/**
+ * The built-in themes and the folders in the global and project theme folders, merged once per
+ * change: settings read the list several times while they render, and each imported theme's CSS
+ * is scanned for its color scheme.
+ */
+const allThemes = createRoot(() =>
+  createMemo(() => {
+    const all = [...builtInThemes, ...imported().map(importedThemeInfo)];
+    return [
+      ...all.filter((theme) => theme.id === DEFAULT_THEME),
+      ...all
+        .filter((theme) => theme.id !== DEFAULT_THEME)
+        .toSorted((a, b) => a.id.localeCompare(b.id)),
+    ];
+  }),
+);
+
 export function themes(): readonly ThemeInfo[] {
-  const all = [...builtInThemes, ...imported().map(importedThemeInfo)];
-  return [
-    ...all.filter((theme) => theme.id === DEFAULT_THEME),
-    ...all
-      .filter((theme) => theme.id !== DEFAULT_THEME)
-      .toSorted((a, b) => a.id.localeCompare(b.id)),
-  ];
+  return allThemes();
 }
 
 let styleElement: HTMLStyleElement | undefined;
