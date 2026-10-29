@@ -281,6 +281,9 @@ export const enUS = {
     showWordCountDesc: "Word and character counts in the title bar",
     tabs: "Tabs",
     tabsDesc: "Open each document in its own tab; off, a document replaces the one on show",
+    hideSingleTab: "Hide the Tab Bar with One Document",
+    hideSingleTabDesc:
+      "With tabs on, keep the strip out of the title bar until a second document opens",
     bodyFont: "Font",
     fallbackFont: "Fallback Font",
     fallbackFontDesc: "For characters the main font lacks, such as CJK",

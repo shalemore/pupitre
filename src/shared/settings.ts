@@ -64,6 +64,8 @@ export const settingsSchema = z.object({
    * show, after the prompt its unsaved changes ask for.
    */
   tabs: z.boolean().catch(false),
+  /** Whether a window with tabs keeps the tab bar hidden while only one document is open. */
+  hideSingleTab: z.boolean().catch(true),
   /** Gap the document card keeps to the window edges, its title bar and its sidebars, in px. */
   immersiveGap: z
     .number()
@@ -148,7 +150,13 @@ export const WORKSPACE_FILE = ".pupitre/settings.json";
  * What belongs to the app and not to a folder: both are read before any folder is open, or have
  * nothing to do with one. Every other setting can be given a value of its own for a folder.
  */
-const APP_KEYS: readonly SettingKey[] = ["startup", "autoCheckUpdates", "sourceMode", "tabs"];
+const APP_KEYS: readonly SettingKey[] = [
+  "startup",
+  "autoCheckUpdates",
+  "sourceMode",
+  "tabs",
+  "hideSingleTab",
+];
 
 export function isWorkspaceKey(key: string): boolean {
   return !APP_KEYS.some((appKey) => appKey === key);

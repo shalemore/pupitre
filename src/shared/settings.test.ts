@@ -92,6 +92,7 @@ describe("helpers", () => {
     expect(isWorkspaceKey("autoCheckUpdates")).toBe(false);
     expect(isWorkspaceKey("sourceMode")).toBe(false);
     expect(isWorkspaceKey("tabs")).toBe(false);
+    expect(isWorkspaceKey("hideSingleTab")).toBe(false);
     expect(isWorkspaceKey("fontSize")).toBe(true);
   });
 

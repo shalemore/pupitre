@@ -268,6 +268,8 @@ export const viVN = {
     tabs: "Thẻ",
     tabsDesc:
       "Mở mỗi tài liệu trong thẻ riêng; khi tắt, tài liệu mới thay thế tài liệu đang hiển thị",
+    hideSingleTab: "Ẩn thanh thẻ khi chỉ có một tài liệu",
+    hideSingleTabDesc: "Khi bật thẻ, giữ thanh ngoài thanh tiêu đề cho đến khi mở tài liệu thứ hai",
     bodyFont: "Phông chữ",
     fallbackFont: "Phông dự phòng",
     fallbackFontDesc: "Dùng cho ký tự không có trong phông chính, ví dụ CJK",

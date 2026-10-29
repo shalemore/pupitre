@@ -275,6 +275,9 @@ export const fiFI = {
     tabs: "Välilehdet",
     tabsDesc:
       "Avaa jokainen asiakirja omalle välilehdelleen; pois päältä uusi asiakirja korvaa näytetyn",
+    hideSingleTab: "Piilota välilehtipalkki yhdellä asiakirjalla",
+    hideSingleTabDesc:
+      "Kun välilehdet ovat käytössä, pidä palkki poissa otsikkoriviltä, kunnes toinen asiakirja avataan",
     bodyFont: "Kirjasin",
     fallbackFont: "Varakirjasin",
     fallbackFontDesc: "Merkkeihin, jotka pääkirjasimesta puuttuvat, esimerkiksi CJK",

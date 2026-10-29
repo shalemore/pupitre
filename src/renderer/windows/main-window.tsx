@@ -135,10 +135,12 @@ export const MainWindow: Component = () => {
   // A menu or the rename field in the start sidebar keeps that sidebar (and the chrome) open
   const [startSidebarHeld, setStartSidebarHeld] = createSignal(false);
   const immersive = () => settings().windowStyle === "immersive";
-  // One document is named by the title bar itself, so only several need a strip of their own. With
-  // tabs off there is never more than one except while the setting is being turned off with several
-  // documents open, and a strip keeps those reachable until they are closed
-  const manyTabs = () => session.tabs().length > 1;
+  // The strip takes the title bar's place with several documents, and with one when the user asks
+  // for it. With tabs off it only appears while documents are left over from turning the setting
+  // off, so they stay reachable until they are closed
+  const tabBarShown = () =>
+    session.tabs().length > 1 ||
+    (settings().tabs && !settings().hideSingleTab && session.tabs().length === 1);
   // Split, the folder has its own sidebar at the start edge and the outline one at the end edge; combined, one sidebar shows either
   const split = () => settings().sidebarLayout === "split";
   // A sidebar keeps the width the user dragged it to in an earlier run
@@ -610,7 +612,7 @@ export const MainWindow: Component = () => {
         )}
       >
         <Show
-          when={manyTabs()}
+          when={tabBarShown()}
           fallback={
             // Equal side columns keep the document name in the middle of the bar, whatever the
             // menus and the count take
@@ -662,7 +664,7 @@ export const MainWindow: Component = () => {
           />
         </Show>
 
-        <Show when={manyTabs()}>{wordCount()}</Show>
+        <Show when={tabBarShown()}>{wordCount()}</Show>
       </TitleBar>
 
       <div

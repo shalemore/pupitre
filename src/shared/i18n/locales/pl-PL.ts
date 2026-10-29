@@ -282,6 +282,9 @@ export const plPL = {
     tabs: "Karty",
     tabsDesc:
       "Otwieraj każdy dokument na osobnej karcie; po wyłączeniu nowy dokument zastępuje wyświetlany",
+    hideSingleTab: "Ukryj pasek kart przy jednym dokumencie",
+    hideSingleTabDesc:
+      "Przy włączonych kartach pasek pozostaje poza paskiem tytułu, dopóki nie otworzy się drugi dokument",
     bodyFont: "Czcionka",
     fallbackFont: "Czcionka zapasowa",
     fallbackFontDesc: "Dla znaków, których brakuje w głównej czcionce, np. CJK",

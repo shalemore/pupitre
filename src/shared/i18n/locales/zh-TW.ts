@@ -271,6 +271,8 @@ export const zhTW = {
     showWordCountDesc: "在標題列顯示字數和字元數",
     tabs: "分頁",
     tabsDesc: "每個檔案在各自的分頁中開啟；關閉時，新檔案會取代目前顯示的檔案",
+    hideSingleTab: "只有一個文件時隱藏分頁列",
+    hideSingleTabDesc: "開啟分頁後，在開啟第二個文件前不顯示分頁列",
     bodyFont: "內文字型",
     fallbackFont: "後備字型",
     fallbackFontDesc: "內文字型缺字時使用，例如中日韓文字",

@@ -273,6 +273,9 @@ export const frFR = {
     tabs: "Onglets",
     tabsDesc:
       "Ouvrir chaque document dans son propre onglet ; désactivé, un nouveau document remplace celui affiché",
+    hideSingleTab: "Masquer la barre d'onglets avec un seul document",
+    hideSingleTabDesc:
+      "Onglets activés : garder la barre hors de la barre de titre jusqu'à l'ouverture d'un deuxième document",
     bodyFont: "Police",
     fallbackFont: "Police de secours",
     fallbackFontDesc: "Pour les caractères absents de la police principale, comme le CJK",

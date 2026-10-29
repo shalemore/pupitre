@@ -277,6 +277,9 @@ export const svSE = {
     tabs: "Flikar",
     tabsDesc:
       "Öppna varje dokument i sin egen flik; avstängt ersätter ett nytt dokument det visade",
+    hideSingleTab: "Dölj flikraden med ett dokument",
+    hideSingleTabDesc:
+      "Med flikar på hålls raden utanför titelraden tills ett andra dokument öppnas",
     bodyFont: "Teckensnitt",
     fallbackFont: "Reservteckensnitt",
     fallbackFontDesc: "För tecken som huvudteckensnittet saknar, till exempel CJK",

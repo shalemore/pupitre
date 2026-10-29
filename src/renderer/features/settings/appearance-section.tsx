@@ -226,6 +226,20 @@ export const AppearanceSection: Component = () => (
           aria-label={t().settings.tabs}
         />
       </SettingField>
+      <Show when={settings().tabs}>
+        <SettingField
+          nested
+          name="hideSingleTab"
+          title={t().settings.hideSingleTab}
+          description={t().settings.hideSingleTabDesc}
+        >
+          <Switch
+            checked={settings().hideSingleTab}
+            onChange={(hideSingleTab) => void updateSettings({ hideSingleTab })}
+            aria-label={t().settings.hideSingleTab}
+          />
+        </SettingField>
+      </Show>
     </SettingGroup>
 
     <SettingGroup>

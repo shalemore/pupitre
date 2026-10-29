@@ -277,6 +277,9 @@ export const trTR = {
     tabs: "Sekmeler",
     tabsDesc:
       "Her belgeyi kendi sekmesinde aç; kapalıyken yeni belge görüntülenen belgenin yerini alır",
+    hideSingleTab: "Tek belgede sekme çubuğunu gizle",
+    hideSingleTabDesc:
+      "Sekmeler açıkken, ikinci bir belge açılana kadar çubuğu başlık çubuğunun dışında tut",
     bodyFont: "Yazı Tipi",
     fallbackFont: "Yedek Yazı Tipi",
     fallbackFontDesc: "Ana yazı tipinde olmayan karakterler için, örneğin CJK",

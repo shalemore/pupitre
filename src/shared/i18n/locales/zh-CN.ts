@@ -271,6 +271,8 @@ export const zhCN = {
     showWordCountDesc: "在标题栏显示字数和字符数",
     tabs: "标签页",
     tabsDesc: "每个文档在各自的标签页中打开；关闭时，新文档会替换当前文档",
+    hideSingleTab: "只有一个文档时隐藏标签栏",
+    hideSingleTabDesc: "开启标签页后，在打开第二个文档前不显示标签栏",
     bodyFont: "正文字体",
     fallbackFont: "后备字体",
     fallbackFontDesc: "正文字体缺字时使用，例如中日韩文字",

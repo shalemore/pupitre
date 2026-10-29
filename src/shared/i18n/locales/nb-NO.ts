@@ -277,6 +277,9 @@ export const nbNO = {
     tabs: "Faner",
     tabsDesc:
       "Åpne hvert dokument i sin egen fane; når det er av, erstatter et nytt dokument det viste",
+    hideSingleTab: "Skjul fanelinjen med ett dokument",
+    hideSingleTabDesc:
+      "Med faner på holdes linjen utenfor tittellinjen til et andre dokument åpnes",
     bodyFont: "Skrifttype",
     fallbackFont: "Reserveskrifttype",
     fallbackFontDesc: "For tegn hovedskrifttypen mangler, for eksempel CJK",

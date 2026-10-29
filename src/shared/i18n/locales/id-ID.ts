@@ -270,6 +270,8 @@ export const idID = {
     tabs: "Tab",
     tabsDesc:
       "Buka setiap dokumen di tabnya sendiri; saat nonaktif, dokumen baru menggantikan dokumen yang ditampilkan",
+    hideSingleTab: "Sembunyikan bilah tab dengan satu dokumen",
+    hideSingleTabDesc: "Saat tab aktif, jauhkan bilah dari bilah judul sampai dokumen kedua dibuka",
     bodyFont: "Font",
     fallbackFont: "Font cadangan",
     fallbackFontDesc: "Untuk karakter yang tidak ada di font utama, misalnya CJK",

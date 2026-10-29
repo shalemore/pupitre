@@ -279,6 +279,9 @@ export const nlNL = {
     tabs: "Tabbladen",
     tabsDesc:
       "Open elk document in een eigen tabblad; uit, vervangt een nieuw document het getoonde",
+    hideSingleTab: "Tabbladen verbergen bij één document",
+    hideSingleTabDesc:
+      "Met tabbladen aan blijft de strook uit de titelbalk tot een tweede document opent",
     bodyFont: "Lettertype",
     fallbackFont: "Terugvallettertype",
     fallbackFontDesc: "Voor tekens die het hoofdlettertype mist, zoals CJK",

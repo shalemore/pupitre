@@ -279,6 +279,9 @@ export const huHU = {
     tabs: "Lapok",
     tabsDesc:
       "Minden dokumentum saját lapon nyílik meg; kikapcsolva az új dokumentum lecseréli a megjelenítettet",
+    hideSingleTab: "Lapsáv elrejtése egy dokumentumnál",
+    hideSingleTabDesc:
+      "Bekapcsolt lapoknál a sáv a címsorban marad rejtve, amíg meg nem nyílik egy második dokumentum",
     bodyFont: "Betűtípus",
     fallbackFont: "Tartalék betűtípus",
     fallbackFontDesc: "A fő betűtípusból hiányzó karakterekhez, például CJK",

@@ -277,6 +277,9 @@ export const daDK = {
     tabs: "Faner",
     tabsDesc:
       "Åbn hvert dokument i sin egen fane; når det er slået fra, erstatter et nyt dokument det viste",
+    hideSingleTab: "Skjul fanelinjen ved ét dokument",
+    hideSingleTabDesc:
+      "Med faner slået til holdes linjen ude af titellinjen, indtil et andet dokument åbnes",
     bodyFont: "Skrifttype",
     fallbackFont: "Reserveskrifttype",
     fallbackFontDesc: "Til tegn, som hovedskrifttypen mangler, fx CJK",

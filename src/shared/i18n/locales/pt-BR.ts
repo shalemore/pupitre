@@ -273,6 +273,9 @@ export const ptBR = {
     tabs: "Abas",
     tabsDesc:
       "Abrir cada documento em sua própria aba; desativado, um novo documento substitui o exibido",
+    hideSingleTab: "Ocultar a barra de abas com um documento",
+    hideSingleTabDesc:
+      "Com as abas ativadas, manter a barra fora da barra de título até um segundo documento ser aberto",
     bodyFont: "Fonte",
     fallbackFont: "Fonte alternativa",
     fallbackFontDesc: "Para caracteres ausentes na fonte principal, como CJK",

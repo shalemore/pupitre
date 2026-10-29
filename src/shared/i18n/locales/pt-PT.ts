@@ -272,6 +272,9 @@ export const ptPT = {
     tabs: "Separadores",
     tabsDesc:
       "Abrir cada documento no seu próprio separador; desativado, um novo documento substitui o apresentado",
+    hideSingleTab: "Ocultar a barra de separadores com um documento",
+    hideSingleTabDesc:
+      "Com os separadores ativos, manter a barra fora da barra de título até ser aberto um segundo documento",
     bodyFont: "Tipo de letra",
     fallbackFont: "Tipo de letra de reserva",
     fallbackFontDesc: "Para caracteres que o tipo de letra principal não tem, como CJK",

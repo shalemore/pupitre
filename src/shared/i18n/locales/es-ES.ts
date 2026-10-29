@@ -274,6 +274,9 @@ export const esES = {
     tabs: "Pestañas",
     tabsDesc:
       "Abrir cada documento en su propia pestaña; desactivado, un documento nuevo sustituye al que se muestra",
+    hideSingleTab: "Ocultar las pestañas con un solo documento",
+    hideSingleTabDesc:
+      "Con las pestañas activadas, mantener la barra fuera de la barra de título hasta que se abra un segundo documento",
     bodyFont: "Fuente",
     fallbackFont: "Fuente alternativa",
     fallbackFontDesc: "Para caracteres que faltan en la fuente principal, como CJK",

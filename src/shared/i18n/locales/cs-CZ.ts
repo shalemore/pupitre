@@ -280,6 +280,9 @@ export const csCZ = {
     tabs: "Karty",
     tabsDesc:
       "Otevírat každý dokument na vlastní kartě; při vypnutí nový dokument nahradí zobrazený",
+    hideSingleTab: "Skrýt karty při jednom dokumentu",
+    hideSingleTabDesc:
+      "Při zapnutých kartách skrýt pruh ze záhlaví, dokud se neotevře druhý dokument",
     bodyFont: "Písmo",
     fallbackFont: "Záložní písmo",
     fallbackFontDesc: "Pro znaky, které hlavní písmo neobsahuje, například CJK",

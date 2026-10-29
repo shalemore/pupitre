@@ -277,6 +277,9 @@ export const deDE = {
     tabs: "Tabs",
     tabsDesc:
       "Jedes Dokument in einem eigenen Tab öffnen; aus, ersetzt ein neues Dokument das angezeigte",
+    hideSingleTab: "Tableiste bei einem Dokument ausblenden",
+    hideSingleTabDesc:
+      "Bei aktiven Tabs die Leiste aus der Titelleiste heraushalten, bis ein zweites Dokument geöffnet wird",
     bodyFont: "Schriftart",
     fallbackFont: "Ersatzschrift",
     fallbackFontDesc: "Für Zeichen, die der Hauptschrift fehlen, z. B. CJK",

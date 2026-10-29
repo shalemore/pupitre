@@ -279,6 +279,9 @@ export const isIS = {
     tabs: "Flipar",
     tabsDesc:
       "Opna hvert skjal í sínum eigin flipa; þegar slökkt er kemur nýtt skjal í stað þess sem sýnt er",
+    hideSingleTab: "Fela flipalistann þegar eitt skjal er opið",
+    hideSingleTabDesc:
+      "Með flipa virka heldur listinn sér utan titilstikunnar þar til annað skjal er opnað",
     bodyFont: "Leturgerð",
     fallbackFont: "Varaleturgerð",
     fallbackFontDesc: "Fyrir stafi sem aðal-leturgerðin skortir, t.d. CJK",

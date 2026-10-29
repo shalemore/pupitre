@@ -273,6 +273,9 @@ export const jaJP = {
     tabs: "タブ",
     tabsDesc:
       "各ドキュメントを個別のタブで開きます。オフのときは、新しく開いたドキュメントが表示中のものを置き換えます",
+    hideSingleTab: "1つのドキュメントでタブバーを隠す",
+    hideSingleTabDesc:
+      "タブを有効にしたとき、2つ目のドキュメントを開くまでタブバーをタイトルバーから隠します",
     bodyFont: "フォント",
     fallbackFont: "代替フォント",
     fallbackFontDesc: "メインフォントにない文字（CJK など）に使用",

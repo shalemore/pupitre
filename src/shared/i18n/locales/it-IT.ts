@@ -274,6 +274,9 @@ export const itIT = {
     tabs: "Schede",
     tabsDesc:
       "Apri ogni documento nella propria scheda; disattivato, un nuovo documento sostituisce quello mostrato",
+    hideSingleTab: "Nascondi la barra delle schede con un solo documento",
+    hideSingleTabDesc:
+      "Con le schede attive, tieni la barra fuori dalla barra del titolo finché non si apre un secondo documento",
     bodyFont: "Carattere",
     fallbackFont: "Carattere di riserva",
     fallbackFontDesc: "Per i caratteri mancanti, come il CJK",
