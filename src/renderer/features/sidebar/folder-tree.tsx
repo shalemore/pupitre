@@ -4,6 +4,7 @@ import {
   createEffect,
   createMemo,
   createResource,
+  createSelector,
   createSignal,
   For,
   on,
@@ -24,7 +25,8 @@ import { excerptOf } from "@/lib/markdown-excerpt";
 import { settings } from "@/lib/settings";
 
 interface TreeContext {
-  activePath: () => string | undefined;
+  /** Whether the row at `path` is the document shown in the editor. */
+  isActive: (path: string) => boolean;
   /** Why opening a file failed, by path. */
   failures: () => Readonly<Record<string, string>>;
   onOpenFile: (path: string) => void;
@@ -159,7 +161,7 @@ const FolderRow: Component<{
 }> = (props) => {
   const expanded = () => props.tree.isExpanded(props.entry.path);
   const failure = () => props.tree.failures()[props.entry.path];
-  const isActive = () => props.tree.activePath() === props.entry.path;
+  const isActive = () => props.tree.isActive(props.entry.path);
   const isDirectory = () => props.entry.kind === "directory";
   const excerpt = createMemo(
     () => excerptOf(props.previews()?.[props.entry.path] ?? "") || undefined,
@@ -267,6 +269,8 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
   );
   const pinnedPaths = createMemo(() => new Set((pins() ?? []).map((entry) => entry.path)));
   const pinnedEntries = () => pins() ?? [];
+  // Each row subscribes to its own boolean, so opening another document touches two rows, not the tree
+  const rowIsActive = createSelector(() => props.activePath);
   // The rename field lives in the sidebar too: folding it away under the field would drop the name
   // being typed and cancel the rename
   const heldOpen = () => menu() !== undefined || renaming() !== undefined;
@@ -416,7 +420,7 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
   const closeMenu = () => setMenu(undefined);
 
   const tree: TreeContext = {
-    activePath: () => props.activePath,
+    isActive: (path) => rowIsActive(path),
     failures,
     onOpenFile: (path) => void openFile(path),
     isExpanded: (path) => expanded().has(path),
