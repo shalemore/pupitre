@@ -444,11 +444,25 @@
   }
 
   .scroll-fade {
+    /*
+     * The edge fades along a curve rather than a straight ramp: opacity is read non-linearly, so a
+     * two-stop gradient leaves a visible edge where the fade begins.
+     */
     mask-image: linear-gradient(
       to bottom,
       transparent,
+      rgb(0 0 0 / 5%) calc(var(--scroll-fade-top) * 0.15),
+      rgb(0 0 0 / 18%) calc(var(--scroll-fade-top) * 0.32),
+      rgb(0 0 0 / 38%) calc(var(--scroll-fade-top) * 0.5),
+      rgb(0 0 0 / 64%) calc(var(--scroll-fade-top) * 0.68),
+      rgb(0 0 0 / 88%) calc(var(--scroll-fade-top) * 0.85),
       black var(--scroll-fade-top),
       black calc(100% - var(--scroll-fade-bottom)),
+      rgb(0 0 0 / 88%) calc(100% - var(--scroll-fade-bottom) * 0.85),
+      rgb(0 0 0 / 64%) calc(100% - var(--scroll-fade-bottom) * 0.68),
+      rgb(0 0 0 / 38%) calc(100% - var(--scroll-fade-bottom) * 0.5),
+      rgb(0 0 0 / 18%) calc(100% - var(--scroll-fade-bottom) * 0.32),
+      rgb(0 0 0 / 5%) calc(100% - var(--scroll-fade-bottom) * 0.15),
       transparent
     );
     transition-property: --scroll-fade-top, --scroll-fade-bottom;
