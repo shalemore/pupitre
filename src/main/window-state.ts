@@ -6,28 +6,17 @@ import { createDebouncedTask } from "./debounced-task";
 import { readJsonFile, writeJsonFile } from "./json-file";
 
 const WINDOW_STATE_FILE = "window-state.json";
-// Moving or resizing a window fires a dozen events a second; only where it settles is worth writing
+// Moving or resizing the sidebar fires a dozen events a second; only where it settles is worth writing
 const WRITE_DELAY = 400;
 
-const boundsSchema = z.strictObject({
-  x: z.number(),
-  y: z.number(),
-  width: z.number(),
-  height: z.number(),
-});
-
 /**
- * What the main window remembers between runs. A run can end before anything is known about it, so
- * each part is optional; the state file never holds a part the app has not observed.
+ * What the main window remembers itself. Electron keeps the bounds and the display mode of the
+ * window named "main"; the sidebar widths are the app's own. Parsing is lenient, so a file an older
+ * version wrote with bounds in it still gives back its sidebars.
  */
-const windowStateSchema = z.strictObject({
-  bounds: boundsSchema.optional(),
-  maximized: z.boolean().default(false),
-  fullscreen: z.boolean().default(false),
+const windowStateSchema = z.object({
   sidebar: z.strictObject({ start: z.number(), end: z.number() }).optional(),
 });
-
-export type WindowBounds = z.infer<typeof boundsSchema>;
 
 export type WindowState = z.infer<typeof windowStateSchema>;
 
