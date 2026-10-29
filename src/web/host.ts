@@ -40,6 +40,7 @@ import {
   settingsFileSchema,
   withoutSetting,
 } from "@shared/settings";
+import { toLf } from "@shared/text";
 import about from "./demo/about.md?raw";
 import { showUnsavedDialog } from "./unsaved-dialog";
 
@@ -211,7 +212,7 @@ function opened(path: string): OpenedDocument {
     folder,
     baseUrl: siteUrl,
     // The editor works on LF; the desktop host normalizes a file the same way before handing it over
-    content: (files.get(path) ?? "").replaceAll(/\r\n?/g, "\n"),
+    content: toLf(files.get(path) ?? ""),
     lineEnding: "lf",
     // A browser hands over text that is already decoded, so the demo writes UTF-8
     encoding: "utf-8",
