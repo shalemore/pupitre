@@ -104,6 +104,8 @@ async function render(pagePath: string, documentWidth: number): Promise<Buffer> 
     webPreferences: {
       sandbox: true,
       contextIsolation: true,
+      // The export zoom is the app's own; an automatic mode would write it into the origin's zoom
+      zoomMode: "manual",
       // A window that is not on screen has its renderer paced down, and a page that is paced down
       // paints late: the capture would then still show the frame from before the resize
       backgroundThrottling: false,

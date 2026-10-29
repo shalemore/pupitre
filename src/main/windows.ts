@@ -118,6 +118,9 @@ function createWindow(view: View, options: BrowserWindowConstructorOptions): Bro
       sandbox: true,
       contextIsolation: true,
       spellcheck: true,
+      // The zoom setting belongs to the document window, which applies it itself; an automatic mode
+      // would zoom every window of the same origin together, settings included
+      zoomMode: view === "main" ? "manual" : "disabled",
       // The dev server page is http://, which Chromium forbids to load the file:// images that sit
       // next to a document. The packaged app loads from file:// and keeps the protection.
       webSecurity: app.isPackaged,
