@@ -5,6 +5,7 @@ import {
   createEffect,
   createMemo,
   createResource,
+  createRoot,
   createSelector,
   createSignal,
   For,
@@ -20,7 +21,7 @@ import type { MenuEntry } from "@shared/menu";
 import { isInsideFolder, relativeToFolder } from "@shared/paths";
 import { ListItem, rowIndent } from "@/components/ui";
 import { MenuEntries } from "@/features/menu/menu-popup";
-import { t } from "@/i18n";
+import { currentLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { reportFailure } from "@/lib/errors";
 import { excerptOf } from "@/lib/markdown-excerpt";
@@ -31,6 +32,13 @@ interface RowMenu {
   entries: readonly MenuEntry[];
   actions: ReadonlyMap<string, () => void>;
 }
+
+/** The date and time under a file row, written the way the interface language writes them. */
+const dateFormat = createRoot(() =>
+  createMemo(
+    () => new Intl.DateTimeFormat(currentLocale(), { dateStyle: "medium", timeStyle: "short" }),
+  ),
+);
 
 interface TreeContext {
   /** Whether the row at `path` is the document shown in the editor. */
@@ -176,6 +184,12 @@ const FolderRow: Component<{
   const excerpt = createMemo(
     () => excerptOf(props.previews()?.[props.entry.path] ?? "") || undefined,
   );
+  // The folder order that reads a time also shows it under the file, so the order has a reason on screen
+  const date = createMemo(() => {
+    const time = props.entry.time;
+    if (time === undefined || isDirectory() || settings().folderSort === "name") return undefined;
+    return dateFormat().format(time);
+  });
 
   return (
     <>
@@ -197,7 +211,7 @@ const FolderRow: Component<{
               onContextMenu={(event) => event.stopPropagation()}
               style={rowIndent(props.depth, 6)}
               title={failure() ?? props.entry.name}
-              class={cn(excerpt() && "items-start")}
+              class={cn((excerpt() || date()) && "items-start")}
             >
               <Show when={isDirectory()} fallback={<span class="size-3 shrink-0" />}>
                 <ChevronRight
@@ -212,18 +226,31 @@ const FolderRow: Component<{
                 fallback={
                   <Show
                     when={failure()}
-                    fallback={<FileText class={cn("size-3.5 shrink-0", excerpt() && "mt-0.5")} />}
+                    fallback={
+                      <FileText
+                        class={cn("size-3.5 shrink-0", (excerpt() || date()) && "mt-0.5")}
+                      />
+                    }
                   >
-                    <CircleAlert class={cn("size-3.5 shrink-0", excerpt() && "mt-0.5")} />
+                    <CircleAlert
+                      class={cn("size-3.5 shrink-0", (excerpt() || date()) && "mt-0.5")}
+                    />
                   </Show>
                 }
               >
                 <Folder class="size-3.5 shrink-0" />
               </Show>
-              <span class={cn("min-w-0", excerpt() ? "flex-1" : "truncate")}>
+              <span class={cn("min-w-0", excerpt() || date() ? "flex-1" : "truncate")}>
                 <span class="block truncate">
                   <bdi dir="ltr">{props.entry.name}</bdi>
                 </span>
+                <Show when={date()}>
+                  {(label) => (
+                    <span class="block text-2xs font-normal text-tertiary tabular-nums">
+                      {label()}
+                    </span>
+                  )}
+                </Show>
                 <Show when={excerpt()}>
                   {/* Isolated, so an excerpt in another script never turns the row around */}
                   <bdi

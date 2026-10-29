@@ -242,10 +242,17 @@ async function listFolder(path: string): Promise<FolderEntry[]> {
     sort === "name"
       ? undefined
       : await Promise.all(entries.map((entry) => limit(() => entryTime(entry.path, sort))));
-  return entries
-    .map((entry, index) => ({ entry, time: times?.[index] ?? UNTIMED }))
-    .toSorted(compareFolderEntries)
-    .map(({ entry }) => entry);
+  return (
+    entries
+      .map((entry, index) => ({ entry, time: times?.[index] ?? UNTIMED }))
+      .toSorted(compareFolderEntries)
+      // The time the order reads goes with the entry, so the row can show the date it was ordered by
+      .map(({ entry, time }) => {
+        if (sort === "name" || time === UNTIMED) return entry;
+        entry.time = time;
+        return entry;
+      })
+  );
 }
 
 /** Windows whose page layout has been warmed up, see the export handler. */

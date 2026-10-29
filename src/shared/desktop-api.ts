@@ -122,6 +122,11 @@ export interface FolderEntry {
   name: string;
   path: string;
   kind: "directory" | "file";
+  /**
+   * When the entry was modified or created, whichever the folder order reads. Absent when the
+   * folder is ordered by name, or when the system would not say.
+   */
+  time?: number;
 }
 
 /** A file or folder pinned to the top of the sidebar, with where it sits under the folder root. */

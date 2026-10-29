@@ -236,7 +236,11 @@ function listFolder(path: string): FolderEntry[] {
   return [...entries.values()]
     .map((entry) => ({ entry, time: sort === "name" ? UNTIMED : timeOf(entry, sort) }))
     .toSorted(compareFolderEntries)
-    .map(({ entry }) => entry);
+    .map(({ entry, time }) => {
+      if (sort === "name" || time === UNTIMED) return entry;
+      entry.time = time;
+      return entry;
+    });
 }
 
 /** The time the demo last wrote an entry, or its newest child for a folder. */
