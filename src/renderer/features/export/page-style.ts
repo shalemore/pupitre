@@ -263,13 +263,13 @@ h4,
 h5,
 h6 {
   margin-block: 1.7em 0.55em;
-  font-weight: 650;
-  line-height: 1.25;
+  font-weight: var(--md-heading-weight, 650);
+  line-height: var(--md-heading-line-height, 1.25);
 }
 
 h1 {
   font-size: 2.05em;
-  font-weight: 700;
+  font-weight: var(--md-heading-weight, 650);
   letter-spacing: -0.01em;
 }
 
@@ -308,7 +308,7 @@ a:hover {
 
 strong,
 b {
-  font-weight: 650;
+  font-weight: var(--md-strong-weight, 650);
 }
 
 del,
@@ -318,8 +318,8 @@ s {
 
 mark {
   padding: 0.05em 0.2em;
-  border-radius: 3px;
-  background: color-mix(in oklab, var(--accent) 24%, transparent);
+  border-radius: var(--radius-xs);
+  background: var(--md-highlight, color-mix(in oklab, var(--accent) 24%, transparent));
   color: inherit;
 }
 
@@ -327,7 +327,7 @@ kbd {
   padding: 0.1em 0.4em;
   border: 1px solid var(--hairline-strong);
   border-block-end-width: 2px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   background: var(--card);
   font-family: var(--code-font);
   font-size: 0.85em;
@@ -414,7 +414,7 @@ li.md-task input {
   margin-inline-end: 0.45em;
   vertical-align: -0.1em;
   border: 1px solid var(--hairline-strong);
-  border-radius: 3px;
+  border-radius: var(--radius-xs);
 }
 
 li.md-task input:checked {
@@ -463,7 +463,7 @@ ${ALERT_TYPES.map(
 p.md-alert-title {
   margin-block-end: 0.5em;
   color: var(--alert-color);
-  font-weight: 650;
+  font-weight: var(--md-strong-weight, 650);
 }
 
 p.md-alert-title::before {
@@ -508,14 +508,14 @@ code {
 
 :not(pre) > code {
   padding: 0.12em 0.32em;
-  border-radius: 4px;
+  border-radius: var(--md-code-radius, var(--radius-xs));
   background: var(--wash);
 }
 
 pre {
   padding: 0.9em 1.1em;
   border: 1px solid var(--hairline);
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   background: var(--card);
   font-size: 0.9em;
   line-height: 1.55;
@@ -555,7 +555,7 @@ td {
 thead th {
   border-block-end: 1.5px solid var(--accent-line);
   background: var(--card);
-  font-weight: 650;
+  font-weight: var(--md-table-heading-weight, 650);
 }
 
 /* Math and diagrams; MathJax draws its glyphs in currentColor, so they follow the text color */
@@ -603,13 +603,13 @@ mjx-container[display="true"] {
 details {
   padding-inline: 1em;
   border: 1px solid var(--hairline);
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
 }
 
 summary {
   padding-block: 0.5em;
   cursor: pointer;
-  font-weight: 650;
+  font-weight: var(--md-strong-weight, 650);
 }
 
 details[open] > summary {
@@ -660,7 +660,7 @@ sup.md-footnote-ref a {
 }
 
 .md-footnotes li:target {
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background: var(--wash);
 }
 
