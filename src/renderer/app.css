@@ -586,15 +586,8 @@
  * layer, where their selectors outweigh the `flex` and `shrink-0` classes on those parts.
  */
 @layer utilities {
-  .app-title-bar[data-compact~="count"] [data-bar-part="count"],
-  .app-title-bar[data-compact~="name"] [data-bar-part="name"] {
+  .app-title-bar[data-compact~="count"] [data-bar-part="count"] {
     display: none;
-  }
-
-  .app-title-bar[data-compact~="name"] [data-menu-bar] {
-    min-width: 0;
-    flex-shrink: 1;
-    overflow: hidden;
   }
 
   /*

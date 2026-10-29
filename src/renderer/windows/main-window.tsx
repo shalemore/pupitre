@@ -16,6 +16,7 @@ import {
 import { IMAGE_FILE, type AppCommand } from "@shared/desktop-api";
 import { messageOf } from "@shared/errors";
 import { isInsideFolder } from "@shared/paths";
+import { AppMark } from "@/components/app-mark";
 import { TitleBar } from "@/components/title-bar";
 import { IconButton } from "@/components/ui";
 import { CommandPalette } from "@/features/command-palette/command-palette";
@@ -656,12 +657,7 @@ export const MainWindow: Component = () => {
               class="flex-1 min-w-0 grid grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] items-center gap-2"
             >
               <div class="flex min-w-0 items-center gap-2 overflow-hidden">
-                <div data-bar-part="name" class="flex items-center gap-2 me-1 pointer-events-none">
-                  <img src="./logo.svg" alt="" class="rounded-sm shadow-sm size-4" />
-                  <span class="font-semibold text-muted-foreground tracking-wide">
-                    {t().common.appName}
-                  </span>
-                </div>
+                <AppMark class="text-muted-foreground" />
                 <Show when={!isMacOS}>
                   <MenuBar onOpenChange={setMenuOpen} />
                 </Show>

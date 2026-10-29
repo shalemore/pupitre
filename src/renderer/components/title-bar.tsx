@@ -5,10 +5,10 @@ import { CaptionButtons } from "./caption-buttons";
 
 /**
  * What the title bar gives up as it narrows, most disposable first. The windows mark those parts
- * with data-bar-part; the menu bar and the document name stay, the name truncating and the menu
+ * with data-bar-part; the document name and the menu bar stay, the name truncating and the menu
  * clipping only when there is nothing left to hide.
  */
-const GIVE_WAY = ["count", "name"];
+const GIVE_WAY = ["count"];
 
 /**
  * The window title bar. It is draggable as a whole and leaves room for the native caption buttons

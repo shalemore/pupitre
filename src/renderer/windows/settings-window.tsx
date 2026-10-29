@@ -2,6 +2,7 @@ import { makeEventListener } from "@solid-primitives/event-listener";
 import { cn } from "cn";
 import { FileCode2, FolderOpen, Info, Palette, Printer, Settings2, Type } from "lucide-solid";
 import { createEffect, onMount, Show, type Component } from "solid-js";
+import { AppMark } from "@/components/app-mark";
 import { TitleBar } from "@/components/title-bar";
 import {
   IconButton,
@@ -45,7 +46,7 @@ export const SettingsWindow: Component = () => {
       )}
     >
       <TitleBar class={cn(!immersive() && "border-b border-border")}>
-        <img src="./logo.svg" alt="" class="rounded-sm shadow-sm size-4" />
+        <AppMark class="text-muted-foreground" />
         <span class="font-semibold text-foreground tracking-wide">{t().settings.title}</span>
       </TitleBar>
 
