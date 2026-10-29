@@ -42,7 +42,7 @@ function readTokens() {
     caution: hex("--alert-caution", raw("--ui-danger")),
     bodyFont: raw("--pref-font-family") || raw("--font-document") || "system-ui, sans-serif",
     codeFont: raw("--pref-code-font") || raw("--font-mono") || "ui-monospace, monospace",
-    fontSize: raw("--pref-font-size") || "16px",
+    fontSize: raw("--pref-font-size") || "14px",
     lineHeight: raw("--pref-line-height") || "1.7",
     contentWidth: raw("--pref-content-width") || "52rem",
     /** The code colors, under the names the highlighter reads them by (code-highlight.ts). */

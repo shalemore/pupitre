@@ -48,7 +48,11 @@ describe("patchSettingsFile", () => {
   });
 
   it("removes an entry set back to the value without one", () => {
-    const file = patchSettingsFile({ fontSize: 18 }, { fontSize: 16 }, DEFAULT_SETTINGS);
+    const file = patchSettingsFile(
+      { fontSize: 18 },
+      { fontSize: DEFAULT_SETTINGS.fontSize },
+      DEFAULT_SETTINGS,
+    );
     expect(file).toEqual({});
   });
 

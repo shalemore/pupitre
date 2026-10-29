@@ -102,7 +102,7 @@ export const settingsSchema = z.object({
   bodyFont: z.string().catch(""),
   fallbackFont: z.string().catch(""),
   codeFont: z.string().catch(""),
-  fontSize: z.number().min(SETTING_RANGES.fontSize.min).max(SETTING_RANGES.fontSize.max).catch(16),
+  fontSize: z.number().min(SETTING_RANGES.fontSize.min).max(SETTING_RANGES.fontSize.max).catch(14),
   lineHeight: z
     .number()
     .min(SETTING_RANGES.lineHeight.min)
