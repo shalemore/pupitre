@@ -126,7 +126,7 @@ const MenuEntries: Component<{
  */
 export const MenuPopup: Component<MenuPopupProps> = (props) => (
   <MenuRoot
-    open
+    open={!props.closing}
     modal={false}
     placement={isRtl() ? "bottom-end" : "bottom-start"}
     gutter={2}
@@ -139,7 +139,6 @@ export const MenuPopup: Component<MenuPopupProps> = (props) => (
     <MenuPortal>
       <MenuContent
         data-menu-panel=""
-        data-closed={props.closing ? "" : undefined}
         onInteractOutside={(event) => {
           // A click in the bar is the bar's business: it switches or closes the menu itself
           if (event.target instanceof Element && event.target.closest("[data-menu-bar]") !== null) {
