@@ -1,6 +1,7 @@
-import { Combobox as KobalteCombobox, useComboboxContext } from "@kobalte/core/combobox";
-import { createEffect, createMemo, createSignal, type JSX, onMount, Show } from "solid-js";
+import { Combobox as KobalteCombobox } from "@kobalte/core/combobox";
+import { createMemo, createSignal, type JSX, onMount, Show } from "solid-js";
 import { Input, ScrollView, Sheet, type ScrollViewProps } from "@/components/ui";
+import { FocusFirstRow, ShowFocusedRow } from "@/lib/combobox-rows";
 
 export interface PaletteSheetProps<Item> {
   /** Names the sheet and the list it holds, for anyone who cannot see it. */
@@ -37,37 +38,6 @@ function selectedRow<Item>(
   selected: Row<Item> | readonly Row<Item>[] | null,
 ): Row<Item> | undefined {
   return isRowList<Item>(selected) ? selected[0] : (selected ?? undefined);
-}
-
-/**
- * Starts the list on its first row and keeps a row pointed at as the query replaces the list. The
- * input keeps the focus, so the list is walked through the combobox's own active descendant.
- */
-function FocusFirstRow(): null {
-  const context = useComboboxContext();
-  onMount(() => context.open("first", "manual"));
-  createEffect(() => {
-    const collection = context.listState().collection();
-    const selection = context.listState().selectionManager();
-    const focused = selection.focusedKey();
-    if (focused != null && collection.getItem(focused) !== undefined) return;
-    const first = collection.getFirstKey();
-    if (first !== undefined) selection.setFocusedKey(first);
-  });
-  return null;
-}
-
-/** Keeps the highlighted row on show; the list scrolls, the focus stays in the input. */
-function ShowFocusedRow(): null {
-  const context = useComboboxContext();
-  createEffect(() => {
-    const selection = context.listState().selectionManager();
-    const key = selection.focusedKey();
-    const list = context.listboxId() ? document.getElementById(context.listboxId() ?? "") : null;
-    if (key == null || list === null) return;
-    list.querySelector(`[data-key="${key}"]`)?.scrollIntoView({ block: "nearest" });
-  });
-  return null;
 }
 
 /**
