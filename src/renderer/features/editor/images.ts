@@ -142,12 +142,6 @@ export function imageAlt(name: string): string {
   return dot > 0 ? name.slice(0, dot) : name;
 }
 
-/** The bytes a base64 payload carries; atob decodes the binary string the byte constructor reads. */
-function base64Bytes(payload: string): Uint8Array {
-  const binary = atob(payload);
-  return Uint8Array.from(binary, (character) => character.charCodeAt(0));
-}
-
 /** The extension of the pictures a data: URL can carry, for a file saved from one. */
 const MIME_EXTENSIONS: Readonly<Record<string, string>> = {
   "image/avif": ".avif",
@@ -171,7 +165,7 @@ export function dataImageFile(src: string, alt: string): File | undefined {
   let bytes: Uint8Array;
   try {
     bytes = parameters.includes("base64")
-      ? base64Bytes(payload)
+      ? Uint8Array.fromBase64(payload)
       : new TextEncoder().encode(decodeURIComponent(payload));
   } catch {
     return undefined;
