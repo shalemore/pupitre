@@ -4,6 +4,7 @@ import { render } from "solid-js/web";
 import { messageOf } from "@shared/errors";
 import type { MenuEntry } from "@shared/menu";
 import { LocaleProvider } from "@/components/locale-provider";
+import { pointerAnchor } from "@/features/menu/anchor";
 import { MenuPopup } from "@/features/menu/menu-popup";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
@@ -210,7 +211,7 @@ export function openImageMenu(
       <LocaleProvider>
         <PictureMenuPanel
           menu={menu}
-          anchor={new DOMRect(event.clientX, event.clientY, 0, 0)}
+          anchor={pointerAnchor(event)}
           onSelect={(id) => {
             close();
             // The menu took the focus with it; the caret belongs back in the text

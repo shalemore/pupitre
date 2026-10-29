@@ -18,6 +18,7 @@ import { messageOf } from "@shared/errors";
 import type { MenuEntry } from "@shared/menu";
 import { isInsideFolder, relativeToFolder } from "@shared/paths";
 import { ListItem, rowIndent } from "@/components/ui";
+import { pointerAnchor } from "@/features/menu/anchor";
 import { MenuPopup } from "@/features/menu/menu-popup";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
@@ -415,7 +416,7 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
             separator,
             trashItem,
           ];
-    setMenu({ entries, actions, anchor: new DOMRect(event.clientX, event.clientY, 0, 0) });
+    setMenu({ entries, actions, anchor: pointerAnchor(event) });
   };
 
   const closeMenu = () => setMenu(undefined);

@@ -3,6 +3,7 @@ import { Folder, ListTree, Pin } from "lucide-solid";
 import { createSignal, type Component, type JSX, Show } from "solid-js";
 import { ScrollView, SegmentedControl, ToggleIconButton } from "@/components/ui";
 import { t } from "@/i18n";
+import { distanceFromEnd, distanceFromStart, isRtl } from "@/lib/rtl";
 
 export type SidebarMode = "outline" | "folder";
 
@@ -28,12 +29,11 @@ interface SidebarSlotProps {
  */
 export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
   const [dragging, setDragging] = createSignal(false);
-  const rtl = () => document.dir === "rtl";
   const resize = (width: number) =>
     props.onWidthChange(Math.min(SIDEBAR_WIDTH.max, Math.max(SIDEBAR_WIDTH.min, width)));
   /** How far the pointer is from the window edge this sidebar sits at. */
   const fromEdge = (clientX: number) =>
-    (props.side === "start") !== rtl() ? clientX : window.innerWidth - clientX;
+    props.side === "start" ? distanceFromStart(clientX) : distanceFromEnd(clientX);
 
   return (
     <div
@@ -74,7 +74,7 @@ export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
           if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
           event.preventDefault();
           // The handle moves towards the window edge on its right or its left
-          const grows = ((event.key === "ArrowRight") === (props.side === "start")) !== rtl();
+          const grows = ((event.key === "ArrowRight") === (props.side === "start")) !== isRtl();
           resize(props.width + (grows ? KEYBOARD_STEP : -KEYBOARD_STEP));
         }}
       />

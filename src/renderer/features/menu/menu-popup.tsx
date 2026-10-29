@@ -13,6 +13,7 @@ import { Check, ChevronRight } from "lucide-solid";
 import { For, Show, type Component } from "solid-js";
 import type { MenuEntry } from "@shared/menu";
 import { Separator } from "@/components/ui";
+import { isRtl } from "@/lib/rtl";
 
 type MenuItemEntry = Extract<MenuEntry, { type: "item" }>;
 
@@ -127,7 +128,7 @@ export const MenuPopup: Component<MenuPopupProps> = (props) => (
   <MenuRoot
     open
     modal={false}
-    placement={document.documentElement.dir === "rtl" ? "bottom-end" : "bottom-start"}
+    placement={isRtl() ? "bottom-end" : "bottom-start"}
     gutter={2}
     fitViewport
     getAnchorRect={() => props.anchor}
