@@ -267,6 +267,8 @@ export const zhCN = {
     pinSidebarsDesc: "沉浸式窗口在书写时保持侧边栏打开",
     filePreviews: "文件预览",
     filePreviewsDesc: "在文件夹中每个文件名下方显示该文件的前几行",
+    showHidden: "显示隐藏文件",
+    showHiddenDesc: "显示系统隐藏的文件和文件夹",
     showWordCount: "显示字数",
     showWordCountDesc: "在标题栏显示字数和字符数",
     tabs: "标签页",

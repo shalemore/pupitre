@@ -278,6 +278,8 @@ export const ar = {
     collapseSidebarName: (name: string) => `طيّ الشريط الجانبي لـ${name}`,
     filePreviews: "معاينات الملفات",
     filePreviewsDesc: "الأسطر الأولى من كل ملف تحت اسمه في المجلد",
+    showHidden: "إظهار الملفات المخفية",
+    showHiddenDesc: "إظهار الملفات والمجلدات التي يخفيها النظام",
     showWordCount: "إظهار عدد الكلمات",
     showWordCountDesc: "عدد الكلمات والأحرف في شريط العنوان",
     tabs: "علامات التبويب",

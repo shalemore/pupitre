@@ -269,6 +269,8 @@ export const koKR = {
     pinSidebarsDesc: "몰입형 창에서 글을 쓰는 동안에도 사이드바를 열어 둡니다",
     filePreviews: "파일 미리보기",
     filePreviewsDesc: "폴더에서 각 파일 이름 아래에 파일의 처음 몇 줄을 표시합니다",
+    showHidden: "숨김 파일 표시",
+    showHiddenDesc: "시스템에서 숨긴 파일과 폴더를 표시합니다",
     showWordCount: "단어 수 표시",
     showWordCountDesc: "제목 표시줄에 단어 수와 글자 수 표시",
     tabs: "탭",

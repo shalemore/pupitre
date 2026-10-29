@@ -274,6 +274,8 @@ export const isIS = {
     pinSidebarsDesc: "Umlykjandi gluggi heldur hliðarstikum opnum meðan þú skrifar",
     filePreviews: "Forskoðun skráa",
     filePreviewsDesc: "Fyrstu línur hverrar skráar undir nafni hennar í möppunni",
+    showHidden: "Sýna faldar skrár",
+    showHiddenDesc: "Sýna skrár og möppur sem kerfið felur",
     showWordCount: "Sýna orðafjölda",
     showWordCountDesc: "Fjöldi orða og stafa í titilstikunni",
     tabs: "Flipar",

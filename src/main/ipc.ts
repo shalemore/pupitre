@@ -1,4 +1,4 @@
-import { mkdir, open, readdir, readFile, stat, writeFile } from "node:fs/promises";
+import { mkdir, open, readFile, stat, writeFile } from "node:fs/promises";
 import { basename, dirname, extname, isAbsolute, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
@@ -35,6 +35,7 @@ import {
 } from "@shared/desktop-api";
 import { formatFileSize } from "@shared/file-size";
 import { compareFolderEntries, UNTIMED } from "@shared/folder-sort";
+import { isHiddenName } from "@shared/hidden";
 import { intlLocale } from "@shared/i18n";
 import type { Settings } from "@shared/settings";
 import { showAboutDialog } from "./about";
@@ -62,6 +63,7 @@ import {
   renameEntry,
   trashEntry,
 } from "./file-actions";
+import { readFolder, markHidden } from "./folder-entries";
 import { listVersions, MAX_SNAPSHOT_BYTES, readVersion, recordVersion } from "./history";
 import { currentLocale, t } from "./i18n";
 import { createIOLimit } from "./io-limit";
@@ -202,18 +204,6 @@ async function saveImage(
 /** How the folder sidebar orders the entries of one folder. */
 type FolderSort = Settings["folderSort"];
 
-/** The entries of one level of a folder, hidden ones left out, in no order. */
-async function readFolder(path: string): Promise<FolderEntry[]> {
-  const entries = await readdir(path, { withFileTypes: true });
-  return entries
-    .filter((entry) => !entry.name.startsWith("."))
-    .map((entry): FolderEntry => ({
-      name: entry.name,
-      path: join(path, entry.name),
-      kind: entry.isDirectory() ? "directory" : "file",
-    }));
-}
-
 /** When an entry was modified or created, or undefined when the system would not say. */
 async function entryTime(
   path: string,
@@ -234,7 +224,7 @@ async function entryTime(
  * large folder from opening a handle for every entry at once.
  */
 async function listFolder(path: string): Promise<FolderEntry[]> {
-  const entries = await readFolder(path);
+  const entries = await markHidden(await readFolder(path));
   const sort = getSettings().folderSort;
   const limit = createIOLimit();
   const times =
@@ -318,7 +308,7 @@ async function readHead(path: string): Promise<string | undefined> {
 
 async function folderPreviews(path: string): Promise<Record<string, string>> {
   const files = (await readFolder(path)).filter(
-    (entry) => entry.kind === "file" && DOCUMENT_FILE.test(entry.name),
+    (entry) => entry.kind === "file" && !isHiddenName(entry.name) && DOCUMENT_FILE.test(entry.name),
   );
   const limit = createIOLimit();
   const heads = await Promise.all(

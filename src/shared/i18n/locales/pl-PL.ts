@@ -277,6 +277,8 @@ export const plPL = {
     pinSidebarsDesc: "Okno immersyjne zostawia paski boczne otwarte podczas pisania",
     filePreviews: "Podgląd plików",
     filePreviewsDesc: "Pierwsze wiersze każdego pliku pod jego nazwą w folderze",
+    showHidden: "Pokaż ukryte pliki",
+    showHiddenDesc: "Pokaż pliki i foldery ukrywane przez system",
     showWordCount: "Pokaż liczbę słów",
     showWordCountDesc: "Liczba słów i znaków na pasku tytułu",
     tabs: "Karty",

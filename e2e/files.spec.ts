@@ -215,3 +215,28 @@ test("keeps the folder the sidebar showed across a restart", async () => {
     await rm(folder, { recursive: true, force: true });
   }
 });
+
+test("shows hidden files only while the eye is on", async () => {
+  const folder = await workspace();
+  const root = join(folder, "project");
+  const readme = join(root, "README.md");
+  await mkdir(root, { recursive: true });
+  await writeFile(readme, "# Project\n");
+  await writeFile(join(root, ".secret.md"), "# Secret\n");
+  const app = await launch({ files: [readme] });
+  try {
+    const sidebar = app.page.locator("[data-sidebar=start]");
+    await expect(sidebar.locator('[title=".secret.md"]')).toHaveCount(0);
+    const eye = sidebar
+      .locator('button[aria-haspopup="menu"]')
+      .first()
+      .locator("xpath=preceding-sibling::button[1]");
+    await expect(eye).toHaveAttribute("aria-pressed", "false");
+    await eye.click();
+    await expect(sidebar.locator('[title=".secret.md"]')).toBeVisible();
+    await expect(eye).toHaveAttribute("aria-pressed", "true");
+  } finally {
+    await close(app);
+    await rm(folder, { recursive: true, force: true });
+  }
+});

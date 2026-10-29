@@ -277,6 +277,8 @@ export const enUS = {
     collapseSidebarName: (name: string) => `Collapse the ${name} Sidebar`,
     filePreviews: "File Previews",
     filePreviewsDesc: "The first lines of each file under its name in the folder",
+    showHidden: "Show hidden files",
+    showHiddenDesc: "Show files and folders the system hides",
     showWordCount: "Show Word Count",
     showWordCountDesc: "Word and character counts in the title bar",
     tabs: "Tabs",

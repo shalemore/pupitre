@@ -267,6 +267,8 @@ export const ptPT = {
     pinSidebarsDesc: "Uma janela imersiva mantém as barras laterais abertas enquanto escreve",
     filePreviews: "Pré-visualizações dos ficheiros",
     filePreviewsDesc: "As primeiras linhas de cada ficheiro sob o nome dele na pasta",
+    showHidden: "Mostrar ficheiros ocultos",
+    showHiddenDesc: "Mostrar os ficheiros e pastas ocultos pelo sistema",
     showWordCount: "Mostrar contagem de palavras",
     showWordCountDesc: "Número de palavras e de caracteres na barra de título",
     tabs: "Separadores",

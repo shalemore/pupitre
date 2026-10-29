@@ -270,6 +270,8 @@ export const fiFI = {
     pinSidebarsDesc: "Immersiivinen ikkuna pitää sivupalkit auki kirjoittaessasi",
     filePreviews: "Tiedostojen esikatselut",
     filePreviewsDesc: "Jokaisen tiedoston ensimmäiset rivit nimen alla kansiossa",
+    showHidden: "Näytä piilotetut tiedostot",
+    showHiddenDesc: "Näytä tiedostot ja kansiot, jotka järjestelmä piilottaa",
     showWordCount: "Näytä sanamäärä",
     showWordCountDesc: "Sanojen ja merkkien määrä otsikkorivillä",
     tabs: "Välilehdet",

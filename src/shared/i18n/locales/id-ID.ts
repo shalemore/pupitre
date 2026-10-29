@@ -265,6 +265,8 @@ export const idID = {
     pinSidebarsDesc: "Jendela imersif menjaga bilah samping tetap terbuka saat Anda menulis",
     filePreviews: "Pratinjau berkas",
     filePreviewsDesc: "Baris-baris pertama setiap berkas di bawah namanya di folder",
+    showHidden: "Tampilkan file tersembunyi",
+    showHiddenDesc: "Tampilkan file dan folder yang disembunyikan sistem",
     showWordCount: "Tampilkan jumlah kata",
     showWordCountDesc: "Jumlah kata dan karakter di bilah judul",
     tabs: "Tab",

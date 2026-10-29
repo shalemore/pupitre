@@ -273,6 +273,8 @@ export const elGR = {
     collapseSidebarName: (name: string) => `Σύμπτυξη πλαϊνής στήλης ${name}`,
     filePreviews: "Προεπισκοπήσεις αρχείων",
     filePreviewsDesc: "Οι πρώτες γραμμές κάθε αρχείου κάτω από το όνομά του στον φάκελο",
+    showHidden: "Εμφάνιση κρυφών αρχείων",
+    showHiddenDesc: "Εμφάνιση αρχείων και φακέλων που αποκρύπτει το σύστημα",
     showWordCount: "Εμφάνιση πλήθους λέξεων",
     showWordCountDesc: "Λέξεις και χαρακτήρες στη γραμμή τίτλου",
     tabs: "Καρτέλες",

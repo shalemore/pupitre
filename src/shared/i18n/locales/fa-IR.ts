@@ -266,6 +266,8 @@ export const faIR = {
     pinSidebarsDesc: "پنجرهٔ غوطه‌ور هنگام نوشتن نوارهای کناری را باز نگه می‌دارد",
     filePreviews: "پیش‌نمایش پرونده‌ها",
     filePreviewsDesc: "نخستین سطرهای هر پرونده زیر نامش در پوشه",
+    showHidden: "نمایش فایل‌های پنهان",
+    showHiddenDesc: "نمایش فایل‌ها و پوشه‌هایی که سیستم پنهان می‌کند",
     showWordCount: "نمایش شمار واژه‌ها",
     showWordCountDesc: "شمار واژه‌ها و نویسه‌ها در نوار عنوان",
     tabs: "زبانه‌ها",

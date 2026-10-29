@@ -268,6 +268,8 @@ export const frFR = {
     pinSidebarsDesc: "Une fenêtre immersive garde ses barres latérales ouvertes pendant l’écriture",
     filePreviews: "Aperçus des fichiers",
     filePreviewsDesc: "Les premières lignes de chaque fichier sous son nom dans le dossier",
+    showHidden: "Afficher les fichiers cachés",
+    showHiddenDesc: "Afficher les fichiers et dossiers masqués par le système",
     showWordCount: "Afficher le nombre de mots",
     showWordCountDesc: "Mots et caractères dans la barre de titre",
     tabs: "Onglets",

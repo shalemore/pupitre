@@ -272,6 +272,8 @@ export const svSE = {
     pinSidebarsDesc: "Ett immersivt fönster håller sidofälten öppna medan du skriver",
     filePreviews: "Filförhandsgranskningar",
     filePreviewsDesc: "De första raderna i varje fil under dess namn i mappen",
+    showHidden: "Visa dolda filer",
+    showHiddenDesc: "Visa filer och mappar som systemet döljer",
     showWordCount: "Visa ordantal",
     showWordCountDesc: "Antal ord och tecken i titelraden",
     tabs: "Flikar",

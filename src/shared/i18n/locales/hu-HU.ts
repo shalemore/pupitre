@@ -274,6 +274,8 @@ export const huHU = {
     pinSidebarsDesc: "Az immerszív ablak írás közben nyitva tartja az oldalsávokat",
     filePreviews: "Fájlelőnézetek",
     filePreviewsDesc: "Minden fájl első sorai a neve alatt a mappában",
+    showHidden: "Rejtett fájlok megjelenítése",
+    showHiddenDesc: "A rendszer által rejtett fájlok és mappák megjelenítése",
     showWordCount: "Szószám megjelenítése",
     showWordCountDesc: "Szavak és karakterek száma a címsorban",
     tabs: "Lapok",

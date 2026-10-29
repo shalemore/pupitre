@@ -274,6 +274,8 @@ export const nlNL = {
     pinSidebarsDesc: "Een immersief venster houdt de zijbalken open terwijl u schrijft",
     filePreviews: "Bestandsvoorbeelden",
     filePreviewsDesc: "De eerste regels van elk bestand onder zijn naam in de map",
+    showHidden: "Verborgen bestanden weergeven",
+    showHiddenDesc: "Bestanden en mappen weergeven die het systeem verbergt",
     showWordCount: "Woordaantal tonen",
     showWordCountDesc: "Woorden en tekens in de titelbalk",
     tabs: "Tabbladen",

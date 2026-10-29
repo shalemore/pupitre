@@ -268,6 +268,8 @@ export const jaJP = {
     pinSidebarsDesc: "没入型ウィンドウで、書いている間もサイドバーを開いたままにします",
     filePreviews: "ファイルのプレビュー",
     filePreviewsDesc: "フォルダー内の各ファイル名の下に、そのファイルの最初の数行を表示します",
+    showHidden: "隠しファイルを表示",
+    showHiddenDesc: "システムが非表示にしているファイルとフォルダーを表示します",
     showWordCount: "語数を表示",
     showWordCountDesc: "タイトルバーに語数と文字数を表示",
     tabs: "タブ",

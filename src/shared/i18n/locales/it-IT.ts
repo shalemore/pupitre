@@ -269,6 +269,8 @@ export const itIT = {
     pinSidebarsDesc: "Una finestra immersiva tiene aperte le barre laterali mentre scrivi",
     filePreviews: "Anteprime dei file",
     filePreviewsDesc: "Le prime righe di ogni file sotto il suo nome nella cartella",
+    showHidden: "Mostra file nascosti",
+    showHiddenDesc: "Mostra i file e le cartelle nascosti dal sistema",
     showWordCount: "Mostra conteggio parole",
     showWordCountDesc: "Parole e caratteri nella barra del titolo",
     tabs: "Schede",

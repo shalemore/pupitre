@@ -265,6 +265,8 @@ export const thTH = {
     pinSidebarsDesc: "หน้าต่างแบบดื่มด่ำจะทำให้แถบด้านข้างเปิดค้างไว้ขณะที่คุณเขียน",
     filePreviews: "ตัวอย่างไฟล์",
     filePreviewsDesc: "บรรทัดแรก ๆ ของแต่ละไฟล์ใต้ชื่อไฟล์ในโฟลเดอร์",
+    showHidden: "แสดงไฟล์ที่ซ่อนอยู่",
+    showHiddenDesc: "แสดงไฟล์และโฟลเดอร์ที่ระบบซ่อนไว้",
     showWordCount: "แสดงจำนวนคำ",
     showWordCountDesc: "จำนวนคำและตัวอักษรในแถบชื่อเรื่อง",
     tabs: "แท็บ",

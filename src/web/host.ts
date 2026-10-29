@@ -22,6 +22,7 @@ import {
   shortcutOf,
   type FormatAction,
 } from "@shared/format";
+import { isHiddenName } from "@shared/hidden";
 import { getDictionary, resolveLocale } from "@shared/i18n";
 import {
   formatShortcut,
@@ -230,6 +231,7 @@ function listFolder(path: string): FolderEntry[] {
       name,
       path: `${path}/${name}`,
       kind: rest.length > 0 ? "directory" : "file",
+      ...(isHiddenName(name) ? { hidden: true } : {}),
     });
   }
   const sort = settings.folderSort;

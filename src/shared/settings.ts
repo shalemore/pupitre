@@ -75,6 +75,8 @@ export const settingsSchema = z.object({
   sidebarVisible: z.boolean().catch(true),
   /** Whether the folder shows the first lines of each file under its name. */
   sidebarPreview: z.boolean().catch(false),
+  /** Whether the folder also shows the entries the system or another tool hides. */
+  showHidden: z.boolean().catch(false),
   /** How the folder orders the entries of the open folder. */
   folderSort: z.enum(["name", "modified", "created"]).catch("name"),
   /** Folder and outline in two sidebars, one at each edge, or as tabs of one sidebar. */

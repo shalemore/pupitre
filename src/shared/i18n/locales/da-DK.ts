@@ -272,6 +272,8 @@ export const daDK = {
     collapseSidebarName: (name: string) => `Skjul ${name}-sidepanelet`,
     filePreviews: "Filforhåndsvisninger",
     filePreviewsDesc: "De første linjer af hver fil under dens navn i mappen",
+    showHidden: "Vis skjulte filer",
+    showHiddenDesc: "Vis filer og mapper, som systemet skjuler",
     showWordCount: "Vis ordantal",
     showWordCountDesc: "Antal ord og tegn i titellinjen",
     tabs: "Faner",

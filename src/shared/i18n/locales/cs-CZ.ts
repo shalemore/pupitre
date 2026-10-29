@@ -275,6 +275,8 @@ export const csCZ = {
     collapseSidebarName: (name: string) => `Sbalit postranní panel ${name}`,
     filePreviews: "Náhledy souborů",
     filePreviewsDesc: "První řádky každého souboru pod jeho názvem ve složce",
+    showHidden: "Zobrazit skryté soubory",
+    showHiddenDesc: "Zobrazit soubory a složky, které systém skrývá",
     showWordCount: "Zobrazit počet slov",
     showWordCountDesc: "Počet slov a znaků v záhlaví",
     tabs: "Karty",

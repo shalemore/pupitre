@@ -2,6 +2,7 @@ import type { Dirent } from "node:fs";
 import { readdir } from "node:fs/promises";
 import { join, relative, sep } from "node:path";
 import { DOCUMENT_FILE, type FolderFile } from "@shared/desktop-api";
+import { isHiddenName } from "@shared/hidden";
 import { nameCollator } from "@shared/name-collator";
 import { createIOLimit } from "./io-limit";
 
@@ -27,12 +28,12 @@ export function relativeTo(root: string, path: string): string {
 
 /** Whether an entry is a folder to walk into: another tool's state and link cycles are not. */
 export function isWorkspaceFolder(entry: Dirent): boolean {
-  return entry.isDirectory() && !entry.name.startsWith(".") && !SKIPPED_FOLDERS.has(entry.name);
+  return entry.isDirectory() && !isHiddenName(entry.name) && !SKIPPED_FOLDERS.has(entry.name);
 }
 
 /** Whether an entry is a document: a text file, neither hidden nor a link to one somewhere else. */
 export function isWorkspaceDocument(entry: Dirent): boolean {
-  return entry.isFile() && !entry.name.startsWith(".") && DOCUMENT_FILE.test(entry.name);
+  return entry.isFile() && !isHiddenName(entry.name) && DOCUMENT_FILE.test(entry.name);
 }
 
 /**

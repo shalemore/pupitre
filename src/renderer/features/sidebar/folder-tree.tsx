@@ -40,6 +40,15 @@ const dateFormat = createRoot(() =>
   ),
 );
 
+/** A copy of `set` with `item` present or absent; the same set when it already is that way. */
+function withMember<T>(set: ReadonlySet<T>, item: T, present: boolean): ReadonlySet<T> {
+  if (set.has(item) === present) return set;
+  const next = new Set(set);
+  if (present) next.add(item);
+  else next.delete(item);
+  return next;
+}
+
 interface TreeContext {
   /** Whether the row at `path` is the document shown in the editor. */
   isActive: (path: string) => boolean;
@@ -59,6 +68,8 @@ interface TreeContext {
   menuOf: (entry: FolderEntry) => RowMenu;
   /** Told when a row menu opens or closes. */
   onMenuOpenChange: (open: boolean) => void;
+  /** Told when a level shows or stops showing hidden entries. */
+  onLevelHiddenChange: (path: string, hidden: boolean) => void;
   /** The absolute paths pinned at the top of this tree. */
   pinned: () => ReadonlySet<string>;
   onTogglePin: (entry: FolderEntry) => void;
@@ -81,6 +92,8 @@ interface FolderTreeProps {
   onPathChanged?: (oldPath: string, newPath: string) => void;
   /** Tells the window that a menu or the rename field holds the sidebar, so the immersive chrome stays put. */
   onHoldOpenChange?: (open: boolean) => void;
+  /** Tells the window whether a level on show holds a hidden entry. */
+  onHiddenChange?: (hidden: boolean) => void;
 }
 
 const FolderChildren: Component<FolderChildrenProps> = (props) => {
@@ -115,6 +128,26 @@ const FolderChildren: Component<FolderChildrenProps> = (props) => {
   // keeps the settings broadcast, which replaces the whole object, from asking for the same order.
   const folderSort = createMemo(() => settings().folderSort);
   createEffect(on(folderSort, () => void refetch(), { defer: true }));
+  const showHidden = createMemo(() => settings().showHidden);
+
+  // Each level a person has opened reports for itself; the tree never walks a folder just to find
+  // out whether an eye is needed. The flag is there even while hidden entries are shown, so the
+  // eye can turn them off again.
+  createEffect(() => {
+    props.tree.onLevelHiddenChange(
+      props.path,
+      (entries() ?? []).some(
+        (entry) => entry.hidden === true && !props.tree.pinned().has(entry.path),
+      ),
+    );
+  });
+  onCleanup(() => props.tree.onLevelHiddenChange(props.path, false));
+
+  const shownEntries = createMemo(() =>
+    (entries() ?? []).filter(
+      (entry) => (showHidden() || entry.hidden !== true) && !props.tree.pinned().has(entry.path),
+    ),
+  );
 
   return (
     <Show
@@ -123,7 +156,7 @@ const FolderChildren: Component<FolderChildrenProps> = (props) => {
         <p class="px-2.5 py-1.5 text-2xs text-destructive">{t().sidebar.folderUnreadable}</p>
       }
     >
-      <For each={(entries() ?? []).filter((entry) => !props.tree.pinned().has(entry.path))}>
+      <For each={shownEntries()}>
         {(entry) => (
           <FolderRow entry={entry} depth={props.depth} tree={props.tree} previews={shownPreviews} />
         )}
@@ -340,6 +373,7 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
   const [renaming, setRenaming] = createSignal<string>();
   const [expanded, setExpanded] = createSignal<ReadonlySet<string>>(new Set());
   const [menuOpen, setMenuOpen] = createSignal(false);
+  const [hiddenFolders, setHiddenFolders] = createSignal<ReadonlySet<string>>(new Set());
   const [pins, { refetch: refetchPins }] = createResource(
     () => props.root,
     (root) => desktop.invoke("folder:pins", root),
@@ -348,6 +382,11 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
   const pinnedEntries = () => pins() ?? [];
   // Each row subscribes to its own boolean, so opening another document touches two rows, not the tree
   const rowIsActive = createSelector(() => props.activePath);
+  const reportHidden = (path: string, hidden: boolean) => {
+    setHiddenFolders((current) => withMember(current, path, hidden));
+  };
+  createEffect(() => props.onHiddenChange?.(hiddenFolders().size > 0));
+  onCleanup(() => props.onHiddenChange?.(false));
   // The rename field lives in the sidebar too: folding it away under the field would drop the name
   // being typed and cancel the rename
   const heldOpen = () => menuOpen() || renaming() !== undefined;
@@ -391,7 +430,7 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
     void run(async () => {
       const name = kind === "directory" ? t().sidebar.newFolder : t().common.untitledFileName;
       const path = await desktop.invoke("folder:create", parent, name, kind);
-      setExpanded((current) => new Set(current).add(parent));
+      setExpanded((current) => withMember(current, parent, true));
       setRenaming(path);
       return undefined;
     });
@@ -500,17 +539,14 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
     onOpenFile: (path) => void openFile(path),
     isExpanded: (path) => expanded().has(path),
     onToggleExpanded: (path) =>
-      setExpanded((current) => {
-        const next = new Set(current);
-        if (!next.delete(path)) next.add(path);
-        return next;
-      }),
+      setExpanded((current) => withMember(current, path, !current.has(path))),
     onOpenFolder: (path) => props.onOpenFolder(path),
     renaming,
     onRename: rename,
     onRenameCancel: () => setRenaming(undefined),
     menuOf,
     onMenuOpenChange: setMenuOpen,
+    onLevelHiddenChange: reportHidden,
     pinned: pinnedPaths,
     onTogglePin: togglePin,
   };

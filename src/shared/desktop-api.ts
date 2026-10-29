@@ -147,6 +147,11 @@ export interface FolderEntry {
   path: string;
   kind: "directory" | "file";
   /**
+   * The system hides it, or another tool left it behind. The folder shows it only while the
+   * show-hidden setting is on.
+   */
+  hidden?: boolean;
+  /**
    * When the entry was modified or created, whichever the folder order reads. Absent when the
    * folder is ordered by name, or when the system would not say.
    */
@@ -323,7 +328,7 @@ export interface InvokeChannels {
   "document:read": (path: string) => OpenedDocument | null;
   /** Where a file sits, for a picture the editor does not read; the path is checked to exist. */
   "document:locate": (path: string) => DocumentLocation;
-  /** Lists one level of a folder: directories first, then by name, modified or created time as the folderSort setting says; hidden entries are left out. */
+  /** Lists one level of a folder: directories first, then by name, modified or created time as the folderSort setting says; hidden entries are returned marked. */
   "folder:list": (path: string) => FolderEntry[];
   /** The entries pinned to the top of the folder, in the order they were pinned. */
   "folder:pins": (root: string) => PinnedEntry[];

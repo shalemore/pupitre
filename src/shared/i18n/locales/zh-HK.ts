@@ -267,6 +267,8 @@ export const zhHK = {
     pinSidebarsDesc: "沉浸式視窗在書寫時保持側邊欄開啟",
     filePreviews: "檔案預覽",
     filePreviewsDesc: "在資料夾中每個檔案名稱下方顯示該檔案的前幾行",
+    showHidden: "顯示隱藏檔案",
+    showHiddenDesc: "顯示系統隱藏的文件和資料夾",
     showWordCount: "顯示字數",
     showWordCountDesc: "在標題列顯示字數和字元數",
     tabs: "分頁",

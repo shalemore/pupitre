@@ -272,6 +272,8 @@ export const nbNO = {
     pinSidebarsDesc: "Et immersivt vindu holder sidefeltene åpne mens du skriver",
     filePreviews: "Filforhåndsvisninger",
     filePreviewsDesc: "De første linjene i hver fil under navnet i mappen",
+    showHidden: "Vis skjulte filer",
+    showHiddenDesc: "Vis filer og mapper som systemet skjuler",
     showWordCount: "Vis ordantall",
     showWordCountDesc: "Antall ord og tegn i tittellinjen",
     tabs: "Faner",

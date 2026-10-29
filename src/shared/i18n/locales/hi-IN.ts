@@ -263,6 +263,8 @@ export const hiIN = {
     pinSidebarsDesc: "इमर्सिव विंडो लिखते समय साइडबार को खुला रखती है",
     filePreviews: "फ़ाइल पूर्वावलोकन",
     filePreviewsDesc: "फ़ोल्डर में हर फ़ाइल के नाम के नीचे उसकी पहली पंक्तियाँ",
+    showHidden: "छिपी फ़ाइलें दिखाएँ",
+    showHiddenDesc: "सिस्टम द्वारा छिपाई गई फ़ाइलें और फ़ोल्डर दिखाएँ",
     showWordCount: "शब्द संख्या दिखाएँ",
     showWordCountDesc: "शीर्षक पट्टी में शब्द और अक्षर की संख्या",
     tabs: "टैब",

@@ -269,6 +269,8 @@ export const esES = {
       "Una ventana inmersiva mantiene abiertas las barras laterales mientras escribes",
     filePreviews: "Vistas previas de los archivos",
     filePreviewsDesc: "Las primeras líneas de cada archivo bajo su nombre en la carpeta",
+    showHidden: "Mostrar archivos ocultos",
+    showHiddenDesc: "Mostrar los archivos y carpetas que oculta el sistema",
     showWordCount: "Mostrar recuento de palabras",
     showWordCountDesc: "Palabras y caracteres en la barra de título",
     tabs: "Pestañas",

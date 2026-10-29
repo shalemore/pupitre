@@ -263,6 +263,8 @@ export const viVN = {
     pinSidebarsDesc: "Cửa sổ đắm chìm giữ các thanh bên mở khi bạn viết",
     filePreviews: "Bản xem trước tệp",
     filePreviewsDesc: "Vài dòng đầu của mỗi tệp dưới tên của nó trong thư mục",
+    showHidden: "Hiện tệp ẩn",
+    showHiddenDesc: "Hiện các tệp và thư mục mà hệ thống ẩn",
     showWordCount: "Hiện số từ",
     showWordCountDesc: "Số từ và số ký tự trên thanh tiêu đề",
     tabs: "Thẻ",

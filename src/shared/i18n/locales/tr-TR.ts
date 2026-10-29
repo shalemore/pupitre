@@ -272,6 +272,8 @@ export const trTR = {
     pinSidebarsDesc: "Sürükleyici bir pencere, siz yazarken kenar çubuklarını açık tutar",
     filePreviews: "Dosya önizlemeleri",
     filePreviewsDesc: "Klasörde her dosyanın adının altında dosyanın ilk satırlarını gösterir",
+    showHidden: "Gizli dosyaları göster",
+    showHiddenDesc: "Sistemin gizlediği dosya ve klasörleri göster",
     showWordCount: "Sözcük Sayısını Göster",
     showWordCountDesc: "Başlık çubuğunda sözcük ve karakter sayısı",
     tabs: "Sekmeler",

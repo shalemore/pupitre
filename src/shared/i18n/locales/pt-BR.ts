@@ -268,6 +268,8 @@ export const ptBR = {
     pinSidebarsDesc: "Uma janela imersiva mantém as barras laterais abertas enquanto você escreve",
     filePreviews: "Pré-visualizações dos arquivos",
     filePreviewsDesc: "As primeiras linhas de cada arquivo sob o nome dele na pasta",
+    showHidden: "Mostrar arquivos ocultos",
+    showHiddenDesc: "Mostrar os arquivos e pastas ocultos pelo sistema",
     showWordCount: "Mostrar contagem de palavras",
     showWordCountDesc: "Palavras e caracteres na barra de título",
     tabs: "Abas",

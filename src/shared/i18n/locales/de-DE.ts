@@ -272,6 +272,8 @@ export const deDE = {
     collapseSidebarName: (name: string) => `Seitenleiste „${name}“ einklappen`,
     filePreviews: "Dateivorschauen",
     filePreviewsDesc: "Die ersten Zeilen jeder Datei unter ihrem Namen im Ordner",
+    showHidden: "Versteckte Dateien anzeigen",
+    showHiddenDesc: "Vom System ausgeblendete Dateien und Ordner anzeigen",
     showWordCount: "Wortanzahl anzeigen",
     showWordCountDesc: "Wörter und Zeichen in der Titelleiste",
     tabs: "Tabs",

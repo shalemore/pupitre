@@ -1,7 +1,7 @@
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { debounce, scheduleIdle } from "@solid-primitives/scheduled";
 import { cn } from "cn";
-import { CornerRightUp } from "lucide-solid";
+import { CornerRightUp, Eye } from "lucide-solid";
 import {
   createEffect,
   createMemo,
@@ -18,7 +18,7 @@ import { messageOf } from "@shared/errors";
 import { isInsideFolder } from "@shared/paths";
 import { AppMark } from "@/components/app-mark";
 import { TitleBar } from "@/components/title-bar";
-import { IconButton } from "@/components/ui";
+import { IconButton, ToggleIconButton } from "@/components/ui";
 import { CommandPalette } from "@/features/command-palette/command-palette";
 import { FindBar } from "@/features/editor/find-bar";
 import { ImagePreview } from "@/features/editor/image-preview";
@@ -148,6 +148,8 @@ export const MainWindow: Component = () => {
   const [menuOpen, setMenuOpen] = createSignal(false);
   // A menu or the rename field in the start sidebar keeps that sidebar (and the chrome) open
   const [startSidebarHeld, setStartSidebarHeld] = createSignal(false);
+  // Whether a level on show in the folder holds an entry the eye can reveal
+  const [folderHasHidden, setFolderHasHidden] = createSignal(false);
   const immersive = () => settings().windowStyle === "immersive";
   // The strip takes the title bar's place with several documents, and with one when the user asks
   // for it. With tabs off it only appears while documents are left over from turning the setting
@@ -313,6 +315,7 @@ export const MainWindow: Component = () => {
         void session.handleRename(oldPath, newPath);
       }}
       onHoldOpenChange={setStartSidebarHeld}
+      onHiddenChange={setFolderHasHidden}
     />
   );
 
@@ -435,7 +438,22 @@ export const MainWindow: Component = () => {
   );
 
   /** The folder's order menu, at the far end of the title row. */
-  const folderAction = () => <FolderSortButton onHoldOpenChange={setStartSidebarHeld} />;
+  const folderAction = () => (
+    <>
+      <Show when={folderHasHidden()}>
+        <ToggleIconButton
+          pressed={settings().showHidden}
+          onChange={(showHidden) => void updateSettings({ showHidden })}
+          label={t().settings.showHidden}
+          size="icon-2xs"
+          class="shrink-0 text-tertiary opacity-50 transition-opacity hover:opacity-100 focus-visible:opacity-100 data-pressed:opacity-100"
+        >
+          <Eye />
+        </ToggleIconButton>
+      </Show>
+      <FolderSortButton onHoldOpenChange={setStartSidebarHeld} />
+    </>
+  );
 
   const openFolder = async () => {
     const path = await desktop.invoke("folder:choose");

@@ -280,6 +280,18 @@ export const AppearanceSection: Component = () => (
               aria-label={t().settings.filePreviews}
             />
           </SettingField>
+          <SettingField
+            nested
+            name="showHidden"
+            title={t().settings.showHidden}
+            description={t().settings.showHiddenDesc}
+          >
+            <Switch
+              checked={settings().showHidden}
+              onChange={(showHidden) => void updateSettings({ showHidden })}
+              aria-label={t().settings.showHidden}
+            />
+          </SettingField>
         </Show>
         <Show when={settings().sidebarVisible}>
           <SettingField
