@@ -1,5 +1,6 @@
 import { debounce } from "@solid-primitives/scheduled";
 import { createSignal, onCleanup } from "solid-js";
+import { readDuration } from "@/lib/motion";
 
 /** How long the pointer may be away from a trigger and its menu before it folds up. */
 const LEAVE_DELAY = 200;
@@ -8,12 +9,8 @@ const DEFAULT_EXIT_DURATION = 150;
 
 /** How long the panel's exit animation runs, from the duration token the closed state asks for. */
 function exitDuration(): number {
-  const value = getComputedStyle(document.documentElement)
-    .getPropertyValue("--transition-duration-ui")
-    .trim();
-  const length = Number.parseFloat(value);
-  if (!Number.isFinite(length)) return DEFAULT_EXIT_DURATION;
-  return value.endsWith("s") && !value.endsWith("ms") ? length * 1000 : length;
+  const style = getComputedStyle(document.documentElement);
+  return readDuration(style.getPropertyValue("--transition-duration-ui"), DEFAULT_EXIT_DURATION);
 }
 
 export interface Menu<T> {
