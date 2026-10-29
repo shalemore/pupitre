@@ -1,11 +1,12 @@
 import { debounce } from "@solid-primitives/scheduled";
 import { batch, createEffect, createMemo, createSignal, on, onCleanup } from "solid-js";
-import type {
-  Draft,
-  DraftSession,
-  LineEnding,
-  OpenedDocument,
-  TextEncoding,
+import {
+  IMAGE_FILE,
+  type Draft,
+  type DraftSession,
+  type LineEnding,
+  type OpenedDocument,
+  type TextEncoding,
 } from "@shared/desktop-api";
 import { messageOf } from "@shared/errors";
 import { createPendingImages, type PendingImages } from "@/features/editor/images";
@@ -95,6 +96,9 @@ let nextDocumentId = 1;
 let nextTabId = 1;
 
 export const isTabDirty = (tab: Tab) => tab.edited || tab.missingOnDisk;
+
+/** A tab that shows a picture: it holds no text, so it is never saved, drafted, searched or formatted. */
+const isImageTab = (tab: Tab) => tab.doc.path !== undefined && IMAGE_FILE.test(tab.doc.path);
 
 /**
  * The open tabs and the life cycle of the document in each: new, open, save, save as, close, and
@@ -219,6 +223,13 @@ export function createDocumentSession(
     });
   };
 
+  /** Shows a picture where an editor would sit; its bytes are never read. */
+  const showImage = async (path: string) => {
+    const location = await desktop.invoke("document:locate", path);
+    if (!(await makeRoom())) return;
+    addTab({ ...location, lineEnding: "lf", encoding: "utf-8", isSample: false }, "");
+  };
+
   /** Replaces the text of a tab with what a file now holds; the editor is rebuilt when it shows that tab. */
   const showReloaded = (tab: Tab, opened: OpenedDocument) => {
     patchTab(tab.id, {
@@ -269,7 +280,7 @@ export function createDocumentSession(
 
   const saveTabAs = async (id: number): Promise<boolean> => {
     const tab = tabs().find((candidate) => candidate.id === id);
-    if (tab === undefined) return false;
+    if (tab === undefined || isImageTab(tab)) return false;
     const location = await desktop.invoke("dialog:choose-save-path", tabFileName(tab));
     if (!location) return false;
     // Only the path changes, not the document id, so the editor and its undo history stay; the
@@ -294,7 +305,7 @@ export function createDocumentSession(
 
   const saveTab = async (id: number): Promise<boolean> => {
     const tab = tabs().find((candidate) => candidate.id === id);
-    if (tab === undefined) return false;
+    if (tab === undefined || isImageTab(tab)) return false;
     const path = tab.doc.path;
     if (path === undefined) return saveTabAs(id);
     if (!(await diskMatchesKnownContent(tab))) return false;
@@ -349,6 +360,7 @@ export function createDocumentSession(
 
   /** One tab as a crash would leave it: the text being edited, and the version it is compared to. */
   const draftOfTab = (tab: Tab): Draft | undefined => {
+    if (isImageTab(tab)) return undefined;
     const markdown = draftText(tab);
     if (markdown === undefined) return undefined;
     return {
@@ -570,8 +582,8 @@ export function createDocumentSession(
   };
 
   const open = async () => {
-    const opened = await desktop.invoke("document:open");
-    if (opened) await showOpened(opened);
+    const path = await desktop.invoke("document:open");
+    if (path !== null) await openPath(path);
   };
 
   /** Returns the failure message when the file can't be opened; with `showError` the user is also told in a dialog. */
@@ -583,6 +595,10 @@ export function createDocumentSession(
       return undefined;
     }
     try {
+      if (IMAGE_FILE.test(path)) {
+        await showImage(path);
+        return undefined;
+      }
       const opened = await desktop.invoke("document:read", path);
       // Null: the user gave up on the encoding of a file that is not UTF-8
       if (opened !== null) await showOpened(opened);

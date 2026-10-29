@@ -29,6 +29,7 @@ import {
   type InitialState,
   DOCUMENT_EXTENSIONS,
   DOCUMENT_FILE,
+  IMAGE_EXTENSIONS,
   PREVIEW_BYTES,
 } from "@shared/desktop-api";
 import { formatFileSize } from "@shared/file-size";
@@ -174,9 +175,6 @@ function checkedPath(path: string): string {
   if (!isAbsolute(path)) throw new Error(`${path} is not an absolute path`);
   return path;
 }
-
-/** The pictures the Insert Image dialog offers, and how large one may be: a document links its images rather than embedding them. */
-const IMAGE_EXTENSIONS = ["png", "jpg", "jpeg", "gif", "webp", "svg", "bmp", "avif"];
 
 /** Where the pictures of a document go: the image folder the settings name, beside the document. */
 function imageFolder(folder: string): string {
@@ -400,11 +398,19 @@ export function registerIpcHandlers(): void {
   handle("document:open", async (event) => {
     const path = await openPath(senderWindow(event), {
       properties: ["openFile"],
-      filters: [{ name: "Markdown", extensions: [...DOCUMENT_EXTENSIONS] }],
+      filters: [
+        { name: "Documents", extensions: [...DOCUMENT_EXTENSIONS] },
+        { name: "Images", extensions: [...IMAGE_EXTENSIONS] },
+      ],
     });
-    return path === null ? null : readDocument(path, senderWindow(event));
+    return path === null ? null : locate(path).path;
   });
   handle("document:read", (event, path) => readDocument(path, senderWindow(event)));
+  // A picture is shown, not read: its path has to exist, but its bytes never become text
+  handle("document:locate", async (_event, path) => {
+    await stat(checkedPath(path));
+    return locate(path);
+  });
   handle("draft:read", () => readDraft());
   handle("draft:write", (_event, draft) => writeDraft(draft));
   handle("draft:clear", () => clearDraft());
@@ -449,7 +455,7 @@ export function registerIpcHandlers(): void {
     const window = senderWindow(event);
     const path = await openPath(window, {
       properties: ["openFile"],
-      filters: [{ name: "Images", extensions: IMAGE_EXTENSIONS }],
+      filters: [{ name: "Images", extensions: [...IMAGE_EXTENSIONS] }],
     });
     if (path === null) return null;
     const name = basename(path);
@@ -476,7 +482,7 @@ export function registerIpcHandlers(): void {
     const source = checkedPath(path);
     const target = await savePath(senderWindow(event), source, {
       name: "Image",
-      extensions: IMAGE_EXTENSIONS,
+      extensions: [...IMAGE_EXTENSIONS],
     });
     return target === null ? null : moveImage(source, target);
   });

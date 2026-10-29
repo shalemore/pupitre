@@ -263,8 +263,8 @@ function folderPreviews(path: string): Record<string, string> {
   return previews;
 }
 
-function pickFile(): Promise<OpenedDocument | null> {
-  const { promise, resolve } = Promise.withResolvers<OpenedDocument | null>();
+function pickFile(): Promise<string | null> {
+  const { promise, resolve } = Promise.withResolvers<string | null>();
   const input = document.createElement("input");
   input.type = "file";
   input.accept = DOCUMENT_EXTENSIONS.map((extension) => `.${extension}`).join(",");
@@ -274,7 +274,7 @@ function pickFile(): Promise<OpenedDocument | null> {
     if (!file) return resolve(null);
     const path = `${DEMO_FOLDER}/${file.name}`;
     files.set(path, await file.text());
-    resolve(opened(path));
+    resolve(path);
   });
   input.click();
   return promise;
@@ -455,6 +455,7 @@ function menuSnapshot(): Menus {
 
 let documentState: DocumentState = {
   hasDocument: false,
+  hasText: false,
   hasPath: false,
   isDirty: false,
   canReopenTab: false,
@@ -503,6 +504,10 @@ const handlers: Handlers = {
     if (text !== undefined) files.set(path, text);
     dropped.delete(path);
     return opened(path);
+  },
+  "document:locate": (path) => {
+    const folder = path.slice(0, path.lastIndexOf("/"));
+    return { path, folder, baseUrl: siteUrl };
   },
   "draft:read": readDraft,
   "draft:write": writeDraft,

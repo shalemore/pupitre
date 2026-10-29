@@ -13,13 +13,14 @@ import {
   Show,
   type Component,
 } from "solid-js";
-import type { AppCommand } from "@shared/desktop-api";
+import { IMAGE_FILE, type AppCommand } from "@shared/desktop-api";
 import { messageOf } from "@shared/errors";
 import { isInsideFolder } from "@shared/paths";
 import { TitleBar } from "@/components/title-bar";
 import { IconButton } from "@/components/ui";
 import { CommandPalette } from "@/features/command-palette/command-palette";
 import { FindBar } from "@/features/editor/find-bar";
+import { ImagePreview } from "@/features/editor/image-preview";
 import type { MarkdownEditorHandle, MatchStats } from "@/features/editor/markdown-editor";
 import { headingKey, type OutlineHeading } from "@/features/editor/outline-heading";
 import { TableSizeDialog } from "@/features/editor/table-size-dialog";
@@ -57,6 +58,9 @@ const SIDEBAR_WIDTH_SAVE_DELAY = 300;
 /** The outline of a document nothing is folded in yet, and of no document at all. */
 const OPEN_SECTIONS: ReadonlySet<string> = new Set();
 
+/** Whether a path names a picture, which the content area shows instead of the editor. */
+const isImagePath = (path: string | undefined) => path !== undefined && IMAGE_FILE.test(path);
+
 /** CodeMirror and the editor around it load when a document is shown, not with the welcome screen. */
 const MarkdownEditor = lazy(async () => {
   const { MarkdownEditor: Component } = await import("@/features/editor/markdown-editor");
@@ -68,6 +72,8 @@ export const MainWindow: Component = () => {
   // folder waits for that editor before it selects itself
   const [editor, setEditor] = createSignal<MarkdownEditorHandle>();
   const session = createDocumentSession(() => editor());
+  /** The active tab shows a picture, not text: the commands that work on text have nothing to do. */
+  const activeIsImage = () => isImagePath(session.activeDocument()?.path);
   const [outline, setOutline] = createSignal<OutlineHeading[]>([]);
   const [activeHeading, setActiveHeading] = createSignal(-1);
   const [stats, setStats] = createSignal<TextStats>({ words: 0, characters: 0, cjk: 0 });
@@ -95,7 +101,9 @@ export const MainWindow: Component = () => {
   });
   // The count ends the bar in either layout: beside the tabs, or at the end of the title's grid
   const wordCount = () => (
-    <Show when={session.activeDocument() !== undefined && settings().showWordCount}>
+    <Show
+      when={session.activeDocument() !== undefined && !activeIsImage() && settings().showWordCount}
+    >
       <div
         data-bar-part="count"
         // The character count is a second reading of a dense page; a page of words needs only
@@ -293,6 +301,11 @@ export const MainWindow: Component = () => {
     />
   );
 
+  // A picture has no editor, so the handle the commands would use has to go with the editor
+  createEffect(() => {
+    if (activeIsImage()) setEditor(undefined);
+  });
+
   createEffect(() => {
     document.title = session.activeDocument()
       ? `${isolateFileName(session.fileName())} - Pupitre`
@@ -301,6 +314,7 @@ export const MainWindow: Component = () => {
   createEffect(() => {
     void desktop.invoke("window:set-document-state", {
       hasDocument: session.activeDocument() !== undefined,
+      hasText: session.activeDocument() !== undefined && !activeIsImage(),
       hasPath: session.activeDocument()?.path !== undefined,
       isDirty: session.hasDirtyTabs(),
       canReopenTab: session.canReopenTab(),
@@ -317,6 +331,11 @@ export const MainWindow: Component = () => {
         if (id === previous) return;
         setFindMode("closed");
         setHistoryOpen(false);
+        // A picture has no outline, counts or heading; the editor fills these in again when it
+        // shows the text of the next document
+        setOutline([]);
+        setActiveHeading(-1);
+        setStats({ words: 0, characters: 0, cjk: 0 });
         chrome.show();
       },
     ),
@@ -349,7 +368,7 @@ export const MainWindow: Component = () => {
   };
 
   const openFind = (mode: Exclude<FindMode, "closed">) => {
-    if (!session.activeDocument()) return;
+    if (!session.activeDocument() || editor() === undefined) return;
     setInitialSearch(editor()?.getSelectedText().trim() ?? "");
     setFindMode(mode);
   };
@@ -418,12 +437,13 @@ export const MainWindow: Component = () => {
   };
 
   const exportPdf = async () => {
-    if (!session.activeDocument()) return;
+    if (!session.activeDocument() || activeIsImage()) return;
     const pdfName = withoutDocumentExtension(session.fileName()) + ".pdf";
     await whilePrinting(() => desktop.invoke("document:export-pdf", pdfName));
   };
 
   const printDocument = async () => {
+    if (activeIsImage()) return;
     await whilePrinting(() => desktop.invoke("document:print"));
   };
 
@@ -773,20 +793,27 @@ export const MainWindow: Component = () => {
 
                   {/* Rebuild the editor per document id, which is a new one for every tab and every reload; Save As only changes the path, so the editor and its undo history stay */}
                   <Show when={tab().doc.id} keyed>
-                    <MarkdownEditor
-                      markdown={tab().markdown}
-                      initialPosition={documentPosition(tab().doc.path)}
-                      baseUrl={tab().doc.baseUrl}
-                      documentPath={tab().doc.path}
-                      pendingImages={tab().pendingImages}
-                      onReady={session.handleEditorReady}
-                      onMarkdownChange={session.handleMarkdownChange}
-                      onOutlineChange={setOutline}
-                      onActiveHeadingChange={setActiveHeading}
-                      onStatsChange={setStats}
-                      onMatchStatsChange={setMatchStats}
-                      ref={setEditor}
-                    />
+                    <Show
+                      when={isImagePath(tab().doc.path)}
+                      fallback={
+                        <MarkdownEditor
+                          markdown={tab().markdown}
+                          initialPosition={documentPosition(tab().doc.path)}
+                          baseUrl={tab().doc.baseUrl}
+                          documentPath={tab().doc.path}
+                          pendingImages={tab().pendingImages}
+                          onReady={session.handleEditorReady}
+                          onMarkdownChange={session.handleMarkdownChange}
+                          onOutlineChange={setOutline}
+                          onActiveHeadingChange={setActiveHeading}
+                          onStatsChange={setStats}
+                          onMatchStatsChange={setMatchStats}
+                          ref={setEditor}
+                        />
+                      }
+                    >
+                      <ImagePreview baseUrl={tab().doc.baseUrl} path={tab().doc.path} />
+                    </Show>
                   </Show>
                 </main>
               )}

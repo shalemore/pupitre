@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { expect, test } from "@playwright/test";
@@ -8,6 +8,40 @@ import { close, launch, run } from "./app";
 async function workspace(): Promise<string> {
   return mkdtemp(join(tmpdir(), "pupitre-files-"));
 }
+
+/** A 1 × 1 red PNG: enough for the viewer to load, small enough to keep in the test. */
+const PIXEL = Buffer.from(
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+  "base64",
+);
+
+test("opens a picture in a preview instead of the editor", async () => {
+  const folder = await workspace();
+  const note = join(folder, "note.md");
+  const picture = join(folder, "picture.png");
+  await writeFile(note, "# Note\n");
+  await writeFile(picture, PIXEL);
+  const app = await launch({ files: [note] });
+  try {
+    await expect(app.page.locator(".cm-content")).toContainText("Note");
+    await run(app.page, { id: "file.open-path", path: picture });
+    const image = app.page.locator("main img");
+    await expect(image).toBeVisible();
+    await expect(image).toHaveAttribute("src", /picture\.png$/);
+    await expect(app.page.locator(".cm-content")).toHaveCount(0);
+    // Saving works on text; a picture has nothing to write, so its bytes stay as they were
+    await run(app.page, { id: "file.save" });
+    await app.page.waitForTimeout(300);
+    expect((await readFile(picture)).equals(PIXEL)).toBe(true);
+    // Opening a text file replaces the preview, as it replaces a document with tabs off
+    await run(app.page, { id: "file.open-path", path: note });
+    await expect(app.page.locator(".cm-content")).toContainText("Note");
+    await expect(app.page.locator("main img")).toHaveCount(0);
+  } finally {
+    await close(app);
+    await rm(folder, { recursive: true, force: true });
+  }
+});
 
 test("keeps the folder the sidebar showed across a restart", async () => {
   const folder = await workspace();

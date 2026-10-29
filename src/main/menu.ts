@@ -31,6 +31,7 @@ const separator: MenuItemConstructorOptions = { type: "separator" };
 
 let documentState: DocumentState = {
   hasDocument: false,
+  hasText: false,
   hasPath: false,
   isDirty: false,
   canReopenTab: false,
@@ -40,8 +41,8 @@ function buildTemplate(): MenuItemConstructorOptions[] {
   const labels = t().menu;
   const isMac = process.platform === "darwin";
   // A document without a file has no versions kept of it
-  const hasFile = documentState.hasDocument && documentState.hasPath;
-  const { hasDocument } = documentState;
+  const hasFile = documentState.hasText && documentState.hasPath;
+  const { hasDocument, hasText } = documentState;
   const recentFiles = getRecentFiles();
 
   const about: MenuItemConstructorOptions = {
@@ -120,34 +121,34 @@ function buildTemplate(): MenuItemConstructorOptions[] {
         {
           label: labels.save,
           accelerator: "CmdOrCtrl+S",
-          enabled: hasDocument,
+          enabled: hasText,
           click: () => dispatchToMainWindow({ id: "file.save" }),
         },
         {
           label: labels.saveAs,
           accelerator: "CmdOrCtrl+Shift+S",
-          enabled: hasDocument,
+          enabled: hasText,
           click: () => dispatchToMainWindow({ id: "file.save-as" }),
         },
         // No accelerator: CmdOrCtrl+P is Quick Open, as it is in Typora
         {
           label: labels.print,
-          enabled: hasDocument,
+          enabled: hasText,
           click: () => dispatchToMainWindow({ id: "file.print" }),
         },
         {
           label: labels.exportPdf,
-          enabled: hasDocument,
+          enabled: hasText,
           click: () => dispatchToMainWindow({ id: "file.export-pdf" }),
         },
         {
           label: labels.exportHtml,
-          enabled: hasDocument,
+          enabled: hasText,
           click: () => dispatchToMainWindow({ id: "file.export-html" }),
         },
         {
           label: labels.exportImage,
-          enabled: hasDocument,
+          enabled: hasText,
           click: () => dispatchToMainWindow({ id: "file.export-image" }),
         },
         separator,
@@ -193,7 +194,7 @@ function buildTemplate(): MenuItemConstructorOptions[] {
         {
           label: labels.copyHtml,
           accelerator: "CmdOrCtrl+Shift+C",
-          enabled: hasDocument,
+          enabled: hasText,
           click: () => dispatchToMainWindow({ id: "edit.copy-html" }),
         },
         { label: labels.paste, role: "paste" },
@@ -217,13 +218,13 @@ function buildTemplate(): MenuItemConstructorOptions[] {
         {
           label: labels.find,
           accelerator: "CmdOrCtrl+F",
-          enabled: hasDocument,
+          enabled: hasText,
           click: () => dispatchToMainWindow({ id: "edit.find" }),
         },
         {
           label: labels.replace,
           accelerator: isMac ? "Cmd+Alt+F" : "Ctrl+H",
-          enabled: hasDocument,
+          enabled: hasText,
           click: () => dispatchToMainWindow({ id: "edit.replace" }),
         },
         {
@@ -236,7 +237,7 @@ function buildTemplate(): MenuItemConstructorOptions[] {
     {
       id: "paragraphMenu",
       label: labels.paragraphMenu,
-      enabled: hasDocument,
+      enabled: hasText,
       // The Table action inside the groups writes the size its shortcut does; this entry asks for
       // a size of its own, which no formatting action can do
       submenu: [
@@ -254,7 +255,7 @@ function buildTemplate(): MenuItemConstructorOptions[] {
     {
       id: "format",
       label: labels.format,
-      enabled: hasDocument,
+      enabled: hasText,
       submenu: [
         ...formatItems(INLINE_FORMAT_ACTIONS, dispatchToMainWindow),
         separator,
@@ -405,6 +406,7 @@ export function setDocumentState(state: DocumentState): void {
   // tab can come back; the dirty state can change on every keystroke and must not rebuild the menu
   const menuChanged =
     state.hasDocument !== documentState.hasDocument ||
+    state.hasText !== documentState.hasText ||
     state.hasPath !== documentState.hasPath ||
     state.canReopenTab !== documentState.canReopenTab;
   documentState = state;

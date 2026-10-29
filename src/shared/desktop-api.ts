@@ -90,6 +90,21 @@ export const DOCUMENT_EXTENSIONS = [...MARKDOWN_EXTENSIONS, "txt"] as const;
 /** Those files, as a test for a path. */
 export const DOCUMENT_FILE = new RegExp(`\\.(?:${DOCUMENT_EXTENSIONS.join("|")})$`, "i");
 
+/** Extensions of the pictures the app can show and insert. */
+export const IMAGE_EXTENSIONS = [
+  "png",
+  "jpg",
+  "jpeg",
+  "gif",
+  "webp",
+  "svg",
+  "bmp",
+  "avif",
+] as const;
+
+/** Those files, as a test for a path. */
+export const IMAGE_FILE = new RegExp(`\\.(?:${IMAGE_EXTENSIONS.join("|")})$`, "i");
+
 /** How much of a file a folder preview reads. */
 export const PREVIEW_BYTES = 1024;
 
@@ -252,6 +267,8 @@ export interface SidebarWidths {
 export interface DocumentState {
   /** A tab holds a document, so the entries that work on one are usable. */
   hasDocument: boolean;
+  /** The document is text an editor shows, so saving, finding, formatting and exporting apply to it. */
+  hasText: boolean;
   /** Whether a file is behind the document on show; only a document with a path has versions to keep. */
   hasPath: boolean;
   /** Any tab has unsaved changes, so closing the window has to ask first. */
@@ -293,7 +310,7 @@ export interface InvokeChannels {
   "themes:list": () => readonly ImportedTheme[];
   /** Opens the global or project theme folder, creating it when it does not exist yet. */
   "themes:reveal": (source: ImportedTheme["source"]) => void;
-  "document:open": () => OpenedDocument | null;
+  "document:open": () => string | null;
   /** The unsaved content left behind by a session that did not end cleanly, or null when there is none. */
   "draft:read": () => DraftSession | null;
   /** Keeps what is unsaved in the open tabs; the host writes it out shortly after. */
@@ -304,6 +321,8 @@ export interface InvokeChannels {
   "folder:choose": () => string | null;
   /** Null when the user gave up on choosing the encoding of a file that is not UTF-8. */
   "document:read": (path: string) => OpenedDocument | null;
+  /** Where a file sits, for a picture the editor does not read; the path is checked to exist. */
+  "document:locate": (path: string) => DocumentLocation;
   /** Lists one level of a folder: directories first, then by name, modified or created time as the folderSort setting says; hidden entries are left out. */
   "folder:list": (path: string) => FolderEntry[];
   /** The entries pinned to the top of the folder, in the order they were pinned. */
