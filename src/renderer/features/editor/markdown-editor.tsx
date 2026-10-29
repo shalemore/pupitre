@@ -32,10 +32,12 @@ import { type Command, EditorView, keymap, placeholder } from "@codemirror/view"
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { debounce } from "@solid-primitives/scheduled";
 import { createEffect, on, onCleanup, onMount, type Component } from "solid-js";
+import { MARKDOWN_FILE } from "@shared/desktop-api";
 import { messageOf } from "@shared/errors";
 import type { FormatAction } from "@shared/format";
 import { ScrollView } from "@/components/ui";
 import { documentHtml, markdownFragment } from "@/features/export/document-html";
+import { pageStyle } from "@/features/export/page-style";
 import { t } from "@/i18n";
 import {
   type DocumentPosition,
@@ -44,6 +46,7 @@ import {
 } from "@/lib/document-positions";
 import { reportFailure } from "@/lib/errors";
 import { fileNameOf, withoutDocumentExtension } from "@/lib/file";
+import { escapeHtml } from "@/lib/html";
 import { settings } from "@/lib/settings";
 import { type TextStats } from "@/lib/text-stats";
 import { themeApplied } from "@/lib/theme";
@@ -202,6 +205,29 @@ function documentTitle(path: string | undefined): string {
   return withoutDocumentExtension(path ? fileNameOf(path) : t().common.untitledFileName);
 }
 
+/** How a document's text is shown: Markdown rendered, or any other text as it is written. */
+type DocumentKind = "markdown" | "text";
+
+/** Only a file whose extension is Markdown is rendered as Markdown; never guess from the text. */
+function documentKind(path: string | undefined): DocumentKind {
+  return path === undefined || MARKDOWN_FILE.test(path) ? "markdown" : "text";
+}
+
+/** A page that shows a text or code file as it is, for the HTML and image exports. */
+function textDocumentHtml(title: string, text: string): string {
+  return `<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>${escapeHtml(title)}</title>
+<style>${pageStyle()}
+body { white-space: pre-wrap; word-break: break-word; padding: 2rem; font-family: var(--code-font, ui-monospace, monospace); font-size: 0.875rem; line-height: 1.6; }
+</style>
+</head>
+<body>${escapeHtml(text)}</body>
+</html>`;
+}
+
 /**
  * What shows the document rendered, or nothing in source mode, where the source of every construct
  * is the document: the markers, the tables, the images and the diagrams as they were written.
@@ -314,6 +340,8 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     // CodeMirror scrolls a document taller than the window in the ScrollView around it rather than
     // in its own scroller, so that is where a place in the document is measured from
     const scroller = container;
+    const kind = documentKind(props.documentPath);
+    const markdown = kind === "markdown";
     // The props follow the document the window shows, and by the time this editor is cleaned up
     // that is already the next one; what it showed itself is kept here instead
     let path = props.documentPath;
@@ -402,42 +430,55 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         doc: props.markdown,
         extensions: [
           history(),
-          smartTyping(() => ({
-            smartQuotes: settings().smartQuotes,
-            smartDashes: settings().smartDashes,
-          })),
-          pairingCompartment.of(markdownPairing(settings().autoPairMarkdown)),
-          // Ahead of lang-markdown's Enter, which only continues lists and quotes
-          Prec.highest(keymap.of([{ key: "Enter", run: insertParagraphBreak }])),
+          ...(markdown
+            ? [
+                smartTyping(() => ({
+                  smartQuotes: settings().smartQuotes,
+                  smartDashes: settings().smartDashes,
+                })),
+                pairingCompartment.of(markdownPairing(settings().autoPairMarkdown)),
+                // Ahead of lang-markdown's Enter, which only continues lists and quotes
+                Prec.highest(keymap.of([{ key: "Enter", run: insertParagraphBreak }])),
+              ]
+            : []),
           keymap.of([
-            ...formatKeymap(markdownStyle),
-            { key: "Tab", run: inList(indentMore), shift: inList(indentLess) },
+            ...(markdown ? formatKeymap(markdownStyle) : []),
+            ...(markdown
+              ? [{ key: "Tab", run: inList(indentMore), shift: inList(indentLess) }]
+              : []),
             ...closeBracketsKeymap,
             ...defaultKeymap,
             ...foldingKeymap,
             ...historyKeymap,
           ]),
-          markdownLanguage,
+          ...(markdown ? [markdownLanguage] : []),
           folding({
             fold: t().editor.fold,
             unfold: t().editor.unfold,
             foldedText: t().editor.foldedText,
           }),
           codeHighlight,
-          renumberOrderedLists(),
-          previewCompartment.of(previewOf(settings().sourceMode)),
-          imageInput(uploadImage),
-          pasteHtml(markdownStyle),
-          baseUrlCompartment.of(documentBaseUrl.of(props.baseUrl)),
-          documentPathCompartment.of(documentFilePath.of(props.documentPath)),
-          diagramThemeCompartment.of(diagramTheme.of(readDiagramTheme())),
-          alertTitles.of(t().editor.alerts),
+          ...(markdown
+            ? [
+                renumberOrderedLists(),
+                imageInput(uploadImage),
+                pasteHtml(markdownStyle),
+                alertTitles.of(t().editor.alerts),
+              ]
+            : []),
+          previewCompartment.of(markdown ? previewOf(settings().sourceMode) : []),
+          baseUrlCompartment.of(markdown ? documentBaseUrl.of(props.baseUrl) : []),
+          documentPathCompartment.of(markdown ? documentFilePath.of(props.documentPath) : []),
+          diagramThemeCompartment.of(markdown ? diagramTheme.of(readDiagramTheme()) : []),
           textDirection,
           search({ createPanel: () => ({ dom: document.createElement("div") }) }),
           EditorView.lineWrapping,
-          EditorView.contentAttributes.of({ class: "md-document md-text-cursor" }),
+          EditorView.contentAttributes.of({
+            class: "md-document md-text-cursor",
+            "data-document-kind": kind,
+          }),
           layeredStyles,
-          placeholder(t().editor.placeholder),
+          ...(markdown ? [placeholder(t().editor.placeholder)] : []),
           focusCompartment.of([]),
           typewriterCompartment.of([]),
           spellcheckCompartment.of([]),
@@ -501,23 +542,32 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     // rendered document even in source mode without the setting changing.
     let sourceConfigured = settings().sourceMode;
     const showSource = (sourceMode: boolean): void => {
-      if (sourceConfigured === sourceMode) return;
+      if (!markdown || sourceConfigured === sourceMode) return;
       sourceConfigured = sourceMode;
       view.dispatch({ effects: previewCompartment.reconfigure(previewOf(sourceMode)) });
     };
 
     // The setting may be changed from the View menu, the settings window or a folder's own file
-    createEffect(on(() => settings().sourceMode, showSource));
+    createEffect(
+      on(
+        () => settings().sourceMode,
+        (sourceMode) => {
+          if (markdown) showSource(sourceMode);
+        },
+      ),
+    );
 
     // Only the characters that pair change, so the setting swaps that one extension and keeps the
     // text, the caret and the undo history as they are
     createEffect(
       on(
         () => settings().autoPairMarkdown,
-        (autoPairMarkdown) =>
+        (autoPairMarkdown) => {
+          if (!markdown) return;
           view.dispatch({
             effects: pairingCompartment.reconfigure(markdownPairing(autoPairMarkdown)),
-          }),
+          });
+        },
         { defer: true },
       ),
     );
@@ -655,16 +705,18 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     };
 
     const insertImage = async () => {
+      // Only a Markdown document links a picture with Markdown syntax
+      if (!markdown) return;
       try {
         const file = await pickImage();
         if (file === null) return;
         const src = await uploadImage(file);
-        const markdown = imageMarkdown(imageAlt(file.name), src);
+        const link = imageMarkdown(imageAlt(file.name), src);
         // Picking and writing took a moment, so the caret the image goes to is read again here
         const { from, to } = view.state.selection.main;
         view.dispatch({
-          changes: { from, to, insert: markdown },
-          selection: { anchor: from + markdown.length },
+          changes: { from, to, insert: link },
+          selection: { anchor: from + link.length },
           scrollIntoView: true,
         });
         view.focus();
@@ -731,10 +783,13 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       replaceNext: () => run(replaceNext),
       replaceAll: () => run(replaceAll),
       format: (action) => {
+        // A text or code file has no Markdown syntax to insert
+        if (!markdown) return;
         runFormatAction(view, action, markdownStyle());
         view.focus();
       },
       insertTable: (rows, columns) => {
+        if (!markdown) return;
         // The live preview opens the cell the caret lands in only for a change made while the
         // editor has the focus, and the size dialog held that until the size was picked
         view.focus();
@@ -751,6 +806,15 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           folded.push({ from, to });
         });
         unfoldAll(view);
+        const restore = () => {
+          // The folds go back to the lines they were made on, unless the document was edited
+          // while it was being printed and they would stand for something else now
+          if (folded.length > 0 && view.state.doc.eq(printed)) {
+            view.dispatch({ effects: folded.map((range) => foldEffect.of(range)) });
+          }
+          if (hadFocus) view.focus();
+        };
+        if (!markdown) return restore;
         // A printout is always the rendered document, so source mode gives the preview back for it
         // and takes it out again afterwards. The extensions go in first: a printing field added by
         // the same change would not see the effect that turns printing on.
@@ -762,25 +826,25 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         return () => {
           view.dispatch({ effects: setPrinting.of(false) });
           showSource(sourceMode);
-          // The folds go back to the lines they were made on, unless the document was edited
-          // while it was being printed and they would stand for something else now
-          if (folded.length > 0 && view.state.doc.eq(printed)) {
-            view.dispatch({ effects: folded.map((range) => foldEffect.of(range)) });
-          }
-          if (hadFocus) view.focus();
+          restore();
         };
       },
-      persistImages: (documentPath) => props.pendingImages.persistView(view, documentPath),
+      persistImages: (documentPath) =>
+        markdown ? props.pendingImages.persistView(view, documentPath) : Promise.resolve(),
       insertImage,
-      toHtml: () => {
+      toHtml: async () => {
+        if (!markdown) {
+          return textDocumentHtml(documentTitle(props.documentPath), view.state.doc.toString());
+        }
         forceParsing(view, view.state.doc.length, FULL_PARSE_TIMEOUT_MS);
         return documentHtml(view.state, documentTitle(props.documentPath));
       },
       toHtmlFragment: async () => {
         const { from, to } = view.state.selection.main;
         // Nothing selected copies the whole document
-        const markdown = from === to ? view.state.sliceDoc(0) : view.state.sliceDoc(from, to);
-        return { markdown, html: await markdownFragment(view.state, markdown) };
+        const text = from === to ? view.state.sliceDoc(0) : view.state.sliceDoc(from, to);
+        if (!markdown) return { markdown: text, html: `<pre>${escapeHtml(text)}</pre>` };
+        return { markdown: text, html: await markdownFragment(view.state, text) };
       },
     });
 

@@ -73,10 +73,19 @@ export interface OpenedDocument extends DocumentLocation {
 }
 
 /**
+ * Extensions the editor renders as Markdown. A file is Markdown only when its extension says so;
+ * every other text file is shown as it is written.
+ */
+export const MARKDOWN_EXTENSIONS = ["md", "markdown", "mdown", "mkd", "mdx"] as const;
+
+/** Those files, as a test for a path. */
+export const MARKDOWN_FILE = new RegExp(`\\.(?:${MARKDOWN_EXTENSIONS.join("|")})$`, "i");
+
+/**
  * Extensions of the text documents the editor opens, previews and links to. Separate from the file
  * types the installer claims as Pupitre's own (see fileAssociations), which are fewer.
  */
-export const DOCUMENT_EXTENSIONS = ["md", "markdown", "mdown", "mkd", "mdx", "txt"] as const;
+export const DOCUMENT_EXTENSIONS = [...MARKDOWN_EXTENSIONS, "txt"] as const;
 
 /** Those files, as a test for a path. */
 export const DOCUMENT_FILE = new RegExp(`\\.(?:${DOCUMENT_EXTENSIONS.join("|")})$`, "i");
