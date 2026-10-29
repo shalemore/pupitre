@@ -112,6 +112,16 @@
     --syntax-invalid: var(--ui-danger);
   }
 
+  /*
+   * On a high-density screen a CSS pixel is more than one physical pixel, so a 1px border reads as
+   * a heavy line. Half a pixel lands on one physical pixel at 2x and stays crisp.
+   */
+  @media (min-resolution: 2dppx) {
+    :root {
+      --ui-border-width: 0.5px;
+    }
+  }
+
   @media (prefers-color-scheme: dark) {
     :root {
       --ui-surface-0: oklch(0.145 0 0);
