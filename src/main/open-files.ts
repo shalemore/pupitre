@@ -17,9 +17,9 @@ export function takeLaunchFile(): string | undefined {
 
 /** Windows and Linux pass the file as an argument; Chromium may add its own switches. */
 function fileFromArgv(argv: readonly string[], workingDirectory: string): string | undefined {
-  // argv starts with the executable, and with the app folder as well when running unpackaged
+  // argv starts with the executable, and with the app folder as well when Electron runs the app
   const file = argv
-    .slice(app.isPackaged ? 1 : 2)
+    .slice(process.defaultApp ? 2 : 1)
     .find((arg) => !arg.startsWith("-") && DOCUMENT_FILE.test(arg));
   return file === undefined ? undefined : resolve(workingDirectory, file);
 }
