@@ -20,13 +20,9 @@ export interface FontFamily {
 /** Chromium refuses to query fonts while the page is hidden, so wait until the window is shown. */
 function whenVisible(): Promise<void> {
   if (document.visibilityState === "visible") return Promise.resolve();
+  // The event only fires when the state changes, so the next one is the window becoming visible
   return new Promise((resolve) => {
-    const handleChange = () => {
-      if (document.visibilityState !== "visible") return;
-      document.removeEventListener("visibilitychange", handleChange);
-      resolve();
-    };
-    document.addEventListener("visibilitychange", handleChange);
+    document.addEventListener("visibilitychange", () => resolve(), { once: true });
   });
 }
 
