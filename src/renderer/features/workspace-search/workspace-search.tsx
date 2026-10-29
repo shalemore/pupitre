@@ -1,5 +1,4 @@
 import { debounce } from "@solid-primitives/scheduled";
-import { cn } from "cn";
 import { CaseSensitive, Regex, WholeWord } from "lucide-solid";
 import {
   createEffect,
@@ -18,7 +17,7 @@ import type {
   WorkspaceSearchOptions,
   WorkspaceSearchResponse,
 } from "@shared/desktop-api";
-import { Badge, Button, Input, ListItem, ScrollView, Sheet } from "@/components/ui";
+import { Badge, Input, ListItem, ScrollView, Sheet, ToggleIconButton } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { createListNavigation } from "@/lib/list-navigation";
@@ -55,17 +54,15 @@ const OptionButton: Component<{
   onChange: (pressed: boolean) => void;
   children: JSX.Element;
 }> = (props) => (
-  <Button
-    variant="ghost"
+  <ToggleIconButton
+    pressed={props.pressed}
+    onChange={props.onChange}
+    label={props.label}
     size="icon-xs"
-    aria-pressed={props.pressed}
-    title={props.label}
-    aria-label={props.label}
-    onClick={() => props.onChange(!props.pressed)}
-    class={cn("text-muted-foreground", props.pressed && "bg-brand/15 text-brand")}
+    class="text-muted-foreground data-pressed:bg-brand/15"
   >
     {props.children}
-  </Button>
+  </ToggleIconButton>
 );
 
 /** The line a match is on, with the matched part marked. */

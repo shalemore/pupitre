@@ -15,3 +15,4 @@ export * from "./sheet";
 export * from "./slider";
 export * from "./switch";
 export * from "./tabs";
+export * from "./toggle-icon-button";

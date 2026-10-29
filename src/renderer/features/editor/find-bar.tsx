@@ -1,4 +1,3 @@
-import { ToggleButton } from "@kobalte/core/toggle-button";
 import { cn } from "cn";
 import {
   CaseSensitive,
@@ -10,7 +9,7 @@ import {
   X,
 } from "lucide-solid";
 import { createEffect, createSignal, on, Show, type Component, type JSX } from "solid-js";
-import { Badge, Button, buttonVariants, IconButton, Input } from "@/components/ui";
+import { Badge, Button, IconButton, Input, ToggleIconButton } from "@/components/ui";
 import { t } from "@/i18n";
 import type { MatchStats, SearchOptions } from "./markdown-editor";
 
@@ -35,18 +34,15 @@ const FindToggle: Component<{
   title: string;
   children: JSX.Element;
 }> = (props) => (
-  <ToggleButton
+  <ToggleIconButton
     pressed={props.pressed}
     onChange={props.onChange}
-    title={props.title}
-    aria-label={props.title}
-    class={cn(
-      buttonVariants({ variant: "ghost", size: "icon-2xs" }),
-      "data-pressed:bg-brand/15 data-pressed:text-brand",
-    )}
+    label={props.title}
+    size="icon-2xs"
+    class="data-pressed:bg-brand/15"
   >
     {props.children}
-  </ToggleButton>
+  </ToggleIconButton>
 );
 
 export const FindBar: Component<FindBarProps> = (props) => {
