@@ -8,3 +8,6 @@
 *.log
 .DS_Store
 /.perf-fixtures
+
+# Notes the agent leaves for the developer about a finding, see .claude/skills/issue-driven-fixes
+/NOTE-*.md
