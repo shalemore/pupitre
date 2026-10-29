@@ -1,7 +1,7 @@
 import { statSync } from "node:fs";
 import { join } from "node:path";
 import { isDeepStrictEqual } from "node:util";
-import { app, BrowserWindow, nativeTheme, shell } from "electron";
+import { app, nativeTheme, shell } from "electron";
 import type { WorkspaceState } from "@shared/desktop-api";
 import {
   DEFAULT_SETTINGS,
@@ -15,6 +15,7 @@ import {
   withoutSetting,
   WORKSPACE_FILE,
 } from "@shared/settings";
+import { broadcast } from "./broadcast";
 import { readJsonFile, writeJsonFile } from "./json-file";
 
 const listeners = new Set<(settings: Settings) => void>();
@@ -110,10 +111,8 @@ export function getWorkspaceState(): WorkspaceState {
 function publish(): void {
   current = resolveSettings(effectiveFile());
   nativeTheme.themeSource = current.colorScheme;
-  for (const window of BrowserWindow.getAllWindows()) {
-    window.webContents.send("settings:changed", current);
-    window.webContents.send("workspace:changed", getWorkspaceState());
-  }
+  broadcast("settings:changed", current);
+  broadcast("workspace:changed", getWorkspaceState());
   for (const listener of listeners) listener(current);
 }
 

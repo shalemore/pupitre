@@ -1,8 +1,9 @@
 import { existsSync, mkdirSync, readdirSync, watch, type FSWatcher } from "node:fs";
 import { basename, dirname, join } from "node:path";
 import { isDeepStrictEqual } from "node:util";
-import { app, BrowserWindow, shell } from "electron";
+import { app, shell } from "electron";
 import type { ImportedTheme } from "@shared/desktop-api";
+import { broadcast } from "./broadcast";
 import { readThemesFromRoot } from "./theme-folders";
 
 /** A write may arrive as several events, such as a temporary file and the rename after it. */
@@ -31,17 +32,11 @@ function readAll(): ImportedTheme[] {
   return themes;
 }
 
-function broadcast(): void {
-  for (const window of BrowserWindow.getAllWindows()) {
-    window.webContents.send("themes:changed", current);
-  }
-}
-
 function refresh(): void {
   const next = readAll();
   const changed = !isDeepStrictEqual(next, current);
   current = next;
-  if (changed) broadcast();
+  if (changed) broadcast("themes:changed", current);
   rewatch();
 }
 
