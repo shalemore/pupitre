@@ -340,6 +340,11 @@ img {
   vertical-align: bottom;
 }
 
+/* A picture sharing its line is inline, as in the editor, and takes no rounded corners */
+img[data-inline] {
+  border-radius: 0;
+}
+
 /*
  * Lists. A marked-up page draws the bullet or the number itself, with the same span the editor
  * uses, so a theme's marker shape and color reach it; a fragment for another application keeps the

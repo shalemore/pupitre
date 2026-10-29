@@ -54,7 +54,7 @@ test("embeds the document's pictures in the exported HTML", async () => {
   await writeFile(picture, PIXEL);
   await writeFile(
     note,
-    '# Note\n\n![shot](picture.png)\n\n<p align="left">\n  <img src="picture.png" width="20" height="20" />\n</p>\n',
+    '# Note\n\n![shot](picture.png)\n\nA line with ![inline](picture.png) text.\n\n<p align="left">\n  <img src="picture.png" width="20" height="20" />\n</p>\n',
   );
   const app = await launch({ files: [note] });
   try {
@@ -67,9 +67,16 @@ test("embeds the document's pictures in the exported HTML", async () => {
       .poll(() => readFile(out, "utf8").catch(() => ""))
       .toContain("data:image/png;base64,");
     const html = await readFile(out, "utf8");
-    // Both the Markdown picture and the one in the HTML block went into the page
+    // Every picture went into the page, and only the one alone in its paragraph is a block
     expect(html).not.toContain('src="picture.png"');
-    expect(html.match(/data:image\/png;base64,/g) ?? []).toHaveLength(2);
+    expect(html.match(/data:image\/png;base64,/g) ?? []).toHaveLength(3);
+    expect(html).toMatch(
+      /<img class="md-image-preview" src="data:image\/png;base64,[^"]*" alt="shot"/,
+    );
+    expect(html).toMatch(
+      /<img class="md-image-preview" data-inline src="data:image\/png;base64,[^"]*" alt="inline"/,
+    );
+    expect(html.match(/ data-inline/g) ?? []).toHaveLength(2);
   } finally {
     await close(app);
     await rm(folder, { recursive: true, force: true });

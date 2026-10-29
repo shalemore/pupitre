@@ -143,12 +143,15 @@ async function imageHtml(
   alt: string,
   title: string,
   size: ImageSize,
+  inline: boolean,
 ): Promise<string> {
   const width = size.width === undefined ? "" : ` width="${size.width}"`;
   const style = imageStyle(size);
   const declarations = style === "" ? "" : ` style="${style}"`;
   const titleAttribute = title === "" ? "" : ` title="${escapeHtml(title)}"`;
-  return `<img class="md-image-preview" src="${escapeHtml(await imageSource(ctx, src))}" alt="${escapeHtml(alt)}"${titleAttribute}${width}${declarations}>`;
+  // A picture sharing its line is inline, as in the editor: no frame and no rounded corners
+  const inlineAttribute = inline ? " data-inline" : "";
+  return `<img class="md-image-preview"${inlineAttribute} src="${escapeHtml(await imageSource(ctx, src))}" alt="${escapeHtml(alt)}"${titleAttribute}${width}${declarations}>`;
 }
 
 async function itemHtml(ctx: ExportContext, item: InlineItem): Promise<string> {
@@ -165,7 +168,7 @@ async function itemHtml(ctx: ExportContext, item: InlineItem): Promise<string> {
     case "link":
       return linkHtml(item.href, await itemsHtml(ctx, item.children));
     case "image":
-      return imageHtml(ctx, item.src, item.alt, item.title, item);
+      return imageHtml(ctx, item.src, item.alt, item.title, item, true);
     case "math":
       return `<span class="md-math">${await renderMath(item.tex, item.display)}</span>`;
     case "footnote":
@@ -379,6 +382,8 @@ async function htmlBlockHtml(ctx: ExportContext, source: string): Promise<string
   decorateHtmlBlock(holder);
   await Promise.all(
     [...holder.querySelectorAll("img")].map(async (image) => {
+      // An HTML block's picture shares its line, as the editor shows it
+      image.setAttribute("data-inline", "");
       const src = image.getAttribute("src");
       if (src === null) return;
       const embedded = await embeddedImage(ctx, src);
@@ -393,8 +398,15 @@ async function renderBlock(ctx: ExportContext, block: SyntaxNode, depth: number)
   const heading = HEADING_LEVEL.exec(block.name);
   if (heading) return headingBlock(ctx, block, heading[1] ?? "1");
   switch (block.name) {
-    case "Paragraph":
-      return `<p>${await itemsHtml(ctx, inlineItems(state, block))}</p>`;
+    case "Paragraph": {
+      const items = inlineItems(state, block);
+      const [only] = items;
+      // A picture alone in its paragraph takes the line, as the editor draws it: a block picture
+      if (items.length === 1 && only?.type === "image") {
+        return imageHtml(ctx, only.src, only.alt, only.title, only, false);
+      }
+      return `<p>${await itemsHtml(ctx, items)}</p>`;
+    }
     case "Blockquote":
       return quoteBlock(ctx, block, depth);
     case "BulletList":
@@ -414,7 +426,14 @@ async function renderBlock(ctx: ExportContext, block: SyntaxNode, depth: number)
       const picture = parseImageTag(source);
       // A block that holds one picture is the tag a resize writes, not raw HTML to sanitize
       if (picture) {
-        return imageHtml(ctx, resolveUrl(state, picture.src), picture.alt, picture.title, picture);
+        return imageHtml(
+          ctx,
+          resolveUrl(state, picture.src),
+          picture.alt,
+          picture.title,
+          picture,
+          true,
+        );
       }
       return isRenderableHtml(source)
         ? `<div class="md-html-block">${await htmlBlockHtml(ctx, source)}</div>`
