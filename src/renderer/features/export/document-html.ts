@@ -7,7 +7,7 @@ import { fencedText } from "@/features/editor/block-text";
 import { detailsSection } from "@/features/editor/details";
 import { HEADING_LEVEL } from "@/features/editor/document-structure";
 import { footnoteLabel } from "@/features/editor/footnotes";
-import { isRenderableHtml } from "@/features/editor/html";
+import { decorateHtmlBlock, isRenderableHtml } from "@/features/editor/html";
 import {
   documentBaseUrl,
   type ImageSize,
@@ -376,6 +376,7 @@ async function htmlBlockHtml(ctx: ExportContext, source: string): Promise<string
   if (!ctx.embedImages) return clean;
   const holder = document.createElement("div");
   holder.innerHTML = clean;
+  decorateHtmlBlock(holder);
   await Promise.all(
     [...holder.querySelectorAll("img")].map(async (image) => {
       const src = image.getAttribute("src");

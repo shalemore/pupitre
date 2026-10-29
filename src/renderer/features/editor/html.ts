@@ -39,6 +39,28 @@ export function isFormattingTag(name: string): boolean {
   return FORMATTING_TAGS.has(name);
 }
 
+/** The heading levels a document styles, from the theme's h1 to its h6. */
+const HEADING_LEVELS = [1, 2, 3, 4, 5, 6] as const;
+
+/**
+ * Gives the elements of a sanitized HTML block the classes a document uses, so an HTML heading,
+ * link or inline format is drawn like the Markdown it stands for. The editor and the exported page
+ * both call this.
+ */
+export function decorateHtmlBlock(block: HTMLElement): void {
+  for (const level of HEADING_LEVELS) {
+    for (const heading of block.querySelectorAll(`h${level}`)) {
+      heading.classList.add("md-heading", `md-h${level}`);
+    }
+  }
+  for (const anchor of block.querySelectorAll("a")) anchor.classList.add("md-link");
+  for (const tag of FORMATTING_TAGS) {
+    for (const element of block.querySelectorAll(tag)) {
+      element.classList.add("md-tag", `md-tag-${tag}`);
+    }
+  }
+}
+
 export class LineBreakWidget extends WidgetType {
   override eq(): boolean {
     return true;
@@ -107,19 +129,7 @@ export class HtmlBlockWidget extends WidgetType {
     const block = document.createElement("div");
     block.className = "md-html-block";
     block.append(DOMPurify.sanitize(this.source, { RETURN_DOM_FRAGMENT: true }));
-    // Preflight leaves headings without their size and weight, so give them the document's styles
-    for (const level of [1, 2, 3, 4, 5, 6] as const) {
-      for (const heading of block.querySelectorAll(`h${level}`)) {
-        heading.classList.add("md-heading", `md-h${level}`);
-      }
-    }
-    for (const anchor of block.querySelectorAll("a")) anchor.classList.add("md-link");
-    // The inline formats take the styles their Markdown counterparts have
-    for (const tag of FORMATTING_TAGS) {
-      for (const element of block.querySelectorAll(tag)) {
-        element.classList.add("md-tag", `md-tag-${tag}`);
-      }
-    }
+    decorateHtmlBlock(block);
     watchHtmlImages(view, block, this.base);
     return block;
   }

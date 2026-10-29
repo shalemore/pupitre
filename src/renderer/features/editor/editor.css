@@ -109,9 +109,9 @@
 
   /*
    * A heading is inset by the theme's --md-block-indent. The line in the editor carries it, and a
-   * heading on an exported page has no line of its own, so it takes the value itself.
+   * heading an HTML block or an exported page writes has no line of its own, so it takes the value.
    */
-  .md-document > .md-heading:not(.cm-line) {
+  .md-document .md-heading:not(.cm-line) {
     padding-inline-start: var(--md-block-indent, 0);
   }
 

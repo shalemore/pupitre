@@ -76,6 +76,44 @@ test("embeds the document's pictures in the exported HTML", async () => {
   }
 });
 
+test("draws an HTML heading like a Markdown one", async () => {
+  const folder = await workspace();
+  const file = join(folder, "headings.md");
+  const out = join(folder, "headings.html");
+  await writeFile(file, '# Markdown\n\n<h1 align="left">HTML</h1>\n');
+  const app = await launch({ files: [file], settings: { theme: "plakat" } });
+  try {
+    await expect(app.page.locator(".cm-content")).toContainText("HTML");
+    const headings = await app.page.evaluate(() =>
+      [...document.querySelectorAll(".cm-content .md-h1")].map((element) => {
+        const style = getComputedStyle(element);
+        return {
+          class: element.className,
+          padding: style.paddingInlineStart,
+          background: style.backgroundImage,
+        };
+      }),
+    );
+    expect(headings).toHaveLength(2);
+    const [markdown, html] = headings;
+    if (markdown === undefined || html === undefined) throw new Error("a heading is missing");
+    // Both carry the theme's banner and inset, whichever way the document wrote the heading
+    expect(html.class).toContain("md-heading");
+    expect(html.padding).toBe(markdown.padding);
+    expect(html.background).not.toBe("none");
+    await app.app.evaluate(({ dialog }, target) => {
+      dialog.showSaveDialog = async () => ({ canceled: false, filePath: target });
+    }, out);
+    await run(app.page, { id: "file.export-html" });
+    await expect
+      .poll(() => readFile(out, "utf8").catch(() => ""))
+      .toMatch(/<div class="md-html-block"><h1[^>]*class="md-heading md-h1"/);
+  } finally {
+    await close(app);
+    await rm(folder, { recursive: true, force: true });
+  }
+});
+
 test("opens a picture in a preview instead of the editor", async () => {
   const folder = await workspace();
   const note = join(folder, "note.md");
