@@ -367,17 +367,10 @@ function buildTemplate(): MenuItemConstructorOptions[] {
   ];
 }
 
-/** What picking an entry runs: the item's own handler, or a role that only Electron knows how to run. */
-type MenuRunner = NonNullable<MenuItemConstructorOptions["click"]> | { role: string };
-
-// The menu is rebuilt whole on any change, so its runner map is too
-let runners = new Map<string, MenuRunner>();
-let applicationMenu: Menu | undefined;
-
 /**
  * Names every item under a top-level menu after its position, so a menu drawn by the window can
- * send back the entry that was picked, and remembers what that entry runs. Separators are never
- * picked, and one instance of them is shared by the whole template.
+ * send back the entry that was picked. Separators are never picked, and one instance of them is
+ * shared by the whole template.
  */
 function indexItems(
   items: readonly MenuItemConstructorOptions[],
@@ -386,16 +379,13 @@ function indexItems(
   return items.map((item, index) => {
     if (item.type === "separator") return item;
     const id = `${parentId}.${index}`;
-    if (item.role !== undefined) runners.set(id, { role: item.role });
-    else if (item.click !== undefined) runners.set(id, item.click);
-    const indexed = Object.assign({}, item, { id });
+    const indexed = { ...item, id };
     if (Array.isArray(item.submenu)) indexed.submenu = indexItems(item.submenu, id);
     return indexed;
   });
 }
 
 function buildApplicationMenu(): Menu {
-  runners = new Map();
   const template = buildTemplate();
   for (const [index, top] of template.entries()) {
     const id = top.id ?? `menu${index}`;
@@ -407,8 +397,7 @@ function buildApplicationMenu(): Menu {
 
 /** The menu depends on the language, recent files and document state; rebuilding it whole on any change is the simplest approach and fast enough. */
 export function rebuildApplicationMenu(): void {
-  applicationMenu = buildApplicationMenu();
-  Menu.setApplicationMenu(applicationMenu);
+  Menu.setApplicationMenu(buildApplicationMenu());
 }
 
 export function setDocumentState(state: DocumentState): void {
@@ -453,57 +442,17 @@ function entriesOf(items: readonly MenuItem[]): MenuEntry[] {
 /** The drawn menu bar asks for this each time it opens a menu, because the entries follow the settings, the recent files and the open document. */
 export function menuSnapshot(): Menus {
   return menusOf((menu) => {
-    const item = applicationMenu?.items.find((candidate) => candidate.id === menu);
+    const item = Menu.getApplicationMenu()?.items.find((candidate) => candidate.id === menu);
     const submenu: Menu | undefined = item?.submenu ?? undefined;
     return submenu === undefined ? [] : entriesOf(submenu.items);
   });
 }
 
-/** Runs a role, which Electron implements only inside its own menus. */
-function runRole(role: string): void {
-  const window = BrowserWindow.getFocusedWindow() ?? getMainWindow();
-  const contents = window?.webContents;
-  switch (role) {
-    case "undo":
-      return contents?.undo();
-    case "redo":
-      return contents?.redo();
-    case "cut":
-      return contents?.cut();
-    case "copy":
-      return contents?.copy();
-    case "paste":
-      return contents?.paste();
-    case "pasteAndMatchStyle":
-      return contents?.pasteAndMatchStyle();
-    case "selectAll":
-      return contents?.selectAll();
-    case "delete":
-      return contents?.delete();
-    case "close":
-      return window?.close();
-    case "quit":
-      return app.quit();
-    case "togglefullscreen":
-      return window?.setFullScreen(!window.isFullScreen());
-    case "reload":
-      return contents?.reload();
-    case "toggleDevTools":
-      return contents?.toggleDevTools();
-    default:
-      // The remaining roles only appear in the macOS system menu bar
-      return;
-  }
-}
-
 /** Runs the entry the drawn menu bar reported; the id comes from the menu the snapshot was made of. */
 export function clickMenuItem(itemId: string): void {
-  const runner = runners.get(itemId);
-  if (runner === undefined) return;
-  if (typeof runner === "function") {
-    // Electron would hand the handler the item, the window and the event; the app's handlers take none of them
-    void Reflect.apply(runner, undefined, []);
-    return;
-  }
-  runRole(runner.role);
+  const item = Menu.getApplicationMenu()?.getMenuItemById(itemId);
+  if (!item) return;
+  const window = BrowserWindow.getFocusedWindow() ?? getMainWindow();
+  // Electron fills in what a role does; the app's own handlers take none of these arguments
+  Reflect.apply(item.click, item, [undefined, window, window?.webContents]);
 }

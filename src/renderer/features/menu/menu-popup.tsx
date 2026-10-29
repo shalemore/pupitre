@@ -1,4 +1,5 @@
 import {
+  MenuCheckboxItem,
   MenuContent,
   MenuItem,
   MenuPortal,
@@ -6,13 +7,13 @@ import {
   MenuSub,
   MenuSubContent,
   MenuSubTrigger,
-  MenuTrigger,
 } from "@kobalte/core/menu";
 import { cn } from "cn";
 import { Check, ChevronRight } from "lucide-solid";
 import { For, Show, type Component } from "solid-js";
 import type { MenuEntry } from "@shared/menu";
 import { Separator } from "@/components/ui";
+import { isRtl } from "@/lib/rtl";
 
 type MenuItemEntry = Extract<MenuEntry, { type: "item" }>;
 
@@ -56,7 +57,7 @@ const ItemContent: Component<{ item: MenuItemEntry; hasChecks: boolean }> = (pro
   </>
 );
 
-const MenuEntries: Component<{
+export const MenuEntries: Component<{
   entries: readonly MenuEntry[];
   onSelect: (entry: MenuItemEntry) => void;
 }> = (props) => {
@@ -74,13 +75,27 @@ const MenuEntries: Component<{
             <Show
               when={item().submenu}
               fallback={
-                <MenuItem
-                  disabled={item().enabled === false}
-                  onSelect={() => props.onSelect(item())}
-                  class="flex w-full items-center gap-6 rounded-md px-2.5 py-1.5 text-start outline-none transition-colors duration-fast data-disabled:text-tertiary data-highlighted:bg-accent data-highlighted:text-foreground"
+                <Show
+                  when={item().checked !== undefined}
+                  fallback={
+                    <MenuItem
+                      disabled={item().enabled === false}
+                      onSelect={() => props.onSelect(item())}
+                      class="flex w-full items-center gap-6 rounded-md px-2.5 py-1.5 text-start outline-none transition-colors duration-fast data-disabled:text-tertiary data-highlighted:bg-accent data-highlighted:text-foreground"
+                    >
+                      <ItemContent item={item()} hasChecks={hasChecks()} />
+                    </MenuItem>
+                  }
                 >
-                  <ItemContent item={item()} hasChecks={hasChecks()} />
-                </MenuItem>
+                  <MenuCheckboxItem
+                    checked={item().checked === true}
+                    disabled={item().enabled === false}
+                    onSelect={() => props.onSelect(item())}
+                    class="flex w-full items-center gap-6 rounded-md px-2.5 py-1.5 text-start outline-none transition-colors duration-fast data-disabled:text-tertiary data-highlighted:bg-accent data-highlighted:text-foreground"
+                  >
+                    <ItemContent item={item()} hasChecks={hasChecks()} />
+                  </MenuCheckboxItem>
+                </Show>
               }
             >
               <MenuSub>
@@ -111,31 +126,19 @@ const MenuEntries: Component<{
  */
 export const MenuPopup: Component<MenuPopupProps> = (props) => (
   <MenuRoot
-    open
+    open={!props.closing}
     modal={false}
-    placement={document.documentElement.dir === "rtl" ? "bottom-end" : "bottom-start"}
+    placement={isRtl() ? "bottom-end" : "bottom-start"}
     gutter={2}
     fitViewport
+    getAnchorRect={() => props.anchor}
     onOpenChange={(open) => {
       if (!open) props.onClose();
     }}
   >
-    <MenuTrigger
-      as="span"
-      aria-hidden="true"
-      tabIndex={-1}
-      style={{
-        position: "fixed",
-        left: `${props.anchor.left}px`,
-        top: `${props.anchor.top}px`,
-        width: `${props.anchor.width}px`,
-        height: `${props.anchor.height}px`,
-        "pointer-events": "none",
-      }}
-    />
     <MenuPortal>
       <MenuContent
-        data-closed={props.closing ? "" : undefined}
+        data-menu-panel=""
         onInteractOutside={(event) => {
           // A click in the bar is the bar's business: it switches or closes the menu itself
           if (event.target instanceof Element && event.target.closest("[data-menu-bar]") !== null) {

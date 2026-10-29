@@ -7,7 +7,8 @@ export interface SheetProps {
   title: string;
   /** Where the sheet sits: a palette is centred, a search hangs under the title bar. */
   placement?: "center" | "top";
-  onKeyDown: (event: KeyboardEvent) => void;
+  /** Handles keys the content cares about before the dialog does; a list that walks itself uses it. */
+  onKeyDown?: (event: KeyboardEvent) => void;
   onClose: () => void;
   children: JSX.Element;
 }

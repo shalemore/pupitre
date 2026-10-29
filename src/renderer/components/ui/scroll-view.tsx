@@ -88,7 +88,6 @@ export function ScrollView(props: ScrollViewProps) {
     setOverflow(hiddenEdges(element));
   };
   const stopScrolling = debounce(() => setScrolling(false), IDLE_MS);
-  onCleanup(stopScrolling.clear);
 
   const visible = () => {
     const { scrollbar } = settings();

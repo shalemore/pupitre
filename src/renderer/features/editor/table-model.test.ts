@@ -73,6 +73,17 @@ describe("readTable", () => {
       ["1", "2"],
     ]);
   });
+
+  it("reads an empty cell between two pipes", () => {
+    const [, table] = tableOf("|  | b ||\n| --- | --- | --- |");
+    expect(table.rows[0]?.cells.map((cell) => cell.text)).toEqual(["", "b", ""]);
+    expect(columnCount(table)).toBe(3);
+  });
+
+  it("leaves the spaces after a closing pipe out of the cells", () => {
+    const [, table] = tableOf("| a | b |  \n| --- | --- |\n| 1 | 2 |");
+    expect(table.rows[0]?.cells.map((cell) => cell.text)).toEqual(["a", "b"]);
+  });
 });
 
 describe("table edits", () => {

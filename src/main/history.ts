@@ -1,8 +1,9 @@
-import { createHash } from "node:crypto";
+import { hash } from "node:crypto";
 import { rmSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { app } from "electron";
+import log from "electron-log/main";
 import { z } from "zod";
 import type { HistoryEntry } from "@shared/desktop-api";
 import { readJsonFile, writeJsonFile } from "./json-file";
@@ -63,7 +64,7 @@ function snapshotFile(key: string, id: string): string {
  * document itself gets when it is opened.
  */
 function keyOf(path: string): string {
-  return createHash("sha1").update(resolve(path)).digest("hex");
+  return hash("sha1", resolve(path), "hex");
 }
 
 /** What is known of the versions; a file that cannot be read as an index leaves nothing to list. */
@@ -170,7 +171,7 @@ export async function recordVersion(path: string, markdown: string): Promise<voi
     // The index is written last, so a version that never made it to the disk is never listed
     writeJsonFile(indexPath(), versions);
   } catch (error) {
-    console.error(`Could not keep a version of ${path}:`, error);
+    log.error(`Could not keep a version of ${path}:`, error);
   }
 }
 

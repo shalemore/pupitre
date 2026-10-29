@@ -2,6 +2,7 @@ import { makeEventListener } from "@solid-primitives/event-listener";
 import { createEffect, createSignal } from "solid-js";
 import { TITLE_BAR_HEIGHT } from "@shared/desktop-api";
 import { desktop, isMacOS } from "@/lib/desktop";
+import { distanceFromEnd, distanceFromStart } from "@/lib/rtl";
 
 /** A little past the title bar, so a pointer on the bar always counts as near the top. */
 const TOP_EDGE = TITLE_BAR_HEIGHT + 8;
@@ -110,12 +111,12 @@ export function createImmersiveChrome(options: ChromeOptions) {
     },
     onPointerMove: (event: PointerEvent) => {
       if (!(event.target instanceof Element)) return;
-      const fromStart = document.dir === "rtl" ? window.innerWidth - event.clientX : event.clientX;
+      const fromStart = distanceFromStart(event.clientX);
       const sidebar = event.target.closest("[data-sidebar]")?.getAttribute("data-sidebar");
       setNear({
         top: event.clientY < (sidebar ? TOP_EDGE_OVER_SIDEBAR : TOP_EDGE),
         start: fromStart < SIDE_EDGE || sidebar === "start",
-        end: window.innerWidth - fromStart < SIDE_EDGE || sidebar === "end",
+        end: distanceFromEnd(event.clientX) < SIDE_EDGE || sidebar === "end",
       });
     },
   };

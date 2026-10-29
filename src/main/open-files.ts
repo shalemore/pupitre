@@ -17,11 +17,22 @@ export function takeLaunchFile(): string | undefined {
 
 /** Windows and Linux pass the file as an argument; Chromium may add its own switches. */
 function fileFromArgv(argv: readonly string[], workingDirectory: string): string | undefined {
-  // argv starts with the executable, and with the app folder as well when running unpackaged
+  // argv starts with the executable, and with the app folder as well when Electron runs the app
   const file = argv
-    .slice(app.isPackaged ? 1 : 2)
+    .slice(process.defaultApp ? 2 : 1)
     .find((arg) => !arg.startsWith("-") && DOCUMENT_FILE.test(arg));
   return file === undefined ? undefined : resolve(workingDirectory, file);
+}
+
+/** The file this instance was started with, which the single-instance lock hands to the first one. */
+export function launchFileFromArgv(): string | undefined {
+  return fileFromArgv(process.argv, process.cwd());
+}
+
+/** The file a second instance handed over, when it sent one. */
+function handedFile(data: unknown): string | undefined {
+  if (typeof data !== "object" || data === null || !("file" in data)) return undefined;
+  return typeof data.file === "string" ? data.file : undefined;
 }
 
 function openFile(path: string): void {
@@ -38,15 +49,16 @@ function openFile(path: string): void {
 
 /** Call before the app is ready: macOS reports files opened at launch with open-file early. */
 export function handleOpenFileRequests(): void {
-  launchFile = fileFromArgv(process.argv, process.cwd());
+  launchFile = launchFileFromArgv();
 
   app.on("open-file", (event, path) => {
     event.preventDefault();
     openFile(path);
   });
 
-  app.on("second-instance", (_event, argv, workingDirectory) => {
-    const file = fileFromArgv(argv, workingDirectory);
+  app.on("second-instance", (_event, argv, workingDirectory, additionalData) => {
+    // The lock carries the file the second instance was started with; its argv may have been reordered
+    const file = handedFile(additionalData) ?? fileFromArgv(argv, workingDirectory);
     if (file) {
       openFile(file);
       return;

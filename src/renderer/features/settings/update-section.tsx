@@ -1,3 +1,4 @@
+import { Progress } from "@kobalte/core/progress";
 import { cn } from "cn";
 import { CheckCircle2, Download, RefreshCw } from "lucide-solid";
 import { createMemo, Show, type Component } from "solid-js";
@@ -5,6 +6,7 @@ import type { UpdateStatus } from "@shared/desktop-api";
 import { Button, Callout, ScrollView } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
+import { formatPercent } from "@/lib/format";
 import { updateStatus } from "@/lib/updater";
 
 function hasKind<K extends UpdateStatus["kind"]>(
@@ -90,14 +92,15 @@ export const UpdateStatusPanel: Component<{ currentVersion: string }> = (props) 
           <Callout class="space-y-2">
             <div class="flex items-center justify-between">
               <span class="text-muted-foreground">{t().settings.downloadingUpdate}</span>
-              <span class="font-mono font-medium tabular-nums">{status().percent}%</span>
+              <span class="font-mono font-medium tabular-nums">
+                {formatPercent(status().percent / 100)}
+              </span>
             </div>
-            <div class="w-full h-1.5 bg-muted rounded-full overflow-hidden">
-              <div
-                class="h-full rounded-full bg-brand transition-[width] duration-sheet"
-                style={{ width: `${status().percent}%` }}
-              />
-            </div>
+            <Progress value={status().percent} aria-label={t().settings.downloadingUpdate}>
+              <Progress.Track class="w-full h-1.5 bg-muted rounded-full overflow-hidden">
+                <Progress.Fill class="h-full rounded-full bg-brand transition-[width] duration-sheet w-(--kb-progress-fill-width)" />
+              </Progress.Track>
+            </Progress>
           </Callout>
         )}
       </Show>

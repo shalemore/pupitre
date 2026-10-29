@@ -1,6 +1,7 @@
 import { join } from "node:path";
-import { app, BrowserWindow } from "electron";
+import { app } from "electron";
 import { z } from "zod";
+import { broadcast } from "./broadcast";
 import { readJsonFile, writeJsonFile } from "./json-file";
 
 const MAX_RECENT_FILES = 10;
@@ -20,9 +21,7 @@ export function getRecentFiles(): readonly string[] {
 function save(next: string[]): void {
   recentFiles = next;
   writeJsonFile(storePath(), next);
-  for (const window of BrowserWindow.getAllWindows()) {
-    window.webContents.send("recent-files:changed", next);
-  }
+  broadcast("recent-files:changed", next);
   for (const listener of listeners) listener();
 }
 

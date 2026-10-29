@@ -20,15 +20,6 @@ export function isolateFileName(name: string): string {
   return `${LEFT_TO_RIGHT_ISOLATE}${name}${POP_ISOLATE}`;
 }
 
-/** A path written with forward slashes and without a trailing one, whatever it was written with. */
-function slashed(path: string): string {
-  return path.replaceAll("\\", "/").replace(/\/+$/, "");
-}
-
-export function isInsideFolder(folder: string, path: string): boolean {
-  return slashed(path).startsWith(`${slashed(folder)}/`);
-}
-
 /**
  * The folder that holds `path`, or undefined when it is the root of a file system or of a network
  * share. The separator style of the path is kept, so a path read from a window and one made here
@@ -46,13 +37,6 @@ export function parentFolder(path: string): string | undefined {
   if (cut === 0) return trimmed.startsWith("/") ? "/" : trimmed.slice(0, 1);
   const parent = trimmed.slice(0, cut);
   return /^[A-Za-z]:$/.test(parent) ? `${parent}${trimmed[cut] ?? "\\"}` : parent;
-}
-
-/** Where `path` sits under `folder`, or undefined when it is not inside it. */
-export function relativeToFolder(folder: string, path: string): string | undefined {
-  const root = slashed(folder);
-  const full = slashed(path);
-  return full.startsWith(`${root}/`) ? full.slice(root.length + 1) : undefined;
 }
 
 /**

@@ -144,6 +144,15 @@ export function resolveLocale(
   return setting === "auto" ? matchLocale(preferredLanguages) : setting;
 }
 
+/**
+ * The locale to format numbers and dates with. Chromium has no Intl data for every language the
+ * app speaks (Icelandic among them) and would quietly use the system language instead; the app's
+ * own fallback is better than a language the user did not choose.
+ */
+export function intlLocale(locale: SupportedLocale): SupportedLocale {
+  return Intl.DateTimeFormat.supportedLocalesOf([locale]).length > 0 ? locale : DEFAULT_LOCALE;
+}
+
 export function getDictionary(locale: SupportedLocale): TranslationSchema {
   return LOCALES[locale].dictionary;
 }

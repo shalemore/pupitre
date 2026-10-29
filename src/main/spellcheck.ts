@@ -1,5 +1,5 @@
-import { app, session } from "electron";
-import { resolveLocale } from "@shared/i18n";
+import { session } from "electron";
+import { currentLocale } from "./i18n";
 import { getSettings } from "./settings-store";
 
 /**
@@ -8,7 +8,7 @@ import { getSettings } from "./settings-store";
  * the exact tag wins over its bare language, and any region of that language over English.
  */
 function spellCheckerLanguage(available: readonly string[]): string {
-  const locale = resolveLocale(getSettings().locale, app.getPreferredSystemLanguages());
+  const locale = currentLocale();
   const exact = available.find((code) => code.toLowerCase() === locale.toLowerCase());
   if (exact !== undefined) return exact;
   const { language } = new Intl.Locale(locale);

@@ -1,7 +1,7 @@
 import { syntaxTree } from "@codemirror/language";
 import { type EditorState, Facet } from "@codemirror/state";
 import { type EditorView, WidgetType } from "@codemirror/view";
-import { messageOf } from "@/lib/errors";
+import { messageOf } from "@shared/errors";
 import { isDarkColor, toHex } from "@/lib/theme";
 import { fencedText } from "./block-text";
 import { onReveal, onScrollbar } from "./widget-events";

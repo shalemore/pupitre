@@ -1,7 +1,8 @@
 import { Combobox as KobalteCombobox } from "@kobalte/core/combobox";
+import { makeEventListener } from "@solid-primitives/event-listener";
 import { cn } from "cn";
 import { Check, ChevronDown } from "lucide-solid";
-import { createSignal, onCleanup, onMount, Show } from "solid-js";
+import { createSignal, Show } from "solid-js";
 import { ScrollView, type ScrollViewProps } from "./scroll-view";
 import type { SelectOption } from "./select";
 
@@ -60,17 +61,19 @@ export function Combobox(props: ComboboxProps) {
     input?.blur();
   };
 
-  onMount(() => {
-    const handlePointer = (event: PointerEvent) => {
+  // Capture, so a pointer down on a part of the window that cannot take the focus is seen as well
+  makeEventListener(
+    document,
+    "pointerdown",
+    (event: PointerEvent) => {
       if (!open()) return;
       const target = event.target;
       if (!(target instanceof Node)) return;
       if (control?.contains(target) || content?.contains(target)) return;
       dismissOutside();
-    };
-    document.addEventListener("pointerdown", handlePointer, true);
-    onCleanup(() => document.removeEventListener("pointerdown", handlePointer, true));
-  });
+    },
+    { capture: true },
+  );
 
   return (
     <KobalteCombobox<SelectOption>

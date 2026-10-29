@@ -1,9 +1,11 @@
+import { ContextMenu } from "@kobalte/core/context-menu";
 import { cn } from "cn";
 import { ChevronRight, CircleAlert, FileText, Folder } from "lucide-solid";
 import {
   createEffect,
   createMemo,
   createResource,
+  createSelector,
   createSignal,
   For,
   on,
@@ -13,18 +15,26 @@ import {
   type Component,
 } from "solid-js";
 import type { FolderEntry } from "@shared/desktop-api";
+import { messageOf } from "@shared/errors";
 import type { MenuEntry } from "@shared/menu";
+import { isInsideFolder, relativeToFolder } from "@shared/paths";
 import { ListItem, rowIndent } from "@/components/ui";
-import { MenuPopup } from "@/features/menu/menu-popup";
+import { MenuEntries } from "@/features/menu/menu-popup";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
-import { messageOf, reportFailure } from "@/lib/errors";
-import { isInsideFolder, relativeToFolder } from "@/lib/file";
+import { reportFailure } from "@/lib/errors";
 import { excerptOf } from "@/lib/markdown-excerpt";
 import { settings } from "@/lib/settings";
 
+/** The menu of a row: what it lists, and what each entry runs, by id. */
+interface RowMenu {
+  entries: readonly MenuEntry[];
+  actions: ReadonlyMap<string, () => void>;
+}
+
 interface TreeContext {
-  activePath: () => string | undefined;
+  /** Whether the row at `path` is the document shown in the editor. */
+  isActive: (path: string) => boolean;
   /** Why opening a file failed, by path. */
   failures: () => Readonly<Record<string, string>>;
   onOpenFile: (path: string) => void;
@@ -35,8 +45,10 @@ interface TreeContext {
   renaming: () => string | undefined;
   onRename: (path: string, name: string) => void;
   onRenameCancel: () => void;
-  /** Opens the menu of a row at the pointer. */
-  onMenu: (entry: FolderEntry, event: MouseEvent) => void;
+  /** The menu of a row, built when it opens. */
+  menuOf: (entry: FolderEntry) => RowMenu;
+  /** Told when a row menu opens or closes. */
+  onMenuOpenChange: (open: boolean) => void;
   /** The absolute paths pinned at the top of this tree. */
   pinned: () => ReadonlySet<string>;
   onTogglePin: (entry: FolderEntry) => void;
@@ -159,7 +171,7 @@ const FolderRow: Component<{
 }> = (props) => {
   const expanded = () => props.tree.isExpanded(props.entry.path);
   const failure = () => props.tree.failures()[props.entry.path];
-  const isActive = () => props.tree.activePath() === props.entry.path;
+  const isActive = () => props.tree.isActive(props.entry.path);
   const isDirectory = () => props.entry.kind === "directory";
   const excerpt = createMemo(
     () => excerptOf(props.previews()?.[props.entry.path] ?? "") || undefined,
@@ -170,61 +182,74 @@ const FolderRow: Component<{
       <Show
         when={props.tree.renaming() === props.entry.path}
         fallback={
-          <ListItem
-            dir="auto"
-            active={isActive()}
-            tone={failure() ? "danger" : "default"}
-            onClick={() =>
-              isDirectory()
-                ? props.tree.onToggleExpanded(props.entry.path)
-                : props.tree.onOpenFile(props.entry.path)
-            }
-            onContextMenu={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-              props.tree.onMenu(props.entry, event);
-            }}
-            style={rowIndent(props.depth, 6)}
-            title={failure() ?? props.entry.name}
-            class={cn(excerpt() && "items-start")}
-          >
-            <Show when={isDirectory()} fallback={<span class="size-3 shrink-0" />}>
-              <ChevronRight
-                class={cn(
-                  "size-3 shrink-0 transition-transform duration-base rtl:-scale-x-100",
-                  expanded() && "rotate-90 rtl:rotate-90",
-                )}
-              />
-            </Show>
-            <Show
-              when={isDirectory()}
-              fallback={
-                <Show
-                  when={failure()}
-                  fallback={<FileText class={cn("size-3.5 shrink-0", excerpt() && "mt-0.5")} />}
-                >
-                  <CircleAlert class={cn("size-3.5 shrink-0", excerpt() && "mt-0.5")} />
-                </Show>
+          <ContextMenu onOpenChange={props.tree.onMenuOpenChange}>
+            <ContextMenu.Trigger
+              as={ListItem}
+              dir="auto"
+              active={isActive()}
+              tone={failure() ? "danger" : "default"}
+              onClick={() =>
+                isDirectory()
+                  ? props.tree.onToggleExpanded(props.entry.path)
+                  : props.tree.onOpenFile(props.entry.path)
               }
+              // A row's menu is its own; the empty space behind it has the folder's
+              onContextMenu={(event) => event.stopPropagation()}
+              style={rowIndent(props.depth, 6)}
+              title={failure() ?? props.entry.name}
+              class={cn(excerpt() && "items-start")}
             >
-              <Folder class="size-3.5 shrink-0" />
-            </Show>
-            <span class={cn("min-w-0", excerpt() ? "flex-1" : "truncate")}>
-              <span class="block truncate">
-                <bdi dir="ltr">{props.entry.name}</bdi>
-              </span>
-              <Show when={excerpt()}>
-                {/* Isolated, so an excerpt in another script never turns the row around */}
-                <bdi
-                  dir="auto"
-                  aria-hidden="true"
-                  class="mt-0.5 line-clamp-2 text-2xs font-normal text-tertiary"
-                >
-                  {excerpt()}
-                </bdi>
+              <Show when={isDirectory()} fallback={<span class="size-3 shrink-0" />}>
+                <ChevronRight
+                  class={cn(
+                    "size-3 shrink-0 transition-transform duration-base rtl:-scale-x-100",
+                    expanded() && "rotate-90 rtl:rotate-90",
+                  )}
+                />
               </Show>
-            </span>
-          </ListItem>
+              <Show
+                when={isDirectory()}
+                fallback={
+                  <Show
+                    when={failure()}
+                    fallback={<FileText class={cn("size-3.5 shrink-0", excerpt() && "mt-0.5")} />}
+                  >
+                    <CircleAlert class={cn("size-3.5 shrink-0", excerpt() && "mt-0.5")} />
+                  </Show>
+                }
+              >
+                <Folder class="size-3.5 shrink-0" />
+              </Show>
+              <span class={cn("min-w-0", excerpt() ? "flex-1" : "truncate")}>
+                <span class="block truncate">
+                  <bdi dir="ltr">{props.entry.name}</bdi>
+                </span>
+                <Show when={excerpt()}>
+                  {/* Isolated, so an excerpt in another script never turns the row around */}
+                  <bdi
+                    dir="auto"
+                    aria-hidden="true"
+                    class="mt-0.5 line-clamp-2 text-2xs font-normal text-tertiary"
+                  >
+                    {excerpt()}
+                  </bdi>
+                </Show>
+              </span>
+            </ContextMenu.Trigger>
+            <ContextMenu.Portal>
+              <ContextMenu.Content class="floating-panel z-50 flex min-w-52 max-h-(--kb-popper-content-available-height) flex-col overflow-y-auto overscroll-contain p-1 text-xs text-foreground outline-none select-none">
+                {(() => {
+                  const menu = props.tree.menuOf(props.entry);
+                  return (
+                    <MenuEntries
+                      entries={menu.entries}
+                      onSelect={(item) => menu.actions.get(item.id)?.()}
+                    />
+                  );
+                })()}
+              </ContextMenu.Content>
+            </ContextMenu.Portal>
+          </ContextMenu>
         }
       >
         <RenameField
@@ -243,14 +268,6 @@ const FolderRow: Component<{
   );
 };
 
-/** One entry of the row menu, with the action it runs. */
-interface OpenMenu {
-  entries: readonly MenuEntry[];
-  actions: ReadonlyMap<string, () => void>;
-  /** Where the pointer opened the menu. */
-  anchor: DOMRect;
-}
-
 interface PathChange {
   old: string;
   path: string;
@@ -260,16 +277,18 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
   const [failures, setFailures] = createSignal<Readonly<Record<string, string>>>({});
   const [renaming, setRenaming] = createSignal<string>();
   const [expanded, setExpanded] = createSignal<ReadonlySet<string>>(new Set());
-  const [menu, setMenu] = createSignal<OpenMenu>();
+  const [menuOpen, setMenuOpen] = createSignal(false);
   const [pins, { refetch: refetchPins }] = createResource(
     () => props.root,
     (root) => desktop.invoke("folder:pins", root),
   );
   const pinnedPaths = createMemo(() => new Set((pins() ?? []).map((entry) => entry.path)));
   const pinnedEntries = () => pins() ?? [];
+  // Each row subscribes to its own boolean, so opening another document touches two rows, not the tree
+  const rowIsActive = createSelector(() => props.activePath);
   // The rename field lives in the sidebar too: folding it away under the field would drop the name
   // being typed and cancel the rename
-  const heldOpen = () => menu() !== undefined || renaming() !== undefined;
+  const heldOpen = () => menuOpen() || renaming() !== undefined;
   createEffect(
     on(heldOpen, (open) => {
       props.onHoldOpenChange?.(open);
@@ -370,7 +389,7 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
   const reveal = (path: string) => perform(() => desktop.invoke("path:reveal", path));
   const copyPath = (path: string) => perform(() => desktop.invoke("clipboard:write-text", path));
 
-  const openMenu = (entry: FolderEntry, event: MouseEvent) => {
+  const menuOf = (entry: FolderEntry): RowMenu => {
     const actions = new Map<string, () => void>();
     const item = (id: string, label: string, act: () => void): MenuEntry => {
       actions.set(id, act);
@@ -410,13 +429,11 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
             separator,
             trashItem,
           ];
-    setMenu({ entries, actions, anchor: new DOMRect(event.clientX, event.clientY, 0, 0) });
+    return { entries, actions };
   };
 
-  const closeMenu = () => setMenu(undefined);
-
   const tree: TreeContext = {
-    activePath: () => props.activePath,
+    isActive: (path) => rowIsActive(path),
     failures,
     onOpenFile: (path) => void openFile(path),
     isExpanded: (path) => expanded().has(path),
@@ -429,7 +446,8 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
     renaming,
     onRename: rename,
     onRenameCancel: () => setRenaming(undefined),
-    onMenu: openMenu,
+    menuOf,
+    onMenuOpenChange: setMenuOpen,
     pinned: pinnedPaths,
     onTogglePin: togglePin,
   };
@@ -437,41 +455,36 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
   return (
     // The empty space of the tree stands for the folder it shows, so a file can be created at its
     // root; it reaches the bottom of the sidebar, so the native menu does not take over there
-    <div
-      class="p-2 space-y-0.5 min-h-full"
-      onContextMenu={(event) => {
-        event.preventDefault();
-        openMenu({ name: props.root, path: props.root, kind: "directory" }, event);
-      }}
-    >
-      <Show when={pinnedEntries().length > 0}>
-        <div class="space-y-0.5">
-          <div class="px-2.5 pt-1 text-2xs font-medium tracking-wider text-tertiary uppercase">
-            {t().sidebar.pinned}
+    <ContextMenu onOpenChange={setMenuOpen}>
+      <ContextMenu.Trigger as="div" class="p-2 space-y-0.5 min-h-full">
+        <Show when={pinnedEntries().length > 0}>
+          <div class="space-y-0.5">
+            <div class="px-2.5 pt-1 text-2xs font-medium tracking-wider text-tertiary uppercase">
+              {t().sidebar.pinned}
+            </div>
+            <For each={pinnedEntries()}>
+              {(entry) => (
+                <FolderRow entry={entry} depth={0} tree={tree} previews={() => undefined} />
+              )}
+            </For>
           </div>
-          <For each={pinnedEntries()}>
-            {(entry) => (
-              <FolderRow entry={entry} depth={0} tree={tree} previews={() => undefined} />
-            )}
-          </For>
-        </div>
-        <div class="mx-2.5 border-t border-border-subtle" />
-      </Show>
-      <FolderChildren path={props.root} depth={0} tree={tree} />
-      <Show when={menu()} keyed>
-        {(open) => (
-          <MenuPopup
-            entries={open.entries}
-            anchor={open.anchor}
-            onSelect={(entry) => {
-              const action = open.actions.get(entry.id);
-              closeMenu();
-              action?.();
-            }}
-            onClose={closeMenu}
-          />
-        )}
-      </Show>
-    </div>
+          <div class="mx-2.5 border-t border-border-subtle" />
+        </Show>
+        <FolderChildren path={props.root} depth={0} tree={tree} />
+      </ContextMenu.Trigger>
+      <ContextMenu.Portal>
+        <ContextMenu.Content class="floating-panel z-50 flex min-w-52 max-h-(--kb-popper-content-available-height) flex-col overflow-y-auto overscroll-contain p-1 text-xs text-foreground outline-none select-none">
+          {(() => {
+            const menu = menuOf({ name: props.root, path: props.root, kind: "directory" });
+            return (
+              <MenuEntries
+                entries={menu.entries}
+                onSelect={(item) => menu.actions.get(item.id)?.()}
+              />
+            );
+          })()}
+        </ContextMenu.Content>
+      </ContextMenu.Portal>
+    </ContextMenu>
   );
 };

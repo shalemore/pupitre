@@ -103,6 +103,10 @@ describe("saving", () => {
     expect(lineEndingOf("a\nb")).toBe("lf");
     expect(withLineEnding(normalizeText("a\r\nb\r\n"), "crlf")).toBe("a\r\nb\r\n");
   });
+
+  it("normalizes every kind of line ending to LF", () => {
+    expect(normalizeText("a\r\nb\rc\n")).toBe("a\nb\nc\n");
+  });
 });
 
 describe("open and save round trip", () => {

@@ -1,4 +1,5 @@
 import type { SyntaxNode, Tree } from "@lezer/common";
+import { toLf } from "@shared/text";
 import { readableTextFrom } from "@/features/editor/document-structure";
 import { markdownParser } from "@/features/editor/markdown-language";
 
@@ -15,7 +16,7 @@ const SKIPPED_BLOCK = /^(?:FencedCode|CodeBlock|FrontMatter|HTMLBlock|CommentBlo
  */
 export function excerptOf(markdown: string): string {
   // Files written on Windows keep their CRLF in the bytes a preview reads
-  const source = markdown.replaceAll("\r\n", "\n");
+  const source = toLf(markdown);
   const tree = markdownParser.parse(source);
   const lines: string[] = [];
   let from = 0;

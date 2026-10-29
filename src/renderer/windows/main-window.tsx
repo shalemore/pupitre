@@ -1,5 +1,5 @@
 import { makeEventListener } from "@solid-primitives/event-listener";
-import { debounce } from "@solid-primitives/scheduled";
+import { debounce, scheduleIdle } from "@solid-primitives/scheduled";
 import { cn } from "cn";
 import { FolderUp } from "lucide-solid";
 import {
@@ -14,6 +14,8 @@ import {
   type Component,
 } from "solid-js";
 import type { AppCommand } from "@shared/desktop-api";
+import { messageOf } from "@shared/errors";
+import { isInsideFolder } from "@shared/paths";
 import { TitleBar } from "@/components/title-bar";
 import { IconButton } from "@/components/ui";
 import { CommandPalette } from "@/features/command-palette/command-palette";
@@ -41,14 +43,8 @@ import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
 import { documentPosition } from "@/lib/document-positions";
 import { createDocumentSession } from "@/lib/document-session";
-import { messageOf, reportFailure } from "@/lib/errors";
-import {
-  fileNameOf,
-  isInsideFolder,
-  isolateFileName,
-  parentFolder,
-  withoutDocumentExtension,
-} from "@/lib/file";
+import { reportFailure } from "@/lib/errors";
+import { fileNameOf, isolateFileName, parentFolder, withoutDocumentExtension } from "@/lib/file";
 import { withoutScripts } from "@/lib/html";
 import { createImmersiveChrome } from "@/lib/immersive-chrome";
 import { recentFiles } from "@/lib/recent-files";
@@ -542,18 +538,13 @@ export const MainWindow: Component = () => {
         event.preventDefault();
         event.stopPropagation();
       };
-      area.addEventListener("wheel", onWheel, { capture: true, passive: false });
-      onCleanup(() => area.removeEventListener("wheel", onWheel, { capture: true }));
+      makeEventListener(area, "wheel", onWheel, { capture: true, passive: false });
     }
     void session.restoreOnStartup();
     // The editor is a chunk of its own; fetch it while the welcome screen is idle, so the first
     // document does not wait for both the file and the code that shows it
     const warmEditor = () => void import("@/features/editor/markdown-editor");
-    if (typeof requestIdleCallback === "function") {
-      requestIdleCallback(warmEditor, { timeout: 2000 });
-    } else {
-      setTimeout(warmEditor, 100);
-    }
+    scheduleIdle(warmEditor, 2000)();
     // A window that closes before the next write of the draft was due keeps the last typing all the same
     makeEventListener(window, "pagehide", session.flushDraft);
     // dragover's default behavior must be prevented, otherwise drop never fires

@@ -1,6 +1,26 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
   "printWidth": 100,
+  "sortImports": {
+    "customGroups": [
+      { "groupName": "side", "selector": "side_effect" },
+      { "groupName": "shared", "elementNamePattern": ["@shared/**"] },
+      { "groupName": "renderer", "elementNamePattern": ["@/**"] }
+    ],
+    "groups": [
+      "side",
+      "builtin",
+      "external",
+      "shared",
+      "renderer",
+      ["sibling", "parent", "index"],
+      "style",
+      "unknown"
+    ],
+    "newlinesBetween": false,
+    "sortSideEffects": false,
+    "ignoreCase": false
+  },
   "ignorePatterns": [
     "node_modules/**",
     "out/**",

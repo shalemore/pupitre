@@ -17,16 +17,15 @@ export interface FontFamily {
   localizedName: string | undefined;
 }
 
+/** One collator for the list, since creating one per comparison is what makes `localeCompare` slow. */
+const familyCollator = new Intl.Collator(undefined, { sensitivity: "base" });
+
 /** Chromium refuses to query fonts while the page is hidden, so wait until the window is shown. */
 function whenVisible(): Promise<void> {
   if (document.visibilityState === "visible") return Promise.resolve();
+  // The event only fires when the state changes, so the next one is the window becoming visible
   return new Promise((resolve) => {
-    const handleChange = () => {
-      if (document.visibilityState !== "visible") return;
-      document.removeEventListener("visibilitychange", handleChange);
-      resolve();
-    };
-    document.addEventListener("visibilitychange", handleChange);
+    document.addEventListener("visibilitychange", () => resolve(), { once: true });
   });
 }
 
@@ -49,9 +48,7 @@ async function queryFontFamilies(): Promise<FontFamily[]> {
       localizedName: isRegular && !localized.startsWith(face.family) ? localized : undefined,
     });
   }
-  return [...families.values()].toSorted((a, b) =>
-    a.family.localeCompare(b.family, undefined, { sensitivity: "base" }),
-  );
+  return [...families.values()].toSorted((a, b) => familyCollator.compare(a.family, b.family));
 }
 
 let cached: Promise<FontFamily[]> | undefined;

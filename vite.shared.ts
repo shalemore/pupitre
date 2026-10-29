@@ -1,6 +1,6 @@
 import { resolve } from "node:path";
-import type { AliasOptions } from "vite";
 import tailwindcss from "@tailwindcss/vite";
+import type { AliasOptions } from "vite";
 import solid from "vite-plugin-solid";
 import { thirdPartyNotices } from "./scripts/third-party-notices.js";
 

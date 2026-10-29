@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { BrowserWindow, nativeImage, screen, type NativeImage, type WebContents } from "electron";
 import { z } from "zod";
+import { messageOf } from "@shared/errors";
 
 /** Width of the exported document, in CSS pixels, before it is scaled up. */
 const DOCUMENT_WIDTH = 900;
@@ -103,6 +104,8 @@ async function render(pagePath: string, documentWidth: number): Promise<Buffer> 
     webPreferences: {
       sandbox: true,
       contextIsolation: true,
+      // The export zoom is the app's own; an automatic mode would write it into the origin's zoom
+      zoomMode: "manual",
       // A window that is not on screen has its renderer paced down, and a page that is paced down
       // paints late: the capture would then still show the frame from before the resize
       backgroundThrottling: false,
@@ -297,7 +300,7 @@ async function captureSlice(
     failure = error;
   }
   if (round === CAPTURE_ATTEMPTS) {
-    const reason = failure instanceof Error ? failure.message : String(failure);
+    const reason = messageOf(failure);
     throw new Error(`Could not capture the page after ${CAPTURE_ATTEMPTS} rounds: ${reason}`);
   }
   await new Promise((waited) => setTimeout(waited, CAPTURE_DELAY * round));

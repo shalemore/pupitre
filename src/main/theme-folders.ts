@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { extname, resolve } from "node:path";
 import type { ImportedTheme } from "@shared/desktop-api";
+import { nameCollator } from "@shared/name-collator";
 import { isInside } from "./is-inside";
 
 const STYLE_FILE = "index.css";
@@ -35,7 +36,7 @@ export function readThemesFromRoot(root: string, source: ImportedTheme["source"]
     folders = readdirSync(root, { withFileTypes: true })
       .filter((entry) => entry.isDirectory())
       .map((entry) => entry.name)
-      .toSorted((a, b) => a.localeCompare(b));
+      .toSorted((a, b) => nameCollator.compare(a, b));
   } catch {
     return [];
   }
@@ -119,7 +120,7 @@ function readAsset(dir: string, url: string): string | undefined {
     if (!stat.isFile() || stat.size > MAX_ASSET_BYTES) return undefined;
     const type = ASSET_TYPES[extname(asset).toLowerCase()];
     if (type === undefined) return undefined;
-    return `data:${type};base64,${readFileSync(asset).toString("base64")}`;
+    return `data:${type};base64,${readFileSync(asset, "base64")}`;
   } catch {
     return undefined;
   }

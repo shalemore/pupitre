@@ -2,31 +2,21 @@ import { rmSync } from "node:fs";
 import { join } from "node:path";
 import { app } from "electron";
 import { z } from "zod";
+import { createDebouncedTask } from "./debounced-task";
 import { readJsonFile, writeJsonFile } from "./json-file";
 
 const WINDOW_STATE_FILE = "window-state.json";
-// Moving or resizing a window fires a dozen events a second; only where it settles is worth writing
+// Moving or resizing the sidebar fires a dozen events a second; only where it settles is worth writing
 const WRITE_DELAY = 400;
 
-const boundsSchema = z.strictObject({
-  x: z.number(),
-  y: z.number(),
-  width: z.number(),
-  height: z.number(),
-});
-
 /**
- * What the main window remembers between runs. A run can end before anything is known about it, so
- * each part is optional; the state file never holds a part the app has not observed.
+ * What the main window remembers itself. Electron keeps the bounds and the display mode of the
+ * window named "main"; the sidebar widths are the app's own. Parsing is lenient, so a file an older
+ * version wrote with bounds in it still gives back its sidebars.
  */
-const windowStateSchema = z.strictObject({
-  bounds: boundsSchema.optional(),
-  maximized: z.boolean().default(false),
-  fullscreen: z.boolean().default(false),
+const windowStateSchema = z.object({
   sidebar: z.strictObject({ start: z.number(), end: z.number() }).optional(),
 });
-
-export type WindowBounds = z.infer<typeof boundsSchema>;
 
 export type WindowState = z.infer<typeof windowStateSchema>;
 
@@ -36,7 +26,6 @@ const FRESH_STATE: WindowState = windowStateSchema.parse({});
 let state: WindowState | undefined;
 let loaded = false;
 let dirty = false;
-let timer: NodeJS.Timeout | undefined;
 
 function statePath(): string {
   return join(app.getPath("userData"), WINDOW_STATE_FILE);
@@ -60,21 +49,24 @@ export function readWindowState(): WindowState | undefined {
   return state;
 }
 
+const writeStateLater = createDebouncedTask(
+  () => {
+    if (!dirty || state === undefined) return;
+    writeJsonFile(statePath(), state);
+    dirty = false;
+  },
+  WRITE_DELAY,
+  { unref: true },
+);
+
 /** Writes the window state still waiting for its delay: the window closed or the app is quitting before it ends. */
 export function flushWindowState(): void {
-  if (timer !== undefined) clearTimeout(timer);
-  timer = undefined;
-  if (!dirty || state === undefined) return;
-  writeJsonFile(statePath(), state);
-  dirty = false;
+  writeStateLater.flush();
 }
 
 /** Remembers part of the window for the next run; the file follows once the window settles. */
 export function updateWindowState(patch: Partial<WindowState>): void {
   state = { ...(readWindowState() ?? FRESH_STATE), ...patch };
   dirty = true;
-  if (timer !== undefined) clearTimeout(timer);
-  timer = setTimeout(flushWindowState, WRITE_DELAY);
-  // A pending write must not be what keeps a quitting app alive, and will-quit flushes it
-  timer.unref();
+  writeStateLater.schedule();
 }

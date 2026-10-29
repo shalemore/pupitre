@@ -7,14 +7,8 @@ import type {
   WorkspaceSearchOptions,
   WorkspaceSearchResponse,
 } from "@shared/desktop-api";
-import {
-  declaredEncoding,
-  decodeWith,
-  mostlyUnreadable,
-  normalizeText,
-  undeclaredUtf16,
-} from "./encoding";
-import { nameCollator } from "./name-collator";
+import { nameCollator } from "@shared/name-collator";
+import { decodeBestEffort } from "./encoding";
 import { isWorkspaceDocument, isWorkspaceFolder, relativeTo } from "./workspace-files";
 
 /**
@@ -104,32 +98,11 @@ function matchesInText(
   return matches;
 }
 
-/**
- * The text a file is searched in, or undefined for content that is not a document.
- *
- * The bytes are decoded the way the editor decodes a file it is not asked about: the encoding a BOM
- * announces, UTF-16 when its zero bytes give it away, and UTF-8 for everything else. Legacy
- * encodings are the limit of it: without a BOM, GB18030, Big5 and Shift_JIS look like nothing in
- * particular, so a file written in one is read as UTF-8 rather than guessed at, since a wrong guess
- * would report matches on text the editor asks the user about instead. The bytes that leaves
- * unreadable count towards the binary content below, so a document mostly made of them is skipped.
- *
- * Binary content is told apart after decoding rather than by the zero bytes a UTF-16 document is
- * full of: what a text holds is what decides.
- */
-function documentText(buffer: Buffer): string | undefined {
-  const declared = declaredEncoding(buffer) ?? undeclaredUtf16(buffer);
-  const text = normalizeText(
-    declared === undefined ? buffer.toString("utf8") : decodeWith(buffer, declared),
-  );
-  return mostlyUnreadable(text) ? undefined : text;
-}
-
 /** The text of a document in a folder, or undefined for a file too large to read or not text at all. */
 async function readSearchableFile(path: string): Promise<string | undefined> {
   try {
     if ((await stat(path)).size > MAX_FILE_BYTES) return undefined;
-    return documentText(await readFile(path));
+    return decodeBestEffort(await readFile(path));
   } catch {
     // A file that cannot be read only costs the matches it could have held
     return undefined;

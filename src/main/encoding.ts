@@ -1,7 +1,9 @@
 import { isUtf8 } from "node:buffer";
-import { type BrowserWindow, dialog } from "electron";
+import type { BrowserWindow } from "electron";
 import iconv from "iconv-lite";
 import type { LineEnding, TextEncoding } from "@shared/desktop-api";
+import { toLf } from "@shared/text";
+import { choose } from "./dialog-choice";
 import { t } from "./i18n";
 
 /**
@@ -123,7 +125,7 @@ export class LossyEncodingError extends Error {
  */
 export function normalizeText(raw: string, lineEnding: LineEnding = lineEndingOf(raw)): string {
   const stripped = raw.startsWith("\uFEFF") ? raw.slice(1) : raw;
-  return lineEnding === "crlf" ? stripped.replaceAll("\r\n", "\n") : stripped;
+  return lineEnding === "crlf" ? toLf(stripped) : stripped;
 }
 
 /** The line ending a save restores for a file that was read as `raw`. */
@@ -162,16 +164,13 @@ async function askEncoding(
   path: string,
 ): Promise<AskedEncoding | undefined> {
   const labels = t().dialogs;
-  const { response } = await dialog.showMessageBox(window, {
-    type: "question",
-    message: labels.encodingMessage,
-    detail: path,
-    buttons: [...ASKED_ENCODINGS.map((encoding) => ENCODING_LABELS[encoding]), labels.cancel],
-    defaultId: 0,
-    cancelId: ASKED_ENCODINGS.length,
-    noLink: true,
-  });
-  return ASKED_ENCODINGS[response];
+  return choose(window, { type: "question", message: labels.encodingMessage, detail: path }, [
+    ...ASKED_ENCODINGS.map((encoding) => ({
+      label: ENCODING_LABELS[encoding],
+      value: encoding,
+    })),
+    { label: labels.cancel, value: undefined },
+  ]);
 }
 
 export interface DecodedDocument {
@@ -193,6 +192,19 @@ function readsAsUtf16(buffer: Buffer): boolean {
     const text = decodeWith(buffer, encoding);
     return !mostlyUnreadable(text) && text.isWellFormed();
   });
+}
+
+/**
+ * The text a file is read as without asking the user: the encoding a BOM announces, UTF-16 when its
+ * zero bytes give it away, and UTF-8 otherwise. Legacy encodings without a BOM look like nothing in
+ * particular, so they are not guessed at. Undefined for content that is not a document.
+ */
+export function decodeBestEffort(buffer: Buffer): string | undefined {
+  const declared = declaredEncoding(buffer) ?? undeclaredUtf16(buffer);
+  const text = normalizeText(
+    declared === undefined ? buffer.toString("utf8") : decodeWith(buffer, declared),
+  );
+  return mostlyUnreadable(text) ? undefined : text;
 }
 
 /**

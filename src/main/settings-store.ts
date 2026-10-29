@@ -1,7 +1,7 @@
 import { statSync } from "node:fs";
 import { join } from "node:path";
 import { isDeepStrictEqual } from "node:util";
-import { app, BrowserWindow, nativeTheme, shell } from "electron";
+import { app, nativeTheme, shell } from "electron";
 import type { WorkspaceState } from "@shared/desktop-api";
 import {
   DEFAULT_SETTINGS,
@@ -15,6 +15,7 @@ import {
   withoutSetting,
   WORKSPACE_FILE,
 } from "@shared/settings";
+import { broadcast } from "./broadcast";
 import { readJsonFile, writeJsonFile } from "./json-file";
 
 const listeners = new Set<(settings: Settings) => void>();
@@ -63,13 +64,20 @@ function dropLegacyState(settings: Record<string, unknown>): boolean {
   return found;
 }
 
+/** The settings file at `path`, parsed and migrated; `exists` is false when there was none. */
+function readSettingsFile(path: string): { settings: Record<string, unknown>; exists: boolean } {
+  const raw = readJsonFile(path);
+  const settings = settingsFileSchema.parse(raw);
+  // Drop what an older version left behind before anything is synced again
+  if (raw !== undefined && dropLegacyState(settings)) writeJsonFile(path, settings);
+  return { settings, exists: raw !== undefined };
+}
+
 function settingsFile(): Record<string, unknown> {
   if (file === undefined) {
-    const raw = readJsonFile(getSettingsPath());
-    firstRun = raw === undefined;
-    file = settingsFileSchema.parse(raw);
-    // Drop what an older version left behind before anything is synced again
-    if (raw !== undefined && dropLegacyState(file)) writeJsonFile(getSettingsPath(), file);
+    const { settings, exists } = readSettingsFile(getSettingsPath());
+    firstRun = !exists;
+    file = settings;
   }
   return file;
 }
@@ -110,10 +118,8 @@ export function getWorkspaceState(): WorkspaceState {
 function publish(): void {
   current = resolveSettings(effectiveFile());
   nativeTheme.themeSource = current.colorScheme;
-  for (const window of BrowserWindow.getAllWindows()) {
-    window.webContents.send("settings:changed", current);
-    window.webContents.send("workspace:changed", getWorkspaceState());
-  }
+  broadcast("settings:changed", current);
+  broadcast("workspace:changed", getWorkspaceState());
   for (const listener of listeners) listener(current);
 }
 
@@ -178,11 +184,9 @@ export function setWorkspace(root: string | null): void {
     workspaceActive = false;
   } else if (workspace?.root !== root) {
     const path = join(root, WORKSPACE_FILE);
-    const raw = readJsonFile(path);
-    const settings = settingsFileSchema.parse(raw);
-    if (raw !== undefined && dropLegacyState(settings)) writeJsonFile(path, settings);
-    workspace = { root, path, exists: raw !== undefined, file: settings };
-    workspaceActive = workspace.exists;
+    const { settings, exists } = readSettingsFile(path);
+    workspace = { root, path, exists, file: settings };
+    workspaceActive = exists;
   } else {
     return;
   }

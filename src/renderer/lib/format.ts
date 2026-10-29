@@ -1,7 +1,7 @@
-import { currentLocale } from "@/i18n";
+import { currentLocale, intlLocale } from "@/i18n";
 
-export function formatNumber(value: number, options?: Intl.NumberFormatOptions): string {
-  return new Intl.NumberFormat(currentLocale(), options).format(value);
+function formatNumber(value: number, options?: Intl.NumberFormatOptions): string {
+  return new Intl.NumberFormat(intlLocale(currentLocale()), options).format(value);
 }
 
 export function formatDecimal(value: number, digits: number): string {

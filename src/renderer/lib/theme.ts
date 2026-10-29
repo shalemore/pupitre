@@ -1,4 +1,4 @@
-import { createSignal } from "solid-js";
+import { createMemo, createRoot, createSignal } from "solid-js";
 import { z } from "zod";
 import type { ImportedTheme } from "@shared/desktop-api";
 import { DEFAULT_LOCALE, LOCALE_CODES, type SupportedLocale } from "@shared/i18n";
@@ -121,10 +121,6 @@ export function readColorScheme(css: string): ColorScheme[] {
   return ["light"];
 }
 
-function supportedSchemes(css: string): ColorScheme[] {
-  return readColorScheme(css);
-}
-
 const builtInCss: Readonly<Record<string, string>> = Object.fromEntries(
   Object.entries(themeStyles).map(([path, css]) => [themeName(path), css]),
 );
@@ -139,7 +135,7 @@ const builtInThemes: readonly ThemeInfo[] = Object.entries(themeStyles).map(
       source: "builtin",
       names: meta.names,
       descriptions: meta.descriptions,
-      schemes: supportedSchemes(css),
+      schemes: readColorScheme(css),
     };
   },
 );
@@ -160,19 +156,29 @@ function importedThemeInfo(theme: ImportedTheme): ThemeInfo {
     source: theme.source,
     names: parsed.success ? parsed.data.name : theme.folder,
     descriptions: parsed.success ? parsed.data.description : undefined,
-    schemes: supportedSchemes(theme.css),
+    schemes: readColorScheme(theme.css),
   };
 }
 
-/** The built-in themes and the folders in the global and project theme folders. */
+/**
+ * The built-in themes and the folders in the global and project theme folders, merged once per
+ * change: settings read the list several times while they render, and each imported theme's CSS
+ * is scanned for its color scheme.
+ */
+const allThemes = createRoot(() =>
+  createMemo(() => {
+    const all = [...builtInThemes, ...imported().map(importedThemeInfo)];
+    return [
+      ...all.filter((theme) => theme.id === DEFAULT_THEME),
+      ...all
+        .filter((theme) => theme.id !== DEFAULT_THEME)
+        .toSorted((a, b) => a.id.localeCompare(b.id)),
+    ];
+  }),
+);
+
 export function themes(): readonly ThemeInfo[] {
-  const all = [...builtInThemes, ...imported().map(importedThemeInfo)];
-  return [
-    ...all.filter((theme) => theme.id === DEFAULT_THEME),
-    ...all
-      .filter((theme) => theme.id !== DEFAULT_THEME)
-      .toSorted((a, b) => a.id.localeCompare(b.id)),
-  ];
+  return allThemes();
 }
 
 let styleElement: HTMLStyleElement | undefined;

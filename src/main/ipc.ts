@@ -1,4 +1,4 @@
-import { access, mkdir, open, readdir, readFile, stat, writeFile } from "node:fs/promises";
+import { mkdir, open, readdir, readFile, stat, writeFile } from "node:fs/promises";
 import { basename, dirname, extname, isAbsolute, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
@@ -13,6 +13,8 @@ import {
   shell,
   type WebContents,
 } from "electron";
+import log from "electron-log/main";
+import writeFileAtomic from "write-file-atomic";
 import {
   type DeletedFileChoice,
   type DocumentLocation,
@@ -30,9 +32,12 @@ import {
   PREVIEW_BYTES,
 } from "@shared/desktop-api";
 import { formatFileSize } from "@shared/file-size";
+import { compareFolderEntries, UNTIMED } from "@shared/folder-sort";
+import { intlLocale } from "@shared/i18n";
 import type { Settings } from "@shared/settings";
 import { showAboutDialog } from "./about";
 import { setAsDefaultMarkdownApp } from "./default-app";
+import { choose, type Answer } from "./dialog-choice";
 import { clearDraft, readDraft, writeDraft } from "./drafts";
 import {
   decodeDocument,
@@ -43,6 +48,7 @@ import {
   normalizeText,
   withLineEnding,
 } from "./encoding";
+import { exists } from "./exists";
 import { exportImage } from "./export-image";
 import {
   MAX_IMAGE_BYTES,
@@ -56,8 +62,8 @@ import {
 } from "./file-actions";
 import { listVersions, MAX_SNAPSHOT_BYTES, readVersion, recordVersion } from "./history";
 import { currentLocale, t } from "./i18n";
+import { createIOLimit } from "./io-limit";
 import { clickMenuItem, menuSnapshot, setDocumentState } from "./menu";
-import { nameCollator } from "./name-collator";
 import { takeLaunchFile } from "./open-files";
 import { unwatchPath, watchPath } from "./path-watcher";
 import { pdfPrintOptions } from "./pdf-print-options";
@@ -111,12 +117,6 @@ function senderWindow(event: IpcMainInvokeEvent): BrowserWindow {
   return window;
 }
 
-/** One button of a confirm box: the words on it, and the answer the window reads back. */
-interface Answer<T> {
-  label: string;
-  value: T;
-}
-
 /** Asks about a document in a native box whose buttons are the answers, and gives back the one that was pressed. */
 async function confirmChoice<T>(
   window: BrowserWindow,
@@ -124,18 +124,18 @@ async function confirmChoice<T>(
   answers: readonly [Answer<T>, ...Answer<T>[]],
   defaultIndex = 0,
 ): Promise<T> {
-  const { response } = await dialog.showMessageBox(window, {
-    type: "warning",
-    message: question.message,
-    detail: question.detail,
-    buttons: answers.map((answer) => answer.label),
-    defaultId: defaultIndex,
-    cancelId: answers.length - 1,
-    noLink: true,
-  });
-  // A box the user dismisses reports its cancel button, which is the last one
+  const chosen = await choose(
+    window,
+    {
+      type: "warning",
+      message: question.message,
+      detail: question.detail,
+      defaultId: defaultIndex,
+    },
+    answers,
+  );
   const [firstAnswer, ...otherAnswers] = answers;
-  return (answers[response] ?? otherAnswers.at(-1) ?? firstAnswer).value;
+  return chosen ?? otherAnswers.at(-1)?.value ?? firstAnswer.value;
 }
 
 /** The file or folder the user picked, or null when they dropped out of the dialog. */
@@ -229,28 +229,22 @@ async function entryTime(
   }
 }
 
-/** What the time of an entry that the system would not report sorts as. */
-const UNTIMED = Number.MIN_SAFE_INTEGER;
-
 /**
  * One level of a folder: directories first, then the order the folderSort setting asks for. The
- * times cost one call per entry, so only the orders that read them pay for it.
+ * times cost one call per entry, so only the orders that read them pay for it, and a limit keeps a
+ * large folder from opening a handle for every entry at once.
  */
 async function listFolder(path: string): Promise<FolderEntry[]> {
   const entries = await readFolder(path);
   const sort = getSettings().folderSort;
+  const limit = createIOLimit();
   const times =
     sort === "name"
       ? undefined
-      : await Promise.all(entries.map((entry) => entryTime(entry.path, sort)));
+      : await Promise.all(entries.map((entry) => limit(() => entryTime(entry.path, sort))));
   return entries
     .map((entry, index) => ({ entry, time: times?.[index] ?? UNTIMED }))
-    .toSorted((a, b) => {
-      if (a.entry.kind !== b.entry.kind) return a.entry.kind === "directory" ? -1 : 1;
-      // Newest first; an entry without a time keeps the end of the list, in name order
-      if (a.time !== b.time) return b.time - a.time;
-      return nameCollator.compare(a.entry.name, b.entry.name);
-    })
+    .toSorted(compareFolderEntries)
     .map(({ entry }) => entry);
 }
 
@@ -278,8 +272,9 @@ async function folderPreviews(path: string): Promise<Record<string, string>> {
   const files = (await readFolder(path)).filter(
     (entry) => entry.kind === "file" && DOCUMENT_FILE.test(entry.name),
   );
+  const limit = createIOLimit();
   const heads = await Promise.all(
-    files.map(async (file) => [file.path, await readHead(file.path)] as const),
+    files.map((file) => limit(async () => [file.path, await readHead(file.path)] as const)),
   );
   return Object.fromEntries(
     heads.filter((head): head is [string, string] => head[1] !== undefined),
@@ -319,13 +314,17 @@ async function peekDocument(
   }
 }
 
+/**
+ * Writes the document in one step: the text goes to a temporary file beside it and is renamed over
+ * the old one, so a crash or a full disk mid-write cannot leave the document truncated.
+ */
 function writeDocument(
   path: string,
   content: string,
   lineEnding: LineEnding,
   encoding: TextEncoding,
 ): Promise<void> {
-  return writeFile(path, encodeDocument(withLineEnding(content, lineEnding), encoding));
+  return writeFileAtomic(path, encodeDocument(withLineEnding(content, lineEnding), encoding));
 }
 
 /**
@@ -347,7 +346,7 @@ async function keepPreviousVersion(
     // A file that does not exist yet is a first save, which has nothing to keep; anything else is
     // worth a line in the log, but not worth failing the save over
     if (error instanceof Error && "code" in error && error.code !== "ENOENT") {
-      console.error(`Could not read ${path} to keep its previous version:`, error);
+      log.error(`Could not read ${path} to keep its previous version:`, error);
     }
     return;
   }
@@ -422,12 +421,7 @@ export function registerIpcHandlers(): void {
   handle("document:peek", (_event, path, maxBytes, encoding) =>
     peekDocument(path, maxBytes, encoding),
   );
-  handle("document:exists", (_event, path) =>
-    access(path).then(
-      () => true,
-      () => false,
-    ),
-  );
+  handle("document:exists", (_event, path) => exists(path));
   handle("document:write", async (_event, path, content, lineEnding, encoding) => {
     await keepPreviousVersion(path, content, encoding);
     await writeDocument(path, content, lineEnding, encoding);
@@ -455,7 +449,9 @@ export function registerIpcHandlers(): void {
       await dialog.showMessageBox(window, {
         type: "error",
         message: t().dialogs.imageTooLarge(name),
-        detail: t().dialogs.imageTooLargeDetail(formatFileSize(MAX_IMAGE_BYTES, currentLocale())),
+        detail: t().dialogs.imageTooLargeDetail(
+          formatFileSize(MAX_IMAGE_BYTES, intlLocale(currentLocale())),
+        ),
         noLink: true,
       });
       return null;

@@ -1,9 +1,10 @@
-import { copyFile, mkdir, rename, stat, writeFile } from "node:fs/promises";
-import { basename, dirname, join, normalize, resolve } from "node:path";
+import { copyFile, mkdir, rename, writeFile } from "node:fs/promises";
+import { basename, dirname, format, join, normalize, parse, resolve } from "node:path";
 import { net, shell } from "electron";
+import { moveFile } from "move-file";
 import type { FolderEntry } from "@shared/desktop-api";
 import { decodeUriPart } from "@shared/uri";
-import { moveFile } from "./move-file";
+import { exists } from "./exists";
 
 /**
  * A name the file system accepts: trimmed, not empty, not "this folder", and free of the characters
@@ -15,13 +16,6 @@ function checkedName(name: string): string {
     throw new Error(`"${name}" cannot name a file`);
   }
   return trimmed;
-}
-
-async function exists(path: string): Promise<boolean> {
-  return stat(path).then(
-    () => true,
-    () => false,
-  );
 }
 
 /** Refuses to replace something that is already there; renaming onto a file the user cannot see would lose it. */
@@ -40,10 +34,8 @@ export async function renameEntry(path: string, name: string): Promise<string> {
 /** "Untitled.md" and then "Untitled 2.md", so creating twice in a row does not have to ask for a name. */
 function numbered(name: string, attempt: number): string {
   if (attempt === 0) return name;
-  const dot = name.lastIndexOf(".");
-  const base = dot > 0 ? name.slice(0, dot) : name;
-  const extension = dot > 0 ? name.slice(dot) : "";
-  return `${base} ${attempt + 1}${extension}`;
+  const { name: base, ext } = parse(name);
+  return format({ name: `${base} ${attempt + 1}`, ext });
 }
 
 /** The first name of this series that is still free. */

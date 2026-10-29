@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { app } from "electron";
 import { type DraftSession } from "@shared/desktop-api";
 import { readDraftSession } from "@shared/draft";
+import { createDebouncedTask } from "./debounced-task";
 import { readJsonFile, writeJsonFile } from "./json-file";
 
 const DRAFT_FILE = "draft.json";
@@ -11,23 +12,24 @@ const DRAFT_FILE = "draft.json";
 const WRITE_DELAY = 500;
 
 let pending: DraftSession | undefined;
-let timer: NodeJS.Timeout | undefined;
 
 function draftPath(): string {
   return join(app.getPath("userData"), DRAFT_FILE);
 }
 
-function cancelPending(): void {
-  if (timer !== undefined) clearTimeout(timer);
-  timer = undefined;
-}
+const writeDraftLater = createDebouncedTask(
+  () => {
+    if (pending === undefined) return;
+    writeJsonFile(draftPath(), pending);
+    pending = undefined;
+  },
+  WRITE_DELAY,
+  { unref: true },
+);
 
 /** Writes a draft still waiting for its delay; the process is going away before the delay ends. */
 export function flushDraft(): void {
-  cancelPending();
-  if (pending === undefined) return;
-  writeJsonFile(draftPath(), pending);
-  pending = undefined;
+  writeDraftLater.flush();
 }
 
 /** The unsaved content of the open tabs, or null when there is none worth restoring. */
@@ -43,14 +45,11 @@ export function readDraft(): DraftSession | null {
 /** Keeps the unsaved content of the open tabs; only the last draft before the delay reaches the disk. */
 export function writeDraft(session: DraftSession): void {
   pending = session;
-  cancelPending();
-  timer = setTimeout(flushDraft, WRITE_DELAY);
-  // A pending write must not be what keeps a quitting app alive, and flushDraft runs on will-quit
-  timer.unref();
+  writeDraftLater.schedule();
 }
 
 export function clearDraft(): void {
   pending = undefined;
-  cancelPending();
+  writeDraftLater.cancel();
   rmSync(draftPath(), { force: true });
 }

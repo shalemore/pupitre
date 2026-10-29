@@ -15,10 +15,11 @@ import {
   type UnsavedChoice,
 } from "@shared/desktop-api";
 import { readDraftSession } from "@shared/draft";
+import { compareFolderEntries, UNTIMED } from "@shared/folder-sort";
 import {
-  FORMAT_ACTIONS,
   INLINE_FORMAT_ACTIONS,
   PARAGRAPH_MENU_GROUPS,
+  shortcutOf,
   type FormatAction,
 } from "@shared/format";
 import { getDictionary, resolveLocale } from "@shared/i18n";
@@ -30,6 +31,7 @@ import {
   type TopMenu,
   withGroupSeparators,
 } from "@shared/menu";
+import { isInsideFolder } from "@shared/paths";
 import { pinKeyOf } from "@shared/pins";
 import {
   DEFAULT_SETTINGS,
@@ -40,6 +42,7 @@ import {
   settingsFileSchema,
   withoutSetting,
 } from "@shared/settings";
+import { toLf } from "@shared/text";
 import about from "./demo/about.md?raw";
 import { showUnsavedDialog } from "./unsaved-dialog";
 
@@ -211,7 +214,7 @@ function opened(path: string): OpenedDocument {
     folder,
     baseUrl: siteUrl,
     // The editor works on LF; the desktop host normalizes a file the same way before handing it over
-    content: (files.get(path) ?? "").replaceAll(/\r\n?/g, "\n"),
+    content: toLf(files.get(path) ?? ""),
     lineEnding: "lf",
     // A browser hands over text that is already decoded, so the demo writes UTF-8
     encoding: "utf-8",
@@ -221,7 +224,7 @@ function opened(path: string): OpenedDocument {
 function listFolder(path: string): FolderEntry[] {
   const entries = new Map<string, FolderEntry>();
   for (const file of files.keys()) {
-    if (!file.startsWith(`${path}/`)) continue;
+    if (!isInsideFolder(path, file)) continue;
     const [name = "", ...rest] = file.slice(path.length + 1).split("/");
     entries.set(name, {
       name,
@@ -230,22 +233,18 @@ function listFolder(path: string): FolderEntry[] {
     });
   }
   const sort = settings.folderSort;
-  return [...entries.values()].toSorted((a, b) => {
-    if (a.kind !== b.kind) return a.kind === "directory" ? -1 : 1;
-    if (sort !== "name") {
-      const difference = timeOf(b, sort) - timeOf(a, sort);
-      if (difference !== 0) return difference;
-    }
-    return a.name.localeCompare(b.name);
-  });
+  return [...entries.values()]
+    .map((entry) => ({ entry, time: sort === "name" ? UNTIMED : timeOf(entry, sort) }))
+    .toSorted(compareFolderEntries)
+    .map(({ entry }) => entry);
 }
 
 /** The time the demo last wrote an entry, or its newest child for a folder. */
 function timeOf(entry: FolderEntry, sort: Exclude<Settings["folderSort"], "name">): number {
-  if (entry.kind === "file") return fileTimes.get(entry.path)?.[sort] ?? 0;
-  let newest = 0;
+  if (entry.kind === "file") return fileTimes.get(entry.path)?.[sort] ?? UNTIMED;
+  let newest = UNTIMED;
   for (const [path, times] of fileTimes) {
-    if (path.startsWith(`${entry.path}/`)) newest = Math.max(newest, times[sort]);
+    if (isInsideFolder(entry.path, path)) newest = Math.max(newest, times[sort]);
   }
   return newest;
 }
@@ -254,7 +253,7 @@ function folderPreviews(path: string): Record<string, string> {
   const previews: Record<string, string> = {};
   for (const [file, text] of files) {
     const name = file.slice(path.length + 1);
-    if (!file.startsWith(`${path}/`) || name.includes("/") || !DOCUMENT_FILE.test(name)) continue;
+    if (!isInsideFolder(path, file) || name.includes("/") || !DOCUMENT_FILE.test(name)) continue;
     previews[file] = text.slice(0, PREVIEW_BYTES);
   }
   return previews;
@@ -303,7 +302,7 @@ function menuItems(menu: TopMenu): DemoMenuEntry[] {
   const send = (command: AppCommand) => () => dispatch(command);
   const formatItems = (actions: readonly FormatAction[]): DemoMenuEntry[] =>
     actions.map((action) => {
-      const shortcut = FORMAT_ACTIONS.find(({ id }) => id === action)?.shortcut;
+      const shortcut = shortcutOf(action);
       return {
         label: format[action],
         run: send({ id: "format", action }),
@@ -514,7 +513,7 @@ const handlers: Handlers = {
       const path = `${root}/${key}`;
       const kind = files.has(path)
         ? "file"
-        : [...files.keys()].some((file) => file.startsWith(`${path}/`))
+        : [...files.keys()].some((file) => isInsideFolder(path, file))
           ? "directory"
           : undefined;
       if (kind === undefined) continue;
