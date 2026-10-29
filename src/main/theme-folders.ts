@@ -120,7 +120,7 @@ function readAsset(dir: string, url: string): string | undefined {
     if (!stat.isFile() || stat.size > MAX_ASSET_BYTES) return undefined;
     const type = ASSET_TYPES[extname(asset).toLowerCase()];
     if (type === undefined) return undefined;
-    return `data:${type};base64,${readFileSync(asset).toString("base64")}`;
+    return `data:${type};base64,${readFileSync(asset, "base64")}`;
   } catch {
     return undefined;
   }
