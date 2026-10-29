@@ -195,6 +195,19 @@ function readsAsUtf16(buffer: Buffer): boolean {
 }
 
 /**
+ * The text a file is read as without asking the user: the encoding a BOM announces, UTF-16 when its
+ * zero bytes give it away, and UTF-8 otherwise. Legacy encodings without a BOM look like nothing in
+ * particular, so they are not guessed at. Undefined for content that is not a document.
+ */
+export function decodeBestEffort(buffer: Buffer): string | undefined {
+  const declared = declaredEncoding(buffer) ?? undeclaredUtf16(buffer);
+  const text = normalizeText(
+    declared === undefined ? buffer.toString("utf8") : decodeWith(buffer, declared),
+  );
+  return mostlyUnreadable(text) ? undefined : text;
+}
+
+/**
  * Reads a file for the editor. What declares an encoding or is recognizable UTF-16 is used as it
  * is, since guessing a legacy encoding would silently garble the text. Text that is valid UTF-8 but
  * decodes to characters no document holds is not UTF-8 either, and is asked about: UTF-16 text in
