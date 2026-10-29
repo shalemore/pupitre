@@ -136,6 +136,8 @@ const FolderChildren: Component<FolderChildrenProps> = (props) => {
 const RenameField: Component<{
   initial: string;
   depth: number;
+  directory: boolean;
+  expanded: boolean;
   onCommit: (name: string) => void;
   onCancel: () => void;
 }> = (props) => {
@@ -145,28 +147,42 @@ const RenameField: Component<{
   onCleanup(() => (replaced = true));
 
   return (
-    <input
-      type="text"
-      value={props.initial}
-      dir="auto"
-      aria-label={t().sidebar.rename}
-      style={rowIndent(props.depth, 6)}
-      class="w-full rounded-md border border-border bg-surface-2 py-1 pe-2.5 text-xs text-foreground outline-none focus-visible:shadow-focus"
-      // Focused once it is in the document, so typing replaces the selected name right away
-      ref={(element) =>
-        requestAnimationFrame(() => {
-          element.focus();
-          element.select();
-        })
-      }
-      onKeyDown={(event) => {
-        if (event.key === "Enter") props.onCommit(event.currentTarget.value);
-        else if (event.key === "Escape") props.onCancel();
-      }}
-      onBlur={() => {
-        if (!replaced) props.onCancel();
-      }}
-    />
+    // The field keeps the row's chevron and icon, so its box starts where the names of the other
+    // rows do, and the indent stays outside the box rather than spanning the whole sidebar
+    <div class="flex items-center gap-1.5 pe-2.5" style={rowIndent(props.depth, 6)}>
+      <Show when={props.directory} fallback={<span class="size-3 shrink-0" />}>
+        <ChevronRight
+          class={cn(
+            "size-3 shrink-0 transition-transform duration-base rtl:-scale-x-100",
+            props.expanded && "rotate-90 rtl:rotate-90",
+          )}
+        />
+      </Show>
+      <Show when={props.directory} fallback={<FileText class="size-3.5 shrink-0" />}>
+        <Folder class="size-3.5 shrink-0" />
+      </Show>
+      <input
+        type="text"
+        value={props.initial}
+        dir="auto"
+        aria-label={t().sidebar.rename}
+        class="min-w-0 flex-1 rounded-md border border-border bg-surface-2 px-2.5 py-1 text-xs text-foreground outline-none focus-visible:shadow-focus"
+        // Focused once it is in the document, so typing replaces the selected name right away
+        ref={(element) =>
+          requestAnimationFrame(() => {
+            element.focus();
+            element.select();
+          })
+        }
+        onKeyDown={(event) => {
+          if (event.key === "Enter") props.onCommit(event.currentTarget.value);
+          else if (event.key === "Escape") props.onCancel();
+        }}
+        onBlur={() => {
+          if (!replaced) props.onCancel();
+        }}
+      />
+    </div>
   );
 };
 
@@ -282,6 +298,8 @@ const FolderRow: Component<{
         <RenameField
           initial={props.entry.name}
           depth={props.depth}
+          directory={isDirectory()}
+          expanded={expanded()}
           onCommit={(name) => props.tree.onRename(props.entry.path, name)}
           onCancel={() => props.tree.onRenameCancel()}
         />
