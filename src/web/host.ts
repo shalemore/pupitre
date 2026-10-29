@@ -16,9 +16,9 @@ import {
 } from "@shared/desktop-api";
 import { readDraftSession } from "@shared/draft";
 import {
-  FORMAT_ACTIONS,
   INLINE_FORMAT_ACTIONS,
   PARAGRAPH_MENU_GROUPS,
+  shortcutOf,
   type FormatAction,
 } from "@shared/format";
 import { getDictionary, resolveLocale } from "@shared/i18n";
@@ -305,7 +305,7 @@ function menuItems(menu: TopMenu): DemoMenuEntry[] {
   const send = (command: AppCommand) => () => dispatch(command);
   const formatItems = (actions: readonly FormatAction[]): DemoMenuEntry[] =>
     actions.map((action) => {
-      const shortcut = FORMAT_ACTIONS.find(({ id }) => id === action)?.shortcut;
+      const shortcut = shortcutOf(action);
       return {
         label: format[action],
         run: send({ id: "format", action }),

@@ -39,6 +39,11 @@ export const FORMAT_ACTIONS = [
 
 export type FormatAction = (typeof FORMAT_ACTIONS)[number]["id"];
 
+/** The shortcut a Format action shows, if it has one. */
+export function shortcutOf(action: FormatAction): string | undefined {
+  return FORMAT_ACTIONS.find(({ id }) => id === action)?.shortcut;
+}
+
 /** The Paragraph menu: groups of actions, a separator between them. */
 export const PARAGRAPH_MENU_GROUPS: readonly (readonly FormatAction[])[] = [
   ["heading1", "heading2", "heading3", "heading4", "heading5", "heading6"],

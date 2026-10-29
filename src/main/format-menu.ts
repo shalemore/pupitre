@@ -1,6 +1,6 @@
 import type { MenuItemConstructorOptions } from "electron";
 import type { AppCommand } from "@shared/desktop-api";
-import { FORMAT_ACTIONS, type FormatAction } from "@shared/format";
+import { shortcutOf, type FormatAction } from "@shared/format";
 import { t } from "./i18n";
 
 /**
@@ -12,7 +12,7 @@ export function formatItems(
   send: (command: AppCommand) => void,
 ): MenuItemConstructorOptions[] {
   return actions.map((action) => {
-    const shortcut = FORMAT_ACTIONS.find(({ id }) => id === action)?.shortcut;
+    const shortcut = shortcutOf(action);
     return {
       label: t().format[action],
       ...(shortcut === undefined ? {} : { accelerator: shortcut, registerAccelerator: false }),
