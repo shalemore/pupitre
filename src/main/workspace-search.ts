@@ -7,6 +7,7 @@ import type {
   WorkspaceSearchOptions,
   WorkspaceSearchResponse,
 } from "@shared/desktop-api";
+import { nameCollator } from "@shared/name-collator";
 import {
   declaredEncoding,
   decodeWith,
@@ -14,7 +15,6 @@ import {
   normalizeText,
   undeclaredUtf16,
 } from "./encoding";
-import { nameCollator } from "./name-collator";
 import { isWorkspaceDocument, isWorkspaceFolder, relativeTo } from "./workspace-files";
 
 /**

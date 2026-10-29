@@ -30,6 +30,7 @@ import {
   type TopMenu,
   withGroupSeparators,
 } from "@shared/menu";
+import { nameCollator } from "@shared/name-collator";
 import { isInsideFolder } from "@shared/paths";
 import { pinKeyOf } from "@shared/pins";
 import {
@@ -238,7 +239,7 @@ function listFolder(path: string): FolderEntry[] {
       const difference = timeOf(b, sort) - timeOf(a, sort);
       if (difference !== 0) return difference;
     }
-    return a.name.localeCompare(b.name);
+    return nameCollator.compare(a.name, b.name);
   });
 }
 

@@ -2,7 +2,7 @@ import type { Dirent } from "node:fs";
 import { readdir } from "node:fs/promises";
 import { join, relative, sep } from "node:path";
 import { DOCUMENT_FILE, type FolderFile } from "@shared/desktop-api";
-import { nameCollator } from "./name-collator";
+import { nameCollator } from "@shared/name-collator";
 
 /**
  * How many documents a walk collects before it stops. A folder that holds more than this is not
