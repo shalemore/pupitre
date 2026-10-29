@@ -31,9 +31,9 @@
     "check:bundle": "node scripts/check-bundle-size.ts",
     "postinstall": "patch-package",
     "typecheck": "tsrs -b",
-    "lint": "oxfmt --check . && oxlint --type-aware . && node scripts/import-order.ts --check && node scripts/check-css.ts",
+    "lint": "oxfmt --check . && oxlint --type-aware . && node scripts/check-css.ts",
     "knip": "knip",
-    "fix": "oxfmt . && oxlint --fix . && node scripts/import-order.ts",
+    "fix": "oxfmt . && oxlint --fix .",
     "check:css": "node scripts/check-css.ts"
   },
   "dependencies": {

@@ -1,8 +1,7 @@
 import { DocInput } from "@codemirror/language";
 import { ChangeSet, Text } from "@codemirror/state";
 import { TreeFragment } from "@lezer/common";
-import type { ChangedRange } from "@lezer/common";
-import type { Tree } from "@lezer/common";
+import type { ChangedRange, Tree } from "@lezer/common";
 import { describe, expect, test } from "vitest";
 import { markdownLanguage } from "../src/renderer/features/editor/markdown-language";
 

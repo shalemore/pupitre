@@ -16,8 +16,7 @@ import {
   resolveUrl,
 } from "@/features/editor/images";
 import { type InlineItem, inlineItems } from "@/features/editor/inline-content";
-import { FULL_PARSE_TIMEOUT_MS } from "@/features/editor/markdown-language";
-import { markdownLanguage } from "@/features/editor/markdown-language";
+import { FULL_PARSE_TIMEOUT_MS, markdownLanguage } from "@/features/editor/markdown-language";
 import { mathFence, mathOf } from "@/features/editor/math";
 import { renderMath } from "@/features/editor/mathjax";
 import { diagramTheme, readDiagramTheme, renderDiagram } from "@/features/editor/mermaid";

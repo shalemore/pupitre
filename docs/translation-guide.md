@@ -378,7 +378,7 @@ No tool can prove that a sentence means what the English means. These catch the 
   key or a broken function fails the build. `src/shared/i18n/typography.test.ts` checks the two
   rules a machine can check: every UI ellipsis is U+2026, and Chinese keeps a space between Han and
   Latin letters or digits.
-- `npm run lint` — formatting, lint rules and import order. It does not spell-check.
+- `npm run lint` — formatting, lint rules and import order (oxfmt's `sortImports`). It does not spell-check.
 - CI runs `lint`, `typecheck`, `knip`, `test:coverage`, `build`, `check:bundle`, `test:e2e` and
   `build:web`. None of them spell-check a dictionary; spelling and grammar need the external tools
   below.

@@ -18,6 +18,8 @@ export default defineConfig({
     // its end, though TypeScript proves that no case is left; `noImplicitReturns` already rejects
     // a function that returns a value on one branch and falls off its end.
     "typescript/consistent-return": "off",
+    // A type and a value from the same module may stay apart; two value imports may not
+    "no-duplicate-imports": ["error", { allowSeparateTypeImports: true }],
     "unicorn/consistent-function-scoping": "off",
     "tailwindcss/enforce-canonical": "warn",
     "tailwindcss/enforce-consistent-variable-syntax": "warn",
