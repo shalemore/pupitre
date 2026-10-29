@@ -14,6 +14,7 @@ import {
   type WebContents,
 } from "electron";
 import log from "electron-log/main";
+import writeFileAtomic from "write-file-atomic";
 import {
   type DeletedFileChoice,
   type DocumentLocation,
@@ -313,13 +314,17 @@ async function peekDocument(
   }
 }
 
+/**
+ * Writes the document in one step: the text goes to a temporary file beside it and is renamed over
+ * the old one, so a crash or a full disk mid-write cannot leave the document truncated.
+ */
 function writeDocument(
   path: string,
   content: string,
   lineEnding: LineEnding,
   encoding: TextEncoding,
 ): Promise<void> {
-  return writeFile(path, encodeDocument(withLineEnding(content, lineEnding), encoding));
+  return writeFileAtomic(path, encodeDocument(withLineEnding(content, lineEnding), encoding));
 }
 
 /**
