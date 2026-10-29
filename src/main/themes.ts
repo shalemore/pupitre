@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readdirSync, watch, type FSWatcher } from "node:fs";
+import { existsSync, mkdirSync, watch, type FSWatcher } from "node:fs";
 import { basename, dirname, join } from "node:path";
 import { isDeepStrictEqual } from "node:util";
 import { app, shell } from "electron";
@@ -9,8 +9,6 @@ import { readThemesFromRoot } from "./theme-folders";
 
 /** A write may arrive as several events, such as a temporary file and the rename after it. */
 const REFRESH_DELAY = 120;
-/** How far below a theme folder the watcher follows asset folders; theme folders are shallow. */
-const MAX_WATCH_DEPTH = 4;
 
 let started = false;
 let projectRoot: string | undefined;
@@ -42,58 +40,36 @@ function refresh(): void {
 
 const refreshLater = createDebouncedTask(refresh, REFRESH_DELAY);
 
-interface Target {
-  path: string;
-  child?: string;
-}
-
 /**
- * The folders to watch for `root`: the deepest existing directory that leads to it, then the root
- * and each theme folder once it exists. Watching the deepest existing ancestor is how a folder
- * that appears later is noticed.
+ * Watches `root` and every folder below it, so an asset edited in a nested folder is noticed too.
+ * A root that does not exist yet is found by watching its deepest existing ancestor for the folder
+ * that leads to it; once it appears, the next refresh watches the root itself.
  */
-function targetsFor(root: string): Target[] {
-  const missing: string[] = [];
+function watchRoot(root: string): void {
   let existing = root;
+  let missing = "";
   while (!existsSync(existing)) {
-    missing.push(existing);
+    missing = basename(existing);
     const parent = dirname(existing);
-    if (parent === existing) return [];
+    if (parent === existing) return;
     existing = parent;
   }
-  if (missing.length > 0) {
-    const child = missing.at(-1);
-    return child === undefined ? [] : [{ path: existing, child: basename(child) }];
-  }
-  const targets: Target[] = [{ path: root }];
+  const child = missing === "" ? undefined : missing;
   try {
-    for (const entry of readdirSync(root, { withFileTypes: true })) {
-      if (!entry.isDirectory()) continue;
-      const folder = join(root, entry.name);
-      targets.push({ path: folder });
-      for (const path of subdirectories(folder)) targets.push({ path });
-    }
+    const watcher = watch(
+      existing,
+      { persistent: false, recursive: child === undefined },
+      (_event, filename) => {
+        // An ancestor is watched only for the folder that leads to the theme root
+        if (child !== undefined && filename !== null && filename !== child) return;
+        refreshLater.schedule();
+      },
+    );
+    watcher.on("error", refreshLater.schedule);
+    watchers.push(watcher);
   } catch {
-    // The folder went away between the check and the read; the next refresh settles it
+    // A path that cannot be watched is tried again on the next refresh
   }
-  return targets;
-}
-
-/** Every folder below a theme folder, so an asset edited in a nested folder is noticed too. */
-function subdirectories(root: string, depth = 0): string[] {
-  const found: string[] = [];
-  if (depth >= MAX_WATCH_DEPTH) return found;
-  try {
-    for (const entry of readdirSync(root, { withFileTypes: true })) {
-      if (!entry.isDirectory()) continue;
-      const path = join(root, entry.name);
-      found.push(path);
-      for (const nested of subdirectories(path, depth + 1)) found.push(nested);
-    }
-  } catch {
-    return found;
-  }
-  return found;
 }
 
 function rewatch(): void {
@@ -102,27 +78,7 @@ function rewatch(): void {
   const roots = [globalRoot(), projectThemes()].filter(
     (root): root is string => root !== undefined,
   );
-  const seen = new Set<string>();
-  for (const root of roots) {
-    for (const target of targetsFor(root)) {
-      const key = `${target.path}\0${target.child ?? ""}`;
-      if (seen.has(key)) continue;
-      seen.add(key);
-      try {
-        const watcher = watch(target.path, { persistent: false }, (_event, filename) => {
-          // An ancestor is watched only for the folder that leads to the theme root
-          if (target.child !== undefined && filename !== null && filename !== target.child) {
-            return;
-          }
-          refreshLater.schedule();
-        });
-        watcher.on("error", refreshLater.schedule);
-        watchers.push(watcher);
-      } catch {
-        // A path that cannot be watched is tried again on the next refresh
-      }
-    }
-  }
+  for (const root of new Set(roots)) watchRoot(root);
 }
 
 /** Reads the global theme folder and starts watching it for changes. */
