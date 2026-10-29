@@ -98,7 +98,16 @@ export const TabsBar: Component<TabsBarProps> = (props) => (
   >
     <KobalteTabs.List
       aria-label={t().tabs.bar}
-      class="scrollbar-none flex h-full min-w-0 flex-1 items-stretch overflow-x-auto print:hidden"
+      // The strip scrolls sideways when the tabs overflow; the wheel follows the row, since a
+      // vertical wheel over it has nothing else to do, and the scrollbar only appears when needed
+      onWheel={(event) => {
+        const strip = event.currentTarget;
+        if (strip.scrollWidth <= strip.clientWidth) return;
+        if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+        event.preventDefault();
+        strip.scrollLeft += event.deltaY;
+      }}
+      class="flex h-full min-w-0 flex-1 items-stretch overflow-x-auto overscroll-x-contain print:hidden"
     >
       <For each={props.tabs}>
         {(tab) => (
