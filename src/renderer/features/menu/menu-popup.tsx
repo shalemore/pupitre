@@ -25,10 +25,6 @@ export interface MenuPopupProps {
   closing?: boolean | undefined;
   onSelect: (entry: MenuItemEntry) => void;
   onClose: () => void;
-  /** Tells the bar that the pointer is over the menu, who keeps it open while it is. */
-  onPointerOver?: (() => void) | undefined;
-  /** Tells the bar that the pointer left the menu, which folds it up after a moment. */
-  onPointerLeave?: (() => void) | undefined;
 }
 
 const ItemContent: Component<{ item: MenuItemEntry; hasChecks: boolean }> = (props) => (
@@ -145,8 +141,6 @@ export const MenuPopup: Component<MenuPopupProps> = (props) => (
             event.preventDefault();
           }
         }}
-        onPointerOver={props.onPointerOver}
-        onPointerLeave={props.onPointerLeave}
         class="floating-panel z-50 flex min-w-52 max-h-(--kb-popper-content-available-height) flex-col overflow-y-auto overscroll-contain p-1 text-xs text-foreground outline-none select-none"
       >
         <MenuEntries entries={props.entries} onSelect={props.onSelect} />

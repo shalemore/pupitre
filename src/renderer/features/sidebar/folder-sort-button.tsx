@@ -51,10 +51,11 @@ export const FolderSortButton: Component<{
         aria-expanded={panel.open() !== undefined}
         class="shrink-0 text-tertiary opacity-50 transition-opacity hover:opacity-100 focus-visible:opacity-100"
         onClick={(event) => {
-          if (panel.open() === undefined) panel.show(event.currentTarget.getBoundingClientRect());
+          if (panel.open() !== undefined) panel.close();
+          // A press on the button while the menu is open closes it from outside first, and the
+          // press must not open it again
+          else if (!panel.closing()) panel.show(event.currentTarget.getBoundingClientRect());
         }}
-        onPointerEnter={(event) => panel.show(event.currentTarget.getBoundingClientRect())}
-        onPointerLeave={panel.leave}
       >
         <ArrowUpDown />
       </IconButton>
@@ -70,8 +71,6 @@ export const FolderSortButton: Component<{
               if (sort !== undefined) void updateSettings({ folderSort: sort });
             }}
             onClose={panel.close}
-            onPointerOver={panel.cancelLeave}
-            onPointerLeave={panel.leave}
           />
         )}
       </Show>
