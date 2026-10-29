@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 /**
@@ -109,7 +109,11 @@ const baseTokens = definedTokens(app);
 const editorTokens = definedTokens(editor);
 const known = new Set([...baseTokens, ...editorTokens]);
 
-const themeNames = readdirSync(THEMES);
+// A folder without an index.css is not a theme: lib/theme.ts finds a theme by that file, and a
+// folder being written may not have one yet
+const themeNames = readdirSync(THEMES).filter((name) =>
+  existsSync(join(THEMES, name, "index.css")),
+);
 const themeTokens = new Map(
   themeNames.map((name) => [
     name,
