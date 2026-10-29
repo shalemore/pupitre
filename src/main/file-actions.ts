@@ -1,10 +1,10 @@
 import { copyFile, mkdir, rename, writeFile } from "node:fs/promises";
 import { basename, dirname, format, join, normalize, parse, resolve } from "node:path";
 import { net, shell } from "electron";
+import { moveFile } from "move-file";
 import type { FolderEntry } from "@shared/desktop-api";
 import { decodeUriPart } from "@shared/uri";
 import { exists } from "./exists";
-import { moveFile } from "./move-file";
 
 /**
  * A name the file system accepts: trimmed, not empty, not "this folder", and free of the characters

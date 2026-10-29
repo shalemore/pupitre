@@ -84,6 +84,7 @@
     "knip": "^6.43.0",
     "lucide-solid": "^1.16.0",
     "mermaid": "^12.2.0",
+    "move-file": "^4.1.0",
     "offstage-windows": "^0.1.2",
     "oxfmt": "^0.74.0",
     "oxlint": "^1.89.0",
