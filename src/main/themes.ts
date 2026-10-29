@@ -4,6 +4,7 @@ import { isDeepStrictEqual } from "node:util";
 import { app, shell } from "electron";
 import type { ImportedTheme } from "@shared/desktop-api";
 import { broadcast } from "./broadcast";
+import { createDebouncedTask } from "./debounced-task";
 import { readThemesFromRoot } from "./theme-folders";
 
 /** A write may arrive as several events, such as a temporary file and the rename after it. */
@@ -15,7 +16,6 @@ let started = false;
 let projectRoot: string | undefined;
 let current: readonly ImportedTheme[] = [];
 let watchers: FSWatcher[] = [];
-let timer: NodeJS.Timeout | undefined;
 
 function globalRoot(): string {
   return join(app.getPath("userData"), "themes");
@@ -40,13 +40,7 @@ function refresh(): void {
   rewatch();
 }
 
-function schedule(): void {
-  clearTimeout(timer);
-  timer = setTimeout(() => {
-    timer = undefined;
-    refresh();
-  }, REFRESH_DELAY);
-}
+const refreshLater = createDebouncedTask(refresh, REFRESH_DELAY);
 
 interface Target {
   path: string;
@@ -120,9 +114,9 @@ function rewatch(): void {
           if (target.child !== undefined && filename !== null && filename !== target.child) {
             return;
           }
-          schedule();
+          refreshLater.schedule();
         });
-        watcher.on("error", schedule);
+        watcher.on("error", refreshLater.schedule);
         watchers.push(watcher);
       } catch {
         // A path that cannot be watched is tried again on the next refresh
@@ -159,8 +153,7 @@ export async function revealThemeFolder(source: ImportedTheme["source"]): Promis
 
 export function stopThemeWatcher(): void {
   started = false;
-  clearTimeout(timer);
-  timer = undefined;
+  refreshLater.cancel();
   for (const watcher of watchers) watcher.close();
   watchers = [];
 }

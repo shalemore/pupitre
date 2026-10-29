@@ -2,6 +2,7 @@ import { rmSync } from "node:fs";
 import { join } from "node:path";
 import { app } from "electron";
 import { z } from "zod";
+import { createDebouncedTask } from "./debounced-task";
 import { readJsonFile, writeJsonFile } from "./json-file";
 
 const WINDOW_STATE_FILE = "window-state.json";
@@ -36,7 +37,6 @@ const FRESH_STATE: WindowState = windowStateSchema.parse({});
 let state: WindowState | undefined;
 let loaded = false;
 let dirty = false;
-let timer: NodeJS.Timeout | undefined;
 
 function statePath(): string {
   return join(app.getPath("userData"), WINDOW_STATE_FILE);
@@ -60,21 +60,24 @@ export function readWindowState(): WindowState | undefined {
   return state;
 }
 
+const writeStateLater = createDebouncedTask(
+  () => {
+    if (!dirty || state === undefined) return;
+    writeJsonFile(statePath(), state);
+    dirty = false;
+  },
+  WRITE_DELAY,
+  { unref: true },
+);
+
 /** Writes the window state still waiting for its delay: the window closed or the app is quitting before it ends. */
 export function flushWindowState(): void {
-  if (timer !== undefined) clearTimeout(timer);
-  timer = undefined;
-  if (!dirty || state === undefined) return;
-  writeJsonFile(statePath(), state);
-  dirty = false;
+  writeStateLater.flush();
 }
 
 /** Remembers part of the window for the next run; the file follows once the window settles. */
 export function updateWindowState(patch: Partial<WindowState>): void {
   state = { ...(readWindowState() ?? FRESH_STATE), ...patch };
   dirty = true;
-  if (timer !== undefined) clearTimeout(timer);
-  timer = setTimeout(flushWindowState, WRITE_DELAY);
-  // A pending write must not be what keeps a quitting app alive, and will-quit flushes it
-  timer.unref();
+  writeStateLater.schedule();
 }

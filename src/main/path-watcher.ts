@@ -1,6 +1,7 @@
 import { watch, type FSWatcher } from "node:fs";
 import { basename, dirname } from "node:path";
 import type { WebContents } from "electron";
+import { createDebouncedTask, type DebouncedTask } from "./debounced-task";
 
 /** Editors and sync tools write in bursts; one notification per burst is enough. */
 const DEBOUNCE_MS = 150;
@@ -9,13 +10,13 @@ type WatchEvent = "folder:changed" | "document:changed";
 
 interface Watch {
   watcher: FSWatcher;
-  timer: NodeJS.Timeout | undefined;
+  task: DebouncedTask;
 }
 
 const watchesBySender = new Map<WebContents, Map<string, Watch>>();
 
 function close(entry: Watch): void {
-  clearTimeout(entry.timer);
+  entry.task.cancel();
   entry.watcher.close();
 }
 
@@ -47,15 +48,14 @@ export function watchPath(sender: WebContents, event: WatchEvent, path: string):
   try {
     const entry: Watch = {
       watcher: watch(event === "document:changed" ? dirname(path) : path),
-      timer: undefined,
+      task: createDebouncedTask(() => {
+        if (!sender.isDestroyed()) sender.send(event, path);
+      }, DEBOUNCE_MS),
     };
     entry.watcher.on("change", (_type, name) => {
       // The file name is not always reported; then any change in the folder counts
       if (watchedFile !== undefined && name !== null && name.toString() !== watchedFile) return;
-      clearTimeout(entry.timer);
-      entry.timer = setTimeout(() => {
-        if (!sender.isDestroyed()) sender.send(event, path);
-      }, DEBOUNCE_MS);
+      entry.task.schedule();
     });
     // The folder was removed or became unreadable; the window finds out the next time it reads it
     entry.watcher.on("error", () => unwatchPath(sender, event, path));
