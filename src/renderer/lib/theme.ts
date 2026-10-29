@@ -121,10 +121,6 @@ export function readColorScheme(css: string): ColorScheme[] {
   return ["light"];
 }
 
-function supportedSchemes(css: string): ColorScheme[] {
-  return readColorScheme(css);
-}
-
 const builtInCss: Readonly<Record<string, string>> = Object.fromEntries(
   Object.entries(themeStyles).map(([path, css]) => [themeName(path), css]),
 );
@@ -139,7 +135,7 @@ const builtInThemes: readonly ThemeInfo[] = Object.entries(themeStyles).map(
       source: "builtin",
       names: meta.names,
       descriptions: meta.descriptions,
-      schemes: supportedSchemes(css),
+      schemes: readColorScheme(css),
     };
   },
 );
@@ -160,7 +156,7 @@ function importedThemeInfo(theme: ImportedTheme): ThemeInfo {
     source: theme.source,
     names: parsed.success ? parsed.data.name : theme.folder,
     descriptions: parsed.success ? parsed.data.description : undefined,
-    schemes: supportedSchemes(theme.css),
+    schemes: readColorScheme(theme.css),
   };
 }
 
