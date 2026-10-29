@@ -1,4 +1,5 @@
-import { app, type BrowserWindow, clipboard, dialog } from "electron";
+import { app, type BrowserWindow, clipboard } from "electron";
+import { choose } from "./dialog-choice";
 import { t } from "./i18n";
 
 export function showAboutDialog(window: BrowserWindow): void {
@@ -10,18 +11,15 @@ export function showAboutDialog(window: BrowserWindow): void {
     `Node.js: ${process.versions.node}`,
     `${labels.about.osLabel} ${process.platform} ${process.arch} ${process.getSystemVersion()}`,
   ].join("\n");
-  void dialog
-    .showMessageBox(window, {
-      type: "info",
-      title: labels.about.windowTitle,
-      message: app.name,
-      detail,
-      buttons: [labels.dialogs.okButton, labels.dialogs.copyButton],
-      defaultId: 0,
-      cancelId: 0,
-      noLink: true,
-    })
-    .then(({ response }) => {
-      if (response === 1) void clipboard.writeText(detail);
-    });
+  void choose(
+    window,
+    { type: "info", title: labels.about.windowTitle, message: app.name, detail },
+    [
+      { label: labels.dialogs.okButton, value: false },
+      { label: labels.dialogs.copyButton, value: true },
+    ],
+    0,
+  ).then((copy) => {
+    if (copy === true) void clipboard.writeText(detail);
+  });
 }

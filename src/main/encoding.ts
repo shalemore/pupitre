@@ -1,8 +1,9 @@
 import { isUtf8 } from "node:buffer";
-import { type BrowserWindow, dialog } from "electron";
+import type { BrowserWindow } from "electron";
 import iconv from "iconv-lite";
 import type { LineEnding, TextEncoding } from "@shared/desktop-api";
 import { toLf } from "@shared/text";
+import { choose } from "./dialog-choice";
 import { t } from "./i18n";
 
 /**
@@ -163,16 +164,13 @@ async function askEncoding(
   path: string,
 ): Promise<AskedEncoding | undefined> {
   const labels = t().dialogs;
-  const { response } = await dialog.showMessageBox(window, {
-    type: "question",
-    message: labels.encodingMessage,
-    detail: path,
-    buttons: [...ASKED_ENCODINGS.map((encoding) => ENCODING_LABELS[encoding]), labels.cancel],
-    defaultId: 0,
-    cancelId: ASKED_ENCODINGS.length,
-    noLink: true,
-  });
-  return ASKED_ENCODINGS[response];
+  return choose(window, { type: "question", message: labels.encodingMessage, detail: path }, [
+    ...ASKED_ENCODINGS.map((encoding) => ({
+      label: ENCODING_LABELS[encoding],
+      value: encoding,
+    })),
+    { label: labels.cancel, value: undefined },
+  ]);
 }
 
 export interface DecodedDocument {

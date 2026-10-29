@@ -36,6 +36,7 @@ import { nameCollator } from "@shared/name-collator";
 import type { Settings } from "@shared/settings";
 import { showAboutDialog } from "./about";
 import { setAsDefaultMarkdownApp } from "./default-app";
+import { choose, type Answer } from "./dialog-choice";
 import { clearDraft, readDraft, writeDraft } from "./drafts";
 import {
   decodeDocument,
@@ -113,12 +114,6 @@ function senderWindow(event: IpcMainInvokeEvent): BrowserWindow {
   return window;
 }
 
-/** One button of a confirm box: the words on it, and the answer the window reads back. */
-interface Answer<T> {
-  label: string;
-  value: T;
-}
-
 /** Asks about a document in a native box whose buttons are the answers, and gives back the one that was pressed. */
 async function confirmChoice<T>(
   window: BrowserWindow,
@@ -126,18 +121,18 @@ async function confirmChoice<T>(
   answers: readonly [Answer<T>, ...Answer<T>[]],
   defaultIndex = 0,
 ): Promise<T> {
-  const { response } = await dialog.showMessageBox(window, {
-    type: "warning",
-    message: question.message,
-    detail: question.detail,
-    buttons: answers.map((answer) => answer.label),
-    defaultId: defaultIndex,
-    cancelId: answers.length - 1,
-    noLink: true,
-  });
-  // A box the user dismisses reports its cancel button, which is the last one
+  const chosen = await choose(
+    window,
+    {
+      type: "warning",
+      message: question.message,
+      detail: question.detail,
+      defaultId: defaultIndex,
+    },
+    answers,
+  );
   const [firstAnswer, ...otherAnswers] = answers;
-  return (answers[response] ?? otherAnswers.at(-1) ?? firstAnswer).value;
+  return chosen ?? otherAnswers.at(-1)?.value ?? firstAnswer.value;
 }
 
 /** The file or folder the user picked, or null when they dropped out of the dialog. */
