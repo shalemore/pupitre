@@ -111,8 +111,11 @@ export const MainWindow: Component = () => {
       </div>
     </Show>
   );
-  // A folder the user dropped in or opened; while the open file is outside of it, the file's own folder is shown instead
-  const [openedFolder, setOpenedFolder] = createSignal<string>();
+  // The folder the user opened or dropped. It is remembered for the next run; a document from
+  // outside it shows its own folder without replacing it
+  const [openedFolder, setOpenedFolder] = createSignal<string | undefined>(
+    desktop.initialState.folder,
+  );
   const [preferredMode, setPreferredMode] = createSignal<SidebarMode>("outline");
   const [findMode, setFindMode] = createSignal<FindMode>("closed");
   const [paletteOpen, setPaletteOpen] = createSignal(false);
@@ -158,23 +161,20 @@ export const MainWindow: Component = () => {
 
   // A folder the user opened shows at once, whatever document is open; while none is open the
   // sidebar keeps the folder it already shows, so opening a document further down the tree does not
-  // descend into the folder that document sits in. A document from outside the folder takes the
-  // sidebar to its own folder.
-  const folderRoot = createMemo(() => openedFolder() ?? session.activeDocument()?.folder);
+  // descend into the folder that document sits in. A document from outside the folder shows the
+  // folder that holds it for as long as it is active, and the opened folder stays remembered.
+  const folderRoot = createMemo(() => {
+    const opened = openedFolder();
+    const doc = session.activeDocument();
+    if (opened === undefined) return doc?.folder;
+    if (doc?.path !== undefined && !isInsideFolder(opened, doc.path)) return doc.folder;
+    return opened;
+  });
   createEffect(
     on(
-      () => session.activeDocument()?.id,
-      () => {
-        const doc = session.activeDocument();
-        if (doc?.folder === undefined) return;
-        const folder = openedFolder();
-        if (folder === undefined) {
-          setOpenedFolder(doc.folder);
-          return;
-        }
-        if (doc.path !== undefined && !isInsideFolder(folder, doc.path)) {
-          setOpenedFolder(doc.folder);
-        }
+      openedFolder,
+      (folder) => {
+        if (folder !== undefined) void desktop.invoke("window:set-folder", folder);
       },
       { defer: true },
     ),

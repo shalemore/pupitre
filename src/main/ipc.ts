@@ -378,6 +378,7 @@ export function registerIpcHandlers(): void {
       recentFiles: getRecentFiles(),
       captionSide: getCaptionSide(event.sender),
       sidebarWidths: readWindowState()?.sidebar,
+      folder: readWindowState()?.folder,
       launchFile: event.sender === getMainWindow()?.webContents ? takeLaunchFile() : undefined,
       themes: getImportedThemes(),
     };
@@ -585,6 +586,7 @@ export function registerIpcHandlers(): void {
   handle("window:open-settings", () => showSettingsWindow());
   handle("window:set-colors", (event, colors) => applyWindowColors(senderWindow(event), colors));
   handle("window:set-sidebar-widths", (_event, widths) => updateWindowState({ sidebar: widths }));
+  handle("window:set-folder", (_event, folder) => updateWindowState({ folder }));
   handle("app:show-about", (event) => showAboutDialog(senderWindow(event)));
   handle("app:set-default-markdown-app", () => setAsDefaultMarkdownApp());
   handle("app:dispatch", (_event, command) => dispatchToMainWindow(command));

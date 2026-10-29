@@ -410,6 +410,8 @@ export interface InvokeChannels {
   "window:set-colors": (colors: WindowColors) => void;
   /** The width the user dragged each sidebar to; the window remembers it for the next run. */
   "window:set-sidebar-widths": (widths: SidebarWidths) => void;
+  /** The folder the sidebar was showing, remembered for the next run. */
+  "window:set-folder": (folder: string) => void;
   "app:show-about": () => void;
   "app:set-default-markdown-app": () => DefaultAppResult;
   "app:dispatch": (command: AppCommand) => void;
@@ -487,6 +489,8 @@ export interface InitialState {
   captionSide: CaptionSide | undefined;
   /** The sidebar widths the main window was last closed with; only the main window uses them. */
   sidebarWidths: SidebarWidths | undefined;
+  /** The folder the folder sidebar was showing when the window was last closed. */
+  folder: string | undefined;
   /** A file the system asked to open when Pupitre started; only given to the main window. */
   launchFile: string | undefined;
   /** Imported themes as they were when the window opened, so the first paint uses the chosen one. */

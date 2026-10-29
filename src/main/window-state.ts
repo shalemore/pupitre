@@ -11,11 +11,13 @@ const WRITE_DELAY = 400;
 
 /**
  * What the main window remembers itself. Electron keeps the bounds and the display mode of the
- * window named "main"; the sidebar widths are the app's own. Parsing is lenient, so a file an older
- * version wrote with bounds in it still gives back its sidebars.
+ * window named "main"; the sidebar widths and the folder the folder sidebar showed are the app's
+ * own. Parsing is lenient, so a file an older version wrote with bounds in it still gives back its
+ * sidebars.
  */
 const windowStateSchema = z.object({
   sidebar: z.strictObject({ start: z.number(), end: z.number() }).optional(),
+  folder: z.string().optional(),
 });
 
 export type WindowState = z.infer<typeof windowStateSchema>;
