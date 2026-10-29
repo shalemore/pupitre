@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { hash } from "node:crypto";
 import { rmSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
@@ -64,7 +64,7 @@ function snapshotFile(key: string, id: string): string {
  * document itself gets when it is opened.
  */
 function keyOf(path: string): string {
-  return createHash("sha1").update(resolve(path)).digest("hex");
+  return hash("sha1", resolve(path), "hex");
 }
 
 /** What is known of the versions; a file that cannot be read as an index leaves nothing to list. */
