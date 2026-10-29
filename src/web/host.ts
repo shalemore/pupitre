@@ -15,6 +15,7 @@ import {
   type UnsavedChoice,
 } from "@shared/desktop-api";
 import { readDraftSession } from "@shared/draft";
+import { compareFolderEntries, UNTIMED } from "@shared/folder-sort";
 import {
   INLINE_FORMAT_ACTIONS,
   PARAGRAPH_MENU_GROUPS,
@@ -30,7 +31,6 @@ import {
   type TopMenu,
   withGroupSeparators,
 } from "@shared/menu";
-import { nameCollator } from "@shared/name-collator";
 import { isInsideFolder } from "@shared/paths";
 import { pinKeyOf } from "@shared/pins";
 import {
@@ -233,20 +233,16 @@ function listFolder(path: string): FolderEntry[] {
     });
   }
   const sort = settings.folderSort;
-  return [...entries.values()].toSorted((a, b) => {
-    if (a.kind !== b.kind) return a.kind === "directory" ? -1 : 1;
-    if (sort !== "name") {
-      const difference = timeOf(b, sort) - timeOf(a, sort);
-      if (difference !== 0) return difference;
-    }
-    return nameCollator.compare(a.name, b.name);
-  });
+  return [...entries.values()]
+    .map((entry) => ({ entry, time: sort === "name" ? UNTIMED : timeOf(entry, sort) }))
+    .toSorted(compareFolderEntries)
+    .map(({ entry }) => entry);
 }
 
 /** The time the demo last wrote an entry, or its newest child for a folder. */
 function timeOf(entry: FolderEntry, sort: Exclude<Settings["folderSort"], "name">): number {
-  if (entry.kind === "file") return fileTimes.get(entry.path)?.[sort] ?? 0;
-  let newest = 0;
+  if (entry.kind === "file") return fileTimes.get(entry.path)?.[sort] ?? UNTIMED;
+  let newest = UNTIMED;
   for (const [path, times] of fileTimes) {
     if (isInsideFolder(entry.path, path)) newest = Math.max(newest, times[sort]);
   }

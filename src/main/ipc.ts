@@ -31,8 +31,8 @@ import {
   PREVIEW_BYTES,
 } from "@shared/desktop-api";
 import { formatFileSize } from "@shared/file-size";
+import { compareFolderEntries, UNTIMED } from "@shared/folder-sort";
 import { intlLocale } from "@shared/i18n";
-import { nameCollator } from "@shared/name-collator";
 import type { Settings } from "@shared/settings";
 import { showAboutDialog } from "./about";
 import { setAsDefaultMarkdownApp } from "./default-app";
@@ -227,9 +227,6 @@ async function entryTime(
   }
 }
 
-/** What the time of an entry that the system would not report sorts as. */
-const UNTIMED = Number.MIN_SAFE_INTEGER;
-
 /**
  * One level of a folder: directories first, then the order the folderSort setting asks for. The
  * times cost one call per entry, so only the orders that read them pay for it.
@@ -243,12 +240,7 @@ async function listFolder(path: string): Promise<FolderEntry[]> {
       : await Promise.all(entries.map((entry) => entryTime(entry.path, sort)));
   return entries
     .map((entry, index) => ({ entry, time: times?.[index] ?? UNTIMED }))
-    .toSorted((a, b) => {
-      if (a.entry.kind !== b.entry.kind) return a.entry.kind === "directory" ? -1 : 1;
-      // Newest first; an entry without a time keeps the end of the list, in name order
-      if (a.time !== b.time) return b.time - a.time;
-      return nameCollator.compare(a.entry.name, b.entry.name);
-    })
+    .toSorted(compareFolderEntries)
     .map(({ entry }) => entry);
 }
 
