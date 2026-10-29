@@ -3,6 +3,7 @@ import { readdir } from "node:fs/promises";
 import { join, relative, sep } from "node:path";
 import { DOCUMENT_FILE, type FolderFile } from "@shared/desktop-api";
 import { nameCollator } from "@shared/name-collator";
+import { createIOLimit } from "./io-limit";
 
 /**
  * How many documents a walk collects before it stops. A folder that holds more than this is not
@@ -41,10 +42,11 @@ export function isWorkspaceDocument(entry: Dirent): boolean {
  */
 export async function listWorkspaceFiles(root: string): Promise<FolderFile[]> {
   const files: FolderFile[] = [];
+  const limit = createIOLimit();
   const walk = async (folder: string): Promise<void> => {
     if (files.length >= MAX_WORKSPACE_FILES) return;
     // A folder that cannot be read holds nothing to offer, and the walk goes on beside it
-    const entries = await readdir(folder, { withFileTypes: true }).catch(() => []);
+    const entries = await limit(() => readdir(folder, { withFileTypes: true }).catch(() => []));
     await Promise.all(
       entries.map(async (entry) => {
         if (files.length >= MAX_WORKSPACE_FILES) return;

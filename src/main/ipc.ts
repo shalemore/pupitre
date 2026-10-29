@@ -61,6 +61,7 @@ import {
 } from "./file-actions";
 import { listVersions, MAX_SNAPSHOT_BYTES, readVersion, recordVersion } from "./history";
 import { currentLocale, t } from "./i18n";
+import { createIOLimit } from "./io-limit";
 import { clickMenuItem, menuSnapshot, setDocumentState } from "./menu";
 import { takeLaunchFile } from "./open-files";
 import { unwatchPath, watchPath } from "./path-watcher";
@@ -229,15 +230,17 @@ async function entryTime(
 
 /**
  * One level of a folder: directories first, then the order the folderSort setting asks for. The
- * times cost one call per entry, so only the orders that read them pay for it.
+ * times cost one call per entry, so only the orders that read them pay for it, and a limit keeps a
+ * large folder from opening a handle for every entry at once.
  */
 async function listFolder(path: string): Promise<FolderEntry[]> {
   const entries = await readFolder(path);
   const sort = getSettings().folderSort;
+  const limit = createIOLimit();
   const times =
     sort === "name"
       ? undefined
-      : await Promise.all(entries.map((entry) => entryTime(entry.path, sort)));
+      : await Promise.all(entries.map((entry) => limit(() => entryTime(entry.path, sort))));
   return entries
     .map((entry, index) => ({ entry, time: times?.[index] ?? UNTIMED }))
     .toSorted(compareFolderEntries)
@@ -268,8 +271,9 @@ async function folderPreviews(path: string): Promise<Record<string, string>> {
   const files = (await readFolder(path)).filter(
     (entry) => entry.kind === "file" && DOCUMENT_FILE.test(entry.name),
   );
+  const limit = createIOLimit();
   const heads = await Promise.all(
-    files.map(async (file) => [file.path, await readHead(file.path)] as const),
+    files.map((file) => limit(async () => [file.path, await readHead(file.path)] as const)),
   );
   return Object.fromEntries(
     heads.filter((head): head is [string, string] => head[1] !== undefined),
