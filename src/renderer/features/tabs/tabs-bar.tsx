@@ -95,7 +95,7 @@ export const TabsBar: Component<TabsBarProps> = (props) => (
   <div
     role="tablist"
     aria-label={t().tabs.bar}
-    class="no-scrollbar flex h-full min-w-0 flex-1 items-stretch overflow-x-auto print:hidden"
+    class="scrollbar-none flex h-full min-w-0 flex-1 items-stretch overflow-x-auto print:hidden"
   >
     <For each={props.tabs}>
       {(tab) => (

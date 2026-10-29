@@ -383,21 +383,7 @@
   }
 }
 
-/* A strip that scrolls without showing a scrollbar, such as the tabs in the title bar */
-@utility no-scrollbar {
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-}
-
-/* A panel that can be taller than a short window scrolls inside it, keeping every entry reachable */
-@utility floating-panel-scroll {
-  max-height: calc(100dvh - 0.5rem);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
+/* A strip that scrolls without showing a scrollbar is styled with Tailwind's scrollbar-none */
 
 /*
  * Press feedback for buttons: a quick squeeze on press and a spring back on release. Colors keep
