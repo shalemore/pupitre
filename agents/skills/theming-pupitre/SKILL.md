@@ -159,6 +159,32 @@ default does, so a centred sheet rises in place instead of sliding in from its u
 `[data-menu-panel]` carries the transform origin of the button a menu hangs from, for a theme that
 replaces the keyframes with a scale. One rule restyles them all.
 
+## Motion
+
+The document's animations take their length and curve from six token pairs, one for each thing
+that moves. They are set with the app's own motion scales, and a theme writes them in its layer,
+which sits above the app's, so nothing needs `!important`:
+
+| Token pair                                       | What it times                                  | Default                  |
+| :----------------------------------------------- | :--------------------------------------------- | :----------------------- |
+| `--motion-enter-duration`, `--motion-enter-ease` | a marker or a quote's bar appearing            | 120ms, `--ease-enter`    |
+| `--motion-block-duration`, `--motion-block-ease` | a formula, a diagram or a table arriving       | 200ms, `--ease-enter`    |
+| `--motion-line-duration`, `--motion-line-ease`   | a line of a code block growing                 | 120ms, `--ease-out-expo` |
+| `--motion-leave-duration`, `--motion-leave-ease` | a block fading out where the text replaced it  | 120ms, `--ease-out-expo` |
+| `--motion-fold-duration`, `--motion-fold-ease`   | a details section opening or closing           | 300ms, `--ease-out-expo` |
+| `--motion-view-duration`, `--motion-view-ease`   | the window cross-fading a theme or a view swap | 300ms, `--ease-enter`    |
+
+```css
+:root {
+  --motion-enter-duration: 200ms;
+  --motion-fold-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+```
+
+The interface's own transitions (menus, hover, the fold gutter, the triangle of a details summary)
+keep the app's motion scale, and the user's Animation setting turns everything off above the
+theme.
+
 ## What to leave alone
 
 - Body font size, line height and content width belong to the user. They are applied above themes.

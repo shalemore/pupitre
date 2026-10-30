@@ -18,19 +18,28 @@ export function onScrollbar(event: Event): boolean {
   );
 }
 
+/** Where a rendering sends the cursor, kept beside its element so that it can change while it stands. */
+const ends = new WeakMap<Element, number>();
+const listening = new WeakSet<Element>();
+
 /**
  * Puts the cursor at `end` when the rendering is clicked, so that the source opens at its end,
- * ready to take what is typed next, instead of at the start of its first line.
+ * ready to take what is typed next, instead of at the start of its first line. A rendering whose
+ * content changed is the same element (WidgetType.updateDOM), so the end is read on every click
+ * rather than captured once.
  */
 export function onReveal(element: HTMLElement, view: EditorView, end: number | undefined): void {
   if (end === undefined) return;
-
+  ends.set(element, end);
+  if (listening.has(element)) return;
+  listening.add(element);
   element.addEventListener("mousedown", (event) => {
-    if (event.button !== 0 || onScrollbar(event)) return;
+    const target = ends.get(element);
+    if (event.button !== 0 || onScrollbar(event) || target === undefined) return;
     // The editor would place the cursor at the start of the block it replaces
     event.preventDefault();
     event.stopPropagation();
     view.focus();
-    view.dispatch({ selection: { anchor: end }, scrollIntoView: true });
+    view.dispatch({ selection: { anchor: target }, scrollIntoView: true });
   });
 }

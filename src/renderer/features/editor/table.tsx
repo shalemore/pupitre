@@ -38,6 +38,7 @@ import { t } from "@/i18n";
 import { openImageMenu } from "./image-menu";
 import { imageDom, imageIn, setImageLayout } from "./images";
 import { InlineContent, type InlineImage } from "./inline-content";
+import { fadeOut } from "./leave";
 import { openLink } from "./live-preview";
 import {
   type Alignment,
@@ -564,6 +565,7 @@ export class TableWidget extends WidgetType {
   }
 
   override destroy(dom: HTMLElement): void {
+    fadeOut(dom);
     mounted.get(dom)?.dispose();
   }
 

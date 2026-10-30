@@ -81,6 +81,7 @@ import {
   pickImage,
   saveImageNextTo,
 } from "./images";
+import { leavingBlocks } from "./leave";
 import { livePreview, setPrinting } from "./live-preview";
 import { FULL_PARSE_TIMEOUT_MS, markdownLanguage } from "./markdown-language";
 import { prerenderMath } from "./math";
@@ -235,7 +236,7 @@ body { white-space: pre-wrap; word-break: break-word; padding: 2rem; font-family
  * is the document: the markers, the tables, the images and the diagrams as they were written.
  */
 function previewOf(sourceMode: boolean): Extension {
-  return sourceMode ? [] : [livePreview, renderedBlocks];
+  return sourceMode ? [] : [livePreview, renderedBlocks, leavingBlocks];
 }
 
 /**
@@ -265,6 +266,9 @@ const layeredStyles = EditorView.theme({
     border: "revert-layer",
   },
   ".cm-line": { padding: "revert-layer" },
+  // A rendering fills the top of a code card (editor.css), so the buffers that stand around an
+  // inline widget would keep it from the card's edge and leave a line box above it
+  ".cm-line.md-code-render > .cm-widgetBuffer": { display: "revert-layer" },
   "&.cm-editor .cm-searchMatch, &.cm-editor .cm-searchMatch-selected": {
     backgroundColor: "revert-layer",
   },

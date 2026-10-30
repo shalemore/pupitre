@@ -1,5 +1,6 @@
 import { EditorView, WidgetType } from "@codemirror/view";
 import type { OutlineHeading } from "./document-structure";
+import { fadeOut } from "./leave";
 
 /** A paragraph that is only this marker stands for the table of contents. */
 export const TOC_MARKER = /^\[TOC\]$/i;
@@ -25,8 +26,23 @@ export class TocWidget extends WidgetType {
   toDOM(view: EditorView): HTMLElement {
     const list = document.createElement("ul");
     list.className = "md-toc";
+    list.append(...this.items(view));
+    return list;
+  }
+
+  /** A heading edited elsewhere moves the links, which are rebuilt in the list that stands here. */
+  override updateDOM(dom: HTMLElement, view: EditorView): boolean {
+    dom.replaceChildren(...this.items(view));
+    return true;
+  }
+
+  override destroy(dom: HTMLElement): void {
+    fadeOut(dom);
+  }
+
+  private items(view: EditorView): HTMLElement[] {
     const top = Math.min(...this.headings.map((heading) => heading.level));
-    for (const { level, text, pos } of this.headings) {
+    return this.headings.map(({ level, text, pos }) => {
       const item = document.createElement("li");
       item.style.paddingInlineStart = `${level - top}em`;
       const link = document.createElement("span");
@@ -40,8 +56,7 @@ export class TocWidget extends WidgetType {
         });
       });
       item.append(link);
-      list.append(item);
-    }
-    return list;
+      return item;
+    });
   }
 }

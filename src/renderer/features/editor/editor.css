@@ -646,9 +646,31 @@
     line-height: 0;
   }
 
+  /*
+   * A quote's bar stands on the room its border keeps. The border itself cannot fade in, since it
+   * appears at its full width the moment the line becomes part of a quote; the bar drawn over it
+   * can, and it is the border that holds the text at the distance the bar takes.
+   */
   .md-quote {
     position: relative;
-    border-inline-start: var(--md-quote-bar-width) solid var(--md-quote-bar);
+    border-inline-start: var(--md-quote-bar-width) solid transparent;
+  }
+
+  .md-quote::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: calc(0px - var(--md-quote-bar-width));
+    inline-size: var(--md-quote-bar-width);
+    background: var(--md-quote-bar);
+    pointer-events: none;
+    transition: opacity var(--motion-enter-duration) var(--motion-enter-ease);
+  }
+
+  @starting-style {
+    .md-quote::after {
+      opacity: 0;
+    }
   }
 
   /*
@@ -1020,6 +1042,88 @@
   .cm-searchMatch.cm-searchMatch-selected {
     background-color: var(--ui-brand);
     color: var(--brand-foreground);
+  }
+
+  /*
+   * Motion. A construct paints itself in instead of moving: CodeMirror measures the boxes it lays
+   * out and keeps the scroll anchored to them, so a transition on geometry would feed it heights
+   * from halfway through. Only paint properties animate. The signal is the DOM's own: CodeMirror
+   * reuses a span or a line while its content stays the same, so an element that appeared really
+   * is new, and one that was already there never replays its entrance while the text is typed.
+   */
+  .md-mark {
+    transition: opacity var(--motion-enter-duration) var(--motion-enter-ease);
+  }
+
+  /* The syntax a selection reveals around the construct it touches */
+  @starting-style {
+    .md-mark {
+      opacity: 0;
+    }
+  }
+
+  /* A code block is drawn line by line, so a line that appears paints its own band in */
+  .md-code-block {
+    transition:
+      background-color var(--motion-line-duration) var(--motion-line-ease),
+      border-color var(--motion-line-duration) var(--motion-line-ease);
+  }
+
+  @starting-style {
+    .md-code-block {
+      background-color: transparent;
+      border-color: transparent;
+    }
+  }
+
+  /*
+   * A line a code block just gained grows into place, so the block is seen to get taller. Only an
+   * empty line does this (live-preview.ts): text in a collapsing line would be cut off while it
+   * grew. CodeMirror measures the line as it moves and the lines below follow it.
+   */
+  .md-code-line-in {
+    interpolate-size: allow-keywords;
+    /* A line with text in it would spill over the ones below while it grows */
+    overflow: clip;
+    transition:
+      block-size var(--motion-line-duration) var(--motion-line-ease),
+      padding-block-start var(--motion-line-duration) var(--motion-line-ease);
+  }
+
+  @starting-style {
+    .md-code-line-in {
+      block-size: 0;
+      padding-block-start: 0;
+    }
+  }
+
+  /* A block that leaves stays for a moment as a copy of itself, fading over what replaced it */
+  @keyframes md-block-leave {
+    to {
+      opacity: 0;
+    }
+  }
+
+  .md-block-ghost {
+    animation: md-block-leave var(--motion-leave-duration) var(--motion-leave-ease) forwards;
+  }
+
+  /*
+   * A rendered block appears when its source first parses: a formula, a diagram, a table, an HTML
+   * block, a table of contents. Its fill and its frame arrive with it; a theme that gives one of
+   * them a background sees it open up.
+   */
+  :is(.md-math, .md-math-block, .md-mermaid, .md-table-block, .md-html-block, .md-toc) {
+    transition:
+      opacity var(--motion-block-duration) var(--motion-block-ease),
+      background-color var(--motion-block-duration) var(--motion-block-ease),
+      border-color var(--motion-block-duration) var(--motion-block-ease);
+  }
+
+  @starting-style {
+    :is(.md-math, .md-math-block, .md-mermaid, .md-table-block, .md-html-block, .md-toc) {
+      opacity: 0;
+    }
   }
 
   /*

@@ -247,6 +247,8 @@ class DecorationBuilder {
     view: EditorView,
     readonly from: number,
     readonly to: number,
+    /** Lines an edit just opened empty inside a code block; they grow into place. */
+    readonly growing: ReadonlySet<number>,
   ) {
     this.state = view.state;
   }
@@ -355,6 +357,7 @@ class DecorationBuilder {
         variables.push(`--md-list-depth: ${line.listDepth}`);
       }
       if (variables.length > 0) attributes["style"] = variables.join("; ");
+      if (this.growing.has(start)) line.classes.add("md-code-line-in");
       if (line.classes.size > 0) attributes["class"] = [...line.classes].join(" ");
       this.decorations.push(Decoration.line({ attributes }).range(start));
     }
@@ -909,14 +912,40 @@ function markFootnotesStart(builder: DecorationBuilder): void {
 }
 
 /** Decorates the rendered viewport, which also covers the lines a scroll brings into view. */
-function buildDecorations(view: EditorView): DecorationSet {
+function buildDecorations(
+  view: EditorView,
+  growing: ReadonlySet<number> = new Set(),
+): DecorationSet {
   const { from, to } = view.viewport;
-  const builder = new DecorationBuilder(view, from, to);
+  const builder = new DecorationBuilder(view, from, to, growing);
   syntaxTree(view.state).iterate({ from, to, enter: (node) => visit(builder, node.node) });
   markFootnotesStart(builder);
   return builder.finish();
 }
 
+/**
+ * The empty lines an edit just opened inside a code block. They grow into place rather than jump,
+ * which is the only way a code block can be seen to get taller: CodeMirror measures the height of
+ * its lines, so the line itself has to carry the movement.
+ */
+function growingLines(update: ViewUpdate): ReadonlySet<number> {
+  const lines = new Set<number>();
+  if (!update.docChanged) return lines;
+  update.changes.iterChangedRanges((_fromA, _toA, _fromB, toB) => {
+    const line = update.state.doc.lineAt(toB);
+    if (line.text.trim() !== "") return;
+    let node: SyntaxNode | null = syntaxTree(update.state).resolveInner(toB, 1);
+    for (; node; node = node.parent) {
+      if (node.name === "FencedCode" || node.name === "CodeBlock") {
+        lines.add(line.from);
+        return;
+      }
+    }
+  });
+  return lines;
+}
+
+/**
 /** The address of the link at `pos`. */
 function linkAt(state: EditorState, pos: number): string | undefined {
   for (
@@ -976,7 +1005,7 @@ const livePreviewPlugin = ViewPlugin.fromClass(
         printingChanged(update.state, update.startState) ||
         syntaxTree(update.state) !== syntaxTree(update.startState)
       ) {
-        this.decorations = buildDecorations(update.view);
+        this.decorations = buildDecorations(update.view, growingLines(update));
       }
     }
   },

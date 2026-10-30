@@ -280,6 +280,29 @@
     1
   );
 
+  /*
+   * The document's own motion, by what moves. This is the one place to change it: a theme sets
+   * these in its own layer, which sits above this one, so its values win without `!important`.
+   *   enter  a marker or a quote's bar appearing while the cursor moves
+   *   block  a formula, a diagram or a table arriving
+   *   line   a line of a code block growing
+   *   leave  a block fading out where the text replaced it
+   *   fold   a details section opening or closing
+   *   view   the window cross-fading a theme change or a view swap
+   */
+  --motion-enter-duration: var(--transition-duration-snap);
+  --motion-enter-ease: var(--ease-enter);
+  --motion-block-duration: var(--transition-duration-base);
+  --motion-block-ease: var(--ease-enter);
+  --motion-line-duration: var(--transition-duration-snap);
+  --motion-line-ease: var(--ease-out-expo);
+  --motion-leave-duration: var(--transition-duration-snap);
+  --motion-leave-ease: var(--ease-out-expo);
+  --motion-fold-duration: var(--transition-duration-sheet);
+  --motion-fold-ease: var(--ease-out-expo);
+  --motion-view-duration: var(--transition-duration-sheet);
+  --motion-view-ease: var(--ease-enter);
+
   --font-sans:
     -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif;

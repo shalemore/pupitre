@@ -1,6 +1,7 @@
 import { type EditorView, WidgetType } from "@codemirror/view";
 import DOMPurify from "dompurify";
 import { imageDom, parseImageTag, resolveAgainst, watchHtmlImages } from "./images";
+import { fadeOut } from "./leave";
 
 /**
  * Raw HTML in Markdown. Inline formatting elements such as `<kbd>Ctrl</kbd>` are shown with
@@ -128,13 +129,29 @@ export class HtmlBlockWidget extends WidgetType {
     }
     const block = document.createElement("div");
     block.className = "md-html-block";
-    block.append(DOMPurify.sanitize(this.source, { RETURN_DOM_FRAGMENT: true }));
-    decorateHtmlBlock(block);
-    watchHtmlImages(view, block, this.base);
+    this.fill(block, view);
     return block;
+  }
+
+  /** The block under the selection is rebuilt as its source is typed, in the element that stands. */
+  override updateDOM(dom: HTMLElement, view: EditorView): boolean {
+    if (!dom.classList.contains("md-html-block")) return false;
+    this.fill(dom, view);
+    return true;
   }
 
   override ignoreEvent(): boolean {
     return false;
+  }
+
+  override destroy(dom: HTMLElement): void {
+    // A block that is only a picture stands as that picture, which needs no fading of its own
+    if (dom.classList.contains("md-html-block")) fadeOut(dom);
+  }
+
+  private fill(block: HTMLElement, view: EditorView): void {
+    block.replaceChildren(DOMPurify.sanitize(this.source, { RETURN_DOM_FRAGMENT: true }));
+    decorateHtmlBlock(block);
+    watchHtmlImages(view, block, this.base);
   }
 }
