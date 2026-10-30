@@ -20,7 +20,7 @@ import { TitleBar } from "@/components/title-bar";
 import { IconButton, ToggleIconButton } from "@/components/ui";
 import { CommandPalette } from "@/features/command-palette/command-palette";
 import { FindBar } from "@/features/editor/find-bar";
-import { ImagePreview } from "@/features/editor/image-preview";
+import { ImagePreview } from "@/features/editor/images/image-preview";
 import type { MarkdownEditorHandle, MatchStats } from "@/features/editor/markdown-editor";
 import { TableSizeDialog } from "@/features/editor/table-size-dialog";
 import { VersionHistory } from "@/features/history/version-history";

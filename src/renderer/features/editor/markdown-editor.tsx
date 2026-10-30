@@ -59,6 +59,8 @@ const scrollArea = css({
   overflowX: "hidden",
   _print: { height: "auto", overflow: "visible" },
 });
+import { imageCaptionClick, imageInput } from "@/features/editor/images/image-widget";
+import { closeInlineTags } from "@/features/editor/widgets/html-widget";
 import { pickImage, saveImageNextTo } from "@/lib/image-files";
 import { alertTitles } from "@/lib/markdown/alerts";
 import { codeHighlight } from "@/lib/markdown/code-highlight";
@@ -87,8 +89,6 @@ import {
   type MarkdownStyle,
   runFormatAction,
 } from "./format-commands";
-import { closeInlineTags } from "./html-widget";
-import { imageCaptionClick, imageInput } from "./image-widget";
 import { leavingBlocks } from "./leave";
 import { livePreview, setPrinting } from "./live-preview";
 import { pasteHtml } from "./paste-html";

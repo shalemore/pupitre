@@ -1,6 +1,6 @@
 import { EditorView, WidgetType } from "@codemirror/view";
+import { fadeOut } from "@/features/editor/leave";
 import type { OutlineHeading } from "@/lib/markdown/structure";
-import { fadeOut } from "./leave";
 
 /** A paragraph that is only this marker stands for the table of contents. */
 export const TOC_MARKER = /^\[TOC\]$/i;

@@ -33,6 +33,10 @@ import {
 } from "solid-js";
 import { Dynamic, render } from "solid-js/web";
 import { IconButton, Separator } from "@/components/ui";
+import { openImageMenu } from "@/features/editor/images/image-menu";
+import { imageDom } from "@/features/editor/images/image-widget";
+import { fadeOut } from "@/features/editor/leave";
+import { openLink } from "@/features/editor/live-preview";
 import { t } from "@/i18n";
 import { imageIn, setImageLayout } from "@/lib/markdown/images";
 import { type InlineImage } from "@/lib/markdown/inline";
@@ -53,11 +57,7 @@ import {
 } from "@/lib/markdown/table-model";
 import { rtlFlip } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
-import { openImageMenu } from "./image-menu";
-import { imageDom } from "./image-widget";
 import { InlineContent } from "./inline-view";
-import { fadeOut } from "./leave";
-import { openLink } from "./live-preview";
 
 /**
  * Tables are always shown rendered and edited in place, like the rest of the live preview: the

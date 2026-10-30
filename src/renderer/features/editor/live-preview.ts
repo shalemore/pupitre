@@ -17,6 +17,13 @@ import {
 } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
 import { DOCUMENT_EXTENSIONS } from "@shared/desktop-api";
+import { openImageMenu } from "@/features/editor/images/image-menu";
+import { ImageWidget } from "@/features/editor/images/image-widget";
+import { AlertTitleWidget } from "@/features/editor/widgets/alert-widget";
+import { CodeCornerWidget, type FenceInfo } from "@/features/editor/widgets/code-corner";
+import { EmojiWidget } from "@/features/editor/widgets/emoji-widget";
+import { LineBreakWidget } from "@/features/editor/widgets/html-widget";
+import { MathWidget } from "@/features/editor/widgets/math-widget";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { pathFromFileUrl } from "@/lib/file";
@@ -36,13 +43,6 @@ import {
 import { markers } from "@/lib/markdown/markers";
 import { mathFence, mathOf } from "@/lib/markdown/math";
 import { collectHeadings, findHeadingByAnchor, HEADING_LEVEL } from "@/lib/markdown/structure";
-import { AlertTitleWidget } from "./alert-widget";
-import { CodeCornerWidget, type FenceInfo } from "./code-corner";
-import { EmojiWidget } from "./emoji-widget";
-import { LineBreakWidget } from "./html-widget";
-import { openImageMenu } from "./image-menu";
-import { ImageWidget } from "./image-widget";
-import { MathWidget } from "./math-widget";
 import { scrollToDocument } from "./scroll";
 
 /**
