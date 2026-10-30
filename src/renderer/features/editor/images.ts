@@ -7,6 +7,7 @@ import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { pathFromFileUrl } from "@/lib/file";
 import { escapeHtml } from "@/lib/html";
+import { css, cx } from "@/styled-system/css";
 import { hasTransparency } from "./image-alpha";
 
 /** file:// URL of the document's folder, to resolve relative image paths; undefined if unsaved. */
@@ -503,6 +504,56 @@ function writeImage(
   setImageLayout(view, image, change(image));
 }
 
+const handleStyle = css({
+  position: "absolute",
+  insetBlockEnd: "-1",
+  insetInlineEnd: "-1",
+  width: "3",
+  height: "3",
+  borderRadius: "full",
+  borderWidth: "hairline",
+  borderStyle: "solid",
+  borderColor: "surface.1",
+  backgroundColor: "brand",
+  boxShadow: "sm",
+  cursor: "nwse-resize",
+  userSelect: "none",
+  opacity: 0,
+  visibility: "hidden",
+  _groupHover: { opacity: 1, visibility: "visible" },
+  _groupFocusWithin: { opacity: 1, visibility: "visible" },
+  _rtl: { cursor: "nesw-resize" },
+});
+const toolbarStyle = css({
+  position: "absolute",
+  gap: "0.5",
+  borderRadius: "lg",
+  backgroundColor: "surface.3",
+  padding: "0.5",
+  boxShadow: "float",
+  userSelect: "none",
+  opacity: 0,
+  visibility: "hidden",
+  _groupHover: { opacity: 1, visibility: "visible" },
+  _groupFocusWithin: { opacity: 1, visibility: "visible" },
+});
+const alignButton = css({
+  display: "grid",
+  width: "6",
+  height: "6",
+  placeItems: "center",
+  borderRadius: "md",
+  borderWidth: 0,
+  backgroundColor: "transparent",
+  padding: 0,
+  color: "tertiary",
+  cursor: "pointer",
+  layerStyle: "interactive",
+  _hover: { backgroundColor: "accent", color: "foreground" },
+  _focusVisible: { outlineStyle: "none", boxShadow: "focus" },
+  "&[aria-pressed='true']": { backgroundColor: "selected", color: "foreground" },
+});
+
 /**
  * The corner handle that sizes the picture. It drags the picture on the screen and writes the width
  * into its source once, when the pointer is released, so that one drag is one change to undo.
@@ -516,8 +567,7 @@ function resizeHandle(
 ): HTMLElement {
   const handle = document.createElement("span");
   // Interface rather than document, sized in rem like the corner of a code block
-  handle.className =
-    "md-image-handle absolute -inset-be-1 -inset-e-1 size-3 rounded-full border border-surface-1 bg-brand shadow-sm cursor-nwse-resize rtl:cursor-nesw-resize select-none opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible";
+  handle.className = cx("md-image-handle", handleStyle);
   handle.title = t().editor.image.resize;
 
   handle.addEventListener("pointerdown", (event) => {
@@ -575,8 +625,7 @@ function alignmentToolbar(
   size: ImageSize,
 ): HTMLElement {
   const toolbar = document.createElement("span");
-  toolbar.className =
-    "md-image-toolbar absolute gap-0.5 rounded-lg bg-surface-3 p-0.5 shadow-float select-none opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible";
+  toolbar.className = cx("md-image-toolbar", toolbarStyle);
   const labels = t().editor.image;
   const choices: readonly { alignment: ImageAlignment; label: string }[] = [
     { alignment: "left", label: labels.alignLeft },
@@ -587,8 +636,7 @@ function alignmentToolbar(
   for (const { alignment, label } of choices) {
     const button = document.createElement("button");
     button.type = "button";
-    button.className =
-      "md-image-align grid size-6 place-items-center rounded-md border-0 bg-transparent p-0 text-tertiary cursor-pointer transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:shadow-focus aria-pressed:bg-selected aria-pressed:text-foreground";
+    button.className = cx("md-image-align", alignButton);
     button.setAttribute("data-alignment", alignment);
     button.title = label;
     button.setAttribute("aria-label", label);

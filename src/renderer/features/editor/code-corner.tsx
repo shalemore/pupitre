@@ -31,6 +31,20 @@ const languagePicker = css({
   _hover: { backgroundColor: "accent", color: "foreground" },
   _focusVisible: { outlineStyle: "none", boxShadow: "focus" },
 });
+const corner = css({
+  position: "absolute",
+  zIndex: 1,
+  top: "var(--md-code-corner-gap)",
+  insetInlineEnd: "2",
+  display: "flex",
+  alignItems: "center",
+  gap: "1.5",
+  fontFamily: "sans",
+  fontSize: "xs",
+  lineHeight: "1",
+  color: "tertiary",
+  userSelect: "none",
+});
 const copy = css({
   display: "grid",
   width: "var(--md-code-corner-size)",
@@ -238,8 +252,7 @@ export class CodeCornerWidget extends WidgetType {
     const container = document.createElement("span");
     // Above the code lines it overlaps while the fence line is shrunk; interface rather than
     // document, so it is sized in rem and does not shrink with the block's em
-    container.className =
-      "absolute z-1 top-(--md-code-corner-gap) end-2 flex items-center gap-1.5 font-sans text-xs leading-none text-tertiary select-none";
+    container.className = corner;
     disposers.set(
       container,
       render(() => <CodeCorner view={view} container={container} fence={this.fence} />, container),
