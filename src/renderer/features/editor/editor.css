@@ -347,6 +347,27 @@
   .md-image-block {
     display: block;
     padding-block: var(--md-image-gap);
+    /* The gap and the caption are em sizes of the page, not of the line the picture stands in;
+       the source of an HTML block, which can hold the picture, is set in the code font */
+    font-size: var(--pref-font-size);
+  }
+
+  /* The buffer before a picture that stands in its `<img>` block would open a line box above it */
+  .md-image-source > .cm-widgetBuffer {
+    display: none;
+  }
+
+  /* An `<img>` tag's source reads where a Markdown picture's caption stands: quiet and centered */
+  .md-image-source {
+    color: var(--ui-text-muted);
+    font-size: 0.85em;
+    text-align: center;
+  }
+
+  /* The caption stood inside the picture's box; the source that takes its place follows it, so the
+     picture keeps no room below itself while the source is shown */
+  .md-image-source > .md-image-block {
+    padding-block-end: 0;
   }
 
   /* A picture with text around it stays in that line, without the frame a picture of its own has */

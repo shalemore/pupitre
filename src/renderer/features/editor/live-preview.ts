@@ -798,9 +798,11 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
   const { name } = node;
   if (name === "FootnoteDefinition") builder.hasFootnoteDefinition = true;
   // A simple HTML heading or paragraph is drawn in place; anything else stays a rendered block
-  const html =
-    name === "HTMLBlock" ? htmlBlockPreview(builder.text(node.from, node.to)) : undefined;
-  const block = html === undefined ? blockClass(name) : undefined;
+  const source = name === "HTMLBlock" ? builder.text(node.from, node.to) : undefined;
+  const html = source === undefined ? undefined : htmlBlockPreview(source);
+  // A picture written as an `<img>` tag keeps the caption line a Markdown picture shows
+  const picture = source !== undefined && parseImageTag(source) !== undefined;
+  const block = html !== undefined ? undefined : picture ? "md-image-source" : blockClass(name);
   // A setext underline is not part of the heading's text; it is styled as syntax below
   if (block) builder.lineClass(node.from, name.startsWith("Setext") ? node.from : node.to, block);
   if (INLINE_CONTAINER.test(name)) visitInlineHtml(builder, node);
