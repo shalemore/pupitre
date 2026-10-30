@@ -714,13 +714,15 @@ function visitInlineHtml(builder: DecorationBuilder, node: SyntaxNode): void {
     const opening = open[index]?.tag;
     if (!opening) continue;
     open.splice(index);
+    // The content keeps the tag's look while the tags are shown, as text between `**` keeps its
+    // weight while the markers are edited
+    builder.mark(opening.to, child.from, `md-tag md-tag-${tag.name}`);
     if (touches(builder.ranges, opening.from, child.to)) {
       builder.mark(opening.from, opening.to, "md-mark");
       builder.mark(child.from, child.to, "md-mark");
     } else {
       builder.hide(opening.from, opening.to);
       builder.hide(child.from, child.to);
-      builder.mark(opening.to, child.from, `md-tag md-tag-${tag.name}`);
     }
   }
 }
