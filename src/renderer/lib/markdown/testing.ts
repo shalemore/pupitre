@@ -7,7 +7,7 @@ import {
 } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import type { SyntaxNode, Tree } from "@lezer/common";
-import { markdownLanguage } from "./markdown-language";
+import { markdownLanguage } from "./language";
 
 /**
  * Helpers for the editor's unit tests. A document is written with `|` marking the cursor, or two of

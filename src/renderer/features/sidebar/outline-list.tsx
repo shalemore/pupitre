@@ -1,8 +1,8 @@
 import { ChevronRight } from "lucide-solid";
 import { createMemo, createSelector, Index, Show, type Component } from "solid-js";
 import { ListItem, rowIndent } from "@/components/ui";
-import { headingKey, type OutlineHeading } from "@/features/editor/outline-heading";
 import { t } from "@/i18n";
+import { headingKey, type OutlineHeading } from "@/lib/markdown/outline-heading";
 import { OUTLINE_ROW } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 

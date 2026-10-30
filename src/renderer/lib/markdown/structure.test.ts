@@ -6,7 +6,7 @@ import {
   mergeHeadings,
   readableText,
   shiftHeadings,
-} from "./document-structure";
+} from "./structure";
 import { fullTree, markdownState } from "./testing";
 
 describe("readableText", () => {

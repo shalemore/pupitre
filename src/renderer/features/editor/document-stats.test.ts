@@ -1,8 +1,8 @@
 import { EditorState } from "@codemirror/state";
 import { describe, expect, it } from "vitest";
+import { markdownState } from "@/lib/markdown/testing";
 import { countTextFast, type TextStats } from "@/lib/text-stats";
 import { countDocument, countRange, createStatsTracker } from "./document-stats";
-import { markdownState } from "./testing";
 
 describe("countRange", () => {
   it("counts the readable text of a range", () => {

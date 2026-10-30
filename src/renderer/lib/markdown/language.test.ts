@@ -1,7 +1,7 @@
 import { tests as specExamples } from "commonmark-spec";
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
-import { collectHeadings, readableText } from "./document-structure";
+import { collectHeadings, readableText } from "./structure";
 import { firstNode, fullTree, markdownState, treeShape, updated } from "./testing";
 
 /** The text of the first URL node of `doc`, which is how far a bare autolink reaches. */

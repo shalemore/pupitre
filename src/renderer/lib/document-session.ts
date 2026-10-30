@@ -9,13 +9,13 @@ import {
   type TextEncoding,
 } from "@shared/desktop-api";
 import { messageOf } from "@shared/errors";
-import { createPendingImages, type PendingImages } from "@/features/editor/images";
 import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
 import { getSampleDocument } from "@/features/samples/sample-document";
 import { currentLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { reportFailure } from "@/lib/errors";
 import { fileNameOf, withTrailingNewline } from "@/lib/file";
+import { createPendingImages, type PendingImages } from "@/lib/pending-images";
 import { recentFiles } from "@/lib/recent-files";
 import { settings } from "@/lib/settings";
 

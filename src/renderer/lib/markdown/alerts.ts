@@ -1,5 +1,4 @@
 import { Facet } from "@codemirror/state";
-import { WidgetType } from "@codemirror/view";
 
 /**
  * GitHub alerts: a quote whose first line is `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` or
@@ -38,25 +37,4 @@ function isAlertType(value: string | undefined): value is AlertType {
 export function alertType(firstLine: string): AlertType | undefined {
   const type = ALERT_MARKER.exec(firstLine)?.[1]?.toLowerCase();
   return isAlertType(type) ? type : undefined;
-}
-
-export class AlertTitleWidget extends WidgetType {
-  constructor(readonly title: string) {
-    super();
-  }
-
-  override eq(other: AlertTitleWidget): boolean {
-    return other.title === this.title;
-  }
-
-  toDOM(): HTMLElement {
-    const title = document.createElement("span");
-    title.className = "md-alert-title";
-    title.textContent = this.title;
-    return title;
-  }
-
-  override ignoreEvent(): boolean {
-    return false;
-  }
 }

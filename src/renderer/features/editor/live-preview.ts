@@ -20,24 +20,29 @@ import { DOCUMENT_EXTENSIONS } from "@shared/desktop-api";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { pathFromFileUrl } from "@/lib/file";
-import { AlertTitleWidget, alertTitles, alertType } from "./alerts";
-import { CodeCornerWidget, type FenceInfo } from "./code-corner";
-import { detailsAnimation, detailsAnimationChanged } from "./details";
-import { collectHeadings, findHeadingByAnchor, HEADING_LEVEL } from "./document-structure";
-import { EmojiWidget, emojiFor } from "./emoji";
-import { footnoteReferences, footnoteTarget } from "./footnotes";
-import { formattingTagClass, htmlTag, isFormattingTag, LineBreakWidget } from "./html";
-import { htmlBlockPreview, type HtmlElement } from "./html-block";
-import { openImageMenu } from "./image-menu";
+import { alertTitles, alertType } from "@/lib/markdown/alerts";
+import { detailsAnimation, detailsAnimationChanged } from "@/lib/markdown/details";
+import { emojiFor } from "@/lib/markdown/emoji";
+import { footnoteReferences, footnoteTarget } from "@/lib/markdown/footnotes";
+import { formattingTagClass, htmlTag, isFormattingTag } from "@/lib/markdown/html";
+import { htmlBlockPreview, type HtmlElement } from "@/lib/markdown/html-block";
 import {
   documentBaseUrl,
   type DocumentImage,
   imageOf,
-  ImageWidget,
   parseImageTag,
   resolveUrl,
-} from "./images";
-import { mathFence, mathOf, MathWidget } from "./math";
+} from "@/lib/markdown/images";
+import { markers } from "@/lib/markdown/markers";
+import { mathFence, mathOf } from "@/lib/markdown/math";
+import { collectHeadings, findHeadingByAnchor, HEADING_LEVEL } from "@/lib/markdown/structure";
+import { AlertTitleWidget } from "./alert-widget";
+import { CodeCornerWidget, type FenceInfo } from "./code-corner";
+import { EmojiWidget } from "./emoji-widget";
+import { LineBreakWidget } from "./html-widget";
+import { openImageMenu } from "./image-menu";
+import { ImageWidget } from "./image-widget";
+import { MathWidget } from "./math-widget";
 import { scrollToDocument } from "./scroll";
 
 /**
@@ -725,15 +730,6 @@ function visitInlineHtml(builder: DecorationBuilder, node: SyntaxNode): void {
       builder.hide(child.from, child.to);
     }
   }
-}
-
-/** The syntax markers directly inside an inline format, such as `**` or `[` and `]`. */
-export function markers(node: SyntaxNode): SyntaxNode[] {
-  const found: SyntaxNode[] = [];
-  for (let child = node.firstChild; child; child = child.nextSibling) {
-    if (child.name.endsWith("Mark")) found.push(child);
-  }
-  return found;
 }
 
 /** The class an inline HTML tag takes so it reads like the Markdown it stands for. */

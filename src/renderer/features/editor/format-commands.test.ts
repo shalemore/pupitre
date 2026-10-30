@@ -2,8 +2,8 @@ import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import type { FormatAction } from "@shared/format";
 import { DEFAULT_SETTINGS } from "@shared/settings";
+import { fullTree, marked, markdownView } from "@/lib/markdown/testing";
 import { insertParagraphBreak, type MarkdownStyle, runFormatAction } from "./format-commands";
-import { fullTree, marked, markdownView } from "./testing";
 
 const style: MarkdownStyle = DEFAULT_SETTINGS;
 

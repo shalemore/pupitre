@@ -23,7 +23,7 @@ import { MenuEntries } from "@/features/menu/menu-popup";
 import { currentLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { reportFailure } from "@/lib/errors";
-import { excerptOf } from "@/lib/markdown-excerpt";
+import { excerptOf } from "@/lib/markdown/excerpt";
 import { settings } from "@/lib/settings";
 import { FLOATING_PANEL, menuPanel } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";

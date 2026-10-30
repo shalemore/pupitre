@@ -1,16 +1,9 @@
-import type { EditorState, Extension } from "@codemirror/state";
-import { EditorView, WidgetType } from "@codemirror/view";
-import DOMPurify from "dompurify";
-import { imageDom, parseImageTag, resolveAgainst, watchHtmlImages } from "./images";
-import { fadeOut } from "./leave";
-import { isLiteralText } from "./smart-typing";
+import type { EditorState } from "@codemirror/state";
 
 /**
- * Raw HTML in Markdown. Inline formatting elements such as `<kbd>Ctrl</kbd>` are shown with
- * their tags hidden away from the selection, like Markdown formats; other inline tags stay source.
- * HTML blocks that start with an element are rendered, sanitized with DOMPurify; comments and
- * closing tags stay source. A block that holds nothing but an `<img>` tag is the picture a resize
- * writes, shown as that picture so that it can be resized and aligned again.
+ * Raw HTML in Markdown, read as syntax: inline formatting elements such as `<kbd>Ctrl</kbd>`,
+ * the blocks that can be shown rendered, and the classes an element takes so an HTML heading,
+ * link or format is drawn like the Markdown it stands for.
  */
 
 /** Inline HTML elements that format text. */
@@ -63,7 +56,7 @@ export function isFormattingTag(name: string): boolean {
 }
 
 /** Elements that never take a closing tag. */
-const VOID_TAGS = new Set(
+export const VOID_TAGS = new Set(
   "area base br col command embed frame hr img input keygen link meta param source track wbr".split(
     " ",
   ),
@@ -75,13 +68,13 @@ const VOID_TAGS = new Set(
  */
 const OPENING_TAG = /<([a-z][\w-]*)((?:[^<>"']|"[^"]*"|'[^']*')*)$/i;
 
-interface OpeningTag {
+export interface OpeningTag {
   name: string;
   /** Where the `<` stands, to tell what the tag is written in. */
   from: number;
 }
 
-function openingTagAt(state: EditorState, at: number): OpeningTag | undefined {
+export function openingTagAt(state: EditorState, at: number): OpeningTag | undefined {
   const line = state.doc.lineAt(at);
   const text = state.sliceDoc(line.from, at);
   const match = OPENING_TAG.exec(text);
@@ -94,31 +87,6 @@ function openingTagAt(state: EditorState, at: number): OpeningTag | undefined {
   // A Markdown autolink is written like a tag: <scheme:…> or <user@host>
   if (rest.startsWith(":") || (!/^\s/.test(rest) && rest.includes("@"))) return undefined;
   return { name, from: line.from + match.index };
-}
-
-/**
- * Closes an inline HTML tag when the `>` that ends it is typed. lang-html's own handler decides
- * from the syntax tree, but Markdown only reads inline HTML once the tag is closed, so the tag
- * being typed is not in that tree yet. Block tags are left to it: they are parsed while they are
- * open, since they start a block.
- */
-export function closeInlineTags(): Extension {
-  return EditorView.inputHandler.of((view, from, to, text) => {
-    if (text !== ">" || from !== to || view.compositionStarted || view.state.readOnly) return false;
-    const tag = openingTagAt(view.state, from);
-    if (tag === undefined || VOID_TAGS.has(tag.name)) return false;
-    // The tag's own `<` tells whether it is written in code, math or front matter
-    if (isLiteralText(view.state, tag.from + 1)) return false;
-    const closing = `</${tag.name}>`;
-    if (view.state.sliceDoc(from, from + closing.length).toLowerCase() === closing) return false;
-    view.dispatch({
-      changes: { from, insert: `>${closing}` },
-      selection: { anchor: from + 1 },
-      userEvent: "input.type",
-      scrollIntoView: true,
-    });
-    return true;
-  });
 }
 
 /** The heading levels a document styles, from the theme's h1 to its h6. */
@@ -140,20 +108,6 @@ export function decorateHtmlBlock(block: HTMLElement): void {
     for (const element of block.querySelectorAll(tag)) {
       for (const name of formattingTagClass(tag).split(" ")) element.classList.add(name);
     }
-  }
-}
-
-export class LineBreakWidget extends WidgetType {
-  override eq(): boolean {
-    return true;
-  }
-
-  toDOM(): HTMLElement {
-    return document.createElement("br");
-  }
-
-  override ignoreEvent(): boolean {
-    return false;
   }
 }
 
@@ -180,64 +134,4 @@ const HIDDEN_CONTENT_TAGS = new Set([
 export function isRenderableHtml(source: string): boolean {
   const tag = /^<([a-z][a-z0-9]*)[\s/>]/i.exec(source)?.[1]?.toLowerCase();
   return tag !== undefined && tag !== "details" && !HIDDEN_CONTENT_TAGS.has(tag);
-}
-
-export class HtmlBlockWidget extends WidgetType {
-  constructor(
-    readonly source: string,
-    /** Folder of the document, for relative image addresses. */
-    readonly base: string | undefined,
-    /** Whether the block's source is shown above it, as while the block is edited. */
-    readonly editing = false,
-  ) {
-    super();
-  }
-
-  override eq(other: HtmlBlockWidget): boolean {
-    return (
-      other.source === this.source && other.base === this.base && other.editing === this.editing
-    );
-  }
-
-  toDOM(view: EditorView): HTMLElement {
-    const picture = parseImageTag(this.source);
-    if (picture) {
-      // The source, which holds the alt text, stands in for the caption while it is shown
-      return imageDom(
-        view,
-        resolveAgainst(this.base, picture.src),
-        picture.alt,
-        picture.title,
-        picture,
-        !this.editing,
-        this.editing ? undefined : picture.alt,
-      );
-    }
-    const block = document.createElement("div");
-    block.className = "md-html-block";
-    this.fill(block, view);
-    return block;
-  }
-
-  /** The block under the selection is rebuilt as its source is typed, in the element that stands. */
-  override updateDOM(dom: HTMLElement, view: EditorView): boolean {
-    if (!dom.classList.contains("md-html-block")) return false;
-    this.fill(dom, view);
-    return true;
-  }
-
-  override ignoreEvent(): boolean {
-    return false;
-  }
-
-  override destroy(dom: HTMLElement): void {
-    // A block that is only a picture stands as that picture, which needs no fading of its own
-    if (dom.classList.contains("md-html-block")) fadeOut(dom);
-  }
-
-  private fill(block: HTMLElement, view: EditorView): void {
-    block.replaceChildren(DOMPurify.sanitize(this.source, { RETURN_DOM_FRAGMENT: true }));
-    decorateHtmlBlock(block);
-    watchHtmlImages(view, block, this.base);
-  }
 }

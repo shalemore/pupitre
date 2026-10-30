@@ -1,8 +1,8 @@
 import { ensureSyntaxTree } from "@codemirror/language";
 import type { ChangeSet, EditorState } from "@codemirror/state";
 import { debounce } from "@solid-primitives/scheduled";
+import { readableText } from "@/lib/markdown/structure";
 import { countText, countTextFast, type TextStats } from "@/lib/text-stats";
-import { readableText } from "./document-structure";
 
 /**
  * Counting walks the whole document, and `Intl.Segmenter` takes about a second per megabyte. A

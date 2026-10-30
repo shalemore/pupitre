@@ -59,19 +59,26 @@ const scrollArea = css({
   overflowX: "hidden",
   _print: { height: "auto", overflow: "visible" },
 });
-import { alertTitles } from "./alerts";
-import { codeHighlight } from "./code-highlight";
-import { codeLanguageFor } from "./code-languages";
-import { cursorStyle, restartCursorBlink } from "./cursor";
-import { createStatsTracker } from "./document-stats";
+import { pickImage, saveImageNextTo } from "@/lib/image-files";
+import { alertTitles } from "@/lib/markdown/alerts";
+import { codeHighlight } from "@/lib/markdown/code-highlight";
+import { codeLanguageFor } from "@/lib/markdown/code-languages";
+import { documentBaseUrl, documentFilePath, imageAlt, imageMarkdown } from "@/lib/markdown/images";
+import { FULL_PARSE_TIMEOUT_MS, markdownLanguage } from "@/lib/markdown/language";
+import { prerenderMath } from "@/lib/markdown/math";
+import { diagramTheme, prerenderDiagrams, readDiagramTheme } from "@/lib/markdown/mermaid";
 import {
   canShiftHeadings,
   collectHeadings,
-  documentObserver,
   findActiveHeading,
   mergeHeadings,
   type OutlineHeading,
-} from "./document-structure";
+} from "@/lib/markdown/structure";
+import { textDirection } from "@/lib/markdown/text-direction";
+import { type PendingImages } from "@/lib/pending-images";
+import { cursorStyle, restartCursorBlink } from "./cursor";
+import { documentObserver } from "./document-observer";
+import { createStatsTracker } from "./document-stats";
 import { folding, foldingKeymap } from "./folding";
 import {
   formatKeymap,
@@ -80,29 +87,15 @@ import {
   type MarkdownStyle,
   runFormatAction,
 } from "./format-commands";
-import { closeInlineTags } from "./html";
-import {
-  type PendingImages,
-  documentBaseUrl,
-  documentFilePath,
-  imageAlt,
-  imageCaptionClick,
-  imageInput,
-  imageMarkdown,
-  pickImage,
-  saveImageNextTo,
-} from "./images";
+import { closeInlineTags } from "./html-widget";
+import { imageCaptionClick, imageInput } from "./image-widget";
 import { leavingBlocks } from "./leave";
 import { livePreview, setPrinting } from "./live-preview";
-import { FULL_PARSE_TIMEOUT_MS, markdownLanguage } from "./markdown-language";
-import { prerenderMath } from "./math";
-import { diagramTheme, prerenderDiagrams, readDiagramTheme } from "./mermaid";
 import { pasteHtml } from "./paste-html";
 import { renderedBlocks } from "./rendered-blocks";
 import { renumberOrderedLists } from "./renumber-lists";
 import { scrollToDocument } from "./scroll";
 import { markdownPairing, smartTyping } from "./smart-typing";
-import { textDirection } from "./text-direction";
 import { focusMode, holdLine, typewriterMode } from "./writing-modes";
 
 export interface SearchOptions {

@@ -1,7 +1,7 @@
 import type { SyntaxNode, Tree } from "@lezer/common";
 import { toLf } from "@shared/text";
-import { readableTextFrom } from "@/features/editor/document-structure";
-import { markdownParser } from "@/features/editor/markdown-language";
+import { markdownParser } from "./language";
+import { readableTextFrom } from "./structure";
 
 /** Lines a folder shows under a file name. */
 const PREVIEW_LINES = 2;

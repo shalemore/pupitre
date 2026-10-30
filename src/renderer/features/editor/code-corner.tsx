@@ -6,9 +6,9 @@ import { createMemo, createSignal, For, Show, type Component } from "solid-js";
 import { render } from "solid-js/web";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
+import { fencedText } from "@/lib/markdown/block-text";
+import { codeLanguages } from "@/lib/markdown/code-languages";
 import { css, cx } from "@/styled-system/css";
-import { fencedText } from "./block-text";
-import { codeLanguages } from "./code-languages";
 
 const COPIED_MS = 1500;
 

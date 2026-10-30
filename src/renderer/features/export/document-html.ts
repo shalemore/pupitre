@@ -2,29 +2,29 @@ import { ensureSyntaxTree, syntaxTree } from "@codemirror/language";
 import { EditorState } from "@codemirror/state";
 import type { SyntaxNode } from "@lezer/common";
 import DOMPurify from "dompurify";
-import { alertTitles, alertType } from "@/features/editor/alerts";
-import { fencedText } from "@/features/editor/block-text";
-import { detailsSection } from "@/features/editor/details";
-import { HEADING_LEVEL } from "@/features/editor/document-structure";
-import { footnoteLabel } from "@/features/editor/footnotes";
-import { decorateHtmlBlock, isRenderableHtml } from "@/features/editor/html";
+import { desktop } from "@/lib/desktop";
+import { pathFromFileUrl } from "@/lib/file";
+import { escapeHtml } from "@/lib/html";
+import { alertTitles, alertType } from "@/lib/markdown/alerts";
+import { fencedText } from "@/lib/markdown/block-text";
+import { detailsSection } from "@/lib/markdown/details";
+import { footnoteLabel } from "@/lib/markdown/footnotes";
+import { decorateHtmlBlock, isRenderableHtml } from "@/lib/markdown/html";
 import {
   documentBaseUrl,
   type ImageSize,
   imageStyle,
   parseImageTag,
   resolveUrl,
-} from "@/features/editor/images";
-import { type InlineItem, inlineItems } from "@/features/editor/inline-content";
-import { FULL_PARSE_TIMEOUT_MS, markdownLanguage } from "@/features/editor/markdown-language";
-import { mathFence, mathOf } from "@/features/editor/math";
-import { renderMath } from "@/features/editor/mathjax";
-import { diagramTheme, readDiagramTheme, renderDiagram } from "@/features/editor/mermaid";
-import { columnCount, readTable } from "@/features/editor/table-model";
-import { baseDirection } from "@/features/editor/text-direction";
-import { desktop } from "@/lib/desktop";
-import { pathFromFileUrl } from "@/lib/file";
-import { escapeHtml } from "@/lib/html";
+} from "@/lib/markdown/images";
+import { type InlineItem, inlineItems } from "@/lib/markdown/inline";
+import { FULL_PARSE_TIMEOUT_MS, markdownLanguage } from "@/lib/markdown/language";
+import { mathFence, mathOf } from "@/lib/markdown/math";
+import { renderMath } from "@/lib/markdown/mathjax";
+import { diagramTheme, readDiagramTheme, renderDiagram } from "@/lib/markdown/mermaid";
+import { HEADING_LEVEL } from "@/lib/markdown/structure";
+import { columnCount, readTable } from "@/lib/markdown/table-model";
+import { baseDirection } from "@/lib/markdown/text-direction";
 import { codeHtml } from "./code-html";
 import { pageStyle } from "./page-style";
 

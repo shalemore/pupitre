@@ -34,13 +34,8 @@ import {
 import { Dynamic, render } from "solid-js/web";
 import { IconButton, Separator } from "@/components/ui";
 import { t } from "@/i18n";
-import { rtlFlip } from "@/lib/styles";
-import { css, cx } from "@/styled-system/css";
-import { openImageMenu } from "./image-menu";
-import { imageDom, imageIn, setImageLayout } from "./images";
-import { InlineContent, type InlineImage } from "./inline-content";
-import { fadeOut } from "./leave";
-import { openLink } from "./live-preview";
+import { imageIn, setImageLayout } from "@/lib/markdown/images";
+import { type InlineImage } from "@/lib/markdown/inline";
 import {
   type Alignment,
   alignColumn,
@@ -55,7 +50,14 @@ import {
   moveRow,
   readTable,
   type TableModel,
-} from "./table-model";
+} from "@/lib/markdown/table-model";
+import { rtlFlip } from "@/lib/styles";
+import { css, cx } from "@/styled-system/css";
+import { openImageMenu } from "./image-menu";
+import { imageDom } from "./image-widget";
+import { InlineContent } from "./inline-view";
+import { fadeOut } from "./leave";
+import { openLink } from "./live-preview";
 
 /**
  * Tables are always shown rendered and edited in place, like the rest of the live preview: the

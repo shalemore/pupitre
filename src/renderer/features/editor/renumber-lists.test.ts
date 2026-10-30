@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { markdownState, updated } from "@/lib/markdown/testing";
 import { orderedListNumbers } from "./renumber-lists";
-import { markdownState, updated } from "./testing";
 
 describe("renumbering ordered lists", () => {
   it("counts the items of a list from one after its first item goes", () => {

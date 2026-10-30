@@ -1,5 +1,5 @@
 import { EditorView, WidgetType } from "@codemirror/view";
-import type { OutlineHeading } from "./document-structure";
+import type { OutlineHeading } from "@/lib/markdown/structure";
 import { fadeOut } from "./leave";
 
 /** A paragraph that is only this marker stands for the table of contents. */

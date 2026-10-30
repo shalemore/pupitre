@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { markdownState } from "@/features/editor/testing";
+import { markdownState } from "@/lib/markdown/testing";
 import { documentHtml, markdownFragment } from "./document-html";
 import { pageStyle } from "./page-style";
 

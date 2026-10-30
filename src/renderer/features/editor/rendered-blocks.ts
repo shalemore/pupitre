@@ -8,23 +8,26 @@ import {
 } from "@codemirror/state";
 import { Decoration, type DecorationSet, EditorView, type WidgetType } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
-import { fencedText } from "./block-text";
+import { fencedText } from "@/lib/markdown/block-text";
 import {
   detailsAnimation,
   detailsSection,
-  SummaryWidget,
   toggledDetails,
   toggleDetails,
-} from "./details";
-import { collectHeadings } from "./document-structure";
-import { HtmlBlockWidget, isRenderableHtml } from "./html";
-import { htmlBlockPreview } from "./html-block";
-import { documentBaseUrl, parseImageTag } from "./images";
+} from "@/lib/markdown/details";
+import { isRenderableHtml } from "@/lib/markdown/html";
+import { htmlBlockPreview } from "@/lib/markdown/html-block";
+import { documentBaseUrl, parseImageTag } from "@/lib/markdown/images";
+import { mathFence, mathOf } from "@/lib/markdown/math";
+import { diagramTheme } from "@/lib/markdown/mermaid";
+import { collectHeadings } from "@/lib/markdown/structure";
+import { readTable } from "@/lib/markdown/table-model";
+import { SummaryWidget } from "./details-widget";
+import { HtmlBlockWidget } from "./html-widget";
 import { printingChanged, revealingRanges, touches, lineRange } from "./live-preview";
-import { mathFence, mathOf, MathWidget } from "./math";
-import { diagramTheme, MermaidWidget } from "./mermaid";
+import { MathWidget } from "./math-widget";
+import { MermaidWidget } from "./mermaid-widget";
 import { TableWidget, tableCursor } from "./table";
-import { readTable } from "./table-model";
 import { TOC_MARKER, TocWidget } from "./toc";
 
 /**

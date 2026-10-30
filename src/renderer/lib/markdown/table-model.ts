@@ -1,6 +1,6 @@
 import type { ChangeSpec, EditorState } from "@codemirror/state";
 import type { SyntaxNode } from "@lezer/common";
-import { type InlineItem, inlineItems } from "./inline-content";
+import { type InlineItem, inlineItems } from "./inline";
 
 /**
  * A GFM table read from its source, with the position of every cell, and the text edits that

@@ -1,8 +1,8 @@
 import { CONTENT_WIDTHS, DEFAULT_SETTINGS } from "@shared/settings";
-import type { AlertType } from "@/features/editor/alerts";
-import { CODE_COLOR_TOKENS, codeHighlightStyle } from "@/features/editor/code-highlight";
 import editorCss from "@/features/editor/editor.css?raw";
 import { FALLBACK_FONTS } from "@/lib/fonts";
+import type { AlertType } from "@/lib/markdown/alerts";
+import { CODE_COLOR_TOKENS, codeHighlightStyle } from "@/lib/markdown/code-highlight";
 import { activeThemeCss, isDarkColor, toHex } from "@/lib/theme";
 import { readToken, type TokenName } from "@/lib/tokens";
 

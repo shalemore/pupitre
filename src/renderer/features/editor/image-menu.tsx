@@ -9,6 +9,7 @@ import { MenuPopup } from "@/features/menu/menu-popup";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { reportFailure } from "@/lib/errors";
+import { saveImageNextTo } from "@/lib/image-files";
 import {
   type DocumentImage,
   dataImageFile,
@@ -18,8 +19,7 @@ import {
   imageAt,
   imageOrigin,
   relinkImage,
-  saveImageNextTo,
-} from "./images";
+} from "@/lib/markdown/images";
 
 /**
  * The menu a right-click on a picture opens: what can be done with the file behind it, the way
