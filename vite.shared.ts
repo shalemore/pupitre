@@ -23,6 +23,8 @@ export function rendererConfig() {
       pandacss({
         cwd: process.cwd(),
         outdir: resolve(process.cwd(), "src/renderer/styled-system"),
+        // Static style objects become class strings at build time, so a render does no style work
+        transform: true,
       }),
       solid(),
       thirdPartyNotices(),
