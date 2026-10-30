@@ -3,6 +3,7 @@ import { Kbd } from "@/components/ui";
 import { PaletteSheet } from "@/features/palette/palette-sheet";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
+import { css } from "@/styled-system/css";
 import { commandsFromMenus, filterCommands } from "./commands";
 
 export interface CommandPaletteProps {
@@ -44,8 +45,16 @@ export function CommandPalette(props: CommandPaletteProps) {
       {(command) => (
         <>
           {/* The path keeps the row's own color, at less weight, so a highlight moves both */}
-          <span class="min-w-0 flex-1 truncate">
-            <span class="opacity-60">
+          <span
+            class={css({
+              minWidth: 0,
+              flex: "1",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            })}
+          >
+            <span class={css({ opacity: 0.6 })}>
               {command.parent}
               {t().commandPalette.separator}
             </span>
@@ -53,7 +62,7 @@ export function CommandPalette(props: CommandPaletteProps) {
           </span>
           <Show when={command.shortcut}>
             {(shortcut) => (
-              <Kbd dir="ltr" class="shrink-0">
+              <Kbd dir="ltr" class={css({ flexShrink: 0 })}>
                 {shortcut()}
               </Kbd>
             )}

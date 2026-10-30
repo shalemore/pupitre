@@ -7,6 +7,7 @@ import { desktop } from "@/lib/desktop";
 import { formatPercent } from "@/lib/format";
 import { settings, updateSettings } from "@/lib/settings";
 import { DEFAULT_THEME, type ThemeInfo, themeDisplayName, themes } from "@/lib/theme";
+import { css } from "@/styled-system/css";
 import { FontSelect, themeFontLabel } from "./font-select";
 import { SettingField, SettingGroup, SettingsSection } from "./settings-section";
 
@@ -71,7 +72,10 @@ function missingThemeMessages(): string[] {
 export const AppearanceSection: Component = () => (
   <SettingsSection title={t().settings.appearance}>
     <Show when={missingThemeMessages().length > 0}>
-      <Callout variant="destructive" class="space-y-1">
+      <Callout
+        variant="destructive"
+        class={css({ "& > :not(:last-child)": { marginBlockEnd: "1" } })}
+      >
         <For each={missingThemeMessages()}>{(message) => <p>{message}</p>}</For>
       </Callout>
     </Show>

@@ -8,12 +8,12 @@ import {
   MenuSubContent,
   MenuSubTrigger,
 } from "@kobalte/core/menu";
-import { cn } from "cn";
 import { Check, ChevronRight } from "lucide-solid";
 import { For, Show, type Component } from "solid-js";
 import type { MenuEntry } from "@shared/menu";
 import { Separator } from "@/components/ui";
 import { isRtl } from "@/lib/rtl";
+import { css, cx } from "@/styled-system/css";
 
 type MenuItemEntry = Extract<MenuEntry, { type: "item" }>;
 
@@ -27,26 +27,74 @@ export interface MenuPopupProps {
   onClose: () => void;
 }
 
+const check = css({ width: "3", height: "3", flexShrink: 0 });
+const hidden = css({ visibility: "hidden" });
+const row = css({ display: "flex", minWidth: 0, flex: "1", alignItems: "center", gap: "1.5" });
+const label = css({ minWidth: 0 });
+const truncate = css({
+  display: "block",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+});
+const detail = css({ display: "block", textStyle: "2xs", color: "tertiary" });
+const shortcut = css({ textStyle: "2xs", color: "tertiary", fontVariantNumeric: "tabular-nums" });
+const item = css({
+  display: "flex",
+  width: "full",
+  alignItems: "center",
+  gap: "6",
+  borderRadius: "md",
+  paddingInline: "2.5",
+  paddingBlock: "1.5",
+  textAlign: "start",
+  outlineStyle: "none",
+  transition: "colors",
+  transitionDuration: "fast",
+  transitionTimingFunction: "outExpo",
+  _disabled: { color: "tertiary" },
+  _highlighted: { backgroundColor: "accent", color: "foreground" },
+});
+const submenuChevron = css({
+  width: "3.5",
+  height: "3.5",
+  flexShrink: 0,
+  color: "tertiary",
+  _rtl: { transform: "scaleX(-1)" },
+});
+const separator = css({ marginBlock: "1", backgroundColor: "border.subtle" });
+const panel = css({
+  zIndex: "50",
+  display: "flex",
+  minWidth: "52",
+  maxHeight: "var(--kb-popper-content-available-height)",
+  flexDirection: "column",
+  overflowY: "auto",
+  overscrollBehavior: "contain",
+  padding: "1",
+  textStyle: "xs",
+  color: "foreground",
+  outlineStyle: "none",
+  userSelect: "none",
+});
+
 const ItemContent: Component<{ item: MenuItemEntry; hasChecks: boolean }> = (props) => (
   <>
-    <span class="flex min-w-0 flex-1 items-center gap-1.5">
+    <span class={row}>
       <Show when={props.hasChecks}>
-        <Check
-          class={cn("size-3 shrink-0", props.item.checked !== true && "invisible")}
-          stroke-width={2}
-        />
+        <Check class={cx(check, props.item.checked !== true && hidden)} stroke-width={2} />
       </Show>
-      <span class="min-w-0">
-        <span class="block truncate">{props.item.label}</span>
+      <span class={label}>
+        <span class={truncate}>{props.item.label}</span>
         <Show when={props.item.detail}>
-          <bdi dir="ltr" class="block truncate text-2xs text-tertiary">
+          <bdi dir="ltr" class={detail}>
             {props.item.detail}
           </bdi>
         </Show>
       </span>
     </span>
     <Show when={props.item.shortcut}>
-      <bdi dir="ltr" class="text-2xs text-tertiary tabular-nums">
+      <bdi dir="ltr" class={shortcut}>
         {props.item.shortcut}
       </bdi>
     </Show>
@@ -65,46 +113,43 @@ export const MenuEntries: Component<{
       {(entry) => (
         <Show
           when={entry.type === "item" ? entry : undefined}
-          fallback={<Separator class="my-1 bg-border-subtle" />}
+          fallback={<Separator class={separator} />}
         >
-          {(item) => (
+          {(itemEntry) => (
             <Show
-              when={item().submenu}
+              when={itemEntry().submenu}
               fallback={
                 <Show
-                  when={item().checked !== undefined}
+                  when={itemEntry().checked !== undefined}
                   fallback={
                     <MenuItem
-                      disabled={item().enabled === false}
-                      onSelect={() => props.onSelect(item())}
-                      class="flex w-full items-center gap-6 rounded-md px-2.5 py-1.5 text-start outline-none transition-colors duration-fast data-disabled:text-tertiary data-highlighted:bg-accent data-highlighted:text-foreground"
+                      disabled={itemEntry().enabled === false}
+                      onSelect={() => props.onSelect(itemEntry())}
+                      class={item}
                     >
-                      <ItemContent item={item()} hasChecks={hasChecks()} />
+                      <ItemContent item={itemEntry()} hasChecks={hasChecks()} />
                     </MenuItem>
                   }
                 >
                   <MenuCheckboxItem
-                    checked={item().checked === true}
-                    disabled={item().enabled === false}
-                    onSelect={() => props.onSelect(item())}
-                    class="flex w-full items-center gap-6 rounded-md px-2.5 py-1.5 text-start outline-none transition-colors duration-fast data-disabled:text-tertiary data-highlighted:bg-accent data-highlighted:text-foreground"
+                    checked={itemEntry().checked === true}
+                    disabled={itemEntry().enabled === false}
+                    onSelect={() => props.onSelect(itemEntry())}
+                    class={item}
                   >
-                    <ItemContent item={item()} hasChecks={hasChecks()} />
+                    <ItemContent item={itemEntry()} hasChecks={hasChecks()} />
                   </MenuCheckboxItem>
                 </Show>
               }
             >
               <MenuSub>
-                <MenuSubTrigger
-                  disabled={item().enabled === false}
-                  class="flex w-full items-center gap-6 rounded-md px-2.5 py-1.5 text-start outline-none transition-colors duration-fast data-disabled:text-tertiary data-highlighted:bg-accent data-highlighted:text-foreground"
-                >
-                  <ItemContent item={item()} hasChecks={hasChecks()} />
-                  <ChevronRight class="size-3.5 shrink-0 text-tertiary rtl:-scale-x-100" />
+                <MenuSubTrigger disabled={itemEntry().enabled === false} class={item}>
+                  <ItemContent item={itemEntry()} hasChecks={hasChecks()} />
+                  <ChevronRight class={submenuChevron} />
                 </MenuSubTrigger>
                 <MenuPortal>
-                  <MenuSubContent class="floating-panel z-50 flex min-w-52 max-h-(--kb-popper-content-available-height) flex-col overflow-y-auto overscroll-contain p-1 text-xs text-foreground outline-none select-none">
-                    <MenuEntries entries={item().submenu ?? []} onSelect={props.onSelect} />
+                  <MenuSubContent class={cx("floating-panel", panel)}>
+                    <MenuEntries entries={itemEntry().submenu ?? []} onSelect={props.onSelect} />
                   </MenuSubContent>
                 </MenuPortal>
               </MenuSub>
@@ -141,7 +186,7 @@ export const MenuPopup: Component<MenuPopupProps> = (props) => (
             event.preventDefault();
           }
         }}
-        class="floating-panel z-50 flex min-w-52 max-h-(--kb-popper-content-available-height) flex-col overflow-y-auto overscroll-contain p-1 text-xs text-foreground outline-none select-none"
+        class={cx("floating-panel", panel)}
       >
         <MenuEntries entries={props.entries} onSelect={props.onSelect} />
       </MenuContent>

@@ -1,5 +1,17 @@
 import { type Component, Show } from "solid-js";
 import { fileNameOf } from "@/lib/file";
+import { css } from "@/styled-system/css";
+
+const container = css({
+  width: "full",
+  height: "full",
+  display: "grid",
+  placeItems: "center",
+  overflow: "hidden",
+  backgroundColor: "surface.1",
+  padding: "6",
+});
+const picture = css({ maxHeight: "full", maxWidth: "full", objectFit: "contain" });
 
 /** A picture shown on its own in the content area, fitted to the room it has. */
 export const ImagePreview: Component<{
@@ -14,13 +26,8 @@ export const ImagePreview: Component<{
   return (
     <Show when={source()}>
       {(src) => (
-        <div class="size-full grid place-items-center overflow-hidden bg-surface-1 p-6">
-          <img
-            src={src()}
-            alt={name()}
-            draggable={false}
-            class="max-h-full max-w-full object-contain"
-          />
+        <div class={container}>
+          <img src={src()} alt={name()} draggable={false} class={picture} />
         </div>
       )}
     </Show>

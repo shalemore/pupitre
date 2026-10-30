@@ -6,10 +6,50 @@ import { createMemo, createSignal, For, Show, type Component } from "solid-js";
 import { render } from "solid-js/web";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
+import { css } from "@/styled-system/css";
 import { fencedText } from "./block-text";
 import { codeLanguages } from "./code-languages";
 
 const COPIED_MS = 1500;
+
+const languagePicker = css({
+  fieldSizing: "content",
+  maxWidth: "32",
+  minWidth: 0,
+  marginInline: "-1",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+  appearance: "none",
+  borderRadius: "sm",
+  borderWidth: 0,
+  backgroundColor: "transparent",
+  paddingInline: "1",
+  paddingBlock: "0.5",
+  cursor: "pointer",
+  layerStyle: "interactive",
+  _hover: { backgroundColor: "accent", color: "foreground" },
+  _focusVisible: { outlineStyle: "none", boxShadow: "focus" },
+});
+const copy = css({
+  display: "grid",
+  width: "var(--md-code-corner-size)",
+  height: "var(--md-code-corner-size)",
+  placeItems: "center",
+  borderRadius: "sm",
+  borderWidth: 0,
+  backgroundColor: "transparent",
+  padding: 0,
+  opacity: 0.6,
+  cursor: "pointer",
+  transitionProperty: "opacity, color, background-color",
+  transitionDuration: "ui",
+  transitionTimingFunction: "outExpo",
+  _hover: { backgroundColor: "accent", color: "foreground", opacity: 1 },
+  "&[data-copied]": { opacity: 1, color: "success" },
+  "& svg": { width: "3.5", height: "3.5" },
+  _print: { display: "none" },
+});
 
 /**
  * The part of a fence line that names the language: everything after the opening backticks. A pick
@@ -132,7 +172,7 @@ const CodeCorner: Component<{
       <Show when={props.fence}>
         <select
           // Interface rather than document, sized in rem so the block's smaller em does not shrink it
-          class="field-sizing-content max-w-32 min-w-0 -mx-1 truncate appearance-none rounded-sm border-0 bg-transparent px-1 py-0.5 cursor-pointer transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:shadow-focus"
+          class={languagePicker}
           aria-label={t().editor.codeLanguage}
           title={t().editor.codeLanguage}
           value={current()}
@@ -145,7 +185,7 @@ const CodeCorner: Component<{
       </Show>
       <button
         type="button"
-        class="grid size-(--md-code-corner-size) place-items-center rounded-sm border-0 bg-transparent p-0 opacity-60 cursor-pointer transition hover:bg-accent hover:text-foreground hover:opacity-100 data-copied:opacity-100 data-copied:text-success [&_svg]:size-3.5 print:hidden"
+        class={copy}
         title={t().common.copy}
         aria-label={t().common.copy}
         data-copied={copied() ? "" : undefined}

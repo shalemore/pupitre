@@ -2,7 +2,6 @@ import { redo, undo } from "@codemirror/commands";
 import { syntaxTree } from "@codemirror/language";
 import type { ChangeSpec } from "@codemirror/state";
 import { type EditorView, ViewPlugin, type ViewUpdate, WidgetType } from "@codemirror/view";
-import { cn } from "cn";
 import {
   ArrowDown,
   ArrowLeft,
@@ -35,6 +34,7 @@ import {
 import { Dynamic, render } from "solid-js/web";
 import { IconButton, Separator } from "@/components/ui";
 import { t } from "@/i18n";
+import { css, cx } from "@/styled-system/css";
 import { openImageMenu } from "./image-menu";
 import { imageDom, imageIn, setImageLayout } from "./images";
 import { InlineContent, type InlineImage } from "./inline-content";
@@ -87,7 +87,7 @@ const TableCellImage: Component<{ view: EditorView; image: InlineImage }> = (pro
       ref={(element) => {
         host = element;
       }}
-      class="block w-full"
+      class={hiddenHost}
     />
   );
 };
@@ -107,7 +107,7 @@ const ToolButton: Component<{
 }> = (props) => (
   <IconButton
     label={props.label}
-    class={cn(props.danger && "hover:bg-destructive/10 hover:text-destructive")}
+    class={cx(props.danger && dangerButton)}
     // Keeps the focus, and with it the cell being edited, in the table
     onMouseDown={(event) => event.preventDefault()}
     onClick={() => props.onClick()}
@@ -116,11 +116,47 @@ const ToolButton: Component<{
   </IconButton>
 );
 
+const hiddenHost = css({ display: "block", width: "full" });
+const dangerButton = css({
+  _hover: { backgroundColor: "destructive/10", color: "destructive" },
+});
+const deleted = css({ position: "relative", display: "inline-flex" });
+const deletedCross = css({
+  position: "absolute",
+  insetInlineEnd: "-0.5",
+  insetBlockEnd: "-0.5",
+  width: "2",
+  height: "2",
+});
+const toolbar = css({
+  position: "absolute",
+  insetBlockEnd: "100%",
+  insetInlineStart: "0",
+  zIndex: "10",
+  marginBlockEnd: "1",
+  display: "flex",
+  alignItems: "center",
+  gap: "0.5",
+  borderRadius: "lg",
+  backgroundColor: "popover",
+  padding: "0.5",
+  boxShadow: "float",
+  animationName: "fadeInUpSmall",
+  animationDuration: "base",
+  animationTimingFunction: "enter",
+  _print: { display: "none" },
+});
+const toolbarSeparator = css({ marginInline: "0.5", height: "4" });
+const rtlFlip = css({ _rtl: { scale: "-1 1" } });
+const tableRoot = css({ position: "relative" });
+const scrollX = css({ overflowX: "auto" });
+const tableElement = css({ borderCollapse: "collapse" });
+
 /** A row or column with a cross on it, the way `Grid2x2X` marks a table that is deleted whole. */
 const Deleted = (props: { children: JSX.Element }) => (
-  <span class="relative inline-flex">
+  <span class={deleted}>
     {props.children}
-    <X class="absolute -inset-e-0.5 -inset-be-0.5 size-2" stroke-width={2} />
+    <X class={deletedCross} stroke-width={2} />
   </span>
 );
 
@@ -141,17 +177,17 @@ const TableToolbar: Component<{
     props.run((model) => alignColumn(state(), model, column(), value), props.cell);
 
   return (
-    <div class="absolute bottom-full inset-s-0 z-10 mb-1 flex items-center gap-0.5 rounded-lg bg-popover p-0.5 shadow-float animate-in fade-in-0 slide-in-from-bottom-1 duration-base print:hidden">
+    <div class={toolbar}>
       <ToolButton label={labels().alignStart} onClick={() => align("start")}>
-        <TextAlignStart class="rtl:-scale-x-100" />
+        <TextAlignStart class={rtlFlip} />
       </ToolButton>
       <ToolButton label={labels().alignCenter} onClick={() => align("center")}>
         <TextAlignCenter />
       </ToolButton>
       <ToolButton label={labels().alignEnd} onClick={() => align("end")}>
-        <TextAlignEnd class="rtl:-scale-x-100" />
+        <TextAlignEnd class={rtlFlip} />
       </ToolButton>
-      <Separator orientation="vertical" class="mx-0.5 h-4" />
+      <Separator orientation="vertical" class={toolbarSeparator} />
       <Show when={row() > 0}>
         <ToolButton
           label={labels().insertRowAbove}
@@ -175,7 +211,7 @@ const TableToolbar: Component<{
         label={labels().insertColumnBefore}
         onClick={() => props.run((model) => insertColumn(state(), model, column()), props.cell)}
       >
-        <BetweenVerticalStart class="rtl:-scale-x-100" />
+        <BetweenVerticalStart class={rtlFlip} />
       </ToolButton>
       <ToolButton
         label={labels().insertColumnAfter}
@@ -186,7 +222,7 @@ const TableToolbar: Component<{
           })
         }
       >
-        <BetweenVerticalEnd class="rtl:-scale-x-100" />
+        <BetweenVerticalEnd class={rtlFlip} />
       </ToolButton>
       {/* Only body rows move: the header line says what the columns hold and stays first */}
       <Show when={row() > 1}>
@@ -225,7 +261,7 @@ const TableToolbar: Component<{
             })
           }
         >
-          <ArrowLeft class="rtl:-scale-x-100" />
+          <ArrowLeft class={rtlFlip} />
         </ToolButton>
       </Show>
       <Show when={column() < columnTotal() - 1}>
@@ -238,10 +274,10 @@ const TableToolbar: Component<{
             })
           }
         >
-          <ArrowRight class="rtl:-scale-x-100" />
+          <ArrowRight class={rtlFlip} />
         </ToolButton>
       </Show>
-      <Separator orientation="vertical" class="mx-0.5 h-4" />
+      <Separator orientation="vertical" class={toolbarSeparator} />
       <Show when={row() > 0}>
         <ToolButton
           label={labels().deleteRow}
@@ -481,7 +517,7 @@ const TableView: Component<TableViewProps> = (props) => {
 
   return (
     <div
-      class="relative"
+      class={tableRoot}
       onFocusOut={(event) => {
         const container = event.currentTarget;
         // Moving to another cell swaps one field for another; only leaving the table ends editing
@@ -493,8 +529,8 @@ const TableView: Component<TableViewProps> = (props) => {
       <Show when={props.active()}>
         {(cell) => <TableToolbar cell={cell()} model={props.model} run={run} view={view} />}
       </Show>
-      <div class="overflow-x-auto">
-        <table class="md-table-view border-collapse md-text-cursor">
+      <div class={scrollX}>
+        <table class={cx("md-table-view", "md-text-cursor", tableElement)}>
           <thead>
             <Index each={header()}>
               {() => (

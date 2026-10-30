@@ -1,5 +1,4 @@
 import { Progress } from "@kobalte/core/progress";
-import { cn } from "cn";
 import { CheckCircle2, Download, RefreshCw } from "lucide-solid";
 import { createMemo, Show, type Component } from "solid-js";
 import type { UpdateStatus } from "@shared/desktop-api";
@@ -8,6 +7,11 @@ import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { formatPercent } from "@/lib/format";
 import { updateStatus } from "@/lib/updater";
+import { css, cx } from "@/styled-system/css";
+
+const spin = css({ animation: "spin" });
+const stack = css({ "& > :not(:last-child)": { marginBlockEnd: "2" } });
+const row = css({ display: "flex", alignItems: "center", justifyContent: "space-between" });
 
 function hasKind<K extends UpdateStatus["kind"]>(
   status: UpdateStatus,
@@ -33,7 +37,7 @@ export const UpdateButton: Component = () => {
       onClick={() => void desktop.invoke("updater:check")}
       disabled={isBusy()}
     >
-      <RefreshCw class={cn(updateStatus().kind === "checking" && "animate-spin")} />
+      <RefreshCw class={cx(updateStatus().kind === "checking" && spin)} />
       <span>
         {updateStatus().kind === "checking"
           ? t().settings.checkingForUpdates
@@ -51,7 +55,10 @@ export const UpdateStatusPanel: Component<{ currentVersion: string }> = (props) 
   return (
     <>
       <Show when={updateStatus().kind === "up-to-date"}>
-        <Callout variant="success" class="flex items-center gap-2 text-success">
+        <Callout
+          variant="success"
+          class={css({ display: "flex", alignItems: "center", gap: "2", color: "success" })}
+        >
           <CheckCircle2 />
           <span>
             {t().settings.upToDate} (v{props.currentVersion})
@@ -61,9 +68,9 @@ export const UpdateStatusPanel: Component<{ currentVersion: string }> = (props) 
 
       <Show when={available()}>
         {(status) => (
-          <Callout variant="brand" class="space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="font-medium text-brand">
+          <Callout variant="brand" class={stack}>
+            <div class={row}>
+              <span class={css({ fontWeight: "medium", color: "brand" })}>
                 {t().settings.updateAvailable}: v{status().version}
               </span>
               <Button
@@ -78,7 +85,12 @@ export const UpdateStatusPanel: Component<{ currentVersion: string }> = (props) 
             <Show when={status().notes}>
               <ScrollView
                 as="p"
-                class="text-2xs text-muted-foreground whitespace-pre-wrap max-h-24"
+                class={css({
+                  textStyle: "2xs",
+                  color: "muted.foreground",
+                  whiteSpace: "pre-wrap",
+                  maxHeight: "24",
+                })}
               >
                 {status().notes}
               </ScrollView>
@@ -89,16 +101,41 @@ export const UpdateStatusPanel: Component<{ currentVersion: string }> = (props) 
 
       <Show when={downloading()}>
         {(status) => (
-          <Callout class="space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="text-muted-foreground">{t().settings.downloadingUpdate}</span>
-              <span class="font-mono font-medium tabular-nums">
+          <Callout class={stack}>
+            <div class={row}>
+              <span class={css({ color: "muted.foreground" })}>
+                {t().settings.downloadingUpdate}
+              </span>
+              <span
+                class={css({
+                  fontFamily: "mono",
+                  fontWeight: "medium",
+                  fontVariantNumeric: "tabular-nums",
+                })}
+              >
                 {formatPercent(status().percent / 100)}
               </span>
             </div>
             <Progress value={status().percent} aria-label={t().settings.downloadingUpdate}>
-              <Progress.Track class="w-full h-1.5 bg-muted rounded-full overflow-hidden">
-                <Progress.Fill class="h-full rounded-full bg-brand transition-[width] duration-sheet w-(--kb-progress-fill-width)" />
+              <Progress.Track
+                class={css({
+                  width: "full",
+                  height: "1.5",
+                  backgroundColor: "muted",
+                  borderRadius: "full",
+                  overflow: "hidden",
+                })}
+              >
+                <Progress.Fill
+                  class={css({
+                    height: "full",
+                    borderRadius: "full",
+                    backgroundColor: "brand",
+                    transitionProperty: "width",
+                    transitionDuration: "sheet",
+                    width: "var(--kb-progress-fill-width)",
+                  })}
+                />
               </Progress.Track>
             </Progress>
           </Callout>
@@ -106,8 +143,8 @@ export const UpdateStatusPanel: Component<{ currentVersion: string }> = (props) 
       </Show>
 
       <Show when={updateStatus().kind === "ready"}>
-        <Callout variant="success" class="flex items-center justify-between">
-          <div class="flex items-center gap-2 text-success">
+        <Callout variant="success" class={row}>
+          <div class={css({ display: "flex", alignItems: "center", gap: "2", color: "success" })}>
             <CheckCircle2 />
             <span>{t().settings.updateReady}</span>
           </div>
@@ -123,7 +160,11 @@ export const UpdateStatusPanel: Component<{ currentVersion: string }> = (props) 
 
       <Show when={failed()}>
         {(status) => (
-          <Callout variant="destructive" class="text-destructive" title={status().message}>
+          <Callout
+            variant="destructive"
+            class={css({ color: "destructive" })}
+            title={status().message}
+          >
             {t().settings.updateErrorGeneric}
           </Callout>
         )}

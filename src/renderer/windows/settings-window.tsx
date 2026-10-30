@@ -1,5 +1,4 @@
 import { makeEventListener } from "@solid-primitives/event-listener";
-import { cn } from "cn";
 import { FileCode2, FolderOpen, Info, Palette, Printer, Settings2, Type } from "lucide-solid";
 import { createEffect, onMount, Show, type Component } from "solid-js";
 import { AppMark } from "@/components/app-mark";
@@ -25,6 +24,57 @@ import { desktop } from "@/lib/desktop";
 import { fileNameOf } from "@/lib/file";
 import { settings } from "@/lib/settings";
 import { workspace } from "@/lib/workspace";
+import { css, cx } from "@/styled-system/css";
+
+const windowFrame = css({
+  height: "100vh",
+  width: "100vw",
+  display: "flex",
+  flexDirection: "column",
+  color: "foreground",
+  userSelect: "none",
+  overflow: "hidden",
+});
+const windowImmersive = css({ backgroundColor: "surface.0" });
+const windowClassic = css({ backgroundColor: "surface.1" });
+const frameBorderBottom = css({
+  borderBlockEndWidth: "1px",
+  borderBlockEndStyle: "solid",
+  borderBlockEndColor: "border",
+});
+const frameBorderEnd = css({
+  borderInlineEndWidth: "1px",
+  borderInlineEndStyle: "solid",
+  borderInlineEndColor: "border",
+});
+const mark = css({ color: "muted.foreground" });
+const title = css({ fontWeight: "semibold", color: "foreground", letterSpacing: "wide" });
+const tabs = css({ display: "flex", flex: "1", overflow: "hidden" });
+const tabsImmersive = css({
+  gap: "var(--pref-immersive-gap)",
+  paddingBlockEnd: "var(--pref-immersive-gap)",
+  paddingInlineEnd: "var(--pref-immersive-gap)",
+});
+const sidebar = css({ width: "48", flexShrink: 0, padding: "3" });
+const sidebarClassic = css({ backgroundColor: "surface.0" });
+const scopeBlock = css({ marginBlockEnd: "3", "& > * + *": { marginBlockStart: "1" } });
+const scopeRow = css({ display: "flex", alignItems: "center", gap: "1", paddingInlineStart: "2" });
+const scopeName = css({
+  minWidth: 0,
+  flex: "1",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+  textStyle: "2xs",
+  color: "muted.foreground",
+});
+const separator = css({ marginBlock: "2" });
+const page = css({ flex: "1", padding: "6" });
+const pageImmersive = css({
+  borderRadius: "lg",
+  backgroundColor: "surface.1",
+  boxShadow: "sm",
+});
 
 export const SettingsWindow: Component = () => {
   const immersive = () => settings().windowStyle === "immersive";
@@ -39,33 +89,22 @@ export const SettingsWindow: Component = () => {
   });
 
   return (
-    <div
-      class={cn(
-        "h-screen w-screen flex flex-col text-foreground select-none overflow-hidden",
-        immersive() ? "bg-surface-0" : "bg-surface-1",
-      )}
-    >
-      <TitleBar class={cn(!immersive() && "border-b border-border")}>
-        <AppMark class="text-muted-foreground" />
-        <span class="font-semibold text-foreground tracking-wide">{t().settings.title}</span>
+    <div class={cx(windowFrame, immersive() ? windowImmersive : windowClassic)}>
+      <TitleBar class={cx(!immersive() && frameBorderBottom)}>
+        <AppMark class={mark} />
+        <span class={title}>{t().settings.title}</span>
       </TitleBar>
 
       {/* An immersive window shows the page as a card on the window background, like the main window; nothing here folds away */}
       <Tabs
         orientation="vertical"
         defaultValue="general"
-        class={cn(
-          "flex flex-1 overflow-hidden",
-          immersive() &&
-            "gap-(--pref-immersive-gap) pb-(--pref-immersive-gap) pe-(--pref-immersive-gap)",
-        )}
+        class={cx(tabs, immersive() && tabsImmersive)}
       >
-        <aside
-          class={cn("w-48 shrink-0 p-3", !immersive() && "border-e border-border bg-surface-0")}
-        >
+        <aside class={cx(sidebar, !immersive() && cx(frameBorderEnd, sidebarClassic))}>
           <Show when={workspace().root}>
             {(root) => (
-              <div class="mb-3 space-y-1">
+              <div class={scopeBlock}>
                 <SegmentedControl<"global" | "folder">
                   value={workspace().active ? "folder" : "global"}
                   onChange={(scope) => void desktop.invoke("workspace:use", scope === "folder")}
@@ -74,12 +113,8 @@ export const SettingsWindow: Component = () => {
                     { value: "folder", label: t().settings.scopeFolder },
                   ]}
                 />
-                <div class="flex items-center gap-1 ps-2">
-                  <span
-                    dir="auto"
-                    class="min-w-0 flex-1 truncate text-2xs text-muted-foreground"
-                    title={root()}
-                  >
+                <div class={scopeRow}>
+                  <span dir="auto" class={scopeName} title={root()}>
                     {fileNameOf(root())}
                   </span>
                   <Show when={workspace().exists}>
@@ -116,7 +151,7 @@ export const SettingsWindow: Component = () => {
               <Printer />
               <span>{t().settings.export}</span>
             </TabsTrigger>
-            <Separator class="my-2" />
+            <Separator class={separator} />
             <TabsTrigger value="about">
               <Info />
               <span>{t().settings.about}</span>
@@ -124,10 +159,7 @@ export const SettingsWindow: Component = () => {
           </TabsList>
         </aside>
 
-        <ScrollView
-          as="main"
-          class={cn("flex-1 p-6", immersive() && "rounded-lg bg-surface-1 shadow-sm")}
-        >
+        <ScrollView as="main" class={cx(page, immersive() && pageImmersive)}>
           <TabsContent value="general">
             <GeneralSection />
           </TabsContent>

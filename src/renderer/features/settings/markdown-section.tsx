@@ -3,6 +3,7 @@ import type { Settings } from "@shared/settings";
 import { Input, Select } from "@/components/ui";
 import { t } from "@/i18n";
 import { settings, updateSettings } from "@/lib/settings";
+import { css } from "@/styled-system/css";
 import { SettingField, SettingGroup, SettingsSection } from "./settings-section";
 
 export const MarkdownSection: Component = () => (
@@ -112,7 +113,7 @@ export const MarkdownSection: Component = () => (
             if (imageFolder) void updateSettings({ imageFolder });
             else e.currentTarget.value = settings().imageFolder;
           }}
-          class="w-36 font-mono"
+          class={css({ width: "36", fontFamily: "mono" })}
           aria-label={t().settings.imageFolder}
         />
       </SettingField>

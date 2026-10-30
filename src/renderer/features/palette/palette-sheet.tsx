@@ -2,6 +2,7 @@ import { Combobox as KobalteCombobox } from "@kobalte/core/combobox";
 import { createMemo, createSignal, type JSX, onMount, Show } from "solid-js";
 import { Input, ScrollView, Sheet, type ScrollViewProps } from "@/components/ui";
 import { FocusFirstRow, ShowFocusedRow } from "@/lib/combobox-rows";
+import { css } from "@/styled-system/css";
 
 export interface PaletteSheetProps<Item> {
   /** Names the sheet and the list it holds, for anyone who cannot see it. */
@@ -39,6 +40,37 @@ function selectedRow<Item>(
 ): Row<Item> | undefined {
   return isRowList<Item>(selected) ? selected[0] : (selected ?? undefined);
 }
+
+const paletteItem = css({
+  layerStyle: "interactive",
+  display: "flex",
+  width: "full",
+  cursor: "pointer",
+  alignItems: "center",
+  gap: "3",
+  borderRadius: "md",
+  paddingBlock: "1.5",
+  paddingInlineEnd: "2.5",
+  textAlign: "start",
+  textStyle: "xs",
+  color: "muted.foreground",
+  outlineStyle: "none",
+  _highlighted: { backgroundColor: "selected", fontWeight: "medium", color: "foreground" },
+});
+const list = css({
+  display: "flex",
+  maxHeight: "80",
+  minHeight: 0,
+  flexDirection: "column",
+  gap: "0.5",
+});
+const empty = css({ paddingInline: "2", paddingBlock: "1.5", color: "muted.foreground" });
+const hint = css({
+  paddingInline: "2",
+  paddingBlockEnd: "1",
+  textStyle: "2xs",
+  color: "muted.foreground",
+});
 
 /**
  * The panel a palette is: a query field over the rows it picks, walked with the arrow keys and run
@@ -92,10 +124,7 @@ export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
         onInputChange={setQuery}
         onChange={(selected) => pick(selectedRow(selected))}
         itemComponent={(itemProps) => (
-          <KobalteCombobox.Item
-            item={itemProps.item}
-            class="flex w-full cursor-pointer items-center gap-3 rounded-md py-1.5 pe-2.5 text-start text-xs text-muted-foreground outline-none transition-colors data-highlighted:bg-selected data-highlighted:font-medium data-highlighted:text-foreground"
-          >
+          <KobalteCombobox.Item item={itemProps.item} class={paletteItem}>
             {props.children(itemProps.item.rawValue.item)}
           </KobalteCombobox.Item>
         )}
@@ -108,25 +137,18 @@ export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
         />
         <KobalteCombobox.Listbox
           as={(listProps: ScrollViewProps) => (
-            <ScrollView
-              as="ul"
-              {...listProps}
-              aria-label={props.title}
-              class="flex max-h-80 min-h-0 flex-col gap-0.5"
-            />
+            <ScrollView as="ul" {...listProps} aria-label={props.title} class={list} />
           )}
         />
         <FocusFirstRow />
         <ShowFocusedRow />
       </KobalteCombobox>
       <Show when={shown().length === 0 && props.emptyMessage !== undefined}>
-        <p role="status" class="px-2 py-1.5 text-muted-foreground">
+        <p role="status" class={empty}>
           {props.emptyMessage}
         </p>
       </Show>
-      <Show when={props.hint}>
-        {(hint) => <p class="px-2 pb-1 text-2xs text-muted-foreground">{hint()}</p>}
-      </Show>
+      <Show when={props.hint}>{(hintText) => <p class={hint}>{hintText()}</p>}</Show>
     </Sheet>
   );
 }

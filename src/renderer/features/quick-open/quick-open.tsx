@@ -4,6 +4,7 @@ import { matchRanges, type MatchRange } from "@/features/palette/fuzzy";
 import { PaletteSheet } from "@/features/palette/palette-sheet";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
+import { css } from "@/styled-system/css";
 
 export interface QuickOpenProps {
   /** The folder whose documents are offered; there is nothing to offer while none is open. */
@@ -63,7 +64,11 @@ const MatchedText: Component<MatchedTextProps> = (props) => {
   return (
     <For each={pieces()}>
       {(piece) =>
-        piece.matched ? <span class="text-brand font-semibold">{piece.text}</span> : piece.text
+        piece.matched ? (
+          <span class={css({ color: "brand", fontWeight: "semibold" })}>{piece.text}</span>
+        ) : (
+          piece.text
+        )
       }
     </For>
   );
@@ -80,9 +85,18 @@ const QuickOpenRow: Component<{ file: FoundFile }> = (props) => {
   );
 
   return (
-    <span dir="auto" class="min-w-0 flex-1 truncate">
+    <span
+      dir="auto"
+      class={css({
+        minWidth: 0,
+        flex: "1",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+      })}
+    >
       <MatchedText text={name()} ranges={props.file.ranges} offset={folder().length} />
-      <span class="opacity-60 ms-2">
+      <span class={css({ opacity: 0.6, marginInlineStart: "2" })}>
         <MatchedText text={folder()} ranges={props.file.ranges} offset={0} />
       </span>
     </span>

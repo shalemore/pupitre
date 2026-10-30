@@ -6,11 +6,49 @@ import { TOP_MENUS, type MenuEntry, type Menus, type TopMenu } from "@shared/men
 import { IconButton } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
+import { css, cx } from "@/styled-system/css";
 import { MenuEntries, MenuPopup } from "./menu-popup";
 import { createMenu } from "./menu-state";
 
 /** How soon after a menu closes the next one is still taking its place rather than arriving. */
 const SWITCH_WINDOW_MS = 100;
+
+const bar = css({
+  display: "flex",
+  flexShrink: 0,
+  alignItems: "center",
+  textStyle: "xs",
+  userSelect: "none",
+});
+const trigger = css({
+  layerStyle: "interactive",
+  flexShrink: 0,
+  whiteSpace: "nowrap",
+  paddingInline: "2.5",
+  paddingBlock: "1",
+  borderRadius: "md",
+  color: "muted.foreground",
+  outlineStyle: "none",
+  cursor: "pointer",
+  _hover: { color: "foreground", backgroundColor: "accent" },
+  _focusVisible: { color: "foreground", backgroundColor: "accent" },
+  _expanded: { color: "foreground", backgroundColor: "accent" },
+});
+const menuPanel = css({
+  zIndex: "50",
+  display: "flex",
+  minWidth: "52",
+  maxHeight: "var(--kb-popper-content-available-height)",
+  flexDirection: "column",
+  overflowY: "auto",
+  overscrollBehavior: "contain",
+  padding: "1",
+  textStyle: "xs",
+  color: "foreground",
+  outlineStyle: "none",
+  userSelect: "none",
+});
+const menuButton = css({ color: "muted.foreground" });
 
 interface MenuBarProps {
   /** Told whether a menu is open, so an immersive title bar can stay unfolded under it. */
@@ -109,7 +147,7 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
             document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
         }
       }}
-      class="flex shrink-0 items-center text-xs select-none"
+      class={bar}
     >
       <For each={TOP_MENUS}>
         {(menu) => (
@@ -122,9 +160,7 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
               else if (open() === menu) hide();
             }}
           >
-            <Menubar.Trigger class="shrink-0 whitespace-nowrap px-2.5 py-1 rounded-md text-muted-foreground outline-none hover:text-foreground hover:bg-accent focus-visible:text-foreground focus-visible:bg-accent data-expanded:text-foreground data-expanded:bg-accent transition-colors cursor-pointer">
-              {t().menu[menu]}
-            </Menubar.Trigger>
+            <Menubar.Trigger class={trigger}>{t().menu[menu]}</Menubar.Trigger>
             <Menubar.Portal>
               <Menubar.Content
                 data-instant={instant() === menu ? "" : undefined}
@@ -139,7 +175,7 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
                     event.preventDefault();
                   }
                 }}
-                class="floating-panel z-50 flex min-w-52 max-h-(--kb-popper-content-available-height) flex-col overflow-y-auto overscroll-contain p-1 text-xs text-foreground outline-none select-none"
+                class={cx("floating-panel", menuPanel)}
               >
                 <MenuEntries
                   entries={entries()[menu] ?? []}
@@ -210,7 +246,7 @@ export const MenuButton: Component<MenuButtonProps> = (props) => {
         label={t().menu.menu}
         aria-haspopup="menu"
         aria-expanded={panel.open() !== undefined}
-        class="text-muted-foreground"
+        class={menuButton}
         // The button does not take the focus from the editor, so closing the menu gives typing back
         onPointerDown={(event) => event.preventDefault()}
         onClick={() => void toggle()}

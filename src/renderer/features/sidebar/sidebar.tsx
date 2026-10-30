@@ -1,9 +1,9 @@
-import { cn } from "cn";
 import { ChevronRight, Folder, ListTree, Pin } from "lucide-solid";
 import { createSignal, type Component, type JSX, Show } from "solid-js";
 import { ScrollView, SegmentedControl, ToggleIconButton } from "@/components/ui";
 import { t } from "@/i18n";
 import { distanceFromEnd, distanceFromStart, isRtl } from "@/lib/rtl";
+import { css, cx } from "@/styled-system/css";
 
 export type SidebarMode = "outline" | "folder";
 
@@ -12,6 +12,85 @@ export type SidebarSide = "start" | "end";
 
 export const SIDEBAR_WIDTH = { initial: 256, min: 180, max: 480 };
 const KEYBOARD_STEP = 16;
+
+const slot = css({
+  position: "relative",
+  flexShrink: 0,
+  overflow: "hidden",
+  _print: { display: "none" },
+});
+const resizing = css({
+  transitionProperty: "width",
+  transitionDuration: "sheet",
+  transitionTimingFunction: "outExpo",
+});
+const fullHeight = css({ height: "full" });
+const handle = css({
+  layerStyle: "interactive",
+  position: "absolute",
+  insetBlock: "0",
+  zIndex: "10",
+  width: "1px",
+  cursor: "col-resize",
+  outlineStyle: "none",
+  _hover: { backgroundColor: "brand/30" },
+  _focusVisible: { backgroundColor: "brand/30" },
+});
+const handleAtStart = css({ insetInlineEnd: "0" });
+const handleAtEnd = css({ insetInlineStart: "0" });
+const handleDragging = css({ backgroundColor: "brand/40" });
+const frame = css({
+  display: "flex",
+  flexDirection: "column",
+  backgroundColor: "surface.0",
+  userSelect: "none",
+  flexShrink: 0,
+  textStyle: "xs",
+  width: "full",
+  height: "full",
+  _print: { display: "none" },
+});
+const quietButton = css({
+  color: "tertiary",
+  opacity: 0.5,
+  transitionProperty: "opacity",
+  transitionDuration: "ui",
+  transitionTimingFunction: "outExpo",
+  _hover: { opacity: 1 },
+  _focusVisible: { opacity: 1 },
+  "&[data-pressed]": { opacity: 1 },
+});
+const rotated = css({ rotate: "45deg" });
+const rtlFlip = css({ _rtl: { scale: "-1 1" } });
+const rotate180 = css({ rotate: "180deg" });
+const titleRow = css({
+  display: "flex",
+  alignItems: "center",
+  gap: "1",
+  paddingInlineStart: "4",
+  paddingInlineEnd: "2",
+  paddingBlockStart: "2",
+});
+const titleMain = css({ display: "flex", minWidth: 0, flex: "1", alignItems: "center", gap: "1" });
+const titleText = css({
+  minWidth: 0,
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+  textStyle: "2xs",
+  fontWeight: "medium",
+  color: "muted.foreground",
+});
+const modeRow = css({
+  margin: "2",
+  marginBlockEnd: 0,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "flex-end",
+  gap: "1",
+});
+const grow = css({ minWidth: 0, flex: "1" });
+const hidden = css({ display: "none" });
 
 interface SidebarSlotProps {
   side: SidebarSide;
@@ -41,13 +120,13 @@ export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
       data-sidebar={props.side}
       inert={!props.shown}
       style={{ width: props.shown ? `${props.width}px` : "0px" }}
-      class={cn(
-        "relative shrink-0 overflow-hidden print:hidden",
+      class={cx(
+        slot,
         // Following the pointer while dragging must not lag behind an animation
-        !dragging() && "transition-[width] duration-sheet",
+        !dragging() && resizing,
       )}
     >
-      <div class="h-full" style={{ width: `${props.width}px` }}>
+      <div class={fullHeight} style={{ width: `${props.width}px` }}>
         {props.children}
       </div>
       <div
@@ -57,10 +136,10 @@ export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
         aria-valuemin={SIDEBAR_WIDTH.min}
         aria-valuemax={SIDEBAR_WIDTH.max}
         tabindex="0"
-        class={cn(
-          "absolute inset-y-0 z-10 w-1 cursor-col-resize outline-none transition-colors hover:bg-brand/30 focus-visible:bg-brand/30",
-          props.side === "start" ? "inset-e-0" : "inset-s-0",
-          dragging() && "bg-brand/40",
+        class={cx(
+          handle,
+          props.side === "start" ? handleAtStart : handleAtEnd,
+          dragging() && handleDragging,
         )}
         onPointerDown={(event) => {
           event.preventDefault();
@@ -85,16 +164,7 @@ export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
 const SidebarFrame: Component<{
   class?: string | undefined;
   children: JSX.Element;
-}> = (props) => (
-  <aside
-    class={cn(
-      "flex print:hidden flex-col bg-surface-0 select-none shrink-0 text-xs size-full",
-      props.class,
-    )}
-  >
-    {props.children}
-  </aside>
-);
+}> = (props) => <aside class={cx(frame, props.class)}>{props.children}</aside>;
 
 /** Keeps the sidebars of an immersive window open while the user writes. Quiet until it is hovered or on. */
 const PinButton: Component<{ pinned: boolean; onChange: (pinned: boolean) => void }> = (props) => (
@@ -103,9 +173,9 @@ const PinButton: Component<{ pinned: boolean; onChange: (pinned: boolean) => voi
     onChange={props.onChange}
     label={t().settings.pinSidebars}
     size="icon-2xs"
-    class="text-tertiary opacity-50 transition-opacity hover:opacity-100 focus-visible:opacity-100 data-pressed:opacity-100"
+    class={quietButton}
   >
-    <Pin class={cn(!props.pinned && "rotate-45")} />
+    <Pin class={props.pinned ? "" : rotated} />
   </ToggleIconButton>
 );
 
@@ -123,11 +193,9 @@ const CollapseButton: Component<{
     onChange={props.onChange}
     label={props.collapsed ? t().sidebar.expandSidebar : t().sidebar.collapseSidebar}
     size="icon-2xs"
-    class="text-tertiary opacity-50 transition-opacity hover:opacity-100 focus-visible:opacity-100 data-pressed:opacity-100"
+    class={quietButton}
   >
-    <ChevronRight
-      class={cn("rtl:-scale-x-100", (props.side === "start") !== props.collapsed && "rotate-180")}
-    />
+    <ChevronRight class={cx(rtlFlip, (props.side === "start") !== props.collapsed && rotate180)} />
   </ToggleIconButton>
 );
 
@@ -152,13 +220,9 @@ const SidebarTitle: Component<
     side: SidebarSide;
   } & PinProps
 > = (props) => (
-  <div class="flex items-center gap-1 ps-4 pe-2 pt-2">
-    <div class="flex min-w-0 flex-1 items-center gap-1">
-      <div
-        dir="auto"
-        class="min-w-0 truncate text-2xs font-medium text-muted-foreground"
-        title={props.title}
-      >
+  <div class={titleRow}>
+    <div class={titleMain}>
+      <div dir="auto" class={titleText} title={props.title}>
         {props.title}
       </div>
       {props.titleAction}
@@ -199,7 +263,7 @@ export const SidebarPanel: Component<
       onPinnedChange={props.onPinnedChange}
       collapsing={props.collapsing}
     />
-    <ScrollView class="flex-1">{props.children}</ScrollView>
+    <ScrollView class={grow}>{props.children}</ScrollView>
   </SidebarFrame>
 );
 
@@ -226,10 +290,10 @@ export const Sidebar: Component<SidebarProps> = (props) => {
   return (
     <SidebarFrame class={props.class}>
       <Show when={both() || props.onPinnedChange}>
-        <div class="m-2 mb-0 flex items-center justify-end gap-1">
+        <div class={modeRow}>
           <Show when={both()}>
             <SegmentedControl<SidebarMode>
-              class="min-w-0 flex-1"
+              class={grow}
               value={props.mode}
               onChange={props.onModeChange}
               options={[
@@ -259,12 +323,8 @@ export const Sidebar: Component<SidebarProps> = (props) => {
         />
       </Show>
       {/* Both stay mounted so the expanded folders survive a switch to the outline */}
-      <ScrollView class={cn("flex-1", props.mode !== "outline" && "hidden")}>
-        {props.outline}
-      </ScrollView>
-      <ScrollView class={cn("flex-1", props.mode !== "folder" && "hidden")}>
-        {props.folder}
-      </ScrollView>
+      <ScrollView class={cx(grow, props.mode !== "outline" && hidden)}>{props.outline}</ScrollView>
+      <ScrollView class={cx(grow, props.mode !== "folder" && hidden)}>{props.folder}</ScrollView>
     </SidebarFrame>
   );
 };

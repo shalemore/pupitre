@@ -4,6 +4,7 @@ import { formatFileSize } from "@shared/file-size";
 import { PaletteSheet } from "@/features/palette/palette-sheet";
 import { currentLocale, intlLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
+import { css } from "@/styled-system/css";
 
 export interface VersionHistoryProps {
   /** The file whose kept versions are listed. */
@@ -71,8 +72,18 @@ export const VersionHistory: Component<VersionHistoryProps> = (props) => {
     >
       {(row) => (
         <>
-          <span class="min-w-0 flex-1 truncate">{row.time}</span>
-          <span class="shrink-0 tabular-nums opacity-60">
+          <span
+            class={css({
+              minWidth: 0,
+              flex: "1",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            })}
+          >
+            {row.time}
+          </span>
+          <span class={css({ flexShrink: 0, fontVariantNumeric: "tabular-nums", opacity: 0.6 })}>
             {formatFileSize(row.entry.bytes, intlLocale(currentLocale()))}
           </span>
         </>

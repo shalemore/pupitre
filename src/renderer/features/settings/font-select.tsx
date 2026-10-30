@@ -1,4 +1,3 @@
-import { cn } from "cn";
 import { RefreshCw } from "lucide-solid";
 import { createResource, createRoot, type Component, type JSX, Show } from "solid-js";
 import { TITLE_BAR_HEIGHT } from "@shared/desktop-api";
@@ -7,6 +6,7 @@ import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
 import { GENERIC_FAMILIES, listFontFamilies, type FontFamily } from "@/lib/fonts";
 import { themeApplied } from "@/lib/theme";
+import { css, cx } from "@/styled-system/css";
 
 type ThemeFontToken = "--font-document" | "--font-mono" | "--font-sans";
 
@@ -51,6 +51,8 @@ const fonts = createRoot(() => {
   return { list, refresh: () => void refetch(true) };
 });
 
+const spin = css({ animation: "spin" });
+
 export interface FontSelectProps {
   value: string;
   onChange: (family: string) => void;
@@ -75,9 +77,9 @@ export const FontSelect: Component<FontSelectProps> = (props) => {
 
   return (
     <div>
-      <div class="flex items-center gap-1.5">
+      <div class={css({ display: "flex", alignItems: "center", gap: "1.5" })}>
         {props.leading}
-        <div class="min-w-0 flex-1">
+        <div class={css({ minWidth: 0, flex: "1" })}>
           <Combobox
             value={props.value}
             onChange={props.onChange}
@@ -91,7 +93,9 @@ export const FontSelect: Component<FontSelectProps> = (props) => {
       </div>
       {/* What a chosen font overrides; the row's reset button gives the theme's own font back */}
       <Show when={props.value !== ""}>
-        <p class="mt-1 text-2xs text-muted-foreground">{props.emptyLabel}</p>
+        <p class={css({ marginBlockStart: "1", textStyle: "2xs", color: "muted.foreground" })}>
+          {props.emptyLabel}
+        </p>
       </Show>
     </div>
   );
@@ -99,6 +103,6 @@ export const FontSelect: Component<FontSelectProps> = (props) => {
 
 export const RefreshFontsButton: Component = () => (
   <IconButton label={t().settings.refreshFonts} size="icon-2xs" onClick={fonts.refresh}>
-    <RefreshCw class={cn(fonts.list.loading && "animate-spin")} />
+    <RefreshCw class={cx(fonts.list.loading && spin)} />
   </IconButton>
 );

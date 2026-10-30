@@ -3,6 +3,7 @@ import type { JSX } from "solid-js";
 import type { Settings } from "@shared/settings";
 import { t } from "@/i18n";
 import { settings, updateSettings } from "@/lib/settings";
+import { css, cx } from "@/styled-system/css";
 
 interface LookOptionProps {
   value: Settings["windowStyle"];
@@ -11,16 +12,103 @@ interface LookOptionProps {
   preview: JSX.Element;
 }
 
+const option = css({
+  display: "flex",
+  width: "48",
+  cursor: "pointer",
+  flexDirection: "column",
+  gap: "2",
+  borderRadius: "lg",
+  borderWidth: "1px",
+  borderStyle: "solid",
+  borderColor: "border",
+  padding: "2",
+  textAlign: "start",
+  outlineStyle: "none",
+  _focusVisible: { boxShadow: "focus" },
+  _hover: { backgroundColor: "accent" },
+  _checked: { borderColor: "brand", backgroundColor: "accent" },
+});
+const optionLabel = css({ paddingInline: "0.5" });
+const optionName = css({
+  display: "block",
+  textStyle: "xs",
+  fontWeight: "medium",
+  color: "foreground",
+});
+const optionDescription = css({
+  display: "block",
+  textStyle: "2xs",
+  lineHeight: "1.375",
+  color: "muted.foreground",
+});
+const section = css({
+  marginBlockEnd: "8",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: "3",
+});
+const group = css({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: "3",
+});
+const groupLabel = css({
+  textStyle: "xs",
+  fontWeight: "medium",
+  color: "muted.foreground",
+});
+const options = css({ display: "flex", alignItems: "stretch", gap: "3" });
+const preview = css({
+  height: "16",
+  borderRadius: "md",
+  backgroundColor: "surface.0",
+  padding: "1.5",
+});
+const previewPane = css({
+  width: "full",
+  height: "full",
+  borderRadius: "sm",
+  backgroundColor: "surface.1",
+  boxShadow: "sm",
+});
+const classicPreview = css({
+  display: "flex",
+  height: "16",
+  flexDirection: "column",
+  overflow: "hidden",
+  borderRadius: "md",
+  borderWidth: "1px",
+  borderStyle: "solid",
+  borderColor: "border",
+});
+const classicBar = css({
+  height: "2.5",
+  borderBlockEndWidth: "1px",
+  borderBlockEndStyle: "solid",
+  borderBlockEndColor: "border",
+  backgroundColor: "surface.0",
+});
+const classicBody = css({ display: "flex", flex: "1" });
+const classicSidebar = css({
+  width: "25%",
+  borderInlineEndWidth: "1px",
+  borderInlineEndStyle: "solid",
+  borderInlineEndColor: "border",
+  backgroundColor: "surface.0",
+});
+const classicDocument = css({ flex: "1", backgroundColor: "surface.1" });
+const hint = css({ textStyle: "2xs", color: "tertiary" });
+
 const LookOption = (props: LookOptionProps) => (
-  <RadioGroup.Item
-    value={props.value}
-    class="pressable flex w-48 cursor-pointer flex-col gap-2 rounded-lg border border-border p-2 text-start outline-none focus-visible:shadow-focus hover:bg-accent data-checked:border-brand data-checked:bg-accent"
-  >
+  <RadioGroup.Item value={props.value} class={cx("pressable", option)}>
     <RadioGroup.ItemInput />
     <RadioGroup.ItemControl>{props.preview}</RadioGroup.ItemControl>
-    <RadioGroup.ItemLabel class="px-0.5">
-      <span class="block text-xs font-medium text-foreground">{props.label}</span>
-      <span class="block text-2xs leading-snug text-muted-foreground">{props.description}</span>
+    <RadioGroup.ItemLabel class={optionLabel}>
+      <span class={optionName}>{props.label}</span>
+      <span class={optionDescription}>{props.description}</span>
     </RadioGroup.ItemLabel>
   </RadioGroup.Item>
 );
@@ -30,7 +118,7 @@ const LookOption = (props: LookOptionProps) => (
  * Pupitre apart, so it is offered next to the classic one before anything else.
  */
 export const LookChooser = () => (
-  <section class="mb-8 flex flex-col items-center gap-3">
+  <section class={section}>
     <RadioGroup
       value={settings().windowStyle}
       onChange={(value) => {
@@ -38,19 +126,19 @@ export const LookChooser = () => (
         if (value === "classic" || value === "immersive")
           void updateSettings({ windowStyle: value });
       }}
-      class="flex flex-col items-center gap-3"
+      class={group}
     >
-      <RadioGroup.Label as="h2" class="text-xs font-medium text-muted-foreground">
+      <RadioGroup.Label as="h2" class={groupLabel}>
         {t().welcome.chooseLook}
       </RadioGroup.Label>
-      <div class="flex items-stretch gap-3">
+      <div class={options}>
         <LookOption
           value="immersive"
           label={t().settings.windowStyleImmersive}
           description={t().welcome.lookImmersiveDesc}
           preview={
-            <div class="h-16 rounded-md bg-surface-0 p-1.5" aria-hidden="true">
-              <div class="size-full rounded-sm bg-surface-1 shadow-sm" />
+            <div class={preview} aria-hidden="true">
+              <div class={previewPane} />
             </div>
           }
         />
@@ -59,20 +147,17 @@ export const LookChooser = () => (
           label={t().settings.windowStyleClassic}
           description={t().welcome.lookClassicDesc}
           preview={
-            <div
-              class="flex h-16 flex-col overflow-hidden rounded-md border border-border"
-              aria-hidden="true"
-            >
-              <div class="h-2.5 border-b border-border bg-surface-0" />
-              <div class="flex flex-1">
-                <div class="w-1/4 border-e border-border bg-surface-0" />
-                <div class="flex-1 bg-surface-1" />
+            <div class={classicPreview} aria-hidden="true">
+              <div class={classicBar} />
+              <div class={classicBody}>
+                <div class={classicSidebar} />
+                <div class={classicDocument} />
               </div>
             </div>
           }
         />
       </div>
     </RadioGroup>
-    <p class="text-2xs text-tertiary">{t().welcome.lookHint}</p>
+    <p class={hint}>{t().welcome.lookHint}</p>
   </section>
 );

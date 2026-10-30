@@ -1,6 +1,6 @@
-import { cn } from "cn";
 import { onCleanup, onMount, Show, type ParentComponent } from "solid-js";
 import { desktop } from "@/lib/desktop";
+import { css, cx } from "@/styled-system/css";
 import { CaptionButtons } from "./caption-buttons";
 
 /**
@@ -10,10 +10,23 @@ import { CaptionButtons } from "./caption-buttons";
  */
 const GIVE_WAY = ["count"];
 
+const titleBar = css({
+  width: "full",
+  height: "10",
+  flexShrink: 0,
+  display: "flex",
+  alignItems: "center",
+  gap: "2",
+  userSelect: "none",
+  backgroundColor: "surface.0",
+  textStyle: "xs",
+  _print: { display: "none" },
+});
+
 /**
  * The window title bar. It is draggable as a whole and leaves room for the native caption buttons
  * or traffic lights (see .app-title-bar in app.css); the main window on Windows and Linux gets
- * caption buttons drawn here instead. Its height is h-10, which has to stay TITLE_BAR_HEIGHT, the
+ * caption buttons drawn here instead. Its height is 40px, which has to stay TITLE_BAR_HEIGHT, the
  * height the main process gives the native buttons and the traffic lights.
  */
 export const TitleBar: ParentComponent<{ class?: string; inert?: boolean }> = (props) => {
@@ -75,9 +88,10 @@ export const TitleBar: ParentComponent<{ class?: string; inert?: boolean }> = (p
       data-caption-buttons={side}
       data-caption-side={layoutSide}
       inert={props.inert}
-      class={cn(
+      class={cx(
         // The horizontal padding comes from .app-title-bar, which leaves room for the caption buttons
-        "app-title-bar print:hidden w-full h-10 shrink-0 flex items-center gap-2 select-none bg-surface-0 text-xs",
+        "app-title-bar",
+        titleBar,
         props.class,
       )}
     >

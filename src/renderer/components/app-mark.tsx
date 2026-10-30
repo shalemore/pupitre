@@ -1,5 +1,7 @@
-import { cn } from "cn";
 import { type JSX, splitProps } from "solid-js";
+import { css, cx } from "@/styled-system/css";
+
+const mark = css({ width: "4", height: "4", flexShrink: 0 });
 
 /**
  * The lectern of the app icon, without its background or its shading, so it takes the color of the
@@ -10,12 +12,7 @@ export function AppMark(props: JSX.SvgSVGAttributes<SVGSVGElement>) {
   const [local, rest] = splitProps(props, ["class"]);
 
   return (
-    <svg
-      viewBox="120 138 272 272"
-      aria-hidden="true"
-      class={cn("size-4 shrink-0", local.class)}
-      {...rest}
-    >
+    <svg viewBox="120 138 272 272" aria-hidden="true" class={cx(mark, local.class)} {...rest}>
       <g fill="currentColor">
         {/* The desktop keeps the icon's foreshortening */}
         <g transform="translate(256 236) scale(0.82 0.9) translate(-256 -236)">

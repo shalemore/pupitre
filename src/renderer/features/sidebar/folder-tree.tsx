@@ -1,5 +1,4 @@
 import { ContextMenu } from "@kobalte/core/context-menu";
-import { cn } from "cn";
 import { ArrowRight, ChevronRight, CircleAlert, FileText, Folder } from "lucide-solid";
 import {
   createEffect,
@@ -26,6 +25,7 @@ import { desktop } from "@/lib/desktop";
 import { reportFailure } from "@/lib/errors";
 import { excerptOf } from "@/lib/markdown-excerpt";
 import { settings } from "@/lib/settings";
+import { css, cx } from "@/styled-system/css";
 
 /** The menu of a row: what it lists, and what each entry runs, by id. */
 interface RowMenu {
@@ -150,12 +150,7 @@ const FolderChildren: Component<FolderChildrenProps> = (props) => {
   );
 
   return (
-    <Show
-      when={!entries.error}
-      fallback={
-        <p class="px-2.5 py-1.5 text-2xs text-destructive">{t().sidebar.folderUnreadable}</p>
-      }
-    >
+    <Show when={!entries.error} fallback={<p class={errorText}>{t().sidebar.folderUnreadable}</p>}>
       <For each={shownEntries()}>
         {(entry) => (
           <FolderRow entry={entry} depth={props.depth} tree={props.tree} previews={shownPreviews} />
@@ -164,6 +159,126 @@ const FolderChildren: Component<FolderChildrenProps> = (props) => {
     </Show>
   );
 };
+
+const errorText = css({
+  paddingInline: "2.5",
+  paddingBlock: "1.5",
+  textStyle: "2xs",
+  color: "destructive",
+});
+const renameRow = css({
+  display: "flex",
+  alignItems: "center",
+  gap: "1.5",
+  paddingInlineEnd: "2.5",
+});
+const indentIcon = css({ width: "3", height: "3", flexShrink: 0 });
+const chevron = css({
+  width: "3",
+  height: "3",
+  flexShrink: 0,
+  transitionProperty: "transform",
+  transitionDuration: "base",
+  transitionTimingFunction: "outExpo",
+  _rtl: { scale: "-1 1" },
+});
+const chevronOpen = css({ rotate: "90deg" });
+const fileIcon = css({ width: "3.5", height: "3.5", flexShrink: 0 });
+const renameField = css({
+  minWidth: 0,
+  flex: "1",
+  borderRadius: "md",
+  borderWidth: "1px",
+  borderStyle: "solid",
+  borderColor: "border",
+  backgroundColor: "surface.2",
+  paddingInline: "2.5",
+  paddingBlock: "1",
+  textStyle: "xs",
+  color: "foreground",
+  outlineStyle: "none",
+  _focusVisible: { boxShadow: "focus" },
+});
+const groupRow = css({ position: "relative" });
+const itemsStart = css({ alignItems: "flex-start" });
+const rowDirectory = css({ paddingInlineEnd: "8" });
+const nameMin = css({ minWidth: 0 });
+const nameGrow = css({ flex: "1" });
+const blockTruncate = css({
+  display: "block",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+});
+const secondaryLine = css({
+  display: "block",
+  textStyle: "2xs",
+  fontWeight: "normal",
+  color: "tertiary",
+  fontVariantNumeric: "tabular-nums",
+});
+const excerptLine = css({
+  marginBlockStart: "0.5",
+  lineClamp: 2,
+  textStyle: "2xs",
+  fontWeight: "normal",
+  color: "tertiary",
+});
+const panel = css({
+  zIndex: "50",
+  display: "flex",
+  minWidth: "52",
+  maxHeight: "var(--kb-popper-content-available-height)",
+  flexDirection: "column",
+  overflowY: "auto",
+  overscrollBehavior: "contain",
+  padding: "1",
+  textStyle: "xs",
+  color: "foreground",
+  outlineStyle: "none",
+  userSelect: "none",
+});
+const openButton = css({
+  position: "absolute",
+  insetInlineEnd: "1",
+  top: "50%",
+  translate: "0 -50%",
+  opacity: 0,
+  transitionProperty: "opacity",
+  transitionDuration: "ui",
+  transitionTimingFunction: "outExpo",
+  _groupHover: { opacity: 1 },
+  _focusVisible: { opacity: 1 },
+});
+const arrow = css({ width: "3", height: "3", _rtl: { scale: "-1 1" } });
+const iconOffset = css({ marginBlockStart: "0.5" });
+const stack = css({ "& > * + *": { marginBlockStart: "0.5" } });
+const expandAnimation = css({
+  "& > * + *": { marginBlockStart: "0.5" },
+  animationName: "fadeInDownSmall",
+  animationDuration: "base",
+  animationTimingFunction: "enter",
+});
+const treeRoot = css({
+  padding: "2",
+  minHeight: "full",
+  "& > * + *": { marginBlockStart: "0.5" },
+});
+const sectionLabel = css({
+  paddingInline: "2.5",
+  paddingBlockStart: "1",
+  textStyle: "2xs",
+  fontWeight: "medium",
+  letterSpacing: "wider",
+  color: "tertiary",
+  textTransform: "uppercase",
+});
+const divider = css({
+  marginInline: "2.5",
+  borderBlockStartWidth: "1px",
+  borderBlockStartStyle: "solid",
+  borderBlockStartColor: "border.subtle",
+});
 
 /** The name of a row being renamed, edited in place; Enter keeps the name, Escape or leaving the field drops it. */
 const RenameField: Component<{
@@ -182,24 +297,19 @@ const RenameField: Component<{
   return (
     // The field keeps the row's chevron and icon, so its box starts where the names of the other
     // rows do, and the indent stays outside the box rather than spanning the whole sidebar
-    <div class="flex items-center gap-1.5 pe-2.5" style={rowIndent(props.depth, 6)}>
-      <Show when={props.directory} fallback={<span class="size-3 shrink-0" />}>
-        <ChevronRight
-          class={cn(
-            "size-3 shrink-0 transition-transform duration-base rtl:-scale-x-100",
-            props.expanded && "rotate-90 rtl:rotate-90",
-          )}
-        />
+    <div class={renameRow} style={rowIndent(props.depth, 6)}>
+      <Show when={props.directory} fallback={<span class={indentIcon} />}>
+        <ChevronRight class={cx(chevron, props.expanded && chevronOpen)} />
       </Show>
-      <Show when={props.directory} fallback={<FileText class="size-3.5 shrink-0" />}>
-        <Folder class="size-3.5 shrink-0" />
+      <Show when={props.directory} fallback={<FileText class={fileIcon} />}>
+        <Folder class={fileIcon} />
       </Show>
       <input
         type="text"
         value={props.initial}
         dir="auto"
         aria-label={t().sidebar.rename}
-        class="min-w-0 flex-1 rounded-md border border-border bg-surface-2 px-2.5 py-1 text-xs text-foreground outline-none focus-visible:shadow-focus"
+        class={renameField}
         // Focused once it is in the document, so typing replaces the selected name right away
         ref={(element) =>
           requestAnimationFrame(() => {
@@ -242,7 +352,7 @@ const FolderRow: Component<{
 
   return (
     <>
-      <div class="group relative">
+      <div class={cx("group", groupRow)}>
         <Show
           when={props.tree.renaming() === props.entry.path}
           fallback={
@@ -261,15 +371,10 @@ const FolderRow: Component<{
                 onContextMenu={(event) => event.stopPropagation()}
                 style={rowIndent(props.depth, 6)}
                 title={failure() ?? props.entry.name}
-                class={cn((excerpt() || date()) && "items-start", isDirectory() && "pe-8")}
+                class={cx((excerpt() || date()) && itemsStart, isDirectory() && rowDirectory)}
               >
-                <Show when={isDirectory()} fallback={<span class="size-3 shrink-0" />}>
-                  <ChevronRight
-                    class={cn(
-                      "size-3 shrink-0 transition-transform duration-base rtl:-scale-x-100",
-                      expanded() && "rotate-90 rtl:rotate-90",
-                    )}
-                  />
+                <Show when={isDirectory()} fallback={<span class={indentIcon} />}>
+                  <ChevronRight class={cx(chevron, expanded() && chevronOpen)} />
                 </Show>
                 <Show
                   when={isDirectory()}
@@ -277,44 +382,32 @@ const FolderRow: Component<{
                     <Show
                       when={failure()}
                       fallback={
-                        <FileText
-                          class={cn("size-3.5 shrink-0", (excerpt() || date()) && "mt-0.5")}
-                        />
+                        <FileText class={cx(fileIcon, (excerpt() || date()) && iconOffset)} />
                       }
                     >
-                      <CircleAlert
-                        class={cn("size-3.5 shrink-0", (excerpt() || date()) && "mt-0.5")}
-                      />
+                      <CircleAlert class={cx(fileIcon, (excerpt() || date()) && iconOffset)} />
                     </Show>
                   }
                 >
-                  <Folder class="size-3.5 shrink-0" />
+                  <Folder class={fileIcon} />
                 </Show>
-                <span class={cn("min-w-0", excerpt() || date() ? "flex-1" : "truncate")}>
-                  <span class="block truncate">
+                <span class={cx(nameMin, excerpt() || date() ? nameGrow : blockTruncate)}>
+                  <span class={blockTruncate}>
                     <bdi dir="ltr">{props.entry.name}</bdi>
                   </span>
                   <Show when={date()}>
-                    {(label) => (
-                      <span class="block text-2xs font-normal text-tertiary tabular-nums">
-                        {label()}
-                      </span>
-                    )}
+                    {(label) => <span class={secondaryLine}>{label()}</span>}
                   </Show>
                   <Show when={excerpt()}>
                     {/* Isolated, so an excerpt in another script never turns the row around */}
-                    <bdi
-                      dir="auto"
-                      aria-hidden="true"
-                      class="mt-0.5 line-clamp-2 text-2xs font-normal text-tertiary"
-                    >
+                    <bdi dir="auto" aria-hidden="true" class={excerptLine}>
                       {excerpt()}
                     </bdi>
                   </Show>
                 </span>
               </ContextMenu.Trigger>
               <ContextMenu.Portal>
-                <ContextMenu.Content class="floating-panel z-50 flex min-w-52 max-h-(--kb-popper-content-available-height) flex-col overflow-y-auto overscroll-contain p-1 text-xs text-foreground outline-none select-none">
+                <ContextMenu.Content class={cx("floating-panel", panel)}>
                   {(() => {
                     const menu = props.tree.menuOf(props.entry);
                     return (
@@ -344,18 +437,18 @@ const FolderRow: Component<{
             label={t().menu.openFolder}
             size="icon-2xs"
             data-slot="folder-open"
-            class="absolute inset-e-1 top-1/2 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+            class={openButton}
             onClick={(event) => {
               event.stopPropagation();
               props.tree.onOpenFolder(props.entry.path);
             }}
           >
-            <ArrowRight class="size-3 rtl:-scale-x-100" />
+            <ArrowRight class={arrow} />
           </IconButton>
         </Show>
       </div>
       <Show when={expanded()}>
-        <div class="space-y-0.5 animate-in fade-in-0 slide-in-from-top-1 duration-base ease-enter">
+        <div class={expandAnimation}>
           <FolderChildren path={props.entry.path} depth={props.depth + 1} tree={props.tree} />
         </div>
       </Show>
@@ -555,24 +648,22 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
     // The empty space of the tree stands for the folder it shows, so a file can be created at its
     // root; it reaches the bottom of the sidebar, so the native menu does not take over there
     <ContextMenu onOpenChange={setMenuOpen}>
-      <ContextMenu.Trigger as="div" class="p-2 space-y-0.5 min-h-full">
+      <ContextMenu.Trigger as="div" class={treeRoot}>
         <Show when={pinnedEntries().length > 0}>
-          <div class="space-y-0.5">
-            <div class="px-2.5 pt-1 text-2xs font-medium tracking-wider text-tertiary uppercase">
-              {t().sidebar.pinned}
-            </div>
+          <div class={stack}>
+            <div class={sectionLabel}>{t().sidebar.pinned}</div>
             <For each={pinnedEntries()}>
               {(entry) => (
                 <FolderRow entry={entry} depth={0} tree={tree} previews={() => undefined} />
               )}
             </For>
           </div>
-          <div class="mx-2.5 border-t border-border-subtle" />
+          <div class={divider} />
         </Show>
         <FolderChildren path={props.root} depth={0} tree={tree} />
       </ContextMenu.Trigger>
       <ContextMenu.Portal>
-        <ContextMenu.Content class="floating-panel z-50 flex min-w-52 max-h-(--kb-popper-content-available-height) flex-col overflow-y-auto overscroll-contain p-1 text-xs text-foreground outline-none select-none">
+        <ContextMenu.Content class={cx("floating-panel", panel)}>
           {(() => {
             const menu = menuOf({ name: props.root, path: props.root, kind: "directory" });
             return (

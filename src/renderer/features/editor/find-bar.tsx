@@ -1,4 +1,3 @@
-import { cn } from "cn";
 import {
   CaseSensitive,
   ChevronDown,
@@ -11,6 +10,7 @@ import {
 import { createEffect, createSignal, on, Show, type Component, type JSX } from "solid-js";
 import { Badge, Button, IconButton, Input, ToggleIconButton } from "@/components/ui";
 import { t } from "@/i18n";
+import { css, cx } from "@/styled-system/css";
 import type { MatchStats, SearchOptions } from "./markdown-editor";
 
 export interface FindBarProps {
@@ -39,11 +39,69 @@ const FindToggle: Component<{
     onChange={props.onChange}
     label={props.title}
     size="icon-2xs"
-    class="data-pressed:bg-brand/15"
+    class={pressedToggle}
   >
     {props.children}
   </ToggleIconButton>
 );
+
+const pressedToggle = css({ "&[data-pressed]": { backgroundColor: "brand/15" } });
+const bar = css({
+  position: "absolute",
+  top: "3",
+  insetInlineEnd: "5",
+  zIndex: "40",
+  display: "flex",
+  flexDirection: "column",
+  gap: "2",
+  borderRadius: "xl",
+  backgroundColor: "popover/95",
+  padding: "2",
+  boxShadow: "float",
+  backdropFilter: "blur(12px)",
+  textStyle: "xs",
+  userSelect: "none",
+  animationName: "fadeInDown",
+  animationDuration: "base",
+  animationTimingFunction: "enter",
+  maxWidth: "sm",
+  width: "full",
+  _print: { display: "none" },
+});
+const row = css({ display: "flex", alignItems: "center", gap: "1.5" });
+const chevron = css({
+  transitionProperty: "transform",
+  transitionDuration: "snap",
+  transitionTimingFunction: "snap",
+  _rtl: { scale: "-1 1" },
+});
+const chevronOpen = css({ transform: "rotate(90deg)" });
+const searchBox = css({
+  position: "relative",
+  flex: "1",
+  display: "flex",
+  alignItems: "center",
+  minWidth: 0,
+});
+const searchField = css({ paddingInlineEnd: "18" });
+const options = css({
+  position: "absolute",
+  insetInlineEnd: "1",
+  display: "flex",
+  alignItems: "center",
+  gap: "0.5",
+});
+const count = css({ flexShrink: 0, fontVariantNumeric: "tabular-nums" });
+const replaceRow = css({
+  display: "flex",
+  alignItems: "center",
+  gap: "1.5",
+  paddingInlineStart: "7",
+  animationName: "fadeInDownSmall",
+  animationDuration: "base",
+  animationTimingFunction: "enter",
+});
+const grow = css({ flex: "1" });
 
 export const FindBar: Component<FindBarProps> = (props) => {
   const [searchText, setSearchText] = createSignal(props.initialSearch);
@@ -108,24 +166,13 @@ export const FindBar: Component<FindBarProps> = (props) => {
   };
 
   return (
-    <div
-      data-slot="find-bar"
-      class={cn(
-        "absolute top-3 inset-e-5 z-40 flex flex-col gap-2 rounded-xl bg-popover/95 p-2 shadow-float backdrop-blur-md text-xs select-none animate-in fade-in-0 slide-in-from-top-2 duration-base ease-enter max-w-sm w-full print:hidden",
-        props.class,
-      )}
-    >
-      <div class="flex items-center gap-1.5">
+    <div data-slot="find-bar" class={cx(bar, props.class)}>
+      <div class={row}>
         <IconButton label={t().editor.toggleReplace} onClick={props.onToggleReplace}>
-          <ChevronRight
-            class={cn(
-              "transition-transform duration-snap ease-snap rtl:-scale-x-100",
-              props.showReplace && "rotate-90",
-            )}
-          />
+          <ChevronRight class={cx(chevron, props.showReplace && chevronOpen)} />
         </IconButton>
 
-        <div class="relative flex-1 flex items-center min-w-0">
+        <div class={searchBox}>
           <Input
             ref={(element) => (searchInput = element)}
             size="sm"
@@ -134,10 +181,10 @@ export const FindBar: Component<FindBarProps> = (props) => {
             onInput={(e) => setSearchText(e.currentTarget.value)}
             onKeyDown={(e) => handleKeyDown(e, props.onFindNext, props.onFindPrevious)}
             placeholder={t().editor.findPlaceholder}
-            class="pe-18"
+            class={searchField}
           />
 
-          <div class="absolute inset-e-1 flex items-center gap-0.5">
+          <div class={options}>
             <FindToggle
               pressed={caseSensitive()}
               onChange={setCaseSensitive}
@@ -154,7 +201,7 @@ export const FindBar: Component<FindBarProps> = (props) => {
           </div>
         </div>
 
-        <div class="shrink-0 tabular-nums">
+        <div class={count}>
           <Show when={searchText()}>
             <Badge variant={hasMatches() ? "secondary" : "destructive"} size="sm" dir="ltr">
               {matchLabel()}
@@ -182,7 +229,7 @@ export const FindBar: Component<FindBarProps> = (props) => {
       </div>
 
       <Show when={props.showReplace}>
-        <div class="flex items-center gap-1.5 ps-7 animate-in fade-in-0 slide-in-from-top-1 duration-base ease-enter">
+        <div class={replaceRow}>
           <Input
             ref={(element) => (replaceInput = element)}
             size="sm"
@@ -191,7 +238,7 @@ export const FindBar: Component<FindBarProps> = (props) => {
             onInput={(e) => setReplaceText(e.currentTarget.value)}
             onKeyDown={(e) => handleKeyDown(e, props.onReplaceNext, props.onReplaceAll)}
             placeholder={t().editor.replacePlaceholder}
-            class="flex-1"
+            class={grow}
           />
           <Button
             variant="outline"

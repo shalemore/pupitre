@@ -7,11 +7,23 @@ import { MenuPopup } from "@/features/menu/menu-popup";
 import { createMenu } from "@/features/menu/menu-state";
 import { t } from "@/i18n";
 import { settings, updateSettings } from "@/lib/settings";
+import { css } from "@/styled-system/css";
 
 type FolderSort = Settings["folderSort"];
 
 /** The orders the menu offers, in the order it shows them. */
 const SORTS: readonly FolderSort[] = ["name", "modified", "created"];
+
+const sortButton = css({
+  flexShrink: 0,
+  color: "tertiary",
+  opacity: 0.5,
+  transitionProperty: "opacity",
+  transitionDuration: "ui",
+  transitionTimingFunction: "outExpo",
+  _hover: { opacity: 1 },
+  _focusVisible: { opacity: 1 },
+});
 
 function labelOf(sort: FolderSort): string {
   switch (sort) {
@@ -49,7 +61,7 @@ export const FolderSortButton: Component<{
         size="icon-2xs"
         aria-haspopup="menu"
         aria-expanded={panel.open() !== undefined}
-        class="shrink-0 text-tertiary opacity-50 transition-opacity hover:opacity-100 focus-visible:opacity-100"
+        class={sortButton}
         onClick={(event) => {
           if (panel.open() !== undefined) panel.close();
           // A press on the button while the menu is open closes it from outside first, and the

@@ -1,6 +1,5 @@
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { debounce, scheduleIdle } from "@solid-primitives/scheduled";
-import { cn } from "cn";
 import { CornerRightUp, Eye } from "lucide-solid";
 import {
   createEffect,
@@ -52,6 +51,7 @@ import { createImmersiveChrome } from "@/lib/immersive-chrome";
 import { recentFiles } from "@/lib/recent-files";
 import { settings, updateSettings } from "@/lib/settings";
 import type { TextStats } from "@/lib/text-stats";
+import { css, cx } from "@/styled-system/css";
 
 type FindMode = "closed" | "find" | "replace";
 // A drag reports the pointer for every pixel it moves; only the width it settles on is worth writing
@@ -67,6 +67,151 @@ const MarkdownEditor = lazy(async () => {
   const { MarkdownEditor: Component } = await import("@/features/editor/markdown-editor");
   return { default: Component };
 });
+
+const windowFrame = css({
+  height: "100vh",
+  width: "100vw",
+  display: "flex",
+  flexDirection: "column",
+  overflow: "hidden",
+  color: "foreground",
+  _print: { display: "block", height: "auto", overflow: "visible" },
+});
+const windowImmersive = css({ backgroundColor: "surface.0" });
+const windowClassic = css({ backgroundColor: "surface.1" });
+const titleBar = css({
+  overflow: "hidden",
+  transitionProperty: "height",
+  transitionDuration: "sheet",
+  transitionTimingFunction: "outExpo",
+});
+const titleBarHidden = css({ height: 0 });
+const frameBorderBottom = css({
+  borderBlockEndWidth: "1px",
+  borderBlockEndStyle: "solid",
+  borderBlockEndColor: "border",
+});
+const frameBorderStart = css({
+  borderInlineStartWidth: "1px",
+  borderInlineStartStyle: "solid",
+  borderInlineStartColor: "border",
+});
+const frameBorderEnd = css({
+  borderInlineEndWidth: "1px",
+  borderInlineEndStyle: "solid",
+  borderInlineEndColor: "border",
+});
+const titleGrid = css({
+  flex: "1",
+  minWidth: 0,
+  display: "grid",
+  gridTemplateColumns: "minmax(0, 1fr) minmax(0, auto) minmax(0, 1fr)",
+  alignItems: "center",
+  gap: "2",
+});
+const titleStart = css({
+  display: "flex",
+  minWidth: 0,
+  alignItems: "center",
+  gap: "2",
+  overflow: "hidden",
+});
+const mark = css({ color: "muted.foreground" });
+const titleCenter = css({
+  minWidth: 0,
+  paddingInline: "4",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "2",
+  fontWeight: "medium",
+  color: "foreground",
+});
+const dirtyDot = css({
+  width: "1.5",
+  height: "1.5",
+  flexShrink: 0,
+  borderRadius: "full",
+  backgroundColor: "brand",
+  animationName: "zoomIn",
+  animationDuration: "snap",
+  animationTimingFunction: "outExpo",
+});
+const ellipsis = css({ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" });
+const titleEnd = css({
+  display: "flex",
+  minWidth: 0,
+  alignItems: "center",
+  justifyContent: "flex-end",
+  overflow: "hidden",
+});
+const content = css({
+  flex: "1",
+  minHeight: 0,
+  display: "flex",
+  overflow: "hidden",
+  _print: { display: "block", overflow: "visible" },
+});
+const contentGap = css({
+  gap: "var(--pref-immersive-gap)",
+  paddingBlock: "var(--pref-immersive-gap)",
+  paddingInlineStart: 0,
+  _print: { padding: 0 },
+});
+const contentEnd = css({ paddingInlineEnd: "var(--pref-immersive-gap)" });
+const contentEndSplit = css({ paddingInlineEnd: 0 });
+const card = css({
+  flex: "1",
+  minWidth: 0,
+  display: "flex",
+  flexDirection: "column",
+  overflow: "hidden",
+  _print: { display: "block", overflow: "visible" },
+});
+const cardImmersive = css({
+  borderRadius: "lg",
+  backgroundColor: "surface.1",
+  boxShadow: "sm",
+  _print: { borderRadius: 0, boxShadow: "none" },
+});
+const documentArea = css({
+  flex: "1",
+  minHeight: 0,
+  display: "flex",
+  overflow: "hidden",
+  _print: { display: "block", overflow: "visible" },
+});
+const grow = css({ flex: "1" });
+const editorArea = css({
+  flex: "1",
+  height: "full",
+  overflow: "hidden",
+  position: "relative",
+  _print: { height: "auto", overflow: "visible" },
+});
+const wordCountLabel = css({
+  textStyle: "2xs",
+  color: "muted.foreground",
+  fontVariantNumeric: "tabular-nums",
+  display: "flex",
+  flexShrink: 0,
+  alignItems: "center",
+  gap: "1.5",
+  whiteSpace: "nowrap",
+  marginInlineEnd: "2",
+});
+const quietButton = css({
+  flexShrink: 0,
+  color: "tertiary",
+  opacity: 0.5,
+  transitionProperty: "opacity",
+  transitionDuration: "ui",
+  transitionTimingFunction: "outExpo",
+  _hover: { opacity: 1 },
+  _focusVisible: { opacity: 1 },
+  "&[data-pressed]": { opacity: 1 },
+});
+const rtlFlip = css({ _rtl: { scale: "-1 1" } });
 
 export const MainWindow: Component = () => {
   // A signal rather than a variable: a new document brings a new editor, and a match found in the
@@ -110,7 +255,7 @@ export const MainWindow: Component = () => {
         // The character count is a second reading of a dense page; a page of words needs only
         // the words beside them, and shows both counts when pointed at
         title={`${wordsText()} · ${charsText()}`}
-        class="text-2xs text-muted-foreground tabular-nums flex shrink-0 items-center gap-1.5 whitespace-nowrap me-2"
+        class={wordCountLabel}
       >
         <span>{wordsText()}</span>
         <Show when={countKind() === "character"}>
@@ -426,13 +571,13 @@ export const MainWindow: Component = () => {
       <IconButton
         label={t().sidebar.parentFolder}
         size="icon-2xs"
-        class="shrink-0 text-tertiary opacity-50 transition-opacity hover:opacity-100 focus-visible:opacity-100"
+        class={quietButton}
         onClick={() => {
           const parent = parentOfFolder();
           if (parent !== undefined) showFolder(parent);
         }}
       >
-        <CornerRightUp class="rtl:-scale-x-100" />
+        <CornerRightUp class={rtlFlip} />
       </IconButton>
     </Show>
   );
@@ -446,7 +591,7 @@ export const MainWindow: Component = () => {
           onChange={(showHidden) => void updateSettings({ showHidden })}
           label={t().settings.showHidden}
           size="icon-2xs"
-          class="shrink-0 text-tertiary opacity-50 transition-opacity hover:opacity-100 focus-visible:opacity-100 data-pressed:opacity-100"
+          class={quietButton}
         >
           <Eye />
         </ToggleIconButton>
@@ -651,18 +796,15 @@ export const MainWindow: Component = () => {
     <div
       data-window-style={settings().windowStyle}
       onPointerMove={(event) => chrome.onPointerMove(event)}
-      class={cn(
-        "h-screen w-screen flex flex-col overflow-hidden text-foreground print:block print:h-auto print:overflow-visible",
-        immersive() ? "bg-surface-0" : "bg-surface-1",
-      )}
+      class={cx(windowFrame, immersive() ? windowImmersive : windowClassic)}
     >
       {/* Folding the title bar away animates its height, and the card moves up into the room */}
       <TitleBar
         inert={!chrome.titleBarVisible()}
-        class={cn(
-          "overflow-hidden transition-[height] duration-sheet",
-          !chrome.titleBarVisible() && "h-0",
-          !immersive() && "border-b border-border",
+        class={cx(
+          titleBar,
+          !chrome.titleBarVisible() && titleBarHidden,
+          !immersive() && frameBorderBottom,
         )}
       >
         <Show
@@ -670,32 +812,26 @@ export const MainWindow: Component = () => {
           fallback={
             // Equal side columns keep the document name in the middle of the bar, whatever the
             // menus and the count take
-            <div
-              data-title-grid
-              class="flex-1 min-w-0 grid grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] items-center gap-2"
-            >
-              <div class="flex min-w-0 items-center gap-2 overflow-hidden">
-                <AppMark class="text-muted-foreground" />
+            <div data-title-grid class={titleGrid}>
+              <div class={titleStart}>
+                <AppMark class={mark} />
                 <Show when={!isMacOS}>
                   <MenuBar onOpenChange={setMenuOpen} />
                 </Show>
               </div>
 
-              <div class="min-w-0 px-4 flex items-center justify-center gap-2 font-medium text-foreground">
+              <div class={titleCenter}>
                 <Show when={session.activeDocument()}>
                   <Show when={session.isDirty()}>
-                    <span
-                      aria-hidden="true"
-                      class="size-1.5 shrink-0 rounded-full bg-brand animate-in fade-in-0 zoom-in-50 duration-snap"
-                    />
+                    <span aria-hidden="true" class={dirtyDot} />
                   </Show>
-                  <bdi dir="ltr" class="truncate">
+                  <bdi dir="ltr" class={ellipsis}>
                     {session.fileName()}
                   </bdi>
                 </Show>
               </div>
 
-              <div class="flex min-w-0 items-center justify-end overflow-hidden">{wordCount()}</div>
+              <div class={titleEnd}>{wordCount()}</div>
             </div>
           }
         >
@@ -721,14 +857,10 @@ export const MainWindow: Component = () => {
         onKeyDown={(event) => {
           if (!event.ctrlKey && !event.metaKey && !event.altKey) chrome.hide();
         }}
-        class={cn(
-          "flex-1 min-h-0 flex overflow-hidden print:block print:overflow-visible",
+        class={cx(
+          content,
           // The card keeps an even gap to the window edges, the title bar and the sidebars
-          immersive() &&
-            cn(
-              "gap-(--pref-immersive-gap) py-(--pref-immersive-gap) ps-0 print:p-0",
-              split() ? "pe-0" : "pe-(--pref-immersive-gap)",
-            ),
+          immersive() && cx(contentGap, split() ? contentEndSplit : contentEnd),
         )}
       >
         <SidebarSlot
@@ -741,7 +873,7 @@ export const MainWindow: Component = () => {
             when={split()}
             fallback={
               <Sidebar
-                class={cn(!immersive() && "border-e border-border")}
+                class={cx(!immersive() && frameBorderEnd)}
                 mode={sidebarMode()}
                 pinned={settings().sidebarPinnedStart}
                 onPinnedChange={onStartPinnedChange()}
@@ -771,7 +903,7 @@ export const MainWindow: Component = () => {
                   pinned={settings().sidebarPinnedStart}
                   onPinnedChange={onStartPinnedChange()}
                   collapsing={!immersive()}
-                  class={cn(!immersive() && "border-e border-border")}
+                  class={cx(!immersive() && frameBorderEnd)}
                 >
                   {folderTree(root)}
                 </SidebarPanel>
@@ -781,17 +913,12 @@ export const MainWindow: Component = () => {
         </SidebarSlot>
 
         {/* An immersive window shows the document as a card on the window background, which also holds the title bar and the sidebar */}
-        <div
-          class={cn(
-            "flex-1 min-w-0 flex flex-col overflow-hidden print:block print:overflow-visible",
-            immersive() && "rounded-lg bg-surface-1 shadow-sm print:rounded-none print:shadow-none",
-          )}
-        >
-          <div class="flex-1 min-h-0 flex overflow-hidden print:block print:overflow-visible">
+        <div class={cx(card, immersive() && cardImmersive)}>
+          <div class={documentArea}>
             <Show
               when={session.activeTab()}
               fallback={
-                <main class="flex-1">
+                <main class={grow}>
                   <WelcomeScreen
                     recentFiles={recentFiles()}
                     onNewDocument={session.newDocument}
@@ -802,7 +929,7 @@ export const MainWindow: Component = () => {
               }
             >
               {(tab) => (
-                <main class="flex-1 h-full overflow-hidden relative print:h-auto print:overflow-visible">
+                <main class={editorArea}>
                   <Show when={findMode() !== "closed"}>
                     <FindBar
                       showReplace={findMode() === "replace"}
@@ -863,7 +990,7 @@ export const MainWindow: Component = () => {
               pinned={settings().sidebarPinnedEnd}
               onPinnedChange={onEndPinnedChange()}
               collapsing={!immersive()}
-              class={cn(!immersive() && "border-s border-border")}
+              class={cx(!immersive() && frameBorderStart)}
             >
               {outlineList()}
             </SidebarPanel>

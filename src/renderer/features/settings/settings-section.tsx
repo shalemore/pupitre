@@ -5,25 +5,64 @@ import { IconButton, SettingRow } from "@/components/ui";
 import { t } from "@/i18n";
 import { resetSetting, settings } from "@/lib/settings";
 import { workspace } from "@/lib/workspace";
+import { css, keyframes } from "@/styled-system/css";
+
+const appear = keyframes({
+  from: { opacity: 0, scale: 0.75 },
+});
 
 /** A titled page of settings; its children are groups. */
 export const SettingsSection: ParentComponent<{ title: string; description?: string }> = (
   props,
 ) => (
-  <section class="max-w-xl">
-    <h2 class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+  <section class={css({ maxWidth: "xl" })}>
+    <h2
+      class={css({
+        textStyle: "xs",
+        fontWeight: "semibold",
+        textTransform: "uppercase",
+        letterSpacing: "wider",
+        color: "muted.foreground",
+      })}
+    >
       {props.title}
     </h2>
     <Show when={props.description}>
-      <p class="mt-1.5 text-2xs leading-relaxed text-muted-foreground">{props.description}</p>
+      <p
+        class={css({
+          marginBlockStart: "1.5",
+          textStyle: "2xs",
+          lineHeight: "relaxed",
+          color: "muted.foreground",
+        })}
+      >
+        {props.description}
+      </p>
     </Show>
-    <div class="mt-3 space-y-6">{props.children}</div>
+    <div
+      class={css({
+        marginBlockStart: "3",
+        "& > :not(:last-child)": { marginBlockEnd: "6" },
+      })}
+    >
+      {props.children}
+    </div>
   </section>
 );
 
 /** Settings that belong together: hairlines between the rows, more space between groups. */
 export const SettingGroup: ParentComponent = (props) => (
-  <div class="divide-y divide-border-subtle">{props.children}</div>
+  <div
+    class={css({
+      "& > :not(:last-child)": {
+        borderBottomWidth: "1px",
+        borderBottomStyle: "solid",
+        borderColor: "border.subtle",
+      },
+    })}
+  >
+    {props.children}
+  </div>
 );
 
 export interface SettingFieldProps {
@@ -46,16 +85,16 @@ export const SettingField: ParentComponent<SettingFieldProps> = (props) => {
     inFolder() ? workspace().overrides.includes(props.name) : isModified(settings(), props.name);
   return (
     <SettingRow
-      class={props.nested ? "ps-4" : undefined}
+      class={props.nested ? css({ paddingInlineStart: "4" }) : undefined}
       title={
-        <span class="flex items-center gap-1.5">
+        <span class={css({ display: "flex", alignItems: "center", gap: "1.5" })}>
           {props.title}
           <Show when={modified()}>
             <IconButton
               label={t().settings.resetToDefault}
               size="icon-2xs"
               onClick={() => void resetSetting(props.name)}
-              class="animate-in fade-in-0 zoom-in-75 duration-snap"
+              class={css({ animationName: appear, animationDuration: "snap" })}
             >
               <RotateCcw />
             </IconButton>

@@ -12,7 +12,9 @@ import { defineConfig } from "@pandacss/dev";
  */
 export default defineConfig({
   presets: ["@pandacss/preset-base", "@pandacss/preset-panda"],
-  preflight: false,
+  // The reset Tailwind's preflight used to give the chrome: borders on native controls and the
+  // margins of headings, lists and paragraphs come from the app's own styles instead
+  preflight: true,
   jsxFramework: "solid",
   include: ["./src/renderer/**/*.{ts,tsx}", "./src/web/**/*.{ts,tsx}"],
   outdir: "src/renderer/styled-system",
@@ -74,17 +76,21 @@ export default defineConfig({
           },
           knob: { value: "var(--ui-knob)" },
           window: {
-            close: { value: "#c42b1c" },
-            closeForeground: { value: "#ffffff" },
+            close: { value: "var(--color-window-close)" },
+            closeForeground: { value: "var(--color-window-close-foreground)" },
           },
         },
         fonts: {
           sans: { value: "var(--font-sans)" },
           mono: { value: "var(--font-mono)" },
         },
-        // The one font size the stylesheets define outside the scales Panda already carries
+        // The interface's type scale, which a theme may resize as a whole
         fontSizes: {
-          "2xs": { value: "0.6875rem" },
+          "2xs": { value: "var(--text-2xs)" },
+          xs: { value: "var(--text-xs)" },
+          sm: { value: "var(--text-sm)" },
+          base: { value: "var(--text-base)" },
+          xl: { value: "var(--text-xl)" },
         },
         radii: {
           xs: { value: "var(--radius-xs)" },
@@ -145,6 +151,22 @@ export default defineConfig({
         fadeIn: {
           from: { opacity: 0 },
           to: { opacity: 1 },
+        },
+        fadeInDown: {
+          from: { opacity: 0, transform: "translateY(-0.5rem)" },
+          to: { opacity: 1, transform: "translateY(0)" },
+        },
+        fadeInDownSmall: {
+          from: { opacity: 0, transform: "translateY(-0.25rem)" },
+          to: { opacity: 1, transform: "translateY(0)" },
+        },
+        zoomIn: {
+          from: { opacity: 0, scale: "0.5" },
+          to: { opacity: 1, scale: "1" },
+        },
+        fadeInUpSmall: {
+          from: { opacity: 0, transform: "translateY(0.25rem)" },
+          to: { opacity: 1, transform: "translateY(0)" },
         },
       },
     },

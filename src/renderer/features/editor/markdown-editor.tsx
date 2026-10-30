@@ -51,6 +51,14 @@ import { settings } from "@/lib/settings";
 import { type TextStats } from "@/lib/text-stats";
 import { themeApplied } from "@/lib/theme";
 import { withViewTransition } from "@/lib/view-transition";
+import { css } from "@/styled-system/css";
+
+const scrollArea = css({
+  width: "full",
+  height: "full",
+  overflowX: "hidden",
+  _print: { height: "auto", overflow: "visible" },
+});
 import { alertTitles } from "./alerts";
 import { codeHighlight } from "./code-highlight";
 import { codeLanguageFor } from "./code-languages";
@@ -888,10 +896,5 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     });
   });
 
-  return (
-    <ScrollView
-      ref={(element) => (container = element)}
-      class="size-full overflow-x-hidden print:h-auto print:overflow-visible"
-    />
-  );
+  return <ScrollView ref={(element) => (container = element)} class={scrollArea} />;
 };

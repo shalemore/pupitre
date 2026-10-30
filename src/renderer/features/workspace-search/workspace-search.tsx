@@ -28,6 +28,71 @@ import {
 import { t } from "@/i18n";
 import { FocusFirstRow, ShowFocusedRow } from "@/lib/combobox-rows";
 import { desktop } from "@/lib/desktop";
+import { css } from "@/styled-system/css";
+
+const optionButton = css({
+  color: "muted.foreground",
+  "&[data-pressed]": { backgroundColor: "brand/15" },
+});
+const mark = css({ borderRadius: "xs", backgroundColor: "brand/20", color: "foreground" });
+const item = css({
+  layerStyle: "interactive",
+  display: "flex",
+  width: "full",
+  cursor: "pointer",
+  alignItems: "center",
+  gap: "2",
+  borderRadius: "md",
+  paddingBlock: "1.5",
+  paddingInlineEnd: "2.5",
+  paddingInlineStart: "6",
+  textAlign: "start",
+  textStyle: "xs",
+  color: "muted.foreground",
+  outlineStyle: "none",
+  _highlighted: { backgroundColor: "selected", fontWeight: "medium", color: "foreground" },
+});
+const lineNumber = css({
+  width: "6",
+  flexShrink: 0,
+  textAlign: "end",
+  textStyle: "2xs",
+  color: "tertiary",
+  fontVariantNumeric: "tabular-nums",
+});
+const matchText = css({
+  minWidth: 0,
+  flex: "1",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+});
+const section = css({
+  display: "flex",
+  alignItems: "center",
+  gap: "1.5",
+  paddingInline: "2.5",
+  paddingBlockStart: "1.5",
+});
+const sectionLabel = css({
+  minWidth: 0,
+  flex: "1",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+  fontWeight: "medium",
+});
+const control = css({ display: "flex", alignItems: "center", gap: "1.5" });
+const optionRow = css({ display: "flex", flexShrink: 0, alignItems: "center", gap: "0.5" });
+const status = css({ paddingInline: "2.5", paddingBlock: "1.5", color: "muted.foreground" });
+const statusError = css({ paddingInline: "2.5", paddingBlock: "1.5", color: "destructive" });
+const countLabel = css({
+  paddingInline: "2.5",
+  textStyle: "2xs",
+  color: "tertiary",
+  fontVariantNumeric: "tabular-nums",
+});
+const list = css({ display: "flex", minHeight: 0, flexDirection: "column", gap: "0.5" });
 
 /** Typing must not ask the main process for the whole folder once per keystroke. */
 const SEARCH_DELAY_MS = 150;
@@ -65,7 +130,7 @@ const OptionButton: Component<{
     onChange={props.onChange}
     label={props.label}
     size="icon-xs"
-    class="text-muted-foreground data-pressed:bg-brand/15"
+    class={optionButton}
   >
     {props.children}
   </ToggleIconButton>
@@ -77,9 +142,7 @@ const MatchLine: Component<{ match: WorkspaceMatch }> = (props) => {
   return (
     <>
       {props.match.text.slice(0, props.match.column)}
-      <mark class="rounded-xs bg-brand/20 text-foreground">
-        {props.match.text.slice(props.match.column, end())}
-      </mark>
+      <mark class={mark}>{props.match.text.slice(props.match.column, end())}</mark>
       {props.match.text.slice(end())}
     </>
   );
@@ -174,21 +237,16 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
           if (row !== null) open(row);
         }}
         itemComponent={(itemProps) => (
-          <KobalteCombobox.Item
-            item={itemProps.item}
-            class="flex w-full cursor-pointer items-center gap-2 rounded-md py-1.5 pe-2.5 ps-6 text-start text-xs text-muted-foreground outline-none transition-colors data-highlighted:bg-selected data-highlighted:font-medium data-highlighted:text-foreground"
-          >
-            <span class="w-6 shrink-0 text-end text-2xs text-tertiary tabular-nums">
-              {itemProps.item.rawValue.match.line}
-            </span>
-            <span dir="auto" class="min-w-0 flex-1 truncate">
+          <KobalteCombobox.Item item={itemProps.item} class={item}>
+            <span class={lineNumber}>{itemProps.item.rawValue.match.line}</span>
+            <span dir="auto" class={matchText}>
               <MatchLine match={itemProps.item.rawValue.match} />
             </span>
           </KobalteCombobox.Item>
         )}
         sectionComponent={(sectionProps) => (
-          <KobalteCombobox.Section class="flex items-center gap-1.5 px-2.5 pt-1.5">
-            <span dir="auto" class="min-w-0 flex-1 truncate font-medium">
+          <KobalteCombobox.Section class={section}>
+            <span dir="auto" class={sectionLabel}>
               {sectionProps.section.rawValue.file.relative}
             </span>
             <Badge variant="muted" size="sm">
@@ -197,7 +255,7 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
           </KobalteCombobox.Section>
         )}
       >
-        <KobalteCombobox.Control class="flex items-center gap-1.5">
+        <KobalteCombobox.Control class={control}>
           <KobalteCombobox.Input
             as={Input}
             ref={(element) => (input = element)}
@@ -205,7 +263,7 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
             placeholder={t().workspaceSearch.placeholder}
             aria-label={t().workspaceSearch.title}
           />
-          <div class="flex shrink-0 items-center gap-0.5">
+          <div class={optionRow}>
             <OptionButton
               pressed={caseSensitive()}
               onChange={setCaseSensitive}
@@ -227,33 +285,29 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
         </KobalteCombobox.Control>
 
         <Show when={props.root === undefined}>
-          <p role="status" class="px-2.5 py-1.5 text-muted-foreground">
+          <p role="status" class={status}>
             {t().workspaceSearch.noFolder}
           </p>
         </Show>
         <Show when={answer()?.kind === "invalid-regexp"}>
-          <p role="status" class="px-2.5 py-1.5 text-destructive">
+          <p role="status" class={statusError}>
             {t().workspaceSearch.invalidRegexp}
           </p>
         </Show>
         <Show when={noResults()}>
-          <p role="status" class="px-2.5 py-1.5 text-muted-foreground">
+          <p role="status" class={status}>
             {t().workspaceSearch.noResults}
           </p>
         </Show>
         <Show when={matchCount() > 0}>
-          <p role="status" class="px-2.5 text-2xs text-tertiary tabular-nums">
+          <p role="status" class={countLabel}>
             {t().workspaceSearch.matchCount(matchCount())}
           </p>
         </Show>
 
         <KobalteCombobox.Listbox
           as={(listProps: ScrollViewProps) => (
-            <ScrollView
-              {...listProps}
-              aria-label={t().workspaceSearch.title}
-              class="flex min-h-0 flex-col gap-0.5"
-            />
+            <ScrollView {...listProps} aria-label={t().workspaceSearch.title} class={list} />
           )}
         />
         <FocusFirstRow />
