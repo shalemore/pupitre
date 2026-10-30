@@ -190,8 +190,8 @@ const [applied, setApplied] = createSignal(undefined, { equals: false });
  * find the CSS the window is showing.
  */
 function themeStyleElement(): HTMLStyleElement {
-  const found = document.querySelector<HTMLStyleElement>("style[data-theme-style]");
-  if (found !== null) return found;
+  const found = document.querySelector("style[data-theme-style]");
+  if (found instanceof HTMLStyleElement) return found;
   const element = document.createElement("style");
   element.dataset["themeStyle"] = "";
   document.head.append(element);
@@ -221,7 +221,8 @@ export function applyTheme(id: string): void {
  * without reading back through the document's CSSOM.
  */
 export function activeThemeCss(): string {
-  return document.querySelector<HTMLStyleElement>("style[data-theme-style]")?.textContent ?? "";
+  const element = document.querySelector("style[data-theme-style]");
+  return element instanceof HTMLStyleElement ? (element.textContent ?? "") : "";
 }
 
 /** Converts any CSS color (themes mostly use oklch) to #rrggbb, for APIs that only take hex. */
