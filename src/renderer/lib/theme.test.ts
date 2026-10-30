@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { DEFAULT_LOCALE, LOCALE_CODES } from "@shared/i18n";
+import themeSchema from "../../../agents/skills/theming-pupitre/theme.schema.json";
 import {
   activeThemeCss,
   applyTheme,
@@ -156,5 +157,21 @@ describe("built-in theme metadata", () => {
       checkEveryLocale(path, "name", result.data.name);
       checkEveryLocale(path, "description", result.data.description);
     }
+  });
+});
+
+describe("theme manifest schema", () => {
+  it("describes the same fields the loader accepts", () => {
+    const described = Object.keys(themeSchema.properties).filter((key) => key !== "$schema");
+    expect(described.toSorted()).toEqual(Object.keys(themeMetaSchema.shape).toSorted());
+    expect(themeSchema.required).toEqual(["name"]);
+  });
+
+  it("offers the same locale codes the app knows", () => {
+    const keyed = themeSchema.$defs.localizedText.oneOf[1];
+    if (keyed === undefined || !("propertyNames" in keyed)) {
+      throw new Error("the schema lost its keyed form");
+    }
+    expect([...keyed.propertyNames.enum].toSorted()).toEqual([...LOCALE_CODES].toSorted());
   });
 });
