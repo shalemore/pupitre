@@ -53,6 +53,7 @@ src/
     features/<x>/  one feature's components, state and helpers
     components/    what several features share; components/ui holds the primitives
     lib/           helpers and state shared across features
+    lib/markdown/  the Markdown model the editor and the export both read
     themes/<x>/    one folder per theme
   web/         the browser demo: an index.html and its `window.desktop`
 build/         icons and other electron-builder resources
@@ -83,15 +84,16 @@ the tab id the editor carries grows with it, so undo history never crosses into 
 ## One tree, no serializer
 
 The document is the Markdown text itself. `@codemirror/lang-markdown` and the Lezer configurations
-beside it — `front-matter.ts`, `math.ts`, `footnotes.ts`, `highlight.ts` — parse it into a single
-tree, and a file is saved exactly as it was typed, whatever the editor drew. There is no serializer,
-and adding one would make a second source of truth for the document.
+beside it in `lib/markdown/` — `front-matter.ts`, `math.ts`, `footnotes.ts`, `highlight.ts` — parse
+it into a single tree, and a file is saved exactly as it was typed, whatever the editor drew. There
+is no serializer, and adding one would make a second source of truth for the document.
 
 Rendering is decorations over that tree. An inline construct hides its markers unless a selection
 touches it, in `features/editor/live-preview.ts`; a block that replaces whole lines — a table, a
 formula, a diagram, HTML — does it from a state field in `rendered-blocks.ts`, because CodeMirror
 takes block decorations from nowhere else. A new syntax is a Lezer `MarkdownConfig` and a rule over
-it; the HTML export reads the same source.
+it; the HTML export reads the same source and shares the model in `lib/markdown/`, so it depends on
+the document rather than on the editor.
 
 ## Themes and settings
 

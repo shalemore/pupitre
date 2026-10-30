@@ -12,7 +12,7 @@ npm run bench
 
 Runs `bench/parse.bench.ts` with `vitest.bench.config.ts` in Node, for about a minute, and prints a
 Vitest table of every case: the mean, the slowest sample and how many samples were taken. The document is parsed with
-`markdownLanguage` from `src/renderer/features/editor/markdown-language.ts`, so the benchmark reads
+`markdownLanguage` from `src/renderer/lib/markdown/language.ts`, so the benchmark reads
 GFM, front matter, math, footnotes, highlight, emoji and sub/superscript exactly as the editor does.
 
 What it reads:
