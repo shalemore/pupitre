@@ -36,7 +36,7 @@ import {
   parseImageTag,
   resolveUrl,
 } from "./images";
-import { mathOf, MathWidget } from "./math";
+import { mathFence, mathOf, MathWidget } from "./math";
 import { scrollToDocument } from "./scroll";
 
 /**
@@ -390,19 +390,37 @@ function fenceInfo(
   };
 }
 
+/** Whether the block opens a rendering over its source when the selection touches it. */
+function showsRendering(state: EditorState, node: SyntaxNode): boolean {
+  if (node.name === "BlockMath") return true;
+  if (node.name !== "FencedCode") return false;
+  if (mathFence(state, node) !== undefined) return true;
+  const info = node.getChild("CodeInfo");
+  return info !== null && state.sliceDoc(info.from, info.to).trim().toLowerCase() === "mermaid";
+}
+
 function visitCodeBlock(builder: DecorationBuilder, node: SyntaxNode): void {
   const first = builder.lineAt(node.from).number;
   const last = builder.lineAt(node.to).number;
+  const active = touches(builder.ranges, ...lineRange(builder.state, node));
+  const rendering = active && showsRendering(builder.state, node);
   builder.eachLine(node.from, node.to, (line, number) => {
     line.classes.add("md-code-block");
-    if (number === first) line.classes.add("md-code-block-start");
+    if (number === first) {
+      line.classes.add("md-code-block-start");
+      // The line holding the rendering takes it over its own padding and line box (editor.css)
+      if (rendering) line.classes.add("md-code-render");
+    }
+    // Room above the first line of the source, where the button that copies the block stands
+    if (rendering && number === first + 1) line.classes.add("md-code-corner-room");
     if (number === last) line.classes.add("md-code-block-end");
   });
-  const active = touches(builder.ranges, ...lineRange(builder.state, node));
   const info = node.getChild("CodeInfo");
   if (node.name !== "BlockMath") {
     const widget = new CodeCornerWidget(fenceInfo(builder, node, active));
-    builder.decorations.push(Decoration.widget({ widget, side: -1 }).range(node.from));
+    // A rendering takes the top of the card, so the button moves to the source under it
+    const corner = rendering && first < last ? builder.lineAt(node.from).to + 1 : node.from;
+    builder.decorations.push(Decoration.widget({ widget, side: -1 }).range(corner));
   }
   if (node.name === "CodeBlock") return;
 
@@ -946,6 +964,31 @@ function growingLines(update: ViewUpdate): ReadonlySet<number> {
 }
 
 /**
+ * The source lines of a rendering the selection has just opened. They unfold under the rendering,
+ * which keeps the place it had while it was closed; the first line holds the rendering itself and
+ * stays still.
+ */
+function openingLines(update: ViewUpdate): ReadonlySet<number> {
+  const lines = new Set<number>();
+  if (!update.selectionSet) return lines;
+  const before = update.startState.selection.ranges;
+  const now = update.state.selection.ranges;
+  syntaxTree(update.state).iterate({
+    enter: (node) => {
+      if (node.name !== "BlockMath" && node.name !== "FencedCode") return;
+      if (!showsRendering(update.state, node.node)) return;
+      const [from, to] = lineRange(update.state, node.node);
+      if (!touches(now, from, to) || touches(before, from, to)) return;
+      const first = update.state.doc.lineAt(from).number + 1;
+      const last = update.state.doc.lineAt(to).number;
+      for (let number = first; number <= last; number++) {
+        lines.add(update.state.doc.line(number).from);
+      }
+    },
+  });
+  return lines;
+}
+
 /** The address of the link at `pos`. */
 function linkAt(state: EditorState, pos: number): string | undefined {
   for (
@@ -1005,7 +1048,10 @@ const livePreviewPlugin = ViewPlugin.fromClass(
         printingChanged(update.state, update.startState) ||
         syntaxTree(update.state) !== syntaxTree(update.startState)
       ) {
-        this.decorations = buildDecorations(update.view, growingLines(update));
+        this.decorations = buildDecorations(
+          update.view,
+          new Set([...growingLines(update), ...openingLines(update)]),
+        );
       }
     }
   },

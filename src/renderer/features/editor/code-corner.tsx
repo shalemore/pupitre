@@ -145,7 +145,7 @@ const CodeCorner: Component<{
       </Show>
       <button
         type="button"
-        class="grid size-6 place-items-center rounded-sm border-0 bg-transparent p-0 opacity-60 cursor-pointer transition hover:bg-accent hover:text-foreground hover:opacity-100 data-copied:opacity-100 data-copied:text-success [&_svg]:size-3.5 print:hidden"
+        class="grid size-(--md-code-corner-size) place-items-center rounded-sm border-0 bg-transparent p-0 opacity-60 cursor-pointer transition hover:bg-accent hover:text-foreground hover:opacity-100 data-copied:opacity-100 data-copied:text-success [&_svg]:size-3.5 print:hidden"
         title={t().common.copy}
         aria-label={t().common.copy}
         data-copied={copied() ? "" : undefined}
@@ -199,7 +199,7 @@ export class CodeCornerWidget extends WidgetType {
     // Above the code lines it overlaps while the fence line is shrunk; interface rather than
     // document, so it is sized in rem and does not shrink with the block's em
     container.className =
-      "absolute z-1 top-1.5 end-2 flex items-center gap-1.5 font-sans text-xs leading-none text-tertiary select-none";
+      "absolute z-1 top-(--md-code-corner-gap) end-2 flex items-center gap-1.5 font-sans text-xs leading-none text-tertiary select-none";
     disposers.set(
       container,
       render(() => <CodeCorner view={view} container={container} fence={this.fence} />, container),

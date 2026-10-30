@@ -35,6 +35,14 @@
   initial-value: 0px;
 }
 
+/* Computed where the code block sets it, so a rendering that reaches over the line's padding
+   reads the same length the line does */
+@property --md-block-indent {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
 @layer editor {
   .cm-scroller {
     overflow-x: auto;
@@ -52,6 +60,11 @@
     /* A fold marker is interface, and a printout shows the whole document anyway */
     .cm-gutters {
       display: none;
+    }
+    /* Nothing is edited on paper, so the closed fences take no room there */
+    .md-code-block.md-syntax-line {
+      font-size: 0.6em;
+      line-height: 1.2;
     }
   }
 
@@ -86,6 +99,14 @@
     /* A frame's shadow falls behind its box, which a picture with a clear background has not */
     --md-image-outline-shadow: drop-shadow(0 1px 2px var(--ui-shadow-near))
       drop-shadow(0 2px 8px var(--ui-shadow-far));
+    /*
+     * The button a code block keeps at its corner, and the line its source keeps under a rendering
+     * for it. Both are sizes of the interface, not of the document, so they are set in rem: the
+     * block's em is the smaller code size.
+     */
+    --md-code-corner-size: 1.5rem;
+    --md-code-corner-gap: 0.375rem;
+    --md-code-corner-room: calc(var(--md-code-corner-size) + 2 * var(--md-code-corner-gap));
     font-family: var(--font-document);
     color: var(--ui-text-primary);
     caret-color: var(--ui-brand);
@@ -807,7 +828,8 @@
     color: var(--ui-text-muted);
   }
 
-  /* Code blocks: one card drawn across their lines; the fences shrink to its padding when hidden */
+  /* Code blocks: one card drawn across their lines; a hidden fence keeps its line, so the card is
+     as tall with its source shown as without it */
   .md-code-block {
     --md-block-indent: 1em;
     /* A diagram inside the block stands on the card, not on the page */
@@ -820,9 +842,38 @@
     unicode-bidi: isolate;
   }
 
-  .md-code-block.md-syntax-line {
-    font-size: 0.6em;
-    line-height: 1.2;
+  /* The fence of a block whose source is hidden is out of sight but still stands on its line */
+  .md-code-block.md-syntax-line .md-mark {
+    visibility: hidden;
+  }
+
+  /*
+   * A rendering that opens together with its source keeps the top of the card, and the lightest
+   * edge the card has cuts it off from the source under it.
+   */
+  .md-code-render > :is(.md-mermaid, .md-math-block) {
+    border-block-end: var(--ui-border-width) solid var(--ui-alpha-1);
+    /* It reaches over the room the line keeps for its own text, so it fills the card exactly as it
+       does while the source is hidden */
+    margin-inline-start: calc(
+      -1 *
+        (
+          var(--md-list-depth, 0) * var(--md-list-indent) + var(--md-quote-depth, 0) *
+            var(--md-quote-indent) + var(--md-block-indent)
+        ) -
+        var(--ui-border-width)
+    );
+    margin-inline-end: calc(-1 * var(--md-block-indent) - var(--ui-border-width));
+  }
+
+  /* The buffers around the rendering would start the line with a box of their own above it */
+  .md-code-render > .cm-widgetBuffer {
+    display: none;
+  }
+
+  /* A line of room under the rendering, where the button that copies the block stands */
+  .md-code-corner-room {
+    padding-block-start: var(--md-code-corner-room);
   }
 
   .md-code-block-start {
