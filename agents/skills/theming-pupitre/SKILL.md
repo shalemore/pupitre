@@ -108,6 +108,11 @@ is applied as is, and users can pair it with another theme for the other scheme 
   it only on purpose.
 - `--font-sans` (interface) and `--font-mono` (code).
 
+A theme may add tokens of its own, under its folder name: `--hongxing-band` in `themes/hongxing`.
+`npm run check:css` accepts those, the tokens the app declares, `--alert-*`, `--md-*`,
+`--font-document` and `--font-display`; anything else fails, so a mistyped `--ui-brandd` cannot
+silently do nothing.
+
 ### The document — `md-*` inside `.md-document`
 
 - Headings `md-heading`, `md-h1`…`md-h6`; lines and paragraphs; quotes `md-quote`; lists; links
@@ -150,7 +155,7 @@ Kobalte's own attributes.
 
 ### Floating panels
 
-Dropdowns, menus and sheets share the `.floating-panel` utility and its animation: every panel
+Dropdowns, menus and sheets share the `.floating-panel` class and its animation: every panel
 fades in with a two-pixel rise, the same whichever edge it opens from, and leaves at once, so a
 menu swapped for the one beside it never shows next to its successor. A menu that takes another's
 place arrives without the rise, through `data-instant`, since replaying it under the pointer reads

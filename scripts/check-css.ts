@@ -128,6 +128,10 @@ const themeTokens = new Map(
   ]),
 );
 
+/** Tokens a theme provides rather than overrides, so the app has no default to declare. */
+const THEME_ONLY_TOKENS = /^--(?:alert-|md-)/;
+const PROVIDED_BY_THEME = new Set(["--font-document", "--font-display"]);
+
 for (const name of themeNames) {
   const file = join(THEMES, name, "index.css");
   const css = readFileSync(file, "utf8");
@@ -140,6 +144,18 @@ for (const name of themeNames) {
         message: `\`${token}\` is not defined by the app or by this theme`,
       });
     }
+  }
+  // A theme may add tokens of its own, but under its folder name: anything else is a typo of a
+  // token the app owns, or of one the theme owns, and would silently do nothing
+  for (const token of themeTokens.get(name) ?? []) {
+    if (known.has(token)) continue;
+    if (token.startsWith(`--${name}-`)) continue;
+    if (THEME_ONLY_TOKENS.test(token) || PROVIDED_BY_THEME.has(token)) continue;
+    problems.push({
+      file,
+      line: 1,
+      message: `\`${token}\` is neither an app token nor a --${name}- token of this theme`,
+    });
   }
 }
 
