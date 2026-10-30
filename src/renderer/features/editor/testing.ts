@@ -1,5 +1,10 @@
 import { ensureSyntaxTree } from "@codemirror/language";
-import { EditorSelection, EditorState, type TransactionSpec } from "@codemirror/state";
+import {
+  EditorSelection,
+  EditorState,
+  type Extension,
+  type TransactionSpec,
+} from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import type { SyntaxNode, Tree } from "@lezer/common";
 import { markdownLanguage } from "./markdown-language";
@@ -58,7 +63,7 @@ export function firstNode(state: EditorState, name: string): SyntaxNode {
 }
 
 /** A view of `text`, where `|` stands for the cursor or the two ends of the selection. */
-export function markdownView(text: string): EditorView {
+export function markdownView(text: string, extra: readonly Extension[] = []): EditorView {
   const [before = "", selected, after] = text.split("|");
   const doc = after === undefined ? before + (selected ?? "") : before + selected + after;
   const anchor = before.length;
@@ -67,7 +72,7 @@ export function markdownView(text: string): EditorView {
     state: EditorState.create({
       doc,
       selection: EditorSelection.single(anchor, head),
-      extensions: markdownLanguage,
+      extensions: [markdownLanguage, ...extra],
     }),
   });
   fullTree(view.state);

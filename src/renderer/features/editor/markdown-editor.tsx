@@ -80,6 +80,7 @@ import {
   type MarkdownStyle,
   runFormatAction,
 } from "./format-commands";
+import { closeInlineTags } from "./html";
 import {
   type PendingImages,
   documentBaseUrl,
@@ -472,6 +473,8 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
             ...historyKeymap,
           ]),
           languageCompartment.of(markdown ? markdownLanguage : []),
+          // After the language, so lang-html closes the block tags it can read from the tree
+          ...(markdown ? [closeInlineTags()] : []),
           folding({
             fold: t().editor.fold,
             unfold: t().editor.unfold,

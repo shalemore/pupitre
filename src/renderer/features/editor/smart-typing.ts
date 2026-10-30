@@ -43,7 +43,12 @@ const LITERAL_TEXT = new Set([
   "LinkTitle",
 ]);
 
-function isLiteralText(state: EditorState, pos: number): boolean {
+/**
+ * Whether the text at `pos` is read as written. Code, math, front matter, raw HTML and the
+ * destination or title of a link keep the characters a file needs, so smart typing leaves them
+ * alone and a tag typed there is not closed.
+ */
+export function isLiteralText(state: EditorState, pos: number): boolean {
   for (
     let node: SyntaxNode | null = syntaxTree(state).resolveInner(pos, 1);
     node;

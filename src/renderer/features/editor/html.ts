@@ -1,7 +1,9 @@
-import { type EditorView, WidgetType } from "@codemirror/view";
+import type { EditorState, Extension } from "@codemirror/state";
+import { EditorView, WidgetType } from "@codemirror/view";
 import DOMPurify from "dompurify";
 import { imageDom, parseImageTag, resolveAgainst, watchHtmlImages } from "./images";
 import { fadeOut } from "./leave";
+import { isLiteralText } from "./smart-typing";
 
 /**
  * Raw HTML in Markdown. Inline formatting elements such as `<kbd>Ctrl</kbd>` are shown with
@@ -58,6 +60,65 @@ export function htmlTag(source: string): { name: string; closing: boolean } | un
 
 export function isFormattingTag(name: string): boolean {
   return FORMATTING_TAGS.has(name);
+}
+
+/** Elements that never take a closing tag. */
+const VOID_TAGS = new Set(
+  "area base br col command embed frame hr img input keygen link meta param source track wbr".split(
+    " ",
+  ),
+);
+
+/**
+ * An opening tag whose `>` is about to be typed, with the text that follows its name. Quoted
+ * attribute values may hold `>`, so the tail is matched with its quotes closed.
+ */
+const OPENING_TAG = /<([a-z][\w-]*)((?:[^<>"']|"[^"]*"|'[^']*')*)$/i;
+
+interface OpeningTag {
+  name: string;
+  /** Where the `<` stands, to tell what the tag is written in. */
+  from: number;
+}
+
+function openingTagAt(state: EditorState, at: number): OpeningTag | undefined {
+  const line = state.doc.lineAt(at);
+  const text = state.sliceDoc(line.from, at);
+  const match = OPENING_TAG.exec(text);
+  const name = match?.[1]?.toLowerCase();
+  const rest = match?.[2] ?? "";
+  if (match === null || name === undefined) return undefined;
+  // A tag written right after `](` is the angle-bracket destination of a link or an image
+  if (text[match.index - 1] === "(" && text[match.index - 2] === "]") return undefined;
+  if (text.endsWith("/")) return undefined;
+  // A Markdown autolink is written like a tag: <scheme:…> or <user@host>
+  if (rest.startsWith(":") || (!/^\s/.test(rest) && rest.includes("@"))) return undefined;
+  return { name, from: line.from + match.index };
+}
+
+/**
+ * Closes an inline HTML tag when the `>` that ends it is typed. lang-html's own handler decides
+ * from the syntax tree, but Markdown only reads inline HTML once the tag is closed, so the tag
+ * being typed is not in that tree yet. Block tags are left to it: they are parsed while they are
+ * open, since they start a block.
+ */
+export function closeInlineTags(): Extension {
+  return EditorView.inputHandler.of((view, from, to, text) => {
+    if (text !== ">" || from !== to || view.compositionStarted || view.state.readOnly) return false;
+    const tag = openingTagAt(view.state, from);
+    if (tag === undefined || VOID_TAGS.has(tag.name)) return false;
+    // The tag's own `<` tells whether it is written in code, math or front matter
+    if (isLiteralText(view.state, tag.from + 1)) return false;
+    const closing = `</${tag.name}>`;
+    if (view.state.sliceDoc(from, from + closing.length).toLowerCase() === closing) return false;
+    view.dispatch({
+      changes: { from, insert: `>${closing}` },
+      selection: { anchor: from + 1 },
+      userEvent: "input.type",
+      scrollIntoView: true,
+    });
+    return true;
+  });
 }
 
 /** The heading levels a document styles, from the theme's h1 to its h6. */

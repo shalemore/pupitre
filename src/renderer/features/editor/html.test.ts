@@ -1,6 +1,63 @@
+import { EditorView } from "@codemirror/view";
 import { describe, expect, it } from "vitest";
-import { HtmlBlockWidget, isRenderableHtml } from "./html";
-import { markdownView } from "./testing";
+import { closeInlineTags, HtmlBlockWidget, isRenderableHtml } from "./html";
+import { markdownView, marked } from "./testing";
+
+/** Types `text` the way CodeMirror does: the first input handler that takes it decides. */
+function type(view: EditorView, text: string): void {
+  const { from, to } = view.state.selection.main;
+  const insert = () =>
+    view.state.update({
+      changes: { from, to, insert: text },
+      selection: { anchor: from + text.length },
+    });
+  const handled = view.state
+    .facet(EditorView.inputHandler)
+    .some((handler) => handler(view, from, to, text, insert));
+  if (!handled) view.dispatch(insert());
+}
+
+describe("closing a tag while it is typed", () => {
+  function closed(before: string): string {
+    const view = markdownView(before, [closeInlineTags()]);
+    type(view, ">");
+    const result = marked(view);
+    view.destroy();
+    return result;
+  }
+
+  it("closes inline, unknown and block tags", () => {
+    expect(closed("<sub|")).toBe("<sub>|</sub>");
+    expect(closed("<sup|")).toBe("<sup>|</sup>");
+    expect(closed("<span|")).toBe("<span>|</span>");
+    expect(closed("<div|")).toBe("<div>|</div>");
+  });
+
+  it("leaves tags that take no closing tag alone", () => {
+    expect(closed("<br|")).toBe("<br>|");
+    expect(closed('<img src="x"|')).toBe('<img src="x">|');
+    expect(closed("<hr/|")).toBe("<hr/>|");
+  });
+
+  it("leaves what Markdown writes with angle brackets alone", () => {
+    expect(closed("<https://example.com|")).toBe("<https://example.com>|");
+    expect(closed("<user@example.com|")).toBe("<user@example.com>|");
+    expect(closed("[x](<sub|)")).toBe("[x](<sub>|)");
+    expect(closed("`<sub|`")).toBe("`<sub>|`");
+    expect(closed("$a<b$|")).toBe("$a<b$>|");
+  });
+
+  it("does not close a tag whose closing tag already follows", () => {
+    expect(closed("<sub|</sub>")).toBe("<sub>|</sub>");
+  });
+
+  it("waits for a quoted attribute to close", () => {
+    const view = markdownView('<sub data-x="|"', [closeInlineTags()]);
+    type(view, ">");
+    expect(marked(view)).toBe('<sub data-x=">|"');
+    view.destroy();
+  });
+});
 
 describe("the HTML blocks the editor shows rendered", () => {
   it("renders an element whose content stays visible", () => {
