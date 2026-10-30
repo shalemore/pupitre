@@ -77,7 +77,6 @@
     "@vitest/coverage-v8": "^5.0.5",
     "bezier-easing": "^3.2.0",
     "chokidar": "^6.0.0",
-    "class-variance-authority": "^0.7.1",
     "cn": "^0.5.0",
     "commonmark-spec": "^0.31.2",
     "direction": "^2.0.1",

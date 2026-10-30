@@ -376,11 +376,11 @@
   from {
     opacity: 0;
     /*
-     * The panel rises from two pixels below where it is laid out. Its own translate utilities,
-     * such as the ones that centre a sheet, are part of the value; replacing them with a bare
+     * The panel rises from two pixels below where it is laid out. A panel that centres itself sets
+     * --panel-translate-x and -y, which are part of the value here: replacing them with a bare
      * `0 2px` would slide a centred sheet in from its uncentred corner.
      */
-    translate: var(--tw-translate-x) calc(var(--tw-translate-y) + 2px);
+    translate: var(--panel-translate-x, 0px) calc(var(--panel-translate-y, 0px) + 2px);
   }
 }
 

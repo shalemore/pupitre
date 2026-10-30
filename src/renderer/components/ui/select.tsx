@@ -1,7 +1,7 @@
 import { Select as KobalteSelect } from "@kobalte/core/select";
-import { cn } from "cn";
 import { Check, ChevronDown } from "lucide-solid";
 import { type JSX, Show } from "solid-js";
+import { css, cx } from "@/styled-system/css";
 import { Badge } from "./badge";
 import { ScrollView, type ScrollViewProps } from "./scroll-view";
 
@@ -29,6 +29,88 @@ export interface SelectProps<T extends string> {
 // Kobalte treats a selected key of "" as "nothing selected" and shows the placeholder instead of the label, so an option with an empty value needs a stand-in key
 const EMPTY_VALUE_KEY = "__empty__";
 
+const item = css({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: "4",
+  borderRadius: "lg",
+  paddingInline: "2.5",
+  paddingBlock: "1.5",
+  textStyle: "xs",
+  outlineStyle: "none",
+  cursor: "pointer",
+  _highlighted: { backgroundColor: "accent" },
+});
+const itemLabel = css({
+  minWidth: 0,
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+  fontWeight: "medium",
+  color: "foreground",
+  ".group[data-selected] &": { color: "brand" },
+});
+const itemHint = css({
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+  textStyle: "2xs",
+  color: "muted.foreground",
+});
+const itemText = css({ display: "flex", minWidth: 0, flexDirection: "column" });
+const itemLine = css({ display: "flex", minWidth: 0, alignItems: "center", gap: "1.5" });
+const check = css({ width: "3", height: "3", flexShrink: 0, color: "brand" });
+const chevronIcon = css({ width: "3.5", height: "3.5" });
+const valueLabel = css({ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" });
+
+const trigger = css({
+  display: "flex",
+  height: "8",
+  minWidth: "36",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: "2",
+  borderRadius: "md",
+  borderWidth: "1px",
+  borderStyle: "solid",
+  borderColor: "input",
+  backgroundColor: "field",
+  paddingInline: "2.5",
+  textStyle: "xs",
+  color: "foreground",
+  outlineStyle: "none",
+  cursor: "pointer",
+  layerStyle: "interactive",
+  _hover: { backgroundColor: "surface.0" },
+  _focusVisible: { boxShadow: "focus" },
+  _expanded: { borderColor: "brand" },
+});
+const value = css({
+  display: "flex",
+  minWidth: 0,
+  flex: "1",
+  alignItems: "center",
+  gap: "1.5",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+});
+const chevron = css({
+  color: "muted.foreground",
+  transitionProperty: "transform",
+  transitionDuration: "base",
+  transitionTimingFunction: "outExpo",
+  _expanded: { transform: "rotate(180deg)" },
+});
+const content = css({
+  zIndex: "50",
+  minWidth: "var(--kb-popper-anchor-width)",
+  transformOrigin: "var(--kb-popper-content-transform-origin)",
+  padding: "1",
+});
+const listbox = css({ maxHeight: "72", outlineStyle: "none" });
+
 /** A dropdown on top of Kobalte, which handles keyboard navigation, typeahead and ARIA. */
 export function Select<T extends string>(props: SelectProps<T>) {
   const selected = () => props.options.find((option) => option.value === props.value);
@@ -45,21 +127,14 @@ export function Select<T extends string>(props: SelectProps<T>) {
       gutter={6}
       placement="bottom-end"
       itemComponent={(itemProps) => (
-        <KobalteSelect.Item
-          data-slot="select-item"
-          item={itemProps.item}
-          class="group flex items-center justify-between gap-4 rounded-lg px-2.5 py-1.5 text-xs outline-none cursor-pointer data-highlighted:bg-accent"
-        >
-          <span class="flex min-w-0 flex-col">
-            <span class="flex min-w-0 items-center gap-1.5">
-              <KobalteSelect.ItemLabel
-                class="min-w-0 truncate font-medium text-foreground group-data-selected:text-brand"
-                style={itemProps.item.rawValue.style}
-              >
+        <KobalteSelect.Item data-slot="select-item" item={itemProps.item} class={cx("group", item)}>
+          <span class={itemText}>
+            <span class={itemLine}>
+              <KobalteSelect.ItemLabel class={itemLabel} style={itemProps.item.rawValue.style}>
                 {itemProps.item.rawValue.label}
               </KobalteSelect.ItemLabel>
               <Show when={itemProps.item.rawValue.hint}>
-                {(hint) => <span class="truncate text-2xs text-muted-foreground">/ {hint()}</span>}
+                {(hint) => <span class={itemHint}>/ {hint()}</span>}
               </Show>
               <Show when={itemProps.item.rawValue.badge}>
                 {(badge) => (
@@ -71,14 +146,14 @@ export function Select<T extends string>(props: SelectProps<T>) {
             </span>
             <Show when={itemProps.item.rawValue.description}>
               {(description) => (
-                <KobalteSelect.ItemDescription class="truncate text-2xs text-muted-foreground">
+                <KobalteSelect.ItemDescription class={itemHint}>
                   {description()}
                 </KobalteSelect.ItemDescription>
               )}
             </Show>
           </span>
           <KobalteSelect.ItemIndicator>
-            <Check class="size-3 shrink-0 text-brand" />
+            <Check class={check} />
           </KobalteSelect.ItemIndicator>
         </KobalteSelect.Item>
       )}
@@ -86,21 +161,16 @@ export function Select<T extends string>(props: SelectProps<T>) {
       <KobalteSelect.Trigger
         data-slot="select-trigger"
         aria-label={props["aria-label"]}
-        class={cn(
-          "flex h-8 min-w-36 items-center justify-between gap-2 rounded-md border border-input bg-field px-2.5 text-xs text-foreground outline-none cursor-pointer transition-colors hover:bg-surface-0 focus-visible:shadow-focus data-expanded:border-brand",
-          props.class,
-        )}
+        class={cx(trigger, props.class)}
       >
-        <KobalteSelect.Value<
-          SelectOption<T>
-        > class="flex min-w-0 flex-1 items-center gap-1.5 truncate">
+        <KobalteSelect.Value<SelectOption<T>> class={value}>
           {(state) => (
             <>
-              <span class="truncate" style={state.selectedOption().style}>
+              <span class={valueLabel} style={state.selectedOption().style}>
                 {state.selectedOption().label}
               </span>
               <Show when={state.selectedOption().hint}>
-                {(hint) => <span class="truncate text-2xs text-muted-foreground">/ {hint()}</span>}
+                {(hint) => <span class={itemHint}>/ {hint()}</span>}
               </Show>
               <Show when={state.selectedOption().badge}>
                 {(badge) => (
@@ -112,18 +182,15 @@ export function Select<T extends string>(props: SelectProps<T>) {
             </>
           )}
         </KobalteSelect.Value>
-        <KobalteSelect.Icon class="text-muted-foreground transition-transform duration-base data-expanded:rotate-180">
-          <ChevronDown class="size-3.5" />
+        <KobalteSelect.Icon class={chevron}>
+          <ChevronDown class={chevronIcon} />
         </KobalteSelect.Icon>
       </KobalteSelect.Trigger>
       <KobalteSelect.Portal>
-        <KobalteSelect.Content
-          data-slot="select-content"
-          class="floating-panel z-50 min-w-(--kb-popper-anchor-width) origin-(--kb-popper-content-transform-origin) p-1"
-        >
+        <KobalteSelect.Content data-slot="select-content" class={cx("floating-panel", content)}>
           <KobalteSelect.Listbox
             as={(listboxProps: ScrollViewProps) => <ScrollView as="ul" {...listboxProps} />}
-            class="max-h-72 outline-none"
+            class={listbox}
           />
         </KobalteSelect.Content>
       </KobalteSelect.Portal>

@@ -1,6 +1,6 @@
 import { Dialog } from "@kobalte/core/dialog";
-import { cn } from "cn";
 import type { Component, JSX } from "solid-js";
+import { css, cx } from "@/styled-system/css";
 
 export interface SheetProps {
   /** Names the dialog, for anyone who cannot see the window it covers. */
@@ -12,6 +12,44 @@ export interface SheetProps {
   onClose: () => void;
   children: JSX.Element;
 }
+
+const backdrop = css({
+  position: "fixed",
+  inset: "0",
+  zIndex: "50",
+  backgroundColor: "surface.0/60",
+  backdropFilter: "blur(4px)",
+  animationName: "fadeIn",
+  animationDuration: "base",
+  animationTimingFunction: "enter",
+});
+const panel = css({
+  position: "fixed",
+  left: "50%",
+  zIndex: "50",
+  display: "flex",
+  width: "calc(100% - 2rem)",
+  flexDirection: "column",
+  gap: "2",
+  padding: "2",
+  textStyle: "xs",
+});
+const atTop = css({
+  "--panel-translate-x": "-50%",
+  "--panel-translate-y": "0px",
+  translate: "-50% 0",
+  top: "16",
+  maxHeight: "calc(100vh - 5rem)",
+  maxWidth: "xl",
+});
+const centered = css({
+  "--panel-translate-x": "-50%",
+  "--panel-translate-y": "-50%",
+  translate: "-50% -50%",
+  top: "50%",
+  maxHeight: "calc(100vh - 2rem)",
+  maxWidth: "lg",
+});
 
 /**
  * A panel over the window, holding a query and the rows it picks. Kobalte traps the focus, gives it
@@ -26,21 +64,13 @@ export const Sheet: Component<SheetProps> = (props) => (
     }}
   >
     <Dialog.Portal>
-      <Dialog.Overlay
-        data-slot="sheet-backdrop"
-        class="fixed inset-0 z-50 bg-surface-0/60 backdrop-blur-sm animate-in fade-in-0 duration-base"
-      />
+      <Dialog.Overlay data-slot="sheet-backdrop" class={backdrop} />
       <Dialog.Content
         data-slot="sheet"
-        class={cn(
-          "floating-panel fixed left-1/2 z-50 flex w-[calc(100%-2rem)] -translate-x-1/2 flex-col gap-2 p-2 text-xs",
-          props.placement === "top"
-            ? "top-16 max-h-[calc(100vh-5rem)] max-w-xl"
-            : "top-1/2 max-h-[calc(100vh-2rem)] max-w-lg -translate-y-1/2",
-        )}
+        class={cx("floating-panel", panel, props.placement === "top" ? atTop : centered)}
         onKeyDown={props.onKeyDown}
       >
-        <Dialog.Title class="sr-only">{props.title}</Dialog.Title>
+        <Dialog.Title class={css({ srOnly: true })}>{props.title}</Dialog.Title>
         {props.children}
       </Dialog.Content>
     </Dialog.Portal>

@@ -144,7 +144,11 @@ export function Button(props: ButtonProps) {
     <button
       type={local.type ?? "button"}
       data-slot="button"
-      class={cx(buttonVariants({ variant: local.variant, size: local.size }), local.class)}
+      class={cx(
+        "pressable",
+        buttonVariants({ variant: local.variant, size: local.size }),
+        local.class,
+      )}
       {...rest}
     />
   );

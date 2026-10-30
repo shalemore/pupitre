@@ -131,6 +131,22 @@ export default defineConfig({
         base: { value: { fontSize: "base", lineHeight: "1.5rem" } },
         xl: { value: { fontSize: "xl", lineHeight: "1.75rem" } },
       },
+      // The transition every control shares; a change of color runs at the interface's pace
+      layerStyles: {
+        interactive: {
+          value: {
+            transition: "colors",
+            transitionDuration: "ui",
+            transitionTimingFunction: "outExpo",
+          },
+        },
+      },
+      keyframes: {
+        fadeIn: {
+          from: { opacity: 0 },
+          to: { opacity: 1 },
+        },
+      },
     },
   },
 });

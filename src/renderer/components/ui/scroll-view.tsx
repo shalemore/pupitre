@@ -1,5 +1,4 @@
 import { debounce } from "@solid-primitives/scheduled";
-import { cn } from "cn";
 import {
   createSignal,
   type JSX,
@@ -11,6 +10,7 @@ import {
 } from "solid-js";
 import { Dynamic } from "solid-js/web";
 import { settings } from "@/lib/settings";
+import { css, cx } from "@/styled-system/css";
 
 const IDLE_MS = 1200;
 /** Space kept free at both ends of the track, so the thumb clears rounded corners. */
@@ -64,6 +64,35 @@ function hiddenEdges(element: HTMLElement): string {
     .join(" ");
 }
 
+const view = css({
+  overflowY: "auto",
+  // The native scrollbar cannot fade, so it gives way to the thumb drawn below
+  scrollbarWidth: "none",
+  "&::-webkit-scrollbar": { display: "none" },
+  _print: { maskImage: "none" },
+});
+const sticky = css({
+  position: "sticky",
+  top: "0",
+  zIndex: "10",
+  height: "0",
+  _print: { display: "none" },
+});
+const track = css({ position: "absolute", insetInlineEnd: "0", top: "0", width: "3" });
+const thumb = css({
+  position: "absolute",
+  insetInlineEnd: "0.5",
+  width: "var(--ui-scrollbar-thickness)",
+  borderRadius: "full",
+  backgroundColor: "border",
+  transitionProperty: "opacity",
+  transitionDuration: "sheet",
+  transitionTimingFunction: "outExpo",
+  _hover: { backgroundColor: "border.strong" },
+});
+const thumbShown = css({ opacity: 1 });
+const thumbHidden = css({ opacity: 0 });
+
 /**
  * A vertically scrolling container with its own overlay scrollbar. Every scrollable area uses it,
  * so the scrollbar setting (auto-hide, always show, always hide) applies everywhere. The native
@@ -73,13 +102,13 @@ function hiddenEdges(element: HTMLElement): string {
  */
 export function ScrollView(props: ScrollViewProps) {
   const [local, rest] = splitProps(props, ["as", "class", "children", "ref"]);
-  const [thumb, setThumb] = createSignal(NO_THUMB);
+  const [thumbGeometry, setThumb] = createSignal(NO_THUMB);
   const [overflow, setOverflow] = createSignal("");
   const [scrolling, setScrolling] = createSignal(false);
   const [hovering, setHovering] = createSignal(false);
   const [dragging, setDragging] = createSignal(false);
   let element: HTMLDivElement | undefined;
-  let track: HTMLDivElement | undefined;
+  let trackElement: HTMLDivElement | undefined;
   let dragStart = { pointerY: 0, scrollTop: 0 };
 
   const update = () => {
@@ -101,7 +130,7 @@ export function ScrollView(props: ScrollViewProps) {
     if (!element) return 0;
     return (
       (element.scrollHeight - element.clientHeight) /
-      (thumb().port - 2 * TRACK_INSET - thumb().height)
+      (thumbGeometry().port - 2 * TRACK_INSET - thumbGeometry().height)
     );
   };
 
@@ -135,11 +164,7 @@ export function ScrollView(props: ScrollViewProps) {
       data-slot="scroll-view"
       data-overflow={overflow() || undefined}
       data-scroll-view
-      class={cn(
-        "overflow-y-auto scrollbar-none print:mask-none",
-        settings().scrollFade && "scroll-fade",
-        local.class,
-      )}
+      class={cx(view, settings().scrollFade && "scroll-fade", local.class)}
       onScroll={() => {
         update();
         setScrolling(true);
@@ -150,31 +175,31 @@ export function ScrollView(props: ScrollViewProps) {
       {/* Zero height and sticky: it follows the scroll port without taking part in the layout. It must stay the first child, because a sticky element placed after the content never reaches the top of the port */}
       <div
         aria-hidden="true"
-        class="sticky top-0 z-10 h-0 print:hidden"
-        style={{ "margin-inline-end": `-${thumb().padding}px` }}
+        class={sticky}
+        style={{ "margin-inline-end": `-${thumbGeometry().padding}px` }}
       >
-        <Show when={settings().scrollbar !== "never" && thumb().height > 0}>
+        <Show when={settings().scrollbar !== "never" && thumbGeometry().height > 0}>
           <div
-            ref={(node) => (track = node)}
-            class="absolute inset-e-0 top-0 w-3"
+            ref={(node) => (trackElement = node)}
+            class={track}
             // The sticky child sits after the top padding; reach back over it so the track spans
             // the port instead of adding the padding to the scroll range
-            style={{ top: `${-thumb().paddingBlockStart}px`, height: `${thumb().port}px` }}
+            style={{
+              top: `${-thumbGeometry().paddingBlockStart}px`,
+              height: `${thumbGeometry().port}px`,
+            }}
             onPointerEnter={() => setHovering(true)}
             onPointerLeave={() => setHovering(false)}
             onPointerDown={(event) => {
-              if (!element || !track || event.target !== track) return;
-              const offset = event.clientY - track.getBoundingClientRect().top - TRACK_INSET;
-              element.scrollTop = (offset - thumb().height / 2) * scrollRatio();
+              if (!element || !trackElement || event.target !== trackElement) return;
+              const offset = event.clientY - trackElement.getBoundingClientRect().top - TRACK_INSET;
+              element.scrollTop = (offset - thumbGeometry().height / 2) * scrollRatio();
             }}
           >
             <div
               data-slot="scroll-thumb"
-              class={cn(
-                "absolute inset-e-0.5 w-(--ui-scrollbar-thickness) rounded-full bg-border transition-opacity duration-sheet hover:bg-border-strong",
-                visible() ? "opacity-100" : "opacity-0",
-              )}
-              style={{ top: `${thumb().top}px`, height: `${thumb().height}px` }}
+              class={cx(thumb, visible() ? thumbShown : thumbHidden)}
+              style={{ top: `${thumbGeometry().top}px`, height: `${thumbGeometry().height}px` }}
               onPointerDown={(event) => {
                 if (!element) return;
                 event.currentTarget.setPointerCapture(event.pointerId);

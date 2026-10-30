@@ -1,4 +1,5 @@
 import { Slider as KobalteSlider } from "@kobalte/core/slider";
+import { css } from "@/styled-system/css";
 
 export interface SliderProps {
   value: number;
@@ -8,6 +9,41 @@ export interface SliderProps {
   onChange: (value: number) => void;
   "aria-label"?: string;
 }
+
+const root = css({
+  position: "relative",
+  display: "flex",
+  width: "36",
+  touchAction: "none",
+  userSelect: "none",
+  alignItems: "center",
+});
+const track = css({
+  position: "relative",
+  height: "1",
+  width: "full",
+  borderRadius: "full",
+  backgroundColor: "input",
+});
+const fill = css({
+  position: "absolute",
+  height: "full",
+  borderRadius: "full",
+  backgroundColor: "brand",
+});
+const thumb = css({
+  top: "-1.5",
+  display: "block",
+  width: "4",
+  height: "4",
+  borderRadius: "full",
+  backgroundColor: "knob",
+  boxShadow: "segmentedThumb",
+  outlineStyle: "none",
+  cursor: "grab",
+  _active: { cursor: "grabbing" },
+  _focusVisible: { boxShadow: "focus" },
+});
 
 export function Slider(props: SliderProps) {
   return (
@@ -21,17 +57,11 @@ export function Slider(props: SliderProps) {
         if (value !== undefined) props.onChange(value);
       }}
       aria-label={props["aria-label"]}
-      class="relative flex w-36 touch-none select-none items-center"
+      class={root}
     >
-      <KobalteSlider.Track
-        data-slot="slider-track"
-        class="relative h-1 w-full rounded-full bg-input"
-      >
-        <KobalteSlider.Fill data-slot="slider-fill" class="absolute h-full rounded-full bg-brand" />
-        <KobalteSlider.Thumb
-          data-slot="slider-thumb"
-          class="-top-1.5 block size-4 rounded-full bg-knob shadow-segmented-thumb outline-none cursor-grab active:cursor-grabbing focus-visible:shadow-focus"
-        >
+      <KobalteSlider.Track data-slot="slider-track" class={track}>
+        <KobalteSlider.Fill data-slot="slider-fill" class={fill} />
+        <KobalteSlider.Thumb data-slot="slider-thumb" class={thumb}>
           <KobalteSlider.Input />
         </KobalteSlider.Thumb>
       </KobalteSlider.Track>

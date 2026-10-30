@@ -1,8 +1,8 @@
 import { Combobox as KobalteCombobox } from "@kobalte/core/combobox";
 import { makeEventListener } from "@solid-primitives/event-listener";
-import { cn } from "cn";
 import { Check, ChevronDown } from "lucide-solid";
 import { createSignal, Show } from "solid-js";
+import { css, cx } from "@/styled-system/css";
 import { ScrollView, type ScrollViewProps } from "./scroll-view";
 import type { SelectOption } from "./select";
 
@@ -25,6 +25,85 @@ function matches(option: SelectOption, input: string): boolean {
   );
 }
 
+const item = css({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: "3",
+  borderRadius: "lg",
+  paddingInline: "2.5",
+  paddingBlock: "1.5",
+  textStyle: "xs",
+  outlineStyle: "none",
+  cursor: "pointer",
+  _highlighted: { backgroundColor: "accent" },
+});
+const itemLine = css({ display: "flex", alignItems: "baseline", gap: "2", minWidth: 0 });
+const itemLabel = css({
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+  color: "foreground",
+  ".group[data-selected] &": { color: "brand" },
+});
+const itemDescription = css({
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+  textStyle: "2xs",
+  color: "muted.foreground",
+});
+const check = css({ width: "3", height: "3", flexShrink: 0, color: "brand" });
+const chevronIcon = css({ width: "3.5", height: "3.5" });
+
+const control = css({
+  display: "flex",
+  height: "8",
+  width: "56",
+  alignItems: "center",
+  borderRadius: "md",
+  borderWidth: "1px",
+  borderStyle: "solid",
+  borderColor: "input",
+  backgroundColor: "field",
+  textStyle: "xs",
+  layerStyle: "interactive",
+  _focusWithin: { boxShadow: "focus" },
+  _expanded: { borderColor: "brand" },
+});
+const input = css({
+  height: "full",
+  minWidth: 0,
+  flex: "1",
+  backgroundColor: "transparent",
+  paddingInline: "2.5",
+  color: "foreground",
+  outlineStyle: "none",
+  _placeholder: { color: "muted.foreground" },
+});
+const trigger = css({
+  display: "flex",
+  height: "full",
+  alignItems: "center",
+  paddingInline: "2",
+  color: "muted.foreground",
+  cursor: "pointer",
+});
+const icon = css({
+  transitionProperty: "transform",
+  transitionDuration: "base",
+  transitionTimingFunction: "outExpo",
+  _expanded: { transform: "rotate(180deg)" },
+});
+const content = css({
+  zIndex: "50",
+  width: "var(--kb-popper-anchor-width)",
+  minWidth: "64",
+  transformOrigin: "var(--kb-popper-content-transform-origin)",
+  padding: "1",
+});
+const listbox = css({ outlineStyle: "none" });
+
 /**
  * A searchable dropdown for long lists such as fonts; descriptions (such as localized font names)
  * are searchable too. Opening it lists everything and brings the current value into view; the
@@ -38,10 +117,10 @@ export function Combobox(props: ComboboxProps) {
   // title bar, a panel) closes the list instead of leaving the input focused and the list open
   const [open, setOpen] = createSignal(false);
   let dismissedOutside = false;
-  let control: HTMLElement | undefined;
-  let content: HTMLElement | undefined;
-  let input: HTMLInputElement | undefined;
-  let listbox: HTMLElement | undefined;
+  let controlElement: HTMLElement | undefined;
+  let contentElement: HTMLElement | undefined;
+  let inputElement: HTMLInputElement | undefined;
+  let listboxElement: HTMLElement | undefined;
 
   const changeOpen = (next: boolean) => {
     setOpen(next);
@@ -50,11 +129,11 @@ export function Combobox(props: ComboboxProps) {
       // rather than with scrollIntoView, which would scroll the panel's ancestors — the settings
       // window among them — to show a portaled option
       requestAnimationFrame(() => {
-        const item = listbox?.querySelector<HTMLElement>("[data-selected]");
-        if (!listbox || !item) return;
-        const box = listbox.getBoundingClientRect();
-        const rect = item.getBoundingClientRect();
-        listbox.scrollTop += rect.top - box.top - (box.height - rect.height) / 2;
+        const selectedItem = listboxElement?.querySelector<HTMLElement>("[data-selected]");
+        if (!listboxElement || !selectedItem) return;
+        const box = listboxElement.getBoundingClientRect();
+        const rect = selectedItem.getBoundingClientRect();
+        listboxElement.scrollTop += rect.top - box.top - (box.height - rect.height) / 2;
       });
     } else {
       setQuery("");
@@ -66,7 +145,7 @@ export function Combobox(props: ComboboxProps) {
   const dismissOutside = () => {
     dismissedOutside = true;
     changeOpen(false);
-    input?.blur();
+    inputElement?.blur();
   };
 
   // Capture, so a pointer down on a part of the window that cannot take the focus is seen as well
@@ -77,7 +156,7 @@ export function Combobox(props: ComboboxProps) {
       if (!open()) return;
       const target = event.target;
       if (!(target instanceof Node)) return;
-      if (control?.contains(target) || content?.contains(target)) return;
+      if (controlElement?.contains(target) || contentElement?.contains(target)) return;
       dismissOutside();
     },
     { capture: true },
@@ -108,43 +187,37 @@ export function Combobox(props: ComboboxProps) {
         <KobalteCombobox.Item
           data-slot="combobox-item"
           item={itemProps.item}
-          class="group flex items-center justify-between gap-3 rounded-lg px-2.5 py-1.5 text-xs outline-none cursor-pointer data-highlighted:bg-accent"
+          class={cx("group", item)}
         >
-          <span class="flex items-baseline gap-2 min-w-0">
-            <KobalteCombobox.ItemLabel
-              class="truncate text-foreground group-data-selected:text-brand"
-              style={itemProps.item.rawValue.style}
-            >
+          <span class={itemLine}>
+            <KobalteCombobox.ItemLabel class={itemLabel} style={itemProps.item.rawValue.style}>
               {itemProps.item.rawValue.label}
             </KobalteCombobox.ItemLabel>
             <Show when={itemProps.item.rawValue.description}>
               {(description) => (
-                <KobalteCombobox.ItemDescription class="truncate text-2xs text-muted-foreground">
+                <KobalteCombobox.ItemDescription class={itemDescription}>
                   {description()}
                 </KobalteCombobox.ItemDescription>
               )}
             </Show>
           </span>
           <KobalteCombobox.ItemIndicator>
-            <Check class="size-3 shrink-0 text-brand" />
+            <Check class={check} />
           </KobalteCombobox.ItemIndicator>
         </KobalteCombobox.Item>
       )}
     >
       <KobalteCombobox.Control
-        ref={(element) => (control = element)}
+        ref={(element) => (controlElement = element)}
         data-slot="combobox-control"
         aria-label={props["aria-label"]}
         onPointerDown={() => changeOpen(true)}
-        class={cn(
-          "flex h-8 w-56 items-center rounded-md border border-input bg-field text-xs transition-colors focus-within:shadow-focus data-expanded:border-brand",
-          props.class,
-        )}
+        class={cx(control, props.class)}
       >
         <KobalteCombobox.Input
-          ref={(element) => (input = element)}
+          ref={(element) => (inputElement = element)}
           data-slot="combobox-input"
-          class="h-full min-w-0 flex-1 bg-transparent px-2.5 text-foreground outline-none placeholder:text-muted-foreground"
+          class={input}
           // Select everything on focus, so typing starts a new search instead of appending to the current font name
           onFocus={(e) => e.currentTarget.select()}
           onInput={(e) => {
@@ -155,37 +228,37 @@ export function Combobox(props: ComboboxProps) {
         />
         <KobalteCombobox.Trigger
           data-slot="combobox-trigger"
-          class="flex h-full items-center px-2 text-muted-foreground cursor-pointer"
+          class={trigger}
           onPointerDown={(event) => {
             event.preventDefault();
             event.stopPropagation();
             if (open()) changeOpen(false);
             else {
               changeOpen(true);
-              input?.focus();
+              inputElement?.focus();
             }
           }}
         >
-          <KobalteCombobox.Icon class="transition-transform duration-base data-expanded:rotate-180">
-            <ChevronDown class="size-3.5" />
+          <KobalteCombobox.Icon class={icon}>
+            <ChevronDown class={chevronIcon} />
           </KobalteCombobox.Icon>
         </KobalteCombobox.Trigger>
       </KobalteCombobox.Control>
       <KobalteCombobox.Portal>
         <KobalteCombobox.Content
-          ref={(element) => (content = element)}
+          ref={(element) => (contentElement = element)}
           data-slot="combobox-content"
           onCloseAutoFocus={(event) => {
             if (!dismissedOutside) return;
             event.preventDefault();
             dismissedOutside = false;
           }}
-          class="floating-panel z-50 w-(--kb-popper-anchor-width) min-w-64 origin-(--kb-popper-content-transform-origin) p-1"
+          class={cx("floating-panel", content)}
         >
           <KobalteCombobox.Listbox
-            ref={(element) => (listbox = element)}
+            ref={(element) => (listboxElement = element)}
             as={(listboxProps: ScrollViewProps) => <ScrollView as="ul" {...listboxProps} />}
-            class="outline-none"
+            class={listbox}
             style={{
               "max-height":
                 "min(20rem, calc(var(--kb-popper-content-available-height, 40rem) - 0.5rem))",

@@ -1,34 +1,65 @@
-import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "cn";
 import { type JSX, splitProps } from "solid-js";
+import { cva, cx, type RecipeVariantProps } from "@/styled-system/css";
 
-const badgeVariants = cva(
-  "inline-flex w-fit max-w-full shrink-0 items-center justify-center gap-1 overflow-hidden rounded-sm border border-transparent font-medium whitespace-nowrap select-none transition-colors [&>svg]:pointer-events-none [&>svg]:shrink-0",
-  {
-    variants: {
-      variant: {
-        default: "bg-primary text-primary-foreground",
-        secondary: "bg-secondary text-secondary-foreground",
-        muted: "bg-muted text-muted-foreground font-normal",
-        outline: "border-border text-foreground",
-        brand: "bg-brand text-brand-foreground",
-        success: "bg-success/15 text-success",
-        destructive: "bg-destructive/15 text-destructive",
-      },
-      size: {
-        sm: "h-4.5 px-1.5 text-2xs [&>svg]:size-2.5",
-        default: "h-5 px-1.5 text-xs [&>svg]:size-3",
-        lg: "h-6 px-2 text-xs [&>svg]:size-3.5",
-      },
+const badgeVariants = cva({
+  base: {
+    layerStyle: "interactive",
+    display: "inline-flex",
+    width: "fit",
+    maxWidth: "full",
+    flexShrink: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "1",
+    overflow: "hidden",
+    borderRadius: "sm",
+    borderWidth: "1px",
+    borderStyle: "solid",
+    borderColor: "transparent",
+    fontWeight: "medium",
+    whiteSpace: "nowrap",
+    userSelect: "none",
+    "& > svg": { pointerEvents: "none", flexShrink: 0 },
+  },
+  variants: {
+    variant: {
+      default: { backgroundColor: "primary", color: "primary.foreground" },
+      secondary: { backgroundColor: "secondary", color: "secondary.foreground" },
+      muted: { backgroundColor: "muted", color: "muted.foreground", fontWeight: "normal" },
+      outline: { borderColor: "border", color: "foreground" },
+      brand: { backgroundColor: "brand", color: "brand.foreground" },
+      success: { backgroundColor: "success/15", color: "success" },
+      destructive: { backgroundColor: "destructive/15", color: "destructive" },
     },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
+    size: {
+      sm: {
+        height: "4.5",
+        paddingInline: "1.5",
+        textStyle: "2xs",
+        "& > svg": { width: "2.5", height: "2.5" },
+      },
+      default: {
+        height: "5",
+        paddingInline: "1.5",
+        textStyle: "xs",
+        "& > svg": { width: "3", height: "3" },
+      },
+      lg: {
+        height: "6",
+        paddingInline: "2",
+        textStyle: "xs",
+        "& > svg": { width: "3.5", height: "3.5" },
+      },
     },
   },
-);
+  defaultVariants: {
+    variant: "default",
+    size: "default",
+  },
+});
 
-export type BadgeProps = JSX.HTMLAttributes<HTMLSpanElement> & VariantProps<typeof badgeVariants>;
+export type BadgeProps = JSX.HTMLAttributes<HTMLSpanElement> &
+  RecipeVariantProps<typeof badgeVariants>;
 
 export function Badge(props: BadgeProps) {
   const [local, rest] = splitProps(props, ["class", "variant", "size"]);
@@ -36,7 +67,7 @@ export function Badge(props: BadgeProps) {
   return (
     <span
       data-slot="badge"
-      class={cn(badgeVariants({ variant: local.variant, size: local.size }), local.class)}
+      class={cx(badgeVariants({ variant: local.variant, size: local.size }), local.class)}
       {...rest}
     />
   );

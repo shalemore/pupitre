@@ -1,14 +1,21 @@
-import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "cn";
 import { type JSX, splitProps } from "solid-js";
+import { cva, cx, type RecipeVariantProps } from "@/styled-system/css";
 
-const calloutVariants = cva("rounded-lg border p-3 text-xs [&_svg]:size-4 [&_svg]:shrink-0", {
+const calloutVariants = cva({
+  base: {
+    borderRadius: "lg",
+    borderWidth: "1px",
+    borderStyle: "solid",
+    padding: "3",
+    textStyle: "xs",
+    "& svg": { width: "4", height: "4", flexShrink: 0 },
+  },
   variants: {
     variant: {
-      neutral: "border-border bg-surface-0",
-      brand: "border-brand/20 bg-brand/10",
-      success: "border-success/20 bg-success/10",
-      destructive: "border-destructive/20 bg-destructive/10",
+      neutral: { borderColor: "border", backgroundColor: "surface.0" },
+      brand: { borderColor: "brand/20", backgroundColor: "brand/10" },
+      success: { borderColor: "success/20", backgroundColor: "success/10" },
+      destructive: { borderColor: "destructive/20", backgroundColor: "destructive/10" },
     },
   },
   defaultVariants: {
@@ -17,7 +24,7 @@ const calloutVariants = cva("rounded-lg border p-3 text-xs [&_svg]:size-4 [&_svg
 });
 
 export type CalloutProps = JSX.HTMLAttributes<HTMLDivElement> &
-  VariantProps<typeof calloutVariants>;
+  RecipeVariantProps<typeof calloutVariants>;
 
 /** A tinted panel for a status message, such as the state of an update. */
 export function Callout(props: CalloutProps) {
@@ -26,7 +33,7 @@ export function Callout(props: CalloutProps) {
   return (
     <div
       data-slot="callout"
-      class={cn(calloutVariants({ variant: local.variant }), local.class)}
+      class={cx(calloutVariants({ variant: local.variant }), local.class)}
       {...rest}
     />
   );
