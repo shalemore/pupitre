@@ -98,12 +98,14 @@
   font-size: 0.82em;
 }
 
+/* Rules above and below the card are inset shadows, so they take no room and a rendering that
+   fills the card lines up with the same block while its source is hidden */
 .md-code-block-start {
-  border-block-start: 1px solid var(--ui-alpha-2);
+  box-shadow: inset 0 1px var(--ui-alpha-2);
 }
 
 .md-code-block-end {
-  border-block-end: 1px solid var(--ui-alpha-2);
+  box-shadow: inset 0 -1px var(--ui-alpha-2);
 }
 
 /* Quotes are set in from both sides in italics, without a bar */

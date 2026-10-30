@@ -177,21 +177,30 @@
   background: oklch(from var(--hongxing-olive) l c h / 12%);
 }
 
-/* Fenced code blocks: white enamel with a blue rim along the top */
+/*
+ * Fenced code blocks: white enamel with a blue rim along the top. The frame is an inset shadow
+ * rather than a border, so it takes no room: a rendering that fills the card lines up with the
+ * same block while its source is hidden.
+ */
 .md-code-block {
-  border-inline: 1px solid var(--ui-alpha-2);
+  --md-code-frame: inset 1px 0 var(--ui-alpha-2), inset -1px 0 var(--ui-alpha-2);
   background: var(--ui-surface-3);
   /* The card is the third surface here, so a diagram inside it stands on that */
   --md-diagram-label: var(--ui-surface-3);
+  box-shadow: var(--md-code-frame);
   line-height: 1.6;
 }
 
 .md-code-block-start {
-  border-block-start: 3px solid var(--hongxing-enamel);
+  box-shadow:
+    var(--md-code-frame),
+    inset 0 3px var(--hongxing-enamel);
 }
 
 .md-code-block-end {
-  border-block-end: 1px solid var(--ui-alpha-2);
+  box-shadow:
+    var(--md-code-frame),
+    inset 0 -1px var(--ui-alpha-2);
 }
 
 @media (prefers-color-scheme: dark) {

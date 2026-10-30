@@ -172,18 +172,27 @@
   background: oklch(from var(--ui-brand) l c h / 8%);
 }
 
-/* Fenced code blocks: a card with a hairline border, drawn line by line */
+/*
+ * Fenced code blocks: a card with a hairline frame, drawn line by line. The frame is an inset
+ * shadow rather than a border, so it takes no room: a rendering that fills the card lines up with
+ * the same block while its source is hidden.
+ */
 .md-code-block {
-  border-inline: 1px solid var(--ui-alpha-2);
+  --md-code-frame: inset 1px 0 var(--ui-alpha-2), inset -1px 0 var(--ui-alpha-2);
+  box-shadow: var(--md-code-frame);
   line-height: 1.6;
 }
 
 .md-code-block-start {
-  border-block-start: 1px solid var(--ui-alpha-2);
+  box-shadow:
+    var(--md-code-frame),
+    inset 0 1px var(--ui-alpha-2);
 }
 
 .md-code-block-end {
-  border-block-end: 1px solid var(--ui-alpha-2);
+  box-shadow:
+    var(--md-code-frame),
+    inset 0 -1px var(--ui-alpha-2);
 }
 
 /* > Block quotes: the red margin line; GitHub alerts (> [!NOTE]) set --alert-color to tint it */

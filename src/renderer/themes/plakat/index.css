@@ -211,9 +211,13 @@
   background: var(--ui-alpha-1);
 }
 
-/* Fenced code blocks: a red bar along the start edge */
+/*
+ * Fenced code blocks: a red bar along the start edge. The bar is an inset shadow rather than a
+ * border, so it takes no room: a rendering that fills the card lines up with the same block while
+ * its source is hidden.
+ */
 .md-code-block {
-  border-inline-start: 3px solid var(--ui-brand);
+  box-shadow: inset 3px 0 var(--ui-brand);
   line-height: 1.6;
 }
 

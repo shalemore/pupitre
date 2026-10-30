@@ -844,10 +844,9 @@
         (
           var(--md-list-depth, 0) * var(--md-list-indent) + var(--md-quote-depth, 0) *
             var(--md-quote-indent) + var(--md-block-indent)
-        ) -
-        var(--ui-border-width)
+        )
     );
-    margin-inline-end: calc(-1 * var(--md-block-indent) - var(--ui-border-width));
+    margin-inline-end: calc(-1 * var(--md-block-indent));
   }
 
   /* The buffers around the rendering would start the line with a box of their own above it */
