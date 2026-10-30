@@ -187,25 +187,30 @@ export class HtmlBlockWidget extends WidgetType {
     readonly source: string,
     /** Folder of the document, for relative image addresses. */
     readonly base: string | undefined,
+    /** Whether the block's source is shown above it, as while the block is edited. */
+    readonly editing = false,
   ) {
     super();
   }
 
   override eq(other: HtmlBlockWidget): boolean {
-    return other.source === this.source && other.base === this.base;
+    return (
+      other.source === this.source && other.base === this.base && other.editing === this.editing
+    );
   }
 
   toDOM(view: EditorView): HTMLElement {
     const picture = parseImageTag(this.source);
     if (picture) {
+      // The source, which holds the alt text, stands in for the caption while it is shown
       return imageDom(
         view,
         resolveAgainst(this.base, picture.src),
         picture.alt,
         picture.title,
         picture,
-        true,
-        picture.alt,
+        !this.editing,
+        this.editing ? undefined : picture.alt,
       );
     }
     const block = document.createElement("div");

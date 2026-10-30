@@ -122,4 +122,16 @@ describe("the HTML blocks the editor shows rendered", () => {
     expect(block.querySelector("mark")?.className).toBe("md-tag md-tag-mark");
     view.destroy();
   });
+
+  it("shows a picture's caption and controls only while its source is hidden", () => {
+    const view = markdownView("");
+    const source = '<img src="logo.svg" alt="Pupitre">';
+    const shown = new HtmlBlockWidget(source, undefined).toDOM(view);
+    const edited = new HtmlBlockWidget(source, undefined, true).toDOM(view);
+    expect(shown.querySelector(".md-image-caption")?.textContent).toBe("Pupitre");
+    expect(shown.querySelector(".md-image-toolbar")).not.toBeNull();
+    expect(edited.querySelector(".md-image-caption")).toBeNull();
+    expect(edited.querySelector(".md-image-toolbar")).toBeNull();
+    view.destroy();
+  });
 });

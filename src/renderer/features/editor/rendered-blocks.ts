@@ -60,7 +60,11 @@ function sourceEnd(state: EditorState, node: SyntaxNode): number {
   return line.from > node.from ? line.from - 1 : close.from;
 }
 
-function blockWidget(state: EditorState, node: SyntaxNode): WidgetType | undefined {
+function blockWidget(
+  state: EditorState,
+  node: SyntaxNode,
+  editing = false,
+): WidgetType | undefined {
   const text = (child: SyntaxNode | null | undefined) =>
     child ? state.sliceDoc(child.from, child.to) : "";
   if (node.name === "Table") {
@@ -72,7 +76,7 @@ function blockWidget(state: EditorState, node: SyntaxNode): WidgetType | undefin
   if (node.name === "HTMLBlock") {
     const source = text(node);
     if (!isRenderableHtml(source) || htmlBlockPreview(source) !== undefined) return undefined;
-    return new HtmlBlockWidget(source, state.facet(documentBaseUrl));
+    return new HtmlBlockWidget(source, state.facet(documentBaseUrl), editing);
   }
   if (node.name === "BlockMath") {
     return new MathWidget(mathOf(state, node).tex, true, sourceEnd(state, node));
@@ -144,14 +148,15 @@ function buildDecorations(state: EditorState): RenderedBlocksState {
         }
         return false;
       }
-      const widget = blockWidget(state, node.node);
-      if (!widget) return false;
-      if (widget instanceof TocWidget) hasToc = true;
       // The block takes whole lines, the markers of a quote or a list around it included, so a
       // cursor anywhere on them reveals its source; a click on the rendering puts it on the first
       const [from, to] = lineRange(state, node.node);
+      const touched = isTouched(from, to);
+      const widget = blockWidget(state, node.node, touched);
+      if (!widget) return false;
+      if (widget instanceof TocWidget) hasToc = true;
       // A table is edited in place (table.tsx), so its source never shows
-      if (node.name === "Table" || !isTouched(from, to)) {
+      if (node.name === "Table" || !touched) {
         hideLines(node.from, node.to, widget);
       } else if (
         node.name === "BlockMath" ||
