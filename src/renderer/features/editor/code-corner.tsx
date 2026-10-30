@@ -6,7 +6,7 @@ import { createMemo, createSignal, For, Show, type Component } from "solid-js";
 import { render } from "solid-js/web";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
-import { css } from "@/styled-system/css";
+import { css, cx } from "@/styled-system/css";
 import { fencedText } from "./block-text";
 import { codeLanguages } from "./code-languages";
 
@@ -34,7 +34,6 @@ const languagePicker = css({
 const corner = css({
   position: "absolute",
   zIndex: 1,
-  top: "var(--md-code-corner-gap)",
   insetInlineEnd: "2",
   display: "flex",
   alignItems: "center",
@@ -45,6 +44,10 @@ const corner = css({
   color: "tertiary",
   userSelect: "none",
 });
+const cornerAtTop = css({ top: "var(--md-code-corner-gap)" });
+// The line holding a rendering starts at the rendering; the fence sits at its bottom edge, which
+// is where the corner belongs
+const cornerAtBottom = css({ bottom: "0" });
 const copy = css({
   display: "grid",
   width: "var(--md-code-corner-size)",
@@ -240,19 +243,23 @@ function sameFence(a: FenceInfo | undefined, b: FenceInfo | undefined): boolean 
  * hidden, and a button that copies the code without the fences.
  */
 export class CodeCornerWidget extends WidgetType {
-  constructor(readonly fence: FenceInfo | undefined) {
+  constructor(
+    readonly fence: FenceInfo | undefined,
+    /** Whether the opening line also holds a rendering, which puts the fence at its bottom. */
+    readonly belowRendering = false,
+  ) {
     super();
   }
 
   override eq(other: CodeCornerWidget): boolean {
-    return sameFence(other.fence, this.fence);
+    return sameFence(other.fence, this.fence) && other.belowRendering === this.belowRendering;
   }
 
   toDOM(view: EditorView): HTMLElement {
     const container = document.createElement("span");
     // Above the code lines it overlaps while the fence line is shrunk; interface rather than
     // document, so it is sized in rem and does not shrink with the block's em
-    container.className = corner;
+    container.className = cx(corner, this.belowRendering ? cornerAtBottom : cornerAtTop);
     disposers.set(
       container,
       render(() => <CodeCorner view={view} container={container} fence={this.fence} />, container),

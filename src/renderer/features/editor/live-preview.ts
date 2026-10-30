@@ -420,17 +420,15 @@ function visitCodeBlock(builder: DecorationBuilder, node: SyntaxNode): void {
       // The line holding the rendering takes it over its own padding and line box (editor.css)
       if (rendering) line.classes.add("md-code-render");
     }
-    // Room above the first line of the source, where the button that copies the block stands
-    if (rendering && number === first + 1) line.classes.add("md-code-corner-room");
     if (number === last) line.classes.add("md-code-block-end");
   });
   const info = node.getChild("CodeInfo");
-  if (node.name !== "BlockMath") {
-    const widget = new CodeCornerWidget(fenceInfo(builder, node, active));
-    // A rendering takes the top of the card, so the button moves to the source under it
-    const corner = rendering && first < last ? builder.lineAt(node.from).to + 1 : node.from;
-    builder.decorations.push(Decoration.widget({ widget, side: -1 }).range(corner));
-  }
+  // The corner stands at the end of the opening line: the fence names the language, and the same
+  // line carries the button that copies the block, so the source starts right under it. A closed
+  // block keeps it at the start of the line the rendering takes over.
+  const widget = new CodeCornerWidget(fenceInfo(builder, node, active), rendering);
+  const corner = rendering ? builder.lineAt(node.from).to : node.from;
+  builder.decorations.push(Decoration.widget({ widget, side: -1 }).range(corner));
   if (node.name === "CodeBlock") return;
 
   for (const fence of node.getChildren(node.name === "BlockMath" ? "MathMark" : "CodeMark")) {
