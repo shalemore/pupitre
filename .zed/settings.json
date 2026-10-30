@@ -26,6 +26,17 @@
       "settings": {
         "package_version": "7.0.2"
       }
+    },
+    // The bundled language service predates the properties the app draws its caret with and
+    // those that space CJK against Latin
+    "vscode-css-language-server": {
+      "settings": {
+        "css": {
+          "lint": {
+            "validProperties": ["text-autospace", "caret-animation"]
+          }
+        }
+      }
     }
   },
   "languages": {
