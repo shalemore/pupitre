@@ -11,20 +11,20 @@ export function AppMark(props: JSX.SvgSVGAttributes<SVGSVGElement>) {
 
   return (
     <svg
-      viewBox="110 132 292 292"
+      viewBox="120 138 272 272"
       aria-hidden="true"
       class={cn("size-4 shrink-0", local.class)}
       {...rest}
     >
       <g fill="currentColor">
-        {/* The slanted top and the apron under it */}
-        <path d="M141 138h230c3 0 5.5 4 7 7l18.5 78c1 1.5 0 3-2.5 3H118c-2.5 0-3.5-1.5-2.5-3L134 145c1.5-3 4-7 7-7Z" />
-        <path d="M116 226h280c1.5 0 2 1 1.5 2.5l-2 6c-.5 1-1.5 1.5-3 1.5H119.5c-1.5 0-2.5-.5-3-1.5l-2-6c-.5-1.5 0-2.5 1.5-2.5Z" />
-        {/* The bracket under the top, the column and the two stepped feet */}
-        <path d="M176 236l26 4h108l26-4Z" />
-        <path d="M188 236h136v150H188Z" />
-        <path d="M156 398l10-12h180l10 12Z" />
-        <path d="M126 411l14-13h232l14 13c1 2.5-1 5-4 5H130c-3 0-5-2.5-4-5Z" />
+        {/* The desktop keeps the icon's foreshortening */}
+        <g transform="translate(256 236) scale(0.82 0.9) translate(-256 -236)">
+          <path d="M141 138h230c2.5 0 4.5 2 5.5 4l17.5 84H118l17.5-84c1-2 3-4 5.5-4Z" />
+          <path d="M118 226h276l-1.5 8.5c-.3 1-1 1.5-2 1.5H121.5c-1 0-1.7-.5-2-1.5Z" />
+        </g>
+        {/* The bracket under the desktop and the column */}
+        <path d="M192 236l18 6h92l18-6Z" />
+        <path d="M208 236h96l3 164H205Z" />
       </g>
     </svg>
   );
