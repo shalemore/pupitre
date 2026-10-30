@@ -5,6 +5,7 @@
 /playwright-report
 /blob-report
 /coverage
+/src/renderer/styled-system
 *.log
 .DS_Store
 /.perf-fixtures

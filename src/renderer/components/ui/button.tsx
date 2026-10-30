@@ -1,41 +1,141 @@
-import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "cn";
 import { type JSX, splitProps } from "solid-js";
+import { cva, cx, type RecipeVariantProps } from "@/styled-system/css";
 
-export const buttonVariants = cva(
-  "pressable inline-flex shrink-0 cursor-pointer items-center justify-center font-medium whitespace-nowrap outline-none select-none focus-visible:shadow-focus disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
-  {
-    variants: {
-      variant: {
-        default: "bg-primary text-primary-foreground hover:opacity-90",
-        brand: "bg-brand text-brand-foreground shadow-sm hover:bg-brand-hover",
-        outline: "border border-border bg-transparent text-foreground hover:bg-accent",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-selected",
-        ghost: "bg-transparent text-muted-foreground hover:bg-accent hover:text-foreground",
-        destructive: "bg-destructive/10 text-destructive hover:bg-destructive/20",
-        link: "text-primary underline-offset-4 hover:underline",
+export const buttonVariants = cva({
+  base: {
+    display: "inline-flex",
+    flexShrink: 0,
+    cursor: "pointer",
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: "medium",
+    whiteSpace: "nowrap",
+    outlineStyle: "none",
+    userSelect: "none",
+    _focusVisible: { boxShadow: "focus" },
+    _disabled: {
+      pointerEvents: "none",
+      cursor: "not-allowed",
+      opacity: 0.5,
+    },
+    // An icon keeps the size its own component gives it
+    "& svg:not([class*='size-'])": { pointerEvents: "none", flexShrink: 0 },
+  },
+  variants: {
+    variant: {
+      default: {
+        backgroundColor: "primary",
+        color: "primary.foreground",
+        _hover: { opacity: 0.9 },
       },
-      size: {
-        default: "h-8 gap-1.5 rounded-md px-3 text-xs [&_svg:not([class*='size-'])]:size-4",
-        xs: "h-6 gap-1 rounded-md px-2 text-2xs [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-7 gap-1.5 rounded-md px-2.5 text-xs [&_svg:not([class*='size-'])]:size-3.5",
-        lg: "h-10 gap-2 rounded-lg px-4 text-sm [&_svg:not([class*='size-'])]:size-4",
-        icon: "size-8 rounded-md [&_svg:not([class*='size-'])]:size-4",
-        "icon-2xs": "size-5 rounded-sm [&_svg:not([class*='size-'])]:size-3",
-        "icon-xs": "size-6 rounded-md [&_svg:not([class*='size-'])]:size-3.5",
-        "icon-sm": "size-7 rounded-md [&_svg:not([class*='size-'])]:size-3.5",
-        "icon-lg": "size-10 rounded-lg [&_svg:not([class*='size-'])]:size-5",
+      brand: {
+        backgroundColor: "brand",
+        color: "brand.foreground",
+        boxShadow: "sm",
+        _hover: { backgroundColor: "brand.hover" },
+      },
+      outline: {
+        borderWidth: "1px",
+        borderStyle: "solid",
+        borderColor: "border",
+        backgroundColor: "transparent",
+        color: "foreground",
+        _hover: { backgroundColor: "accent" },
+      },
+      secondary: {
+        backgroundColor: "secondary",
+        color: "secondary.foreground",
+        _hover: { backgroundColor: "selected" },
+      },
+      ghost: {
+        backgroundColor: "transparent",
+        color: "muted.foreground",
+        _hover: { backgroundColor: "accent", color: "foreground" },
+      },
+      destructive: {
+        backgroundColor: "destructive/10",
+        color: "destructive",
+        _hover: { backgroundColor: "destructive/20" },
+      },
+      link: {
+        color: "primary",
+        textUnderlineOffset: "4px",
+        _hover: { textDecoration: "underline" },
       },
     },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
+    size: {
+      default: {
+        height: "8",
+        gap: "1.5",
+        borderRadius: "md",
+        paddingInline: "3",
+        textStyle: "xs",
+        "& svg:not([class*='size-'])": { width: "4", height: "4" },
+      },
+      xs: {
+        height: "6",
+        gap: "1",
+        borderRadius: "md",
+        paddingInline: "2",
+        textStyle: "2xs",
+        "& svg:not([class*='size-'])": { width: "3", height: "3" },
+      },
+      sm: {
+        height: "7",
+        gap: "1.5",
+        borderRadius: "md",
+        paddingInline: "2.5",
+        textStyle: "xs",
+        "& svg:not([class*='size-'])": { width: "3.5", height: "3.5" },
+      },
+      lg: {
+        height: "10",
+        gap: "2",
+        borderRadius: "lg",
+        paddingInline: "4",
+        textStyle: "sm",
+        "& svg:not([class*='size-'])": { width: "4", height: "4" },
+      },
+      icon: {
+        width: "8",
+        height: "8",
+        borderRadius: "md",
+        "& svg:not([class*='size-'])": { width: "4", height: "4" },
+      },
+      "icon-2xs": {
+        width: "5",
+        height: "5",
+        borderRadius: "sm",
+        "& svg:not([class*='size-'])": { width: "3", height: "3" },
+      },
+      "icon-xs": {
+        width: "6",
+        height: "6",
+        borderRadius: "md",
+        "& svg:not([class*='size-'])": { width: "3.5", height: "3.5" },
+      },
+      "icon-sm": {
+        width: "7",
+        height: "7",
+        borderRadius: "md",
+        "& svg:not([class*='size-'])": { width: "3.5", height: "3.5" },
+      },
+      "icon-lg": {
+        width: "10",
+        height: "10",
+        borderRadius: "lg",
+        "& svg:not([class*='size-'])": { width: "5", height: "5" },
+      },
     },
   },
-);
+  defaultVariants: {
+    variant: "default",
+    size: "default",
+  },
+});
 
 export type ButtonProps = JSX.ButtonHTMLAttributes<HTMLButtonElement> &
-  VariantProps<typeof buttonVariants>;
+  RecipeVariantProps<typeof buttonVariants>;
 
 export function Button(props: ButtonProps) {
   const [local, rest] = splitProps(props, ["class", "variant", "size", "type"]);
@@ -44,7 +144,7 @@ export function Button(props: ButtonProps) {
     <button
       type={local.type ?? "button"}
       data-slot="button"
-      class={cn(buttonVariants({ variant: local.variant, size: local.size }), local.class)}
+      class={cx(buttonVariants({ variant: local.variant, size: local.size }), local.class)}
       {...rest}
     />
   );

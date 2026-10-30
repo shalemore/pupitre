@@ -7,12 +7,6 @@ export default defineConfig({
     perf: "error",
   },
   plugins: ["unicorn", "typescript", "oxc", "vitest"],
-  jsPlugins: ["oxlint-tailwindcss"],
-  settings: {
-    tailwindcss: {
-      entryPoint: "src/renderer/app.css",
-    },
-  },
   rules: {
     // An exhaustive switch over a union ends a function on a path the rule counts as falling off
     // its end, though TypeScript proves that no case is left; `noImplicitReturns` already rejects
@@ -21,11 +15,12 @@ export default defineConfig({
     // A type and a value from the same module may stay apart; two value imports may not
     "no-duplicate-imports": ["error", { allowSeparateTypeImports: true }],
     "unicorn/consistent-function-scoping": "off",
-    "tailwindcss/enforce-canonical": "warn",
-    "tailwindcss/enforce-consistent-variable-syntax": "warn",
-    "tailwindcss/no-unknown-classes": "error",
-    "tailwindcss/no-conflicting-classes": "error",
-    "tailwindcss/enforce-shorthand": "warn",
   },
-  ignorePatterns: ["node_modules/**", "out/**", "release/**"],
+  ignorePatterns: [
+    "node_modules/**",
+    "out/**",
+    "release/**",
+    // Panda generates it; there is nothing to fix by hand there
+    "src/renderer/styled-system/**",
+  ],
 });

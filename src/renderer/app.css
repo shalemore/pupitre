@@ -15,7 +15,7 @@
  * reads is defined. @keyframes are the exception: they have no layers and a later definition wins,
  * so a theme replaces one by defining it again.
  */
-@layer theme, base, editor, components, utilities, document-theme, preferences;
+@layer reset, base, editor, theme, components, utilities, document-theme, preferences;
 
 @import "tailwindcss";
 /* Tailwind scans from the Vite root, which is src/web for the web demo, so both folders are named */

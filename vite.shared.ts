@@ -1,4 +1,5 @@
 import { resolve } from "node:path";
+import { pandacss } from "@pandacss/vite";
 import tailwindcss from "@tailwindcss/vite";
 import type { AliasOptions } from "vite";
 import solid from "vite-plugin-solid";
@@ -18,7 +19,16 @@ export const sharedAlias: AliasOptions = { "@shared": resolve("src/shared") };
 export function rendererConfig() {
   return {
     resolve: { alias },
-    plugins: [solid(), tailwindcss(), thirdPartyNotices()],
+    // electron-vite gives each environment its own root; Panda scans from the repository instead
+    plugins: [
+      pandacss({
+        cwd: process.cwd(),
+        outdir: resolve(process.cwd(), "src/renderer/styled-system"),
+      }),
+      solid(),
+      tailwindcss(),
+      thirdPartyNotices(),
+    ],
     // Vite binds "localhost" to ::1 only on some machines, and the page then gets ERR_CONNECTION_REFUSED
     server: { host: "127.0.0.1" },
   };

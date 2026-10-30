@@ -3,9 +3,18 @@
   "printWidth": 100,
   "sortImports": {
     "customGroups": [
-      { "groupName": "side", "selector": "side_effect" },
-      { "groupName": "shared", "elementNamePattern": ["@shared/**"] },
-      { "groupName": "renderer", "elementNamePattern": ["@/**"] }
+      {
+        "groupName": "side",
+        "selector": "side_effect"
+      },
+      {
+        "groupName": "shared",
+        "elementNamePattern": ["@shared/**"]
+      },
+      {
+        "groupName": "renderer",
+        "elementNamePattern": ["@/**"]
+      }
     ],
     "groups": [
       "side",
@@ -26,6 +35,7 @@
     "out/**",
     "release/**",
     "package-lock.json",
-    "docs/design/app-icon.html"
+    "docs/design/app-icon.html",
+    "src/renderer/styled-system/**"
   ]
 }
