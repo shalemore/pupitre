@@ -28,6 +28,14 @@
  * evaluated at use and follow the theme. How to write a theme: the `theming-pupitre` skill.
  */
 @layer base {
+  /* The element each window renders into */
+  #root {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+  }
+
   :root {
     --ui-surface-0: oklch(0.972 0 0);
     --ui-surface-1: oklch(0.99 0 0);
