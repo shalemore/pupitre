@@ -362,10 +362,13 @@ export function imageIn(state: EditorState, from: number, to: number): DocumentI
   return findImage(state, from, to);
 }
 
-/** The range of the value of the src attribute of the `<img>` tag written as `source`. */
-function tagAddressRange(source: string): { from: number; to: number } | undefined {
+/** The range of the value of an attribute of an `<img>` tag written as `source`. */
+function tagAttributeRange(
+  source: string,
+  attribute: string,
+): { from: number; to: number } | undefined {
   for (const match of source.matchAll(TAG_ATTRIBUTE)) {
-    if (match[1]?.toLowerCase() !== "src") continue;
+    if (match[1]?.toLowerCase() !== attribute) continue;
     const quoted = match[2] ?? match[3];
     const value = quoted ?? match[4];
     if (value === undefined) return undefined;
@@ -374,6 +377,26 @@ function tagAddressRange(source: string): { from: number; to: number } | undefin
     return { from: end - value.length, to: end };
   }
   return undefined;
+}
+
+/** The range of the value of the src attribute of the `<img>` tag written as `source`. */
+function tagAddressRange(source: string): { from: number; to: number } | undefined {
+  return tagAttributeRange(source, "src");
+}
+
+/**
+ * The range the alt text of `image` covers: the text between the brackets of a Markdown image, or
+ * the value of the alt attribute of an `<img>` tag.
+ */
+function altRange(
+  state: EditorState,
+  image: DocumentImage,
+): { from: number; to: number } | undefined {
+  if (state.sliceDoc(image.from, image.from + 2) === "![") {
+    return { from: image.from + 2, to: image.from + 2 + image.alt.length };
+  }
+  const range = tagAttributeRange(state.sliceDoc(image.from, image.to), "alt");
+  return range && { from: image.from + range.from, to: image.from + range.to };
 }
 
 /**
@@ -810,6 +833,25 @@ export function imageDom(
   frame.append(image);
   watchImage(view, image, frame, src);
 
+  // The picture shows its source, so a click edits it at the end of its address rather than
+  // placing a cursor by coordinates; the controls keep their own events
+  const editSource = (event: MouseEvent, place: (image: DocumentImage) => number | undefined) => {
+    if (event.button !== 0) return;
+    if (event.target instanceof Element && event.target.closest(CONTROLS)) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const picture = imageAt(view.state, view.posAtDOM(block));
+    if (picture === undefined) return;
+    view.focus();
+    view.dispatch({
+      selection: { anchor: place(picture) ?? picture.from },
+      scrollIntoView: true,
+    });
+  };
+  frame.addEventListener("mousedown", (event) => {
+    editSource(event, (picture) => addressRange(view.state, picture)?.to);
+  });
+
   if (controls) {
     const commit = write ?? ((change) => writeImage(view, block, change));
     const toolbar = alignmentToolbar(view, commit, size);
@@ -831,6 +873,9 @@ export function imageDom(
     const label = document.createElement("span");
     label.className = "md-image-caption";
     label.textContent = caption;
+    label.addEventListener("mousedown", (event) => {
+      editSource(event, (picture) => altRange(view.state, picture)?.to);
+    });
     block.append(label);
   }
 
@@ -934,6 +979,32 @@ export class ImageWidget extends WidgetType {
 
 function imageFiles(data: DataTransfer | null): File[] {
   return [...(data?.files ?? [])].filter((file) => file.type.startsWith("image/"));
+}
+
+/**
+ * A Markdown picture's caption is its alt text in the source; a click in it edits that text at its
+ * end, as a click on the picture edits its address.
+ */
+export function imageCaptionClick(): Extension {
+  return EditorView.domEventHandlers({
+    mousedown(event, view) {
+      if (event.button !== 0) return false;
+      const target = event.target;
+      if (!(target instanceof Element)) return false;
+      const line = target.closest(".cm-line.md-image-caption");
+      if (line === null || target.closest(".md-image-block") !== null) return false;
+      const pos = view.posAtCoords(event);
+      if (pos === null) return false;
+      const picture = imageAt(view.state, pos);
+      if (picture === undefined) return false;
+      const alt = altRange(view.state, picture);
+      if (alt === undefined || pos < alt.from || pos > alt.to) return false;
+      event.preventDefault();
+      view.focus();
+      view.dispatch({ selection: { anchor: alt.to }, scrollIntoView: true });
+      return true;
+    },
+  });
 }
 
 /**

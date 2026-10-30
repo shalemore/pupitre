@@ -86,6 +86,7 @@ import {
   documentBaseUrl,
   documentFilePath,
   imageAlt,
+  imageCaptionClick,
   imageInput,
   imageMarkdown,
   pickImage,
@@ -488,6 +489,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
             ? [
                 renumberOrderedLists(),
                 imageInput(uploadImage),
+                imageCaptionClick(),
                 pasteHtml(markdownStyle),
                 alertTitles.of(t().editor.alerts),
               ]
