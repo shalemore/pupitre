@@ -6,8 +6,6 @@
     // `npm run test:perf` runs this config; the Playwright plugin only reads playwright.config.ts
     "playwright.perf.config.ts",
   ],
-  // The theming skill ships as documentation; its barebone theme is a reference, not an import
-  "ignore": ["agents/skills/**"],
   "ignoreBinaries": [
     // A Linux system tool: src/main/windows.ts reads where the desktop puts the caption buttons
     "gsettings",

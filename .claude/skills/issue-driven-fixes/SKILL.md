@@ -63,7 +63,7 @@ The user often sends more problems while you are working. Pause long enough to c
 
 After the last issue:
 
-- Review the whole diff against AGENTS.md: naming, the strict TypeScript rules, comment style, Tailwind usage, test coverage, dead code.
+- Review the whole diff against AGENTS.md: naming, the strict TypeScript rules, comment style, style usage, test coverage, dead code.
 - Fix what the review finds by amending each change into the commit it belongs to, preserving those commits' dates. Do not add a "review fixes" commit.
 - Run the full suite again.
 - Report to the user: every issue with its commit, what passed, what could not be reproduced or is still open, and that the issues close when the branch is pushed.

@@ -12,8 +12,8 @@ import { defineConfig } from "@pandacss/dev";
  */
 export default defineConfig({
   presets: ["@pandacss/preset-base", "@pandacss/preset-panda"],
-  // The reset Tailwind's preflight used to give the chrome: borders on native controls and the
-  // margins of headings, lists and paragraphs come from the app's own styles instead
+  // Native controls come with borders, margins and a background of their own; the reset takes
+  // them away so the app's styles decide every one of them
   preflight: true,
   jsxFramework: "solid",
   include: ["./src/renderer/**/*.{ts,tsx}", "./src/web/**/*.{ts,tsx}"],

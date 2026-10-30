@@ -19,16 +19,7 @@ const EDITOR_CSS = "src/renderer/features/editor/editor.css";
 const THEMES = "src/renderer/themes";
 
 /** At-rules that are statements rather than style rules, so they may sit outside a layer. */
-const TOP_LEVEL_AT_RULES = [
-  "@import",
-  "@source",
-  "@custom-variant",
-  "@theme",
-  "@utility",
-  "@property",
-  "@layer",
-  "@keyframes",
-];
+const TOP_LEVEL_AT_RULES = ["@import", "@property", "@layer", "@keyframes"];
 
 /** The motion switch is the one rule that has to outrank every layer, `!important` and all. */
 const MOTION_RULES = ["@media (prefers-reduced-motion: reduce)", ':root[data-motion="off"]'];

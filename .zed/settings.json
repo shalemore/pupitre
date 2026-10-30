@@ -26,28 +26,10 @@
       "settings": {
         "package_version": "7.0.2"
       }
-    },
-    "tailwindcss-language-server": {
-      "settings": {
-        "classFunctions": ["cn", "cva"],
-        "lint": {
-          "suggestCanonicalClasses": "ignore"
-        }
-      }
-    },
-    "tailwindcss-intellisense-css": {
-      "settings": {
-        "css": {
-          "lint": {
-            "validProperties": ["caret-animation"]
-          }
-        }
-      }
     }
   },
   "languages": {
     "CSS": {
-      "language_servers": ["tailwindcss-intellisense-css", "!vscode-css-language-server", "..."],
       "formatter": {
         "language_server": { "name": "oxfmt" }
       }
