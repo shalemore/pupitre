@@ -352,18 +352,6 @@
     font-size: var(--pref-font-size);
   }
 
-  /* The buffer before a picture that stands in its `<img>` block would open a line box above it */
-  .md-image-source > .cm-widgetBuffer {
-    display: none;
-  }
-
-  /* An `<img>` tag's source reads where a Markdown picture's caption stands: quiet and centered */
-  .md-image-source {
-    color: var(--ui-text-muted);
-    font-size: 0.85em;
-    text-align: center;
-  }
-
   /* The caption stood inside the picture's box; the source that takes its place follows it, so the
      picture keeps no room below itself while the source is shown */
   .md-image-source > .md-image-block {
@@ -379,10 +367,6 @@
 
   .md-image-block[data-inline] > .md-image-frame {
     margin-inline: 0;
-    padding: 0;
-    border-radius: 0;
-    background: none;
-    box-shadow: none;
   }
 
   /* An aligned picture takes the whole line, so that its margins can place it on that line */
@@ -407,11 +391,16 @@
   }
 
   /*
-   * A picture whose own parts are see-through, an icon or a logo for one, stands without the
-   * frame: a box and its shadow would paint over the shape it was drawn with. Its shadow follows
-   * its outline instead, and it keeps the corners of that outline rather than the frame's.
+   * Some pictures stand without the frame: one that shares its line with text, one whose own parts
+   * are see-through (a box and its shadow would paint over the shape it was drawn with), and one
+   * that cannot be shown (its reason takes the frame's place). A see-through picture keeps the
+   * corners of its outline instead, and its shadow follows the image.
    */
-  .md-image-frame[data-alpha] {
+  :is(
+    .md-image-block[data-inline] > .md-image-frame,
+    .md-image-frame[data-alpha],
+    .md-image-frame[data-state="error"]
+  ) {
     padding: 0;
     border-radius: 0;
     background: none;
@@ -429,13 +418,17 @@
     filter: var(--md-image-outline-shadow);
   }
 
-  /* The caption under a picture is its alt text: quiet, centered and smaller than the page */
-  .md-image-caption {
-    display: block;
-    padding-block-start: 0.1em;
+  /* The caption under a picture, and the source that takes its place while an `<img>` tag is
+     edited: quiet, centered and smaller than the page */
+  :is(.md-image-caption, .md-image-source) {
     color: var(--ui-text-muted);
     font-size: 0.85em;
     text-align: center;
+  }
+
+  .md-image-caption {
+    display: block;
+    padding-block-start: 0.1em;
   }
 
   /*
@@ -492,13 +485,6 @@
   .md-image-frame[data-state="error"] > .md-image-preview,
   .md-image-frame[data-state="error"] > :is(.md-image-handle, .md-image-toolbar) {
     display: none;
-  }
-
-  .md-image-frame[data-state="error"] {
-    padding: 0;
-    border-radius: 0;
-    background: none;
-    box-shadow: none;
   }
 
   .md-image-fallback {
@@ -870,8 +856,9 @@
     margin-inline-end: calc(-1 * var(--md-block-indent));
   }
 
-  /* The buffers around the rendering would start the line with a box of their own above it */
-  .md-code-render > .cm-widgetBuffer {
+  /* A widget that fills the top of its line — a code card's rendering, the picture standing in an
+     `<img>` block — would be pushed down by the buffer the line keeps around it */
+  :is(.md-code-render, .md-image-source) > .cm-widgetBuffer {
     display: none;
   }
 

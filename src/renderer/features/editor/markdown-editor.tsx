@@ -280,12 +280,9 @@ const layeredStyles = EditorView.theme({
     border: "revert-layer",
   },
   ".cm-line": { padding: "revert-layer" },
-  // A rendering fills the top of a code card (editor.css), so the buffers that stand around an
-  // inline widget would keep it from the card's edge and leave a line box above it
-  ".cm-line.md-code-render > .cm-widgetBuffer": { display: "revert-layer" },
-  // The same holds for the picture that stands in an `<img>` block; the caption line under it
-  // must keep the picture at its top, where it stands while the source is hidden
-  ".cm-line.md-image-source > .cm-widgetBuffer": { display: "revert-layer" },
+  // A rendering fills the top of a code card, and a picture the top of the line its source stands
+  // in (editor.css), so the buffers that stand around the widget would leave a line box above it
+  ".cm-line:is(.md-code-render, .md-image-source) > .cm-widgetBuffer": { display: "revert-layer" },
   "&.cm-editor .cm-searchMatch, &.cm-editor .cm-searchMatch-selected": {
     backgroundColor: "revert-layer",
   },
