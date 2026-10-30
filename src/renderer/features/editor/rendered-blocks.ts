@@ -28,7 +28,7 @@ import { mathFence, mathOf } from "@/lib/markdown/math";
 import { diagramTheme } from "@/lib/markdown/mermaid";
 import { collectHeadings } from "@/lib/markdown/structure";
 import { readTable } from "@/lib/markdown/table-model";
-import { printingChanged, revealingRanges, touches, lineRange } from "./live-preview";
+import { lineRange, printingChanged, revealingRanges, touches } from "./live-preview-builder";
 
 /**
  * Blocks that are shown rendered (tables, display math, diagrams, HTML, `<details>`, `[TOC]`), with the same rule as the live preview:

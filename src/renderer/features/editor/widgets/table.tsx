@@ -36,7 +36,7 @@ import { IconButton, Separator } from "@/components/ui";
 import { openImageMenu } from "@/features/editor/images/image-menu";
 import { imageDom } from "@/features/editor/images/image-widget";
 import { fadeOut } from "@/features/editor/leave";
-import { openLink } from "@/features/editor/live-preview";
+import { openLink } from "@/features/editor/live-preview-links";
 import { t } from "@/i18n";
 import { imageIn, setImageLayout } from "@/lib/markdown/images";
 import { type InlineImage } from "@/lib/markdown/inline";
