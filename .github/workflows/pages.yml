@@ -4,18 +4,17 @@ name: Pages
 # A main push refreshes /test/ and rebuilds the root from that tag, so the default address only
 # changes when a release is tagged. The repository needs Settings > Pages > Source set to GitHub
 # Actions.
+#
+# The Release workflow calls this workflow directly after it publishes a tag: a release created
+# with the repository token does not start a workflow of its own. A package-only push completes
+# Release without publishing, so it never starts a second deployment.
 on:
   push:
     branches: [main]
     tags: ["v*"]
   release:
     types: [published]
-  # The release workflow creates its tag with the repository token, and that kind of event does not
-  # start another workflow. Run when Release finishes as well, so the root follows a new tag even
-  # when the release event itself is suppressed.
-  workflow_run:
-    workflows: [Release]
-    types: [completed]
+  workflow_call:
   workflow_dispatch:
 
 permissions:
@@ -23,12 +22,13 @@ permissions:
   pages: write
   id-token: write
 
-concurrency:
-  group: pages
-  cancel-in-progress: true
-
 jobs:
   deploy:
+    # A push and a release can both deploy; cancelling the earlier one marks its commit with a
+    # failed check even though the deploy it replaced succeeded. Queue them instead.
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     environment:
       name: github-pages

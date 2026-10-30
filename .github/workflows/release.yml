@@ -4,8 +4,8 @@ name: Release
 on:
   push:
     branches: [main]
-    # A release exists only when the version changes; running this on every main push made its
-    # completion trigger a second Pages deployment for no new tag.
+    # A release exists only when the version changes; a push that only changes dependencies runs
+    # the version check and skips the release jobs.
     paths:
       - package.json
       - package-lock.json
@@ -200,6 +200,18 @@ jobs:
 
           # Publish the draft release created by electron-builder with the generated notes
           gh release edit "v$VERSION" --draft=false --notes-file notes.md
+
+  # The Pages workflow used to run on every Release completion, which also happened for a
+  # package-only push that published nothing. Call it from the job that publishes the tag instead.
+  pages:
+    name: Deploy the web demo
+    needs: [check, publish-release]
+    if: needs.check.outputs.publish == 'true'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/pages.yml
 
   # Scoop unpacks the released installer instead of running it, see scripts/scoop-manifest.ts. The
   # bucket needs the secret SCOOP_BUCKET_TOKEN, see CONTRIBUTING.md; without it the release is still
