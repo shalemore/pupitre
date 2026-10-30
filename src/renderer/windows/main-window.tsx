@@ -13,7 +13,6 @@ import {
   type Component,
 } from "solid-js";
 import { IMAGE_FILE, type AppCommand } from "@shared/desktop-api";
-import { messageOf } from "@shared/errors";
 import { isInsideFolder } from "@shared/paths";
 import { AppMark } from "@/components/app-mark";
 import { TitleBar } from "@/components/title-bar";
@@ -43,16 +42,42 @@ import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
 import { documentPosition } from "@/lib/document-positions";
 import { createDocumentSession } from "@/lib/document-session";
-import { reportFailure } from "@/lib/errors";
-import { fileNameOf, isolateFileName, parentFolder, withoutDocumentExtension } from "@/lib/file";
-import { withoutScripts } from "@/lib/html";
+import { fileNameOf, isolateFileName, parentFolder } from "@/lib/file";
 import { createImmersiveChrome } from "@/lib/immersive-chrome";
 import { headingKey, type OutlineHeading } from "@/lib/markdown/outline-heading";
 import { recentFiles } from "@/lib/recent-files";
 import { settings, updateSettings } from "@/lib/settings";
 import { quietButton, rtlFlip } from "@/lib/styles";
 import type { TextStats } from "@/lib/text-stats";
-import { css, cx } from "@/styled-system/css";
+import { cx } from "@/styled-system/css";
+import { createDocumentActions } from "./document-actions";
+import {
+  card,
+  cardImmersive,
+  content,
+  contentEnd,
+  contentEndSplit,
+  contentGap,
+  dirtyDot,
+  documentArea,
+  editorArea,
+  ellipsis,
+  frameBorderBottom,
+  frameBorderEnd,
+  frameBorderStart,
+  grow,
+  mark,
+  titleBar,
+  titleBarHidden,
+  titleCenter,
+  titleEnd,
+  titleGrid,
+  titleStart,
+  windowClassic,
+  windowFrame,
+  windowImmersive,
+  wordCountLabel,
+} from "./main-window-styles";
 
 type FindMode = "closed" | "find" | "replace";
 // A drag reports the pointer for every pixel it moves; only the width it settles on is worth writing
@@ -67,139 +92,6 @@ const isImagePath = (path: string | undefined) => path !== undefined && IMAGE_FI
 const MarkdownEditor = lazy(async () => {
   const { MarkdownEditor: Component } = await import("@/features/editor/markdown-editor");
   return { default: Component };
-});
-
-const windowFrame = css({
-  height: "100vh",
-  width: "100vw",
-  display: "flex",
-  flexDirection: "column",
-  overflow: "hidden",
-  color: "foreground",
-  _print: { display: "block", height: "auto", overflow: "visible" },
-});
-const windowImmersive = css({ backgroundColor: "surface.0" });
-const windowClassic = css({ backgroundColor: "surface.1" });
-const titleBar = css({
-  overflow: "hidden",
-  transitionProperty: "height",
-  transitionDuration: "sheet",
-  transitionTimingFunction: "outExpo",
-});
-const titleBarHidden = css({ height: 0 });
-const frameBorderBottom = css({
-  borderBlockEndWidth: "hairline",
-  borderBlockEndStyle: "solid",
-  borderBlockEndColor: "border",
-});
-const frameBorderStart = css({
-  borderInlineStartWidth: "hairline",
-  borderInlineStartStyle: "solid",
-  borderInlineStartColor: "border",
-});
-const frameBorderEnd = css({
-  borderInlineEndWidth: "hairline",
-  borderInlineEndStyle: "solid",
-  borderInlineEndColor: "border",
-});
-const titleGrid = css({
-  flex: "1",
-  minWidth: 0,
-  display: "grid",
-  gridTemplateColumns: "minmax(0, 1fr) minmax(0, auto) minmax(0, 1fr)",
-  alignItems: "center",
-  gap: "2",
-});
-const titleStart = css({
-  display: "flex",
-  minWidth: 0,
-  alignItems: "center",
-  gap: "2",
-  overflow: "hidden",
-});
-const mark = css({ color: "muted.foreground" });
-const titleCenter = css({
-  minWidth: 0,
-  paddingInline: "4",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  gap: "2",
-  fontWeight: "medium",
-  color: "foreground",
-});
-const dirtyDot = css({
-  width: "1.5",
-  height: "1.5",
-  flexShrink: 0,
-  borderRadius: "full",
-  backgroundColor: "brand",
-  animationName: "zoomIn",
-  animationDuration: "snap",
-  animationTimingFunction: "outExpo",
-});
-const ellipsis = css({ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" });
-const titleEnd = css({
-  display: "flex",
-  minWidth: 0,
-  alignItems: "center",
-  justifyContent: "flex-end",
-  overflow: "hidden",
-});
-const content = css({
-  flex: "1",
-  minHeight: 0,
-  display: "flex",
-  overflow: "hidden",
-  _print: { display: "block", overflow: "visible" },
-});
-const contentGap = css({
-  gap: "var(--pref-immersive-gap)",
-  paddingBlock: "var(--pref-immersive-gap)",
-  paddingInlineStart: 0,
-  _print: { padding: 0 },
-});
-const contentEnd = css({ paddingInlineEnd: "var(--pref-immersive-gap)" });
-const contentEndSplit = css({ paddingInlineEnd: 0 });
-const card = css({
-  flex: "1",
-  minWidth: 0,
-  display: "flex",
-  flexDirection: "column",
-  overflow: "hidden",
-  _print: { display: "block", overflow: "visible" },
-});
-const cardImmersive = css({
-  borderRadius: "lg",
-  backgroundColor: "surface.1",
-  boxShadow: "sm",
-  _print: { borderRadius: 0, boxShadow: "none" },
-});
-const documentArea = css({
-  flex: "1",
-  minHeight: 0,
-  display: "flex",
-  overflow: "hidden",
-  _print: { display: "block", overflow: "visible" },
-});
-const grow = css({ flex: "1" });
-const editorArea = css({
-  flex: "1",
-  height: "full",
-  overflow: "hidden",
-  position: "relative",
-  _print: { height: "auto", overflow: "visible" },
-});
-const wordCountLabel = css({
-  textStyle: "2xs",
-  color: "muted.foreground",
-  fontVariantNumeric: "tabular-nums",
-  display: "flex",
-  flexShrink: 0,
-  alignItems: "center",
-  gap: "1.5",
-  whiteSpace: "nowrap",
-  marginInlineEnd: "2",
 });
 
 export const MainWindow: Component = () => {
@@ -594,66 +486,8 @@ export const MainWindow: Component = () => {
     if (path !== null) showFolder(path);
   };
 
-  /** Runs `run` with the whole document rendered, which printing and exporting need, and puts it back. */
-  const whilePrinting = async (run: () => Promise<unknown>) => {
-    const resume = await editor()?.prepareForPrint();
-    try {
-      await run();
-    } finally {
-      resume?.();
-    }
-  };
-
-  const exportPdf = async () => {
-    if (!session.activeDocument() || activeIsImage()) return;
-    const pdfName = withoutDocumentExtension(session.fileName()) + ".pdf";
-    await whilePrinting(() => desktop.invoke("document:export-pdf", pdfName));
-  };
-
-  const printDocument = async () => {
-    if (activeIsImage()) return;
-    await whilePrinting(() => desktop.invoke("document:print"));
-  };
-
-  /** Writes the document as the page the editor would show, as a web page or as one tall image. */
-  const exportDocument = async (format: "html" | "image") => {
-    const doc = session.activeDocument();
-    if (!doc) return;
-    const html = await editor()?.toHtml();
-    if (html === undefined) return;
-    const name =
-      withoutDocumentExtension(session.fileName()) + (format === "html" ? ".html" : ".png");
-    try {
-      await (format === "html"
-        ? desktop.invoke("document:export-html", name, html)
-        : desktop.invoke("document:export-image", name, withoutScripts(html), doc.folder));
-    } catch (error) {
-      await reportFailure(t().dialogs.saveFailed, name, messageOf(error));
-    }
-  };
-
-  /** Inserts the clipboard's text where it is being typed, leaving its formatting behind. */
-  const pastePlainText = async () => {
-    // A browser can refuse the clipboard read; there is nothing to insert then
-    const text = await desktop.invoke("clipboard:read-text").catch(() => "");
-    if (text === "") return;
-    const active = document.activeElement;
-    if (active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement) {
-      const start = active.selectionStart ?? active.value.length;
-      const end = active.selectionEnd ?? start;
-      active.setRangeText(text, start, end, "end");
-      active.dispatchEvent(new Event("input", { bubbles: true }));
-      return;
-    }
-    editor()?.pastePlainText(text);
-  };
-
-  /** Puts the selection, or the whole document when nothing is selected, on the clipboard as rich text. */
-  const copyAsHtml = async () => {
-    const fragment = await editor()?.toHtmlFragment();
-    if (fragment === undefined) return;
-    await desktop.invoke("clipboard:write-rich", fragment.markdown, fragment.html);
-  };
+  const { copyAsHtml, exportDocument, exportPdf, pastePlainText, printDocument } =
+    createDocumentActions(session, editor, activeIsImage);
 
   /** Puts the caret back where the table would go, for a size dialog that was not answered. */
   const closeTableSize = () => {

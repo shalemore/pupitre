@@ -894,3 +894,6 @@ export function createDocumentSession(
     },
   };
 }
+
+/** The open tabs and the document in each, as one object the window and its commands share. */
+export type DocumentSession = ReturnType<typeof createDocumentSession>;
