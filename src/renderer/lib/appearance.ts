@@ -6,12 +6,13 @@ import { desktop } from "@/lib/desktop";
 import { codeFontFamily, documentFontFamily, interfaceFontFamily } from "@/lib/fonts";
 import { settings } from "@/lib/settings";
 import { applyTheme, DEFAULT_THEME, importedThemes, readWindowColors, themes } from "@/lib/theme";
+import { clearToken, readToken, writeToken, type TokenName } from "@/lib/tokens";
 import { withViewTransition } from "@/lib/view-transition";
 
 /** Removes the variable when the value is undefined, so the stylesheet falls back to the theme. */
-function setOptionalProperty(name: string, value: string | undefined): void {
-  if (value === undefined) document.documentElement.style.removeProperty(name);
-  else document.documentElement.style.setProperty(name, value);
+function setOptionalProperty(name: TokenName, value: string | undefined): void {
+  if (value === undefined) clearToken(document.documentElement.style, name);
+  else writeToken(document.documentElement.style, name, value);
 }
 
 /**
@@ -73,27 +74,22 @@ export function setupAppearance(): void {
       // The theme brings the fonts the stacks below fall back to, so a change of theme rebuilds them
       activeTheme();
       const themeStyle = getComputedStyle(root);
-      const themeFonts = themeStyle.getPropertyValue("--font-document");
+      const themeFonts = readToken(themeStyle, "font-document");
       const fontStackIntent =
-        themeStyle.getPropertyValue("--font-stack-intent").trim() === "mono" ? "mono" : "text";
-      root.style.setProperty("--pref-font-size", `${fontSize}px`);
-      root.style.setProperty("--pref-line-height", String(lineHeight));
-      root.style.setProperty("--pref-content-width", CONTENT_WIDTHS[contentWidth]);
-      root.style.setProperty("--pref-immersive-gap", `${immersiveGap}px`);
+        readToken(themeStyle, "font-stack-intent") === "mono" ? "mono" : "text";
+      writeToken(root.style, "pref-font-size", `${fontSize}px`);
+      writeToken(root.style, "pref-line-height", String(lineHeight));
+      writeToken(root.style, "pref-content-width", CONTENT_WIDTHS[contentWidth]);
+      writeToken(root.style, "pref-immersive-gap", `${immersiveGap}px`);
       setOptionalProperty(
-        "--pref-font-family",
+        "pref-font-family",
         documentFontFamily(bodyFont, fallbackFont, themeFonts, fontStackIntent),
       );
       setOptionalProperty(
-        "--pref-code-font",
-        codeFontFamily(
-          codeFont,
-          fallbackFont,
-          themeStyle.getPropertyValue("--font-mono"),
-          fontStackIntent,
-        ),
+        "pref-code-font",
+        codeFontFamily(codeFont, fallbackFont, readToken(themeStyle, "font-mono"), fontStackIntent),
       );
-      setOptionalProperty("--pref-ui-font", interfaceFontFamily(uiFont, fallbackFont));
+      setOptionalProperty("pref-ui-font", interfaceFontFamily(uiFont, fallbackFont));
     });
   });
 }

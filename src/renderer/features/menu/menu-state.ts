@@ -1,5 +1,6 @@
 import { createSignal, onCleanup } from "solid-js";
 import { readDuration } from "@/lib/motion";
+import { readToken } from "@/lib/tokens";
 
 /** Used when the stylesheet cannot say how long the panel's exit takes. */
 const DEFAULT_EXIT_DURATION = 150;
@@ -7,7 +8,7 @@ const DEFAULT_EXIT_DURATION = 150;
 /** How long the panel's exit animation runs, from the duration token the closed state asks for. */
 function exitDuration(): number {
   const style = getComputedStyle(document.documentElement);
-  return readDuration(style.getPropertyValue("--transition-duration-ui"), DEFAULT_EXIT_DURATION);
+  return readDuration(readToken(style, "transition-duration-ui"), DEFAULT_EXIT_DURATION);
 }
 
 export interface Menu<T> {

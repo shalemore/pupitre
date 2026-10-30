@@ -3,6 +3,7 @@ import { type EditorState, Facet } from "@codemirror/state";
 import { type EditorView, WidgetType } from "@codemirror/view";
 import { messageOf } from "@shared/errors";
 import { isDarkColor, toHex } from "@/lib/theme";
+import { readToken, type TokenName } from "@/lib/tokens";
 import { fencedText } from "./block-text";
 import { fadeOut } from "./leave";
 import { onReveal, onScrollbar } from "./widget-events";
@@ -17,17 +18,16 @@ export type DiagramTheme = Readonly<Record<string, string | boolean>>;
  */
 export function readDiagramTheme(): DiagramTheme {
   const style = getComputedStyle(document.documentElement);
-  const color = (name: string) => toHex(style.getPropertyValue(name));
-  const canvas = color("--ui-surface-1");
-  const fill = color("--diagram-fill");
-  const stroke = color("--diagram-stroke");
-  const line = color("--diagram-line");
-  const text = color("--diagram-text");
-  const accent = color("--diagram-accent");
+  const color = (name: TokenName) => toHex(readToken(style, name));
+  const canvas = color("ui-surface-1");
+  const fill = color("diagram-fill");
+  const stroke = color("diagram-stroke");
+  const line = color("diagram-line");
+  const text = color("diagram-text");
+  const accent = color("diagram-accent");
   return {
     darkMode: isDarkColor(canvas),
-    fontFamily:
-      style.getPropertyValue("--pref-font-family") || style.getPropertyValue("--font-document"),
+    fontFamily: readToken(style, "pref-font-family") || readToken(style, "font-document"),
     background: canvas,
     primaryColor: fill,
     primaryTextColor: text,

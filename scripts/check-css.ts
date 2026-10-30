@@ -1,5 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { TOKEN_NAMES } from "../src/shared/design-tokens.ts";
 
 /**
  * Checks the two promises the stylesheets make to themes:
@@ -133,6 +134,22 @@ for (const name of themeNames) {
         message: `\`${token}\` is not defined by the app or by this theme`,
       });
     }
+  }
+}
+
+// Every token the renderer reads by name is declared, so renaming one in the stylesheets cannot
+// leave a silent empty value behind in TypeScript.
+const themeKnown = new Set<string>();
+for (const tokens of themeTokens.values()) for (const token of tokens) themeKnown.add(token);
+for (const token of TOKEN_NAMES) {
+  if (token.startsWith("pref-")) continue;
+  const name = `--${token}`;
+  if (!known.has(name) && !themeKnown.has(name)) {
+    problems.push({
+      file: "src/shared/design-tokens.ts",
+      line: 1,
+      message: `\`${name}\` is read from TypeScript but no stylesheet declares it`,
+    });
   }
 }
 

@@ -1,5 +1,6 @@
 import BezierEasing from "bezier-easing";
 import { settings } from "@/lib/settings";
+import { readToken } from "@/lib/tokens";
 
 /**
  * Whether the interface moves. The setting forces motion on or off; "system" follows the
@@ -54,8 +55,8 @@ function parseBezier(value: string): Bezier | undefined {
  */
 export function scrollTiming(): Timing {
   const style = getComputedStyle(document.documentElement);
-  const duration = readDuration(style.getPropertyValue("--transition-duration-sheet"), 300);
-  const bezier = parseBezier(style.getPropertyValue("--ease-out-expo"));
+  const duration = readDuration(readToken(style, "transition-duration-sheet"), 300);
+  const bezier = parseBezier(readToken(style, "ease-out-expo"));
   return {
     duration,
     ease: bezier ? BezierEasing(bezier.x1, bezier.y1, bezier.x2, bezier.y2) : (t) => t,

@@ -9,6 +9,7 @@
     "lib": ["ESNext"],
     "types": ["node"],
     "noEmit": true,
+    "allowImportingTsExtensions": true,
     "paths": { "@shared/*": ["./src/shared/*"] }
   },
   "include": [

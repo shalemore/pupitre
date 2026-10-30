@@ -4,6 +4,7 @@ import type { ImportedTheme } from "@shared/desktop-api";
 import { DEFAULT_LOCALE, LOCALE_CODES, type SupportedLocale } from "@shared/i18n";
 import { DEFAULT_SETTINGS } from "@shared/settings";
 import { desktop } from "@/lib/desktop";
+import { readToken } from "@/lib/tokens";
 
 type ColorScheme = "light" | "dark";
 
@@ -246,7 +247,7 @@ export function isDarkColor(hex: string): boolean {
 export function readWindowColors(): { background: string; symbol: string } {
   const style = getComputedStyle(document.documentElement);
   return {
-    background: toHex(style.getPropertyValue("--ui-surface-1")),
-    symbol: toHex(style.getPropertyValue("--ui-text-secondary")),
+    background: toHex(readToken(style, "ui-surface-1")),
+    symbol: toHex(readToken(style, "ui-text-secondary")),
   };
 }
