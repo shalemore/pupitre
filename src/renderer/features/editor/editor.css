@@ -1181,24 +1181,6 @@
   }
 
   /*
-   * A rendered block appears when its source first parses: a formula, a diagram, a table, an HTML
-   * block, a table of contents. Its fill and its frame arrive with it; a theme that gives one of
-   * them a background sees it open up.
-   */
-  :is(.md-math, .md-math-block, .md-mermaid, .md-table-block, .md-html-block, .md-toc) {
-    transition:
-      opacity var(--motion-block-duration) var(--motion-block-ease),
-      background-color var(--motion-block-duration) var(--motion-block-ease),
-      border-color var(--motion-block-duration) var(--motion-block-ease);
-  }
-
-  @starting-style {
-    :is(.md-math, .md-math-block, .md-mermaid, .md-table-block, .md-html-block, .md-toc) {
-      opacity: 0;
-    }
-  }
-
-  /*
    * Folding, see folding.ts. The fold gutter is a column of no width of its own that hangs into the
    * room the document keeps for its inline start padding: the document is centered, so a gutter
    * with room of its own would take that centering away and shift the text sideways. Its markers
