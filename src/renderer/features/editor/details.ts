@@ -1,7 +1,9 @@
+import { syntaxTree } from "@codemirror/language";
 import { type EditorState, StateEffect, StateField } from "@codemirror/state";
 import { type EditorView, WidgetType } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
 import { textOfHtml } from "@/lib/html";
+import { readDuration } from "@/lib/motion";
 
 /**
  * Collapsible `<details>` sections whose content is Markdown.
@@ -67,6 +69,99 @@ export function detailsSection(
   };
 }
 
+/** How long a section takes to fold away, when the stylesheet cannot say. */
+const FOLD_FALLBACK_MS = 300;
+
+/** Which content the editor is folding or unfolding right now, as positions in the document. */
+export interface DetailsAnimation {
+  readonly from: number;
+  readonly to: number;
+  readonly closing: boolean;
+}
+
+const animateDetails = StateEffect.define<DetailsAnimation | undefined>();
+
+/**
+ * The content a section is folding or unfolding. The lines take their class from it, so they keep
+ * it while the editor measures them; a class set on the DOM would be wiped by the next update.
+ */
+export const detailsAnimation = StateField.define<DetailsAnimation | undefined>({
+  create: () => undefined,
+  update(value, tr) {
+    let next =
+      value !== undefined && tr.docChanged
+        ? {
+            ...value,
+            from: tr.changes.mapPos(value.from, 1),
+            to: tr.changes.mapPos(value.to, -1),
+          }
+        : value;
+    for (const effect of tr.effects) {
+      if (effect.is(animateDetails)) next = effect.value;
+    }
+    return next;
+  },
+});
+
+/** Whether this update asked a section to fold or unfold, so the lines it covers are rebuilt. */
+export function detailsAnimationChanged(state: EditorState, previous: EditorState): boolean {
+  return state.field(detailsAnimation, false) !== previous.field(detailsAnimation, false);
+}
+
+/** The opening block a section starts with, from the position its summary stands for. */
+function openingBlock(state: EditorState, pos: number): SyntaxNode | undefined {
+  for (
+    let node: SyntaxNode | null = syntaxTree(state).resolveInner(pos + 1, 1);
+    node;
+    node = node.parent
+  ) {
+    if (node.name === "HTMLBlock") return node;
+  }
+  return undefined;
+}
+
+/**
+ * Opens or closes a section the way the outline rows do: the content it folds shrinks to nothing
+ * first, and the lines it brings in grow back from nothing. Content the selection is editing stays
+ * shown either way, since the source is what is being written there.
+ */
+function toggleSection(view: EditorView, pos: number, open: boolean): void {
+  const state = view.state;
+  const opening = openingBlock(state, pos);
+  const section = opening && detailsSection(state, opening);
+  const from = opening ? state.doc.lineAt(opening.to).to + 1 : pos;
+  const to = section?.closing ? state.doc.lineAt(section.closing.from).from - 1 : state.doc.length;
+  const sourceEditing = state.selection.ranges.some(
+    (range) => range.from <= to && range.to >= from,
+  );
+  if (sourceEditing || opening === undefined || from > to) {
+    view.dispatch({ effects: toggleDetails.of(pos) });
+    return;
+  }
+  if (!open) {
+    view.dispatch({
+      effects: [toggleDetails.of(pos), animateDetails.of({ from, to, closing: false })],
+    });
+    return;
+  }
+  // The content folds first, and the section changes once it has gone. The wait is the transition
+  // the stylesheet gave the lines, so a theme that changes its motion is followed, and a motion
+  // turned off makes it immediate
+  view.dispatch({ effects: animateDetails.of({ from, to, closing: true }) });
+  const closing = view.dom.querySelector<HTMLElement>(".md-details-closing");
+  const wait =
+    closing === null
+      ? 0
+      : readDuration(getComputedStyle(closing).transitionDuration, FOLD_FALLBACK_MS);
+  window.setTimeout(() => {
+    const current = openingBlock(view.state, pos);
+    // The document may have changed under the animation; only close what is still open there
+    if (current !== undefined && detailsSection(view.state, current)?.open) {
+      view.dispatch({ effects: [toggleDetails.of(pos), animateDetails.of(undefined)] });
+    }
+  }, wait + 16);
+}
+
 export class SummaryWidget extends WidgetType {
   constructor(
     readonly summary: string,
@@ -88,7 +183,7 @@ export class SummaryWidget extends WidgetType {
     toggle.className = "md-details-toggle";
     toggle.addEventListener("mousedown", (event) => {
       event.preventDefault();
-      view.dispatch({ effects: toggleDetails.of(this.pos) });
+      toggleSection(view, this.pos, this.open);
     });
     summary.append(toggle, this.summary);
     return summary;

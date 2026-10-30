@@ -9,7 +9,13 @@ import {
 import { Decoration, type DecorationSet, EditorView, type WidgetType } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
 import { fencedText } from "./block-text";
-import { detailsSection, SummaryWidget, toggledDetails, toggleDetails } from "./details";
+import {
+  detailsAnimation,
+  detailsSection,
+  SummaryWidget,
+  toggledDetails,
+  toggleDetails,
+} from "./details";
 import { collectHeadings } from "./document-structure";
 import { HtmlBlockWidget, isRenderableHtml } from "./html";
 import { htmlBlockPreview } from "./html-block";
@@ -261,4 +267,9 @@ const renderedBlockDecorations = StateField.define<RenderedBlocksState>({
   provide: (field) => EditorView.decorations.from(field, (state) => state.decorations),
 });
 
-export const renderedBlocks: Extension = [toggledDetails, renderedBlockDecorations, tableCursor];
+export const renderedBlocks: Extension = [
+  toggledDetails,
+  detailsAnimation,
+  renderedBlockDecorations,
+  tableCursor,
+];

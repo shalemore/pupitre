@@ -22,6 +22,7 @@ import { desktop } from "@/lib/desktop";
 import { pathFromFileUrl } from "@/lib/file";
 import { AlertTitleWidget, alertTitles, alertType } from "./alerts";
 import { CodeCornerWidget, type FenceInfo } from "./code-corner";
+import { detailsAnimation, detailsAnimationChanged } from "./details";
 import { collectHeadings, findHeadingByAnchor, HEADING_LEVEL } from "./document-structure";
 import { EmojiWidget, emojiFor } from "./emoji";
 import { footnoteReferences, footnoteTarget } from "./footnotes";
@@ -342,6 +343,11 @@ class DecorationBuilder {
 
   finish(): DecorationSet {
     this.collapseBlankLines();
+    const animation = this.state.field(detailsAnimation, false);
+    // A line of the folding content is decorated even when nothing else marks it
+    if (animation !== undefined && animation.from <= animation.to) {
+      this.eachLine(animation.from, animation.to, () => {});
+    }
     for (const [start, line] of this.lines) {
       const leading = /^[ \t]*/.exec(this.lineAt(start).text)?.[0].length ?? 0;
       this.hide(start, start + Math.min(leading, line.listIndent));
@@ -358,6 +364,9 @@ class DecorationBuilder {
       }
       if (variables.length > 0) attributes["style"] = variables.join("; ");
       if (this.growing.has(start)) line.classes.add("md-code-line-in");
+      if (animation !== undefined && start >= animation.from && start <= animation.to) {
+        line.classes.add(animation.closing ? "md-details-closing" : "md-details-opening");
+      }
       if (line.classes.size > 0) attributes["class"] = [...line.classes].join(" ");
       this.decorations.push(Decoration.line({ attributes }).range(start));
     }
@@ -1046,6 +1055,7 @@ const livePreviewPlugin = ViewPlugin.fromClass(
         update.selectionSet ||
         update.viewportChanged ||
         printingChanged(update.state, update.startState) ||
+        detailsAnimationChanged(update.state, update.startState) ||
         syntaxTree(update.state) !== syntaxTree(update.startState)
       ) {
         this.decorations = buildDecorations(

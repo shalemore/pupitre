@@ -1016,6 +1016,7 @@
     height: 0.5em;
     background: currentColor;
     clip-path: polygon(0 0, 100% 50%, 0 100%);
+    transition: transform var(--transition-duration-ui) var(--ease-out-expo);
   }
 
   .md-details-toggle:dir(rtl)::before {
@@ -1024,6 +1025,30 @@
 
   .md-details-summary.is-open .md-details-toggle::before {
     transform: rotate(90deg);
+  }
+
+  /*
+   * A section folds and unfolds the way an outline row does: the content it closes shrinks to
+   * nothing, and the lines it opens grow back from nothing.
+   */
+  .md-document > :is(.md-details-opening, .md-details-closing) {
+    interpolate-size: allow-keywords;
+    overflow: clip;
+    transition:
+      block-size var(--motion-fold-duration) var(--motion-fold-ease),
+      padding-block var(--motion-fold-duration) var(--motion-fold-ease);
+  }
+
+  @starting-style {
+    .md-document > .md-details-opening {
+      block-size: 0;
+      padding-block: 0;
+    }
+  }
+
+  .md-document > .md-details-closing {
+    block-size: 0;
+    padding-block: 0;
   }
 
   /*
