@@ -1,5 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import pandaConfig from "../panda.config.ts";
 import { TOKEN_NAMES } from "../src/shared/design-tokens.ts";
 
 /**
@@ -68,6 +69,20 @@ function definedTokens(css: string): Set<string> {
     match[1] === undefined ? [] : [match[1]],
   );
   return new Set(names);
+}
+
+/** Every custom property a value somewhere in an object refers to. */
+function referencedTokens(value: unknown, found = new Set<string>()): Set<string> {
+  if (typeof value === "string") {
+    for (const match of value.matchAll(/var\(\s*(--[a-z0-9-]+)/gi)) {
+      if (match[1] !== undefined) found.add(match[1]);
+    }
+  } else if (Array.isArray(value)) {
+    for (const item of value) referencedTokens(item, found);
+  } else if (value !== null && typeof value === "object") {
+    for (const item of Object.values(value)) referencedTokens(item, found);
+  }
+  return found;
 }
 
 function usedTokens(css: string): Map<string, number> {
@@ -140,6 +155,17 @@ for (const token of TOKEN_NAMES) {
       file: "src/shared/design-tokens.ts",
       line: 1,
       message: `\`${name}\` is read from TypeScript but no stylesheet declares it`,
+    });
+  }
+}
+
+// A token the Panda config aliases is declared too: a typo there would silently fall back
+for (const token of referencedTokens(pandaConfig.theme.extend?.tokens)) {
+  if (!known.has(token)) {
+    problems.push({
+      file: "panda.config.ts",
+      line: 1,
+      message: `\`${token}\` is aliased by a Panda token but no stylesheet declares it`,
     });
   }
 }
