@@ -54,11 +54,13 @@ describe("the HTML blocks the editor shows rendered", () => {
   it("gives the inline formats the classes their Markdown spellings use", () => {
     const view = markdownView("");
     const block = new HtmlBlockWidget(
-      "<p><b>bold</b> <em>italic</em> <kbd>Ctrl</kbd> <mark>hi</mark></p>",
+      "<p><b>bold</b> <em>italic</em> <del>gone</del> <code>x</code> <kbd>Ctrl</kbd> <mark>hi</mark></p>",
       undefined,
     ).toDOM(view);
-    expect(block.querySelector("b")?.className).toBe("md-tag md-tag-b");
-    expect(block.querySelector("em")?.className).toBe("md-tag md-tag-em");
+    expect(block.querySelector("b")?.className).toBe("md-tag md-tag-b md-strong");
+    expect(block.querySelector("em")?.className).toBe("md-tag md-tag-em md-em");
+    expect(block.querySelector("del")?.className).toBe("md-tag md-tag-del md-strike");
+    expect(block.querySelector("code")?.className).toBe("md-tag md-tag-code md-code");
     expect(block.querySelector("kbd")?.className).toBe("md-tag md-tag-kbd");
     expect(block.querySelector("mark")?.className).toBe("md-tag md-tag-mark");
     view.destroy();

@@ -26,7 +26,7 @@ import { detailsAnimation, detailsAnimationChanged } from "./details";
 import { collectHeadings, findHeadingByAnchor, HEADING_LEVEL } from "./document-structure";
 import { EmojiWidget, emojiFor } from "./emoji";
 import { footnoteReferences, footnoteTarget } from "./footnotes";
-import { htmlTag, isFormattingTag, LineBreakWidget } from "./html";
+import { formattingTagClass, htmlTag, isFormattingTag, LineBreakWidget } from "./html";
 import { htmlBlockPreview, type HtmlElement } from "./html-block";
 import { openImageMenu } from "./image-menu";
 import {
@@ -716,7 +716,7 @@ function visitInlineHtml(builder: DecorationBuilder, node: SyntaxNode): void {
     open.splice(index);
     // The content keeps the tag's look while the tags are shown, as text between `**` keeps its
     // weight while the markers are edited
-    builder.mark(opening.to, child.from, `md-tag md-tag-${tag.name}`);
+    builder.mark(opening.to, child.from, formattingTagClass(tag.name));
     if (touches(builder.ranges, opening.from, child.to)) {
       builder.mark(opening.from, opening.to, "md-mark");
       builder.mark(child.from, child.to, "md-mark");

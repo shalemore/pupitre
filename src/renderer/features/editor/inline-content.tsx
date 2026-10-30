@@ -3,7 +3,7 @@ import type { SyntaxNode } from "@lezer/common";
 import { type Component, createResource, For, type JSX, Match, Switch } from "solid-js";
 import { Dynamic } from "solid-js/web";
 import { emojiFor } from "./emoji";
-import { htmlTag, isFormattingTag } from "./html";
+import { formattingTagClass, htmlTag, isFormattingTag } from "./html";
 import { type ImageAlignment, imageOf, imageStyle, parseImageTag, resolveUrl } from "./images";
 import { markers } from "./live-preview";
 import { renderMath } from "./mathjax";
@@ -157,7 +157,7 @@ export function inlineItems(
             push({
               type: "element",
               tag: element.tag,
-              class: `md-tag md-tag-${element.tag}`,
+              class: formattingTagClass(element.tag),
               children: element.items,
             });
           }

@@ -29,6 +29,26 @@ const FORMATTING_TAGS = new Set([
   "u",
 ]);
 
+/**
+ * The Markdown construct an element stands for. Its content takes the same classes as that
+ * construct, so a theme styles `<strong>` and `**` in one place and both read alike.
+ */
+const MARKDOWN_EQUIVALENT: Readonly<Record<string, string>> = {
+  b: "md-strong",
+  code: "md-code",
+  del: "md-strike",
+  em: "md-em",
+  i: "md-em",
+  s: "md-strike",
+  strong: "md-strong",
+};
+
+/** The classes the content of a formatting element takes, for the live preview and HTML blocks. */
+export function formattingTagClass(name: string): string {
+  const equivalent = MARKDOWN_EQUIVALENT[name];
+  return `md-tag md-tag-${name}${equivalent === undefined ? "" : ` ${equivalent}`}`;
+}
+
 /** The name of an inline HTML tag such as `<kbd>` or `</kbd>`, and whether it closes. */
 export function htmlTag(source: string): { name: string; closing: boolean } | undefined {
   const match = /^<(\/?)([a-z][a-z0-9]*)\b[^>]*>$/i.exec(source);
@@ -57,7 +77,7 @@ export function decorateHtmlBlock(block: HTMLElement): void {
   for (const anchor of block.querySelectorAll("a")) anchor.classList.add("md-link");
   for (const tag of FORMATTING_TAGS) {
     for (const element of block.querySelectorAll(tag)) {
-      element.classList.add("md-tag", `md-tag-${tag}`);
+      for (const name of formattingTagClass(tag).split(" ")) element.classList.add(name);
     }
   }
 }
