@@ -2,65 +2,22 @@ import { debounce } from "@solid-primitives/scheduled";
 import { batch, createEffect, createMemo, createSignal, on, onCleanup } from "solid-js";
 import {
   IMAGE_FILE,
-  type Draft,
   type DraftSession,
   type LineEnding,
   type OpenedDocument,
-  type TextEncoding,
 } from "@shared/desktop-api";
 import { messageOf } from "@shared/errors";
 import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
 import { getSampleDocument } from "@/features/samples/sample-document";
 import { currentLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
+import { createDocumentDrafts } from "@/lib/document-drafts";
+import { isImageTab, isTabDirty, type OpenDocument, type Tab } from "@/lib/document-tab";
 import { reportFailure } from "@/lib/errors";
 import { fileNameOf, withTrailingNewline } from "@/lib/file";
 import { createPendingImages, type PendingImages } from "@/lib/pending-images";
 import { recentFiles } from "@/lib/recent-files";
 import { settings } from "@/lib/settings";
-
-/** The file behind a tab, the way it was opened and is written back. */
-export interface OpenDocument {
-  /**
-   * Increases whenever the editor has to be built again around another text, which is every time
-   * another tab is shown and every time a file is reloaded, so undo history never crosses them.
-   */
-  id: number;
-  path: string | undefined;
-  folder: string | undefined;
-  baseUrl: string | undefined;
-  /** The file's original line ending; new documents use LF. */
-  lineEnding: LineEnding;
-  /** The file's encoding, which a save keeps; new documents use UTF-8. */
-  encoding: TextEncoding;
-  isSample: boolean;
-}
-
-/** One open document, with the text being edited and the version it is compared to. */
-export interface Tab {
-  /** Names the tab itself: switching and closing address a tab by it, and it stays when the text is reloaded. */
-  id: number;
-  doc: OpenDocument;
-  markdown: string;
-  /** What the file or the tab last held; the tab is dirty while `markdown` differs from it. */
-  savedMarkdown: string;
-  /**
-   * Whether the editor holds a change that is not saved. The text itself is read from the editor
-   * when it is needed, so a keystroke does not copy a whole document into the session.
-   */
-  edited: boolean;
-  /** The file was deleted elsewhere; until the tab is saved again its text exists nowhere else. */
-  missingOnDisk: boolean;
-  /** What the file on disk is known to contain, so a change caused by the tab's own save is recognized. */
-  diskContent: string;
-  /** The user let this tab's changes go on the way out; no draft of it is kept until it is typed into again. */
-  discarded: boolean;
-  /**
-   * Pictures pasted into the document before it had a file. They belong to the tab: switching tabs
-   * rebuilds the editor that showed them, and a save of any tab has to write them first.
-   */
-  pendingImages: PendingImages;
-}
 
 /** The text of a closed tab that had no file: nothing on disk holds it, so the closed tabs keep it whole. */
 interface InMemoryTab extends Omit<OpenDocument, "id" | "path"> {
@@ -83,22 +40,12 @@ const AUTO_SAVE_DELAY = 1500;
 const SAVED_CHECK_DELAY = 400;
 // File › Reopen Closed Tab walks back through the tabs that were closed, and only so many are kept
 const CLOSED_TAB_LIMIT = 20;
-// A draft follows the pause after typing, not the keystrokes themselves; the main process writes it out a moment later
-const DRAFT_WRITE_DELAY = 1000;
-// A draft copies the text of every changed tab into the profile; a document this large would make
-// every pause and every close write hundreds of megabytes, so it is not drafted at all
-const MAX_DRAFT_CHARACTERS = 8 * 1024 * 1024;
 // Comparing the whole document with the saved version after an undo is only cheap while it is small
 const MAX_SAVED_CHECK_CHARACTERS = 8 * 1024 * 1024;
 // Saving compares the file on disk with what was last read or written; bigger files skip the comparison to keep saving fast
 const MAX_CONFLICT_CHECK_BYTES = 512 * 1024;
 let nextDocumentId = 1;
 let nextTabId = 1;
-
-export const isTabDirty = (tab: Tab) => tab.edited || tab.missingOnDisk;
-
-/** A tab that shows a picture: it holds no text, so it is never saved, drafted, searched or formatted. */
-const isImageTab = (tab: Tab) => tab.doc.path !== undefined && IMAGE_FILE.test(tab.doc.path);
 
 /**
  * The open tabs and the life cycle of the document in each: new, open, save, save as, close, and
@@ -348,66 +295,7 @@ export function createDocumentSession(
     if (editor.getMarkdown() === tab.savedMarkdown) patchTab(tab.id, { edited: false });
   }, SAVED_CHECK_DELAY);
 
-  /** The text of a tab as a draft would keep it, or undefined when it is too large to copy. */
-  const draftText = (tab: Tab): string | undefined => {
-    const editor = tab.id === activeTabId() ? getEditor() : undefined;
-    if (editor !== undefined) {
-      if (editor.getMarkdownLength() > MAX_DRAFT_CHARACTERS) return undefined;
-      return editor.getMarkdown();
-    }
-    return tab.markdown.length <= MAX_DRAFT_CHARACTERS ? tab.markdown : undefined;
-  };
-
-  /** One tab as a crash would leave it: the text being edited, and the version it is compared to. */
-  const draftOfTab = (tab: Tab): Draft | undefined => {
-    if (isImageTab(tab)) return undefined;
-    const markdown = draftText(tab);
-    if (markdown === undefined) return undefined;
-    return {
-      path: tab.doc.path,
-      folder: tab.doc.folder,
-      baseUrl: tab.doc.baseUrl,
-      markdown,
-      savedMarkdown: tab.savedMarkdown,
-      lineEnding: tab.doc.lineEnding,
-      encoding: tab.doc.encoding,
-      isSample: tab.doc.isSample,
-    };
-  };
-
-  /** What a crash would bring back: every tab with unsaved changes, and which of them was being edited. */
-  const currentDraft = (): DraftSession | undefined => {
-    const unsaved = tabs()
-      .filter((tab) => !tab.discarded && isTabDirty(tab))
-      .map((tab) => ({ tab, draft: draftOfTab(tab) }))
-      .filter((entry): entry is { tab: Tab; draft: Draft } => entry.draft !== undefined);
-    if (unsaved.length === 0) return undefined;
-    // The active tab is only among them when it has changes of its own; the first one stands in otherwise
-    const active = unsaved.findIndex(({ tab }) => tab.id === activeTabId());
-    return { tabs: unsaved.map(({ draft }) => draft), active: Math.max(active, 0) };
-  };
-
-  const writeDraft = debounce(() => {
-    const draft = currentDraft();
-    if (draft === undefined) {
-      void desktop.invoke("draft:clear");
-      return;
-    }
-    void desktop.invoke("draft:write", draft);
-  }, DRAFT_WRITE_DELAY);
-
-  const dropDraft = () => {
-    writeDraft.clear();
-    void desktop.invoke("draft:clear");
-  };
-
-  /** Keeps what is unsaved right now, for a window that closes before the delay of the draft ends. */
-  const flushDraft = () => {
-    const draft = currentDraft();
-    writeDraft.clear();
-    if (draft === undefined) return dropDraft();
-    void desktop.invoke("draft:write", draft);
-  };
+  const drafts = createDocumentDrafts({ tabs, activeTabId, editor: getEditor });
 
   /**
    * Asks to save, discard or cancel the changes of one tab; `discard` means they are given up for
@@ -725,7 +613,7 @@ export function createDocumentSession(
     if (!tab.edited || tab.discarded) {
       patchTab(tab.id, { edited: true, discarded: false });
     } else if (startupDone()) {
-      writeDraft();
+      drafts.writeDraft();
     }
     checkSaved();
     if (settings().autoSave) scheduleSave();
@@ -852,10 +740,10 @@ export function createDocumentSession(
   createEffect(() => {
     if (!startupDone()) return;
     if (!tabs().some((tab) => !tab.discarded && isTabDirty(tab))) {
-      dropDraft();
+      drafts.dropDraft();
       return;
     }
-    writeDraft();
+    drafts.writeDraft();
   });
 
   return {
@@ -885,11 +773,11 @@ export function createDocumentSession(
     handleRename,
     restoreOnStartup,
     confirmDiscard,
-    flushDraft,
+    flushDraft: drafts.flushDraft,
     dispose: () => {
       scheduleSave.clear();
       checkSaved.clear();
-      flushDraft();
+      drafts.flushDraft();
       for (const tab of tabs()) tab.pendingImages.dispose();
     },
   };
