@@ -50,6 +50,7 @@ import { escapeHtml } from "@/lib/html";
 import { settings } from "@/lib/settings";
 import { type TextStats } from "@/lib/text-stats";
 import { themeApplied } from "@/lib/theme";
+import { withViewTransition } from "@/lib/view-transition";
 import { alertTitles } from "./alerts";
 import { codeHighlight } from "./code-highlight";
 import { codeLanguageFor } from "./code-languages";
@@ -558,10 +559,15 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     // as they are. The editor remembers the mode it is set to itself, because printing shows the
     // rendered document even in source mode without the setting changing.
     let sourceConfigured = settings().sourceMode;
-    const showSource = (sourceMode: boolean): void => {
+    const showSource = (sourceMode: boolean, animate = true): void => {
       if (!markdown || sourceConfigured === sourceMode) return;
       sourceConfigured = sourceMode;
-      view.dispatch({ effects: previewCompartment.reconfigure(previewOf(sourceMode)) });
+      const reconfigure = () =>
+        view.dispatch({ effects: previewCompartment.reconfigure(previewOf(sourceMode)) });
+      // The markers, the renderings and every line's height change at once: the window cross-fades
+      // the two states instead of the document flashing from one to the other
+      if (animate) withViewTransition(reconfigure);
+      else reconfigure();
     };
 
     // The setting may be changed from the View menu, the settings window or a folder's own file
@@ -747,15 +753,19 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       getMarkdownLength: () => view.state.doc.length,
       focus: () => view.focus(),
       replaceDocument: (text) => {
-        view.dispatch({
-          changes: { from: 0, to: view.state.doc.length, insert: text },
-          // A restored version starts at its own beginning, whatever was selected before
-          selection: { anchor: 0 },
-          scrollIntoView: true,
-          // A change made by the app rather than typed would otherwise fold into the typing just
-          // before it, and one Undo would take back more than the version that was restored
-          annotations: [isolateHistory.of("full")],
-        });
+        // A version that replaces the whole document swaps every rendering at once; the window
+        // cross-fades the two texts instead of flashing the restored text in
+        withViewTransition(() =>
+          view.dispatch({
+            changes: { from: 0, to: view.state.doc.length, insert: text },
+            // A restored version starts at its own beginning, whatever was selected before
+            selection: { anchor: 0 },
+            scrollIntoView: true,
+            // A change made by the app rather than typed would otherwise fold into the typing just
+            // before it, and one Undo would take back more than the version that was restored
+            annotations: [isolateHistory.of("full")],
+          }),
+        );
         view.focus();
       },
       scrollTo: (pos) => {
@@ -836,13 +846,13 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         // and takes it out again afterwards. The extensions go in first: a printing field added by
         // the same change would not see the effect that turns printing on.
         const sourceMode = sourceConfigured;
-        showSource(false);
+        showSource(false, false);
         view.dispatch({ effects: setPrinting.of(true) });
         forceParsing(view, view.state.doc.length, FULL_PARSE_TIMEOUT_MS);
         await Promise.all([prerenderMath(view.state), prerenderDiagrams(view.state)]);
         return () => {
           view.dispatch({ effects: setPrinting.of(false) });
-          showSource(sourceMode);
+          showSource(sourceMode, false);
           restore();
         };
       },

@@ -604,6 +604,19 @@
 }
 
 /*
+ * View transitions (withViewTransition): the browser paints the window before and after an update
+ * and cross-fades the two images, which is how a swap that reflows every line can move without
+ * CodeMirror's measurements ever seeing the animation. The default cross-fade keeps the app's timing.
+ */
+@layer base {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: var(--motion-view-duration);
+    animation-timing-function: var(--motion-view-ease);
+  }
+}
+
+/*
  * The title bar hides the parts it can do without as it narrows, and the menu bar clips its own
  * items once nothing is left to hide (see GIVE_WAY in title-bar.tsx). These belong to the utilities
  * layer, where their selectors outweigh the `flex` and `shrink-0` classes on those parts.
