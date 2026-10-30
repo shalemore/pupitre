@@ -267,6 +267,9 @@ const layeredStyles = EditorView.theme({
     caretColor: "revert-layer",
   },
   ".cm-placeholder": { color: "revert-layer" },
+  // A hidden heading marker is a zero-width replacement; the buffer CodeMirror puts there is 1em
+  // tall, which would make the line grow when the marker shows or hides
+  ".md-heading .cm-widgetBuffer": { height: "0px" },
   // The fold gutter is not a column of its own (editor.css), so it wears neither of CodeMirror's
   // color schemes: its surface comes from the layers, where a theme can give it one
   "&.cm-editor .cm-gutters": {
