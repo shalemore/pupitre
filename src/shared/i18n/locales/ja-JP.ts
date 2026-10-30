@@ -1,4 +1,4 @@
-import type { TranslationSchema } from "../types";
+import type { TranslationSchema } from "@shared/i18n/types";
 
 export const jaJP = {
   common: {

@@ -1,5 +1,5 @@
-import { createPlural } from "../plural";
-import type { TranslationSchema } from "../types";
+import { createPlural } from "@shared/i18n/plural";
+import type { TranslationSchema } from "@shared/i18n/types";
 
 const words = createPlural("cs", { one: "slovo", few: "slova", many: "slov" });
 const characters = createPlural("cs", { one: "znak", few: "znaky", many: "znaků" });
