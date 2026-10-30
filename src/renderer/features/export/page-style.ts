@@ -1,6 +1,8 @@
+import { CONTENT_WIDTHS, DEFAULT_SETTINGS } from "@shared/settings";
 import type { AlertType } from "@/features/editor/alerts";
 import { CODE_COLOR_TOKENS, codeHighlightStyle } from "@/features/editor/code-highlight";
 import editorCss from "@/features/editor/editor.css?raw";
+import { FALLBACK_FONTS } from "@/lib/fonts";
 import { activeThemeCss, isDarkColor, toHex } from "@/lib/theme";
 
 /**
@@ -40,11 +42,11 @@ function readTokens() {
     important: hex("--alert-important", raw("--ui-brand")),
     warning: hex("--alert-warning", raw("--ui-danger")),
     caution: hex("--alert-caution", raw("--ui-danger")),
-    bodyFont: raw("--pref-font-family") || raw("--font-document") || "system-ui, sans-serif",
-    codeFont: raw("--pref-code-font") || raw("--font-mono") || "ui-monospace, monospace",
-    fontSize: raw("--pref-font-size") || "14px",
-    lineHeight: raw("--pref-line-height") || "1.7",
-    contentWidth: raw("--pref-content-width") || "52rem",
+    bodyFont: raw("--pref-font-family") || raw("--font-document") || FALLBACK_FONTS.document,
+    codeFont: raw("--pref-code-font") || raw("--font-mono") || FALLBACK_FONTS.code,
+    fontSize: raw("--pref-font-size") || `${DEFAULT_SETTINGS.fontSize}px`,
+    lineHeight: raw("--pref-line-height") || String(DEFAULT_SETTINGS.lineHeight),
+    contentWidth: raw("--pref-content-width") || CONTENT_WIDTHS[DEFAULT_SETTINGS.contentWidth],
     /** The code colors, under the names the highlighter reads them by (code-highlight.ts). */
     syntax: CODE_COLOR_TOKENS.map((token) => ({
       name: `--syntax-${token}`,

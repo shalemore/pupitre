@@ -1,19 +1,12 @@
 import { createPrefersDark } from "@solid-primitives/media";
 import { createEffect, createMemo, createRoot } from "solid-js";
-import type { ContentWidth } from "@shared/settings";
+import { CONTENT_WIDTHS } from "@shared/settings";
 import { currentDirection, currentLocale } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { codeFontFamily, documentFontFamily, interfaceFontFamily } from "@/lib/fonts";
 import { settings } from "@/lib/settings";
 import { applyTheme, DEFAULT_THEME, importedThemes, readWindowColors, themes } from "@/lib/theme";
 import { withViewTransition } from "@/lib/view-transition";
-
-const CONTENT_WIDTHS: Record<ContentWidth, string> = {
-  compact: "42rem",
-  normal: "52rem",
-  wide: "64rem",
-  full: "none",
-};
 
 /** Removes the variable when the value is undefined, so the stylesheet falls back to the theme. */
 function setOptionalProperty(name: string, value: string | undefined): void {

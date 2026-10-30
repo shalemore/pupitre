@@ -143,6 +143,14 @@ export type Settings = z.output<typeof settingsSchema>;
 export type SettingKey = keyof Settings;
 export type ContentWidth = Settings["contentWidth"];
 
+/** The width of the reading column each `contentWidth` choice asks for. */
+export const CONTENT_WIDTHS: Record<ContentWidth, string> = {
+  compact: "42rem",
+  normal: "52rem",
+  wide: "64rem",
+  full: "none",
+};
+
 export const SETTING_KEYS = settingsSchema.keyof().options;
 
 /** Where a folder keeps its own settings, relative to the folder; the format is that of the global file. */

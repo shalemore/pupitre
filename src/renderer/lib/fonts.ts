@@ -121,6 +121,15 @@ function userFontStack(
   return families.join(", ");
 }
 
+/**
+ * The face a document falls back to when neither the theme nor the settings name one, so that a
+ * page still has a font when it is drawn where the theme's variables are not there to answer.
+ */
+export const FALLBACK_FONTS = {
+  document: "system-ui, sans-serif",
+  code: "ui-monospace, monospace",
+} as const;
+
 /** The body font stack; themeStack is the computed value of the theme's --font-document. */
 export function documentFontFamily(
   bodyFont: string,
