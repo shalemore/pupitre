@@ -25,14 +25,14 @@ export interface Timing {
   ease: (t: number) => number;
 }
 
-/** A duration token from the stylesheet in milliseconds, or `fallback` when it cannot be read. */
-export function readDuration(value: string, fallback: number): number {
+/** A duration token from the stylesheet in milliseconds, or 0 when it cannot be read. */
+export function readDuration(value: string): number {
   const length = Number.parseFloat(value);
-  if (!Number.isFinite(length)) return fallback;
+  if (!Number.isFinite(length)) return 0;
   const trimmed = value.trim();
   if (trimmed.endsWith("ms")) return length;
   if (trimmed.endsWith("s")) return length * 1000;
-  return fallback;
+  return 0;
 }
 
 function parseBezier(value: string): Bezier | undefined {
@@ -55,7 +55,7 @@ function parseBezier(value: string): Bezier | undefined {
  */
 export function scrollTiming(): Timing {
   const style = getComputedStyle(document.documentElement);
-  const duration = readDuration(readToken(style, "transition-duration-sheet"), 300);
+  const duration = readDuration(readToken(style, "transition-duration-sheet"));
   const bezier = parseBezier(readToken(style, "ease-out-expo"));
   return {
     duration,

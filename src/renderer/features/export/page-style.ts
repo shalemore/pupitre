@@ -4,6 +4,7 @@ import { CODE_COLOR_TOKENS, codeHighlightStyle } from "@/features/editor/code-hi
 import editorCss from "@/features/editor/editor.css?raw";
 import { FALLBACK_FONTS } from "@/lib/fonts";
 import { activeThemeCss, isDarkColor, toHex } from "@/lib/theme";
+import { readToken, type TokenName } from "@/lib/tokens";
 
 /**
  * The stylesheet of an exported page. An export is ordinary HTML (`h1`, `p`, `ul`, `pre`), so the
@@ -17,40 +18,43 @@ import { activeThemeCss, isDarkColor, toHex } from "@/lib/theme";
 function readTokens() {
   const root = getComputedStyle(document.documentElement);
   const raw = (name: string) => root.getPropertyValue(name).trim();
+  const token = (name: TokenName) => readToken(root, name);
   /*
    * A host without a canvas (a test, or a renderer that never draws) still gets a page: a color
    * that cannot be converted stays as the theme wrote it, and CSS reads both forms.
    */
-  const hex = (name: string, fallback = "") => {
-    const color = raw(name) || fallback || "#000000";
+  const hexOf = (color: string) => {
+    if (color === "") return "#000000";
     try {
       return toHex(color);
     } catch {
       return color;
     }
   };
+  const hex = (name: TokenName, fallback?: TokenName) =>
+    hexOf(token(name) || (fallback === undefined ? "" : token(fallback)));
   return {
-    page: hex("--ui-surface-1"),
-    card: hex("--ui-surface-0"),
-    text: hex("--ui-text-primary"),
-    soft: hex("--ui-text-secondary"),
-    faint: hex("--ui-text-muted"),
-    accent: hex("--ui-brand"),
-    danger: hex("--ui-danger"),
-    note: hex("--alert-note", raw("--ui-brand")),
-    tip: hex("--alert-tip", raw("--ui-success")),
-    important: hex("--alert-important", raw("--ui-brand")),
-    warning: hex("--alert-warning", raw("--ui-danger")),
-    caution: hex("--alert-caution", raw("--ui-danger")),
-    bodyFont: raw("--pref-font-family") || raw("--font-document") || FALLBACK_FONTS.document,
-    codeFont: raw("--pref-code-font") || raw("--font-mono") || FALLBACK_FONTS.code,
-    fontSize: raw("--pref-font-size") || `${DEFAULT_SETTINGS.fontSize}px`,
-    lineHeight: raw("--pref-line-height") || String(DEFAULT_SETTINGS.lineHeight),
-    contentWidth: raw("--pref-content-width") || CONTENT_WIDTHS[DEFAULT_SETTINGS.contentWidth],
+    page: hex("ui-surface-1"),
+    card: hex("ui-surface-0"),
+    text: hex("ui-text-primary"),
+    soft: hex("ui-text-secondary"),
+    faint: hex("ui-text-muted"),
+    accent: hex("ui-brand"),
+    danger: hex("ui-danger"),
+    note: hex("alert-note", "ui-brand"),
+    tip: hex("alert-tip", "ui-success"),
+    important: hex("alert-important", "ui-brand"),
+    warning: hex("alert-warning", "ui-danger"),
+    caution: hex("alert-caution", "ui-danger"),
+    bodyFont: token("pref-font-family") || token("font-document") || FALLBACK_FONTS.document,
+    codeFont: token("pref-code-font") || token("font-mono") || FALLBACK_FONTS.code,
+    fontSize: token("pref-font-size") || `${DEFAULT_SETTINGS.fontSize}px`,
+    lineHeight: token("pref-line-height") || String(DEFAULT_SETTINGS.lineHeight),
+    contentWidth: token("pref-content-width") || CONTENT_WIDTHS[DEFAULT_SETTINGS.contentWidth],
     /** The code colors, under the names the highlighter reads them by (code-highlight.ts). */
-    syntax: CODE_COLOR_TOKENS.map((token) => ({
-      name: `--syntax-${token}`,
-      color: hex(`--syntax-${token}`),
+    syntax: CODE_COLOR_TOKENS.map((name) => ({
+      name: `--syntax-${name}`,
+      color: hexOf(raw(`--syntax-${name}`)),
     })),
   };
 }

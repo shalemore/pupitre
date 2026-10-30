@@ -1,11 +1,11 @@
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { createEffect, createSignal } from "solid-js";
-import { TITLE_BAR_HEIGHT } from "@shared/desktop-api";
+import { TITLE_BAR_CLEARANCE } from "@shared/desktop-api";
 import { desktop, isMacOS } from "@/lib/desktop";
 import { distanceFromEnd, distanceFromStart } from "@/lib/rtl";
 
 /** A little past the title bar, so a pointer on the bar always counts as near the top. */
-const TOP_EDGE = TITLE_BAR_HEIGHT + 8;
+const TOP_EDGE = TITLE_BAR_CLEARANCE;
 const SIDE_EDGE = 16;
 /** Over a sidebar the title bar would push the sidebar's own controls under the pointer. */
 const TOP_EDGE_OVER_SIDEBAR = 6;

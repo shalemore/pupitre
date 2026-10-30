@@ -69,9 +69,6 @@ export function detailsSection(
   };
 }
 
-/** How long a section takes to fold away, when the stylesheet cannot say. */
-const FOLD_FALLBACK_MS = 300;
-
 /** Which content the editor is folding or unfolding right now, as positions in the document. */
 export interface DetailsAnimation {
   readonly from: number;
@@ -149,10 +146,7 @@ function toggleSection(view: EditorView, pos: number, open: boolean): void {
   // turned off makes it immediate
   view.dispatch({ effects: animateDetails.of({ from, to, closing: true }) });
   const closing = view.dom.querySelector<HTMLElement>(".md-details-closing");
-  const wait =
-    closing === null
-      ? 0
-      : readDuration(getComputedStyle(closing).transitionDuration, FOLD_FALLBACK_MS);
+  const wait = closing === null ? 0 : readDuration(getComputedStyle(closing).transitionDuration);
   window.setTimeout(() => {
     const current = openingBlock(view.state, pos);
     // The document may have changed under the animation; only close what is still open there

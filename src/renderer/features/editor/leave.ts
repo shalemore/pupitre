@@ -82,6 +82,6 @@ export function fadeOut(dom: HTMLElement): void {
   ghost.addEventListener("animationend", () => ghost.remove(), { once: true });
   // A theme may give the fade a length of its own, or turn it off through the motion switch and
   // leave no animation to end; the timeout is the way out either way
-  const fade = readDuration(getComputedStyle(ghost).animationDuration, 500);
+  const fade = readDuration(getComputedStyle(ghost).animationDuration);
   window.setTimeout(() => ghost.remove(), fade + 200);
 }

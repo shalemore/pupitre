@@ -1,4 +1,5 @@
 import { onCleanup, onMount, Show, type ParentComponent } from "solid-js";
+import { TITLE_BAR_HEIGHT } from "@shared/desktop-api";
 import { desktop } from "@/lib/desktop";
 import { css, cx } from "@/styled-system/css";
 import { CaptionButtons } from "./caption-buttons";
@@ -12,7 +13,6 @@ const GIVE_WAY = ["count"];
 
 const titleBar = css({
   width: "full",
-  height: "10",
   flexShrink: 0,
   display: "flex",
   alignItems: "center",
@@ -26,8 +26,8 @@ const titleBar = css({
 /**
  * The window title bar. It is draggable as a whole and leaves room for the native caption buttons
  * or traffic lights (see .app-title-bar in app.css); the main window on Windows and Linux gets
- * caption buttons drawn here instead. Its height is 40px, which has to stay TITLE_BAR_HEIGHT, the
- * height the main process gives the native buttons and the traffic lights.
+ * caption buttons drawn here instead. Its height comes from TITLE_BAR_HEIGHT, which the main
+ * process also gives the native buttons and the traffic lights.
  */
 export const TitleBar: ParentComponent<{ class?: string; inert?: boolean }> = (props) => {
   const side = desktop.initialState.captionSide;
@@ -88,6 +88,7 @@ export const TitleBar: ParentComponent<{ class?: string; inert?: boolean }> = (p
       data-caption-buttons={side}
       data-caption-side={layoutSide}
       inert={props.inert}
+      style={{ height: `${TITLE_BAR_HEIGHT}px` }}
       class={cx(
         // The horizontal padding comes from .app-title-bar, which leaves room for the caption buttons
         "app-title-bar",

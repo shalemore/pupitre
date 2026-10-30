@@ -1,6 +1,6 @@
 import { RefreshCw } from "lucide-solid";
 import { createResource, createRoot, type Component, type JSX, Show } from "solid-js";
-import { TITLE_BAR_HEIGHT } from "@shared/desktop-api";
+import { TITLE_BAR_CLEARANCE } from "@shared/desktop-api";
 import { Combobox, IconButton, type SelectOption } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
@@ -52,6 +52,9 @@ const fonts = createRoot(() => {
 });
 
 const spin = css({ animation: "spin" });
+const optionRow = css({ display: "flex", alignItems: "center", gap: "1.5" });
+const grow = css({ minWidth: 0, flex: "1" });
+const hint = css({ marginBlockStart: "1", textStyle: "2xs", color: "muted.foreground" });
 
 export interface FontSelectProps {
   value: string;
@@ -71,15 +74,15 @@ export const FontSelect: Component<FontSelectProps> = (props) => {
       label: family,
       description: localizedName,
       // Each option is shown in its own font to make picking easier
-      style: { "font-family": JSON.stringify(family) },
+      style: { fontFamily: JSON.stringify(family) },
     })),
   ];
 
   return (
     <div>
-      <div class={css({ display: "flex", alignItems: "center", gap: "1.5" })}>
+      <div class={optionRow}>
         {props.leading}
-        <div class={css({ minWidth: 0, flex: "1" })}>
+        <div class={grow}>
           <Combobox
             value={props.value}
             onChange={props.onChange}
@@ -87,15 +90,13 @@ export const FontSelect: Component<FontSelectProps> = (props) => {
             placeholder={t().settings.searchFont}
             aria-label={props["aria-label"]}
             // The list must stay below the window's title bar, even when it opens near the top
-            overflowPadding={TITLE_BAR_HEIGHT + 8}
+            overflowPadding={TITLE_BAR_CLEARANCE}
           />
         </div>
       </div>
       {/* What a chosen font overrides; the row's reset button gives the theme's own font back */}
       <Show when={props.value !== ""}>
-        <p class={css({ marginBlockStart: "1", textStyle: "2xs", color: "muted.foreground" })}>
-          {props.emptyLabel}
-        </p>
+        <p class={hint}>{props.emptyLabel}</p>
       </Show>
     </div>
   );

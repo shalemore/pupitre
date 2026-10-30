@@ -249,6 +249,9 @@ export type AppCommand =
 /** Height of the title bar every window draws at its top, which the main process also gives the native buttons. */
 export const TITLE_BAR_HEIGHT = 40;
 
+/** Room below the bar that still counts as near it: a pointer there, or a panel opening there, stays with the bar. */
+export const TITLE_BAR_CLEARANCE = TITLE_BAR_HEIGHT + 8;
+
 /** Window background and secondary text color under the current theme, used to avoid a flash before the window shows and to color the Windows title bar buttons. */
 export interface WindowColors {
   background: string;
