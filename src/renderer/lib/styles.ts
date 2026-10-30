@@ -38,3 +38,30 @@ export const menuPanel = css({
   outlineStyle: "none",
   userSelect: "none",
 });
+
+/** A line that takes the room left in a row and clips what does not fit. */
+export const truncateGrow = css({
+  minWidth: 0,
+  flex: "1",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+});
+
+/** A control that keeps its size in a row that may be too narrow. */
+export const shrinkNone = css({ flexShrink: 0 });
+
+/** Text that stands beside the important part of a row. */
+export const dim = css({ opacity: 0.6 });
+
+/** A name a screen reader reads and the window does not show. */
+export const srOnly = css({ srOnly: true });
+
+/*
+ * Classes app.css defines for a theme to replace. TypeScript names them so a component cannot
+ * invent one; the stylesheet remains the only place that draws them.
+ */
+export const FLOATING_PANEL = "floating-panel";
+export const PRESSABLE = "pressable";
+export const OUTLINE_ROW = "outline-row";
+export const SCROLL_FADE = "scroll-fade";

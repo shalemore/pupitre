@@ -11,59 +11,50 @@ const appear = keyframes({
   from: { opacity: 0, scale: 0.75 },
 });
 
+const section = css({ maxWidth: "xl" });
+const title = css({
+  textStyle: "xs",
+  fontWeight: "semibold",
+  textTransform: "uppercase",
+  letterSpacing: "wider",
+  color: "muted.foreground",
+});
+const description = css({
+  marginBlockStart: "1.5",
+  textStyle: "2xs",
+  lineHeight: "relaxed",
+  color: "muted.foreground",
+});
+const groups = css({
+  marginBlockStart: "3",
+  "& > :not(:last-child)": { marginBlockEnd: "6" },
+});
+const group = css({
+  "& > :not(:last-child)": {
+    borderBottomWidth: "hairline",
+    borderBottomStyle: "solid",
+    borderColor: "border.subtle",
+  },
+});
+const nested = css({ paddingInlineStart: "4" });
+const titleRow = css({ display: "flex", alignItems: "center", gap: "1.5" });
+const resetButton = css({ animationName: appear, animationDuration: "snap" });
+
 /** A titled page of settings; its children are groups. */
 export const SettingsSection: ParentComponent<{ title: string; description?: string }> = (
   props,
 ) => (
-  <section class={css({ maxWidth: "xl" })}>
-    <h2
-      class={css({
-        textStyle: "xs",
-        fontWeight: "semibold",
-        textTransform: "uppercase",
-        letterSpacing: "wider",
-        color: "muted.foreground",
-      })}
-    >
-      {props.title}
-    </h2>
+  <section class={section}>
+    <h2 class={title}>{props.title}</h2>
     <Show when={props.description}>
-      <p
-        class={css({
-          marginBlockStart: "1.5",
-          textStyle: "2xs",
-          lineHeight: "relaxed",
-          color: "muted.foreground",
-        })}
-      >
-        {props.description}
-      </p>
+      <p class={description}>{props.description}</p>
     </Show>
-    <div
-      class={css({
-        marginBlockStart: "3",
-        "& > :not(:last-child)": { marginBlockEnd: "6" },
-      })}
-    >
-      {props.children}
-    </div>
+    <div class={groups}>{props.children}</div>
   </section>
 );
 
 /** Settings that belong together: hairlines between the rows, more space between groups. */
-export const SettingGroup: ParentComponent = (props) => (
-  <div
-    class={css({
-      "& > :not(:last-child)": {
-        borderBottomWidth: "hairline",
-        borderBottomStyle: "solid",
-        borderColor: "border.subtle",
-      },
-    })}
-  >
-    {props.children}
-  </div>
-);
+export const SettingGroup: ParentComponent = (props) => <div class={group}>{props.children}</div>;
 
 export interface SettingFieldProps {
   name: SettingKey;
@@ -85,16 +76,16 @@ export const SettingField: ParentComponent<SettingFieldProps> = (props) => {
     inFolder() ? workspace().overrides.includes(props.name) : isModified(settings(), props.name);
   return (
     <SettingRow
-      class={props.nested ? css({ paddingInlineStart: "4" }) : undefined}
+      class={props.nested ? nested : undefined}
       title={
-        <span class={css({ display: "flex", alignItems: "center", gap: "1.5" })}>
+        <span class={titleRow}>
           {props.title}
           <Show when={modified()}>
             <IconButton
               label={t().settings.resetToDefault}
               size="icon-2xs"
               onClick={() => void resetSetting(props.name)}
-              class={css({ animationName: appear, animationDuration: "snap" })}
+              class={resetButton}
             >
               <RotateCcw />
             </IconButton>

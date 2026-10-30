@@ -12,6 +12,36 @@ import { css, cx } from "@/styled-system/css";
 const spin = css({ animation: "spin" });
 const stack = css({ "& > :not(:last-child)": { marginBlockEnd: "2" } });
 const row = css({ display: "flex", alignItems: "center", justifyContent: "space-between" });
+const inlineSuccess = css({ display: "flex", alignItems: "center", gap: "2", color: "success" });
+const brandText = css({ fontWeight: "medium", color: "brand" });
+const notes = css({
+  textStyle: "2xs",
+  color: "muted.foreground",
+  whiteSpace: "pre-wrap",
+  maxHeight: "24",
+});
+const mutedText = css({ color: "muted.foreground" });
+const percent = css({
+  fontFamily: "mono",
+  fontWeight: "medium",
+  fontVariantNumeric: "tabular-nums",
+});
+const track = css({
+  width: "full",
+  height: "1.5",
+  backgroundColor: "muted",
+  borderRadius: "full",
+  overflow: "hidden",
+});
+const fill = css({
+  height: "full",
+  borderRadius: "full",
+  backgroundColor: "brand",
+  transitionProperty: "width",
+  transitionDuration: "sheet",
+  width: "var(--kb-progress-fill-width)",
+});
+const destructiveText = css({ color: "destructive" });
 
 function hasKind<K extends UpdateStatus["kind"]>(
   status: UpdateStatus,
@@ -55,10 +85,7 @@ export const UpdateStatusPanel: Component<{ currentVersion: string }> = (props) 
   return (
     <>
       <Show when={updateStatus().kind === "up-to-date"}>
-        <Callout
-          variant="success"
-          class={css({ display: "flex", alignItems: "center", gap: "2", color: "success" })}
-        >
+        <Callout variant="success" class={inlineSuccess}>
           <CheckCircle2 />
           <span>
             {t().settings.upToDate} (v{props.currentVersion})
@@ -70,7 +97,7 @@ export const UpdateStatusPanel: Component<{ currentVersion: string }> = (props) 
         {(status) => (
           <Callout variant="brand" class={stack}>
             <div class={row}>
-              <span class={css({ fontWeight: "medium", color: "brand" })}>
+              <span class={brandText}>
                 {t().settings.updateAvailable}: v{status().version}
               </span>
               <Button
@@ -83,15 +110,7 @@ export const UpdateStatusPanel: Component<{ currentVersion: string }> = (props) 
               </Button>
             </div>
             <Show when={status().notes}>
-              <ScrollView
-                as="p"
-                class={css({
-                  textStyle: "2xs",
-                  color: "muted.foreground",
-                  whiteSpace: "pre-wrap",
-                  maxHeight: "24",
-                })}
-              >
+              <ScrollView as="p" class={notes}>
                 {status().notes}
               </ScrollView>
             </Show>
@@ -103,39 +122,12 @@ export const UpdateStatusPanel: Component<{ currentVersion: string }> = (props) 
         {(status) => (
           <Callout class={stack}>
             <div class={row}>
-              <span class={css({ color: "muted.foreground" })}>
-                {t().settings.downloadingUpdate}
-              </span>
-              <span
-                class={css({
-                  fontFamily: "mono",
-                  fontWeight: "medium",
-                  fontVariantNumeric: "tabular-nums",
-                })}
-              >
-                {formatPercent(status().percent / 100)}
-              </span>
+              <span class={mutedText}>{t().settings.downloadingUpdate}</span>
+              <span class={percent}>{formatPercent(status().percent / 100)}</span>
             </div>
             <Progress value={status().percent} aria-label={t().settings.downloadingUpdate}>
-              <Progress.Track
-                class={css({
-                  width: "full",
-                  height: "1.5",
-                  backgroundColor: "muted",
-                  borderRadius: "full",
-                  overflow: "hidden",
-                })}
-              >
-                <Progress.Fill
-                  class={css({
-                    height: "full",
-                    borderRadius: "full",
-                    backgroundColor: "brand",
-                    transitionProperty: "width",
-                    transitionDuration: "sheet",
-                    width: "var(--kb-progress-fill-width)",
-                  })}
-                />
+              <Progress.Track class={track}>
+                <Progress.Fill class={fill} />
               </Progress.Track>
             </Progress>
           </Callout>
@@ -144,7 +136,7 @@ export const UpdateStatusPanel: Component<{ currentVersion: string }> = (props) 
 
       <Show when={updateStatus().kind === "ready"}>
         <Callout variant="success" class={row}>
-          <div class={css({ display: "flex", alignItems: "center", gap: "2", color: "success" })}>
+          <div class={inlineSuccess}>
             <CheckCircle2 />
             <span>{t().settings.updateReady}</span>
           </div>
@@ -160,11 +152,7 @@ export const UpdateStatusPanel: Component<{ currentVersion: string }> = (props) 
 
       <Show when={failed()}>
         {(status) => (
-          <Callout
-            variant="destructive"
-            class={css({ color: "destructive" })}
-            title={status().message}
-          >
+          <Callout variant="destructive" class={destructiveText} title={status().message}>
             {t().settings.updateErrorGeneric}
           </Callout>
         )}

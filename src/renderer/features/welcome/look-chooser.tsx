@@ -3,6 +3,7 @@ import type { JSX } from "solid-js";
 import type { Settings } from "@shared/settings";
 import { t } from "@/i18n";
 import { settings, updateSettings } from "@/lib/settings";
+import { PRESSABLE } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 
 interface LookOptionProps {
@@ -103,7 +104,7 @@ const classicDocument = css({ flex: "1", backgroundColor: "surface.1" });
 const hint = css({ textStyle: "2xs", color: "tertiary" });
 
 const LookOption = (props: LookOptionProps) => (
-  <RadioGroup.Item value={props.value} class={cx("pressable", option)}>
+  <RadioGroup.Item value={props.value} class={cx(PRESSABLE, option)}>
     <RadioGroup.ItemInput />
     <RadioGroup.ItemControl>{props.preview}</RadioGroup.ItemControl>
     <RadioGroup.ItemLabel class={optionLabel}>

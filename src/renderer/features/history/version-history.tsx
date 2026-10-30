@@ -4,6 +4,7 @@ import { formatFileSize } from "@shared/file-size";
 import { PaletteSheet } from "@/features/palette/palette-sheet";
 import { currentLocale, intlLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
+import { truncateGrow } from "@/lib/styles";
 import { css } from "@/styled-system/css";
 
 export interface VersionHistoryProps {
@@ -24,6 +25,12 @@ interface VersionRow {
  * The versions a document had before its file was written over, newest first. Picking one puts its
  * text back into the editor; nothing on disk changes until the document is saved again.
  */
+const size = css({
+  flexShrink: 0,
+  fontVariantNumeric: "tabular-nums",
+  opacity: 0.6,
+});
+
 export const VersionHistory: Component<VersionHistoryProps> = (props) => {
   // Asked once, when the panel opens: what a save adds while it is open belongs to its next opening
   const [versions] = createResource(
@@ -72,20 +79,8 @@ export const VersionHistory: Component<VersionHistoryProps> = (props) => {
     >
       {(row) => (
         <>
-          <span
-            class={css({
-              minWidth: 0,
-              flex: "1",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            })}
-          >
-            {row.time}
-          </span>
-          <span class={css({ flexShrink: 0, fontVariantNumeric: "tabular-nums", opacity: 0.6 })}>
-            {formatFileSize(row.entry.bytes, intlLocale(currentLocale()))}
-          </span>
+          <span class={truncateGrow}>{row.time}</span>
+          <span class={size}>{formatFileSize(row.entry.bytes, intlLocale(currentLocale()))}</span>
         </>
       )}
     </PaletteSheet>

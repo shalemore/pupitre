@@ -13,7 +13,7 @@ import { For, Show, type Component } from "solid-js";
 import type { MenuEntry } from "@shared/menu";
 import { Separator } from "@/components/ui";
 import { isRtl } from "@/lib/rtl";
-import { menuPanel, rtlFlip, truncate } from "@/lib/styles";
+import { FLOATING_PANEL, menuPanel, rtlFlip, truncate } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 
 type MenuItemEntry = Extract<MenuEntry, { type: "item" }>;
@@ -129,7 +129,7 @@ export const MenuEntries: Component<{
                   <ChevronRight class={cx(submenuChevron, rtlFlip)} />
                 </MenuSubTrigger>
                 <MenuPortal>
-                  <MenuSubContent class={cx("floating-panel", menuPanel)}>
+                  <MenuSubContent class={cx(FLOATING_PANEL, menuPanel)}>
                     <MenuEntries entries={itemEntry().submenu ?? []} onSelect={props.onSelect} />
                   </MenuSubContent>
                 </MenuPortal>
@@ -167,7 +167,7 @@ export const MenuPopup: Component<MenuPopupProps> = (props) => (
             event.preventDefault();
           }
         }}
-        class={cx("floating-panel", menuPanel)}
+        class={cx(FLOATING_PANEL, menuPanel)}
       >
         <MenuEntries entries={props.entries} onSelect={props.onSelect} />
       </MenuContent>

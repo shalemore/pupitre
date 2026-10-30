@@ -6,6 +6,8 @@ import { settings, updateSettings } from "@/lib/settings";
 import { css } from "@/styled-system/css";
 import { SettingField, SettingGroup, SettingsSection } from "./settings-section";
 
+const monoField = css({ width: "36", fontFamily: "mono" });
+
 export const MarkdownSection: Component = () => (
   <SettingsSection title={t().settings.markdown} description={t().settings.markdownDesc}>
     <SettingGroup>
@@ -113,7 +115,7 @@ export const MarkdownSection: Component = () => (
             if (imageFolder) void updateSettings({ imageFolder });
             else e.currentTarget.value = settings().imageFolder;
           }}
-          class={css({ width: "36", fontFamily: "mono" })}
+          class={monoField}
           aria-label={t().settings.imageFolder}
         />
       </SettingField>

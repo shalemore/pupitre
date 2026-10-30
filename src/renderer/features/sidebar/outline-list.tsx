@@ -3,6 +3,7 @@ import { createMemo, createSelector, Index, Show, type Component } from "solid-j
 import { ListItem, rowIndent } from "@/components/ui";
 import { headingKey, type OutlineHeading } from "@/features/editor/outline-heading";
 import { t } from "@/i18n";
+import { OUTLINE_ROW } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 
 interface OutlineListProps {
@@ -114,7 +115,7 @@ export const OutlineList: Component<OutlineListProps> = (props) => {
               data-folded={row().hidden ? "" : undefined}
               inert={row().hidden}
               aria-hidden={row().hidden ? "true" : undefined}
-              class={cx("outline-row", rowStyle)}
+              class={cx(OUTLINE_ROW, rowStyle)}
             >
               <Show when={row().hasChildren} fallback={<span aria-hidden="true" class={spacer} />}>
                 <button

@@ -1,5 +1,6 @@
 import { Dialog } from "@kobalte/core/dialog";
 import type { Component, JSX } from "solid-js";
+import { FLOATING_PANEL, srOnly } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 
 export interface SheetProps {
@@ -67,10 +68,10 @@ export const Sheet: Component<SheetProps> = (props) => (
       <Dialog.Overlay data-slot="sheet-backdrop" class={backdrop} />
       <Dialog.Content
         data-slot="sheet"
-        class={cx("floating-panel", panel, props.placement === "top" ? atTop : centered)}
+        class={cx(FLOATING_PANEL, panel, props.placement === "top" ? atTop : centered)}
         onKeyDown={props.onKeyDown}
       >
-        <Dialog.Title class={css({ srOnly: true })}>{props.title}</Dialog.Title>
+        <Dialog.Title class={srOnly}>{props.title}</Dialog.Title>
         {props.children}
       </Dialog.Content>
     </Dialog.Portal>

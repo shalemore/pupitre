@@ -10,6 +10,7 @@ import {
 } from "solid-js";
 import { Dynamic } from "solid-js/web";
 import { settings } from "@/lib/settings";
+import { SCROLL_FADE } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 
 const IDLE_MS = 1200;
@@ -164,7 +165,7 @@ export function ScrollView(props: ScrollViewProps) {
       data-slot="scroll-view"
       data-overflow={overflow() || undefined}
       data-scroll-view
-      class={cx(view, settings().scrollFade && "scroll-fade", local.class)}
+      class={cx(view, settings().scrollFade && SCROLL_FADE, local.class)}
       onScroll={() => {
         update();
         setScrolling(true);

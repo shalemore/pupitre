@@ -2,6 +2,7 @@ import { Combobox as KobalteCombobox } from "@kobalte/core/combobox";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { Check, ChevronDown } from "lucide-solid";
 import { createSignal, Show } from "solid-js";
+import { FLOATING_PANEL } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 import { ScrollView, type ScrollViewProps } from "./scroll-view";
 import type { SelectOption } from "./select";
@@ -253,7 +254,7 @@ export function Combobox(props: ComboboxProps) {
             event.preventDefault();
             dismissedOutside = false;
           }}
-          class={cx("floating-panel", content)}
+          class={cx(FLOATING_PANEL, content)}
         >
           <KobalteCombobox.Listbox
             ref={(element) => (listboxElement = element)}

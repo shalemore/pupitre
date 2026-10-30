@@ -3,43 +3,53 @@ import { Show, type Component } from "solid-js";
 import { Button, Input, Separator } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
-import { css } from "@/styled-system/css";
+import { shrinkNone, truncate } from "@/lib/styles";
+import { css, cx } from "@/styled-system/css";
 import pkg from "../../../../package.json";
 import { UpdateButton, UpdateStatusPanel } from "./update-section";
 
+const section = css({
+  maxWidth: "xl",
+  textStyle: "xs",
+  "& > :not(:last-child)": { marginBlockEnd: "4" },
+});
+const header = css({ display: "flex", alignItems: "center", gap: "3" });
+const logo = css({
+  width: "10",
+  height: "10",
+  flexShrink: 0,
+  borderRadius: "xl",
+  boxShadow: "sm",
+});
+const nameBlock = css({ minWidth: 0, flex: "1" });
+const appName = css({ textStyle: "base", fontWeight: "semibold", color: "foreground" });
+const version = css({
+  textStyle: "2xs",
+  color: "muted.foreground",
+  fontVariantNumeric: "tabular-nums",
+});
+const row = css({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: "3",
+});
+const rowText = css({ minWidth: 0 });
+const rowTitle = css({ fontWeight: "medium", color: "foreground" });
+const rowDescription = css({ textStyle: "2xs", color: "muted.foreground" });
+const settingsTitle = css({ marginBlockEnd: "2", fontWeight: "medium", color: "foreground" });
+const settingsRow = css({ display: "flex", alignItems: "center", gap: "2" });
+const settingsPath = css({ fontFamily: "mono", textStyle: "2xs" });
+
 export const AboutSection: Component = () => (
-  <section
-    class={css({
-      maxWidth: "xl",
-      textStyle: "xs",
-      "& > :not(:last-child)": { marginBlockEnd: "4" },
-    })}
-  >
-    <div class={css({ display: "flex", alignItems: "center", gap: "3" })}>
-      <img
-        src="./logo.svg"
-        alt=""
-        class={css({
-          width: "10",
-          height: "10",
-          flexShrink: 0,
-          borderRadius: "xl",
-          boxShadow: "sm",
-        })}
-      />
-      <div class={css({ minWidth: 0, flex: "1" })}>
-        <h2 class={css({ textStyle: "base", fontWeight: "semibold", color: "foreground" })}>
-          Pupitre
-        </h2>
-        <div
-          class={css({
-            textStyle: "2xs",
-            color: "muted.foreground",
-            fontVariantNumeric: "tabular-nums",
-          })}
-        >
+  <section class={section}>
+    <div class={header}>
+      <img src="./logo.svg" alt="" class={logo} />
+      <div class={nameBlock}>
+        <h2 class={appName}>Pupitre</h2>
+        <div class={version}>
           {t().settings.version} {pkg.version}
-          <Show when={desktop.electronVersion}>{(version) => <> · Electron {version()}</>}</Show>
+          <Show when={desktop.electronVersion}>{(value) => <> · Electron {value()}</>}</Show>
         </div>
       </div>
       <Show when={desktop.initialState.capabilities.selfUpdate}>
@@ -51,35 +61,16 @@ export const AboutSection: Component = () => (
 
     <Separator />
 
-    <div
-      class={css({
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: "3",
-      })}
-    >
-      <div class={css({ minWidth: 0 })}>
-        <div class={css({ fontWeight: "medium", color: "foreground" })}>
-          {t().about.sampleDocTitle}
-        </div>
-        <div
-          class={css({
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-            textStyle: "2xs",
-            color: "muted.foreground",
-          })}
-        >
-          {t().about.sampleDocDesc}
-        </div>
+    <div class={row}>
+      <div class={rowText}>
+        <div class={rowTitle}>{t().about.sampleDocTitle}</div>
+        <div class={cx(truncate, rowDescription)}>{t().about.sampleDocDesc}</div>
       </div>
       <Button
         variant="outline"
         size="sm"
         onClick={() => void desktop.invoke("app:dispatch", { id: "help.sample-document" })}
-        class={css({ flexShrink: 0 })}
+        class={shrinkNone}
       >
         <BookOpen />
         <span>{t().about.openSampleDoc}</span>
@@ -90,15 +81,13 @@ export const AboutSection: Component = () => (
       <Separator />
 
       <div>
-        <div class={css({ marginBlockEnd: "2", fontWeight: "medium", color: "foreground" })}>
-          {t().settings.settingsFile}
-        </div>
-        <div class={css({ display: "flex", alignItems: "center", gap: "2" })}>
+        <div class={settingsTitle}>{t().settings.settingsFile}</div>
+        <div class={settingsRow}>
           <Input
             readOnly
             dir="ltr"
             value={desktop.initialState.settingsPath}
-            class={css({ fontFamily: "mono", textStyle: "2xs" })}
+            class={settingsPath}
           />
           <Button
             variant="outline"

@@ -1,6 +1,7 @@
 import { Select as KobalteSelect } from "@kobalte/core/select";
 import { Check, ChevronDown } from "lucide-solid";
 import { type JSX, Show } from "solid-js";
+import { FLOATING_PANEL } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 import { Badge } from "./badge";
 import { ScrollView, type ScrollViewProps } from "./scroll-view";
@@ -187,7 +188,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
         </KobalteSelect.Icon>
       </KobalteSelect.Trigger>
       <KobalteSelect.Portal>
-        <KobalteSelect.Content data-slot="select-content" class={cx("floating-panel", content)}>
+        <KobalteSelect.Content data-slot="select-content" class={cx(FLOATING_PANEL, content)}>
           <KobalteSelect.Listbox
             as={(listboxProps: ScrollViewProps) => <ScrollView as="ul" {...listboxProps} />}
             class={listbox}

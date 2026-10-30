@@ -1,4 +1,5 @@
 import { type JSX, splitProps } from "solid-js";
+import { PRESSABLE } from "@/lib/styles";
 import { cva, cx, type RecipeVariantProps } from "@/styled-system/css";
 
 export const buttonVariants = cva({
@@ -145,7 +146,7 @@ export function Button(props: ButtonProps) {
       type={local.type ?? "button"}
       data-slot="button"
       class={cx(
-        "pressable",
+        PRESSABLE,
         buttonVariants({ variant: local.variant, size: local.size }),
         local.class,
       )}

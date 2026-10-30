@@ -6,7 +6,7 @@ import { TOP_MENUS, type MenuEntry, type Menus, type TopMenu } from "@shared/men
 import { IconButton } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
-import { menuPanel } from "@/lib/styles";
+import { FLOATING_PANEL, menuPanel } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 import { MenuEntries, MenuPopup } from "./menu-popup";
 import { createMenu } from "./menu-state";
@@ -162,7 +162,7 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
                     event.preventDefault();
                   }
                 }}
-                class={cx("floating-panel", menuPanel)}
+                class={cx(FLOATING_PANEL, menuPanel)}
               >
                 <MenuEntries
                   entries={entries()[menu] ?? []}

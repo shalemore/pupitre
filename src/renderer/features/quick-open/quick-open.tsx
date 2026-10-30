@@ -4,7 +4,8 @@ import { matchRanges, type MatchRange } from "@/features/palette/fuzzy";
 import { PaletteSheet } from "@/features/palette/palette-sheet";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
-import { css } from "@/styled-system/css";
+import { dim, truncateGrow } from "@/lib/styles";
+import { css, cx } from "@/styled-system/css";
 
 export interface QuickOpenProps {
   /** The folder whose documents are offered; there is nothing to offer while none is open. */
@@ -63,16 +64,13 @@ const MatchedText: Component<MatchedTextProps> = (props) => {
 
   return (
     <For each={pieces()}>
-      {(piece) =>
-        piece.matched ? (
-          <span class={css({ color: "brand", fontWeight: "semibold" })}>{piece.text}</span>
-        ) : (
-          piece.text
-        )
-      }
+      {(piece) => (piece.matched ? <span class={matched}>{piece.text}</span> : piece.text)}
     </For>
   );
 };
+
+const matched = css({ color: "brand", fontWeight: "semibold" });
+const folderGap = css({ marginInlineStart: "2" });
 
 const QuickOpenRow: Component<{ file: FoundFile }> = (props) => {
   const name = createMemo(() => {
@@ -85,18 +83,9 @@ const QuickOpenRow: Component<{ file: FoundFile }> = (props) => {
   );
 
   return (
-    <span
-      dir="auto"
-      class={css({
-        minWidth: 0,
-        flex: "1",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap",
-      })}
-    >
+    <span dir="auto" class={truncateGrow}>
       <MatchedText text={name()} ranges={props.file.ranges} offset={folder().length} />
-      <span class={css({ opacity: 0.6, marginInlineStart: "2" })}>
+      <span class={cx(dim, folderGap)}>
         <MatchedText text={folder()} ranges={props.file.ranges} offset={0} />
       </span>
     </span>

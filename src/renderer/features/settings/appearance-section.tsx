@@ -11,6 +11,8 @@ import { css } from "@/styled-system/css";
 import { FontSelect, themeFontLabel } from "./font-select";
 import { SettingField, SettingGroup, SettingsSection } from "./settings-section";
 
+const stack = css({ "& > :not(:last-child)": { marginBlockEnd: "1" } });
+
 function schemeLabel(theme: ThemeInfo): string {
   if (theme.schemes.length > 1) return t().settings.schemeBoth;
   return theme.schemes.includes("dark")
@@ -72,10 +74,7 @@ function missingThemeMessages(): string[] {
 export const AppearanceSection: Component = () => (
   <SettingsSection title={t().settings.appearance}>
     <Show when={missingThemeMessages().length > 0}>
-      <Callout
-        variant="destructive"
-        class={css({ "& > :not(:last-child)": { marginBlockEnd: "1" } })}
-      >
+      <Callout variant="destructive" class={stack}>
         <For each={missingThemeMessages()}>{(message) => <p>{message}</p>}</For>
       </Callout>
     </Show>
