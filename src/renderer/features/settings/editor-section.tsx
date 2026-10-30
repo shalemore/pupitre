@@ -16,7 +16,7 @@ export const EditorSection: Component = () => (
           <FontSelect
             value={settings().bodyFont}
             onChange={(bodyFont) => void updateSettings({ bodyFont })}
-            emptyLabel={themeFontLabel("--font-document")}
+            emptyLabel={themeFontLabel("font-document")}
             leading={<RefreshFontsButton />}
             aria-label={t().settings.bodyFont}
           />
@@ -39,7 +39,7 @@ export const EditorSection: Component = () => (
           <FontSelect
             value={settings().codeFont}
             onChange={(codeFont) => void updateSettings({ codeFont })}
-            emptyLabel={themeFontLabel("--font-mono")}
+            emptyLabel={themeFontLabel("font-mono")}
             aria-label={t().settings.codeFont}
           />
         </SettingField>

@@ -139,7 +139,7 @@ export const AppearanceSection: Component = () => (
         <FontSelect
           value={settings().uiFont}
           onChange={(uiFont) => void updateSettings({ uiFont })}
-          emptyLabel={themeFontLabel("--font-sans")}
+          emptyLabel={themeFontLabel("font-sans")}
           aria-label={t().settings.uiFont}
         />
       </SettingField>

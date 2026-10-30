@@ -6,9 +6,8 @@ import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
 import { GENERIC_FAMILIES, listFontFamilies, type FontFamily } from "@/lib/fonts";
 import { themeApplied } from "@/lib/theme";
+import { readToken, type TokenName } from "@/lib/tokens";
 import { css, cx } from "@/styled-system/css";
-
-type ThemeFontToken = "--font-document" | "--font-mono" | "--font-sans";
 
 const APPLE_SYSTEM_ALIASES = new Set(["-apple-system", "blinkmacsystemfont"]);
 const WINDOWS_FAMILIES = new Set([
@@ -19,10 +18,10 @@ const WINDOWS_FAMILIES = new Set([
 ]);
 
 /** The first face the active theme's stack names, so a setting can show what it would fall back to. */
-function themeFontName(token: ThemeFontToken): string | undefined {
+function themeFontName(token: TokenName): string | undefined {
   // Read again after a theme switch, which rewrites the variables
   themeApplied();
-  const stack = getComputedStyle(document.documentElement).getPropertyValue(token);
+  const stack = readToken(getComputedStyle(document.documentElement), token);
   const families = stack
     .split(",")
     .map((family) => family.trim().replace(/^["']|["']$/g, ""))
@@ -37,7 +36,7 @@ function themeFontName(token: ThemeFontToken): string | undefined {
 }
 
 /** The "Theme Default" label, naming the face the theme brings so an override is visible. */
-export function themeFontLabel(token: ThemeFontToken): string {
+export function themeFontLabel(token: TokenName): string {
   const name = themeFontName(token);
   return name === undefined ? t().settings.themeDefault : `${t().settings.themeDefault} · ${name}`;
 }

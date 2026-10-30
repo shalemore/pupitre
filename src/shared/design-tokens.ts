@@ -35,6 +35,7 @@ export const TOKEN_NAMES = [
   // Fonts, where the theme names the fallback the settings' choices build on
   "font-document",
   "font-mono",
+  "font-sans",
   "font-stack-intent",
 
   // Motion, so code that animates by hand follows the transitions around it
