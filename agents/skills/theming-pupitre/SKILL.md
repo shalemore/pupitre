@@ -133,6 +133,11 @@ silently do nothing.
 - `--font-document`: the default body font. Set `--font-stack-intent: mono` when it is monospaced,
   so the user's fallback font sits after the generic families instead of breaking the grid.
 - Space lines with padding, never margins: CodeMirror measures line boxes.
+- Draw a code card's frame with inset shadows, not borders (`box-shadow: inset 1px 0 …`). A
+  rendering fills the card and spans its box; a border takes room, so the rendering would sit a
+  border's width inside the text flow and move when its source is shown or hidden. Put the frame's
+  side shadows in a custom property when the first and last line add an edge of their own (as the
+  built-in themes do with `--md-code-frame`).
 - Use `em` inside the document, and logical properties (`padding-inline-start`, not `padding-left`)
   so right-to-left documents mirror correctly.
 
