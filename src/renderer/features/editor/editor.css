@@ -852,6 +852,8 @@
    */
   .md-code-render > :is(.md-mermaid, .md-math-block) {
     border-block-end: var(--ui-border-width) solid var(--ui-alpha-1);
+    /* Room between the rendering and the fence line under it, where the copy button stands */
+    margin-block-end: var(--md-code-corner-gap);
     /* It reaches over the room the line keeps for its own text, so it fills the card exactly as it
        does while the source is hidden */
     margin-inline-start: calc(
