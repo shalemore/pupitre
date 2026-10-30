@@ -27,17 +27,17 @@ import {
   searchPanelOpen,
   setSearchQuery,
 } from "@codemirror/search";
-import { type ChangeDesc, Compartment, EditorState, type Extension, Prec } from "@codemirror/state";
+import { Compartment, EditorState, type Extension, Prec } from "@codemirror/state";
 import { type Command, EditorView, keymap, placeholder } from "@codemirror/view";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { debounce } from "@solid-primitives/scheduled";
 import { createEffect, on, onCleanup, onMount, type Component } from "solid-js";
-import { MARKDOWN_FILE } from "@shared/desktop-api";
 import { messageOf } from "@shared/errors";
 import type { FormatAction } from "@shared/format";
 import { ScrollView } from "@/components/ui";
+import { imageCaptionClick, imageInput } from "@/features/editor/images/image-widget";
+import { closeInlineTags } from "@/features/editor/widgets/html-widget";
 import { documentHtml, markdownFragment } from "@/features/export/document-html";
-import { pageStyle } from "@/features/export/page-style";
 import { t } from "@/i18n";
 import {
   type DocumentPosition,
@@ -45,22 +45,7 @@ import {
   rememberDocumentPosition,
 } from "@/lib/document-positions";
 import { reportFailure } from "@/lib/errors";
-import { fileNameOf, withoutDocumentExtension } from "@/lib/file";
 import { escapeHtml } from "@/lib/html";
-import { settings } from "@/lib/settings";
-import { type TextStats } from "@/lib/text-stats";
-import { themeApplied } from "@/lib/theme";
-import { withViewTransition } from "@/lib/view-transition";
-import { css } from "@/styled-system/css";
-
-const scrollArea = css({
-  width: "full",
-  height: "full",
-  overflowX: "hidden",
-  _print: { height: "auto", overflow: "visible" },
-});
-import { imageCaptionClick, imageInput } from "@/features/editor/images/image-widget";
-import { closeInlineTags } from "@/features/editor/widgets/html-widget";
 import { pickImage, saveImageNextTo } from "@/lib/image-files";
 import { alertTitles } from "@/lib/markdown/alerts";
 import { codeHighlight } from "@/lib/markdown/code-highlight";
@@ -69,18 +54,25 @@ import { documentBaseUrl, documentFilePath, imageAlt, imageMarkdown } from "@/li
 import { FULL_PARSE_TIMEOUT_MS, markdownLanguage } from "@/lib/markdown/language";
 import { prerenderMath } from "@/lib/markdown/math";
 import { diagramTheme, prerenderDiagrams, readDiagramTheme } from "@/lib/markdown/mermaid";
-import {
-  canShiftHeadings,
-  collectHeadings,
-  findActiveHeading,
-  mergeHeadings,
-  type OutlineHeading,
-} from "@/lib/markdown/structure";
+import { findActiveHeading, type OutlineHeading } from "@/lib/markdown/structure";
 import { textDirection } from "@/lib/markdown/text-direction";
 import { type PendingImages } from "@/lib/pending-images";
+import { settings } from "@/lib/settings";
+import { type TextStats } from "@/lib/text-stats";
+import { themeApplied } from "@/lib/theme";
+import { withViewTransition } from "@/lib/view-transition";
 import { cursorStyle, restartCursorBlink } from "./cursor";
 import { documentObserver } from "./document-observer";
 import { createStatsTracker } from "./document-stats";
+import { documentKind, documentTitle, textDocumentHtml } from "./editor-document";
+import { createOutlineTracker } from "./editor-outline";
+import {
+  createMatchCounter,
+  type MatchStats,
+  type SearchOptions,
+  selectedSearchText,
+} from "./editor-search";
+import { layeredStyles, scrollArea } from "./editor-styles";
 import { folding, foldingKeymap } from "./folding";
 import {
   formatKeymap,
@@ -97,24 +89,6 @@ import { renumberOrderedLists } from "./renumber-lists";
 import { scrollToDocument } from "./scroll";
 import { markdownPairing, smartTyping } from "./smart-typing";
 import { focusMode, holdLine, typewriterMode } from "./writing-modes";
-
-export interface SearchOptions {
-  search: string;
-  replace: string;
-  caseSensitive: boolean;
-  wholeWord: boolean;
-  regexp: boolean;
-}
-
-export interface MatchStats {
-  /** 1-based index of the selected match; 0 when no match is selected. */
-  current: number;
-  total: number;
-  /** The total is still being counted; the arrows can be used meanwhile. */
-  pending?: boolean;
-  /** The document has more matches than the count is willing to walk. */
-  capped?: boolean;
-}
 
 export interface MarkdownEditorHandle {
   getMarkdown: () => string;
@@ -206,35 +180,6 @@ function markdownStyle(): MarkdownStyle {
   };
 }
 
-/** The title of an exported page: the document's file name without its extension. */
-function documentTitle(path: string | undefined): string {
-  return withoutDocumentExtension(path ? fileNameOf(path) : t().common.untitledFileName);
-}
-
-/** How a document's text is shown: Markdown rendered, any other text as it is, code by its grammar. */
-type DocumentKind = "markdown" | "text" | "code";
-
-/** Only a file whose extension is Markdown is rendered as Markdown; never guess from the text. */
-function documentKind(path: string | undefined): DocumentKind {
-  if (path === undefined || MARKDOWN_FILE.test(path)) return "markdown";
-  return codeLanguageFor(path) === undefined ? "text" : "code";
-}
-
-/** A page that shows a text or code file as it is, for the HTML and image exports. */
-function textDocumentHtml(title: string, text: string): string {
-  return `<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>${escapeHtml(title)}</title>
-<style>${pageStyle()}
-body { white-space: pre-wrap; word-break: break-word; padding: 2rem; font-family: var(--code-font, ui-monospace, monospace); font-size: 0.875rem; line-height: 1.6; }
-</style>
-</head>
-<body>${escapeHtml(text)}</body>
-</html>`;
-}
-
 /**
  * What shows the document rendered, or nothing in source mode, where the source of every construct
  * is the document: the markers, the tables, the images and the diagrams as they were written.
@@ -243,45 +188,8 @@ function previewOf(sourceMode: boolean): Extension {
   return sourceMode ? [] : [livePreview, renderedBlocks, leavingBlocks];
 }
 
-/**
- * CodeMirror injects its base styles outside every cascade layer, where they would beat the editor
- * layer, the theme and the preferences alike. `revert-layer` hands these properties back to the
- * layers (app.css), so the document is styled by CSS like the rest of the app.
- */
-const layeredStyles = EditorView.theme({
-  "&.cm-focused": { outline: "revert-layer" },
-  ".cm-scroller": {
-    fontFamily: "revert-layer",
-    lineHeight: "revert-layer",
-    overflowX: "revert-layer",
-  },
-  "&.cm-editor .cm-content": {
-    boxSizing: "revert-layer",
-    margin: "revert-layer",
-    padding: "revert-layer",
-    caretColor: "revert-layer",
-  },
-  ".cm-placeholder": { color: "revert-layer" },
-  // A hidden heading marker is a zero-width replacement; the buffer CodeMirror puts there is 1em
-  // tall, which would make the line grow when the marker shows or hides
-  ".md-heading .cm-widgetBuffer": { height: "0px" },
-  // The fold gutter is not a column of its own (editor.css), so it wears neither of CodeMirror's
-  // color schemes: its surface comes from the layers, where a theme can give it one
-  "&.cm-editor .cm-gutters": {
-    backgroundColor: "revert-layer",
-    color: "revert-layer",
-    border: "revert-layer",
-  },
-  ".cm-line": { padding: "revert-layer" },
-  // A rendering fills the top of a code card, and a picture the top of the line its source stands
-  // in (editor.css), so the buffers that stand around the widget would leave a line box above it
-  ".cm-line:is(.md-code-render, .md-image-source) > .cm-widgetBuffer": { display: "revert-layer" },
-  "&.cm-editor .cm-searchMatch, &.cm-editor .cm-searchMatch-selected": {
-    backgroundColor: "revert-layer",
-  },
-  // The search panel only switches match highlighting on; the find bar is the app's own
-  ".cm-panels": { display: "none" },
-});
+/** How long a scroll or a keystroke settles before the place in the document is measured and saved. */
+const POSITION_SAVE_DEBOUNCE_MS = 150;
 
 /** In a list, Tab and Shift+Tab nest and unnest the item; elsewhere they keep their default. */
 const inList: (command: Command) => Command = (command) => (view) => {
@@ -291,55 +199,6 @@ const inList: (command: Command) => Command = (command) => (view) => {
   }
   return false;
 };
-
-const OUTLINE_DEBOUNCE_MS = 150;
-const POSITION_SAVE_DEBOUNCE_MS = 150;
-// Counting every match of a large document is another walk through the whole text; below this
-// size it is cheap enough to do before returning, above it the count runs in slices
-const SYNC_MATCH_LIMIT = 512 * 1024;
-// A find bar does not need the exact number of matches in a book-length document
-const MAX_COUNTED_MATCHES = 1_000;
-const MATCH_COUNT_SLICE_MS = 8;
-const MAX_INITIAL_SEARCH_LENGTH = 200;
-
-function countMatches(state: EditorState, query: SearchQuery): MatchStats {
-  const { from, to } = state.selection.main;
-  let total = 0;
-  let current = 0;
-  const cursor = query.getCursor(state);
-  for (let match = cursor.next(); !match.done; match = cursor.next()) {
-    total++;
-    if (match.value.from === from && match.value.to === to) current = total;
-  }
-  return { current, total };
-}
-
-async function countMatchesInSlices(
-  state: EditorState,
-  query: SearchQuery,
-  cancelled: () => boolean,
-): Promise<MatchStats | undefined> {
-  const { from, to } = state.selection.main;
-  let total = 0;
-  let current = 0;
-  const cursor = query.getCursor(state);
-
-  const runSlice = async (): Promise<MatchStats | undefined> => {
-    const deadline = performance.now() + MATCH_COUNT_SLICE_MS;
-    while (performance.now() < deadline) {
-      const match = cursor.next();
-      if (match.done) return { current, total };
-      total++;
-      if (match.value.from === from && match.value.to === to) current = total;
-      if (total >= MAX_COUNTED_MATCHES) return { current, total, capped: true };
-    }
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    if (cancelled()) return undefined;
-    return runSlice();
-  };
-
-  return runSlice();
-}
 
 export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
   let container: HTMLDivElement | undefined;
@@ -359,53 +218,9 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     // The props follow the document the window shows, and by the time this editor is cleaned up
     // that is already the next one; what it showed itself is kept here instead
     let path = props.documentPath;
-    let headings: OutlineHeading[] = [];
-    let outlineStarted = false;
-    let observedDoc: EditorState["doc"] | undefined;
     const stats = createStatsTracker((next) => props.onStatsChange(next));
-    let matchRun = 0;
-
-    /**
-     * The match count the find bar shows. A small document is counted before the answer returns;
-     * a large one starts a cancelled-on-new-search background count and says it is pending.
-     */
-    const requestMatchStats = (view: EditorView): MatchStats => {
-      const query = getSearchQuery(view.state);
-      if (!query.valid || query.search === "") {
-        matchRun++;
-        return { current: 0, total: 0 };
-      }
-      if (view.state.doc.length <= SYNC_MATCH_LIMIT) {
-        matchRun++;
-        return countMatches(view.state, query);
-      }
-      const run = ++matchRun;
-      void countMatchesInSlices(view.state, query, () => run !== matchRun).then((counted) => {
-        if (counted !== undefined && run === matchRun) props.onMatchStatsChange(counted);
-      });
-      return { current: 0, total: 0, pending: true };
-    };
-
-    let outlineDirty = false;
-    let pendingOutlineChanges: ChangeDesc | undefined;
-    // The outline only changes when a heading does, but collecting it walks the parsed tree; let
-    // the keystrokes settle first so typing never waits for a list of thousands of rows
-    const updateOutline = debounce((state: EditorState) => {
-      if (!outlineDirty && pendingOutlineChanges !== undefined) {
-        const changes = pendingOutlineChanges;
-        pendingOutlineChanges = undefined;
-        for (const heading of headings) {
-          heading.pos = changes.mapPos(heading.pos);
-        }
-        return;
-      }
-      outlineDirty = false;
-      pendingOutlineChanges = undefined;
-      const next = mergeHeadings(headings, collectHeadings(state));
-      if (next === headings) return;
-      headings = next;
-      props.onOutlineChange(headings);
-    }, OUTLINE_DEBOUNCE_MS);
+    const matches = createMatchCounter((next) => props.onMatchStatsChange(next));
+    const outline = createOutlineTracker((next) => props.onOutlineChange(next));
 
     const focusCompartment = new Compartment();
     const typewriterCompartment = new Compartment();
@@ -505,37 +320,11 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           documentObserver(
             {
               onDocChange: (state, update) => {
-                const docChanged = state.doc !== observedDoc;
-                observedDoc = state.doc;
-                // The first outline is built as the editor opens, so its rows are not assembled
-                // under the first keystrokes; later changes wait for a pause, and prose edits that
-                // touch no heading only shift the positions of the headings below them
-                if (!outlineStarted) {
-                  outlineStarted = true;
-                  headings = collectHeadings(state);
-                  props.onOutlineChange(headings);
-                } else {
-                  if (
-                    !docChanged ||
-                    update === undefined ||
-                    outlineDirty ||
-                    !canShiftHeadings(headings, update)
-                  ) {
-                    outlineDirty = true;
-                    pendingOutlineChanges = undefined;
-                  } else {
-                    pendingOutlineChanges =
-                      pendingOutlineChanges === undefined
-                        ? update.changes.desc
-                        : pendingOutlineChanges.composeDesc(update.changes.desc);
-                  }
-                  updateOutline(state);
-                }
                 // Parsing the rest of a small document is not an edit, but it can make its count exact
-                if (!docChanged) stats.refresh(state);
+                if (!outline.update(state, update)) stats.refresh(state);
               },
               onPositionChange: (position) =>
-                props.onActiveHeadingChange(findActiveHeading(headings, position)),
+                props.onActiveHeadingChange(findActiveHeading(outline.current(), position)),
             },
             scroller,
           ),
@@ -733,7 +522,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
 
     const run = (command: Command): MatchStats => {
       if (getSearchQuery(view.state).valid) command(view);
-      return requestMatchStats(view);
+      return matches.request(view);
     };
 
     const insertImage = async () => {
@@ -794,12 +583,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         });
         view.focus();
       },
-      getSelectedText: () => {
-        const { from, to } = view.state.selection.main;
-        if (to === from || to - from > MAX_INITIAL_SEARCH_LENGTH) return "";
-        const selected = view.state.sliceDoc(from, to);
-        return selected.includes("\n") ? "" : selected;
-      },
+      getSelectedText: () => selectedSearchText(view.state),
       pastePlainText: (text) => {
         view.focus();
         view.dispatch(view.state.replaceSelection(text), {
@@ -812,7 +596,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         if (options.search && !searchPanelOpen(view.state)) openSearchPanel(view);
         view.dispatch({ effects: setSearchQuery.of(new SearchQuery(options)) });
         if (!options.search) closeSearchPanel(view);
-        return requestMatchStats(view);
+        return matches.request(view);
       },
       findNext: () => run(findNext),
       findPrevious: () => run(findPrevious),
@@ -886,9 +670,9 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
 
     onCleanup(() => {
       disposed = true;
-      updateOutline.clear();
+      outline.dispose();
       schedulePositionSave.clear();
-      matchRun++;
+      matches.cancel();
       stats.dispose();
       // The view is gone once this returns, so the place has to be taken from it beforehand
       savePosition();
