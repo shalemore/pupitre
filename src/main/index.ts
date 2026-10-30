@@ -15,8 +15,10 @@ import { flushWindowState } from "./window-state";
 import { createMainWindow } from "./windows";
 
 allowMacTypeInjection();
-// Groups the taskbar button and attributes notifications to the app; electron-builder uses the same id
-app.setAppUserModelId("com.shalemore.pupitre");
+// Groups the taskbar button and attributes notifications to the app; electron-builder uses the same
+// id. Only a packaged run sets it: an unpackaged run keeps Electron's identity, so the taskbar does
+// not take the icon of an installed build.
+if (app.isPackaged) app.setAppUserModelId("com.shalemore.pupitre");
 // The log and the crash dumps a report may point at, before a crash or a second instance can happen
 setupDiagnostics();
 
