@@ -4,7 +4,7 @@ import { cva, cx, type RecipeVariantProps } from "@/styled-system/css";
 const calloutVariants = cva({
   base: {
     borderRadius: "lg",
-    borderWidth: "1px",
+    borderWidth: "hairline",
     borderStyle: "solid",
     padding: "3",
     textStyle: "xs",

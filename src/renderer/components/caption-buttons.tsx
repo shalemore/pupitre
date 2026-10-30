@@ -12,7 +12,7 @@ const controls = css({
 });
 const closeButton = css({
   display: "flex",
-  width: "2.875rem",
+  width: "captionButton",
   alignItems: "center",
   justifyContent: "center",
   color: "muted.foreground",
@@ -21,7 +21,7 @@ const closeButton = css({
 });
 const windowButton = css({
   display: "flex",
-  width: "2.875rem",
+  width: "captionButton",
   alignItems: "center",
   justifyContent: "center",
   color: "muted.foreground",

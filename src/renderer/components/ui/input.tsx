@@ -6,7 +6,7 @@ const inputVariants = cva({
     width: "full",
     minWidth: 0,
     borderRadius: "md",
-    borderWidth: "1px",
+    borderWidth: "hairline",
     borderStyle: "solid",
     borderColor: "input",
     backgroundColor: "field",

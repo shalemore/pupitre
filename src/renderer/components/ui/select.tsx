@@ -72,7 +72,7 @@ const trigger = css({
   justifyContent: "space-between",
   gap: "2",
   borderRadius: "md",
-  borderWidth: "1px",
+  borderWidth: "hairline",
   borderStyle: "solid",
   borderColor: "input",
   backgroundColor: "field",

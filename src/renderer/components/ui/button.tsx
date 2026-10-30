@@ -35,7 +35,7 @@ export const buttonVariants = cva({
         _hover: { backgroundColor: "brand.hover" },
       },
       outline: {
-        borderWidth: "1px",
+        borderWidth: "hairline",
         borderStyle: "solid",
         borderColor: "border",
         backgroundColor: "transparent",

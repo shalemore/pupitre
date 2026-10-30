@@ -34,6 +34,7 @@ import {
 import { Dynamic, render } from "solid-js/web";
 import { IconButton, Separator } from "@/components/ui";
 import { t } from "@/i18n";
+import { rtlFlip } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 import { openImageMenu } from "./image-menu";
 import { imageDom, imageIn, setImageLayout } from "./images";
@@ -147,7 +148,6 @@ const toolbar = css({
   _print: { display: "none" },
 });
 const toolbarSeparator = css({ marginInline: "0.5", height: "4" });
-const rtlFlip = css({ _rtl: { scale: "-1 1" } });
 const tableRoot = css({ position: "relative" });
 const scrollX = css({ overflowX: "auto" });
 const tableElement = css({ borderCollapse: "collapse" });

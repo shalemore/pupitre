@@ -38,12 +38,12 @@ const windowFrame = css({
 const windowImmersive = css({ backgroundColor: "surface.0" });
 const windowClassic = css({ backgroundColor: "surface.1" });
 const frameBorderBottom = css({
-  borderBlockEndWidth: "1px",
+  borderBlockEndWidth: "hairline",
   borderBlockEndStyle: "solid",
   borderBlockEndColor: "border",
 });
 const frameBorderEnd = css({
-  borderInlineEndWidth: "1px",
+  borderInlineEndWidth: "hairline",
   borderInlineEndStyle: "solid",
   borderInlineEndColor: "border",
 });

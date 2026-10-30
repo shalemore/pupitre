@@ -3,6 +3,7 @@ import { createSignal, type Component, type JSX, Show } from "solid-js";
 import { ScrollView, SegmentedControl, ToggleIconButton } from "@/components/ui";
 import { t } from "@/i18n";
 import { distanceFromEnd, distanceFromStart, isRtl } from "@/lib/rtl";
+import { quietButton, rtlFlip } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 
 export type SidebarMode = "outline" | "folder";
@@ -50,18 +51,7 @@ const frame = css({
   height: "full",
   _print: { display: "none" },
 });
-const quietButton = css({
-  color: "tertiary",
-  opacity: 0.5,
-  transitionProperty: "opacity",
-  transitionDuration: "ui",
-  transitionTimingFunction: "outExpo",
-  _hover: { opacity: 1 },
-  _focusVisible: { opacity: 1 },
-  "&[data-pressed]": { opacity: 1 },
-});
 const rotated = css({ rotate: "45deg" });
-const rtlFlip = css({ _rtl: { scale: "-1 1" } });
 const rotate180 = css({ rotate: "180deg" });
 const titleRow = css({
   display: "flex",

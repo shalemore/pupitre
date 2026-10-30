@@ -31,7 +31,7 @@ const tabItem = css({
   maxWidth: "48",
   flexShrink: 0,
   alignItems: "center",
-  borderInlineEndWidth: "1px",
+  borderInlineEndWidth: "hairline",
   borderInlineEndStyle: "solid",
   borderInlineEndColor: "border.subtle",
   layerStyle: "interactive",

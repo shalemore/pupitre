@@ -55,7 +55,7 @@ export const SettingGroup: ParentComponent = (props) => (
   <div
     class={css({
       "& > :not(:last-child)": {
-        borderBottomWidth: "1px",
+        borderBottomWidth: "hairline",
         borderBottomStyle: "solid",
         borderColor: "border.subtle",
       },

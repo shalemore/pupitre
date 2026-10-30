@@ -6,6 +6,7 @@ import { TOP_MENUS, type MenuEntry, type Menus, type TopMenu } from "@shared/men
 import { IconButton } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
+import { menuPanel } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 import { MenuEntries, MenuPopup } from "./menu-popup";
 import { createMenu } from "./menu-state";
@@ -33,20 +34,6 @@ const trigger = css({
   _hover: { color: "foreground", backgroundColor: "accent" },
   _focusVisible: { color: "foreground", backgroundColor: "accent" },
   _expanded: { color: "foreground", backgroundColor: "accent" },
-});
-const menuPanel = css({
-  zIndex: "50",
-  display: "flex",
-  minWidth: "52",
-  maxHeight: "var(--kb-popper-content-available-height)",
-  flexDirection: "column",
-  overflowY: "auto",
-  overscrollBehavior: "contain",
-  padding: "1",
-  textStyle: "xs",
-  color: "foreground",
-  outlineStyle: "none",
-  userSelect: "none",
 });
 const menuButton = css({ color: "muted.foreground" });
 

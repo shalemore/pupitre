@@ -50,6 +50,7 @@ import { withoutScripts } from "@/lib/html";
 import { createImmersiveChrome } from "@/lib/immersive-chrome";
 import { recentFiles } from "@/lib/recent-files";
 import { settings, updateSettings } from "@/lib/settings";
+import { quietButton, rtlFlip } from "@/lib/styles";
 import type { TextStats } from "@/lib/text-stats";
 import { css, cx } from "@/styled-system/css";
 
@@ -87,17 +88,17 @@ const titleBar = css({
 });
 const titleBarHidden = css({ height: 0 });
 const frameBorderBottom = css({
-  borderBlockEndWidth: "1px",
+  borderBlockEndWidth: "hairline",
   borderBlockEndStyle: "solid",
   borderBlockEndColor: "border",
 });
 const frameBorderStart = css({
-  borderInlineStartWidth: "1px",
+  borderInlineStartWidth: "hairline",
   borderInlineStartStyle: "solid",
   borderInlineStartColor: "border",
 });
 const frameBorderEnd = css({
-  borderInlineEndWidth: "1px",
+  borderInlineEndWidth: "hairline",
   borderInlineEndStyle: "solid",
   borderInlineEndColor: "border",
 });
@@ -200,18 +201,6 @@ const wordCountLabel = css({
   whiteSpace: "nowrap",
   marginInlineEnd: "2",
 });
-const quietButton = css({
-  flexShrink: 0,
-  color: "tertiary",
-  opacity: 0.5,
-  transitionProperty: "opacity",
-  transitionDuration: "ui",
-  transitionTimingFunction: "outExpo",
-  _hover: { opacity: 1 },
-  _focusVisible: { opacity: 1 },
-  "&[data-pressed]": { opacity: 1 },
-});
-const rtlFlip = css({ _rtl: { scale: "-1 1" } });
 
 export const MainWindow: Component = () => {
   // A signal rather than a variable: a new document brings a new editor, and a match found in the

@@ -122,6 +122,14 @@ export default defineConfig({
           enter: { value: "var(--ease-enter)" },
           spring: { value: "var(--ease-spring)" },
         },
+        // Every hairline the interface draws; a theme changes them all from --ui-border-width
+        borderWidths: {
+          hairline: { value: "var(--ui-border-width)" },
+        },
+        // The three caption buttons (minimise, maximise, close) share this width
+        sizes: {
+          captionButton: { value: "2.875rem" },
+        },
         zIndex: {
           1: { value: "1" },
           10: { value: "10" },

@@ -13,7 +13,7 @@ const badgeVariants = cva({
     gap: "1",
     overflow: "hidden",
     borderRadius: "sm",
-    borderWidth: "1px",
+    borderWidth: "hairline",
     borderStyle: "solid",
     borderColor: "transparent",
     fontWeight: "medium",

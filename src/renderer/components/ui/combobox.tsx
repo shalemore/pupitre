@@ -62,7 +62,7 @@ const control = css({
   width: "56",
   alignItems: "center",
   borderRadius: "md",
-  borderWidth: "1px",
+  borderWidth: "hairline",
   borderStyle: "solid",
   borderColor: "input",
   backgroundColor: "field",

@@ -19,7 +19,7 @@ const option = css({
   flexDirection: "column",
   gap: "2",
   borderRadius: "lg",
-  borderWidth: "1px",
+  borderWidth: "hairline",
   borderStyle: "solid",
   borderColor: "border",
   padding: "2",
@@ -80,13 +80,13 @@ const classicPreview = css({
   flexDirection: "column",
   overflow: "hidden",
   borderRadius: "md",
-  borderWidth: "1px",
+  borderWidth: "hairline",
   borderStyle: "solid",
   borderColor: "border",
 });
 const classicBar = css({
   height: "2.5",
-  borderBlockEndWidth: "1px",
+  borderBlockEndWidth: "hairline",
   borderBlockEndStyle: "solid",
   borderBlockEndColor: "border",
   backgroundColor: "surface.0",
@@ -94,7 +94,7 @@ const classicBar = css({
 const classicBody = css({ display: "flex", flex: "1" });
 const classicSidebar = css({
   width: "25%",
-  borderInlineEndWidth: "1px",
+  borderInlineEndWidth: "hairline",
   borderInlineEndStyle: "solid",
   borderInlineEndColor: "border",
   backgroundColor: "surface.0",

@@ -25,6 +25,7 @@ import { desktop } from "@/lib/desktop";
 import { reportFailure } from "@/lib/errors";
 import { excerptOf } from "@/lib/markdown-excerpt";
 import { settings } from "@/lib/settings";
+import { menuPanel } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 
 /** The menu of a row: what it lists, and what each entry runs, by id. */
@@ -188,7 +189,7 @@ const renameField = css({
   minWidth: 0,
   flex: "1",
   borderRadius: "md",
-  borderWidth: "1px",
+  borderWidth: "hairline",
   borderStyle: "solid",
   borderColor: "border",
   backgroundColor: "surface.2",
@@ -223,20 +224,6 @@ const excerptLine = css({
   textStyle: "2xs",
   fontWeight: "normal",
   color: "tertiary",
-});
-const panel = css({
-  zIndex: "50",
-  display: "flex",
-  minWidth: "52",
-  maxHeight: "var(--kb-popper-content-available-height)",
-  flexDirection: "column",
-  overflowY: "auto",
-  overscrollBehavior: "contain",
-  padding: "1",
-  textStyle: "xs",
-  color: "foreground",
-  outlineStyle: "none",
-  userSelect: "none",
 });
 const openButton = css({
   position: "absolute",
@@ -275,7 +262,7 @@ const sectionLabel = css({
 });
 const divider = css({
   marginInline: "2.5",
-  borderBlockStartWidth: "1px",
+  borderBlockStartWidth: "hairline",
   borderBlockStartStyle: "solid",
   borderBlockStartColor: "border.subtle",
 });
@@ -407,7 +394,7 @@ const FolderRow: Component<{
                 </span>
               </ContextMenu.Trigger>
               <ContextMenu.Portal>
-                <ContextMenu.Content class={cx("floating-panel", panel)}>
+                <ContextMenu.Content class={cx("floating-panel", menuPanel)}>
                   {(() => {
                     const menu = props.tree.menuOf(props.entry);
                     return (
@@ -663,7 +650,7 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
         <FolderChildren path={props.root} depth={0} tree={tree} />
       </ContextMenu.Trigger>
       <ContextMenu.Portal>
-        <ContextMenu.Content class={cx("floating-panel", panel)}>
+        <ContextMenu.Content class={cx("floating-panel", menuPanel)}>
           {(() => {
             const menu = menuOf({ name: props.root, path: props.root, kind: "directory" });
             return (

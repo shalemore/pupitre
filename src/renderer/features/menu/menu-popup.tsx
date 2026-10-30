@@ -13,6 +13,7 @@ import { For, Show, type Component } from "solid-js";
 import type { MenuEntry } from "@shared/menu";
 import { Separator } from "@/components/ui";
 import { isRtl } from "@/lib/rtl";
+import { menuPanel, rtlFlip, truncate } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 
 type MenuItemEntry = Extract<MenuEntry, { type: "item" }>;
@@ -31,12 +32,7 @@ const check = css({ width: "3", height: "3", flexShrink: 0 });
 const hidden = css({ visibility: "hidden" });
 const row = css({ display: "flex", minWidth: 0, flex: "1", alignItems: "center", gap: "1.5" });
 const label = css({ minWidth: 0 });
-const truncate = css({
-  display: "block",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
-});
+const block = css({ display: "block" });
 const detail = css({ display: "block", textStyle: "2xs", color: "tertiary" });
 const shortcut = css({ textStyle: "2xs", color: "tertiary", fontVariantNumeric: "tabular-nums" });
 const item = css({
@@ -60,23 +56,8 @@ const submenuChevron = css({
   height: "3.5",
   flexShrink: 0,
   color: "tertiary",
-  _rtl: { transform: "scaleX(-1)" },
 });
 const separator = css({ marginBlock: "1", backgroundColor: "border.subtle" });
-const panel = css({
-  zIndex: "50",
-  display: "flex",
-  minWidth: "52",
-  maxHeight: "var(--kb-popper-content-available-height)",
-  flexDirection: "column",
-  overflowY: "auto",
-  overscrollBehavior: "contain",
-  padding: "1",
-  textStyle: "xs",
-  color: "foreground",
-  outlineStyle: "none",
-  userSelect: "none",
-});
 
 const ItemContent: Component<{ item: MenuItemEntry; hasChecks: boolean }> = (props) => (
   <>
@@ -85,9 +66,9 @@ const ItemContent: Component<{ item: MenuItemEntry; hasChecks: boolean }> = (pro
         <Check class={cx(check, props.item.checked !== true && hidden)} stroke-width={2} />
       </Show>
       <span class={label}>
-        <span class={truncate}>{props.item.label}</span>
+        <span class={cx(truncate, block)}>{props.item.label}</span>
         <Show when={props.item.detail}>
-          <bdi dir="ltr" class={detail}>
+          <bdi dir="ltr" class={cx(truncate, block, detail)}>
             {props.item.detail}
           </bdi>
         </Show>
@@ -145,10 +126,10 @@ export const MenuEntries: Component<{
               <MenuSub>
                 <MenuSubTrigger disabled={itemEntry().enabled === false} class={item}>
                   <ItemContent item={itemEntry()} hasChecks={hasChecks()} />
-                  <ChevronRight class={submenuChevron} />
+                  <ChevronRight class={cx(submenuChevron, rtlFlip)} />
                 </MenuSubTrigger>
                 <MenuPortal>
-                  <MenuSubContent class={cx("floating-panel", panel)}>
+                  <MenuSubContent class={cx("floating-panel", menuPanel)}>
                     <MenuEntries entries={itemEntry().submenu ?? []} onSelect={props.onSelect} />
                   </MenuSubContent>
                 </MenuPortal>
@@ -186,7 +167,7 @@ export const MenuPopup: Component<MenuPopupProps> = (props) => (
             event.preventDefault();
           }
         }}
-        class={cx("floating-panel", panel)}
+        class={cx("floating-panel", menuPanel)}
       >
         <MenuEntries entries={props.entries} onSelect={props.onSelect} />
       </MenuContent>
