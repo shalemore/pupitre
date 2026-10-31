@@ -33,7 +33,7 @@ import { makeEventListener } from "@solid-primitives/event-listener";
 import { debounce } from "@solid-primitives/scheduled";
 import { createEffect, on, onCleanup, onMount, type Component } from "solid-js";
 import { messageOf } from "@shared/errors";
-import type { FormatAction } from "@shared/format";
+import type { FormatAction } from "@shared/format-actions";
 import { ScrollView } from "@/components/ui";
 import { imageCaptionClick, imageInput } from "@/features/editor/images/image-widget";
 import { closeInlineTags } from "@/features/editor/widgets/html-widget";
@@ -42,7 +42,7 @@ import {
   type DocumentPosition,
   flushDocumentPositions,
   rememberDocumentPosition,
-} from "@/lib/document-positions";
+} from "@/lib/document/positions";
 import { reportFailure } from "@/lib/errors";
 import { escapeHtml } from "@/lib/html";
 import { pickImage, saveImageNextTo } from "@/lib/image-files";

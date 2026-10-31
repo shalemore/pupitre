@@ -1,5 +1,5 @@
 import { BrowserWindow, Menu, type MenuItemConstructorOptions, type WebContents } from "electron";
-import { CONTEXT_MENU_FORMAT_ACTIONS } from "@shared/format";
+import { CONTEXT_MENU_FORMAT_ACTIONS } from "@shared/format-actions";
 import { withGroupSeparators } from "@shared/menu";
 import { formatItems } from "./format-menu";
 import { t } from "./i18n";

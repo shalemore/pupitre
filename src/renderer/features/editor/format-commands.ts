@@ -8,7 +8,7 @@ import {
 } from "@codemirror/state";
 import type { Command, EditorView, KeyBinding } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
-import { FORMAT_ACTIONS, type FormatAction } from "@shared/format";
+import { FORMAT_ACTIONS, type FormatAction } from "@shared/format-actions";
 import type { Settings } from "@shared/settings";
 import { footnoteLabel } from "@/lib/markdown/footnotes";
 import { htmlTag } from "@/lib/markdown/html";

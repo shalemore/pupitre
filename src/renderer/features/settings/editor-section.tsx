@@ -3,7 +3,7 @@ import { SETTING_RANGES, type Settings } from "@shared/settings";
 import { Select, Slider, Switch } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
-import { formatDecimal } from "@/lib/format";
+import { formatDecimal } from "@/lib/number-format";
 import { settings, updateSettings } from "@/lib/settings";
 import { FontSelect, RefreshFontsButton, themeFontLabel } from "./font-select";
 import { SettingField, SettingGroup, SettingsSection } from "./settings-section";

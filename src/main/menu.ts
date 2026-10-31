@@ -9,7 +9,7 @@ import {
   shell,
 } from "electron";
 import type { DocumentState } from "@shared/desktop-api";
-import { INLINE_FORMAT_ACTIONS, PARAGRAPH_MENU_GROUPS } from "@shared/format";
+import { INLINE_FORMAT_ACTIONS, PARAGRAPH_MENU_GROUPS } from "@shared/format-actions";
 import {
   formatShortcut,
   type MenuEntry,

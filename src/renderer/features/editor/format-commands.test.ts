@@ -1,6 +1,6 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
-import type { FormatAction } from "@shared/format";
+import type { FormatAction } from "@shared/format-actions";
 import { DEFAULT_SETTINGS } from "@shared/settings";
 import { fullTree, marked, markdownView } from "@/lib/markdown/testing";
 import { insertParagraphBreak, type MarkdownStyle, runFormatAction } from "./format-commands";

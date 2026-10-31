@@ -5,7 +5,7 @@ import type { UpdateStatus } from "@shared/desktop-api";
 import { Button, Callout, ScrollView } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
-import { formatPercent } from "@/lib/format";
+import { formatPercent } from "@/lib/number-format";
 import { updateStatus } from "@/lib/updater";
 import { css, cx } from "@/styled-system/css";
 

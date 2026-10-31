@@ -4,7 +4,7 @@ import { SETTING_RANGES, type Settings } from "@shared/settings";
 import { Callout, IconButton, Select, Slider, Switch } from "@/components/ui";
 import { currentLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
-import { formatPercent } from "@/lib/format";
+import { formatPercent } from "@/lib/number-format";
 import { settings, updateSettings } from "@/lib/settings";
 import { DEFAULT_THEME, type ThemeInfo, themeDisplayName, themes } from "@/lib/theme";
 import { css } from "@/styled-system/css";

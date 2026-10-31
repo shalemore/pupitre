@@ -4,7 +4,7 @@ import {
   PARAGRAPH_MENU_GROUPS,
   shortcutOf,
   type FormatAction,
-} from "@shared/format";
+} from "@shared/format-actions";
 import type { TranslationSchema } from "@shared/i18n";
 import {
   formatShortcut,

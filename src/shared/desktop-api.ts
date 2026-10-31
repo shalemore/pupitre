@@ -1,4 +1,4 @@
-import type { FormatAction } from "./format";
+import type { FormatAction } from "./format-actions";
 import type { Menus } from "./menu";
 import type { SettingKey, Settings } from "./settings";
 
