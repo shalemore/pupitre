@@ -38,10 +38,13 @@ import { compareFolderEntries, UNTIMED } from "@shared/folder-sort";
 import { isHiddenName } from "@shared/hidden";
 import { intlLocale } from "@shared/i18n";
 import type { Settings } from "@shared/settings";
-import { showAboutDialog } from "./about";
-import { setAsDefaultMarkdownApp } from "./default-app";
 import { choose, type Answer } from "./dialog-choice";
-import { clearDraft, readDraft, writeDraft } from "./drafts";
+import { clearDraft, readDraft, writeDraft } from "./document/drafts";
+import { listVersions, MAX_SNAPSHOT_BYTES, readVersion, recordVersion } from "./document/history";
+import { readPins, writePins } from "./document/pins";
+import { exportImage } from "./export/export-image";
+import { pdfPrintOptions } from "./export/pdf-print-options";
+import { setAsDefaultMarkdownApp } from "./files/default-app";
 import {
   decodeDocument,
   decodeWith,
@@ -50,9 +53,8 @@ import {
   lineEndingOf,
   normalizeText,
   withLineEnding,
-} from "./encoding";
-import { exists } from "./exists";
-import { exportImage } from "./export-image";
+} from "./files/encoding";
+import { exists } from "./files/exists";
 import {
   MAX_IMAGE_BYTES,
   copyImageInto,
@@ -62,17 +64,17 @@ import {
   moveImageInto,
   renameEntry,
   trashEntry,
-} from "./file-actions";
-import { readFolder, markHidden } from "./folder-entries";
-import { listVersions, MAX_SNAPSHOT_BYTES, readVersion, recordVersion } from "./history";
+} from "./files/file-actions";
+import { readFolder, markHidden } from "./files/folder-entries";
+import { createIOLimit } from "./files/io-limit";
+import { takeLaunchFile } from "./files/open-files";
+import { unwatchPath, watchPath } from "./files/path-watcher";
+import { addRecentFile, getRecentFiles, removeRecentFile } from "./files/recent-files";
+import { listWorkspaceFiles } from "./files/workspace-files";
+import { searchWorkspace } from "./files/workspace-search";
 import { currentLocale, t } from "./i18n";
-import { createIOLimit } from "./io-limit";
-import { clickMenuItem, menuSnapshot, setDocumentState } from "./menu";
-import { takeLaunchFile } from "./open-files";
-import { unwatchPath, watchPath } from "./path-watcher";
-import { pdfPrintOptions } from "./pdf-print-options";
-import { readPins, writePins } from "./pins";
-import { addRecentFile, getRecentFiles, removeRecentFile } from "./recent-files";
+import { showAboutDialog } from "./menus/about";
+import { clickMenuItem, menuSnapshot, setDocumentState } from "./menus/menu";
 import {
   getSettings,
   getSettingsPath,
@@ -83,8 +85,8 @@ import {
   setWorkspace,
   updateSettings,
   useWorkspace,
-} from "./settings-store";
-import { getImportedThemes, revealThemeFolder, setProjectThemeRoot } from "./themes";
+} from "./settings/settings-store";
+import { getImportedThemes, revealThemeFolder, setProjectThemeRoot } from "./settings/themes";
 import {
   canSelfUpdate,
   checkForUpdates,
@@ -92,7 +94,7 @@ import {
   getUpdateStatus,
   installUpdate,
 } from "./updater";
-import { readWindowState, updateWindowState } from "./window-state";
+import { readWindowState, updateWindowState } from "./windows/window-state";
 import {
   applyWindowColors,
   closeWithoutPrompt,
@@ -101,9 +103,7 @@ import {
   getCaptionSide,
   setDocumentEdited,
   showSettingsWindow,
-} from "./windows";
-import { listWorkspaceFiles } from "./workspace-files";
-import { searchWorkspace } from "./workspace-search";
+} from "./windows/windows";
 
 function handle<K extends keyof InvokeChannels>(
   channel: K,

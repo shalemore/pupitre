@@ -14,8 +14,8 @@ import {
   type CaptionSide,
   type WindowColors,
 } from "@shared/desktop-api";
-import { setupContextMenu } from "./context-menu";
-import { onSettingsChange } from "./settings-store";
+import { setupContextMenu } from "../menus/context-menu";
+import { onSettingsChange } from "../settings/settings-store";
 import { flushWindowState } from "./window-state";
 import { applyZoom, stepZoom } from "./zoom";
 

@@ -17,15 +17,15 @@ import {
   menusOf,
   withGroupSeparators,
 } from "@shared/menu";
+import { diagnosticsInfo } from "../diagnostics/diagnostics";
+import { REPOSITORY_URL, reportIssueUrl } from "../diagnostics/report-issue";
+import { clearRecentFiles, getRecentFiles } from "../files/recent-files";
+import { t } from "../i18n";
+import { getSettings, updateSettings } from "../settings/settings-store";
+import { dispatchToMainWindow, getMainWindow, showSettingsWindow } from "../windows/windows";
+import { resetZoom, stepZoom } from "../windows/zoom";
 import { showAboutDialog } from "./about";
-import { diagnosticsInfo } from "./diagnostics";
 import { formatItems } from "./format-menu";
-import { t } from "./i18n";
-import { clearRecentFiles, getRecentFiles } from "./recent-files";
-import { REPOSITORY_URL, reportIssueUrl } from "./report-issue";
-import { getSettings, updateSettings } from "./settings-store";
-import { dispatchToMainWindow, getMainWindow, showSettingsWindow } from "./windows";
-import { resetZoom, stepZoom } from "./zoom";
 
 const separator: MenuItemConstructorOptions = { type: "separator" };
 

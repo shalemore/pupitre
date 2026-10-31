@@ -2,7 +2,7 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { extname, resolve } from "node:path";
 import type { ImportedTheme } from "@shared/desktop-api";
 import { nameCollator } from "@shared/name-collator";
-import { isInside } from "./is-inside";
+import { isInside } from "../is-inside";
 
 const STYLE_FILE = "index.css";
 const META_FILE = "theme.json";

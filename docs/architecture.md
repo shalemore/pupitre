@@ -45,7 +45,14 @@ anything touching the disk is a channel and every payload back is data to valida
 
 ```
 src/
-  main/        Electron main process: windows, menus, dialogs, file IO, settings, updates
+  main/        Electron main process: the entry, the IPC hub and the helpers they share
+    menus/         the native menus and the About dialog
+    files/         opening, reading, watching and writing documents and folders
+    windows/       the app's windows, their state, zoom and spellcheck
+    document/      the drafts, versions and pins kept for a document
+    settings/      the settings file and the themes it lists
+    export/        the image and PDF export
+    diagnostics/   the log and the issue report
   preload/     contextBridge that exposes the typed `window.desktop` API
   shared/      Code both sides use: IPC contract, settings schema, i18n dictionaries
   renderer/    SolidJS UI, one bundle for both windows
@@ -74,9 +81,9 @@ editor is given the text of the tab that is shown and never owns it:
   made elsewhere, and comparing against it separates the tab's write from someone else's.
 - `missingOnDisk` marks a file deleted outside the app: until the tab is saved again its text exists
   nowhere else.
-- A draft is the unsaved text of one tab, written by `src/main/drafts.ts` a moment after typing
+- A draft is the unsaved text of one tab, written by `src/main/document/drafts.ts` a moment after typing
   stops, so a crash leaves something to offer back.
-- `src/main/history.ts` keeps the version a save overwrites, under `userData`: 20 versions per
+- `src/main/document/history.ts` keeps the version a save overwrites, under `userData`: 20 versions per
   document, 200 MB in total, for File › Version History.
 
 Switching tabs rebuilds the `EditorView` around the tab's text rather than replacing that text, and

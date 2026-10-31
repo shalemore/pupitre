@@ -1,6 +1,6 @@
 import { watch, type FSWatcher } from "chokidar";
 import type { WebContents } from "electron";
-import { createDebouncedTask, type DebouncedTask } from "./debounced-task";
+import { createDebouncedTask, type DebouncedTask } from "../debounced-task";
 
 /** Editors and sync tools write in bursts; one notification per burst is enough. */
 const DEBOUNCE_MS = 150;

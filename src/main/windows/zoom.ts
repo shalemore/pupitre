@@ -1,6 +1,6 @@
 import type { WebContents } from "electron";
 import { ZOOM_STEPS, zoomFactor } from "@shared/settings";
-import { getSettings, updateSettings } from "./settings-store";
+import { getSettings, updateSettings } from "../settings/settings-store";
 
 /** Steps the zoom to the next value above or below it, which may be one the steps do not have. */
 export function stepZoom(direction: "in" | "out"): void {

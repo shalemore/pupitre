@@ -1,18 +1,18 @@
 import { join } from "node:path";
 import { app, BrowserWindow, nativeTheme, session } from "electron";
-import { setupDiagnostics } from "./diagnostics";
-import { flushDraft } from "./drafts";
+import { setupDiagnostics } from "./diagnostics/diagnostics";
+import { flushDraft } from "./document/drafts";
+import { handleOpenFileRequests, launchFileFromArgv } from "./files/open-files";
+import { onRecentFilesChange } from "./files/recent-files";
 import { registerIpcHandlers } from "./ipc";
-import { allowMacTypeInjection } from "./mactype";
-import { rebuildApplicationMenu } from "./menu";
-import { handleOpenFileRequests, launchFileFromArgv } from "./open-files";
-import { onRecentFilesChange } from "./recent-files";
-import { getSettings, onSettingsChange } from "./settings-store";
-import { applySpellCheck } from "./spellcheck";
-import { startThemeWatcher, stopThemeWatcher } from "./themes";
+import { rebuildApplicationMenu } from "./menus/menu";
+import { getSettings, onSettingsChange } from "./settings/settings-store";
+import { startThemeWatcher, stopThemeWatcher } from "./settings/themes";
 import { checkForUpdatesOnStartup, setupUpdater } from "./updater";
-import { flushWindowState } from "./window-state";
-import { createMainWindow } from "./windows";
+import { allowMacTypeInjection } from "./windows/mactype";
+import { applySpellCheck } from "./windows/spellcheck";
+import { flushWindowState } from "./windows/window-state";
+import { createMainWindow } from "./windows/windows";
 
 allowMacTypeInjection();
 // Groups the taskbar button and attributes notifications to the app; electron-builder uses the same

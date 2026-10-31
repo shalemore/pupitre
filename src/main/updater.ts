@@ -7,8 +7,8 @@ import type { UpdateStatus } from "@shared/desktop-api";
 import { messageOf } from "@shared/errors";
 import { broadcast } from "./broadcast";
 import { t } from "./i18n";
-import { getSettings } from "./settings-store";
-import { showSettingsWindow } from "./windows";
+import { getSettings } from "./settings/settings-store";
+import { showSettingsWindow } from "./windows/windows";
 
 const { autoUpdater } = electronUpdater;
 

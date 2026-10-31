@@ -3,8 +3,8 @@ import { basename, join, resolve } from "node:path";
 import { z } from "zod";
 import type { PinnedEntry } from "@shared/desktop-api";
 import { pinKeyOf } from "@shared/pins";
-import { isInside } from "./is-inside";
-import { readJsonFile, writeJsonFile } from "./json-file";
+import { isInside } from "../is-inside";
+import { readJsonFile, writeJsonFile } from "../json-file";
 
 /** Where a folder keeps the entries pinned to the top of its sidebar. */
 export const PINS_FILE = ".pupitre/pins.json";

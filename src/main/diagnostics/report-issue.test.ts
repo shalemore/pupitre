@@ -78,7 +78,7 @@ describe("reportIssueUrl", () => {
 
   it("names only fields the bug report form declares", () => {
     const form = readFileSync(
-      new URL("../../.github/ISSUE_TEMPLATE/bug_report.yml", import.meta.url),
+      new URL("../../../.github/ISSUE_TEMPLATE/bug_report.yml", import.meta.url),
       "utf8",
     );
     const ids = new Set<string>();

@@ -1,6 +1,6 @@
 import { session } from "electron";
-import { currentLocale } from "./i18n";
-import { getSettings } from "./settings-store";
+import { currentLocale } from "../i18n";
+import { getSettings } from "../settings/settings-store";
 
 /**
  * The dictionary to check the interface locale with, out of the ones Chromium ships. It names

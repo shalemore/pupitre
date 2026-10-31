@@ -1,6 +1,6 @@
 import { app, type BrowserWindow, clipboard } from "electron";
-import { choose } from "./dialog-choice";
-import { t } from "./i18n";
+import { choose } from "../dialog-choice";
+import { t } from "../i18n";
 
 export function showAboutDialog(window: BrowserWindow): void {
   const labels = t();

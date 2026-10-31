@@ -2,8 +2,8 @@ import { rmSync } from "node:fs";
 import { join } from "node:path";
 import { app } from "electron";
 import { z } from "zod";
-import { createDebouncedTask } from "./debounced-task";
-import { readJsonFile, writeJsonFile } from "./json-file";
+import { createDebouncedTask } from "../debounced-task";
+import { readJsonFile, writeJsonFile } from "../json-file";
 
 const WINDOW_STATE_FILE = "window-state.json";
 // Moving or resizing the sidebar fires a dozen events a second; only where it settles is worth writing

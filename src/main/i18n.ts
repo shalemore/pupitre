@@ -5,7 +5,7 @@ import {
   type SupportedLocale,
   type TranslationSchema,
 } from "@shared/i18n";
-import { getSettings } from "./settings-store";
+import { getSettings } from "./settings/settings-store";
 
 export function currentLocale(): SupportedLocale {
   return resolveLocale(getSettings().locale, app.getPreferredSystemLanguages());

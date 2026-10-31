@@ -19,7 +19,7 @@ vi.mock("electron", () => ({
   BrowserWindow: vi.fn<() => object>(),
   dialog: { showMessageBox: vi.fn<typeof import("electron").dialog.showMessageBox>() },
 }));
-vi.mock("./i18n", async () => {
+vi.mock("../i18n", async () => {
   const { getDictionary } = await import("@shared/i18n");
   return { t: () => getDictionary("en-US") };
 });

@@ -3,8 +3,8 @@ import { join } from "node:path";
 import { app } from "electron";
 import { type DraftSession } from "@shared/desktop-api";
 import { readDraftSession } from "@shared/draft";
-import { createDebouncedTask } from "./debounced-task";
-import { readJsonFile, writeJsonFile } from "./json-file";
+import { createDebouncedTask } from "../debounced-task";
+import { readJsonFile, writeJsonFile } from "../json-file";
 
 const DRAFT_FILE = "draft.json";
 // The renderer already waits for a pause in the typing; this delay only coalesces the writes that

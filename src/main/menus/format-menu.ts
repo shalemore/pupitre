@@ -1,7 +1,7 @@
 import type { MenuItemConstructorOptions } from "electron";
 import type { AppCommand } from "@shared/desktop-api";
 import { shortcutOf, type FormatAction } from "@shared/format-actions";
-import { t } from "./i18n";
+import { t } from "../i18n";
 
 /**
  * Menu items for formatting actions. The editor's keymap handles the shortcuts, so they are only

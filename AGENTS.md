@@ -154,7 +154,7 @@ than waiting for a review to notice it.
   demo serves it. A license that asks for more than its text gets a note in `NOTES` there.
 - The main process owns all privileged work: file system access, native dialogs, menus, the
   settings file and auto updates. The renderer asks for it through IPC.
-- `main/history.ts` keeps the version a save overwrites, in a folder of its own under `userData`,
+- `main/document/history.ts` keeps the version a save overwrites, in a folder of its own under `userData`,
   so that File › Version History can bring one back.
 - Windows run with `sandbox: true` and `contextIsolation: true`. External URLs open in the system
   browser through `setWindowOpenHandler`; never load remote content into an app window.

@@ -5,7 +5,7 @@ they were written on: there is no telemetry, and nothing is uploaded.
 
 ## Where the files are
 
-`src/main/diagnostics.ts` sends the log to `main.log` in the folder Electron reports as
+`src/main/diagnostics/diagnostics.ts` sends the log to `main.log` in the folder Electron reports as
 `app.getPath("logs")`, and starts Electron's crash reporter with `uploadToServer: false`, so Crashpad
 keeps its dumps in `app.getPath("crashDumps")`. Both follow the app's data folder:
 

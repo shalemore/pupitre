@@ -4,8 +4,8 @@ import { isDeepStrictEqual } from "node:util";
 import { watch, type FSWatcher } from "chokidar";
 import { app, shell } from "electron";
 import type { ImportedTheme } from "@shared/desktop-api";
-import { broadcast } from "./broadcast";
-import { createDebouncedTask } from "./debounced-task";
+import { broadcast } from "../broadcast";
+import { createDebouncedTask } from "../debounced-task";
 import { readThemesFromRoot } from "./theme-folders";
 
 /** A write may arrive as several events, such as a temporary file and the rename after it. */

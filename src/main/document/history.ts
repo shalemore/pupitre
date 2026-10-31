@@ -6,7 +6,7 @@ import { app } from "electron";
 import log from "electron-log/main";
 import { z } from "zod";
 import type { HistoryEntry } from "@shared/desktop-api";
-import { readJsonFile, writeJsonFile } from "./json-file";
+import { readJsonFile, writeJsonFile } from "../json-file";
 
 const MAX_VERSIONS_PER_DOCUMENT = 20;
 const MAX_TOTAL_BYTES = 200 * 1024 * 1024;

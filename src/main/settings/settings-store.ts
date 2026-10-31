@@ -15,8 +15,8 @@ import {
   withoutSetting,
   WORKSPACE_FILE,
 } from "@shared/settings";
-import { broadcast } from "./broadcast";
-import { readJsonFile, writeJsonFile } from "./json-file";
+import { broadcast } from "../broadcast";
+import { readJsonFile, writeJsonFile } from "../json-file";
 
 const listeners = new Set<(settings: Settings) => void>();
 

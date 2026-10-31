@@ -3,8 +3,8 @@ import type { BrowserWindow } from "electron";
 import iconv from "iconv-lite";
 import type { LineEnding, TextEncoding } from "@shared/desktop-api";
 import { toLf } from "@shared/text";
-import { choose } from "./dialog-choice";
-import { t } from "./i18n";
+import { choose } from "../dialog-choice";
+import { t } from "../i18n";
 
 /**
  * The encodings a file that declares none can be saved in, in the order the question lists them.
