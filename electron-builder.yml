@@ -77,6 +77,9 @@ win:
 nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
+  # Windows reads this as the app's DisplayName; the default appends the version, which Installed
+  # apps already shows on the line below the name.
+  uninstallDisplayName: ${productName}
 mac:
   # electron-updater updates macOS from the zip; the dmg is for the first install
   target:
