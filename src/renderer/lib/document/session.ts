@@ -9,15 +9,15 @@ import {
 import { messageOf } from "@shared/errors";
 import { currentLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
-import { createDocumentDrafts } from "@/lib/document-drafts";
-import type { DocumentEditorWithImages } from "@/lib/document-editor";
-import { isImageTab, isTabDirty, type OpenDocument, type Tab } from "@/lib/document-tab";
 import { reportFailure } from "@/lib/errors";
 import { fileNameOf, withTrailingNewline } from "@/lib/file";
 import { createPendingImages, type PendingImages } from "@/lib/pending-images";
 import { recentFiles } from "@/lib/recent-files";
 import { getSampleDocument } from "@/lib/samples/sample-document";
 import { settings } from "@/lib/settings";
+import { createDocumentDrafts } from "./drafts";
+import type { DocumentEditorWithImages } from "./editor";
+import { isImageTab, isTabDirty, type OpenDocument, type Tab } from "./tab";
 
 /** The text of a closed tab that had no file: nothing on disk holds it, so the closed tabs keep it whole. */
 interface InMemoryTab extends Omit<OpenDocument, "id" | "path"> {

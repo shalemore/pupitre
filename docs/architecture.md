@@ -53,6 +53,7 @@ src/
     features/<x>/  one feature's components, state and helpers
     components/    what several features share; components/ui holds the primitives
     lib/           helpers and state shared across features
+    lib/document/  the open tabs and the document in each
     lib/markdown/  the Markdown model the editor and the export both read
     themes/<x>/    one folder per theme
   web/         the browser demo: an index.html and its `window.desktop`
@@ -64,7 +65,7 @@ e2e/           Playwright specs, run against the built app
 
 ## The document session
 
-`src/renderer/lib/document-session.ts` owns the open tabs and the life of the document in each. The
+`src/renderer/lib/document/session.ts` owns the open tabs and the life of the document in each. The
 editor is given the text of the tab that is shown and never owns it:
 
 - `markdown` is the text being edited and `savedMarkdown` what the tab last held; the tab is dirty

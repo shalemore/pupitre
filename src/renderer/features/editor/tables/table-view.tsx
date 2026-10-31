@@ -5,7 +5,7 @@ import { type Accessor, type Component, createSelector, Index, type Setter, Show
 import { Dynamic } from "solid-js/web";
 import { openImageMenu } from "@/features/editor/images/image-menu";
 import { openLink } from "@/features/editor/preview/links";
-import { InlineContent } from "@/features/editor/widgets/inline-view";
+import { InlineContent } from "@/features/editor/tables/inline-view";
 import { imageIn } from "@/lib/markdown/images";
 import { columnCount, editCell, insertRow, type TableModel } from "@/lib/markdown/table-model";
 import { css, cx } from "@/styled-system/css";

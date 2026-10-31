@@ -145,7 +145,7 @@ than waiting for a review to notice it.
 - The renderer only talks to its host through `window.desktop`, so another host can run it. The web
   demo (`src/web/host.ts`) keeps files in memory and settings in localStorage; a new channel in
   `InvokeChannels` has to be given a handler there too, which the compiler enforces.
-- `lib/document-session.ts` owns the open tabs and the life cycle of the document in each: the
+- `lib/document/session.ts` owns the open tabs and the life cycle of the document in each: the
   `savedMarkdown` decides whether a tab is dirty, `diskContent` what the file held when it was last
   read, so a save can tell the file changed elsewhere. The editor only holds the text of the tab on
   show.

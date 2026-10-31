@@ -2,7 +2,7 @@ import { messageOf } from "@shared/errors";
 import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
-import type { DocumentSession } from "@/lib/document-session";
+import type { DocumentSession } from "@/lib/document/session";
 import { reportFailure } from "@/lib/errors";
 import { withoutDocumentExtension } from "@/lib/file";
 import { withoutScripts } from "@/lib/html";

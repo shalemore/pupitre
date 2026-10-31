@@ -23,9 +23,8 @@ import { ImagePreview } from "@/features/editor/images/image-preview";
 import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
 import type { MatchStats } from "@/features/editor/search";
 import { TableSizeDialog } from "@/features/editor/tables/table-size-dialog";
-import { VersionHistory } from "@/features/history/version-history";
-import { MenuBar, MenuButton } from "@/features/menu/menu-bar";
-import { QuickOpen } from "@/features/quick-open/quick-open";
+import { MenuBar, MenuButton } from "@/features/menu-bar";
+import { QuickOpen } from "@/features/quick-open";
 import { FolderSortButton } from "@/features/sidebar/folder-sort-button";
 import { FolderTree } from "@/features/sidebar/folder-tree";
 import { OutlineList } from "@/features/sidebar/outline-list";
@@ -36,13 +35,14 @@ import {
   SidebarSlot,
   type SidebarMode,
 } from "@/features/sidebar/sidebar";
-import { TabsBar } from "@/features/tabs/tabs-bar";
+import { TabsBar } from "@/features/tabs-bar";
+import { VersionHistory } from "@/features/version-history";
 import { WelcomeScreen } from "@/features/welcome/welcome-screen";
-import { WorkspaceSearch } from "@/features/workspace-search/workspace-search";
+import { WorkspaceSearch } from "@/features/workspace-search";
 import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
-import { documentPosition } from "@/lib/document-positions";
-import { createDocumentSession } from "@/lib/document-session";
+import { documentPosition } from "@/lib/document/positions";
+import { createDocumentSession } from "@/lib/document/session";
 import { fileNameOf, isolateFileName, parentFolder } from "@/lib/file";
 import { createImmersiveChrome } from "@/lib/immersive-chrome";
 import { headingKey, type OutlineHeading } from "@/lib/markdown/outline-heading";
