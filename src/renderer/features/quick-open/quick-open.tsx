@@ -1,9 +1,9 @@
 import { createMemo, createResource, For, type Component } from "solid-js";
 import type { FolderFile } from "@shared/desktop-api";
-import { matchRanges, type MatchRange } from "@/features/palette/fuzzy";
-import { PaletteSheet } from "@/features/palette/palette-sheet";
+import { PaletteSheet } from "@/components/palette-sheet";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
+import { matchRanges, type MatchRange } from "@/lib/fuzzy";
 import { dim, truncateGrow } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 

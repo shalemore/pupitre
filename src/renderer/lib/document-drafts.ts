@@ -1,7 +1,7 @@
 import { debounce } from "@solid-primitives/scheduled";
 import type { Draft, DraftSession } from "@shared/desktop-api";
-import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
 import { desktop } from "@/lib/desktop";
+import type { DocumentEditor } from "@/lib/document-editor";
 import { isImageTab, isTabDirty, type Tab } from "@/lib/document-tab";
 
 // A draft follows the pause after typing, not the keystrokes themselves; the main process writes it out a moment later
@@ -10,7 +10,7 @@ const DRAFT_WRITE_DELAY = 1000;
 // every pause and every close write hundreds of megabytes, so it is not drafted at all
 const MAX_DRAFT_CHARACTERS = 8 * 1024 * 1024;
 
-type DraftEditor = Pick<MarkdownEditorHandle, "getMarkdown" | "getMarkdownLength">;
+type DraftEditor = DocumentEditor;
 
 /** What a draft reads: the open tabs and, for the one on show, the editor that holds its latest text. */
 export interface DraftSource {

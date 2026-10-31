@@ -46,7 +46,7 @@ const DRAFT_KEY = "pupitre:draft";
 const platform: DesktopPlatform = "linux";
 const DEMO_FOLDER = "/demo";
 // The demo has no bundle to keep small across launches, so its sample document is part of the page
-const SAMPLE_DOCUMENTS = import.meta.glob<string>("../renderer/features/samples/documents/*.md", {
+const SAMPLE_DOCUMENTS = import.meta.glob<string>("../renderer/lib/samples/documents/*.md", {
   query: "?raw",
   import: "default",
   eager: true,
@@ -167,7 +167,7 @@ const files = new Map([
   [ABOUT_PATH, about],
   [
     `${DEMO_FOLDER}/Pupitre Guide.md`,
-    SAMPLE_DOCUMENTS[`../renderer/features/samples/documents/${currentLocale()}.md`] ?? "",
+    SAMPLE_DOCUMENTS[`../renderer/lib/samples/documents/${currentLocale()}.md`] ?? "",
   ],
 ]);
 // Files dropped on the page are read after the page asked for their path

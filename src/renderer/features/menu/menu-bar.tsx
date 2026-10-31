@@ -3,13 +3,13 @@ import { makeEventListener } from "@solid-primitives/event-listener";
 import { Menu } from "lucide-solid";
 import { createSignal, For, Show, type Component } from "solid-js";
 import { TOP_MENUS, type MenuEntry, type Menus, type TopMenu } from "@shared/menu";
+import { MenuEntries, MenuPopup } from "@/components/menu-popup";
 import { IconButton } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
+import { createMenu } from "@/lib/menu-state";
 import { FLOATING_PANEL, menuPanel } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
-import { MenuEntries, MenuPopup } from "./menu-popup";
-import { createMenu } from "./menu-state";
 
 /** How soon after a menu closes the next one is still taking its place rather than arriving. */
 const SWITCH_WINDOW_MS = 100;

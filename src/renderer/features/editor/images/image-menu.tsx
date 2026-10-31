@@ -4,8 +4,7 @@ import { render } from "solid-js/web";
 import { messageOf } from "@shared/errors";
 import type { MenuEntry } from "@shared/menu";
 import { LocaleProvider } from "@/components/locale-provider";
-import { pointerAnchor } from "@/features/menu/anchor";
-import { MenuPopup } from "@/features/menu/menu-popup";
+import { MenuPopup } from "@/components/menu-popup";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { reportFailure } from "@/lib/errors";
@@ -20,6 +19,7 @@ import {
   imageOrigin,
   relinkImage,
 } from "@/lib/markdown/images";
+import { pointerAnchor } from "@/lib/menu-anchor";
 
 /**
  * The menu a right-click on a picture opens: what can be done with the file behind it, the way

@@ -1,6 +1,6 @@
 import { createMemo, createResource, Show } from "solid-js";
+import { PaletteSheet } from "@/components/palette-sheet";
 import { Kbd } from "@/components/ui";
-import { PaletteSheet } from "@/features/palette/palette-sheet";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { dim, shrinkNone, truncateGrow } from "@/lib/styles";

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import editorCss from "@/features/editor/editor.css?raw";
 import { markdownState } from "@/lib/markdown/testing";
 import { documentHtml, markdownFragment } from "./document-html";
 import { pageStyle } from "./page-style";
@@ -42,7 +43,7 @@ describe("exporting a page", () => {
   ].join("\n");
 
   it("marks the markup with the classes the document theme styles", async () => {
-    const html = await documentHtml(markdownState(markdown), "Title");
+    const html = await documentHtml(markdownState(markdown), "Title", editorCss);
     expect(html).toContain('<h1 class="md-heading md-h1">');
     expect(html).toContain('<blockquote class="md-quote">');
     expect(html).toContain('<hr class="md-hr">');
@@ -72,7 +73,7 @@ describe("copying as a fragment", () => {
 
 describe("the stylesheet of an exported page", () => {
   it("writes the document rules when no stylesheet of the app can be read", () => {
-    const css = pageStyle();
+    const css = pageStyle(editorCss);
     expect(css).toContain("@layer export-base, editor, document-theme, export-page;");
     expect(css).toContain(".md-list-bullet::before");
     expect(css).toContain("--md-quote-bar");

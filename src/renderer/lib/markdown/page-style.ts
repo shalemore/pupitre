@@ -1,5 +1,4 @@
 import { CONTENT_WIDTHS, DEFAULT_SETTINGS } from "@shared/settings";
-import editorCss from "@/features/editor/editor.css?raw";
 import { FALLBACK_FONTS } from "@/lib/fonts";
 import type { AlertType } from "@/lib/markdown/alerts";
 import { CODE_COLOR_TOKENS, codeHighlightStyle } from "@/lib/markdown/code-highlight";
@@ -156,9 +155,10 @@ function editorRules(rules: CSSRuleList): string {
  * The editor-layer rules the exported markup needs: the layout of a quote, a marker, a code card
  * or a table sits there, not in the theme, so a theme alone would not draw them. They are parsed
  * from the editor's own text rather than read from the window, because a packaged app loads its
- * stylesheet from a file and the CSSOM of such a sheet cannot be read.
+ * stylesheet from a file and the CSSOM of such a sheet cannot be read. The text is passed in: the
+ * page renderer belongs to the Markdown model, and the editor is one of its callers.
  */
-function editorStyle(): string {
+function editorStyle(editorCss: string): string {
   try {
     const sheet = new CSSStyleSheet();
     sheet.replaceSync(editorCss);
@@ -184,11 +184,11 @@ function themeRules(dark: boolean): string {
 }
 
 /** The whole stylesheet of an exported document, as the text of a `<style>` element. */
-export function pageStyle(): string {
+export function pageStyle(editorCss: string): string {
   const tokens = readTokens();
   const dark = isDarkColor(tokens.page);
   const theme = themeRules(dark);
-  const editor = editorStyle();
+  const editor = editorStyle(editorCss);
   return `
 @layer export-base, editor, document-theme, export-page;
 

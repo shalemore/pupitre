@@ -513,7 +513,11 @@ async function contentOf(ctx: ExportContext): Promise<string> {
 }
 
 /** The document as a page of its own, titled `title` and styled by the theme in use. */
-export async function documentHtml(state: EditorState, title: string): Promise<string> {
+export async function documentHtml(
+  state: EditorState,
+  title: string,
+  editorCss: string,
+): Promise<string> {
   const ctx: ExportContext = {
     state,
     definitions: [],
@@ -532,7 +536,7 @@ export async function documentHtml(state: EditorState, title: string): Promise<s
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${escapeHtml(title)}</title>
 <style>
-${pageStyle()}</style>
+${pageStyle(editorCss)}</style>
 </head>
 <body>
 <article class="md-document">

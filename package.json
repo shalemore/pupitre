@@ -30,10 +30,11 @@
     "check:bundle": "node scripts/check-bundle-size.ts",
     "postinstall": "patch-package",
     "typecheck": "tsrs -b",
-    "lint": "oxfmt --check . && oxlint --type-aware . && node scripts/check-css.ts",
+    "lint": "oxfmt --check . && oxlint --type-aware . && node scripts/check-css.ts && node scripts/check-architecture.ts",
     "knip": "knip",
     "fix": "oxfmt . && oxlint --fix .",
     "check:css": "node scripts/check-css.ts",
+    "check:architecture": "node scripts/check-architecture.ts",
     "prepare": "panda codegen"
   },
   "dependencies": {

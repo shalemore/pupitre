@@ -7,16 +7,16 @@ import {
   type OpenedDocument,
 } from "@shared/desktop-api";
 import { messageOf } from "@shared/errors";
-import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
-import { getSampleDocument } from "@/features/samples/sample-document";
 import { currentLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { createDocumentDrafts } from "@/lib/document-drafts";
+import type { DocumentEditorWithImages } from "@/lib/document-editor";
 import { isImageTab, isTabDirty, type OpenDocument, type Tab } from "@/lib/document-tab";
 import { reportFailure } from "@/lib/errors";
 import { fileNameOf, withTrailingNewline } from "@/lib/file";
 import { createPendingImages, type PendingImages } from "@/lib/pending-images";
 import { recentFiles } from "@/lib/recent-files";
+import { getSampleDocument } from "@/lib/samples/sample-document";
 import { settings } from "@/lib/settings";
 
 /** The text of a closed tab that had no file: nothing on disk holds it, so the closed tabs keep it whole. */
@@ -52,11 +52,7 @@ let nextTabId = 1;
  * the unsaved-changes prompt before a tab or the window goes. The editor holds the Markdown text of
  * the active tab; the caller provides it through getMarkdown.
  */
-export function createDocumentSession(
-  getEditor: () =>
-    | Pick<MarkdownEditorHandle, "getMarkdown" | "getMarkdownLength" | "persistImages">
-    | undefined,
-) {
+export function createDocumentSession(getEditor: () => DocumentEditorWithImages | undefined) {
   const [tabs, setTabs] = createSignal<Tab[]>([]);
   const [activeTabId, setActiveTabId] = createSignal<number>();
   // Tabs in the order they were closed, so the last one is the next to come back

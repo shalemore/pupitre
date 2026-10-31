@@ -14,8 +14,8 @@ import {
 } from "solid-js";
 import type { FolderEntry } from "@shared/desktop-api";
 import type { MenuEntry } from "@shared/menu";
+import { MenuEntries } from "@/components/menu-popup";
 import { IconButton, ListItem, rowIndent } from "@/components/ui";
-import { MenuEntries } from "@/features/menu/menu-popup";
 import { currentLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { excerptOf } from "@/lib/markdown/excerpt";

@@ -5,24 +5,25 @@ This file is the single source of project conventions for humans and coding agen
 
 ## Commands
 
-| Command                 | Purpose                                                       |
-| :---------------------- | :------------------------------------------------------------ |
-| `npm run dev`           | Start Electron with the Vite dev server (HMR)                 |
-| `npm run build`         | Bundle main, preload and renderer into `out/`                 |
-| `npm run check:bundle`  | Fail when a renderer chunk passes its size budget             |
-| `npm run dev:web`       | Serve the web demo (renderer on the browser host)             |
-| `npm run build:web`     | Build the web demo into `out/web`                             |
-| `npm run dist`          | Build and package installers into `release/`                  |
-| `npm test`              | Run the unit tests (Vitest)                                   |
-| `npm run test:coverage` | Run the unit tests with coverage and check its floor          |
-| `npm run test:e2e`      | Drive the built app with Playwright (`build` first)           |
-| `npm run test:perf`     | Time the built app by hand, minutes long (`build`)            |
-| `npm run bench`         | Benchmark the parser by hand, a minute long                   |
-| `npm run typecheck`     | Type-check every project (`tsrs -b`)                          |
-| `npm run lint`          | Check formatting (oxfmt), lint (oxlint) and CSS layers        |
-| `npm run check:css`     | Check that app.css rules sit in layers and theme tokens exist |
-| `npm run knip`          | Find dead files, unused exports and dependencies              |
-| `npm run fix`           | Apply formatting and safe lint fixes                          |
+| Command                      | Purpose                                                       |
+| :--------------------------- | :------------------------------------------------------------ |
+| `npm run dev`                | Start Electron with the Vite dev server (HMR)                 |
+| `npm run build`              | Bundle main, preload and renderer into `out/`                 |
+| `npm run check:bundle`       | Fail when a renderer chunk passes its size budget             |
+| `npm run dev:web`            | Serve the web demo (renderer on the browser host)             |
+| `npm run build:web`          | Build the web demo into `out/web`                             |
+| `npm run dist`               | Build and package installers into `release/`                  |
+| `npm test`                   | Run the unit tests (Vitest)                                   |
+| `npm run test:coverage`      | Run the unit tests with coverage and check its floor          |
+| `npm run test:e2e`           | Drive the built app with Playwright (`build` first)           |
+| `npm run test:perf`          | Time the built app by hand, minutes long (`build`)            |
+| `npm run bench`              | Benchmark the parser by hand, a minute long                   |
+| `npm run typecheck`          | Type-check every project (`tsrs -b`)                          |
+| `npm run lint`               | Check formatting, lint, CSS layers and layer boundaries       |
+| `npm run check:css`          | Check that app.css rules sit in layers and theme tokens exist |
+| `npm run check:architecture` | Check that no import crosses a layer boundary                 |
+| `npm run knip`               | Find dead files, unused exports and dependencies              |
+| `npm run fix`                | Apply formatting and safe lint fixes                          |
 
 Before considering a change done, `lint`, `typecheck`, `knip`, `test`, `build` and `check:bundle`
 must all pass. Run `npm run test:e2e` as well once the change touches the main process, the IPC
@@ -122,29 +123,21 @@ await app.evaluate(({ dialog }) => {
 
 ## Process Layout
 
-```
-src/
-  main/       Electron main process: windows, menus, dialogs, file IO, settings, updates
-  preload/    contextBridge that exposes the typed `window.desktop` API
-  shared/     Code used by both sides: IPC contract, settings schema, i18n dictionaries
-  renderer/   SolidJS UI (one bundle, the window kind is picked from `location.hash`)
-    main.tsx        entry: applies appearance, then renders the window for the hash
-    windows/        one top-level component per window (main window, settings window)
-    features/<x>/   components, state and helpers used by one feature (editor, outline, …)
-    components/     components shared by several features; components/ui holds primitives
-    lib/            helpers and state shared across features (desktop API, settings, theme,
-                    fonts, text stats, the document session)
-    lib/markdown/   the Markdown model: the Lezer syntax, the text a reader sees, tables,
-                    pictures and the renderers an exported page reuses
-    themes/<name>/  theme folders, see "Themes"
-    styled-system/  generated by Panda from panda.config.ts; ignored, and `npm install` rebuilds it
-web/          the web demo: an index.html and `host.ts`, a browser `window.desktop` (GitHub Pages)
-panda.config.ts  the design tokens and the cascade layers Panda writes its rules into
-build/        icons and other electron-builder resources
-docs/         design notes and mockups
-scripts/      helpers for the build and the release, run by node as they are (a .ts file is
-              stripped of its types, not compiled)
-```
+The folder map lives in [docs/architecture.md](docs/architecture.md#the-folder-layout), so the two
+cannot drift apart. What matters for a change is the direction of imports:
+
+- `shared/` is the code both processes can use; it never imports the renderer, the main process or
+  the preload.
+- `renderer/lib/` and `renderer/components/` are shared by features. A feature may use them, never
+  the other way around.
+- Two features are independent: `features/a` never imports `features/b`. What several features need
+  goes to `components/` (the component) or `lib/` (the state and helpers).
+- `renderer/windows/` composes features; a feature never imports a window.
+- The renderer never imports the main process or the preload, and the main process never imports the
+  UI.
+
+`npm run check:architecture` enforces these edges, so a misplaced import fails the build rather
+than waiting for a review to notice it.
 
 - `src/shared/desktop-api.ts` is the IPC contract. Every channel is declared there once and both
   `ipcMain.handle` and `window.desktop.invoke` are typed from it. Never call `ipcRenderer` or
@@ -276,12 +269,12 @@ only make code generation easier.
   emoji, plus the extensions in `lib/markdown/`, such as `front-matter.ts`, `highlight.ts`,
   `math.ts` and `footnotes.ts`). Support a new syntax by adding a Lezer `MarkdownConfig`, then
   render it with the one rule every construct follows: its markers (or, for a rendered block, its
-  source) are hidden unless a selection touches it. Inline syntax and line styles live in
-  `features/editor/live-preview.ts`; blocks that replace whole lines (tables, math, diagrams, HTML,
-  `<details>`) in `rendered-blocks.ts`, because CodeMirror only takes block decorations from a
-  state field. The model both the editor and the export read — the syntax, the text a reader sees,
-  tables, pictures and the page renderers — is `lib/markdown/`, so exporting needs no editor. Do not
-  hand-roll Markdown parsing.
+  source) are hidden unless a selection touches it. Inline syntax and line styles live in the
+  `features/editor/live-preview-*` family (`live-preview.ts` is its entry); blocks that replace
+  whole lines (tables, math, diagrams, HTML, `<details>`) in `rendered-blocks.ts`, because
+  CodeMirror only takes block decorations from a state field. The model both the editor and the
+  export read — the syntax, the text a reader sees, tables, pictures and the page renderers — is
+  `lib/markdown/`, so exporting needs no editor. Do not hand-roll Markdown parsing.
 - `features/editor/markdown-editor.tsx` owns the `EditorView` and exposes a small imperative
   handle (`getMarkdown`, `replaceDocument`, search, scrolling, formatting, `persistImages`,
   `prepareForPrint`, `toHtml`, `toHtmlFragment`). Formatting commands edit the source text

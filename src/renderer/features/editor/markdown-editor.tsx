@@ -37,7 +37,6 @@ import type { FormatAction } from "@shared/format";
 import { ScrollView } from "@/components/ui";
 import { imageCaptionClick, imageInput } from "@/features/editor/images/image-widget";
 import { closeInlineTags } from "@/features/editor/widgets/html-widget";
-import { documentHtml, markdownFragment } from "@/features/export/document-html";
 import { t } from "@/i18n";
 import {
   type DocumentPosition,
@@ -50,6 +49,7 @@ import { pickImage, saveImageNextTo } from "@/lib/image-files";
 import { alertTitles } from "@/lib/markdown/alerts";
 import { codeHighlight } from "@/lib/markdown/code-highlight";
 import { codeLanguageFor } from "@/lib/markdown/code-languages";
+import { documentHtml, markdownFragment } from "@/lib/markdown/document-html";
 import { documentBaseUrl, documentFilePath, imageAlt, imageMarkdown } from "@/lib/markdown/images";
 import { FULL_PARSE_TIMEOUT_MS, markdownLanguage } from "@/lib/markdown/language";
 import { prerenderMath } from "@/lib/markdown/math";
@@ -89,6 +89,7 @@ import { renumberOrderedLists } from "./renumber-lists";
 import { scrollToDocument } from "./scroll";
 import { markdownPairing, smartTyping } from "./smart-typing";
 import { focusMode, holdLine, typewriterMode } from "./writing-modes";
+import editorCss from "./editor.css?raw";
 
 export interface MarkdownEditorHandle {
   getMarkdown: () => string;
@@ -127,7 +128,7 @@ export interface MarkdownEditorHandle {
   persistImages: (documentPath: string) => Promise<void>;
   /** Asks for an image file and links it at the caret, the way a pasted picture is linked. */
   insertImage: () => Promise<void>;
-  /** The document as a self-contained HTML page, see features/export/document-html.ts. */
+  /** The document as a self-contained HTML page, see lib/markdown/document-html.ts. */
   toHtml: () => Promise<string>;
   /**
    * The selection, or the whole document when nothing is selected, as the Markdown that was
@@ -657,7 +658,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           return textDocumentHtml(documentTitle(props.documentPath), view.state.doc.toString());
         }
         forceParsing(view, view.state.doc.length, FULL_PARSE_TIMEOUT_MS);
-        return documentHtml(view.state, documentTitle(props.documentPath));
+        return documentHtml(view.state, documentTitle(props.documentPath), editorCss);
       },
       toHtmlFragment: async () => {
         const { from, to } = view.state.selection.main;

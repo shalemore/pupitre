@@ -450,7 +450,7 @@ export interface InvokeChannels {
   "clipboard:read-text": () => string | Promise<string>;
   /**
    * Puts the same text on the clipboard in both formats, so that a rich text application keeps the
-   * markup it was given and a plain one still gets the text, see features/export/document-html.ts.
+   * markup it was given and a plain one still gets the text, see lib/markdown/document-html.ts.
    */
   "clipboard:write-rich": (text: string, html: string) => void;
   /** The entries of every top-level menu; Windows and Linux draw them in the title bar, and the contents are asked for each time a menu opens because they follow the settings, the recent files and the document. */

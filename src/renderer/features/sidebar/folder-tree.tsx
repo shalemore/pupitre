@@ -15,7 +15,7 @@ import type { FolderEntry } from "@shared/desktop-api";
 import { messageOf } from "@shared/errors";
 import type { MenuEntry } from "@shared/menu";
 import { isInsideFolder, relativeToFolder } from "@shared/paths";
-import { MenuEntries } from "@/features/menu/menu-popup";
+import { MenuEntries } from "@/components/menu-popup";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { reportFailure } from "@/lib/errors";
