@@ -8,7 +8,7 @@ import { emojiFor } from "@/lib/markdown/emoji";
 import { footnoteReferences } from "@/lib/markdown/footnotes";
 import { type DocumentImage, imageOf, resolveUrl } from "@/lib/markdown/images";
 import { mathOf } from "@/lib/markdown/math";
-import { type DecorationBuilder, touches } from "./live-preview-builder";
+import { type DecorationBuilder, touches } from "./builder";
 
 /**
  * The live preview of inline constructs: links, pictures, footnotes, emoji and inline math.

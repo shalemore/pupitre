@@ -269,10 +269,10 @@ only make code generation easier.
   emoji, plus the extensions in `lib/markdown/`, such as `front-matter.ts`, `highlight.ts`,
   `math.ts` and `footnotes.ts`). Support a new syntax by adding a Lezer `MarkdownConfig`, then
   render it with the one rule every construct follows: its markers (or, for a rendered block, its
-  source) are hidden unless a selection touches it. Inline syntax and line styles live in the
-  `features/editor/live-preview-*` family (`live-preview.ts` is its entry); blocks that replace
-  whole lines (tables, math, diagrams, HTML, `<details>`) in `rendered-blocks.ts`, because
-  CodeMirror only takes block decorations from a state field. The model both the editor and the
+  source) are hidden unless a selection touches it. Inline syntax and line styles live in
+  `features/editor/preview/`; blocks that replace whole lines (tables, math, diagrams, HTML,
+  `<details>`) in its `rendered-blocks.ts`, because CodeMirror only takes block decorations from a
+  state field. The model both the editor and the
   export read — the syntax, the text a reader sees, tables, pictures and the page renderers — is
   `lib/markdown/`, so exporting needs no editor. Do not hand-roll Markdown parsing.
 - `features/editor/markdown-editor.tsx` owns the `EditorView` and exposes a small imperative

@@ -9,30 +9,13 @@ import { htmlBlockPreview } from "@/lib/markdown/html-block";
 import { parseImageTag } from "@/lib/markdown/images";
 import { markers } from "@/lib/markdown/markers";
 import { HEADING_LEVEL } from "@/lib/markdown/structure";
-import {
-  showsRendering,
-  visitBlockquote,
-  visitCodeBlock,
-  visitListItem,
-} from "./live-preview-blocks";
-import {
-  DecorationBuilder,
-  lineRange,
-  printing,
-  printingChanged,
-  touches,
-} from "./live-preview-builder";
-import { visitHtmlBlock, visitInlineHtml } from "./live-preview-html";
-import {
-  visitEmoji,
-  visitFootnote,
-  visitImage,
-  visitInlineMath,
-  visitLink,
-} from "./live-preview-inline";
-import { followLink, linkAt } from "./live-preview-links";
+import { showsRendering, visitBlockquote, visitCodeBlock, visitListItem } from "./blocks";
+import { DecorationBuilder, lineRange, printing, printingChanged, touches } from "./builder";
+import { visitHtmlBlock, visitInlineHtml } from "./html";
+import { visitEmoji, visitFootnote, visitImage, visitInlineMath, visitLink } from "./inline";
+import { followLink, linkAt } from "./links";
 
-export { setPrinting } from "./live-preview-builder";
+export { setPrinting } from "./builder";
 
 /**
  * Typora-style live preview over plain Markdown source.

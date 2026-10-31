@@ -4,11 +4,11 @@ import type { EditorView } from "@codemirror/view";
 import { type Accessor, type Component, createSelector, Index, type Setter, Show } from "solid-js";
 import { Dynamic } from "solid-js/web";
 import { openImageMenu } from "@/features/editor/images/image-menu";
-import { openLink } from "@/features/editor/live-preview-links";
+import { openLink } from "@/features/editor/preview/links";
+import { InlineContent } from "@/features/editor/widgets/inline-view";
 import { imageIn } from "@/lib/markdown/images";
 import { columnCount, editCell, insertRow, type TableModel } from "@/lib/markdown/table-model";
 import { css, cx } from "@/styled-system/css";
-import { InlineContent } from "./inline-view";
 import { type CellPosition, TableCellImage } from "./table-cell";
 import { TableToolbar } from "./table-toolbar";
 

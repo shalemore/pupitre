@@ -11,7 +11,7 @@ import { createEffect, createSignal, on, Show, type Component, type JSX } from "
 import { Badge, Button, IconButton, Input, ToggleIconButton } from "@/components/ui";
 import { t } from "@/i18n";
 import { css, cx } from "@/styled-system/css";
-import type { MatchStats, SearchOptions } from "./editor-search";
+import type { MatchStats, SearchOptions } from "./search";
 
 export interface FindBarProps {
   showReplace: boolean;

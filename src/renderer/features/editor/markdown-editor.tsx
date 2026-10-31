@@ -62,17 +62,9 @@ import { type TextStats } from "@/lib/text-stats";
 import { themeApplied } from "@/lib/theme";
 import { withViewTransition } from "@/lib/view-transition";
 import { cursorStyle, restartCursorBlink } from "./cursor";
+import { documentKind, documentTitle, textDocumentHtml } from "./document";
 import { documentObserver } from "./document-observer";
 import { createStatsTracker } from "./document-stats";
-import { documentKind, documentTitle, textDocumentHtml } from "./editor-document";
-import { createOutlineTracker } from "./editor-outline";
-import {
-  createMatchCounter,
-  type MatchStats,
-  type SearchOptions,
-  selectedSearchText,
-} from "./editor-search";
-import { layeredStyles, scrollArea } from "./editor-styles";
 import { folding, foldingKeymap } from "./folding";
 import {
   formatKeymap,
@@ -82,12 +74,20 @@ import {
   runFormatAction,
 } from "./format-commands";
 import { leavingBlocks } from "./leave";
-import { livePreview, setPrinting } from "./live-preview";
+import { createOutlineTracker } from "./outline";
 import { pasteHtml } from "./paste-html";
-import { renderedBlocks } from "./rendered-blocks";
+import { livePreview, setPrinting } from "./preview/live-preview";
+import { renderedBlocks } from "./preview/rendered-blocks";
 import { renumberOrderedLists } from "./renumber-lists";
 import { scrollToDocument } from "./scroll";
+import {
+  createMatchCounter,
+  type MatchStats,
+  type SearchOptions,
+  selectedSearchText,
+} from "./search";
 import { markdownPairing, smartTyping } from "./smart-typing";
+import { layeredStyles, scrollArea } from "./styles";
 import { focusMode, holdLine, typewriterMode } from "./writing-modes";
 import editorCss from "./editor.css?raw";
 

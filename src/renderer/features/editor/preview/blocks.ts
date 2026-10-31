@@ -5,7 +5,7 @@ import { AlertTitleWidget } from "@/features/editor/widgets/alert-widget";
 import { CodeCornerWidget, type FenceInfo } from "@/features/editor/widgets/code-corner";
 import { alertTitles, alertType } from "@/lib/markdown/alerts";
 import { mathFence } from "@/lib/markdown/math";
-import { type DecorationBuilder, lineRange, touches } from "./live-preview-builder";
+import { type DecorationBuilder, lineRange, touches } from "./builder";
 
 /**
  * The live preview of the constructs that draw across lines: code and math fences, list items,

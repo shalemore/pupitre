@@ -8,11 +8,11 @@ import {
 } from "@codemirror/state";
 import { Decoration, type DecorationSet, EditorView, type WidgetType } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
+import { TableWidget, tableCursor } from "@/features/editor/tables/table";
 import { SummaryWidget } from "@/features/editor/widgets/details-widget";
 import { HtmlBlockWidget } from "@/features/editor/widgets/html-widget";
 import { MathWidget } from "@/features/editor/widgets/math-widget";
 import { MermaidWidget } from "@/features/editor/widgets/mermaid-widget";
-import { TableWidget, tableCursor } from "@/features/editor/widgets/table";
 import { TOC_MARKER, TocWidget } from "@/features/editor/widgets/toc";
 import { fencedText } from "@/lib/markdown/block-text";
 import {
@@ -28,7 +28,7 @@ import { mathFence, mathOf } from "@/lib/markdown/math";
 import { diagramTheme } from "@/lib/markdown/mermaid";
 import { collectHeadings } from "@/lib/markdown/structure";
 import { readTable } from "@/lib/markdown/table-model";
-import { lineRange, printingChanged, revealingRanges, touches } from "./live-preview-builder";
+import { lineRange, printingChanged, revealingRanges, touches } from "./builder";
 
 /**
  * Blocks that are shown rendered (tables, display math, diagrams, HTML, `<details>`, `[TOC]`), with the same rule as the live preview:

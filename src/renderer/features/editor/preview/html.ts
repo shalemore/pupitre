@@ -4,8 +4,8 @@ import { LineBreakWidget } from "@/features/editor/widgets/html-widget";
 import { formattingTagClass, htmlTag, isFormattingTag } from "@/lib/markdown/html";
 import type { HtmlElement } from "@/lib/markdown/html-block";
 import { parseImageTag } from "@/lib/markdown/images";
-import { type DecorationBuilder, touches } from "./live-preview-builder";
-import { placeImage } from "./live-preview-inline";
+import { type DecorationBuilder, touches } from "./builder";
+import { placeImage } from "./inline";
 
 /**
  * The live preview of raw HTML: formatting tags paired like Markdown formats, the inline line

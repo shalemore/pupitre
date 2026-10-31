@@ -3,11 +3,11 @@ import type { EditorState } from "@codemirror/state";
 import type { EditorView } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
 import { DOCUMENT_EXTENSIONS } from "@shared/desktop-api";
+import { scrollToDocument } from "@/features/editor/scroll";
 import { desktop } from "@/lib/desktop";
 import { pathFromFileUrl } from "@/lib/file";
 import { documentBaseUrl } from "@/lib/markdown/images";
 import { collectHeadings, findHeadingByAnchor } from "@/lib/markdown/structure";
-import { scrollToDocument } from "./scroll";
 
 /**
  * Following a link in the document: web and mail addresses open in the browser, an anchor scrolls
