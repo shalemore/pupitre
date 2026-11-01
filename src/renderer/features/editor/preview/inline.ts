@@ -8,6 +8,7 @@ import { emojiFor } from "@/lib/markdown/emoji";
 import { footnoteReferences } from "@/lib/markdown/footnotes";
 import { type DocumentImage, imageOf, resolveUrl } from "@/lib/markdown/images";
 import { mathOf } from "@/lib/markdown/math";
+import { referenceTarget } from "@/lib/markdown/references";
 import { type DecorationBuilder, touches } from "./builder";
 
 /**
@@ -17,6 +18,14 @@ import { type DecorationBuilder, touches } from "./builder";
 export function visitLink(builder: DecorationBuilder, node: SyntaxNode): void {
   const [open, close] = node.getChildren("LinkMark");
   if (!open || !close) return;
+  // Brackets around something that resolves to nothing are text, not link syntax; the content
+  // inside still reads as it is written, inline HTML included
+  if (
+    node.getChild("URL") === null &&
+    referenceTarget(builder.state, node, open.to, close.from) === undefined
+  ) {
+    return;
+  }
   if (touches(builder.ranges, node.from, node.to)) {
     for (let child = node.firstChild; child; child = child.nextSibling) {
       if (/^(?:LinkMark|URL|LinkTitle|LinkLabel)$/.test(child.name)) {
