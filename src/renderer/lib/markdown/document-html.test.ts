@@ -16,6 +16,42 @@ describe("exporting footnotes", () => {
   });
 });
 
+describe("exporting anchors written as HTML", () => {
+  it("keeps the target of an anchor-only paragraph", async () => {
+    const markdown = '<a id="quick-start"></a>\n\nJump to [the start](#quick-start).\n';
+    const html = await documentHtml(markdownState(markdown), "Title", editorCss);
+    expect(html).toContain('<a class="md-link" id="quick-start"></a>');
+    expect(html).toContain('<a class="md-link" href="#quick-start">the start</a>');
+  });
+
+  it("keeps the link an inline HTML anchor stands for", async () => {
+    const markdown = 'Visit <a href="https://example.com" title="Example">the site</a> now.\n';
+    const html = await documentHtml(markdownState(markdown), "Title", editorCss);
+    expect(html).toContain(
+      '<a class="md-link" href="https://example.com" title="Example" target="_blank" rel="noreferrer">the site</a>',
+    );
+  });
+
+  it("keeps a target written with the legacy name attribute", async () => {
+    const markdown = '<a name="legacy"></a>\n\nJump to [the target](#legacy).\n';
+    const html = await documentHtml(markdownState(markdown), "Title", editorCss);
+    expect(html).toContain('<a class="md-link" id="legacy"></a>');
+  });
+
+  it("keeps the target of an anchor that is never closed", async () => {
+    const markdown = 'Text <a id="open"> more text\n';
+    const html = await documentHtml(markdownState(markdown), "Title", editorCss);
+    expect(html).toContain('<a class="md-link" id="open"> more text</a>');
+  });
+
+  it("keeps a target inside a rendered HTML block", async () => {
+    const markdown = '<div><a id="inside">Text</a></div>\n';
+    const html = await documentHtml(markdownState(markdown), "Title", editorCss);
+    expect(html).toContain('id="inside"');
+    expect(html).toContain("md-link");
+  });
+});
+
 describe("exporting comments", () => {
   it("leaves comments out of the page", async () => {
     const markdown = "Alpha <!-- hidden --> beta.\n\n<!-- a block comment -->\n\nGamma.\n";

@@ -1,4 +1,5 @@
 import type { EditorState } from "@codemirror/state";
+import type { Config } from "dompurify";
 
 /**
  * Raw HTML in Markdown, read as syntax: inline formatting elements such as `<kbd>Ctrl</kbd>`,
@@ -129,6 +130,14 @@ const HIDDEN_CONTENT_TAGS = new Set([
   "title",
   "xmp",
 ]);
+
+/**
+ * Sanitizer options for HTML written in a document. The sanitizer drops `id` by default, because an
+ * id can shadow a global; an anchor's target is the one id an in-page link cannot do without.
+ */
+export const RAW_HTML_SANITIZE_OPTIONS: Config = {
+  ADD_ATTR: (attribute, tag) => tag === "a" && (attribute === "id" || attribute === "name"),
+};
 
 /** Whether an HTML block is an element that can be shown rendered. */
 export function isRenderableHtml(source: string): boolean {

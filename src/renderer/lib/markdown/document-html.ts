@@ -9,7 +9,11 @@ import { alertTitles, alertType } from "@/lib/markdown/alerts";
 import { fencedText } from "@/lib/markdown/block-text";
 import { detailsSection } from "@/lib/markdown/details";
 import { footnoteLabel } from "@/lib/markdown/footnotes";
-import { decorateHtmlBlock, isRenderableHtml } from "@/lib/markdown/html";
+import {
+  RAW_HTML_SANITIZE_OPTIONS,
+  decorateHtmlBlock,
+  isRenderableHtml,
+} from "@/lib/markdown/html";
 import {
   documentBaseUrl,
   type ImageSize,
@@ -167,6 +171,16 @@ async function itemHtml(ctx: ExportContext, item: InlineItem): Promise<string> {
     }
     case "link":
       return linkHtml(item.href, await itemsHtml(ctx, item.children));
+    case "anchor": {
+      const href = item.href === undefined ? "" : ` href="${escapeHtml(item.href)}"`;
+      const id = item.id === undefined ? "" : ` id="${escapeHtml(item.id)}"`;
+      const title = item.title === undefined ? "" : ` title="${escapeHtml(item.title)}"`;
+      const target =
+        item.href !== undefined && EXTERNAL.test(item.href)
+          ? ' target="_blank" rel="noreferrer"'
+          : "";
+      return `<a class="md-link"${href}${id}${title}${target}>${await itemsHtml(ctx, item.children)}</a>`;
+    }
     case "image":
       return imageHtml(ctx, item.src, item.alt, item.title, item, true);
     case "math":
@@ -375,7 +389,7 @@ async function footnoteSection(ctx: ExportContext): Promise<string> {
 
 /** Sanitized HTML, with the pictures it holds embedded when the page is a file of its own. */
 async function htmlBlockHtml(ctx: ExportContext, source: string): Promise<string> {
-  const clean = DOMPurify.sanitize(source);
+  const clean = DOMPurify.sanitize(source, RAW_HTML_SANITIZE_OPTIONS);
   if (!ctx.embedImages) return clean;
   const holder = document.createElement("div");
   holder.innerHTML = clean;

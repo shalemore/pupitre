@@ -19,6 +19,17 @@ export type InlineItem =
   | { type: "element"; tag: string; class?: string; children: InlineItem[] }
   | { type: "link"; href: string; children: InlineItem[] }
   | {
+      /**
+       * An anchor written as raw HTML. Unlike a link it may carry no destination at all: a target
+       * on a line of its own is what in-page links point at.
+       */
+      type: "anchor";
+      href: string | undefined;
+      id: string | undefined;
+      title: string | undefined;
+      children: InlineItem[];
+    }
+  | {
       type: "image";
       src: string;
       alt: string;
@@ -43,6 +54,51 @@ const ELEMENT_TAGS: Record<string, { tag: string; class: string }> = {
   Superscript: { tag: "sup", class: "md-tag md-tag-sup" },
 };
 
+interface AnchorAttributes {
+  href?: string;
+  id?: string;
+  /** The legacy spelling of a target, which HTML resolves like an `id`. */
+  name?: string;
+  title?: string;
+}
+
+interface OpenElement {
+  tag: string;
+  items: InlineItem[];
+  attributes?: AnchorAttributes;
+}
+
+const ANCHOR_ATTRIBUTE = /\b(href|id|name|title)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+))/gi;
+
+/** The attributes an inline `<a>` tag carries that the page needs; the first spelling wins. */
+function anchorAttributes(source: string): AnchorAttributes {
+  const attributes: AnchorAttributes = {};
+  for (const [, name, quoted, single, bare] of source.matchAll(ANCHOR_ATTRIBUTE)) {
+    const value = quoted ?? single ?? bare ?? "";
+    switch (name?.toLowerCase()) {
+      case "href":
+        attributes.href ??= value;
+        break;
+      case "id":
+        attributes.id ??= value;
+        break;
+      case "name":
+        attributes.name ??= value;
+        break;
+      case "title":
+        attributes.title ??= value;
+        break;
+    }
+  }
+  return attributes;
+}
+
+/** An anchor item, with the target its tag names, whether written as `id` or the legacy `name`. */
+function anchorItem(element: OpenElement): InlineItem {
+  const { href, id, name, title } = element.attributes ?? {};
+  return { type: "anchor", href, id: id ?? name, title, children: element.items };
+}
+
 /** The items between `from` and `to`, children of `parent`. */
 export function inlineItems(
   state: EditorState,
@@ -52,7 +108,7 @@ export function inlineItems(
 ): InlineItem[] {
   const text = (start: number, end: number) => state.sliceDoc(start, end);
   // Open formatting tags, innermost last; items collect into the top entry
-  const stack: { tag: string; items: InlineItem[] }[] = [{ tag: "", items: [] }];
+  const stack: OpenElement[] = [{ tag: "", items: [] }];
   const push = (item: InlineItem) => stack.at(-1)?.items.push(item);
   let pos = from;
 
@@ -163,7 +219,13 @@ export function inlineItems(
         }
         const tag = htmlTag(source);
         if (tag?.name === "br") push({ type: "break" });
-        else if (tag && isFormattingTag(tag.name) && !tag.closing)
+        // An anchor is a target the page keeps even when it shows nothing, as in `<a id="x"></a>`
+        else if (tag?.name === "a" && !tag.closing) {
+          stack.push({ tag: "a", items: [], attributes: anchorAttributes(source) });
+        } else if (tag?.name === "a" && stack.length > 1 && stack.at(-1)?.tag === "a") {
+          const anchor = stack.pop();
+          if (anchor) push(anchorItem(anchor));
+        } else if (tag && isFormattingTag(tag.name) && !tag.closing)
           stack.push({ tag: tag.name, items: [] });
         else if (tag?.closing && stack.length > 1 && stack.at(-1)?.tag === tag.name) {
           const element = stack.pop();
@@ -185,10 +247,13 @@ export function inlineItems(
     }
   }
   if (to > pos) push({ type: "text", text: text(pos, to) });
-  // Tags that were never closed keep their content as plain items
+  // A tag that was never closed keeps its content; an anchor keeps its target too, since raw HTML
+  // closes it at the end of the line
   while (stack.length > 1) {
     const element = stack.pop();
-    if (element) stack.at(-1)?.items.push(...element.items);
+    if (!element) continue;
+    if (element.tag === "a") stack.at(-1)?.items.push(anchorItem(element));
+    else stack.at(-1)?.items.push(...element.items);
   }
   return stack[0]?.items ?? [];
 }

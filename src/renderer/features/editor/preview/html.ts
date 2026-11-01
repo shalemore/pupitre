@@ -45,6 +45,29 @@ export function visitInlineHtml(builder: DecorationBuilder, node: SyntaxNode): v
       }
       continue;
     }
+    // An anchor keeps its target in the page; away from the selection its tags take no room, and
+    // a link's text reads as a link, as the Markdown construct does
+    if (tag.name === "a") {
+      if (!tag.closing) {
+        open.push({ name: "a", tag: child });
+        continue;
+      }
+      const index = open.findLastIndex((entry) => entry.name === "a");
+      const opening = open[index]?.tag;
+      if (!opening) continue;
+      open.splice(index);
+      if (/\bhref\s*=/i.test(builder.text(opening.from, opening.to))) {
+        builder.mark(opening.to, child.from, "md-link");
+      }
+      if (touches(builder.ranges, opening.from, child.to)) {
+        builder.mark(opening.from, opening.to, "md-mark");
+        builder.mark(child.from, child.to, "md-mark");
+      } else {
+        builder.hide(opening.from, opening.to);
+        builder.hide(child.from, child.to);
+      }
+      continue;
+    }
     if (!isFormattingTag(tag.name)) continue;
     if (!tag.closing) {
       open.push({ name: tag.name, tag: child });
@@ -63,6 +86,20 @@ export function visitInlineHtml(builder: DecorationBuilder, node: SyntaxNode): v
     } else {
       builder.hide(opening.from, opening.to);
       builder.hide(child.from, child.to);
+    }
+  }
+  // An anchor the line never closes keeps its target, and its tag stays out of the way; raw HTML
+  // closes it at the end of the line
+  for (const entry of open) {
+    if (entry.name !== "a") continue;
+    const opening = entry.tag;
+    if (/\bhref\s*=/i.test(builder.text(opening.from, opening.to))) {
+      builder.mark(opening.to, node.to, "md-link");
+    }
+    if (touches(builder.ranges, opening.from, node.to)) {
+      builder.mark(opening.from, opening.to, "md-mark");
+    } else {
+      builder.hide(opening.from, opening.to);
     }
   }
 }

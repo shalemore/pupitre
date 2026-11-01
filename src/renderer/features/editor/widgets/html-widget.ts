@@ -4,7 +4,12 @@ import DOMPurify from "dompurify";
 import { imageDom, watchHtmlImages } from "@/features/editor/images/image-widget";
 import { fadeOut } from "@/features/editor/leave";
 import { isLiteralText } from "@/features/editor/smart-typing";
-import { VOID_TAGS, decorateHtmlBlock, openingTagAt } from "@/lib/markdown/html";
+import {
+  RAW_HTML_SANITIZE_OPTIONS,
+  VOID_TAGS,
+  decorateHtmlBlock,
+  openingTagAt,
+} from "@/lib/markdown/html";
 import { parseImageTag, resolveAgainst } from "@/lib/markdown/images";
 
 /**
@@ -105,7 +110,12 @@ export class HtmlBlockWidget extends WidgetType {
   }
 
   private fill(block: HTMLElement, view: EditorView): void {
-    block.replaceChildren(DOMPurify.sanitize(this.source, { RETURN_DOM_FRAGMENT: true }));
+    block.replaceChildren(
+      DOMPurify.sanitize(this.source, {
+        ...RAW_HTML_SANITIZE_OPTIONS,
+        RETURN_DOM_FRAGMENT: true,
+      }),
+    );
     decorateHtmlBlock(block);
     watchHtmlImages(view, block, this.base);
   }
