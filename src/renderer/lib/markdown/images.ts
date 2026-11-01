@@ -5,6 +5,7 @@ import type { SyntaxNode } from "@lezer/common";
 import { decodeUriPart } from "@shared/uri";
 import { pathFromFileUrl } from "@/lib/file";
 import { escapeHtml } from "@/lib/html";
+import { referenceTarget } from "./references";
 
 /** file:// URL of the document's folder, to resolve relative image paths; undefined if unsaved. */
 export const documentBaseUrl = Facet.define<string | undefined, string | undefined>({
@@ -299,18 +300,22 @@ function titleText(source: string): string {
   return (quote === '"' || quote === "'") && source.endsWith(quote) ? source.slice(1, -1) : source;
 }
 
-/** The picture a Markdown image node draws. */
+/** The picture a Markdown image node draws, its reference resolved to the definition it names. */
 function markdownImage(state: EditorState, node: SyntaxNode): DocumentImage | undefined {
   const [open, close] = node.getChildren("LinkMark");
+  if (!open || !close) return undefined;
   const url = node.getChild("URL");
-  if (!open || !close || !url) return undefined;
+  const definition = url === null ? referenceTarget(state, node, open.to, close.from) : undefined;
+  const src = url === null ? definition?.href : state.sliceDoc(url.from, url.to);
+  if (src === undefined) return undefined;
   const title = node.getChild("LinkTitle");
   return {
     from: node.from,
     to: node.to,
-    src: imageSource(state.sliceDoc(url.from, url.to)),
+    src: imageSource(src),
     alt: state.sliceDoc(open.to, close.from),
-    title: title === null ? "" : titleText(state.sliceDoc(title.from, title.to)),
+    title:
+      title !== null ? titleText(state.sliceDoc(title.from, title.to)) : (definition?.title ?? ""),
     width: undefined,
     alignment: undefined,
   };

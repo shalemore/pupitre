@@ -7,6 +7,7 @@ import { scrollToDocument } from "@/features/editor/scroll";
 import { desktop } from "@/lib/desktop";
 import { pathFromFileUrl } from "@/lib/file";
 import { documentBaseUrl } from "@/lib/markdown/images";
+import { referenceTarget } from "@/lib/markdown/references";
 import { collectHeadings, findHeadingByAnchor } from "@/lib/markdown/structure";
 
 /**
@@ -23,6 +24,11 @@ export function linkAt(state: EditorState, pos: number): string | undefined {
   ) {
     const url = node.name === "URL" ? node : node.getChild("URL");
     if (url) return state.sliceDoc(url.from, url.to);
+    if (node.name === "Link") {
+      const [open, close] = node.getChildren("LinkMark");
+      const target = open && close ? referenceTarget(state, node, open.to, close.from) : undefined;
+      if (target !== undefined) return target.href;
+    }
   }
   return undefined;
 }

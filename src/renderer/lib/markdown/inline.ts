@@ -4,6 +4,7 @@ import { emojiFor } from "./emoji";
 import { formattingTagClass, htmlTag, isFormattingTag } from "./html";
 import { type ImageAlignment, imageOf, parseImageTag, resolveUrl } from "./images";
 import { markers } from "./markers";
+import { referenceTarget } from "./references";
 
 /**
  * Inline Markdown rendered as elements, for widgets that replace their source (table cells) and for
@@ -88,7 +89,17 @@ export function inlineItems(
         break;
       case "Link": {
         const url = child.getChild("URL");
-        push({ type: "link", href: url ? text(url.from, url.to) : "", children: inner() });
+        const href =
+          url !== null ? text(url.from, url.to) : referenceTarget(state, child, start, end)?.href;
+        // A bracketed run that resolves to nothing is not a link: CommonMark keeps its brackets
+        // and its content as written, so inline HTML inside it still reaches the page
+        if (href === undefined) {
+          if (start > child.from) push({ type: "text", text: text(child.from, start) });
+          for (const item of inner()) push(item);
+          if (child.to > end) push({ type: "text", text: text(end, child.to) });
+          break;
+        }
+        push({ type: "link", href, children: inner() });
         break;
       }
       case "Autolink":
@@ -100,18 +111,21 @@ export function inlineItems(
       }
       case "Image": {
         const image = imageOf(state, child);
-        if (image) {
-          push({
-            type: "image",
-            src: resolveUrl(state, image.src),
-            alt: image.alt,
-            title: image.title,
-            width: image.width,
-            alignment: image.alignment,
-            from: image.from,
-            to: image.to,
-          });
+        if (image === undefined) {
+          // Without a destination there is no picture; CommonMark leaves the source as text
+          push({ type: "text", text: text(child.from, child.to) });
+          break;
         }
+        push({
+          type: "image",
+          src: resolveUrl(state, image.src),
+          alt: image.alt,
+          title: image.title,
+          width: image.width,
+          alignment: image.alignment,
+          from: image.from,
+          to: image.to,
+        });
         break;
       }
       case "FootnoteReference":
