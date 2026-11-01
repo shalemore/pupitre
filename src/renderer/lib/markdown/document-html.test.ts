@@ -16,6 +16,23 @@ describe("exporting footnotes", () => {
   });
 });
 
+describe("exporting autolinks", () => {
+  it("writes an address as a mail link and keeps a URI's own scheme", async () => {
+    const markdown =
+      "Write to <user@example.com> or visit <https://example.com>.\n\nBare user@example.com too.\n";
+    const html = await markdownFragment(markdownState(markdown), markdown);
+    expect(html).toContain('href="mailto:user@example.com"');
+    expect(html).toContain('href="https://example.com"');
+    expect(html).toContain(">user@example.com</a>");
+  });
+
+  it("writes a bare www address as a web link", async () => {
+    const markdown = "Visit www.example.com today.\n";
+    const html = await markdownFragment(markdownState(markdown), markdown);
+    expect(html).toContain('href="http://www.example.com"');
+  });
+});
+
 describe("exporting anchors written as HTML", () => {
   it("keeps the target of an anchor-only paragraph", async () => {
     const markdown = '<a id="quick-start"></a>\n\nJump to [the start](#quick-start).\n';

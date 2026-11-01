@@ -6,6 +6,7 @@ import { DOCUMENT_EXTENSIONS } from "@shared/desktop-api";
 import { scrollToDocument } from "@/features/editor/scroll";
 import { desktop } from "@/lib/desktop";
 import { pathFromFileUrl } from "@/lib/file";
+import { autolinkDestination } from "@/lib/markdown/autolink-destination";
 import { documentBaseUrl } from "@/lib/markdown/images";
 import { referenceTarget } from "@/lib/markdown/references";
 import { collectHeadings, findHeadingByAnchor } from "@/lib/markdown/structure";
@@ -22,7 +23,17 @@ export function linkAt(state: EditorState, pos: number): string | undefined {
     node;
     node = node.parent
   ) {
-    const url = node.name === "URL" ? node : node.getChild("URL");
+    if (node.name === "URL") {
+      const written = state.sliceDoc(node.from, node.to);
+      const parent = node.parent?.name;
+      // A bare address is an autolink; a link's own destination is used as written
+      return parent === "Link" || parent === "Image" ? written : autolinkDestination(written);
+    }
+    if (node.name === "Autolink") {
+      const url = node.getChild("URL");
+      return url === null ? undefined : autolinkDestination(state.sliceDoc(url.from, url.to));
+    }
+    const url = node.getChild("URL");
     if (url) return state.sliceDoc(url.from, url.to);
     if (node.name === "Link") {
       const [open, close] = node.getChildren("LinkMark");

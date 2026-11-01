@@ -1,5 +1,6 @@
 import type { EditorState } from "@codemirror/state";
 import type { SyntaxNode } from "@lezer/common";
+import { autolinkDestination } from "./autolink-destination";
 import { emojiFor } from "./emoji";
 import { formattingTagClass, htmlTag, isFormattingTag } from "./html";
 import { type ImageAlignment, imageOf, parseImageTag, resolveUrl } from "./images";
@@ -161,8 +162,9 @@ export function inlineItems(
       case "Autolink":
       case "URL": {
         const url = child.name === "URL" ? child : child.getChild("URL");
-        const href = url ? text(url.from, url.to) : "";
-        push({ type: "link", href, children: [{ type: "text", text: href }] });
+        const written = url ? text(url.from, url.to) : "";
+        const href = url ? autolinkDestination(written) : "";
+        push({ type: "link", href, children: [{ type: "text", text: written }] });
         break;
       }
       case "Image": {
