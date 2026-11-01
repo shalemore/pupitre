@@ -2,6 +2,7 @@ import type { EditorView } from "@codemirror/view";
 import { t } from "@/i18n";
 import type { DocumentImage, ImageAlignment, ImageSize } from "@/lib/markdown/images";
 import { css, cx } from "@/styled-system/css";
+import { relabelOnLocaleChange } from "../widgets/relabel-on-locale";
 
 /**
  * The controls of a picture: the corner handle that resizes it and the bar that aligns it. Both
@@ -78,7 +79,7 @@ export function resizeHandle(
   const handle = document.createElement("span");
   // Interface rather than document, sized in rem like the corner of a code block
   handle.className = cx("md-image-handle", handleStyle);
-  handle.title = t().editor.image.resize;
+  relabelOnLocaleChange(handle, () => (handle.title = t().editor.image.resize));
 
   handle.addEventListener("pointerdown", (event) => {
     if (event.button !== 0) return;
@@ -136,11 +137,10 @@ export function alignmentToolbar(
 ): HTMLElement {
   const toolbar = document.createElement("span");
   toolbar.className = cx("md-image-toolbar", toolbarStyle);
-  const labels = t().editor.image;
-  const choices: readonly { alignment: ImageAlignment; label: string }[] = [
-    { alignment: "left", label: labels.alignLeft },
-    { alignment: "center", label: labels.alignCenter },
-    { alignment: "right", label: labels.alignRight },
+  const choices: readonly { alignment: ImageAlignment; label: () => string }[] = [
+    { alignment: "left", label: () => t().editor.image.alignLeft },
+    { alignment: "center", label: () => t().editor.image.alignCenter },
+    { alignment: "right", label: () => t().editor.image.alignRight },
   ];
 
   for (const { alignment, label } of choices) {
@@ -148,8 +148,11 @@ export function alignmentToolbar(
     button.type = "button";
     button.className = cx("md-image-align", alignButton);
     button.setAttribute("data-alignment", alignment);
-    button.title = label;
-    button.setAttribute("aria-label", label);
+    relabelOnLocaleChange(button, () => {
+      const text = label();
+      button.title = text;
+      button.setAttribute("aria-label", text);
+    });
     button.setAttribute("aria-pressed", String(size.alignment === alignment));
     // A press keeps the cursor in the text; the button is not a place to type
     button.addEventListener("mousedown", (event) => event.preventDefault());

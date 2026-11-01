@@ -1,5 +1,6 @@
 import type { EditorView } from "@codemirror/view";
 import { t } from "@/i18n";
+import { relabelOnLocaleChange } from "../widgets/relabel-on-locale";
 import { hasTransparency } from "./image-alpha";
 
 /**
@@ -49,7 +50,6 @@ export function watchImage(
   const retry = document.createElement("button");
   retry.type = "button";
   retry.className = "md-image-retry";
-  retry.textContent = t().editor.image.retry;
   const fallback = document.createElement("span");
   fallback.className = "md-image-fallback";
   fallback.append(message, retry);
@@ -58,12 +58,19 @@ export function watchImage(
   frame.append(skeleton, fallback);
 
   const remote = WEB_IMAGE.test(src);
+  let failed = false;
+  const label = () => {
+    retry.textContent = t().editor.image.retry;
+    if (failed) {
+      message.textContent = remote ? t().editor.image.failedNetwork : t().editor.image.failedFile;
+    }
+  };
+  relabelOnLocaleChange(retry, label);
   const attributeWidth = Number(image.getAttribute("width"));
   const styleWidth = Number.parseFloat(image.style.width);
   let knownWidth = attributeWidth || (Number.isFinite(styleWidth) ? styleWidth : 0);
   let knownHeight = Number(image.getAttribute("height")) || 0;
   let loaded = false;
-  let failed = false;
   let attempts = 0;
   let slowTimer: number | undefined;
 
@@ -130,7 +137,7 @@ export function watchImage(
       return;
     }
     failed = true;
-    message.textContent = remote ? t().editor.image.failedNetwork : t().editor.image.failedFile;
+    label();
     // Keep the space the picture would take, so retrying it does not move the page
     if (knownWidth > 0) frame.style.inlineSize = `${knownWidth}px`;
     if (knownHeight > 0) frame.style.minBlockSize = `${knownHeight}px`;

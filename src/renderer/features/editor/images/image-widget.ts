@@ -12,6 +12,7 @@ import {
   resolveAgainst,
   setImageLayout,
 } from "@/lib/markdown/images";
+import { relabelOnLocaleChange } from "../widgets/relabel-on-locale";
 import { alignmentToolbar, resizeHandle, TOOLBAR_INSET } from "./image-controls";
 import { watchImage } from "./image-loading";
 
@@ -123,7 +124,7 @@ export function imageDom(
     const hint = document.createElement("button");
     hint.type = "button";
     hint.className = "md-image-caption-hint";
-    hint.textContent = t().editor.image.addCaption;
+    relabelOnLocaleChange(hint, () => (hint.textContent = t().editor.image.addCaption));
     hint.addEventListener("mousedown", (event) => event.preventDefault());
     hint.addEventListener("click", () => {
       const picture = imageAt(view.state, view.posAtDOM(block));

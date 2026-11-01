@@ -3,6 +3,7 @@ import type { SyntaxNode } from "@lezer/common";
 import { ImageWidget } from "@/features/editor/images/image-widget";
 import { EmojiWidget } from "@/features/editor/widgets/emoji-widget";
 import { MathWidget } from "@/features/editor/widgets/math-widget";
+import { relabelOnLocaleChange } from "@/features/editor/widgets/relabel-on-locale";
 import { t } from "@/i18n";
 import { emojiFor } from "@/lib/markdown/emoji";
 import { footnoteReferences } from "@/lib/markdown/footnotes";
@@ -129,7 +130,7 @@ class FootnoteBacksWidget extends WidgetType {
         number.textContent = String(index + 1);
         link.append(number);
       }
-      link.title = t().editor.footnoteBack;
+      relabelOnLocaleChange(link, () => (link.title = t().editor.footnoteBack));
       link.setAttribute("role", "link");
       link.addEventListener("mousedown", (event) => {
         if (event.button !== 0) return;
