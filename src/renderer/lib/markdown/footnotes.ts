@@ -66,6 +66,8 @@ export const footnotes: MarkdownConfig = {
         line.moveBase(line.pos + match[0].length);
         return null;
       },
+      // A definition that follows another starts a block of its own, with or without a blank line
+      endLeaf: (_cx, line) => DEFINITION.test(line.text.slice(line.pos)),
     },
   ],
 };

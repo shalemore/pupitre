@@ -16,6 +16,16 @@ describe("exporting footnotes", () => {
   });
 });
 
+describe("exporting adjacent footnote definitions", () => {
+  it("keeps each definition as its own footnote", async () => {
+    const markdown = "One[^1] two[^2].\n\n[^1]: First note.\n[^2]: Second note.\n";
+    const html = await markdownFragment(markdownState(markdown), markdown);
+    expect(html.match(/<li id="fn-/g)).toHaveLength(2);
+    expect(html).toContain('<li id="fn-1">First note.');
+    expect(html).toContain('<li id="fn-2">Second note.');
+  });
+});
+
 describe("exporting autolinks", () => {
   it("writes an address as a mail link and keeps a URI's own scheme", async () => {
     const markdown =
