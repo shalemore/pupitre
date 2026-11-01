@@ -134,7 +134,7 @@ function TabButton(props: TabButtonProps) {
         <Show when={isTabDirty(props.tab)}>
           <span aria-hidden="true" class={dirtyDot} />
         </Show>
-        <bdi dir="ltr" class={tabName}>
+        <bdi dir="auto" class={tabName}>
           {props.name}
         </bdi>
       </KobalteTabs.Trigger>

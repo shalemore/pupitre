@@ -133,7 +133,6 @@ export const OutlineList: Component<OutlineListProps> = (props) => {
                 </button>
               </Show>
               <ListItem
-                dir="auto"
                 active={isActive(row().index)}
                 aria-current={isActive(row().index) ? "location" : undefined}
                 onClick={() => props.onSelectHeading(row().heading)}

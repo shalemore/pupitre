@@ -231,7 +231,6 @@ export const FolderRow: Component<{
             <ContextMenu onOpenChange={props.tree.onMenuOpenChange}>
               <ContextMenu.Trigger
                 as={ListItem}
-                dir="auto"
                 active={isActive()}
                 tone={failure() ? "danger" : "default"}
                 onClick={() =>
@@ -265,7 +264,7 @@ export const FolderRow: Component<{
                 </Show>
                 <span class={cx(nameMin, excerpt() || date() ? nameGrow : blockTruncate)}>
                   <span class={blockTruncate}>
-                    <bdi dir="ltr">{props.entry.name}</bdi>
+                    <bdi dir="auto">{props.entry.name}</bdi>
                   </span>
                   <Show when={date()}>
                     {(label) => <span class={secondaryLine}>{label()}</span>}

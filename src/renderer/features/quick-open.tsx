@@ -83,10 +83,14 @@ const QuickOpenRow: Component<{ file: FoundFile }> = (props) => {
   );
 
   return (
-    <span dir="auto" class={truncateGrow}>
-      <MatchedText text={name()} ranges={props.file.ranges} offset={folder().length} />
+    <span class={truncateGrow}>
+      <bdi dir="auto">
+        <MatchedText text={name()} ranges={props.file.ranges} offset={folder().length} />
+      </bdi>
       <span class={cx(dim, folderGap)}>
-        <MatchedText text={folder()} ranges={props.file.ranges} offset={0} />
+        <bdi dir="auto">
+          <MatchedText text={folder()} ranges={props.file.ranges} offset={0} />
+        </bdi>
       </span>
     </span>
   );

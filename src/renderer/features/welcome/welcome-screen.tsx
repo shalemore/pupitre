@@ -133,9 +133,9 @@ export const WelcomeScreen: Component<WelcomeScreenProps> = (props) => {
                 class={cx("group", recentItem)}
               >
                 <span class={recentName}>
-                  <bdi dir="ltr">{fileNameOf(path)}</bdi>
+                  <bdi dir="auto">{fileNameOf(path)}</bdi>
                 </span>
-                <span dir="ltr" class={recentPath}>
+                <span dir="auto" class={recentPath}>
                   {path}
                 </span>
               </ListItem>

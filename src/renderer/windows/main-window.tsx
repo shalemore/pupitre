@@ -649,7 +649,7 @@ export const MainWindow: Component = () => {
                   <Show when={session.isDirty()}>
                     <span aria-hidden="true" class={dirtyDot} />
                   </Show>
-                  <bdi dir="ltr" class={ellipsis}>
+                  <bdi dir="auto" class={ellipsis}>
                     {session.fileName()}
                   </bdi>
                 </Show>

@@ -68,7 +68,7 @@ const ItemContent: Component<{ item: MenuItemEntry; hasChecks: boolean }> = (pro
       <span class={label}>
         <span class={cx(truncate, block)}>{props.item.label}</span>
         <Show when={props.item.detail}>
-          <bdi dir="ltr" class={cx(truncate, block, detail)}>
+          <bdi dir="auto" class={cx(truncate, block, detail)}>
             {props.item.detail}
           </bdi>
         </Show>
