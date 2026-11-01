@@ -208,8 +208,8 @@
     no-repeat;
 }
 
-/* Images */
-.md-image-preview {
+/* Images: a picture that shares its line with text has no frame, so it keeps square corners */
+.md-image-block:not([data-inline]) .md-image-preview {
   border-radius: var(--radius-lg);
 }
 

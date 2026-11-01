@@ -119,6 +119,10 @@ silently do nothing.
   `md-link`; inline code `md-code`; code blocks `md-code-block`; tables `md-table-view`; images
   `md-image-*`; footnotes; front matter `md-front-matter`; HTML tags shown as source
   `md-html-mark`.
+- A picture that shares its line with text is `md-image-block[data-inline]` and has no frame, so it
+  keeps square corners. Round only a picture that stands on its own:
+  `.md-image-block:not([data-inline]) .md-image-preview`. A rule on `.md-image-preview` alone also
+  rounds badges and other inline pictures.
 - Document defaults are tokens, so a theme need not restate the rule:
   `--md-page-padding-block`, `--md-link-underline`, `--md-heading-weight`,
   `--md-heading-line-height`, `--md-strong-weight`, `--md-h1-size`…`--md-h6-size`,

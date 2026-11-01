@@ -187,7 +187,7 @@
     center / 40% 1px no-repeat;
 }
 
-.md-image-preview {
+.md-image-block:not([data-inline]) .md-image-preview {
   border-radius: var(--radius-md);
 }
 
