@@ -39,7 +39,7 @@ import { lineRange, printingChanged, revealingRanges, touches } from "./builder"
 
 /** Containers whose children can be rendered blocks; other blocks are never entered. */
 const CONTAINER = /^(?:Document|Blockquote|BulletList|OrderedList|ListItem)$/;
-const RENDERED_NODE = /^(?:Table|HTMLBlock|BlockMath|FencedCode|LinkReference)$/;
+const RENDERED_NODE = /^(?:Table|HTMLBlock|CommentBlock|BlockMath|FencedCode|LinkReference)$/;
 const MAX_TOC_LENGTH = 64;
 
 function isTocParagraph(state: EditorState, node: SyntaxNode): boolean {
@@ -133,8 +133,9 @@ function buildDecorations(state: EditorState): RenderedBlocksState {
     enter: (node) => {
       if (node.from <= hiddenUntil) return false;
       if (CONTAINER.test(node.name)) return true;
-      // A definition is source the reader never sees; its line takes no room until it is edited
-      if (node.name === "LinkReference") {
+      // A definition or a comment is source the reader never sees; its lines take no room until
+      // they are edited
+      if (node.name === "LinkReference" || node.name === "CommentBlock") {
         const [from, to] = lineRange(state, node.node);
         if (!isTouched(from, to)) hideLines(from, to);
         return false;

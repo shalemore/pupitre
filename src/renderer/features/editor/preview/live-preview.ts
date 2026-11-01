@@ -136,6 +136,10 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
       return false;
     case "CommentBlock":
       return false;
+    // A comment inside a line is source too: hidden until the selection touches it
+    case "Comment":
+      builder.marker(node, touches(builder.ranges, node.from, node.to));
+      return false;
     case "Blockquote":
       visitBlockquote(builder, node);
       return true;

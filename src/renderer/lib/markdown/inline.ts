@@ -136,6 +136,9 @@ export function inlineItems(
         push({ type: "text", text: emojiFor(source) ?? source });
         break;
       }
+      // A comment is source the reader never sees, in the page as in the preview
+      case "Comment":
+        break;
       case "Escape":
         push({ type: "text", text: text(child.from + 1, child.to) });
         break;

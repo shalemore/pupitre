@@ -16,6 +16,18 @@ describe("exporting footnotes", () => {
   });
 });
 
+describe("exporting comments", () => {
+  it("leaves comments out of the page", async () => {
+    const markdown = "Alpha <!-- hidden --> beta.\n\n<!-- a block comment -->\n\nGamma.\n";
+    const html = await documentHtml(markdownState(markdown), "Title", editorCss);
+    expect(html).not.toContain("hidden");
+    expect(html).not.toContain("block comment");
+    expect(html).toContain("Alpha");
+    expect(html).toContain("beta.");
+    expect(html).toContain("Gamma.");
+  });
+});
+
 describe("exporting a page", () => {
   const markdown = [
     "# Title",
