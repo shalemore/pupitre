@@ -23,7 +23,8 @@ import {
 } from "@/lib/markdown/details";
 import { isRenderableHtml } from "@/lib/markdown/html";
 import { htmlBlockPreview } from "@/lib/markdown/html-block";
-import { documentBaseUrl, parseImageTag } from "@/lib/markdown/images";
+import { documentBaseUrl } from "@/lib/markdown/images";
+import { hasVisibleContent, inlineItems } from "@/lib/markdown/inline";
 import { mathFence, mathOf } from "@/lib/markdown/math";
 import { diagramTheme } from "@/lib/markdown/mermaid";
 import { collectHeadings } from "@/lib/markdown/structure";
@@ -48,6 +49,17 @@ function isTocParagraph(state: EditorState, node: SyntaxNode): boolean {
     node.to - node.from <= MAX_TOC_LENGTH &&
     TOC_MARKER.test(state.sliceDoc(node.from, node.to))
   );
+}
+
+/**
+ * Whether a paragraph puts nothing on the page: it holds only anchors, comments or whitespace,
+ * such as the target `<a id="quick-start"></a>` on a line of its own. Its line keeps no room until
+ * the selection touches it, as a hidden block does.
+ */
+function rendersNothing(state: EditorState, node: SyntaxNode): boolean {
+  // Only HTML can make a paragraph invisible, and most paragraphs hold none of it
+  if (!state.sliceDoc(node.from, node.to).includes("<")) return false;
+  return !hasVisibleContent(inlineItems(state, node));
 }
 
 /**
@@ -140,6 +152,13 @@ function buildDecorations(state: EditorState): RenderedBlocksState {
         if (!isTouched(from, to)) hideLines(from, to);
         return false;
       }
+      // A paragraph that renders nothing, such as an anchor target on a line of its own, is source
+      // too; its line keeps no room until it is edited
+      if (node.name === "Paragraph" && rendersNothing(state, node.node)) {
+        const [from, to] = lineRange(state, node.node);
+        if (!isTouched(from, to)) hideLines(from, to);
+        return false;
+      }
       const details = node.name === "HTMLBlock" ? detailsSection(state, node.node) : undefined;
       if (details) {
         const { summary, open, closing } = details;
@@ -168,18 +187,11 @@ function buildDecorations(state: EditorState): RenderedBlocksState {
       // A table is edited in place (table.tsx), so its source never shows
       if (node.name === "Table" || !touched) {
         hideLines(node.from, node.to, widget);
-      } else if (
-        node.name === "BlockMath" ||
-        node.name === "FencedCode" ||
-        // An `<img>` tag reads like a Markdown image: the picture above, its source below
-        (node.name === "HTMLBlock" &&
-          parseImageTag(state.sliceDoc(node.from, node.to)) !== undefined)
-      ) {
-        // Math and diagrams open in the first line of their source, which is a code card, so the
-        // rendering and the source stay one piece instead of becoming two blocks of their own
-        decorations.push(Decoration.widget({ widget, side: 1 }).range(from));
       } else {
-        decorations.push(Decoration.widget({ widget, block: true, side: 1 }).range(to));
+        // Math, diagrams, HTML and pictures open in the first line of their source, which is a
+        // code card, so the rendering and the source stay one piece instead of becoming two
+        // blocks of their own, in that order whichever the construct is
+        decorations.push(Decoration.widget({ widget, side: 1 }).range(from));
       }
       return false;
     },
@@ -194,7 +206,12 @@ function hasRenderedBlockOrSpill(state: EditorState, from: number, to: number): 
     to,
     enter: (node) => {
       if (CONTAINER.test(node.name)) return true;
-      if (RENDERED_NODE.test(node.name) || isTocParagraph(state, node.node) || node.to > to) {
+      if (
+        RENDERED_NODE.test(node.name) ||
+        isTocParagraph(state, node.node) ||
+        (node.name === "Paragraph" && rendersNothing(state, node.node)) ||
+        node.to > to
+      ) {
         found = true;
       }
       return false;

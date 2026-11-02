@@ -5,11 +5,18 @@ import type { SyntaxNode } from "@lezer/common";
 import { openImageMenu } from "@/features/editor/images/image-menu";
 import { detailsAnimationChanged } from "@/lib/markdown/details";
 import { footnoteTarget } from "@/lib/markdown/footnotes";
+import { isRenderableHtml } from "@/lib/markdown/html";
 import { htmlBlockPreview } from "@/lib/markdown/html-block";
 import { parseImageTag } from "@/lib/markdown/images";
 import { markers } from "@/lib/markdown/markers";
 import { HEADING_LEVEL } from "@/lib/markdown/structure";
-import { showsRendering, visitBlockquote, visitCodeBlock, visitListItem } from "./blocks";
+import {
+  showsRendering,
+  visitBlockquote,
+  visitCodeBlock,
+  visitHtmlSource,
+  visitListItem,
+} from "./blocks";
 import { DecorationBuilder, lineRange, printing, printingChanged, touches } from "./builder";
 import { visitHtmlBlock, visitInlineHtml } from "./html";
 import { visitEmoji, visitFootnote, visitImage, visitInlineMath, visitLink } from "./inline";
@@ -133,6 +140,7 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
     }
     case "HTMLBlock":
       if (html !== undefined) visitHtmlBlock(builder, node, html.element);
+      else if (source !== undefined && isRenderableHtml(source)) visitHtmlSource(builder, node);
       return false;
     case "CommentBlock":
       return false;

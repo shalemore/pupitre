@@ -125,6 +125,9 @@ function readBlockCode(view: EditorView, container: HTMLElement): string {
     node;
     node = node.parent
   ) {
+    if (node.name === "HTMLBlock") {
+      return view.state.sliceDoc(node.from, node.to);
+    }
     if (node.name === "CodeBlock") {
       return view.state.sliceDoc(node.from, node.to).replace(/^(?: {4}|\t)/gm, "");
     }

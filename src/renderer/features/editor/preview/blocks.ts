@@ -119,6 +119,29 @@ export function showsRendering(state: EditorState, node: SyntaxNode): boolean {
   return info !== null && state.sliceDoc(info.from, info.to).trim().toLowerCase() === "mermaid";
 }
 
+/**
+ * The source of an HTML block that shows its rendering above it once the selection is inside: the
+ * same code card a fence uses, with the copy button, so the block reads as one piece.
+ */
+export function visitHtmlSource(builder: DecorationBuilder, node: SyntaxNode): void {
+  if (!touches(builder.ranges, ...lineRange(builder.state, node))) return;
+  const first = builder.lineAt(node.from).number;
+  const last = builder.lineAt(node.to).number;
+  builder.eachLine(node.from, node.to, (line, number) => {
+    line.classes.add("md-code-block");
+    if (number === first) {
+      line.classes.add("md-code-block-start");
+      line.classes.add("md-code-render");
+    }
+    if (number === last) line.classes.add("md-code-block-end");
+  });
+  // No fence names a language here; the corner is the copy button alone, under the rendering
+  const widget = new CodeCornerWidget(undefined, true);
+  builder.decorations.push(
+    Decoration.widget({ widget, side: -1 }).range(builder.lineAt(node.from).to),
+  );
+}
+
 export function visitCodeBlock(builder: DecorationBuilder, node: SyntaxNode): void {
   const first = builder.lineAt(node.from).number;
   const last = builder.lineAt(node.to).number;

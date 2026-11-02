@@ -46,6 +46,32 @@ export type InlineItem =
 
 export type InlineImage = Extract<InlineItem, { type: "image" }>;
 
+/**
+ * Whether rendered inline items put anything on the page. An anchor with no content, such as a
+ * target on a line of its own, is not visible; text, a picture, a formula, a footnote or a line
+ * break is.
+ */
+export function hasVisibleContent(items: readonly InlineItem[]): boolean {
+  for (const item of items) {
+    switch (item.type) {
+      case "text":
+        if (item.text.trim() !== "") return true;
+        break;
+      case "anchor":
+      case "element":
+      case "link":
+        if (hasVisibleContent(item.children)) return true;
+        break;
+      case "break":
+      case "image":
+      case "math":
+      case "footnote":
+        return true;
+    }
+  }
+  return false;
+}
+
 const ELEMENT_TAGS: Record<string, { tag: string; class: string }> = {
   StrongEmphasis: { tag: "strong", class: "md-strong" },
   Emphasis: { tag: "em", class: "md-em" },
