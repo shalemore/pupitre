@@ -61,6 +61,24 @@ function shortcutItems(
   }));
 }
 
+/** How long a held theme shortcut must be quiet before the next press toggles the scheme. */
+const THEME_TOGGLE_QUIET_MS = 500;
+let themeToggleAllowedAt = 0;
+
+/**
+ * Toggles light and dark, once per press: the first press changes at once, and while a held key
+ * repeats, each repeat postpones the next change until the key has been quiet.
+ */
+function toggleColorScheme(): void {
+  const now = Date.now();
+  if (now < themeToggleAllowedAt) {
+    themeToggleAllowedAt = now + THEME_TOGGLE_QUIET_MS;
+    return;
+  }
+  themeToggleAllowedAt = now + THEME_TOGGLE_QUIET_MS;
+  updateSettings({ colorScheme: nativeTheme.shouldUseDarkColors ? "light" : "dark" });
+}
+
 function buildTemplate(): SettingMenu[] {
   const labels = t().menu;
   const isMac = process.platform === "darwin";
@@ -308,8 +326,7 @@ function buildTemplate(): SettingMenu[] {
         {
           label: labels.toggleTheme,
           accelerator: "CmdOrCtrl+Shift+D",
-          click: () =>
-            updateSettings({ colorScheme: nativeTheme.shouldUseDarkColors ? "light" : "dark" }),
+          click: toggleColorScheme,
         },
         separator,
         // Ctrl+Tab stays Ctrl on every platform: Cmd+Tab is the system's own window switcher
