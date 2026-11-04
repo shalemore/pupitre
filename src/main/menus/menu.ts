@@ -300,6 +300,7 @@ function buildTemplate(): MenuItemConstructorOptions[] {
         },
         {
           label: labels.toggleTheme,
+          accelerator: "CmdOrCtrl+Shift+D",
           click: () =>
             updateSettings({ colorScheme: nativeTheme.shouldUseDarkColors ? "light" : "dark" }),
         },
