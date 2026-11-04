@@ -15,14 +15,14 @@ export const FORMAT_ACTIONS = [
   { id: "inlineCode", shortcut: "CmdOrCtrl+Shift+`" },
   { id: "link", shortcut: "CmdOrCtrl+K" },
   { id: "clearFormat", shortcut: "CmdOrCtrl+\\" },
-  { id: "paragraph", shortcut: "CmdOrCtrl+0" },
+  { id: "paragraph", shortcut: undefined },
   { id: "heading1", shortcut: "CmdOrCtrl+1" },
   { id: "heading2", shortcut: "CmdOrCtrl+2" },
   { id: "heading3", shortcut: "CmdOrCtrl+3" },
   { id: "heading4", shortcut: "CmdOrCtrl+4" },
   { id: "heading5", shortcut: "CmdOrCtrl+5" },
   { id: "heading6", shortcut: "CmdOrCtrl+6" },
-  // The keys that step a heading belong to zoom, and Ctrl+0 is Paragraph, as in Typora
+  // The keys that step a heading belong to zoom, and Ctrl+0 resets it, as in other apps
   { id: "headingUp", shortcut: undefined },
   { id: "headingDown", shortcut: undefined },
   { id: "quote", shortcut: "CmdOrCtrl+Shift+Q" },

@@ -45,19 +45,19 @@ let documentState: DocumentState = {
 };
 
 /**
- * The items that step the zoom. The first spelling is the one the menu shows; the others only give
- * the step the spellings Electron reads differently, which hidden items carry (see entriesOf).
+ * A menu item for a shortcut and its other spellings: the first is the one the menu shows, and the
+ * rest are hidden, since Electron reads some keys as more than one accelerator (see entriesOf).
  */
-function zoomItems(
+function shortcutItems(
   label: string,
-  direction: "in" | "out",
   accelerators: readonly string[],
+  click: () => void,
 ): MenuItemConstructorOptions[] {
   return accelerators.map((accelerator, index) => ({
     label,
     accelerator,
     visible: index === 0,
-    click: () => stepZoom(direction),
+    click,
   }));
 }
 
@@ -351,12 +351,20 @@ function buildTemplate(): SettingMenu[] {
           click: () => updateSettings({ sourceMode: !getSettings().sourceMode }),
         },
         separator,
-        // `=` is what the key is on most keyboards; the keypad's own keys come as numadd and numsub
-        ...zoomItems(labels.zoomIn, "in", ["CmdOrCtrl+Plus", "CmdOrCtrl+=", "CmdOrCtrl+numadd"]),
-        ...zoomItems(labels.zoomOut, "out", ["CmdOrCtrl+-", "CmdOrCtrl+numsub"]),
-        // Ctrl+0 belongs to "Paragraph", as in Typora, and Ctrl+Shift+digit belongs to the
-        // keyboard layouts of Windows, which never passes it on; R carries the reset instead
-        { label: labels.resetZoom, accelerator: "CmdOrCtrl+Shift+R", click: resetZoom },
+        // The main row, the keypad, and the spellings Electron reads for the same keys
+        ...shortcutItems(labels.zoomIn, ["CmdOrCtrl+Plus", "CmdOrCtrl+=", "CmdOrCtrl+numadd"], () =>
+          stepZoom("in"),
+        ),
+        ...shortcutItems(labels.zoomOut, ["CmdOrCtrl+-", "CmdOrCtrl+numsub"], () =>
+          stepZoom("out"),
+        ),
+        // Ctrl+0 is what other apps reset the zoom with; Shift+0 is ")" and the keypad's zero
+        // carries Ins. Ctrl+Shift+R stays as the key the app used before
+        ...shortcutItems(
+          labels.resetZoom,
+          ["CmdOrCtrl+0", "CmdOrCtrl+num0", "CmdOrCtrl+Shift+0", "CmdOrCtrl+Shift+R"],
+          resetZoom,
+        ),
         separator,
         { label: labels.fullScreen, role: "togglefullscreen" },
         ...(app.isPackaged
