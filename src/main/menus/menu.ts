@@ -37,6 +37,23 @@ let documentState: DocumentState = {
   canReopenTab: false,
 };
 
+/**
+ * The items that step the zoom. The first spelling is the one the menu shows; the others only give
+ * the step the spellings Electron reads differently, which hidden items carry (see entriesOf).
+ */
+function zoomItems(
+  label: string,
+  direction: "in" | "out",
+  accelerators: readonly string[],
+): MenuItemConstructorOptions[] {
+  return accelerators.map((accelerator, index) => ({
+    label,
+    accelerator,
+    visible: index === 0,
+    click: () => stepZoom(direction),
+  }));
+}
+
 function buildTemplate(): MenuItemConstructorOptions[] {
   const labels = t().menu;
   const isMac = process.platform === "darwin";
@@ -323,15 +340,9 @@ function buildTemplate(): MenuItemConstructorOptions[] {
           click: () => updateSettings({ sourceMode: !getSettings().sourceMode }),
         },
         separator,
-        { label: labels.zoomIn, accelerator: "CmdOrCtrl+Plus", click: () => stepZoom("in") },
-        // The same shortcut without Shift, which is what the key is on most keyboards
-        {
-          label: labels.zoomIn,
-          accelerator: "CmdOrCtrl+=",
-          visible: false,
-          click: () => stepZoom("in"),
-        },
-        { label: labels.zoomOut, accelerator: "CmdOrCtrl+-", click: () => stepZoom("out") },
+        // `=` is what the key is on most keyboards; the keypad's own keys come as numadd and numsub
+        ...zoomItems(labels.zoomIn, "in", ["CmdOrCtrl+Plus", "CmdOrCtrl+=", "CmdOrCtrl+numadd"]),
+        ...zoomItems(labels.zoomOut, "out", ["CmdOrCtrl+-", "CmdOrCtrl+numsub"]),
         // Ctrl+0 belongs to "Paragraph", as in Typora, and Ctrl+Shift+digit belongs to the
         // keyboard layouts of Windows, which never passes it on; R carries the reset instead
         { label: labels.resetZoom, accelerator: "CmdOrCtrl+Shift+R", click: resetZoom },
