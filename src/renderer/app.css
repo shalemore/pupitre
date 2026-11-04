@@ -362,6 +362,13 @@
   }
 }
 
+@keyframes panel-exit {
+  from,
+  to {
+    opacity: 0;
+  }
+}
+
 @layer components {
   .floating-panel {
     border-radius: var(--radius-xl);
@@ -385,6 +392,10 @@
        while it folds away */
     &[data-closed] {
       pointer-events: none;
+      /* The panel leaves at once. It takes an exit animation to give the presence something to
+         wait for, and that keeps the panel's last frame invisible instead of composited over
+         whatever replaced it */
+      animation: panel-exit var(--transition-duration-fast) var(--ease-out-expo) forwards;
     }
   }
 }
