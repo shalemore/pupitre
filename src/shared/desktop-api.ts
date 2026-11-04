@@ -208,7 +208,7 @@ export interface WorkspaceState {
 export type UpdateStatus =
   | { kind: "idle" }
   | { kind: "checking" }
-  | { kind: "available"; version: string; notes: string }
+  | { kind: "available"; version: string }
   | { kind: "up-to-date" }
   | { kind: "downloading"; percent: number }
   | { kind: "ready"; version: string }

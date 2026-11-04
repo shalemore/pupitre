@@ -27,3 +27,25 @@ test("opening a font picker leaves the settings page where it was", async () => 
     await close(app);
   }
 });
+
+test("an update offers its download in place of the check button, without notes", async () => {
+  const app = await launch({ settings: { locale: "en-US" } });
+  try {
+    const settingsWindow = app.app.waitForEvent("window");
+    await app.page.evaluate(() => window.desktop.invoke("window:open-settings"));
+    const settings = await settingsWindow;
+    await settings.waitForLoadState("domcontentloaded");
+    await settings.getByRole("tab").last().click();
+    await app.app.evaluate(({ BrowserWindow }) => {
+      for (const window of BrowserWindow.getAllWindows()) {
+        window.webContents.send("updater:status", { kind: "available", version: "9.9.9" });
+      }
+    });
+    await expect(settings.getByText("New version available: v9.9.9")).toBeVisible();
+    // The header button becomes the download one; the panel carries no release notes
+    await expect(settings.getByRole("button", { name: "Download" })).toBeVisible();
+    await expect(settings.getByRole("button", { name: "Check for Updates" })).toHaveCount(0);
+  } finally {
+    await close(app);
+  }
+});

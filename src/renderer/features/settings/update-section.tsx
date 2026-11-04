@@ -2,7 +2,7 @@ import { Progress } from "@kobalte/core/progress";
 import { CheckCircle2, Download, RefreshCw } from "lucide-solid";
 import { createMemo, Show, type Component } from "solid-js";
 import type { UpdateStatus } from "@shared/desktop-api";
-import { Button, Callout, ScrollView } from "@/components/ui";
+import { Button, Callout } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { formatPercent } from "@/lib/number-format";
@@ -14,12 +14,6 @@ const stack = css({ "& > :not(:last-child)": { marginBlockEnd: "2" } });
 const row = css({ display: "flex", alignItems: "center", justifyContent: "space-between" });
 const inlineSuccess = css({ display: "flex", alignItems: "center", gap: "2", color: "success" });
 const brandText = css({ fontWeight: "medium", color: "brand" });
-const notes = css({
-  textStyle: "2xs",
-  color: "muted.foreground",
-  whiteSpace: "pre-wrap",
-  maxHeight: "24",
-});
 const mutedText = css({ color: "muted.foreground" });
 const percent = css({
   fontFamily: "mono",
@@ -59,19 +53,27 @@ function useStatus<K extends UpdateStatus["kind"]>(kind: K) {
 }
 
 export const UpdateButton: Component = () => {
-  const isBusy = () => updateStatus().kind === "checking" || updateStatus().kind === "downloading";
+  const kind = () => updateStatus().kind;
+  const isBusy = () => kind() === "checking" || kind() === "downloading";
+  const offersDownload = () => kind() === "available" || kind() === "downloading";
+  const run = () => {
+    if (kind() === "available") void desktop.invoke("updater:download");
+    else if (kind() !== "downloading") void desktop.invoke("updater:check");
+  };
   return (
-    <Button
-      variant="outline"
-      size="sm"
-      onClick={() => void desktop.invoke("updater:check")}
-      disabled={isBusy()}
-    >
-      <RefreshCw class={cx(updateStatus().kind === "checking" && spin)} />
+    <Button variant="outline" size="sm" onClick={run} disabled={isBusy()}>
+      <Show
+        when={offersDownload()}
+        fallback={<RefreshCw class={cx(kind() === "checking" && spin)} />}
+      >
+        <Download />
+      </Show>
       <span>
-        {updateStatus().kind === "checking"
+        {kind() === "checking"
           ? t().settings.checkingForUpdates
-          : t().settings.checkForUpdates}
+          : offersDownload()
+            ? t().settings.downloadUpdate
+            : t().settings.checkForUpdates}
       </span>
     </Button>
   );
@@ -95,25 +97,10 @@ export const UpdateStatusPanel: Component<{ currentVersion: string }> = (props) 
 
       <Show when={available()}>
         {(status) => (
-          <Callout variant="brand" class={stack}>
-            <div class={row}>
-              <span class={brandText}>
-                {t().settings.updateAvailable}: v{status().version}
-              </span>
-              <Button
-                variant="default"
-                size="sm"
-                onClick={() => void desktop.invoke("updater:download")}
-              >
-                <Download />
-                <span>{t().settings.downloadUpdate}</span>
-              </Button>
-            </div>
-            <Show when={status().notes}>
-              <ScrollView as="p" class={notes}>
-                {status().notes}
-              </ScrollView>
-            </Show>
+          <Callout variant="brand">
+            <span class={brandText}>
+              {t().settings.updateAvailable}: v{status().version}
+            </span>
           </Callout>
         )}
       </Show>

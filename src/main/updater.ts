@@ -21,13 +21,6 @@ function setStatus(next: UpdateStatus): void {
   broadcast("updater:status", status);
 }
 
-function releaseNotes(
-  notes: string | readonly { note: string | null }[] | null | undefined,
-): string {
-  if (typeof notes === "string") return notes;
-  return (notes ?? []).flatMap(({ note }) => (note === null ? [] : [note])).join("\n\n");
-}
-
 // Only the Windows installer writes an uninstaller next to the executable. A copy without one was
 // unpacked by a package manager such as Scoop, and the installer an update would run is not what
 // that package manager installed.
@@ -41,7 +34,7 @@ export function setupUpdater(): void {
   autoUpdater.autoDownload = false;
   autoUpdater.on("checking-for-update", () => setStatus({ kind: "checking" }));
   autoUpdater.on("update-available", (info) => {
-    setStatus({ kind: "available", version: info.version, notes: releaseNotes(info.releaseNotes) });
+    setStatus({ kind: "available", version: info.version });
     if (notifyWhenAvailable && Notification.isSupported()) {
       const notification = new Notification({
         title: t().settings.updateNotificationTitle(info.version),
