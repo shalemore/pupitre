@@ -17,6 +17,7 @@ import {
   menusOf,
   withGroupSeparators,
 } from "@shared/menu";
+import { type BooleanSettingKey, isBooleanSettingKey } from "@shared/settings";
 import { diagnosticsInfo } from "../diagnostics/diagnostics";
 import { REPOSITORY_URL, reportIssueUrl } from "../diagnostics/report-issue";
 import { clearRecentFiles, getRecentFiles } from "../files/recent-files";
@@ -28,6 +29,12 @@ import { showAboutDialog } from "./about";
 import { formatItems } from "./format-menu";
 
 const separator: MenuItemConstructorOptions = { type: "separator" };
+
+/** A menu item that a drawn check box follows the setting of. */
+type SettingMenu = Omit<MenuItemConstructorOptions, "submenu"> & {
+  setting?: BooleanSettingKey;
+  submenu?: SettingMenu[] | Menu;
+};
 
 let documentState: DocumentState = {
   hasDocument: false,
@@ -54,7 +61,7 @@ function zoomItems(
   }));
 }
 
-function buildTemplate(): MenuItemConstructorOptions[] {
+function buildTemplate(): SettingMenu[] {
   const labels = t().menu;
   const isMac = process.platform === "darwin";
   // A document without a file has no versions kept of it
@@ -324,6 +331,7 @@ function buildTemplate(): MenuItemConstructorOptions[] {
           type: "checkbox",
           accelerator: "F8",
           checked: getSettings().focusMode,
+          setting: "focusMode",
           click: () => updateSettings({ focusMode: !getSettings().focusMode }),
         },
         {
@@ -331,6 +339,7 @@ function buildTemplate(): MenuItemConstructorOptions[] {
           type: "checkbox",
           accelerator: "F9",
           checked: getSettings().typewriterMode,
+          setting: "typewriterMode",
           click: () => updateSettings({ typewriterMode: !getSettings().typewriterMode }),
         },
         {
@@ -338,6 +347,7 @@ function buildTemplate(): MenuItemConstructorOptions[] {
           type: "checkbox",
           accelerator: "CmdOrCtrl+/",
           checked: getSettings().sourceMode,
+          setting: "sourceMode",
           click: () => updateSettings({ sourceMode: !getSettings().sourceMode }),
         },
         separator,
@@ -385,10 +395,7 @@ function buildTemplate(): MenuItemConstructorOptions[] {
  * send back the entry that was picked. Separators are never picked, and one instance of them is
  * shared by the whole template.
  */
-function indexItems(
-  items: readonly MenuItemConstructorOptions[],
-  parentId: string,
-): MenuItemConstructorOptions[] {
+function indexItems(items: readonly SettingMenu[], parentId: string): SettingMenu[] {
   return items.map((item, index) => {
     if (item.type === "separator") return item;
     const id = `${parentId}.${index}`;
@@ -430,12 +437,19 @@ function shortcutOf(item: MenuItem): string | undefined {
   return item.accelerator === null ? undefined : formatShortcut(item.accelerator);
 }
 
+/** The setting a native check box stands for; the template carries it through the native item. */
+function settingOf(item: MenuItem): BooleanSettingKey | undefined {
+  const setting: unknown = "setting" in item ? item.setting : undefined;
+  return isBooleanSettingKey(setting) ? setting : undefined;
+}
+
 function entriesOf(items: readonly MenuItem[]): MenuEntry[] {
   return items.flatMap((item): MenuEntry[] => {
     // Hidden items only exist to give an accelerator a second spelling
     if (!item.visible) return [];
     if (item.type === "separator") return [{ type: "separator" }];
     const shortcut = shortcutOf(item);
+    const setting = settingOf(item);
     // Electron gives an item without a submenu null there, whatever its types say
     const submenu: Menu | undefined = item.submenu ?? undefined;
     return [
@@ -447,6 +461,7 @@ function entriesOf(items: readonly MenuItem[]): MenuEntry[] {
         ...(shortcut === undefined ? {} : { shortcut }),
         enabled: item.enabled,
         ...(item.type === "checkbox" ? { checked: item.checked } : {}),
+        ...(setting === undefined ? {} : { setting }),
         ...(submenu === undefined ? {} : { submenu: entriesOf(submenu.items) }),
       },
     ];

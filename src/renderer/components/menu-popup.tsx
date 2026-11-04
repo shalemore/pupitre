@@ -13,6 +13,7 @@ import { For, Show, type Component } from "solid-js";
 import type { MenuEntry } from "@shared/menu";
 import { Separator } from "@/components/ui";
 import { isRtl } from "@/lib/rtl";
+import { settings } from "@/lib/settings";
 import { FLOATING_PANEL, menuPanel, rtlFlip, truncate } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 
@@ -59,11 +60,13 @@ const submenuChevron = css({
 });
 const separator = css({ marginBlock: "1", backgroundColor: "border.subtle" });
 
-const ItemContent: Component<{ item: MenuItemEntry; hasChecks: boolean }> = (props) => (
+const ItemContent: Component<{ item: MenuItemEntry; checked: boolean; hasChecks: boolean }> = (
+  props,
+) => (
   <>
     <span class={row}>
       <Show when={props.hasChecks}>
-        <Check class={cx(check, props.item.checked !== true && hidden)} stroke-width={2} />
+        <Check class={cx(check, !props.checked && hidden)} stroke-width={2} />
       </Show>
       <span class={label}>
         <span class={cx(truncate, block)}>{props.item.label}</span>
@@ -86,8 +89,12 @@ export const MenuEntries: Component<{
   entries: readonly MenuEntry[];
   onSelect: (entry: MenuItemEntry) => void;
 }> = (props) => {
-  const hasChecks = () =>
-    props.entries.some((entry) => entry.type === "item" && entry.checked !== undefined);
+  const isCheck = (entry: MenuItemEntry) =>
+    entry.checked !== undefined || entry.setting !== undefined;
+  const hasChecks = () => props.entries.some((entry) => entry.type === "item" && isCheck(entry));
+  // A check that stands for a setting follows the live value, not the snapshot the menu opened with
+  const checked = (entry: MenuItemEntry): boolean =>
+    entry.setting === undefined ? entry.checked === true : settings()[entry.setting];
 
   return (
     <For each={props.entries}>
@@ -101,31 +108,43 @@ export const MenuEntries: Component<{
               when={itemEntry().submenu}
               fallback={
                 <Show
-                  when={itemEntry().checked !== undefined}
+                  when={isCheck(itemEntry())}
                   fallback={
                     <MenuItem
                       disabled={itemEntry().enabled === false}
                       onSelect={() => props.onSelect(itemEntry())}
                       class={item}
                     >
-                      <ItemContent item={itemEntry()} hasChecks={hasChecks()} />
+                      <ItemContent
+                        item={itemEntry()}
+                        checked={checked(itemEntry())}
+                        hasChecks={hasChecks()}
+                      />
                     </MenuItem>
                   }
                 >
                   <MenuCheckboxItem
-                    checked={itemEntry().checked === true}
+                    checked={checked(itemEntry())}
                     disabled={itemEntry().enabled === false}
                     onSelect={() => props.onSelect(itemEntry())}
                     class={item}
                   >
-                    <ItemContent item={itemEntry()} hasChecks={hasChecks()} />
+                    <ItemContent
+                      item={itemEntry()}
+                      checked={checked(itemEntry())}
+                      hasChecks={hasChecks()}
+                    />
                   </MenuCheckboxItem>
                 </Show>
               }
             >
               <MenuSub>
                 <MenuSubTrigger disabled={itemEntry().enabled === false} class={item}>
-                  <ItemContent item={itemEntry()} hasChecks={hasChecks()} />
+                  <ItemContent
+                    item={itemEntry()}
+                    checked={checked(itemEntry())}
+                    hasChecks={hasChecks()}
+                  />
                   <ChevronRight class={cx(submenuChevron, rtlFlip)} />
                 </MenuSubTrigger>
                 <MenuPortal>

@@ -36,6 +36,21 @@ test("opens a title-bar menu, switches it and runs an item", async () => {
   }
 });
 
+test("a shortcut updates the check mark of an open menu", async () => {
+  const app = await launch();
+  try {
+    const bar = app.page.getByRole("menubar");
+    await bar.locator("button").nth(4).click();
+    // View holds the three checks; source mode is the last of them
+    const sourceMode = app.page.getByRole("menuitemcheckbox").last();
+    await expect(sourceMode).toHaveAttribute("aria-checked", "false");
+    await app.page.evaluate(() => window.desktop.invoke("settings:update", { sourceMode: true }));
+    await expect(sourceMode).toHaveAttribute("aria-checked", "true");
+  } finally {
+    await close(app);
+  }
+});
+
 test("closing a tab leaves the menu bar closed", async () => {
   const folder = await mkdtemp(join(tmpdir(), "pupitre-menu-"));
   const first = join(folder, "one.md");

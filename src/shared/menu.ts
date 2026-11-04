@@ -1,3 +1,5 @@
+import type { BooleanSettingKey } from "./settings";
+
 /**
  * The top-level menus of the menu bar. Windows and Linux draw them in the title bar, so the host
  * sends their entries to the window; macOS keeps the system menu bar.
@@ -19,6 +21,8 @@ export type MenuEntry =
       shortcut?: string;
       enabled?: boolean;
       checked?: boolean;
+      /** The setting a check box stands for, so the window shows its live value rather than a snapshot. */
+      setting?: BooleanSettingKey;
       submenu?: readonly MenuEntry[];
     };
 

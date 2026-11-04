@@ -173,6 +173,19 @@ export function isWorkspaceKey(key: string): boolean {
 }
 export const DEFAULT_SETTINGS: Settings = settingsSchema.parse({});
 
+/** The settings a check box can stand for, which are the ones a menu shows as checked or not. */
+export type BooleanSettingKey = {
+  [K in SettingKey]: Settings[K] extends boolean ? K : never;
+}[SettingKey];
+
+const BOOLEAN_SETTING_KEYS = new Set<string>(
+  SETTING_KEYS.filter((key) => typeof DEFAULT_SETTINGS[key] === "boolean"),
+);
+
+export function isBooleanSettingKey(value: unknown): value is BooleanSettingKey {
+  return typeof value === "string" && BOOLEAN_SETTING_KEYS.has(value);
+}
+
 /** Reads a parsed settings file; anything that is not an object counts as "nothing changed". */
 export function resolveSettings(file: unknown): Settings {
   return settingsSchema.catch(DEFAULT_SETTINGS).parse(file);
