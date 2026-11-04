@@ -1,7 +1,6 @@
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { FileCode2, FolderOpen, Info, Palette, Printer, Settings2, Type } from "lucide-solid";
 import { createEffect, onMount, Show, type Component } from "solid-js";
-import { AppMark } from "@/components/app-mark";
 import { TitleBar } from "@/components/title-bar";
 import {
   IconButton,
@@ -47,7 +46,6 @@ const frameBorderEnd = css({
   borderInlineEndStyle: "solid",
   borderInlineEndColor: "border",
 });
-const mark = css({ color: "muted.foreground" });
 const title = css({ fontWeight: "semibold", color: "foreground", letterSpacing: "wide" });
 const tabs = css({ display: "flex", flex: "1", overflow: "hidden" });
 const tabsImmersive = css({
@@ -91,7 +89,6 @@ export const SettingsWindow: Component = () => {
   return (
     <div class={cx(windowFrame, immersive() ? windowImmersive : windowClassic)}>
       <TitleBar class={cx(!immersive() && frameBorderBottom)}>
-        <AppMark class={mark} />
         <span class={title}>{t().settings.title}</span>
       </TitleBar>
 

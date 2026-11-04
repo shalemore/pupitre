@@ -14,7 +14,6 @@ import {
 } from "solid-js";
 import { IMAGE_FILE, type AppCommand } from "@shared/desktop-api";
 import { isInsideFolder } from "@shared/paths";
-import { AppMark } from "@/components/app-mark";
 import { TitleBar } from "@/components/title-bar";
 import { IconButton, ToggleIconButton } from "@/components/ui";
 import { CommandPalette } from "@/features/command-palette/command-palette";
@@ -67,7 +66,6 @@ import {
   frameBorderEnd,
   frameBorderStart,
   grow,
-  mark,
   titleBar,
   titleBarHidden,
   titleCenter,
@@ -638,7 +636,6 @@ export const MainWindow: Component = () => {
             // menus and the count take
             <div data-title-grid class={titleGrid}>
               <div class={titleStart}>
-                <AppMark class={mark} />
                 <Show when={!isMacOS}>
                   <MenuBar onOpenChange={setMenuOpen} />
                 </Show>

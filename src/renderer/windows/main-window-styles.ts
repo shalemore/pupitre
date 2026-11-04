@@ -50,7 +50,6 @@ export const titleStart = css({
   gap: "2",
   overflow: "hidden",
 });
-export const mark = css({ color: "muted.foreground" });
 export const titleCenter = css({
   minWidth: 0,
   paddingInline: "4",
