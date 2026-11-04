@@ -17,7 +17,8 @@ import {
 import { setupContextMenu } from "../menus/context-menu";
 import { onSettingsChange } from "../settings/settings-store";
 import { flushWindowState } from "./window-state";
-import { applyZoom, stepZoom } from "./zoom";
+import { applyZoom, resetZoom, stepZoom } from "./zoom";
+import { zoomCommandOf } from "./zoom-shortcuts";
 
 /** The renderer picks the view to show from location.hash. */
 type View = "main" | "settings";
@@ -114,9 +115,10 @@ function createWindow(view: View, options: BrowserWindowConstructorOptions): Bro
       sandbox: true,
       contextIsolation: true,
       spellcheck: true,
-      // The zoom setting belongs to the document window, which applies it itself; an automatic mode
-      // would zoom every window of the same origin together, settings included
-      zoomMode: view === "main" ? "manual" : "disabled",
+      // Zoom belongs to the document window, not to every window of the same origin, so it is
+      // isolated instead of the default shared mode; "manual" would keep setZoomFactor from
+      // actually zooming the page
+      zoomMode: view === "main" ? "isolated" : "disabled",
       // The dev server page is http://, which Chromium forbids to load the file:// images that sit
       // next to a document. The packaged app loads from file:// and keeps the protection.
       webSecurity: app.isPackaged,
@@ -137,6 +139,16 @@ function createWindow(view: View, options: BrowserWindowConstructorOptions): Bro
   if (view === "main") {
     // Electron does not handle Ctrl+wheel zoom by itself; it steps the setting like the menu does
     webContents.on("zoom-changed", (_event, direction) => stepZoom(direction));
+    // The zoom accelerators in the menu only show the keys on Windows and Linux (see zoom-shortcuts)
+    if (process.platform !== "darwin") {
+      webContents.on("before-input-event", (event, input) => {
+        const command = zoomCommandOf(input, process.platform);
+        if (command === undefined) return;
+        event.preventDefault();
+        if (command === "reset") resetZoom();
+        else stepZoom(command);
+      });
+    }
     webContents.on("did-finish-load", () => applyZoom(webContents));
     const unsubscribe = onSettingsChange(() => applyZoom(webContents));
     window.on("closed", unsubscribe);

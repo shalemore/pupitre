@@ -47,6 +47,8 @@ let documentState: DocumentState = {
 /**
  * A menu item for a shortcut and its other spellings: the first is the one the menu shows, and the
  * rest are hidden, since Electron reads some keys as more than one accelerator (see entriesOf).
+ * The window reads the real keys itself (see zoom-shortcuts.ts), so on Windows and Linux these
+ * accelerators are only displayed; macOS registers them.
  */
 function shortcutItems(
   label: string,
@@ -56,6 +58,7 @@ function shortcutItems(
   return accelerators.map((accelerator, index) => ({
     label,
     accelerator,
+    registerAccelerator: false,
     visible: index === 0,
     click,
   }));
