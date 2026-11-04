@@ -1,4 +1,4 @@
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { expect, test } from "@playwright/test";
@@ -46,6 +46,50 @@ test("a shortcut updates the check mark of an open menu", async () => {
     await expect(sourceMode).toHaveAttribute("aria-checked", "false");
     await app.page.evaluate(() => window.desktop.invoke("settings:update", { sourceMode: true }));
     await expect(sourceMode).toHaveAttribute("aria-checked", "true");
+  } finally {
+    await close(app);
+  }
+});
+
+test("a held theme key toggles once, while every new press toggles again", async () => {
+  const app = await launch();
+  try {
+    const scheme = () =>
+      readFile(join(app.profile, "settings.json"), "utf8").then(
+        (text): unknown => {
+          const settings: unknown = JSON.parse(text);
+          // The file only holds values that differ from the defaults, and light is the default
+          return typeof settings === "object" && settings !== null && "colorScheme" in settings
+            ? settings.colorScheme
+            : "light";
+        },
+        () => "light",
+      );
+    const press = (autoRepeat: boolean) =>
+      app.app.evaluate(({ BrowserWindow }, repeat) => {
+        const window = BrowserWindow.getAllWindows()[0];
+        if (!window) throw new Error("the app has no window");
+        window.webContents.focus();
+        window.webContents.sendInputEvent({
+          type: "keyDown",
+          keyCode: "d",
+          modifiers: repeat ? ["control", "shift", "isautorepeat"] : ["control", "shift"],
+        });
+        window.webContents.sendInputEvent({
+          type: "keyUp",
+          keyCode: "d",
+          modifiers: ["control", "shift"],
+        });
+      }, autoRepeat);
+
+    await press(false);
+    await expect.poll(scheme).toBe("dark");
+    // The repeats a held key sends leave the scheme where the first press put it
+    await press(true);
+    await press(true);
+    await expect.poll(scheme).toBe("dark");
+    await press(false);
+    await expect.poll(scheme).toBe("light");
   } finally {
     await close(app);
   }

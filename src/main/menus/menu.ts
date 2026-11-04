@@ -5,7 +5,6 @@ import {
   Menu,
   type MenuItem,
   type MenuItemConstructorOptions,
-  nativeTheme,
   shell,
 } from "electron";
 import type { DocumentState } from "@shared/desktop-api";
@@ -22,6 +21,7 @@ import { diagnosticsInfo } from "../diagnostics/diagnostics";
 import { REPOSITORY_URL, reportIssueUrl } from "../diagnostics/report-issue";
 import { clearRecentFiles, getRecentFiles } from "../files/recent-files";
 import { t } from "../i18n";
+import { toggleColorScheme } from "../settings/color-scheme";
 import { getSettings, updateSettings } from "../settings/settings-store";
 import { dispatchToMainWindow, getMainWindow, showSettingsWindow } from "../windows/windows";
 import { resetZoom, stepZoom } from "../windows/zoom";
@@ -62,24 +62,6 @@ function shortcutItems(
     visible: index === 0,
     click,
   }));
-}
-
-/** How long a held theme shortcut must be quiet before the next press toggles the scheme. */
-const THEME_TOGGLE_QUIET_MS = 500;
-let themeToggleAllowedAt = 0;
-
-/**
- * Toggles light and dark, once per press: the first press changes at once, and while a held key
- * repeats, each repeat postpones the next change until the key has been quiet.
- */
-function toggleColorScheme(): void {
-  const now = Date.now();
-  if (now < themeToggleAllowedAt) {
-    themeToggleAllowedAt = now + THEME_TOGGLE_QUIET_MS;
-    return;
-  }
-  themeToggleAllowedAt = now + THEME_TOGGLE_QUIET_MS;
-  updateSettings({ colorScheme: nativeTheme.shouldUseDarkColors ? "light" : "dark" });
 }
 
 function buildTemplate(): SettingMenu[] {
@@ -329,6 +311,9 @@ function buildTemplate(): SettingMenu[] {
         {
           label: labels.toggleTheme,
           accelerator: "CmdOrCtrl+Shift+D",
+          // The window reads this key itself so that a held key does not strobe the scheme; on
+          // Windows and Linux the menu only shows it (see shortcuts.ts)
+          registerAccelerator: false,
           click: toggleColorScheme,
         },
         separator,

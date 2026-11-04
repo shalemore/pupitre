@@ -15,10 +15,11 @@ import {
   type WindowColors,
 } from "@shared/desktop-api";
 import { setupContextMenu } from "../menus/context-menu";
+import { toggleColorScheme } from "../settings/color-scheme";
 import { onSettingsChange } from "../settings/settings-store";
+import { shortcutOf } from "./shortcuts";
 import { flushWindowState } from "./window-state";
 import { applyZoom, resetZoom, stepZoom } from "./zoom";
-import { zoomCommandOf } from "./zoom-shortcuts";
 
 /** The renderer picks the view to show from location.hash. */
 type View = "main" | "settings";
@@ -139,14 +140,16 @@ function createWindow(view: View, options: BrowserWindowConstructorOptions): Bro
   if (view === "main") {
     // Electron does not handle Ctrl+wheel zoom by itself; it steps the setting like the menu does
     webContents.on("zoom-changed", (_event, direction) => stepZoom(direction));
-    // The zoom accelerators in the menu only show the keys on Windows and Linux (see zoom-shortcuts)
+    // The menu shortcuts the window handles itself: Electron reads their accelerator strings
+    // differently from what keyboards send, and a held key has to behave (see shortcuts.ts)
     if (process.platform !== "darwin") {
       webContents.on("before-input-event", (event, input) => {
-        const command = zoomCommandOf(input, process.platform);
-        if (command === undefined) return;
+        const shortcut = shortcutOf(input, process.platform);
+        if (shortcut === undefined) return;
         event.preventDefault();
-        if (command === "reset") resetZoom();
-        else stepZoom(command);
+        if (shortcut.kind === "toggleTheme") toggleColorScheme();
+        else if (shortcut.command === "reset") resetZoom();
+        else stepZoom(shortcut.command);
       });
     }
     webContents.on("did-finish-load", () => applyZoom(webContents));
