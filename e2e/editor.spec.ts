@@ -129,3 +129,41 @@ test("brings back unsaved work after the app is killed", async () => {
     await rm(first.temp, { recursive: true, force: true });
   }
 });
+
+test("a page that fits the window does not scroll", async () => {
+  const folder = await workspace();
+  const file = join(folder, "fits.md");
+  // A document with room to spare below its text, but shorter than the window
+  await writeFile(file, Array.from({ length: 12 }, (_, line) => `Line ${line + 1}`).join("\n\n"));
+  const app = await launch({ files: [file] });
+  try {
+    const page = app.page;
+    await page.locator(".cm-content").waitFor();
+    // Pin the window size, so the page the text has to fill is the same on every screen
+    await app.app.evaluate(({ BrowserWindow }) =>
+      BrowserWindow.getAllWindows()[0]?.setContentSize(1000, 700),
+    );
+    const range = () =>
+      page.evaluate(() => {
+        const scroller = document.querySelector(".cm-editor")?.closest("[data-scroll-view]");
+        return scroller instanceof HTMLElement ? scroller.scrollHeight - scroller.clientHeight : -1;
+      });
+    await expect.poll(range).toBe(0);
+
+    // Typewriter mode keeps the room it holds the line in, even on a page that fits
+    await page.evaluate(() => window.desktop.invoke("settings:update", { typewriterMode: true }));
+    await expect.poll(range).toBeGreaterThan(0);
+    await page.evaluate(() => window.desktop.invoke("settings:update", { typewriterMode: false }));
+    await expect.poll(range).toBe(0);
+
+    await replaceText(
+      page,
+      Array.from({ length: 80 }, (_, line) => `Line ${line + 1}`).join("\n\n"),
+    );
+    // A document longer than the window scrolls
+    await expect.poll(range).toBeGreaterThan(0);
+  } finally {
+    await close(app);
+    await rm(folder, { recursive: true, force: true });
+  }
+});

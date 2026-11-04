@@ -80,7 +80,7 @@
      * Default look of the document. A theme overrides these the way it overrides colors, and the
      * editor's own rules read them, so a theme that changes one need not restate the rule.
      */
-    --md-page-padding-block: 3em 40vh;
+    --md-page-padding-block: 3em;
     --md-link-underline: none;
     --md-heading-weight: 650;
     --md-heading-line-height: 1.3;
@@ -758,6 +758,11 @@
 
   .md-document.typewriter-mode[data-typewriter="top"] {
     padding-block-end: 100vh;
+  }
+
+  /* The margin a line held at the bottom keeps below it, even at the end of the document */
+  .md-document.typewriter-mode[data-typewriter="bottom"] {
+    padding-block-end: var(--typewriter-edge);
   }
 
   /*

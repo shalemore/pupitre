@@ -103,7 +103,7 @@
 }
 
 .md-document {
-  padding-block: 3.5em 40vh;
+  padding-block: 3.5em;
   font-family: var(--font-document);
   color: var(--ui-text-primary);
   caret-color: var(--ui-brand);

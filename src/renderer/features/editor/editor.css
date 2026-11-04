@@ -111,7 +111,10 @@
     caret-color: var(--ui-brand);
     /* Chinese and Latin have no space character between them; the browser adds the quarter em */
     text-autospace: normal;
-    /* Room above the text and below it for the last lines to reach the middle of the window */
+    /*
+     * Room above the text and below it at the end of the page. Typewriter mode widens it to hold
+     * the line it follows, which is layout of its own (app.css).
+     */
     padding-block: var(--md-page-padding-block);
   }
 
