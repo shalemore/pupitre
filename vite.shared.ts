@@ -7,6 +7,8 @@ import { thirdPartyNotices } from "./scripts/third-party-notices.js";
 export const alias: AliasOptions = {
   "@shared": resolve("src/shared"),
   "@": resolve("src/renderer"),
+  "@root": resolve("."),
+  "@agents": resolve("agents"),
 };
 
 export const sharedAlias: AliasOptions = { "@shared": resolve("src/shared") };

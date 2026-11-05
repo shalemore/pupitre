@@ -1,3 +1,4 @@
+import pkg from "@root/package.json";
 import { BookOpen, FolderOpen } from "lucide-solid";
 import { Show, type Component } from "solid-js";
 import { Button, Input, Separator } from "@/components/ui";
@@ -5,7 +6,6 @@ import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { shrinkNone, truncate } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
-import pkg from "../../../../package.json";
 import { UpdateButton, UpdateStatusPanel } from "./update-section";
 
 const section = css({

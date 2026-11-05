@@ -1,8 +1,8 @@
 import type { EditorView } from "@codemirror/view";
+import { relabelOnLocaleChange } from "@/features/editor/widgets/relabel-on-locale";
 import { t } from "@/i18n";
 import type { DocumentImage, ImageAlignment, ImageSize } from "@/lib/markdown/images";
 import { css, cx } from "@/styled-system/css";
-import { relabelOnLocaleChange } from "../widgets/relabel-on-locale";
 import { applyImageWidth } from "./image-geometry";
 
 /**

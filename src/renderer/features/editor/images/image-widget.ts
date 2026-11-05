@@ -1,5 +1,6 @@
 import type { Extension } from "@codemirror/state";
 import { EditorView, WidgetType } from "@codemirror/view";
+import { relabelOnLocaleChange } from "@/features/editor/widgets/relabel-on-locale";
 import { t } from "@/i18n";
 import {
   type DocumentImage,
@@ -12,7 +13,6 @@ import {
   sameImageSize,
   setImageLayout,
 } from "@/lib/markdown/images";
-import { relabelOnLocaleChange } from "../widgets/relabel-on-locale";
 import { alignmentToolbar, resizeHandle, TOOLBAR_INSET } from "./image-controls";
 import { applyImageLayout } from "./image-geometry";
 import { watchImage } from "./image-loading";

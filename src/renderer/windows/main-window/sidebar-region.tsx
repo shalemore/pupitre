@@ -3,7 +3,7 @@ import { Sidebar, SidebarPanel, SidebarSlot, type SidebarMode } from "@/features
 import type { SidebarControl } from "@/features/sidebar/sidebar-control";
 import { t } from "@/i18n";
 import { fileNameOf } from "@/lib/file";
-import { sidebarDivider } from "../window-chrome";
+import { sidebarDivider } from "@/windows/window-chrome";
 
 interface SidebarRegionProps {
   /** The document card, which sits between the two sidebars. */
