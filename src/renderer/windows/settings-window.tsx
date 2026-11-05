@@ -24,28 +24,15 @@ import { fileNameOf } from "@/lib/file";
 import { settings } from "@/lib/settings";
 import { workspace } from "@/lib/workspace";
 import { css, cx } from "@/styled-system/css";
+import {
+  frameBorderBottom,
+  frameBorderEnd,
+  windowClassic,
+  windowFrame,
+  windowImmersive,
+} from "./window-chrome";
 
-const windowFrame = css({
-  height: "100vh",
-  width: "100vw",
-  display: "flex",
-  flexDirection: "column",
-  color: "foreground",
-  userSelect: "none",
-  overflow: "hidden",
-});
-const windowImmersive = css({ backgroundColor: "surface.0" });
-const windowClassic = css({ backgroundColor: "surface.1" });
-const frameBorderBottom = css({
-  borderBlockEndWidth: "hairline",
-  borderBlockEndStyle: "solid",
-  borderBlockEndColor: "border",
-});
-const frameBorderEnd = css({
-  borderInlineEndWidth: "hairline",
-  borderInlineEndStyle: "solid",
-  borderInlineEndColor: "border",
-});
+const settingsFrame = css({ userSelect: "none" });
 const title = css({ fontWeight: "semibold", color: "foreground", letterSpacing: "wide" });
 const tabs = css({ display: "flex", flex: "1", overflow: "hidden" });
 const tabsImmersive = css({
@@ -87,7 +74,7 @@ export const SettingsWindow: Component = () => {
   });
 
   return (
-    <div class={cx(windowFrame, immersive() ? windowImmersive : windowClassic)}>
+    <div class={cx(windowFrame, settingsFrame, immersive() ? windowImmersive : windowClassic)}>
       <TitleBar class={cx(!immersive() && frameBorderBottom)}>
         <span class={title}>{t().settings.title}</span>
       </TitleBar>

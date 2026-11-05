@@ -1,33 +1,7 @@
 import { css } from "@/styled-system/css";
 
-/** The classes of the main window: its frame, the title bar and the card the document stands on. */
+/** The classes of the main window: the title bar and the card the document stands on. */
 
-export const windowFrame = css({
-  height: "100vh",
-  width: "100vw",
-  display: "flex",
-  flexDirection: "column",
-  overflow: "hidden",
-  color: "foreground",
-  _print: { display: "block", height: "auto", overflow: "visible" },
-});
-export const windowImmersive = css({ backgroundColor: "surface.0" });
-export const windowClassic = css({ backgroundColor: "surface.1" });
-export const frameBorderBottom = css({
-  borderBlockEndWidth: "hairline",
-  borderBlockEndStyle: "solid",
-  borderBlockEndColor: "border",
-});
-export const frameBorderStart = css({
-  borderInlineStartWidth: "hairline",
-  borderInlineStartStyle: "solid",
-  borderInlineStartColor: "border",
-});
-export const frameBorderEnd = css({
-  borderInlineEndWidth: "hairline",
-  borderInlineEndStyle: "solid",
-  borderInlineEndColor: "border",
-});
 export const titleGrid = css({
   flex: "1",
   minWidth: 0,

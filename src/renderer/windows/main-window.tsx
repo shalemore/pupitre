@@ -63,19 +63,21 @@ import {
   documentArea,
   editorArea,
   ellipsis,
-  frameBorderBottom,
-  frameBorderEnd,
-  frameBorderStart,
   grow,
   titleCenter,
   titleEnd,
   titleGrid,
   titleStart,
+  wordCountLabel,
+} from "./main-window-styles";
+import {
+  frameBorderBottom,
+  frameBorderEnd,
+  frameBorderStart,
   windowClassic,
   windowFrame,
   windowImmersive,
-  wordCountLabel,
-} from "./main-window-styles";
+} from "./window-chrome";
 
 type FindMode = "closed" | "find" | "replace";
 // A drag reports the pointer for every pixel it moves; only the width it settles on is worth writing
