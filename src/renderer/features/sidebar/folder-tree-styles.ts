@@ -25,7 +25,7 @@ export const chevron = css({
   transitionTimingFunction: "outExpo",
   _rtl: { scale: "[-1 1]" },
 });
-export const chevronOpen = css({ rotate: "[90deg]" });
+export const chevronOpen = css({ rotate: "[90deg]", _rtl: { rotate: "[-90deg]" } });
 export const fileIcon = css({ width: "3.5", height: "3.5", flexShrink: 0 });
 export const renameField = css({
   minWidth: "0",
