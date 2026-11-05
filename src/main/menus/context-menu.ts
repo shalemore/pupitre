@@ -1,6 +1,7 @@
 import { BrowserWindow, Menu, type MenuItemConstructorOptions, type WebContents } from "electron";
 import { CONTEXT_MENU_FORMAT_ACTIONS } from "@shared/format-actions";
 import { withGroupSeparators } from "@shared/menu";
+import { sendTo } from "../broadcast";
 import { t } from "../i18n";
 import { formatItems } from "./format-menu";
 
@@ -41,7 +42,7 @@ export function setupContextMenu(webContents: WebContents, options: ContextMenuO
     const formatting =
       options.formatting && params.isEditable && params.formControlType === "none"
         ? formatItems(CONTEXT_MENU_FORMAT_ACTIONS, (command) =>
-            webContents.send("app:command", command),
+            sendTo(webContents, "app:command", command),
           )
         : [];
     const editItems: MenuItemConstructorOptions[] = params.isEditable

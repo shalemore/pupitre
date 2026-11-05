@@ -15,6 +15,7 @@ import {
   type WindowColors,
 } from "@shared/desktop-api";
 import type { Settings } from "@shared/settings";
+import { sendTo } from "../broadcast";
 import { setupContextMenu } from "../menus/context-menu";
 import { toggleColorScheme } from "../settings/color-scheme";
 import { onSettingsChange } from "../settings/settings-store";
@@ -237,7 +238,7 @@ export function dispatchToMainWindow(command: AppCommand): void {
   if (!mainWindow) return;
   if (mainWindow.isMinimized()) mainWindow.restore();
   mainWindow.focus();
-  mainWindow.webContents.send("app:command", command);
+  sendTo(mainWindow.webContents, "app:command", command);
 }
 
 /** Colors the renderer reports after loading a theme or switching between light and dark: applied to that window and remembered for windows created later. */

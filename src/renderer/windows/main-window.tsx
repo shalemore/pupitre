@@ -65,6 +65,14 @@ const OPEN_SECTIONS: ReadonlySet<string> = new Set();
 /** Whether a path names a picture, which the content area shows instead of the editor. */
 const isImagePath = (path: string | undefined) => path !== undefined && IMAGE_FILE.test(path);
 
+/**
+ * A command no case answered. The parameter is `never`, so a command added to AppCommand fails to
+ * compile here instead of reaching this line.
+ */
+function unhandledCommand(command: never): never {
+  throw new Error(`Unhandled command: ${JSON.stringify(command)}`);
+}
+
 /** CodeMirror and the editor around it load when a document is shown, not with the welcome screen. */
 const MarkdownEditor = lazy(async () => {
   const { MarkdownEditor: Component } = await import("@/features/editor/markdown-editor");
@@ -527,6 +535,8 @@ export const MainWindow: Component = () => {
         return editor()?.format(command.action);
       case "window.close":
         return void closeWindow();
+      default:
+        return unhandledCommand(command);
     }
   };
 
