@@ -32,6 +32,7 @@ import { createImmersiveChrome } from "@/lib/immersive-chrome";
 import { headingKey, type OutlineHeading } from "@/lib/markdown/outline-heading";
 import { recentFiles } from "@/lib/recent-files";
 import { isImmersive, settings, updateSettings } from "@/lib/settings";
+import { SIDEBAR_WIDTH } from "@/lib/sidebar";
 import type { TextStats } from "@/lib/text-stats";
 import { createDocumentActions } from "./document-actions";
 import { card, content, documentArea, editorArea, welcomeArea } from "./main-window-styles";
@@ -138,6 +139,24 @@ export const MainWindow: Component = () => {
     setStart: setStartWidth,
     setEnd: setEndWidth,
   } = createSidebarWidths(desktop.initialState.sidebarWidths);
+  // The pair may not take the document's room: each side stops where the other side and a minimum
+  // document would begin
+  const DOCUMENT_MIN_WIDTH = 240;
+  const [viewportWidth, setViewportWidth] = createSignal(window.innerWidth);
+  makeEventListener(window, "resize", () => setViewportWidth(window.innerWidth));
+  const startMaxWidth = () =>
+    Math.max(
+      SIDEBAR_WIDTH.min,
+      Math.min(
+        SIDEBAR_WIDTH.max,
+        viewportWidth() - (split() ? endWidth() : 0) - DOCUMENT_MIN_WIDTH,
+      ),
+    );
+  const endMaxWidth = () =>
+    Math.max(
+      SIDEBAR_WIDTH.min,
+      Math.min(SIDEBAR_WIDTH.max, viewportWidth() - startWidth() - DOCUMENT_MIN_WIDTH),
+    );
 
   // A folder the user opened shows at once, whatever document is open; while none is open the
   // sidebar keeps the folder it already shows, so opening a document further down the tree does not
@@ -593,6 +612,8 @@ export const MainWindow: Component = () => {
           endShown={chrome.endSidebarVisible()}
           startWidth={startWidth()}
           endWidth={endWidth()}
+          startMaxWidth={startMaxWidth()}
+          endMaxWidth={endMaxWidth()}
           onStartWidth={setStartWidth}
           onEndWidth={setEndWidth}
           startControl={startControl}

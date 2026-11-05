@@ -20,6 +20,8 @@ interface SidebarRegionProps {
   endShown: boolean;
   startWidth: number;
   endWidth: number;
+  startMaxWidth: number;
+  endMaxWidth: number;
   onStartWidth: (width: number) => void;
   onEndWidth: (width: number) => void;
   startControl: SidebarControl;
@@ -45,6 +47,7 @@ export const SidebarRegion: Component<SidebarRegionProps> = (props) => {
         side="start"
         shown={props.startShown}
         width={props.startWidth}
+        maxWidth={props.startMaxWidth}
         label={t().sidebar.folder}
         onWidthChange={props.onStartWidth}
         rail={props.startRail}
@@ -95,6 +98,7 @@ export const SidebarRegion: Component<SidebarRegionProps> = (props) => {
           side="end"
           shown={props.endShown}
           width={props.endWidth}
+          maxWidth={props.endMaxWidth}
           label={t().sidebar.outline}
           onWidthChange={props.onEndWidth}
           rail={props.endRail}

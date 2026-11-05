@@ -117,6 +117,8 @@ interface SidebarSlotProps {
   side: SidebarSide;
   shown: boolean;
   width: number;
+  /** The widest this sidebar may be while the pair leaves the document its room. */
+  maxWidth: number;
   /** Names the resize handle for anyone who cannot see it. */
   label: string;
   onWidthChange: (width: number) => void;
@@ -135,8 +137,11 @@ interface SidebarSlotProps {
 export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
   const [dragging, setDragging] = createSignal(false);
   const folded = () => !props.shown && props.rail !== undefined;
+  const shownWidth = () => Math.min(props.width, props.maxWidth);
   const resize = (width: number) =>
-    props.onWidthChange(Math.min(SIDEBAR_WIDTH.max, Math.max(SIDEBAR_WIDTH.min, width)));
+    props.onWidthChange(
+      Math.min(props.maxWidth, Math.max(SIDEBAR_WIDTH.min, Math.min(SIDEBAR_WIDTH.max, width))),
+    );
   /** How far the pointer is from the window edge this sidebar sits at. */
   const fromEdge = (clientX: number) =>
     props.side === "start" ? distanceFromStart(clientX) : distanceFromEnd(clientX);
@@ -145,14 +150,16 @@ export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
     <div
       // The resize handle belongs to the sidebar as far as the immersive window's hover goes
       data-sidebar={props.side}
-      style={{ width: props.shown ? `${props.width}px` : folded() ? `${RAIL_WIDTH}px` : "0px" }}
+      style={{
+        width: props.shown ? `${shownWidth()}px` : folded() ? `${RAIL_WIDTH}px` : "0px",
+      }}
       class={cx(
         slot,
         // Following the pointer while dragging must not lag behind an animation
         !dragging() && resizing,
       )}
     >
-      <div class={fullHeight} inert={!props.shown} style={{ width: `${props.width}px` }}>
+      <div class={fullHeight} inert={!props.shown} style={{ width: `${shownWidth()}px` }}>
         {props.children}
       </div>
       <Show when={!props.shown ? props.rail : undefined}>
@@ -174,7 +181,7 @@ export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
           role="separator"
           aria-label={props.label}
           aria-orientation="vertical"
-          aria-valuenow={props.width}
+          aria-valuenow={shownWidth()}
           aria-valuemin={SIDEBAR_WIDTH.min}
           aria-valuemax={SIDEBAR_WIDTH.max}
           tabindex="0"
@@ -196,7 +203,7 @@ export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
             event.preventDefault();
             // The handle moves towards the window edge on its right or its left
             const grows = ((event.key === "ArrowRight") === (props.side === "start")) !== isRtl();
-            resize(props.width + (grows ? KEYBOARD_STEP : -KEYBOARD_STEP));
+            resize(shownWidth() + (grows ? KEYBOARD_STEP : -KEYBOARD_STEP));
           }}
         />
       </Show>
