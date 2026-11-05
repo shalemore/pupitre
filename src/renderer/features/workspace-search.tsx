@@ -79,6 +79,7 @@ const sectionLabel = css(truncateStyle, {
 });
 const control = css({ display: "flex", alignItems: "center", gap: "1.5" });
 const optionRow = css({ display: "flex", flexShrink: 0, alignItems: "center", gap: "0.5" });
+const optionWrap = css({ display: "flex" });
 const status = css({ paddingInline: "2.5", paddingBlock: "1.5", color: "muted.foreground" });
 const statusError = css({ paddingInline: "2.5", paddingBlock: "1.5", color: "destructive" });
 const countLabel = css({
@@ -127,15 +128,18 @@ const OptionButton: Component<{
   onChange: (pressed: boolean) => void;
   children: JSX.Element;
 }> = (props) => (
-  <ToggleIconButton
-    pressed={props.pressed}
-    onChange={props.onChange}
-    label={props.label}
-    size="icon-xs"
-    class={optionButton}
-  >
-    {props.children}
-  </ToggleIconButton>
+  // A press on the toggle must not take the focus from the query
+  <span class={optionWrap} onMouseDown={(event) => event.preventDefault()}>
+    <ToggleIconButton
+      pressed={props.pressed}
+      onChange={props.onChange}
+      label={props.label}
+      size="icon-xs"
+      class={optionButton}
+    >
+      {props.children}
+    </ToggleIconButton>
+  </span>
 );
 
 /** The line a match is on, with the matched part marked. */
