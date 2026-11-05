@@ -100,7 +100,7 @@ const content = css({
   transformOrigin: "var(--kb-popper-content-transform-origin)",
   padding: "1",
 });
-const listbox = css({ maxHeight: "72", outlineStyle: "none" });
+const listbox = css({ outlineStyle: "none" });
 
 /** A dropdown on top of Kobalte, which handles keyboard navigation, typeahead and ARIA. */
 export function Select<T extends string>(props: SelectProps<T>) {
@@ -117,6 +117,10 @@ export function Select<T extends string>(props: SelectProps<T>) {
       }}
       gutter={6}
       placement="bottom-end"
+      // A long list near the bottom of the window shifts or flips inside it and scrolls instead
+      slide
+      fitViewport
+      overflowPadding={8}
       itemComponent={(itemProps) => (
         <KobalteSelect.Item data-slot="select-item" item={itemProps.item} class={cx("group", item)}>
           <span class={itemText}>
@@ -182,6 +186,10 @@ export function Select<T extends string>(props: SelectProps<T>) {
           <KobalteSelect.Listbox
             as={(listboxProps: ScrollViewProps) => <ScrollView as="ul" {...listboxProps} />}
             class={listbox}
+            style={{
+              "max-height":
+                "min(18rem, calc(var(--kb-popper-content-available-height, 30rem) - 0.5rem))",
+            }}
           />
         </KobalteSelect.Content>
       </KobalteSelect.Portal>
