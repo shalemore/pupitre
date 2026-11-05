@@ -6,6 +6,7 @@ import { Button, Callout } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { formatPercent } from "@/lib/number-format";
+import { updateActionOf } from "@/lib/update-action";
 import { updateStatus } from "@/lib/updater";
 import { css } from "@/styled-system/css";
 
@@ -52,44 +53,8 @@ function useStatus<K extends UpdateStatus["kind"]>(kind: K) {
   });
 }
 
-/** What the update button offers for the status on show, so its label, icon and command agree. */
-function useUpdateAction() {
-  return createMemo(() => {
-    switch (updateStatus().kind) {
-      case "checking":
-        return {
-          icon: <RefreshCw class={spin} />,
-          label: t().settings.checkingForUpdates,
-          disabled: true,
-          command: "updater:check",
-        } as const;
-      case "available":
-        return {
-          icon: <Download />,
-          label: t().settings.downloadUpdate,
-          disabled: false,
-          command: "updater:download",
-        } as const;
-      case "downloading":
-        return {
-          icon: <Download />,
-          label: t().settings.downloadUpdate,
-          disabled: true,
-          command: "updater:download",
-        } as const;
-      default:
-        return {
-          icon: <RefreshCw />,
-          label: t().settings.checkForUpdates,
-          disabled: false,
-          command: "updater:check",
-        } as const;
-    }
-  });
-}
-
 export const UpdateButton: Component = () => {
-  const action = useUpdateAction();
+  const action = createMemo(() => updateActionOf(updateStatus(), t().settings));
   return (
     <Button
       variant="outline"
@@ -97,7 +62,12 @@ export const UpdateButton: Component = () => {
       onClick={() => void desktop.invoke(action().command)}
       disabled={action().disabled}
     >
-      {action().icon}
+      <Show
+        when={action().icon === "download"}
+        fallback={<RefreshCw class={action().spinning ? spin : ""} />}
+      >
+        <Download />
+      </Show>
       <span>{action().label}</span>
     </Button>
   );
