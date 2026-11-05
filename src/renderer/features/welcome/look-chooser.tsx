@@ -40,7 +40,7 @@ const optionName = css({
 const optionDescription = css({
   display: "block",
   textStyle: "2xs",
-  lineHeight: "1.375",
+  lineHeight: "[1.375]",
   color: "muted.foreground",
 });
 const section = css({
@@ -94,7 +94,7 @@ const classicBar = css({
 });
 const classicBody = css({ display: "flex", flex: "1" });
 const classicSidebar = css({
-  width: "25%",
+  width: "[25%]",
   borderInlineEndWidth: "hairline",
   borderInlineEndStyle: "solid",
   borderInlineEndColor: "border",

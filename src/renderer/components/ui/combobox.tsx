@@ -39,7 +39,7 @@ const item = css({
   cursor: "pointer",
   _highlighted: { backgroundColor: "accent" },
 });
-const itemLine = css({ display: "flex", alignItems: "baseline", gap: "2", minWidth: 0 });
+const itemLine = css({ display: "flex", alignItems: "baseline", gap: "2", minWidth: "0" });
 const itemLabel = css(truncateStyle, {
   color: "foreground",
   ".group[data-selected] &": { color: "brand" },
@@ -68,7 +68,7 @@ const control = css({
 });
 const input = css({
   height: "full",
-  minWidth: 0,
+  minWidth: "0",
   flex: "1",
   backgroundColor: "transparent",
   paddingInline: "2.5",

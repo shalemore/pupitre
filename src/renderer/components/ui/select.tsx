@@ -44,7 +44,7 @@ const item = css({
   _highlighted: { backgroundColor: "accent" },
 });
 const itemLabel = css(truncateStyle, {
-  minWidth: 0,
+  minWidth: "0",
   fontWeight: "medium",
   color: "foreground",
   ".group[data-selected] &": { color: "brand" },
@@ -53,8 +53,8 @@ const itemHint = css(truncateStyle, {
   textStyle: "2xs",
   color: "muted.foreground",
 });
-const itemText = css({ display: "flex", minWidth: 0, flexDirection: "column" });
-const itemLine = css({ display: "flex", minWidth: 0, alignItems: "center", gap: "1.5" });
+const itemText = css({ display: "flex", minWidth: "0", flexDirection: "column" });
+const itemLine = css({ display: "flex", minWidth: "0", alignItems: "center", gap: "1.5" });
 const check = css({ width: "3", height: "3", flexShrink: 0, color: "brand" });
 const chevronIcon = css({ width: "3.5", height: "3.5" });
 
@@ -82,7 +82,7 @@ const trigger = css({
 });
 const value = css(truncateStyle, {
   display: "flex",
-  minWidth: 0,
+  minWidth: "0",
   flex: "1",
   alignItems: "center",
   gap: "1.5",

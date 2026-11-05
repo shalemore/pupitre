@@ -57,7 +57,7 @@ const settingsSidebar = cva({
 const scopeBlock = css({ marginBlockEnd: "3", "& > * + *": { marginBlockStart: "1" } });
 const scopeRow = css({ display: "flex", alignItems: "center", gap: "1", paddingInlineStart: "2" });
 const scopeName = css(truncateStyle, {
-  minWidth: 0,
+  minWidth: "0",
   flex: "1",
   textStyle: "2xs",
   color: "muted.foreground",

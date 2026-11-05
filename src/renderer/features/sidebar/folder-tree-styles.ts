@@ -23,12 +23,12 @@ export const chevron = css({
   transitionProperty: "transform",
   transitionDuration: "base",
   transitionTimingFunction: "outExpo",
-  _rtl: { scale: "-1 1" },
+  _rtl: { scale: "[-1 1]" },
 });
-export const chevronOpen = css({ rotate: "90deg" });
+export const chevronOpen = css({ rotate: "[90deg]" });
 export const fileIcon = css({ width: "3.5", height: "3.5", flexShrink: 0 });
 export const renameField = css({
-  minWidth: 0,
+  minWidth: "0",
   flex: "1",
   borderRadius: "md",
   borderWidth: "hairline",
@@ -45,7 +45,7 @@ export const renameField = css({
 export const groupRow = css({ position: "relative" });
 export const itemsStart = css({ alignItems: "flex-start" });
 export const rowDirectory = css({ paddingInlineEnd: "8" });
-export const nameMin = css({ minWidth: 0 });
+export const nameMin = css({ minWidth: "0" });
 export const nameGrow = css({ flex: "1" });
 export const blockTruncate = css(truncateStyle, {
   display: "block",
@@ -67,8 +67,8 @@ export const excerptLine = css({
 export const openButton = css({
   position: "absolute",
   insetInlineEnd: "1",
-  top: "50%",
-  translate: "0 -50%",
+  top: "[50%]",
+  translate: "[0 -50%]",
   opacity: 0,
   transitionProperty: "opacity",
   transitionDuration: "ui",
@@ -76,7 +76,7 @@ export const openButton = css({
   _groupHover: { opacity: 1 },
   _focusVisible: { opacity: 1 },
 });
-export const arrow = css({ width: "3", height: "3", _rtl: { scale: "-1 1" } });
+export const arrow = css({ width: "3", height: "3", _rtl: { scale: "[-1 1]" } });
 export const iconOffset = css({ marginBlockStart: "0.5" });
 export const stack = css({ "& > * + *": { marginBlockStart: "0.5" } });
 export const expandAnimation = css({

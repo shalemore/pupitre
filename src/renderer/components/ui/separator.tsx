@@ -7,9 +7,9 @@ export interface SeparatorProps extends JSX.HTMLAttributes<HTMLDivElement> {
 }
 
 // Kobalte draws a separator as <hr>, which the preflight gives a border in the text colour
-const separator = css({ flexShrink: 0, borderWidth: 0, backgroundColor: "border" });
-const horizontal = css({ height: "1px", width: "full" });
-const vertical = css({ height: "full", width: "1px", alignSelf: "stretch" });
+const separator = css({ flexShrink: 0, borderWidth: "[0]", backgroundColor: "border" });
+const horizontal = css({ height: "[1px]", width: "full" });
+const vertical = css({ height: "full", width: "[1px]", alignSelf: "stretch" });
 
 export function Separator(props: SeparatorProps) {
   const [local, rest] = splitProps(props, ["class", "orientation"]);

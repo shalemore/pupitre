@@ -5,11 +5,7 @@ import { IconButton, SettingRow } from "@/components/ui";
 import { t } from "@/i18n";
 import { resetSetting, settings } from "@/lib/settings";
 import { workspace } from "@/lib/workspace";
-import { css, keyframes } from "@/styled-system/css";
-
-const appear = keyframes({
-  from: { opacity: 0, scale: 0.75 },
-});
+import { css } from "@/styled-system/css";
 
 const section = css({ maxWidth: "xl" });
 const title = css({
@@ -38,7 +34,7 @@ const group = css({
 });
 const nested = css({ paddingInlineStart: "4" });
 const titleRow = css({ display: "flex", alignItems: "center", gap: "1.5" });
-const resetButton = css({ animationName: appear, animationDuration: "snap" });
+const resetButton = css({ animationName: "appear", animationDuration: "snap" });
 
 /** A titled page of settings; its children are groups. */
 export const SettingsSection: ParentComponent<{ title: string; description?: string }> = (

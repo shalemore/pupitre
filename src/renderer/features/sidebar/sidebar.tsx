@@ -29,7 +29,7 @@ const handle = css({
   position: "absolute",
   insetBlock: "0",
   zIndex: "10",
-  width: "1px",
+  width: "[1px]",
   cursor: "col-resize",
   outlineStyle: "none",
   _hover: { backgroundColor: "brand/30" },
@@ -49,8 +49,8 @@ const frame = css({
   height: "full",
   _print: { display: "none" },
 });
-const rotated = css({ rotate: "45deg" });
-const rotate180 = css({ rotate: "180deg" });
+const rotated = css({ rotate: "[45deg]" });
+const rotate180 = css({ rotate: "[180deg]" });
 const titleRow = css({
   display: "flex",
   alignItems: "center",
@@ -59,22 +59,28 @@ const titleRow = css({
   paddingInlineEnd: "2",
   paddingBlockStart: "2",
 });
-const titleMain = css({ display: "flex", minWidth: 0, flex: "1", alignItems: "center", gap: "1" });
+const titleMain = css({
+  display: "flex",
+  minWidth: "0",
+  flex: "1",
+  alignItems: "center",
+  gap: "1",
+});
 const titleText = css(truncateStyle, {
-  minWidth: 0,
+  minWidth: "0",
   textStyle: "2xs",
   fontWeight: "medium",
   color: "muted.foreground",
 });
 const modeRow = css({
   margin: "2",
-  marginBlockEnd: 0,
+  marginBlockEnd: "0",
   display: "flex",
   alignItems: "center",
   justifyContent: "flex-end",
   gap: "1",
 });
-const grow = css({ minWidth: 0, flex: "1" });
+const grow = css({ minWidth: "0", flex: "1" });
 const hidden = css({ display: "none" });
 
 interface SidebarSlotProps {

@@ -19,17 +19,17 @@ const backdrop = css({
   inset: "0",
   zIndex: "50",
   backgroundColor: "surface.0/60",
-  backdropFilter: "blur(4px)",
+  backdropFilter: "[blur(4px)]",
   animationName: "fadeIn",
   animationDuration: "base",
   animationTimingFunction: "enter",
 });
 const panel = css({
   position: "fixed",
-  left: "50%",
+  left: "[50%]",
   zIndex: "50",
   display: "flex",
-  width: "calc(100% - 2rem)",
+  width: "[calc(100% - 2rem)]",
   flexDirection: "column",
   gap: "2",
   padding: "2",
@@ -38,17 +38,17 @@ const panel = css({
 const atTop = css({
   "--panel-translate-x": "-50%",
   "--panel-translate-y": "0px",
-  translate: "-50% 0",
+  translate: "[-50% 0]",
   top: "16",
-  maxHeight: "calc(100vh - 5rem)",
+  maxHeight: "[calc(100vh - 5rem)]",
   maxWidth: "xl",
 });
 const centered = css({
   "--panel-translate-x": "-50%",
   "--panel-translate-y": "-50%",
-  translate: "-50% -50%",
-  top: "50%",
-  maxHeight: "calc(100vh - 2rem)",
+  translate: "[-50% -50%]",
+  top: "[50%]",
+  maxHeight: "[calc(100vh - 2rem)]",
   maxWidth: "lg",
 });
 

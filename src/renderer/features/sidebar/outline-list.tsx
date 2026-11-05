@@ -56,18 +56,18 @@ const chevron = css({
   transitionProperty: "transform, rotate, scale",
   transitionDuration: "base",
   transitionTimingFunction: "outExpo",
-  _rtl: { scale: "-1 1" },
+  _rtl: { scale: "[-1 1]" },
 });
-const chevronOpen = css({ rotate: "90deg", _rtl: { rotate: "-90deg" } });
-const item = css({ minWidth: 0, flex: "1" });
+const chevronOpen = css({ rotate: "[90deg]", _rtl: { rotate: "[-90deg]" } });
+const item = css({ minWidth: "0", flex: "1" });
 const topLevelItem = css({ fontWeight: "medium" });
 const untitled = css(truncateStyle, {
-  minWidth: 0,
+  minWidth: "0",
   fontStyle: "italic",
   color: "tertiary",
 });
 const title = css(truncateStyle, {
-  minWidth: 0,
+  minWidth: "0",
 });
 
 export const OutlineList: Component<OutlineListProps> = (props) => {

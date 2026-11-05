@@ -31,8 +31,8 @@ export interface MenuPopupProps {
 
 const check = css({ width: "3", height: "3", flexShrink: 0 });
 const hidden = css({ visibility: "hidden" });
-const row = css({ display: "flex", minWidth: 0, flex: "1", alignItems: "center", gap: "1.5" });
-const label = css({ minWidth: 0 });
+const row = css({ display: "flex", minWidth: "0", flex: "1", alignItems: "center", gap: "1.5" });
+const label = css({ minWidth: "0" });
 const block = css({ display: "block" });
 const detail = css({ display: "block", textStyle: "2xs", color: "tertiary" });
 const shortcut = css({ textStyle: "2xs", color: "tertiary", fontVariantNumeric: "tabular-nums" });

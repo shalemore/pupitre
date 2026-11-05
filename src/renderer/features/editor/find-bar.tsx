@@ -58,7 +58,7 @@ const bar = css({
   backgroundColor: "popover/95",
   padding: "2",
   boxShadow: "float",
-  backdropFilter: "blur(12px)",
+  backdropFilter: "[blur(12px)]",
   textStyle: "xs",
   userSelect: "none",
   animationName: "fadeInDown",
@@ -73,7 +73,7 @@ const chevron = css({
   transitionProperty: "transform",
   transitionDuration: "snap",
   transitionTimingFunction: "snap",
-  _rtl: { scale: "-1 1" },
+  _rtl: { scale: "[-1 1]" },
 });
 const chevronOpen = css({ transform: "rotate(90deg)" });
 const searchBox = css({
@@ -81,9 +81,9 @@ const searchBox = css({
   flex: "1",
   display: "flex",
   alignItems: "center",
-  minWidth: 0,
+  minWidth: "0",
 });
-const searchField = css({ paddingInlineEnd: "18" });
+const searchField = css({ paddingInlineEnd: "[18px]" });
 const options = css({
   position: "absolute",
   insetInlineEnd: "1",

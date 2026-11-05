@@ -67,7 +67,7 @@ const deletedCross = css({
 });
 const toolbar = css({
   position: "absolute",
-  insetBlockEnd: "100%",
+  insetBlockEnd: "[100%]",
   insetInlineStart: "0",
   zIndex: "10",
   marginBlockEnd: "1",

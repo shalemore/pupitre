@@ -28,7 +28,7 @@ const tabItem = css({
   position: "relative",
   display: "flex",
   height: "full",
-  minWidth: 0,
+  minWidth: "0",
   maxWidth: "48",
   flexShrink: 0,
   alignItems: "center",
@@ -36,14 +36,14 @@ const tabItem = css({
   borderInlineEndStyle: "solid",
   borderInlineEndColor: "border.subtle",
   layerStyle: "interactive",
-  _last: { borderInlineEndWidth: "0" },
+  _last: { borderInlineEndWidth: "[0]" },
 });
 const tabActive = css({ backgroundColor: "surface.1" });
 const tabIdle = css({ _hover: { backgroundColor: "accent" } });
 const trigger = css({
   display: "flex",
   height: "full",
-  minWidth: 0,
+  minWidth: "0",
   flex: "1",
   cursor: "pointer",
   alignItems: "center",
@@ -63,7 +63,7 @@ const dirtyDot = css({
   backgroundColor: "brand",
 });
 const tabName = css(truncateStyle, {
-  minWidth: 0,
+  minWidth: "0",
 });
 const closeButton = css({
   marginInlineEnd: "1",
@@ -87,14 +87,14 @@ const activeUnderline = css({
 const bar = css({
   display: "flex",
   height: "full",
-  minWidth: 0,
+  minWidth: "0",
   flex: "1",
   alignItems: "stretch",
 });
 const tabStrip = css({
   display: "flex",
   height: "full",
-  minWidth: 0,
+  minWidth: "0",
   flex: "1",
   alignItems: "stretch",
   overflowX: "auto",

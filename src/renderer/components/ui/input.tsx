@@ -4,7 +4,7 @@ import { cva, cx, type RecipeVariantProps } from "@/styled-system/css";
 const inputVariants = cva({
   base: {
     width: "full",
-    minWidth: 0,
+    minWidth: "0",
     borderRadius: "md",
     borderWidth: "hairline",
     borderStyle: "solid",

@@ -6,8 +6,8 @@ import { css, cx } from "@/styled-system/css";
 
 const panel = css({
   margin: "auto",
-  width: "min(24rem, calc(100vw - 2rem))",
-  borderWidth: 0,
+  width: "[min(24rem, calc(100vw - 2rem))]",
+  borderWidth: "[0]",
   padding: "6",
   textStyle: "sm",
   color: "foreground",

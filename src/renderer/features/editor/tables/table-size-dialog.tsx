@@ -20,7 +20,7 @@ function sizeOf(text: string, size: Size): number {
   return Math.min(Math.max(value, size.min), size.max);
 }
 
-const field = css({ display: "flex", minWidth: 0, flex: "1", flexDirection: "column", gap: "1" });
+const field = css({ display: "flex", minWidth: "0", flex: "1", flexDirection: "column", gap: "1" });
 const fieldLabel = css({ textStyle: "2xs", color: "muted.foreground" });
 const fields = css({ display: "flex", alignItems: "flex-end", gap: "2" });
 const actions = css({ display: "flex", justifyContent: "flex-end", gap: "2" });

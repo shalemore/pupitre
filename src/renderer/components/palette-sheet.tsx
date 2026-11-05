@@ -60,7 +60,7 @@ const paletteItem = css({
 const list = css({
   display: "flex",
   maxHeight: "80",
-  minHeight: 0,
+  minHeight: "0",
   flexDirection: "column",
   gap: "0.5",
 });

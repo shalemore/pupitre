@@ -52,7 +52,7 @@ const fonts = createRoot(() => {
 
 const spin = css({ animation: "spin" });
 const optionRow = css({ display: "flex", alignItems: "center", gap: "1.5" });
-const grow = css({ minWidth: 0, flex: "1" });
+const grow = css({ minWidth: "0", flex: "1" });
 const hint = css({ marginBlockStart: "1", textStyle: "2xs", color: "muted.foreground" });
 
 export interface FontSelectProps {

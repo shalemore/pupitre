@@ -13,7 +13,7 @@ const row = css({
   gap: "4",
   paddingBlock: "2.5",
 });
-const text = css({ display: "flex", minWidth: 0, flexDirection: "column", gap: "0.5" });
+const text = css({ display: "flex", minWidth: "0", flexDirection: "column", gap: "0.5" });
 const title = css({ textStyle: "xs", fontWeight: "medium", color: "foreground" });
 const description = css({ textStyle: "2xs", lineHeight: "relaxed", color: "muted.foreground" });
 const actions = css({ display: "flex", flexShrink: 0, alignItems: "center", gap: "2" });

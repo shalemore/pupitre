@@ -8,7 +8,8 @@ import { defineConfig } from "@pandacss/dev";
  *
  * Panda's tokens are the `theme` layer and its recipes the `components` layer, which is where the
  * app's own order puts them (app.css). Type safety comes from the tokens: a color, size or
- * duration that does not exist fails to compile.
+ * duration that does not exist fails to compile. A value the scales do not have is written as an
+ * arbitrary value in brackets, such as `width: "[100vh]"`.
  */
 export default defineConfig({
   presets: ["@pandacss/preset-base", "@pandacss/preset-panda"],
@@ -16,6 +17,8 @@ export default defineConfig({
   // them away so the app's styles decide every one of them
   preflight: true,
   jsxFramework: "solid",
+  strictTokens: true,
+  strictPropertyValues: true,
   include: ["./src/renderer/**/*.{ts,tsx}", "./src/web/**/*.{ts,tsx}"],
   outdir: "src/renderer/styled-system",
   // Components import through the renderer's alias, so Panda reads the same paths
@@ -175,6 +178,10 @@ export default defineConfig({
         fadeInUpSmall: {
           from: { opacity: 0, transform: "translateY(0.25rem)" },
           to: { opacity: 1, transform: "translateY(0)" },
+        },
+        // A settings page that takes the room of the one it replaces
+        appear: {
+          from: { opacity: 0, scale: "0.75" },
         },
       },
     },

@@ -62,7 +62,7 @@ const lineNumber = css({
   fontVariantNumeric: "tabular-nums",
 });
 const matchText = css(truncateStyle, {
-  minWidth: 0,
+  minWidth: "0",
   flex: "1",
 });
 const section = css({
@@ -73,7 +73,7 @@ const section = css({
   paddingBlockStart: "1.5",
 });
 const sectionLabel = css(truncateStyle, {
-  minWidth: 0,
+  minWidth: "0",
   flex: "1",
   fontWeight: "medium",
 });
@@ -87,7 +87,7 @@ const countLabel = css({
   color: "tertiary",
   fontVariantNumeric: "tabular-nums",
 });
-const list = css({ display: "flex", minHeight: 0, flexDirection: "column", gap: "0.5" });
+const list = css({ display: "flex", minHeight: "0", flexDirection: "column", gap: "0.5" });
 
 /** Typing must not ask the main process for the whole folder once per keystroke. */
 const SEARCH_DELAY_MS = 150;

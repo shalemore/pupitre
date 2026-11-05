@@ -39,12 +39,12 @@ const logo = css({
   userSelect: "none",
   marginBlockEnd: "4",
   opacity: 0.9,
-  filter: "drop-shadow(0 1px 2px rgb(0 0 0 / 0.15))",
+  filter: "[drop-shadow(0 1px 2px rgb(0 0 0 / 0.15))]",
 });
 const title = css({
   textStyle: "xl",
   fontWeight: "semibold",
-  letterSpacing: "-0.025em",
+  letterSpacing: "[-0.025em]",
   color: "foreground",
   marginBlockEnd: "6",
 });
@@ -76,7 +76,7 @@ const recentItem = css({
   paddingInlineStart: "2.5",
 });
 const recentName = css(truncateStyle, {
-  minWidth: 0,
+  minWidth: "0",
   fontWeight: "medium",
   color: "foreground",
   layerStyle: "interactive",

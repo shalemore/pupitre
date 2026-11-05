@@ -21,7 +21,7 @@ const logo = css({
   borderRadius: "xl",
   boxShadow: "sm",
 });
-const nameBlock = css({ minWidth: 0, flex: "1" });
+const nameBlock = css({ minWidth: "0", flex: "1" });
 const appName = css({ textStyle: "base", fontWeight: "semibold", color: "foreground" });
 const version = css({
   textStyle: "2xs",
@@ -34,7 +34,7 @@ const row = css({
   justifyContent: "space-between",
   gap: "3",
 });
-const rowText = css({ minWidth: 0 });
+const rowText = css({ minWidth: "0" });
 const rowTitle = css({ fontWeight: "medium", color: "foreground" });
 const rowDescription = css({ textStyle: "2xs", color: "muted.foreground" });
 const settingsTitle = css({ marginBlockEnd: "2", fontWeight: "medium", color: "foreground" });

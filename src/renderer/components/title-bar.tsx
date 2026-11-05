@@ -13,7 +13,7 @@ const GIVE_WAY = ["count"];
 
 const titleBar = css({
   width: "full",
-  height: `${TITLE_BAR_HEIGHT}px`,
+  height: `[${TITLE_BAR_HEIGHT}px]`,
   overflow: "hidden",
   flexShrink: 0,
   display: "flex",
@@ -25,7 +25,7 @@ const titleBar = css({
   transitionProperty: "height",
   transitionDuration: "sheet",
   transitionTimingFunction: "outExpo",
-  "&[data-folded]": { height: 0 },
+  "&[data-folded]": { height: "0" },
   _print: { display: "none" },
 });
 

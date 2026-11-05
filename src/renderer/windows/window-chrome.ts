@@ -5,8 +5,8 @@ import { cva } from "@/styled-system/css";
 /** An immersive window stands its parts on its own surface; a classic one uses the page surface. */
 export const windowFrame = cva({
   base: {
-    height: "100vh",
-    width: "100vw",
+    height: "[100vh]",
+    width: "[100vw]",
     display: "flex",
     flexDirection: "column",
     overflow: "hidden",
