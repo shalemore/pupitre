@@ -365,7 +365,8 @@ export const MainWindow: Component = () => {
   const openWorkspaceMatch = async (path: string, from: number, to: number) => {
     closeOverlay();
     setMatchToReveal({ path, from, to });
-    await session.openPath(path, false);
+    // A file that cannot be opened explains itself, as it does from Quick Open
+    await session.openPath(path);
     // The file could not be read, so the match has nowhere to appear
     if (session.activeDocument()?.path !== path) setMatchToReveal(undefined);
   };
