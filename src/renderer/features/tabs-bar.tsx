@@ -99,6 +99,9 @@ const tabStrip = css({
   alignItems: "stretch",
   overflowX: "auto",
   overscrollBehaviorX: "contain",
+  // The wheel and the focused tab scroll the strip; a native bar would take a band of the 40 px bar
+  scrollbarWidth: "none",
+  "&::-webkit-scrollbar": { display: "none" },
   _print: { display: "none" },
 });
 
