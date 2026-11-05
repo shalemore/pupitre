@@ -36,6 +36,8 @@ const trigger = css({
   _expanded: { color: "foreground", backgroundColor: "accent" },
 });
 const menuButton = css({ color: "muted.foreground" });
+/** Kobalte's menubar has no gutter option; the margin leaves the same gap as the other menus. */
+const menuBarPanel = css({ marginBlockStart: "2" });
 
 interface MenuBarProps {
   /** Told whether a menu is open, so an immersive title bar can stay unfolded under it. */
@@ -162,7 +164,7 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
                     event.preventDefault();
                   }
                 }}
-                class={cx(FLOATING_PANEL, menuPanel)}
+                class={cx(FLOATING_PANEL, menuPanel, menuBarPanel)}
               >
                 <MenuEntries
                   entries={entries()[menu] ?? []}
