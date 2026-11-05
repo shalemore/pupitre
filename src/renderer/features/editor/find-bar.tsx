@@ -34,22 +34,26 @@ const FindToggle: Component<{
   title: string;
   children: JSX.Element;
 }> = (props) => (
-  <ToggleIconButton
-    pressed={props.pressed}
-    onChange={props.onChange}
-    label={props.title}
-    size="icon-2xs"
-    class={pressedToggle}
-  >
-    {props.children}
-  </ToggleIconButton>
+  // A press on the toggle must not take the focus from the query, or the next typed key goes to the button
+  <span class={toggleWrap} onMouseDown={(event) => event.preventDefault()}>
+    <ToggleIconButton
+      pressed={props.pressed}
+      onChange={props.onChange}
+      label={props.title}
+      size="icon-2xs"
+      class={pressedToggle}
+    >
+      {props.children}
+    </ToggleIconButton>
+  </span>
 );
 
 const pressedToggle = css({ "&[data-pressed]": { backgroundColor: "brand/15" } });
+const toggleWrap = css({ display: "flex" });
 const bar = css({
   position: "absolute",
   top: "3",
-  insetInlineEnd: "5",
+  insetInline: "5",
   zIndex: "40",
   display: "flex",
   flexDirection: "column",
@@ -65,10 +69,9 @@ const bar = css({
   animationDuration: "base",
   animationTimingFunction: "enter",
   maxWidth: "sm",
-  width: "full",
   _print: { display: "none" },
 });
-const row = css({ display: "flex", alignItems: "center", gap: "1.5" });
+const row = css({ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "1.5" });
 const chevron = css({
   transitionProperty: "transform",
   transitionDuration: "snap",
@@ -81,9 +84,9 @@ const searchBox = css({
   flex: "1",
   display: "flex",
   alignItems: "center",
-  minWidth: "0",
+  minWidth: "32",
 });
-const searchField = css({ paddingInlineEnd: "[18px]" });
+const searchField = css({ paddingInlineEnd: "[4.5rem]" });
 const options = css({
   position: "absolute",
   insetInlineEnd: "1",
@@ -94,6 +97,7 @@ const options = css({
 const count = css({ flexShrink: 0, fontVariantNumeric: "tabular-nums" });
 const replaceRow = css({
   display: "flex",
+  flexWrap: "wrap",
   alignItems: "center",
   gap: "1.5",
   paddingInlineStart: "7",
@@ -101,7 +105,7 @@ const replaceRow = css({
   animationDuration: "base",
   animationTimingFunction: "enter",
 });
-const grow = css({ flex: "1" });
+const grow = css({ flex: "1", minWidth: "28" });
 
 export const FindBar: Component<FindBarProps> = (props) => {
   const [searchText, setSearchText] = createSignal(props.initialSearch);
@@ -166,7 +170,15 @@ export const FindBar: Component<FindBarProps> = (props) => {
   };
 
   return (
-    <div data-slot="find-bar" class={cx(bar, props.class)}>
+    <div
+      data-slot="find-bar"
+      class={cx(bar, props.class)}
+      onKeyDown={(event) => {
+        if (event.key !== "Escape" || event.defaultPrevented) return;
+        event.preventDefault();
+        props.onClose();
+      }}
+    >
       <div class={row}>
         <IconButton label={t().editor.toggleReplace} onClick={props.onToggleReplace}>
           <ChevronRight class={cx(chevron, props.showReplace && chevronOpen)} />
