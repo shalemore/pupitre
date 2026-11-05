@@ -586,6 +586,10 @@
     inline-size: max-content;
   }
 
+  .md-image-frame[data-toolbar-outside] > .md-image-toolbar:dir(rtl) {
+    translate: 50% 0;
+  }
+
   .md-image-block[data-alignment="left"]
     > .md-image-frame[data-toolbar-outside]
     > .md-image-toolbar {
