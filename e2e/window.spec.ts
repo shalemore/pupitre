@@ -44,3 +44,26 @@ test("steps the zoom of the page with Ctrl and the plus and minus keys", async (
     await close(app);
   }
 });
+
+test("typing folds the immersive chrome under a pointer resting at the top", async () => {
+  const app = await launch({ files: ["README.md"], settings: { windowStyle: "immersive" } });
+  try {
+    await app.page.locator(".cm-content").waitFor();
+    const barHeight = () =>
+      app.page.evaluate(
+        () => document.querySelector(".app-title-bar")?.getBoundingClientRect().height ?? -1,
+      );
+    await app.page.mouse.move(600, 4);
+    await expect.poll(barHeight).toBeGreaterThan(0);
+    // The pointer stays at the top; typing alone takes the bar away
+    await app.page.locator(".cm-content").focus();
+    await app.page.keyboard.type("x");
+    await expect.poll(barHeight).toBe(0);
+    // Reaching for the edge again brings it back
+    await app.page.mouse.move(600, 400);
+    await app.page.mouse.move(600, 4);
+    await expect.poll(barHeight).toBeGreaterThan(0);
+  } finally {
+    await close(app);
+  }
+});

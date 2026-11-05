@@ -29,7 +29,11 @@ const titleBar = css({
  * caption buttons drawn here instead. Its height comes from TITLE_BAR_HEIGHT, which the main
  * process also gives the native buttons and the traffic lights.
  */
-export const TitleBar: ParentComponent<{ class?: string; inert?: boolean }> = (props) => {
+export const TitleBar: ParentComponent<{
+  class?: string;
+  inert?: boolean;
+  folded?: boolean;
+}> = (props) => {
   const side = desktop.initialState.captionSide;
   // macOS keeps its traffic lights in the native bar, on the left, as the drawn buttons can
   const layoutSide = side ?? (desktop.platform === "darwin" ? "left" : undefined);
@@ -88,7 +92,7 @@ export const TitleBar: ParentComponent<{ class?: string; inert?: boolean }> = (p
       data-caption-buttons={side}
       data-caption-side={layoutSide}
       inert={props.inert}
-      style={{ height: `${TITLE_BAR_HEIGHT}px` }}
+      style={{ height: props.folded ? "0px" : `${TITLE_BAR_HEIGHT}px` }}
       class={cx(
         // The horizontal padding comes from .app-title-bar, which leaves room for the caption buttons
         "app-title-bar",

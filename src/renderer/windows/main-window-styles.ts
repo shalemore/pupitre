@@ -19,7 +19,6 @@ export const titleBar = css({
   transitionDuration: "sheet",
   transitionTimingFunction: "outExpo",
 });
-export const titleBarHidden = css({ height: 0 });
 export const frameBorderBottom = css({
   borderBlockEndWidth: "hairline",
   borderBlockEndStyle: "solid",

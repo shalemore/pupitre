@@ -67,7 +67,6 @@ import {
   frameBorderStart,
   grow,
   titleBar,
-  titleBarHidden,
   titleCenter,
   titleEnd,
   titleGrid,
@@ -623,11 +622,8 @@ export const MainWindow: Component = () => {
       {/* Folding the title bar away animates its height, and the card moves up into the room */}
       <TitleBar
         inert={!chrome.titleBarVisible()}
-        class={cx(
-          titleBar,
-          !chrome.titleBarVisible() && titleBarHidden,
-          !immersive() && frameBorderBottom,
-        )}
+        folded={!chrome.titleBarVisible()}
+        class={cx(titleBar, !immersive() && frameBorderBottom)}
       >
         <Show
           when={tabBarShown()}

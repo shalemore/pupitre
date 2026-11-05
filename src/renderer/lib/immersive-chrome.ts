@@ -45,6 +45,7 @@ export interface ChromeOptions {
 export function createImmersiveChrome(options: ChromeOptions) {
   const [writing, setWriting] = createSignal(false);
   const [near, setNear] = createSignal(NO_EDGE);
+  const [topReached, setTopReached] = createSignal(false);
   // A control the user just used may leave the pointer past the edge it belongs to, such as a menu
   // item that hangs below the title bar; the chrome stays unfolded until the user goes back to
   // writing or scrolling, rather than folding as soon as the pointer moves back into the text
@@ -61,7 +62,7 @@ export function createImmersiveChrome(options: ChromeOptions) {
   const shown = (atEdge: boolean, folded = false) =>
     !options.canFold() || kept() || atEdge || (!writing() && !folded);
   const titleBarVisible = () =>
-    !options.immersive() || options.titleBarPinned() || shown(near().top);
+    !options.immersive() || options.titleBarPinned() || shown(near().top && topReached());
   // A classic window only folds a sidebar the user collapsed, and brings it back near its edge;
   // it never folds while writing, so the immersive writing and room tests do not apply to it
   const sidebarShown = (atEdge: boolean, pinned: () => boolean, immersiveShown: () => boolean) =>
@@ -78,6 +79,7 @@ export function createImmersiveChrome(options: ChromeOptions) {
 
   const hide = () => {
     setWriting(options.canFold());
+    setTopReached(false);
     setKept(false);
     setNear(NO_EDGE);
   };
@@ -122,11 +124,13 @@ export function createImmersiveChrome(options: ChromeOptions) {
       if (!(event.target instanceof Element)) return;
       const fromStart = distanceFromStart(event.clientX);
       const sidebar = event.target.closest("[data-sidebar]")?.getAttribute("data-sidebar");
-      setNear({
+      const next = {
         top: event.clientY < (sidebar ? TOP_EDGE_OVER_SIDEBAR : TOP_EDGE),
         start: fromStart < SIDE_EDGE || sidebar === "start",
         end: distanceFromEnd(event.clientX) < SIDE_EDGE || sidebar === "end",
-      });
+      };
+      if (next.top && !near().top) setTopReached(true);
+      setNear(next);
     },
   };
 }
