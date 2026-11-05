@@ -277,6 +277,8 @@ export interface DocumentState {
   hasDocument: boolean;
   /** The document is text an editor shows, so saving, finding, formatting and exporting apply to it. */
   hasText: boolean;
+  /** The text is Markdown, so the paragraph and format commands apply to it. */
+  isMarkdown: boolean;
   /** Whether a file is behind the document on show; only a document with a path has versions to keep. */
   hasPath: boolean;
   /** Any tab has unsaved changes, so closing the window has to ask first. */

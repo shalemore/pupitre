@@ -10,11 +10,13 @@ import { t } from "../i18n";
 export function formatItems(
   actions: readonly FormatAction[],
   send: (command: AppCommand) => void,
+  enabled = true,
 ): MenuItemConstructorOptions[] {
   return actions.map((action) => {
     const shortcut = shortcutOf(action);
     return {
       label: t().format[action],
+      enabled,
       ...(shortcut === undefined ? {} : { accelerator: shortcut, registerAccelerator: false }),
       click: () => send({ id: "format", action }),
     };

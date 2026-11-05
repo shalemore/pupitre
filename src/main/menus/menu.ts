@@ -40,6 +40,7 @@ type SettingMenu = Omit<MenuItemConstructorOptions, "submenu"> & {
 let documentState: DocumentState = {
   hasDocument: false,
   hasText: false,
+  isMarkdown: false,
   hasPath: false,
   isDirty: false,
   canReopenTab: false,
@@ -71,6 +72,8 @@ function buildTemplate(): SettingMenu[] {
   // A document without a file has no versions kept of it
   const hasFile = documentState.hasText && documentState.hasPath;
   const { hasDocument, hasText } = documentState;
+  // Paragraph and Format write Markdown syntax, so they have nothing to do in a text or code file
+  const canFormat = hasText && documentState.isMarkdown;
   const recentFiles = getRecentFiles();
 
   const about: MenuItemConstructorOptions = {
@@ -265,17 +268,18 @@ function buildTemplate(): SettingMenu[] {
     {
       id: "paragraphMenu",
       label: labels.paragraphMenu,
-      enabled: hasText,
+      enabled: canFormat,
       // The Table action inside the groups writes the size its shortcut does; this entry asks for
       // a size of its own, which no formatting action can do
       submenu: [
         ...withGroupSeparators(
-          PARAGRAPH_MENU_GROUPS.map((group) => formatItems(group, dispatchToMainWindow)),
+          PARAGRAPH_MENU_GROUPS.map((group) => formatItems(group, dispatchToMainWindow, canFormat)),
           separator,
         ),
         separator,
         {
           label: labels.insertTable,
+          enabled: canFormat,
           click: () => dispatchToMainWindow({ id: "edit.insert-table" }),
         },
       ],
@@ -283,13 +287,14 @@ function buildTemplate(): SettingMenu[] {
     {
       id: "format",
       label: labels.format,
-      enabled: hasText,
+      enabled: canFormat,
       submenu: [
-        ...formatItems(INLINE_FORMAT_ACTIONS, dispatchToMainWindow),
+        ...formatItems(INLINE_FORMAT_ACTIONS, dispatchToMainWindow, canFormat),
         separator,
         {
           label: labels.insertImage,
           accelerator: SHORTCUTS.insertImage,
+          enabled: canFormat,
           click: () => dispatchToMainWindow({ id: "edit.insert-image" }),
         },
       ],
@@ -440,6 +445,7 @@ export function setDocumentState(state: DocumentState): void {
   const menuChanged =
     state.hasDocument !== documentState.hasDocument ||
     state.hasText !== documentState.hasText ||
+    state.isMarkdown !== documentState.isMarkdown ||
     state.hasPath !== documentState.hasPath ||
     state.canReopenTab !== documentState.canReopenTab;
   documentState = state;

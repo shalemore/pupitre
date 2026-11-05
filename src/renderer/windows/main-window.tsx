@@ -11,7 +11,7 @@ import {
   Show,
   type Component,
 } from "solid-js";
-import { IMAGE_FILE, type AppCommand } from "@shared/desktop-api";
+import { IMAGE_FILE, MARKDOWN_FILE, type AppCommand } from "@shared/desktop-api";
 import { isInsideFolder } from "@shared/paths";
 import { TitleBar } from "@/components/title-bar";
 import { FindBar } from "@/features/editor/find-bar";
@@ -71,6 +71,15 @@ export const MainWindow: Component = () => {
   const session = createDocumentSession(() => editor());
   /** The active tab shows a picture, not text: the commands that work on text have nothing to do. */
   const activeIsImage = () => isImagePath(session.activeDocument()?.path);
+  /** An untitled document is Markdown; a file is Markdown only by its extension. */
+  const activeIsMarkdown = () => {
+    const document = session.activeDocument();
+    return (
+      document !== undefined &&
+      !activeIsImage() &&
+      (document.path === undefined || MARKDOWN_FILE.test(document.path))
+    );
+  };
   const [outline, setOutline] = createSignal<OutlineHeading[]>([]);
   const [activeHeading, setActiveHeading] = createSignal(-1);
   const [stats, setStats] = createSignal<TextStats>({ words: 0, characters: 0, cjk: 0 });
@@ -289,6 +298,7 @@ export const MainWindow: Component = () => {
     void desktop.invoke("window:set-document-state", {
       hasDocument: session.activeDocument() !== undefined,
       hasText: session.activeDocument() !== undefined && !activeIsImage(),
+      isMarkdown: activeIsMarkdown(),
       hasPath: session.activeDocument()?.path !== undefined,
       isDirty: session.hasDirtyTabs(),
       canReopenTab: session.canReopenTab(),

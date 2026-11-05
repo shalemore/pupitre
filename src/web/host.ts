@@ -276,6 +276,7 @@ function pickFile(): Promise<string | null> {
 let documentState: DocumentState = {
   hasDocument: false,
   hasText: false,
+  isMarkdown: false,
   hasPath: false,
   isDirty: false,
   canReopenTab: false,
