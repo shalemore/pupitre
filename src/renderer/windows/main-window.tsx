@@ -1,6 +1,5 @@
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { scheduleIdle } from "@solid-primitives/scheduled";
-import { CornerRightUp, Eye } from "lucide-solid";
 import {
   createEffect,
   createMemo,
@@ -15,43 +14,28 @@ import {
 import { IMAGE_FILE, type AppCommand } from "@shared/desktop-api";
 import { isInsideFolder } from "@shared/paths";
 import { TitleBar } from "@/components/title-bar";
-import { IconButton, ToggleIconButton } from "@/components/ui";
 import { FindBar } from "@/features/editor/find-bar";
 import { ImagePreview } from "@/features/editor/images/image-preview";
 import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
 import type { MatchStats } from "@/features/editor/search";
-import { MenuBar, MenuButton } from "@/features/menu-bar";
-import { FolderSortButton } from "@/features/sidebar/folder-sort-button";
 import { FolderTree } from "@/features/sidebar/folder-tree";
 import { OutlineList } from "@/features/sidebar/outline-list";
 import type { SidebarMode } from "@/features/sidebar/sidebar";
 import { createSidebarControl } from "@/features/sidebar/sidebar-control";
-import { TabsBar } from "@/features/tabs-bar";
 import { WelcomeScreen } from "@/features/welcome/welcome-screen";
-import { t } from "@/i18n";
-import { desktop, isMacOS } from "@/lib/desktop";
+import { desktop } from "@/lib/desktop";
 import { documentPosition } from "@/lib/document/positions";
 import { createDocumentSession } from "@/lib/document/session";
-import { isolateFileName, parentFolder } from "@/lib/file";
+import { isolateFileName } from "@/lib/file";
 import { createImmersiveChrome } from "@/lib/immersive-chrome";
 import { headingKey, type OutlineHeading } from "@/lib/markdown/outline-heading";
 import { recentFiles } from "@/lib/recent-files";
 import { isImmersive, settings, updateSettings } from "@/lib/settings";
-import { quietButton, rtlFlip, truncate } from "@/lib/styles";
 import type { TextStats } from "@/lib/text-stats";
 import { createDocumentActions } from "./document-actions";
-import {
-  card,
-  content,
-  dirtyDot,
-  documentArea,
-  editorArea,
-  welcomeArea,
-  titleCenter,
-  titleEnd,
-  titleGrid,
-  titleStart,
-} from "./main-window-styles";
+import { card, content, documentArea, editorArea, welcomeArea } from "./main-window-styles";
+import { FolderActions, ParentFolderButton } from "./main-window/folder-actions";
+import { MainTitleContent } from "./main-window/main-title-content";
 import { Overlays, type Overlay } from "./main-window/overlays";
 import { SidebarRegion } from "./main-window/sidebar-region";
 import { createSidebarWidths } from "./main-window/sidebar-widths";
@@ -371,46 +355,6 @@ export const MainWindow: Component = () => {
     if (!settings().sidebarVisible) void updateSettings({ sidebarVisible: true });
   };
 
-  const parentOfFolder = createMemo(() => {
-    const root = folderRoot();
-    return root === undefined ? undefined : parentFolder(root);
-  });
-
-  /** The button up to the folder that holds the one on show, right beside its name. */
-  const parentAction = () => (
-    <Show when={desktop.initialState.capabilities.folderParent && parentOfFolder()}>
-      <IconButton
-        label={t().sidebar.parentFolder}
-        size="icon-2xs"
-        class={quietButton}
-        onClick={() => {
-          const parent = parentOfFolder();
-          if (parent !== undefined) showFolder(parent);
-        }}
-      >
-        <CornerRightUp class={rtlFlip} />
-      </IconButton>
-    </Show>
-  );
-
-  /** The folder's order menu, at the far end of the title row. */
-  const folderAction = () => (
-    <>
-      <Show when={folderHasHidden()}>
-        <ToggleIconButton
-          pressed={settings().showHidden}
-          onChange={(showHidden) => void updateSettings({ showHidden })}
-          label={t().settings.showHidden}
-          size="icon-2xs"
-          class={quietButton}
-        >
-          <Eye />
-        </ToggleIconButton>
-      </Show>
-      <FolderSortButton onHoldOpenChange={setStartSidebarHeld} />
-    </>
-  );
-
   const openFolder = async () => {
     const path = await desktop.invoke("folder:choose");
     if (path !== null) showFolder(path);
@@ -588,48 +532,18 @@ export const MainWindow: Component = () => {
     >
       {/* Folding the title bar away animates its height, and the card moves up into the room */}
       <TitleBar folded={!chrome.titleBarVisible()} class={barDivider({ classic: !isImmersive() })}>
-        <Show
-          when={tabBarShown()}
-          fallback={
-            // Equal side columns keep the document name in the middle of the bar, whatever the
-            // menus and the count take
-            <div data-title-grid class={titleGrid}>
-              <div class={titleStart}>
-                <Show when={!isMacOS}>
-                  <MenuBar onOpenChange={setMenuOpen} />
-                </Show>
-              </div>
-
-              <div class={titleCenter}>
-                <Show when={session.activeDocument()}>
-                  <Show when={session.isDirty()}>
-                    <span aria-hidden="true" class={dirtyDot} />
-                  </Show>
-                  <bdi dir="auto" class={truncate}>
-                    {session.fileName()}
-                  </bdi>
-                </Show>
-              </div>
-
-              <div class={titleEnd}>{wordCount()}</div>
-            </div>
-          }
-        >
-          {/* With several documents the bar holds the tabs; the menus fold into one button so the
-              strip does not sit under a bar that unfolds as the pointer reaches for it */}
-          <Show when={!isMacOS}>
-            <MenuButton onOpenChange={setMenuOpen} />
-          </Show>
-          <TabsBar
-            tabs={session.tabs()}
-            activeId={session.activeTab()?.id}
-            nameOf={session.tabFileName}
-            onActivate={session.activateTab}
-            onClose={(id) => void session.closeTab(id)}
-          />
-        </Show>
-
-        <Show when={tabBarShown()}>{wordCount()}</Show>
+        <MainTitleContent
+          tabsShown={tabBarShown()}
+          fileName={session.activeDocument() === undefined ? undefined : session.fileName()}
+          dirty={session.isDirty()}
+          tabs={session.tabs()}
+          activeId={session.activeTab()?.id}
+          nameOf={session.tabFileName}
+          onActivate={session.activateTab}
+          onClose={(id) => void session.closeTab(id)}
+          count={wordCount()}
+          onMenuOpenChange={setMenuOpen}
+        />
       </TitleBar>
 
       <div
@@ -653,8 +567,21 @@ export const MainWindow: Component = () => {
           mode={sidebarMode()}
           hasOutline={session.activeDocument() !== undefined}
           folderRoot={folderRoot()}
-          folderTitleAction={parentAction()}
-          folderAction={folderAction()}
+          folderTitleAction={
+            <ParentFolderButton
+              root={folderRoot()}
+              canGoUp={desktop.initialState.capabilities.folderParent}
+              onGoUp={showFolder}
+            />
+          }
+          folderAction={
+            <FolderActions
+              hasHidden={folderHasHidden()}
+              showHidden={settings().showHidden}
+              onShowHiddenChange={(showHidden) => void updateSettings({ showHidden })}
+              onHoldOpenChange={setStartSidebarHeld}
+            />
+          }
           outline={outlineList()}
           folderTree={folderTree}
           onModeChange={setPreferredMode}
