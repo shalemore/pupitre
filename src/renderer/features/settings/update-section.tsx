@@ -7,7 +7,7 @@ import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { formatPercent } from "@/lib/number-format";
 import { updateStatus } from "@/lib/updater";
-import { css, cx } from "@/styled-system/css";
+import { css } from "@/styled-system/css";
 
 const spin = css({ animation: "spin" });
 const stack = css({ "& > :not(:last-child)": { marginBlockEnd: "2" } });
@@ -52,41 +52,67 @@ function useStatus<K extends UpdateStatus["kind"]>(kind: K) {
   });
 }
 
+/** What the update button offers for the status on show, so its label, icon and command agree. */
+function useUpdateAction() {
+  return createMemo(() => {
+    switch (updateStatus().kind) {
+      case "checking":
+        return {
+          icon: <RefreshCw class={spin} />,
+          label: t().settings.checkingForUpdates,
+          disabled: true,
+          command: "updater:check",
+        } as const;
+      case "available":
+        return {
+          icon: <Download />,
+          label: t().settings.downloadUpdate,
+          disabled: false,
+          command: "updater:download",
+        } as const;
+      case "downloading":
+        return {
+          icon: <Download />,
+          label: t().settings.downloadUpdate,
+          disabled: true,
+          command: "updater:download",
+        } as const;
+      default:
+        return {
+          icon: <RefreshCw />,
+          label: t().settings.checkForUpdates,
+          disabled: false,
+          command: "updater:check",
+        } as const;
+    }
+  });
+}
+
 export const UpdateButton: Component = () => {
-  const kind = () => updateStatus().kind;
-  const isBusy = () => kind() === "checking" || kind() === "downloading";
-  const offersDownload = () => kind() === "available" || kind() === "downloading";
-  const run = () => {
-    if (kind() === "available") void desktop.invoke("updater:download");
-    else if (kind() !== "downloading") void desktop.invoke("updater:check");
-  };
+  const action = useUpdateAction();
   return (
-    <Button variant="outline" size="sm" onClick={run} disabled={isBusy()}>
-      <Show
-        when={offersDownload()}
-        fallback={<RefreshCw class={cx(kind() === "checking" && spin)} />}
-      >
-        <Download />
-      </Show>
-      <span>
-        {kind() === "checking"
-          ? t().settings.checkingForUpdates
-          : offersDownload()
-            ? t().settings.downloadUpdate
-            : t().settings.checkForUpdates}
-      </span>
+    <Button
+      variant="outline"
+      size="sm"
+      onClick={() => void desktop.invoke(action().command)}
+      disabled={action().disabled}
+    >
+      {action().icon}
+      <span>{action().label}</span>
     </Button>
   );
 };
 
 export const UpdateStatusPanel: Component<{ currentVersion: string }> = (props) => {
+  const upToDate = useStatus("up-to-date");
   const available = useStatus("available");
   const downloading = useStatus("downloading");
+  const ready = useStatus("ready");
   const failed = useStatus("error");
 
   return (
     <>
-      <Show when={updateStatus().kind === "up-to-date"}>
+      <Show when={upToDate()}>
         <Callout variant="success" class={inlineSuccess}>
           <CheckCircle2 />
           <span>
@@ -121,7 +147,7 @@ export const UpdateStatusPanel: Component<{ currentVersion: string }> = (props) 
         )}
       </Show>
 
-      <Show when={updateStatus().kind === "ready"}>
+      <Show when={ready()}>
         <Callout variant="success" class={row}>
           <div class={inlineSuccess}>
             <CheckCircle2 />
