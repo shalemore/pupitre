@@ -183,7 +183,11 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
     };
     const separator: MenuEntry = { type: "separator" };
     const renameItem = item("rename", t().sidebar.rename, () => setRenaming(entry.path));
-    const trashItem = item("trash", t().sidebar.moveToTrash, () => trash(entry.path));
+    // The root is the open folder itself: trashing it would leave the sidebar on a dead path
+    const trashItem =
+      entry.path === props.root
+        ? undefined
+        : item("trash", t().sidebar.moveToTrash, () => trash(entry.path));
     const pathItems = [
       item("reveal", t().sidebar.showInFolder, () => reveal(entry.path)),
       item("copy-path", t().sidebar.copyPath, () => copyPath(entry.path)),
@@ -204,16 +208,14 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
             renameItem,
             separator,
             ...pathItems,
-            separator,
-            trashItem,
+            ...(trashItem === undefined ? [] : [separator, trashItem]),
           ]
         : [
             renameItem,
             separator,
             ...pathItems,
             ...(pinItem === undefined ? [] : [separator, pinItem]),
-            separator,
-            trashItem,
+            ...(trashItem === undefined ? [] : [separator, trashItem]),
           ];
     return { entries, actions };
   };
