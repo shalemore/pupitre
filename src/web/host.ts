@@ -195,8 +195,12 @@ function touchFile(path: string, created = false): void {
   });
 }
 
+function folderOf(path: string): string {
+  return path.slice(0, path.lastIndexOf("/"));
+}
+
 function opened(path: string): OpenedDocument {
-  const folder = path.slice(0, path.lastIndexOf("/"));
+  const folder = folderOf(path);
   return {
     path,
     folder,
@@ -330,10 +334,7 @@ const handlers: Handlers = {
     dropped.delete(path);
     return opened(path);
   },
-  "document:locate": (path) => {
-    const folder = path.slice(0, path.lastIndexOf("/"));
-    return { path, folder, baseUrl: siteUrl };
-  },
+  "document:locate": (path) => ({ path, folder: folderOf(path), baseUrl: siteUrl }),
   "draft:read": readDraft,
   "draft:write": writeDraft,
   "draft:clear": () => localStorage.removeItem(DRAFT_KEY),
@@ -365,22 +366,26 @@ const handlers: Handlers = {
     if (kind === "file") {
       files.set(path, "");
       touchFile(path, true);
+      emit("folder:changed", parent);
     }
     return path;
   },
   "path:rename": (path, name) => {
-    const target = `${path.slice(0, path.lastIndexOf("/"))}/${name}`;
+    const parent = folderOf(path);
+    const target = `${parent}/${name}`;
     const content = files.get(path) ?? "";
     const times = fileTimes.get(path);
     files.delete(path);
     files.set(target, content);
     fileTimes.delete(path);
     if (times !== undefined) fileTimes.set(target, times);
+    emit("folder:changed", parent);
     return target;
   },
   "path:trash": (path) => {
     files.delete(path);
     fileTimes.delete(path);
+    emit("folder:changed", folderOf(path));
   },
   "path:reveal": () => {},
   "path:locate": (path) => opened(path),
@@ -397,6 +402,7 @@ const handlers: Handlers = {
     const created = !files.has(path);
     files.set(path, content);
     touchFile(path, created);
+    if (created) emit("folder:changed", folderOf(path));
   },
   "dialog:choose-save-path": (suggestedName) => {
     const name = prompt(labels().menu.saveAs, suggestedName)?.trim();
