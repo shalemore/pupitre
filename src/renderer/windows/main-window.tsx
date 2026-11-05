@@ -93,6 +93,11 @@ export const MainWindow: Component = () => {
   const [findMode, setFindMode] = createSignal<FindMode>("closed");
   const [overlay, setOverlay] = createSignal<Overlay>();
   const closeOverlay = () => setOverlay(undefined);
+  // A sheet is modal and has no trigger to hand the focus back to, so the editor takes it again
+  const closeToEditor = () => {
+    closeOverlay();
+    editor()?.focus();
+  };
   // A match to select once the editor holds the document it was found in
   const [matchToReveal, setMatchToReveal] = createSignal<
     { path: string; from: number; to: number } | undefined
@@ -385,7 +390,7 @@ export const MainWindow: Component = () => {
     editor()?.insertTable(rows, columns);
   };
 
-  const openPalette = () => setOverlay({ kind: "palette", onClose: closeOverlay });
+  const openPalette = () => setOverlay({ kind: "palette", onClose: closeToEditor });
 
   const openTableSize = () =>
     setOverlay({ kind: "table-size", onInsert: insertTable, onClose: closeTableSize });
@@ -398,7 +403,7 @@ export const MainWindow: Component = () => {
       kind: "history",
       path,
       onRestore: (markdown) => editor()?.replaceDocument(markdown),
-      onClose: closeOverlay,
+      onClose: closeToEditor,
     });
   };
 
@@ -407,7 +412,7 @@ export const MainWindow: Component = () => {
       kind: "quick-open",
       root: folderRoot(),
       onOpen: (path) => void session.openPath(path),
-      onClose: closeOverlay,
+      onClose: closeToEditor,
     });
 
   const openWorkspaceSearch = () =>
