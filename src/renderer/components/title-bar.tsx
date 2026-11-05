@@ -13,6 +13,8 @@ const GIVE_WAY = ["count"];
 
 const titleBar = css({
   width: "full",
+  height: `${TITLE_BAR_HEIGHT}px`,
+  overflow: "hidden",
   flexShrink: 0,
   display: "flex",
   alignItems: "center",
@@ -20,6 +22,10 @@ const titleBar = css({
   userSelect: "none",
   backgroundColor: "surface.0",
   textStyle: "xs",
+  transitionProperty: "height",
+  transitionDuration: "sheet",
+  transitionTimingFunction: "outExpo",
+  "&[data-folded]": { height: 0 },
   _print: { display: "none" },
 });
 
@@ -29,11 +35,7 @@ const titleBar = css({
  * caption buttons drawn here instead. Its height comes from TITLE_BAR_HEIGHT, which the main
  * process also gives the native buttons and the traffic lights.
  */
-export const TitleBar: ParentComponent<{
-  class?: string;
-  inert?: boolean;
-  folded?: boolean;
-}> = (props) => {
+export const TitleBar: ParentComponent<{ class?: string; folded?: boolean }> = (props) => {
   const side = desktop.initialState.captionSide;
   // macOS keeps its traffic lights in the native bar, on the left, as the drawn buttons can
   const layoutSide = side ?? (desktop.platform === "darwin" ? "left" : undefined);
@@ -91,8 +93,8 @@ export const TitleBar: ParentComponent<{
       dir="ltr"
       data-caption-buttons={side}
       data-caption-side={layoutSide}
-      inert={props.inert}
-      style={{ height: props.folded ? "0px" : `${TITLE_BAR_HEIGHT}px` }}
+      data-folded={props.folded ? "" : undefined}
+      inert={props.folded}
       class={cx(
         // The horizontal padding comes from .app-title-bar, which leaves room for the caption buttons
         "app-title-bar",

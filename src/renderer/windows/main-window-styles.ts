@@ -13,12 +13,6 @@ export const windowFrame = css({
 });
 export const windowImmersive = css({ backgroundColor: "surface.0" });
 export const windowClassic = css({ backgroundColor: "surface.1" });
-export const titleBar = css({
-  overflow: "hidden",
-  transitionProperty: "height",
-  transitionDuration: "sheet",
-  transitionTimingFunction: "outExpo",
-});
 export const frameBorderBottom = css({
   borderBlockEndWidth: "hairline",
   borderBlockEndStyle: "solid",
