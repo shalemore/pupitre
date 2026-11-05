@@ -2,6 +2,7 @@ import type { EditorView } from "@codemirror/view";
 import { t } from "@/i18n";
 import { relabelOnLocaleChange } from "../widgets/relabel-on-locale";
 import { hasTransparency } from "./image-alpha";
+import { clearImageRoom, reserveImageRoom } from "./image-geometry";
 
 /**
  * How a picture loads: the skeleton a slow download shows, the retries a failed one makes, and
@@ -117,8 +118,7 @@ export function watchImage(
     attempts = 0;
     knownWidth = image.naturalWidth || knownWidth;
     knownHeight = image.naturalHeight || knownHeight;
-    frame.style.removeProperty("inline-size");
-    frame.style.removeProperty("min-block-size");
+    clearImageRoom(frame);
     settle("ready");
     // A picture with a clear background, an icon for one, keeps its own outline instead of
     // standing in a frame that would box it in
@@ -138,9 +138,7 @@ export function watchImage(
     }
     failed = true;
     label();
-    // Keep the space the picture would take, so retrying it does not move the page
-    if (knownWidth > 0) frame.style.inlineSize = `${knownWidth}px`;
-    if (knownHeight > 0) frame.style.minBlockSize = `${knownHeight}px`;
+    reserveImageRoom(frame, knownWidth, knownHeight);
     settle("error");
   });
 

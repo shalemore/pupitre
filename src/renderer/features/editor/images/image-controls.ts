@@ -3,6 +3,7 @@ import { t } from "@/i18n";
 import type { DocumentImage, ImageAlignment, ImageSize } from "@/lib/markdown/images";
 import { css, cx } from "@/styled-system/css";
 import { relabelOnLocaleChange } from "../widgets/relabel-on-locale";
+import { applyImageWidth } from "./image-geometry";
 
 /**
  * The controls of a picture: the corner handle that resizes it and the bar that aligns it. Both
@@ -91,7 +92,7 @@ export function resizeHandle(
     const room = (block.parentElement ?? block).getBoundingClientRect().width;
     // An unmeasured line puts no limit on the width
     const limit = room > 0 ? Math.round(room) : Number.POSITIVE_INFINITY;
-    const original = image.style.width;
+    const original = image.style.width === "" ? undefined : Number.parseFloat(image.style.width);
     // The handle hangs at the end of the line, which is the left edge of a right-to-left document
     const step = getComputedStyle(image).direction === "rtl" ? -1 : 1;
     let width = Math.round(startWidth);
@@ -99,7 +100,7 @@ export function resizeHandle(
     const dragged = (move: PointerEvent) => {
       const grown = Math.round(startWidth + (move.clientX - start) * step);
       width = Math.min(Math.max(grown, MIN_IMAGE_WIDTH), limit);
-      image.style.width = `${width}px`;
+      applyImageWidth(image, width);
       // The line changed height with the picture, which the editor has to measure again
       view.requestMeasure();
     };
@@ -114,7 +115,7 @@ export function resizeHandle(
     };
     const cancelled = () => {
       stop();
-      image.style.width = original;
+      applyImageWidth(image, original);
       view.requestMeasure();
     };
 

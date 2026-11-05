@@ -8,12 +8,12 @@ import {
   altRange,
   imageAt,
   imageMarkdown,
-  imageStyle,
   resolveAgainst,
   setImageLayout,
 } from "@/lib/markdown/images";
 import { relabelOnLocaleChange } from "../widgets/relabel-on-locale";
 import { alignmentToolbar, resizeHandle, TOOLBAR_INSET } from "./image-controls";
+import { applyImageLayout } from "./image-geometry";
 import { watchImage } from "./image-loading";
 
 /** The controls of a picture are not places to type, so the editor leaves their events alone. */
@@ -61,13 +61,12 @@ export function imageDom(
   const frame = document.createElement("span");
   // The controls show while the pointer is on the frame, which its group variant marks
   frame.className = "md-image-frame group";
-  frame.style.cssText = imageStyle(size);
 
   const image = document.createElement("img");
   image.className = "md-image-preview";
   image.alt = alt;
   image.title = title;
-  if (size.width !== undefined) image.style.width = `${size.width}px`;
+  applyImageLayout(frame, image, size);
 
   frame.append(image);
   watchImage(view, image, frame, src);
