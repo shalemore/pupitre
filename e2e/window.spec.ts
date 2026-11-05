@@ -49,20 +49,38 @@ test("typing folds the immersive chrome under a pointer resting at the top", asy
   const app = await launch({ files: ["README.md"], settings: { windowStyle: "immersive" } });
   try {
     await app.page.locator(".cm-content").waitFor();
-    const barHeight = () =>
-      app.page.evaluate(
-        () => document.querySelector(".app-title-bar")?.getBoundingClientRect().height ?? -1,
-      );
+    // What the reader sees and can reach: the bar's height and focusability, and the room the
+    // sidebars take beside the document
+    const chrome = () =>
+      app.page.evaluate(() => {
+        const bar = document.querySelector(".app-title-bar");
+        return {
+          barHeight: bar?.getBoundingClientRect().height ?? -1,
+          barFocusable: bar instanceof HTMLElement && !bar.inert,
+          sidebars: [...document.querySelectorAll("[data-sidebar]")].map(
+            (sidebar) => sidebar.getBoundingClientRect().width,
+          ),
+        };
+      });
+    const allShown = (state: Awaited<ReturnType<typeof chrome>>) =>
+      state.barHeight > 0 && state.barFocusable && state.sidebars.every((width) => width > 0);
+    const allFolded = (state: Awaited<ReturnType<typeof chrome>>) =>
+      state.barHeight === 0 && !state.barFocusable && state.sidebars.every((width) => width === 0);
+
     await app.page.mouse.move(600, 4);
-    await expect.poll(barHeight).toBeGreaterThan(0);
-    // The pointer stays at the top; typing alone takes the bar away
+    await expect.poll(async () => allShown(await chrome())).toBe(true);
+    // The pointer stays at the top; typing alone takes the bar and the sidebars away
     await app.page.locator(".cm-content").focus();
     await app.page.keyboard.type("x");
-    await expect.poll(barHeight).toBe(0);
-    // Reaching for the edge again brings it back
+    await expect.poll(async () => allFolded(await chrome())).toBe(true);
+
+    // The top brings the bar back, while each sidebar waits for the pointer to reach its edge
     await app.page.mouse.move(600, 400);
     await app.page.mouse.move(600, 4);
-    await expect.poll(barHeight).toBeGreaterThan(0);
+    await expect.poll(async () => (await chrome()).barHeight).toBeGreaterThan(0);
+    expect((await chrome()).sidebars.every((width) => width === 0)).toBe(true);
+    await app.page.mouse.move(4, 400);
+    await expect.poll(async () => (await chrome()).sidebars.some((width) => width > 0)).toBe(true);
   } finally {
     await close(app);
   }
