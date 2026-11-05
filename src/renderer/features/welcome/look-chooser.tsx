@@ -16,6 +16,7 @@ interface LookOptionProps {
 const option = css({
   display: "flex",
   width: "48",
+  maxWidth: "full",
   cursor: "pointer",
   flexDirection: "column",
   gap: "2",
@@ -61,7 +62,13 @@ const groupLabel = css({
   fontWeight: "medium",
   color: "muted.foreground",
 });
-const options = css({ display: "flex", alignItems: "stretch", gap: "3" });
+const options = css({
+  display: "flex",
+  flexWrap: "wrap",
+  alignItems: "stretch",
+  justifyContent: "center",
+  gap: "3",
+});
 const preview = css({
   height: "16",
   borderRadius: "md",

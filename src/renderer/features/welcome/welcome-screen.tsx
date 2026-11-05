@@ -1,6 +1,6 @@
 import { FilePlus, FolderOpen } from "lucide-solid";
 import { For, Show, type Component } from "solid-js";
-import { Button, Kbd, ListItem } from "@/components/ui";
+import { Button, Kbd, ListItem, ScrollView } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
 import { fileNameOf } from "@/lib/file";
@@ -21,17 +21,20 @@ const RECENT_FILES_SHOWN = 5;
 
 const screen = css({
   height: "full",
+  paddingInline: "4",
+  paddingBlock: "12",
+  userSelect: "none",
+  animationName: "fadeIn",
+  animationDuration: "sheet",
+  animationTimingFunction: "enter",
+});
+const content = css({
+  minHeight: "full",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
   textAlign: "center",
-  userSelect: "none",
-  paddingInline: "4",
-  paddingBlock: "12",
-  animationName: "fadeIn",
-  animationDuration: "sheet",
-  animationTimingFunction: "enter",
 });
 const logo = css({
   width: "14",
@@ -50,7 +53,9 @@ const title = css({
 });
 const actions = css({
   display: "flex",
+  flexWrap: "wrap",
   alignItems: "center",
+  justifyContent: "center",
   gap: "3",
   marginBlockEnd: "8",
 });
@@ -94,52 +99,54 @@ const shortcut = css({ marginInlineStart: "1" });
 
 export const WelcomeScreen: Component<WelcomeScreenProps> = (props) => {
   return (
-    <div data-slot="welcome" class={screen}>
-      <img src="./logo.svg" alt="" class={logo} />
+    <ScrollView data-slot="welcome" class={screen}>
+      <div class={content}>
+        <img src="./logo.svg" alt="" class={logo} />
 
-      <h1 class={title}>{t().common.appName}</h1>
+        <h1 class={title}>{t().common.appName}</h1>
 
-      <Show when={desktop.initialState.firstRun}>
-        <LookChooser />
-      </Show>
+        <Show when={desktop.initialState.firstRun}>
+          <LookChooser />
+        </Show>
 
-      <div class={actions}>
-        <Button variant="brand" onClick={props.onNewDocument}>
-          <FilePlus class={actionIcon} />
-          <span>{t().actions.newDoc}</span>
-          <Kbd class={shortcut}>{modifier}N</Kbd>
-        </Button>
+        <div class={actions}>
+          <Button variant="brand" onClick={props.onNewDocument}>
+            <FilePlus class={actionIcon} />
+            <span>{t().actions.newDoc}</span>
+            <Kbd class={shortcut}>{modifier}N</Kbd>
+          </Button>
 
-        <Button variant="outline" onClick={props.onOpenFile}>
-          <FolderOpen class={actionIcon} />
-          <span>{t().actions.openDoc}</span>
-          <Kbd class={shortcut}>{modifier}O</Kbd>
-        </Button>
-      </div>
-
-      <Show when={props.recentFiles.length > 0}>
-        <div class={recentList}>
-          <span class={recentLabel}>{t().menu.openRecent}</span>
-          <For each={props.recentFiles.slice(0, RECENT_FILES_SHOWN)}>
-            {(path) => (
-              <ListItem
-                onClick={() => props.onOpenRecent(path)}
-                title={path}
-                class={cx("group", recentItem)}
-              >
-                <span class={recentName}>
-                  <bdi dir="auto">{fileNameOf(path)}</bdi>
-                </span>
-                <span dir="auto" class={recentPath}>
-                  {path}
-                </span>
-              </ListItem>
-            )}
-          </For>
+          <Button variant="outline" onClick={props.onOpenFile}>
+            <FolderOpen class={actionIcon} />
+            <span>{t().actions.openDoc}</span>
+            <Kbd class={shortcut}>{modifier}O</Kbd>
+          </Button>
         </div>
-      </Show>
 
-      <p class={hint}>{t().welcome.dragDropHint}</p>
-    </div>
+        <Show when={props.recentFiles.length > 0}>
+          <div class={recentList}>
+            <span class={recentLabel}>{t().menu.openRecent}</span>
+            <For each={props.recentFiles.slice(0, RECENT_FILES_SHOWN)}>
+              {(path) => (
+                <ListItem
+                  onClick={() => props.onOpenRecent(path)}
+                  title={path}
+                  class={cx("group", recentItem)}
+                >
+                  <span class={recentName}>
+                    <bdi dir="auto">{fileNameOf(path)}</bdi>
+                  </span>
+                  <span dir="auto" class={recentPath}>
+                    {path}
+                  </span>
+                </ListItem>
+              )}
+            </For>
+          </div>
+        </Show>
+
+        <p class={hint}>{t().welcome.dragDropHint}</p>
+      </div>
+    </ScrollView>
   );
 };
