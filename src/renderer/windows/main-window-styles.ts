@@ -89,14 +89,3 @@ export const editorArea = css({
   position: "relative",
   _print: { height: "auto", overflow: "visible" },
 });
-export const wordCountLabel = css({
-  textStyle: "2xs",
-  color: "muted.foreground",
-  fontVariantNumeric: "tabular-nums",
-  display: "flex",
-  flexShrink: 0,
-  alignItems: "center",
-  gap: "1.5",
-  whiteSpace: "nowrap",
-  marginInlineEnd: "2",
-});

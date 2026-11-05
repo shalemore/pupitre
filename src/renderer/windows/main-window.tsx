@@ -27,13 +27,7 @@ import { QuickOpen } from "@/features/quick-open";
 import { FolderSortButton } from "@/features/sidebar/folder-sort-button";
 import { FolderTree } from "@/features/sidebar/folder-tree";
 import { OutlineList } from "@/features/sidebar/outline-list";
-import {
-  SIDEBAR_WIDTH,
-  Sidebar,
-  SidebarPanel,
-  SidebarSlot,
-  type SidebarMode,
-} from "@/features/sidebar/sidebar";
+import { SIDEBAR_WIDTH, type SidebarMode } from "@/features/sidebar/sidebar";
 import { createSidebarControl } from "@/features/sidebar/sidebar-control";
 import { TabsBar } from "@/features/tabs-bar";
 import { VersionHistory } from "@/features/version-history";
@@ -68,16 +62,10 @@ import {
   titleEnd,
   titleGrid,
   titleStart,
-  wordCountLabel,
 } from "./main-window-styles";
-import {
-  frameBorderBottom,
-  frameBorderEnd,
-  frameBorderStart,
-  windowClassic,
-  windowFrame,
-  windowImmersive,
-} from "./window-chrome";
+import { SidebarRegion } from "./main-window/sidebar-region";
+import { WordCount } from "./main-window/word-count";
+import { frameBorderBottom, windowClassic, windowFrame, windowImmersive } from "./window-chrome";
 
 type FindMode = "closed" | "find" | "replace";
 // A drag reports the pointer for every pixel it moves; only the width it settles on is worth writing
@@ -104,46 +92,12 @@ export const MainWindow: Component = () => {
   const [outline, setOutline] = createSignal<OutlineHeading[]>([]);
   const [activeHeading, setActiveHeading] = createSignal(-1);
   const [stats, setStats] = createSignal<TextStats>({ words: 0, characters: 0, cjk: 0 });
-  // A page written mostly in Han or kana counts its characters one by one, the way Word counts
-  // Chinese; a page of words counts the words between spaces. The CJK count says which of the two
-  // a document follows, and the dictionary names the number after that, whatever the interface
-  // language is
-  const countKind = (): "word" | "character" =>
-    stats().cjk * 2 >= stats().words ? "character" : "word";
-  // A selection is counted before the document totals, as "12 words / 300 words"; the dictionary
-  // decides the order and the separator
-  const wordsText = createMemo(() => {
-    const { words, selectedWords } = stats();
-    const total = t().common.wordsCount(words, countKind());
-    return selectedWords === undefined
-      ? total
-      : t().common.selectedOfTotal(t().common.wordsCount(selectedWords, countKind()), total);
-  });
-  const charsText = createMemo(() => {
-    const { characters, selectedCharacters } = stats();
-    const total = t().common.charsCount(characters);
-    return selectedCharacters === undefined
-      ? total
-      : t().common.selectedOfTotal(t().common.charsCount(selectedCharacters), total);
-  });
   // The count ends the bar in either layout: beside the tabs, or at the end of the title's grid
   const wordCount = () => (
     <Show
       when={session.activeDocument() !== undefined && !activeIsImage() && settings().showWordCount}
     >
-      <div
-        data-bar-part="count"
-        // The character count is a second reading of a dense page; a page of words needs only
-        // the words beside them, and shows both counts when pointed at
-        title={`${wordsText()} · ${charsText()}`}
-        class={wordCountLabel}
-      >
-        <span>{wordsText()}</span>
-        <Show when={countKind() === "character"}>
-          <span>·</span>
-          <span>{charsText()}</span>
-        </Show>
-      </div>
+      <WordCount stats={stats()} />
     </Show>
   );
   // The folder the user opened or dropped. It is remembered for the next run; a document from
@@ -666,133 +620,94 @@ export const MainWindow: Component = () => {
           immersive() && cx(contentGap, split() ? contentEndSplit : contentEnd),
         )}
       >
-        <SidebarSlot
-          side="start"
-          shown={startSidebarShown()}
-          width={startWidth()}
-          onWidthChange={setStartWidth}
+        <SidebarRegion
+          immersive={immersive()}
+          split={split()}
+          startShown={startSidebarShown()}
+          endShown={endSidebarShown()}
+          startWidth={startWidth()}
+          endWidth={endWidth()}
+          onStartWidth={setStartWidth}
+          onEndWidth={setEndWidth}
+          startControl={startControl}
+          endControl={endControl}
+          mode={sidebarMode()}
+          hasOutline={session.activeDocument() !== undefined}
+          folderRoot={folderRoot()}
+          folderName={fileNameOf(folderRoot() ?? "")}
+          folderTitleAction={parentAction()}
+          folderAction={folderAction()}
+          outline={outlineList()}
+          folderTree={folderTree}
+          onModeChange={setPreferredMode}
         >
-          <Show
-            when={split()}
-            fallback={
-              <Sidebar
-                class={cx(!immersive() && frameBorderEnd)}
-                mode={sidebarMode()}
-                control={startControl}
-                hasOutline={session.activeDocument() !== undefined}
-                hasFolder={folderRoot() !== undefined}
-                folderName={fileNameOf(folderRoot() ?? "")}
-                folderTitleAction={parentAction()}
-                folderAction={folderAction()}
-                onModeChange={setPreferredMode}
-                outline={outlineList()}
-                folder={
-                  <Show when={folderRoot()} keyed>
-                    {folderTree}
-                  </Show>
-                }
-              />
-            }
-          >
-            <Show when={folderRoot()} keyed>
-              {(root) => (
-                <SidebarPanel
-                  side="start"
-                  title={fileNameOf(root)}
-                  titleAction={parentAction()}
-                  action={folderAction()}
-                  control={startControl}
-                  class={cx(!immersive() && frameBorderEnd)}
-                >
-                  {folderTree(root)}
-                </SidebarPanel>
-              )}
-            </Show>
-          </Show>
-        </SidebarSlot>
-
-        {/* An immersive window shows the document as a card on the window background, which also holds the title bar and the sidebar */}
-        <div class={cx(card, immersive() && cardImmersive)}>
-          <div class={documentArea}>
-            <Show
-              when={session.activeTab()}
-              fallback={
-                <main class={grow}>
-                  <WelcomeScreen
-                    recentFiles={recentFiles()}
-                    onNewDocument={session.newDocument}
-                    onOpenFile={session.open}
-                    onOpenRecent={session.openPath}
-                  />
-                </main>
-              }
-            >
-              {(tab) => (
-                <main class={editorArea}>
-                  <Show when={findMode() !== "closed"}>
-                    <FindBar
-                      showReplace={findMode() === "replace"}
-                      initialSearch={initialSearch()}
-                      matchStats={matchStats()}
-                      onToggleReplace={() =>
-                        setFindMode(findMode() === "replace" ? "find" : "replace")
-                      }
-                      onClose={closeFind}
-                      onSearchChange={(options) => runSearch((handle) => handle.setSearch(options))}
-                      onFindNext={() => runSearch((handle) => handle.findNext())}
-                      onFindPrevious={() => runSearch((handle) => handle.findPrevious())}
-                      onReplaceNext={() => runSearch((handle) => handle.replaceNext())}
-                      onReplaceAll={() => runSearch((handle) => handle.replaceAll())}
+          {/* An immersive window shows the document as a card on the window background, which also holds the title bar and the sidebar */}
+          <div class={cx(card, immersive() && cardImmersive)}>
+            <div class={documentArea}>
+              <Show
+                when={session.activeTab()}
+                fallback={
+                  <main class={grow}>
+                    <WelcomeScreen
+                      recentFiles={recentFiles()}
+                      onNewDocument={session.newDocument}
+                      onOpenFile={session.open}
+                      onOpenRecent={session.openPath}
                     />
-                  </Show>
-
-                  {/* Rebuild the editor per document id, which is a new one for every tab and every reload; Save As only changes the path, so the editor and its undo history stay */}
-                  <Show when={tab().doc.id} keyed>
-                    <Show
-                      when={isImagePath(tab().doc.path)}
-                      fallback={
-                        <MarkdownEditor
-                          markdown={tab().markdown}
-                          initialPosition={documentPosition(tab().doc.path)}
-                          baseUrl={tab().doc.baseUrl}
-                          documentPath={tab().doc.path}
-                          pendingImages={tab().pendingImages}
-                          onReady={session.handleEditorReady}
-                          onMarkdownChange={session.handleMarkdownChange}
-                          onOutlineChange={setOutline}
-                          onActiveHeadingChange={setActiveHeading}
-                          onStatsChange={setStats}
-                          onMatchStatsChange={setMatchStats}
-                          ref={setEditor}
-                        />
-                      }
-                    >
-                      <ImagePreview baseUrl={tab().doc.baseUrl} path={tab().doc.path} />
+                  </main>
+                }
+              >
+                {(tab) => (
+                  <main class={editorArea}>
+                    <Show when={findMode() !== "closed"}>
+                      <FindBar
+                        showReplace={findMode() === "replace"}
+                        initialSearch={initialSearch()}
+                        matchStats={matchStats()}
+                        onToggleReplace={() =>
+                          setFindMode(findMode() === "replace" ? "find" : "replace")
+                        }
+                        onClose={closeFind}
+                        onSearchChange={(options) =>
+                          runSearch((handle) => handle.setSearch(options))
+                        }
+                        onFindNext={() => runSearch((handle) => handle.findNext())}
+                        onFindPrevious={() => runSearch((handle) => handle.findPrevious())}
+                        onReplaceNext={() => runSearch((handle) => handle.replaceNext())}
+                        onReplaceAll={() => runSearch((handle) => handle.replaceAll())}
+                      />
                     </Show>
-                  </Show>
-                </main>
-              )}
-            </Show>
-          </div>
-        </div>
 
-        <Show when={split()}>
-          <SidebarSlot
-            side="end"
-            shown={endSidebarShown()}
-            width={endWidth()}
-            onWidthChange={setEndWidth}
-          >
-            <SidebarPanel
-              side="end"
-              title={t().sidebar.outline}
-              control={endControl}
-              class={cx(!immersive() && frameBorderStart)}
-            >
-              {outlineList()}
-            </SidebarPanel>
-          </SidebarSlot>
-        </Show>
+                    {/* Rebuild the editor per document id, which is a new one for every tab and every reload; Save As only changes the path, so the editor and its undo history stay */}
+                    <Show when={tab().doc.id} keyed>
+                      <Show
+                        when={isImagePath(tab().doc.path)}
+                        fallback={
+                          <MarkdownEditor
+                            markdown={tab().markdown}
+                            initialPosition={documentPosition(tab().doc.path)}
+                            baseUrl={tab().doc.baseUrl}
+                            documentPath={tab().doc.path}
+                            pendingImages={tab().pendingImages}
+                            onReady={session.handleEditorReady}
+                            onMarkdownChange={session.handleMarkdownChange}
+                            onOutlineChange={setOutline}
+                            onActiveHeadingChange={setActiveHeading}
+                            onStatsChange={setStats}
+                            onMatchStatsChange={setMatchStats}
+                            ref={setEditor}
+                          />
+                        }
+                      >
+                        <ImagePreview baseUrl={tab().doc.baseUrl} path={tab().doc.path} />
+                      </Show>
+                    </Show>
+                  </main>
+                )}
+              </Show>
+            </div>
+          </div>
+        </SidebarRegion>
       </div>
 
       <Show when={paletteOpen()}>
