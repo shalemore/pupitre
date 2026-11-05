@@ -2,11 +2,12 @@ import { createMemo, createRoot, createSignal } from "solid-js";
 import { z } from "zod";
 import type { ImportedTheme } from "@shared/desktop-api";
 import { DEFAULT_LOCALE, LOCALE_CODES, type SupportedLocale } from "@shared/i18n";
-import { DEFAULT_SETTINGS } from "@shared/settings";
+import { DEFAULT_SETTINGS, type Settings } from "@shared/settings";
 import { desktop } from "@/lib/desktop";
 import { readToken } from "@/lib/tokens";
 
-type ColorScheme = "light" | "dark";
+/** The schemes a theme can provide; following the system is a choice of the app, not of a theme. */
+type ColorScheme = Exclude<Settings["colorScheme"], "system">;
 
 /**
  * A theme's text: one string for every language, or text keyed by the app's locale codes. A
@@ -16,7 +17,7 @@ type ColorScheme = "light" | "dark";
 export type LocalizedText = string | Partial<Record<SupportedLocale, string>>;
 
 /** Where a theme comes from: the app bundle, the global themes folder, or the open project's. */
-type ThemeSource = "builtin" | "global" | "project";
+type ThemeSource = "builtin" | ImportedTheme["source"];
 
 export interface ThemeInfo {
   /** Value stored in settings: the folder name for a built-in theme, `source:folder` otherwise. */

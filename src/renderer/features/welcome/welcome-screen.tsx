@@ -4,6 +4,7 @@ import { Button, Kbd, ListItem } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
 import { fileNameOf } from "@/lib/file";
+import { truncateStyle } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 import { LookChooser } from "./look-chooser";
 
@@ -74,23 +75,17 @@ const recentItem = css({
   gap: "2",
   paddingInlineStart: "2.5",
 });
-const recentName = css({
+const recentName = css(truncateStyle, {
   minWidth: 0,
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
   fontWeight: "medium",
   color: "foreground",
   layerStyle: "interactive",
   _groupHover: { color: "brand" },
 });
-const recentPath = css({
+const recentPath = css(truncateStyle, {
   textStyle: "2xs",
   fontFamily: "mono",
   color: "tertiary",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
   maxWidth: "40",
 });
 const hint = css({ textStyle: "2xs", color: "tertiary" });

@@ -1,5 +1,6 @@
 import { Copy, Minus, Square, X } from "lucide-solid";
 import { createSignal, onCleanup, Show, type Component } from "solid-js";
+import type { CaptionSide } from "@shared/desktop-api";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { css, cx } from "@/styled-system/css";
@@ -37,7 +38,7 @@ const restoreIcon = css({ width: "3.5", height: "3.5", transform: "scaleX(-1)" }
  * where the native buttons could not hide with the title bar. Close goes through the window's
  * close event, so unsaved changes are still asked about.
  */
-export const CaptionButtons: Component<{ side: "left" | "right" }> = (props) => {
+export const CaptionButtons: Component<{ side: CaptionSide }> = (props) => {
   const [maximized, setMaximized] = createSignal(false);
   onCleanup(desktop.on("window:maximized-changed", setMaximized));
   const labels = () => t().window;

@@ -1,9 +1,8 @@
 import { SHORTCUTS } from "@shared/shortcuts";
+import type { ZoomCommand } from "./zoom";
 
 /** The shortcut the main window handles itself. */
-export type AppShortcut =
-  | { kind: "zoom"; command: "in" | "out" | "reset" }
-  | { kind: "toggleTheme" };
+export type AppShortcut = { kind: "zoom"; command: ZoomCommand } | { kind: "toggleTheme" };
 
 /** The part of a keystroke that a shortcut depends on. */
 export type Keystroke = {
@@ -20,7 +19,7 @@ export type Keystroke = {
  * The character the keyboard produced decides the zoom, so the keypad's "+" and "-" and the
  * shifted paren of "0" need no spellings of their own.
  */
-const ZOOM_BY_KEY = new Map<string, "in" | "out" | "reset">([
+const ZOOM_BY_KEY = new Map<string, ZoomCommand>([
   ["+", "in"],
   ["=", "in"],
   ["-", "out"],

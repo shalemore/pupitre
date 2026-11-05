@@ -2,7 +2,7 @@ import { Combobox as KobalteCombobox } from "@kobalte/core/combobox";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { Check, ChevronDown } from "lucide-solid";
 import { createSignal, Show } from "solid-js";
-import { FLOATING_PANEL } from "@/lib/styles";
+import { FLOATING_PANEL, truncateStyle } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 import { ScrollView, type ScrollViewProps } from "./scroll-view";
 import type { SelectOption } from "./select";
@@ -40,17 +40,11 @@ const item = css({
   _highlighted: { backgroundColor: "accent" },
 });
 const itemLine = css({ display: "flex", alignItems: "baseline", gap: "2", minWidth: 0 });
-const itemLabel = css({
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
+const itemLabel = css(truncateStyle, {
   color: "foreground",
   ".group[data-selected] &": { color: "brand" },
 });
-const itemDescription = css({
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
+const itemDescription = css(truncateStyle, {
   textStyle: "2xs",
   color: "muted.foreground",
 });

@@ -4,6 +4,7 @@ import { createEffect, For, Show, type Component } from "solid-js";
 import { IconButton } from "@/components/ui";
 import { t } from "@/i18n";
 import { isTabDirty, type Tab } from "@/lib/document/tab";
+import { truncateStyle } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 
 export interface TabsBarProps {
@@ -61,11 +62,8 @@ const dirtyDot = css({
   borderRadius: "full",
   backgroundColor: "brand",
 });
-const tabName = css({
+const tabName = css(truncateStyle, {
   minWidth: 0,
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
 });
 const closeButton = css({
   marginInlineEnd: "1",

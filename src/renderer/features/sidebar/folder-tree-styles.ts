@@ -1,3 +1,4 @@
+import { truncateStyle } from "@/lib/styles";
 import { css } from "@/styled-system/css";
 
 /** The classes of the folder tree: its rows, the field that renames one, and the tree itself. */
@@ -46,11 +47,8 @@ export const itemsStart = css({ alignItems: "flex-start" });
 export const rowDirectory = css({ paddingInlineEnd: "8" });
 export const nameMin = css({ minWidth: 0 });
 export const nameGrow = css({ flex: "1" });
-export const blockTruncate = css({
+export const blockTruncate = css(truncateStyle, {
   display: "block",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
 });
 export const secondaryLine = css({
   display: "block",

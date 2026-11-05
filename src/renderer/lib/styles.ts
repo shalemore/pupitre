@@ -1,11 +1,14 @@
 import { css } from "@/styled-system/css";
 
-/** A single line of text clipped with an ellipsis. */
-export const truncate = css({
+/** A single line of text clipped with an ellipsis, to compose as `css(truncateStyle, { … })`. */
+export const truncateStyle = css.raw({
   overflow: "hidden",
   textOverflow: "ellipsis",
   whiteSpace: "nowrap",
 });
+
+/** The same clip as a class, for an element that needs nothing else. */
+export const truncate = css(truncateStyle);
 
 /** A glyph that points the other way in a right-to-left window. */
 export const rtlFlip = css({ _rtl: { scale: "-1 1" } });
@@ -40,13 +43,7 @@ export const menuPanel = css({
 });
 
 /** A line that takes the room left in a row and clips what does not fit. */
-export const truncateGrow = css({
-  minWidth: 0,
-  flex: "1",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
-});
+export const truncateGrow = css(truncateStyle, { minWidth: 0, flex: "1" });
 
 /** A control that keeps its size in a row that may be too narrow. */
 export const shrinkNone = css({ flexShrink: 0 });

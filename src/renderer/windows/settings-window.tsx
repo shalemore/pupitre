@@ -22,6 +22,7 @@ import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { fileNameOf } from "@/lib/file";
 import { isImmersive } from "@/lib/settings";
+import { truncateStyle } from "@/lib/styles";
 import { workspace } from "@/lib/workspace";
 import { cva, css, cx } from "@/styled-system/css";
 import { barDivider, windowFrame } from "./window-chrome";
@@ -55,12 +56,9 @@ const settingsSidebar = cva({
 });
 const scopeBlock = css({ marginBlockEnd: "3", "& > * + *": { marginBlockStart: "1" } });
 const scopeRow = css({ display: "flex", alignItems: "center", gap: "1", paddingInlineStart: "2" });
-const scopeName = css({
+const scopeName = css(truncateStyle, {
   minWidth: 0,
   flex: "1",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
   textStyle: "2xs",
   color: "muted.foreground",
 });

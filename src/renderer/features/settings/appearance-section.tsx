@@ -6,6 +6,7 @@ import { currentLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { formatPercent } from "@/lib/number-format";
 import { isImmersive, settings, updateSettings } from "@/lib/settings";
+import type { SidebarSide } from "@/lib/sidebar";
 import { DEFAULT_THEME, type ThemeInfo, themeDisplayName, themes } from "@/lib/theme";
 import { css } from "@/styled-system/css";
 import { FontSelect, themeFontLabel } from "./font-select";
@@ -72,7 +73,7 @@ function missingThemeMessages(): string[] {
 }
 
 /** The sidebar's control is the pin an immersive window offers, or the collapse a classic one does. */
-function sidebarControlTitle(side: "start" | "end"): string {
+function sidebarControlTitle(side: SidebarSide): string {
   const name = side === "start" ? t().sidebar.folder : t().sidebar.outline;
   if (!isImmersive()) {
     return settings().sidebarLayout === "split"

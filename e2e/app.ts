@@ -6,6 +6,7 @@ import { join } from "node:path";
 import { _electron as electron } from "@playwright/test";
 import type { ElectronApplication, Page } from "@playwright/test";
 import type { AppCommand } from "../src/shared/desktop-api";
+import type { Settings } from "../src/shared/settings";
 
 /** Playwright starts in the repository root, where `npm run build` left `out/`. */
 const ROOT = process.cwd();
@@ -24,7 +25,7 @@ export interface LaunchOptions {
   /** Reuse the profile of a launch that was killed, to bring its draft back. */
   readonly profile?: string;
   /** Settings written into a fresh profile before the app starts, such as `{ tabs: true }`. */
-  readonly settings?: Readonly<Record<string, unknown>>;
+  readonly settings?: Partial<Settings>;
 }
 
 /**

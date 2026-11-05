@@ -1,8 +1,8 @@
 import { debounce } from "@solid-primitives/scheduled";
 import { createEffect, createSignal, on } from "solid-js";
 import type { SidebarWidths } from "@shared/desktop-api";
-import { SIDEBAR_WIDTH } from "@/features/sidebar/sidebar";
 import { desktop } from "@/lib/desktop";
+import { SIDEBAR_WIDTH } from "@/lib/sidebar";
 
 /** A drag reports the pointer for every pixel it moves; only the width it settles on is worth writing. */
 const SAVE_DELAY = 300;

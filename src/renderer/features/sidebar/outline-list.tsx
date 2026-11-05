@@ -3,7 +3,7 @@ import { createMemo, createSelector, Index, Show, type Component } from "solid-j
 import { ListItem, rowIndent } from "@/components/ui";
 import { t } from "@/i18n";
 import { headingKey, type OutlineHeading } from "@/lib/markdown/outline-heading";
-import { OUTLINE_ROW } from "@/lib/styles";
+import { OUTLINE_ROW, truncateStyle } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 
 interface OutlineListProps {
@@ -61,19 +61,13 @@ const chevron = css({
 const chevronOpen = css({ rotate: "90deg", _rtl: { rotate: "-90deg" } });
 const item = css({ minWidth: 0, flex: "1" });
 const topLevelItem = css({ fontWeight: "medium" });
-const untitled = css({
+const untitled = css(truncateStyle, {
   minWidth: 0,
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
   fontStyle: "italic",
   color: "tertiary",
 });
-const title = css({
+const title = css(truncateStyle, {
   minWidth: 0,
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
 });
 
 export const OutlineList: Component<OutlineListProps> = (props) => {

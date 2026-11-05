@@ -37,7 +37,6 @@ export const dirtyDot = css({
   animationDuration: "snap",
   animationTimingFunction: "outExpo",
 });
-export const ellipsis = css({ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" });
 export const titleEnd = css({
   display: "flex",
   minWidth: 0,

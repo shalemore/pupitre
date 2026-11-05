@@ -3,16 +3,13 @@ import { createSignal, type Component, type JSX, Show } from "solid-js";
 import { ScrollView, SegmentedControl, ToggleIconButton } from "@/components/ui";
 import { t } from "@/i18n";
 import { distanceFromEnd, distanceFromStart, isRtl } from "@/lib/rtl";
-import { quietButton, rtlFlip } from "@/lib/styles";
+import { SIDEBAR_WIDTH, type SidebarSide } from "@/lib/sidebar";
+import { quietButton, rtlFlip, truncateStyle } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 import type { SidebarControl } from "./sidebar-control";
 
 export type SidebarMode = "outline" | "folder";
 
-/** The window edge a sidebar sits at; the immersive window folds each one towards its own edge. */
-export type SidebarSide = "start" | "end";
-
-export const SIDEBAR_WIDTH = { initial: 256, min: 180, max: 480 };
 const KEYBOARD_STEP = 16;
 
 const slot = css({
@@ -63,11 +60,8 @@ const titleRow = css({
   paddingBlockStart: "2",
 });
 const titleMain = css({ display: "flex", minWidth: 0, flex: "1", alignItems: "center", gap: "1" });
-const titleText = css({
+const titleText = css(truncateStyle, {
   minWidth: 0,
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
   textStyle: "2xs",
   fontWeight: "medium",
   color: "muted.foreground",

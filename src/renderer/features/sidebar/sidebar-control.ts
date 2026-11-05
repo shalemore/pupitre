@@ -1,6 +1,6 @@
 import type { Accessor } from "solid-js";
 import { settings, updateSettings } from "@/lib/settings";
-import type { SidebarSide } from "./sidebar";
+import type { SidebarSide } from "@/lib/sidebar";
 
 export interface SidebarControl {
   /** Whether the sidebar stays open when the window folds its chrome. */

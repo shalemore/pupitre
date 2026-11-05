@@ -54,7 +54,7 @@ export const PARAGRAPH_MENU_GROUPS: readonly (readonly FormatAction[])[] = [
 ];
 
 /** The Format menu: every inline format, in the order the menu lists them. */
-export const INLINE_FORMAT_ACTIONS = [
+export const INLINE_FORMAT_ACTIONS: readonly FormatAction[] = [
   "bold",
   "italic",
   "underline",
@@ -65,13 +65,13 @@ export const INLINE_FORMAT_ACTIONS = [
   "inlineCode",
   "link",
   "clearFormat",
-] as const satisfies readonly FormatAction[];
+];
 
 /**
  * Inline formats offered first in the context menu, which its edit actions have to stay visible
  * next to; the rest are a menu bar or a shortcut away.
  */
-export const CONTEXT_MENU_FORMAT_ACTIONS = [
+export const CONTEXT_MENU_FORMAT_ACTIONS: readonly FormatAction[] = [
   "bold",
   "italic",
   "underline",
@@ -79,4 +79,4 @@ export const CONTEXT_MENU_FORMAT_ACTIONS = [
   "highlight",
   "inlineCode",
   "link",
-] as const satisfies readonly FormatAction[];
+];

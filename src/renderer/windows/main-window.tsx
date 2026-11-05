@@ -37,7 +37,7 @@ import { createImmersiveChrome } from "@/lib/immersive-chrome";
 import { headingKey, type OutlineHeading } from "@/lib/markdown/outline-heading";
 import { recentFiles } from "@/lib/recent-files";
 import { isImmersive, settings, updateSettings } from "@/lib/settings";
-import { quietButton, rtlFlip } from "@/lib/styles";
+import { quietButton, rtlFlip, truncate } from "@/lib/styles";
 import type { TextStats } from "@/lib/text-stats";
 import { createDocumentActions } from "./document-actions";
 import {
@@ -46,7 +46,6 @@ import {
   dirtyDot,
   documentArea,
   editorArea,
-  ellipsis,
   welcomeArea,
   titleCenter,
   titleEnd,
@@ -596,7 +595,7 @@ export const MainWindow: Component = () => {
                   <Show when={session.isDirty()}>
                     <span aria-hidden="true" class={dirtyDot} />
                   </Show>
-                  <bdi dir="auto" class={ellipsis}>
+                  <bdi dir="auto" class={truncate}>
                     {session.fileName()}
                   </bdi>
                 </Show>

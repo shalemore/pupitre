@@ -8,18 +8,16 @@ import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { fencedText } from "@/lib/markdown/block-text";
 import { codeLanguages } from "@/lib/markdown/code-languages";
+import { truncateStyle } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 
 const COPIED_MS = 1500;
 
-const languagePicker = css({
+const languagePicker = css(truncateStyle, {
   fieldSizing: "content",
   maxWidth: "32",
   minWidth: 0,
   marginInline: "-1",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
   appearance: "none",
   borderRadius: "sm",
   borderWidth: 0,

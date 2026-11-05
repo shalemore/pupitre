@@ -14,6 +14,7 @@ import {
   type CaptionSide,
   type WindowColors,
 } from "@shared/desktop-api";
+import type { Settings } from "@shared/settings";
 import { setupContextMenu } from "../menus/context-menu";
 import { toggleColorScheme } from "../settings/color-scheme";
 import { onSettingsChange } from "../settings/settings-store";
@@ -37,7 +38,10 @@ const MAIN_WINDOW_SIZE = { width: 1180, height: 780 };
 const MAIN_WINDOW_MIN_SIZE = { width: 720, height: 480 };
 
 // Before a window shows there is no page yet, so it uses the colors a theme reported earlier; the first launch uses the default theme's values
-const knownColors = {
+const knownColors: Record<
+  Exclude<Settings["colorScheme"], "system">,
+  { background: string; symbol: string }
+> = {
   light: { background: "#fcfcfc", symbol: "#525252" },
   dark: { background: "#131313", symbol: "#a4a4a4" },
 };
@@ -50,7 +54,7 @@ function windowColors() {
  * GNOME and other Linux desktops can put the caption buttons on the left. The layout lists the
  * buttons left and right of a colon, e.g. "close,minimize,maximize:appmenu".
  */
-function linuxCaptionSide(): "left" | "right" {
+function linuxCaptionSide(): CaptionSide {
   try {
     const layout = execFileSync(
       "gsettings",

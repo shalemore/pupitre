@@ -1,5 +1,6 @@
 import { SegmentedControl as KobalteSegmentedControl } from "@kobalte/core/segmented-control";
 import { For, type JSX } from "solid-js";
+import { truncate } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 
 export interface SegmentedOption<T extends string> {
@@ -51,7 +52,6 @@ const label = css({
   "&[data-checked]": { fontWeight: "medium", color: "foreground" },
   "& svg": { width: "3.5", height: "3.5", flexShrink: 0 },
 });
-const text = css({ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" });
 
 /**
  * A row of mutually exclusive options on a recessed track, with a thumb that slides to the
@@ -76,7 +76,7 @@ export function SegmentedControl<T extends string>(props: SegmentedControlProps<
             <KobalteSegmentedControl.ItemInput class="peer" />
             <KobalteSegmentedControl.ItemLabel data-slot="segmented-item" class={label}>
               {option.icon}
-              <span class={text}>{option.label}</span>
+              <span class={truncate}>{option.label}</span>
             </KobalteSegmentedControl.ItemLabel>
           </KobalteSegmentedControl.Item>
         )}

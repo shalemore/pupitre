@@ -28,6 +28,7 @@ import {
 import { t } from "@/i18n";
 import { FocusFirstRow, ShowFocusedRow } from "@/lib/combobox-rows";
 import { desktop } from "@/lib/desktop";
+import { truncateStyle } from "@/lib/styles";
 import { css } from "@/styled-system/css";
 
 const optionButton = css({
@@ -60,12 +61,9 @@ const lineNumber = css({
   color: "tertiary",
   fontVariantNumeric: "tabular-nums",
 });
-const matchText = css({
+const matchText = css(truncateStyle, {
   minWidth: 0,
   flex: "1",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
 });
 const section = css({
   display: "flex",
@@ -74,12 +72,9 @@ const section = css({
   paddingInline: "2.5",
   paddingBlockStart: "1.5",
 });
-const sectionLabel = css({
+const sectionLabel = css(truncateStyle, {
   minWidth: 0,
   flex: "1",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
   fontWeight: "medium",
 });
 const control = css({ display: "flex", alignItems: "center", gap: "1.5" });

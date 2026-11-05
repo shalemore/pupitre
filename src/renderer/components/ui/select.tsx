@@ -1,7 +1,7 @@
 import { Select as KobalteSelect } from "@kobalte/core/select";
 import { Check, ChevronDown } from "lucide-solid";
 import { type JSX, Show } from "solid-js";
-import { FLOATING_PANEL } from "@/lib/styles";
+import { FLOATING_PANEL, truncate, truncateStyle } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 import { Badge } from "./badge";
 import { ScrollView, type ScrollViewProps } from "./scroll-view";
@@ -43,19 +43,13 @@ const item = css({
   cursor: "pointer",
   _highlighted: { backgroundColor: "accent" },
 });
-const itemLabel = css({
+const itemLabel = css(truncateStyle, {
   minWidth: 0,
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
   fontWeight: "medium",
   color: "foreground",
   ".group[data-selected] &": { color: "brand" },
 });
-const itemHint = css({
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
+const itemHint = css(truncateStyle, {
   textStyle: "2xs",
   color: "muted.foreground",
 });
@@ -63,7 +57,6 @@ const itemText = css({ display: "flex", minWidth: 0, flexDirection: "column" });
 const itemLine = css({ display: "flex", minWidth: 0, alignItems: "center", gap: "1.5" });
 const check = css({ width: "3", height: "3", flexShrink: 0, color: "brand" });
 const chevronIcon = css({ width: "3.5", height: "3.5" });
-const valueLabel = css({ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" });
 
 const trigger = css({
   display: "flex",
@@ -87,15 +80,12 @@ const trigger = css({
   _focusVisible: { boxShadow: "focus" },
   _expanded: { borderColor: "brand" },
 });
-const value = css({
+const value = css(truncateStyle, {
   display: "flex",
   minWidth: 0,
   flex: "1",
   alignItems: "center",
   gap: "1.5",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
 });
 const chevron = css({
   color: "muted.foreground",
@@ -167,7 +157,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
         <KobalteSelect.Value<SelectOption<T>> class={value}>
           {(state) => (
             <>
-              <span class={valueLabel} style={state.selectedOption().style}>
+              <span class={truncate} style={state.selectedOption().style}>
                 {state.selectedOption().label}
               </span>
               <Show when={state.selectedOption().hint}>
