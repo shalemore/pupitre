@@ -71,6 +71,9 @@ export interface TreeContext {
   renaming: () => string | undefined;
   onRename: (path: string, name: string) => void;
   onRenameCancel: () => void;
+  /** The row a rename left to focus once it is on the page again. */
+  focusAfterRename: () => string | undefined;
+  onFocusAfterRename: () => void;
   /** The menu of a row, built when it opens. */
   menuOf: (entry: FolderEntry) => RowMenu;
   /** Told when a row menu opens or closes. */
@@ -212,6 +215,18 @@ export const FolderRow: Component<{
   const failure = () => props.tree.failures()[props.entry.path];
   const isActive = () => props.tree.isActive(props.entry.path);
   const isDirectory = () => props.entry.kind === "directory";
+  // A rename takes the focused field away; the row that replaces it takes focus once it is here
+  createEffect(() => {
+    if (props.tree.focusAfterRename() !== props.entry.path) return;
+    requestAnimationFrame(() => {
+      const row = [...document.querySelectorAll<HTMLButtonElement>("[data-folder-row]")].find(
+        (element) => element.dataset["folderRow"] === props.entry.path,
+      );
+      if (row === undefined) return;
+      props.tree.onFocusAfterRename();
+      row.focus();
+    });
+  });
   const excerpt = createMemo(
     () => excerptOf(props.previews()?.[props.entry.path] ?? "") || undefined,
   );
@@ -231,6 +246,7 @@ export const FolderRow: Component<{
             <ContextMenu onOpenChange={props.tree.onMenuOpenChange}>
               <ContextMenu.Trigger
                 as={ListItem}
+                data-folder-row={props.entry.path}
                 active={isActive()}
                 tone={failure() ? "danger" : "default"}
                 onClick={() =>

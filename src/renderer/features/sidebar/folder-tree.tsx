@@ -56,6 +56,7 @@ interface PathChange {
 export const FolderTree: Component<FolderTreeProps> = (props) => {
   const [failures, setFailures] = createSignal<Readonly<Record<string, string>>>({});
   const [renaming, setRenaming] = createSignal<string>();
+  const [focusAfterRename, setFocusAfterRename] = createSignal<string>();
   const [expanded, setExpanded] = createSignal<ReadonlySet<string>>(new Set());
   const [menuOpen, setMenuOpen] = createSignal(false);
   const [hiddenFolders, setHiddenFolders] = createSignal<ReadonlySet<string>>(new Set());
@@ -106,8 +107,15 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
     void run(async () => {
       const next = await desktop.invoke("path:rename", path, name);
       await movePins(path, next);
+      setFocusAfterRename(next);
       return { old: path, path: next };
     });
+  };
+
+  const cancelRename = () => {
+    const path = renaming();
+    setRenaming(undefined);
+    if (path !== undefined) setFocusAfterRename(path);
   };
 
   // A new entry is named right away, so the folder it went into is opened for its row to show the field
@@ -230,7 +238,9 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
     onOpenFolder: (path) => props.onOpenFolder(path),
     renaming,
     onRename: rename,
-    onRenameCancel: () => setRenaming(undefined),
+    onRenameCancel: cancelRename,
+    focusAfterRename,
+    onFocusAfterRename: () => setFocusAfterRename(undefined),
     menuOf,
     onMenuOpenChange: setMenuOpen,
     onLevelHiddenChange: reportHidden,

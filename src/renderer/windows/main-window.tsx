@@ -439,11 +439,18 @@ export const MainWindow: Component = () => {
     void desktop.invoke("window:close-confirmed");
   };
 
+  // A tab's close button goes away with the tab, so the focus would otherwise fall to the body;
+  // the editor of whatever tab is left takes it once the close has settled
+  const closeTabToEditor = async (id: number) => {
+    await session.closeTab(id);
+    requestAnimationFrame(() => editor()?.focus());
+  };
+
   /** Closes the tab being shown; the last one closes the window. */
   const closeActiveTab = async () => {
     const tab = session.activeTab();
     if (tab === undefined) return;
-    if (session.tabs().length > 1) return session.closeTab(tab.id);
+    if (session.tabs().length > 1) return closeTabToEditor(tab.id);
     await closeWindow();
   };
 
@@ -566,7 +573,7 @@ export const MainWindow: Component = () => {
           activeId={session.activeTab()?.id}
           nameOf={session.tabFileName}
           onActivate={session.activateTab}
-          onClose={(id) => void session.closeTab(id)}
+          onClose={(id) => void closeTabToEditor(id)}
           count={wordCount()}
           onMenuOpenChange={setMenuOpen}
         />
