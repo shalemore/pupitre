@@ -138,7 +138,9 @@ export const OutlineList: Component<OutlineListProps> = (props) => {
                   when={row().heading.text.trim()}
                   fallback={<span class={untitled}>{t().sidebar.untitled}</span>}
                 >
-                  <span class={title}>{row().heading.text}</span>
+                  <bdi dir="auto" class={title}>
+                    {row().heading.text}
+                  </bdi>
                 </Show>
               </ListItem>
             </div>

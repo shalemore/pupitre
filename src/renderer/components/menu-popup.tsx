@@ -69,7 +69,15 @@ const ItemContent: Component<{ item: MenuItemEntry; checked: boolean; hasChecks:
         <Check class={cx(check, !props.checked && hidden)} stroke-width={2} />
       </Show>
       <span class={label}>
-        <span class={cx(truncate, block)}>{props.item.label}</span>
+        <Show
+          when={props.item.detail}
+          fallback={<span class={cx(truncate, block)}>{props.item.label}</span>}
+        >
+          {/* A recent file's name is document text, not a UI label; its path is isolated below */}
+          <bdi dir="auto" class={cx(truncate, block)}>
+            {props.item.label}
+          </bdi>
+        </Show>
         <Show when={props.item.detail}>
           <bdi dir="auto" class={cx(truncate, block, detail)}>
             {props.item.detail}

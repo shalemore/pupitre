@@ -50,7 +50,7 @@ export function CommandPalette(props: CommandPaletteProps) {
               {command.parent}
               {t().commandPalette.separator}
             </span>
-            {command.label}
+            <bdi dir="auto">{command.label}</bdi>
           </span>
           <Show when={command.shortcut}>
             {(shortcut) => (

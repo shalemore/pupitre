@@ -133,6 +133,7 @@ export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
         <KobalteCombobox.Input
           as={Input}
           ref={(element) => (input = element)}
+          dir="auto"
           placeholder={props.placeholder}
           aria-label={props.title}
         />
