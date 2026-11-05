@@ -50,7 +50,7 @@ const paletteItem = css({
   gap: "3",
   borderRadius: "md",
   paddingBlock: "1.5",
-  paddingInlineEnd: "2.5",
+  paddingInline: "2.5",
   textAlign: "start",
   textStyle: "xs",
   color: "muted.foreground",
@@ -63,10 +63,11 @@ const list = css({
   minHeight: "0",
   flexDirection: "column",
   gap: "0.5",
+  marginBlockStart: "2",
 });
-const empty = css({ paddingInline: "2", paddingBlock: "1.5", color: "muted.foreground" });
+const empty = css({ paddingInline: "2.5", paddingBlock: "1.5", color: "muted.foreground" });
 const hint = css({
-  paddingInline: "2",
+  paddingInline: "2.5",
   paddingBlockEnd: "1",
   textStyle: "2xs",
   color: "muted.foreground",
