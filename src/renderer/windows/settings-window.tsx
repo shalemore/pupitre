@@ -21,7 +21,7 @@ import { MarkdownSection } from "@/features/settings/markdown-section";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { fileNameOf } from "@/lib/file";
-import { settings } from "@/lib/settings";
+import { isImmersive } from "@/lib/settings";
 import { workspace } from "@/lib/workspace";
 import { css, cx } from "@/styled-system/css";
 import {
@@ -62,7 +62,6 @@ const pageImmersive = css({
 });
 
 export const SettingsWindow: Component = () => {
-  const immersive = () => settings().windowStyle === "immersive";
   createEffect(() => {
     document.title = t().settings.title;
   });
@@ -74,8 +73,8 @@ export const SettingsWindow: Component = () => {
   });
 
   return (
-    <div class={cx(windowFrame, settingsFrame, immersive() ? windowImmersive : windowClassic)}>
-      <TitleBar class={cx(!immersive() && frameBorderBottom)}>
+    <div class={cx(windowFrame, settingsFrame, isImmersive() ? windowImmersive : windowClassic)}>
+      <TitleBar class={cx(!isImmersive() && frameBorderBottom)}>
         <span class={title}>{t().settings.title}</span>
       </TitleBar>
 
@@ -83,9 +82,9 @@ export const SettingsWindow: Component = () => {
       <Tabs
         orientation="vertical"
         defaultValue="general"
-        class={cx(tabs, immersive() && tabsImmersive)}
+        class={cx(tabs, isImmersive() && tabsImmersive)}
       >
-        <aside class={cx(sidebar, !immersive() && cx(frameBorderEnd, sidebarClassic))}>
+        <aside class={cx(sidebar, !isImmersive() && cx(frameBorderEnd, sidebarClassic))}>
           <Show when={workspace().root}>
             {(root) => (
               <div class={scopeBlock}>
@@ -143,7 +142,7 @@ export const SettingsWindow: Component = () => {
           </TabsList>
         </aside>
 
-        <ScrollView as="main" class={cx(page, immersive() && pageImmersive)}>
+        <ScrollView as="main" class={cx(page, isImmersive() && pageImmersive)}>
           <TabsContent value="general">
             <GeneralSection />
           </TabsContent>

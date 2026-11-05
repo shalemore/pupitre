@@ -1,54 +1,67 @@
-import { Show, type Component } from "solid-js";
+import type { Component } from "solid-js";
 import { CommandPalette } from "@/features/command-palette/command-palette";
 import { TableSizeDialog } from "@/features/editor/tables/table-size-dialog";
 import { QuickOpen } from "@/features/quick-open";
 import { VersionHistory } from "@/features/version-history";
 import { WorkspaceSearch } from "@/features/workspace-search";
 
-/** The panels that take the window over while they are open; one replaces another. */
-export type Overlay = "palette" | "table-size" | "history" | "quick-open" | "workspace-search";
+/** Closing is the same for every panel, so the state that opened one carries its own close. */
+type Closable<T> = T & { onClose: () => void };
 
-interface OverlaysProps {
-  overlay: Overlay | undefined;
-  /** The file whose versions the history shows; none when the document has no file. */
-  historyPath: string | undefined;
-  folderRoot: string | undefined;
-  onClose: () => void;
-  onCloseTable: () => void;
-  onCloseSearch: () => void;
-  onRestore: (markdown: string) => void;
-  onInsertTable: (rows: number, columns: number) => void;
-  onOpenPath: (path: string) => void;
-  onOpenMatch: (path: string, from: number, to: number) => void;
-}
+/**
+ * The panel that takes the window over, with what it shows and what it does. The state carries its
+ * own handlers, so a panel only ever receives the fields it has a use for.
+ */
+export type Overlay =
+  | Closable<{ kind: "palette" }>
+  | Closable<{
+      kind: "table-size";
+      onInsert: (rows: number, columns: number) => void;
+    }>
+  | Closable<{
+      kind: "history";
+      path: string;
+      onRestore: (markdown: string) => void;
+    }>
+  | Closable<{
+      kind: "quick-open";
+      root: string | undefined;
+      onOpen: (path: string) => void;
+    }>
+  | Closable<{
+      kind: "workspace-search";
+      root: string | undefined;
+      onOpenMatch: (path: string, from: number, to: number) => void;
+    }>;
 
-export const Overlays: Component<OverlaysProps> = (props) => (
-  <>
-    <Show when={props.overlay === "palette"}>
-      <CommandPalette onClose={props.onClose} />
-    </Show>
-
-    <Show when={props.overlay === "table-size"}>
-      <TableSizeDialog onInsert={props.onInsertTable} onClose={props.onCloseTable} />
-    </Show>
-
-    {/* The versions belong to a file, so a document that has none has no panel to offer */}
-    <Show when={props.overlay === "history" && props.historyPath}>
-      {(path) => (
-        <VersionHistory path={path()} onRestore={props.onRestore} onClose={props.onClose} />
-      )}
-    </Show>
-
-    <Show when={props.overlay === "quick-open"}>
-      <QuickOpen root={props.folderRoot} onClose={props.onClose} onOpen={props.onOpenPath} />
-    </Show>
-
-    <Show when={props.overlay === "workspace-search"}>
-      <WorkspaceSearch
-        root={props.folderRoot}
-        onOpenMatch={props.onOpenMatch}
-        onClose={props.onCloseSearch}
-      />
-    </Show>
-  </>
-);
+/**
+ * The panel the state names. The window mounts this keyed, so a new overlay builds its panel from
+ * scratch and this only has to pick one.
+ */
+export const Overlays: Component<{ overlay: Overlay }> = (props) => {
+  const overlay = props.overlay;
+  switch (overlay.kind) {
+    case "palette":
+      return <CommandPalette onClose={overlay.onClose} />;
+    case "table-size":
+      return <TableSizeDialog onInsert={overlay.onInsert} onClose={overlay.onClose} />;
+    case "history":
+      return (
+        <VersionHistory
+          path={overlay.path}
+          onRestore={overlay.onRestore}
+          onClose={overlay.onClose}
+        />
+      );
+    case "quick-open":
+      return <QuickOpen root={overlay.root} onOpen={overlay.onOpen} onClose={overlay.onClose} />;
+    case "workspace-search":
+      return (
+        <WorkspaceSearch
+          root={overlay.root}
+          onOpenMatch={overlay.onOpenMatch}
+          onClose={overlay.onClose}
+        />
+      );
+  }
+};

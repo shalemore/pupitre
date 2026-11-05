@@ -9,6 +9,9 @@ desktop.on("settings:changed", setSettings);
 
 export { settings };
 
+/** Whether the windows draw the immersive chrome, which folds away while the user works. */
+export const isImmersive = () => settings().windowStyle === "immersive";
+
 export function updateSettings(patch: Partial<Settings>): Promise<void> {
   return desktop.invoke("settings:update", patch);
 }

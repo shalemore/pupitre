@@ -464,9 +464,14 @@ function imageMarkup(image: TaggedImage): string {
   return `<img src="${escapeHtml(image.src)}" alt="${escapeHtml(image.alt)}"${title}${width}${declarations}>`;
 }
 
+/** Whether two sizes place a picture the same way. */
+export function sameImageSize(a: ImageSize, b: ImageSize): boolean {
+  return a.width === b.width && a.alignment === b.alignment;
+}
+
 /** Writes a size a known picture was changed to into its source, as one undoable change. */
 export function setImageLayout(view: EditorView, image: DocumentImage, size: ImageSize): void {
-  if (size.width === image.width && size.alignment === image.alignment) return;
+  if (sameImageSize(size, image)) return;
   view.dispatch({
     changes: {
       from: image.from,

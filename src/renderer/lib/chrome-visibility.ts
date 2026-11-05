@@ -6,6 +6,9 @@ export interface ChromeOptions {
   startPinned: () => boolean;
   endPinned: () => boolean;
   titleBarPinned: () => boolean;
+  /** Whether the layout has a sidebar to show there at all, whatever the fold decides. */
+  startWanted: () => boolean;
+  endWanted: () => boolean;
   /** Width a sidebar takes beside the document; 0 when the layout shows none. */
   startRoom: () => number;
   endRoom: () => number;
@@ -46,11 +49,11 @@ export function chromeVisibility(
   return {
     titleBar:
       !options.immersive() || options.titleBarPinned() || shown(state.near.top && state.topReached),
-    start: sidebarShown(
-      state.near.start,
-      options.startPinned(),
-      shown(state.near.start, startFolded()),
-    ),
-    end: sidebarShown(state.near.end, options.endPinned(), shown(state.near.end, endFolded())),
+    start:
+      options.startWanted() &&
+      sidebarShown(state.near.start, options.startPinned(), shown(state.near.start, startFolded())),
+    end:
+      options.endWanted() &&
+      sidebarShown(state.near.end, options.endPinned(), shown(state.near.end, endFolded())),
   };
 }

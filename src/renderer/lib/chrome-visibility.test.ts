@@ -7,6 +7,8 @@ const options: ChromeOptions = {
   titleBarPinned: () => false,
   startPinned: () => false,
   endPinned: () => false,
+  startWanted: () => true,
+  endWanted: () => true,
   startRoom: () => 256,
   endRoom: () => 256,
 };
@@ -99,6 +101,14 @@ describe("chromeVisibility", () => {
     expect(
       chromeVisibility({ ...state, near: { top: false, start: true, end: false } }, classic, 1400),
     ).toEqual({ titleBar: true, start: true, end: false });
+  });
+
+  it("keeps a sidebar the layout has no place for hidden, whatever the pointer asks", () => {
+    const idle = { ...state, writing: false, near: { top: false, start: true, end: true } };
+    expect(chromeVisibility(idle, { ...options, startWanted: () => false }, 1400)).toMatchObject({
+      start: false,
+      end: true,
+    });
   });
 
   it("keeps the chrome out after a menu pick until the next write or scroll", () => {

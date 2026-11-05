@@ -5,7 +5,7 @@ import { Callout, IconButton, Select, Slider, Switch } from "@/components/ui";
 import { currentLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { formatPercent } from "@/lib/number-format";
-import { settings, updateSettings } from "@/lib/settings";
+import { isImmersive, settings, updateSettings } from "@/lib/settings";
 import { DEFAULT_THEME, type ThemeInfo, themeDisplayName, themes } from "@/lib/theme";
 import { css } from "@/styled-system/css";
 import { FontSelect, themeFontLabel } from "./font-select";
@@ -69,6 +69,19 @@ function missingThemeMessages(): string[] {
     messages.push(t().settings.darkThemeMissing);
   }
   return messages;
+}
+
+/** The sidebar's control is the pin an immersive window offers, or the collapse a classic one does. */
+function sidebarControlTitle(side: "start" | "end"): string {
+  const name = side === "start" ? t().sidebar.folder : t().sidebar.outline;
+  if (!isImmersive()) {
+    return settings().sidebarLayout === "split"
+      ? t().settings.collapseSidebarName(name)
+      : t().sidebar.collapseSidebar;
+  }
+  return settings().sidebarLayout === "split"
+    ? t().settings.pinSidebar(name)
+    : t().settings.pinSidebars;
 }
 
 export const AppearanceSection: Component = () => (
@@ -192,7 +205,7 @@ export const AppearanceSection: Component = () => (
         />
       </SettingField>
 
-      <Show when={settings().windowStyle === "immersive"}>
+      <Show when={isImmersive()}>
         <SettingField
           nested
           name="immersiveGap"
@@ -300,18 +313,8 @@ export const AppearanceSection: Component = () => (
           <SettingField
             nested
             name="sidebarPinnedStart"
-            title={
-              settings().windowStyle === "immersive"
-                ? settings().sidebarLayout === "split"
-                  ? t().settings.pinSidebar(t().sidebar.folder)
-                  : t().settings.pinSidebars
-                : settings().sidebarLayout === "split"
-                  ? t().settings.collapseSidebarName(t().sidebar.folder)
-                  : t().sidebar.collapseSidebar
-            }
-            description={
-              settings().windowStyle === "immersive" ? t().settings.pinSidebarsDesc : undefined
-            }
+            title={sidebarControlTitle("start")}
+            description={isImmersive() ? t().settings.pinSidebarsDesc : undefined}
           >
             <Switch
               checked={settings().sidebarPinnedStart}
@@ -320,15 +323,7 @@ export const AppearanceSection: Component = () => (
             />
           </SettingField>
           <Show when={settings().sidebarLayout === "split"}>
-            <SettingField
-              nested
-              name="sidebarPinnedEnd"
-              title={
-                settings().windowStyle === "immersive"
-                  ? t().settings.pinSidebar(t().sidebar.outline)
-                  : t().settings.collapseSidebarName(t().sidebar.outline)
-              }
-            >
+            <SettingField nested name="sidebarPinnedEnd" title={sidebarControlTitle("end")}>
               <Switch
                 checked={settings().sidebarPinnedEnd}
                 onChange={(sidebarPinnedEnd) => void updateSettings({ sidebarPinnedEnd })}

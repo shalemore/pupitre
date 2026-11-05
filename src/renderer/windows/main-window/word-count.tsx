@@ -22,15 +22,13 @@ const countKind = (stats: TextStats): "word" | "character" =>
 
 /** The words and characters of the document, and of the selection when there is one. */
 export const WordCount: Component<{ stats: TextStats }> = (props) => {
+  const kind = createMemo(() => countKind(props.stats));
   const wordsText = createMemo(() => {
     const { words, selectedWords } = props.stats;
-    const total = t().common.wordsCount(words, countKind(props.stats));
+    const total = t().common.wordsCount(words, kind());
     return selectedWords === undefined
       ? total
-      : t().common.selectedOfTotal(
-          t().common.wordsCount(selectedWords, countKind(props.stats)),
-          total,
-        );
+      : t().common.selectedOfTotal(t().common.wordsCount(selectedWords, kind()), total);
   });
   const charsText = createMemo(() => {
     const { characters, selectedCharacters } = props.stats;
@@ -45,7 +43,7 @@ export const WordCount: Component<{ stats: TextStats }> = (props) => {
   return (
     <div data-bar-part="count" title={`${wordsText()} · ${charsText()}`} class={label}>
       <span>{wordsText()}</span>
-      <Show when={countKind(props.stats) === "character"}>
+      <Show when={kind() === "character"}>
         <span>·</span>
         <span>{charsText()}</span>
       </Show>

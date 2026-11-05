@@ -1,5 +1,5 @@
 import { makeEventListener } from "@solid-primitives/event-listener";
-import { debounce, scheduleIdle } from "@solid-primitives/scheduled";
+import { scheduleIdle } from "@solid-primitives/scheduled";
 import { CornerRightUp, Eye } from "lucide-solid";
 import {
   createEffect,
@@ -24,7 +24,7 @@ import { MenuBar, MenuButton } from "@/features/menu-bar";
 import { FolderSortButton } from "@/features/sidebar/folder-sort-button";
 import { FolderTree } from "@/features/sidebar/folder-tree";
 import { OutlineList } from "@/features/sidebar/outline-list";
-import { SIDEBAR_WIDTH, type SidebarMode } from "@/features/sidebar/sidebar";
+import type { SidebarMode } from "@/features/sidebar/sidebar";
 import { createSidebarControl } from "@/features/sidebar/sidebar-control";
 import { TabsBar } from "@/features/tabs-bar";
 import { WelcomeScreen } from "@/features/welcome/welcome-screen";
@@ -32,11 +32,11 @@ import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
 import { documentPosition } from "@/lib/document/positions";
 import { createDocumentSession } from "@/lib/document/session";
-import { fileNameOf, isolateFileName, parentFolder } from "@/lib/file";
+import { isolateFileName, parentFolder } from "@/lib/file";
 import { createImmersiveChrome } from "@/lib/immersive-chrome";
 import { headingKey, type OutlineHeading } from "@/lib/markdown/outline-heading";
 import { recentFiles } from "@/lib/recent-files";
-import { settings, updateSettings } from "@/lib/settings";
+import { isImmersive, settings, updateSettings } from "@/lib/settings";
 import { quietButton, rtlFlip } from "@/lib/styles";
 import type { TextStats } from "@/lib/text-stats";
 import { cx } from "@/styled-system/css";
@@ -60,12 +60,11 @@ import {
 } from "./main-window-styles";
 import { Overlays, type Overlay } from "./main-window/overlays";
 import { SidebarRegion } from "./main-window/sidebar-region";
+import { createSidebarWidths } from "./main-window/sidebar-widths";
 import { WordCount } from "./main-window/word-count";
 import { frameBorderBottom, windowClassic, windowFrame, windowImmersive } from "./window-chrome";
 
 type FindMode = "closed" | "find" | "replace";
-// A drag reports the pointer for every pixel it moves; only the width it settles on is worth writing
-const SIDEBAR_WIDTH_SAVE_DELAY = 300;
 /** The outline of a document nothing is folded in yet, and of no document at all. */
 const OPEN_SECTIONS: ReadonlySet<string> = new Set();
 
@@ -106,6 +105,7 @@ export const MainWindow: Component = () => {
   const [preferredMode, setPreferredMode] = createSignal<SidebarMode>("outline");
   const [findMode, setFindMode] = createSignal<FindMode>("closed");
   const [overlay, setOverlay] = createSignal<Overlay>();
+  const closeOverlay = () => setOverlay(undefined);
   // A match to select once the editor holds the document it was found in
   const [matchToReveal, setMatchToReveal] = createSignal<
     { path: string; from: number; to: number } | undefined
@@ -122,7 +122,6 @@ export const MainWindow: Component = () => {
   const [startSidebarHeld, setStartSidebarHeld] = createSignal(false);
   // Whether a level on show in the folder holds an entry the eye can reveal
   const [folderHasHidden, setFolderHasHidden] = createSignal(false);
-  const immersive = () => settings().windowStyle === "immersive";
   // The strip takes the title bar's place with several documents, and with one when the user asks
   // for it. With tabs off it only appears while documents are left over from turning the setting
   // off, so they stay reachable until they are closed
@@ -132,17 +131,12 @@ export const MainWindow: Component = () => {
   // Split, the folder has its own sidebar at the start edge and the outline one at the end edge; combined, one sidebar shows either
   const split = () => settings().sidebarLayout === "split";
   // A sidebar keeps the width the user dragged it to in an earlier run
-  const savedWidths = desktop.initialState.sidebarWidths;
-  const [startWidth, setStartWidth] = createSignal(savedWidths?.start ?? SIDEBAR_WIDTH.initial);
-  const [endWidth, setEndWidth] = createSignal(savedWidths?.end ?? SIDEBAR_WIDTH.initial);
-  const saveWidthsSoon = debounce(
-    (start: number, end: number) =>
-      void desktop.invoke("window:set-sidebar-widths", { start, end }),
-    SIDEBAR_WIDTH_SAVE_DELAY,
-  );
-  createEffect(
-    on([startWidth, endWidth], ([start, end]) => saveWidthsSoon(start, end), { defer: true }),
-  );
+  const {
+    start: startWidth,
+    end: endWidth,
+    setStart: setStartWidth,
+    setEnd: setEndWidth,
+  } = createSidebarWidths(desktop.initialState.sidebarWidths);
 
   // A folder the user opened shows at once, whatever document is open; while none is open the
   // sidebar keeps the folder it already shows, so opening a document further down the tree does not
@@ -184,14 +178,16 @@ export const MainWindow: Component = () => {
       : session.activeDocument() !== undefined || folderRoot() !== undefined);
   const endSidebarWanted = () =>
     split() && settings().sidebarVisible && session.activeDocument() !== undefined;
-  const startControl = createSidebarControl("start", immersive, () => chrome.hide());
-  const endControl = createSidebarControl("end", immersive, () => chrome.hide());
+  const startControl = createSidebarControl("start", isImmersive, () => chrome.hide());
+  const endControl = createSidebarControl("end", isImmersive, () => chrome.hide());
   const chrome = createImmersiveChrome({
-    immersive,
-    canFold: () => immersive() && session.activeDocument() !== undefined,
+    immersive: isImmersive,
+    canFold: () => isImmersive() && session.activeDocument() !== undefined,
     startPinned: () => startControl.open() || startSidebarHeld(),
     endPinned: () => endControl.open(),
     titleBarPinned: menuOpen,
+    startWanted: startSidebarWanted,
+    endWanted: endSidebarWanted,
     startRoom: () => (startSidebarWanted() ? startWidth() : 0),
     endRoom: () => (endSidebarWanted() ? endWidth() : 0),
   });
@@ -230,8 +226,6 @@ export const MainWindow: Component = () => {
       { defer: true },
     ),
   );
-  const startSidebarShown = () => startSidebarWanted() && chrome.sidebarVisible();
-  const endSidebarShown = () => endSidebarWanted() && chrome.endSidebarVisible();
   const sidebarMode = (): SidebarMode => {
     if (session.activeDocument() === undefined) return "folder";
     return folderRoot() === undefined ? "outline" : preferredMode();
@@ -308,7 +302,7 @@ export const MainWindow: Component = () => {
         // document; only another document is a reason to close these and unfold the chrome
         if (id === previous) return;
         setFindMode("closed");
-        if (overlay() === "history") setOverlay(undefined);
+        if (overlay()?.kind === "history") closeOverlay();
         // A picture has no outline, counts or heading; the editor fills these in again when it
         // shows the text of the next document
         setOutline([]);
@@ -333,12 +327,12 @@ export const MainWindow: Component = () => {
   );
 
   const closeWorkspaceSearch = () => {
-    setOverlay(undefined);
+    closeOverlay();
     editor()?.focus();
   };
 
   const openWorkspaceMatch = async (path: string, from: number, to: number) => {
-    setOverlay(undefined);
+    closeOverlay();
     setMatchToReveal({ path, from, to });
     await session.openPath(path, false);
     // The file could not be read, so the match has nowhere to appear
@@ -425,14 +419,47 @@ export const MainWindow: Component = () => {
 
   /** Puts the caret back where the table would go, for a size dialog that was not answered. */
   const closeTableSize = () => {
-    setOverlay(undefined);
+    closeOverlay();
     editor()?.focus();
   };
 
   const insertTable = (rows: number, columns: number) => {
-    setOverlay(undefined);
+    closeOverlay();
     editor()?.insertTable(rows, columns);
   };
+
+  const openPalette = () => setOverlay({ kind: "palette", onClose: closeOverlay });
+
+  const openTableSize = () =>
+    setOverlay({ kind: "table-size", onInsert: insertTable, onClose: closeTableSize });
+
+  // The versions belong to a file, so a document that has none has no panel to offer
+  const openHistory = () => {
+    const path = session.activeDocument()?.path;
+    if (path === undefined) return;
+    setOverlay({
+      kind: "history",
+      path,
+      onRestore: (markdown) => editor()?.replaceDocument(markdown),
+      onClose: closeOverlay,
+    });
+  };
+
+  const openQuickOpen = () =>
+    setOverlay({
+      kind: "quick-open",
+      root: folderRoot(),
+      onOpen: (path) => void session.openPath(path),
+      onClose: closeOverlay,
+    });
+
+  const openWorkspaceSearch = () =>
+    setOverlay({
+      kind: "workspace-search",
+      root: folderRoot(),
+      onOpenMatch: (path, from, to) => void openWorkspaceMatch(path, from, to),
+      onClose: closeWorkspaceSearch,
+    });
 
   /** Asks about every tab with unsaved changes, then lets the window go. */
   const closeWindow = async () => {
@@ -457,7 +484,7 @@ export const MainWindow: Component = () => {
       case "file.open-folder":
         return void openFolder();
       case "file.quick-open":
-        return setOverlay("quick-open");
+        return openQuickOpen();
       case "file.open-path":
         return void session.openPath(command.path);
       case "file.save":
@@ -477,7 +504,7 @@ export const MainWindow: Component = () => {
       case "file.export-image":
         return void exportDocument("image");
       case "file.version-history":
-        return setOverlay("history");
+        return openHistory();
       case "edit.find":
         return openFind("find");
       case "edit.replace":
@@ -489,13 +516,13 @@ export const MainWindow: Component = () => {
       case "edit.insert-image":
         return void editor()?.insertImage();
       case "edit.insert-table":
-        return setOverlay("table-size");
+        return openTableSize();
       case "edit.search-workspace":
-        return setOverlay("workspace-search");
+        return openWorkspaceSearch();
       case "view.toggle-sidebar":
         return void updateSettings({ sidebarVisible: !settings().sidebarVisible });
       case "view.command-palette":
-        return setOverlay("palette");
+        return openPalette();
       case "view.next-tab":
         return session.nextTab();
       case "view.previous-tab":
@@ -553,10 +580,10 @@ export const MainWindow: Component = () => {
     <div
       data-window-style={settings().windowStyle}
       onPointerMove={(event) => chrome.onPointerMove(event)}
-      class={cx(windowFrame, immersive() ? windowImmersive : windowClassic)}
+      class={cx(windowFrame, isImmersive() ? windowImmersive : windowClassic)}
     >
       {/* Folding the title bar away animates its height, and the card moves up into the room */}
-      <TitleBar folded={!chrome.titleBarVisible()} class={cx(!immersive() && frameBorderBottom)}>
+      <TitleBar folded={!chrome.titleBarVisible()} class={cx(!isImmersive() && frameBorderBottom)}>
         <Show
           when={tabBarShown()}
           fallback={
@@ -609,14 +636,14 @@ export const MainWindow: Component = () => {
         class={cx(
           content,
           // The card keeps an even gap to the window edges, the title bar and the sidebars
-          immersive() && cx(contentGap, split() ? contentEndSplit : contentEnd),
+          isImmersive() && cx(contentGap, split() ? contentEndSplit : contentEnd),
         )}
       >
         <SidebarRegion
-          immersive={immersive()}
+          immersive={isImmersive()}
           split={split()}
-          startShown={startSidebarShown()}
-          endShown={endSidebarShown()}
+          startShown={chrome.sidebarVisible()}
+          endShown={chrome.endSidebarVisible()}
           startWidth={startWidth()}
           endWidth={endWidth()}
           onStartWidth={setStartWidth}
@@ -626,7 +653,6 @@ export const MainWindow: Component = () => {
           mode={sidebarMode()}
           hasOutline={session.activeDocument() !== undefined}
           folderRoot={folderRoot()}
-          folderName={fileNameOf(folderRoot() ?? "")}
           folderTitleAction={parentAction()}
           folderAction={folderAction()}
           outline={outlineList()}
@@ -634,7 +660,7 @@ export const MainWindow: Component = () => {
           onModeChange={setPreferredMode}
         >
           {/* An immersive window shows the document as a card on the window background, which also holds the title bar and the sidebar */}
-          <div class={cx(card, immersive() && cardImmersive)}>
+          <div class={cx(card, isImmersive() && cardImmersive)}>
             <div class={documentArea}>
               <Show
                 when={session.activeTab()}
@@ -702,18 +728,9 @@ export const MainWindow: Component = () => {
         </SidebarRegion>
       </div>
 
-      <Overlays
-        overlay={overlay()}
-        historyPath={session.activeDocument()?.path}
-        folderRoot={folderRoot()}
-        onClose={() => setOverlay(undefined)}
-        onCloseTable={closeTableSize}
-        onCloseSearch={closeWorkspaceSearch}
-        onRestore={(markdown) => editor()?.replaceDocument(markdown)}
-        onInsertTable={insertTable}
-        onOpenPath={(path) => void session.openPath(path)}
-        onOpenMatch={(path, from, to) => void openWorkspaceMatch(path, from, to)}
-      />
+      <Show when={overlay()} keyed>
+        {(current) => <Overlays overlay={current} />}
+      </Show>
     </div>
   );
 };

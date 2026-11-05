@@ -9,6 +9,7 @@ import {
   imageAt,
   imageMarkdown,
   resolveAgainst,
+  sameImageSize,
   setImageLayout,
 } from "@/lib/markdown/images";
 import { relabelOnLocaleChange } from "../widgets/relabel-on-locale";
@@ -187,8 +188,7 @@ export class ImageWidget extends WidgetType {
       other.src === this.src &&
       other.alt === this.alt &&
       other.title === this.title &&
-      other.size.width === this.size.width &&
-      other.size.alignment === this.size.alignment &&
+      sameImageSize(other.size, this.size) &&
       other.controls === this.controls &&
       other.inline === this.inline
     );
