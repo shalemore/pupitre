@@ -43,17 +43,19 @@ export function chromeVisibility(
     !options.startPinned() && cramped(options.startRoom() + (endFolded() ? 0 : options.endRoom()));
   const shown = (atEdge: boolean, folded = false) =>
     !options.canFold() || state.kept || atEdge || (!state.writing && !folded);
-  const sidebarShown = (atEdge: boolean, pinned: boolean, immersiveShown: boolean) =>
-    options.immersive() ? pinned || immersiveShown : pinned || atEdge || state.kept;
+  // A classic sidebar is either open or collapsed to its rail; its edge and a menu that just
+  // closed do not bring it back, or the rail could never be used and the document scrollbar would
+  // open it under the pointer.
+  const sidebarShown = (pinned: boolean, immersiveShown: boolean) =>
+    options.immersive() ? pinned || immersiveShown : pinned;
 
   return {
     titleBar:
       !options.immersive() || options.titleBarPinned() || shown(state.near.top && state.topReached),
     startSidebar:
       options.startWanted() &&
-      sidebarShown(state.near.start, options.startPinned(), shown(state.near.start, startFolded())),
+      sidebarShown(options.startPinned(), shown(state.near.start, startFolded())),
     endSidebar:
-      options.endWanted() &&
-      sidebarShown(state.near.end, options.endPinned(), shown(state.near.end, endFolded())),
+      options.endWanted() && sidebarShown(options.endPinned(), shown(state.near.end, endFolded())),
   };
 }

@@ -91,16 +91,26 @@ describe("chromeVisibility", () => {
     });
   });
 
-  it("keeps a classic window's title bar and only folds the sidebars the user collapsed", () => {
+  it("keeps a classic window's title bar and only shows the sidebars the user left open", () => {
     const classic: ChromeOptions = { ...options, immersive: () => false };
     expect(chromeVisibility(state, classic, 1400)).toEqual({
       titleBar: true,
       startSidebar: false,
       endSidebar: false,
     });
+    // The edge rail is the way back, so proximity and a menu that just closed do not reveal it
     expect(
-      chromeVisibility({ ...state, near: { top: false, start: true, end: false } }, classic, 1400),
-    ).toEqual({ titleBar: true, startSidebar: true, endSidebar: false });
+      chromeVisibility(
+        { ...state, near: { top: false, start: true, end: true }, kept: true },
+        classic,
+        1400,
+      ),
+    ).toEqual({ titleBar: true, startSidebar: false, endSidebar: false });
+    expect(chromeVisibility(state, { ...classic, startPinned: () => true }, 1400)).toEqual({
+      titleBar: true,
+      startSidebar: true,
+      endSidebar: false,
+    });
   });
 
   it("keeps a sidebar the layout has no place for hidden, whatever the pointer asks", () => {

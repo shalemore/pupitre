@@ -1,5 +1,11 @@
 import { Show, type Component, type JSX } from "solid-js";
-import { Sidebar, SidebarPanel, SidebarSlot, type SidebarMode } from "@/features/sidebar/sidebar";
+import {
+  Sidebar,
+  SidebarPanel,
+  SidebarSlot,
+  type SidebarMode,
+  type SidebarRail,
+} from "@/features/sidebar/sidebar";
 import type { SidebarControl } from "@/features/sidebar/sidebar-control";
 import { t } from "@/i18n";
 import { fileNameOf } from "@/lib/file";
@@ -18,6 +24,8 @@ interface SidebarRegionProps {
   onEndWidth: (width: number) => void;
   startControl: SidebarControl;
   endControl: SidebarControl;
+  startRail: SidebarRail | undefined;
+  endRail: SidebarRail | undefined;
   mode: SidebarMode;
   hasOutline: boolean;
   folderRoot: string | undefined;
@@ -38,6 +46,7 @@ export const SidebarRegion: Component<SidebarRegionProps> = (props) => {
         shown={props.startShown}
         width={props.startWidth}
         onWidthChange={props.onStartWidth}
+        rail={props.startRail}
       >
         <Show
           when={props.split}
@@ -86,6 +95,7 @@ export const SidebarRegion: Component<SidebarRegionProps> = (props) => {
           shown={props.endShown}
           width={props.endWidth}
           onWidthChange={props.onEndWidth}
+          rail={props.endRail}
         >
           <SidebarPanel
             side="end"

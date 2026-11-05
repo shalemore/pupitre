@@ -20,9 +20,10 @@ import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
 import type { MatchStats } from "@/features/editor/search";
 import { FolderTree } from "@/features/sidebar/folder-tree";
 import { OutlineList } from "@/features/sidebar/outline-list";
-import type { SidebarMode } from "@/features/sidebar/sidebar";
+import type { SidebarMode, SidebarRail } from "@/features/sidebar/sidebar";
 import { createSidebarControl } from "@/features/sidebar/sidebar-control";
 import { WelcomeScreen } from "@/features/welcome/welcome-screen";
+import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { documentPosition } from "@/lib/document/positions";
 import { createDocumentSession } from "@/lib/document/session";
@@ -166,6 +167,16 @@ export const MainWindow: Component = () => {
     split() && settings().sidebarVisible && session.activeDocument() !== undefined;
   const startControl = createSidebarControl("start", isImmersive, () => chrome.hide());
   const endControl = createSidebarControl("end", isImmersive, () => chrome.hide());
+  // A classic window collapses a sidebar to a rail; an immersive one has nothing at the edge to
+  // click, so its folded chrome keeps out of the document's way instead.
+  const startRail = (): SidebarRail | undefined =>
+    isImmersive() || startControl.open() || !startSidebarWanted()
+      ? undefined
+      : { label: t().sidebar.expandSidebar, onExpand: () => startControl.setOpen(true) };
+  const endRail = (): SidebarRail | undefined =>
+    isImmersive() || endControl.open() || !endSidebarWanted()
+      ? undefined
+      : { label: t().sidebar.expandSidebar, onExpand: () => endControl.setOpen(true) };
   const chrome = createImmersiveChrome({
     immersive: isImmersive,
     canFold: () => isImmersive() && session.activeDocument() !== undefined,
@@ -564,6 +575,8 @@ export const MainWindow: Component = () => {
           onEndWidth={setEndWidth}
           startControl={startControl}
           endControl={endControl}
+          startRail={startRail()}
+          endRail={endRail()}
           mode={sidebarMode()}
           hasOutline={session.activeDocument() !== undefined}
           folderRoot={folderRoot()}

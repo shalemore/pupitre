@@ -1,6 +1,6 @@
 import { ChevronRight, Folder, ListTree, Pin } from "lucide-solid";
 import { createSignal, type Component, type JSX, Show } from "solid-js";
-import { ScrollView, SegmentedControl, ToggleIconButton } from "@/components/ui";
+import { IconButton, ScrollView, SegmentedControl, ToggleIconButton } from "@/components/ui";
 import { t } from "@/i18n";
 import { distanceFromEnd, distanceFromStart, isRtl } from "@/lib/rtl";
 import { SIDEBAR_WIDTH, type SidebarSide } from "@/lib/sidebar";
@@ -9,6 +9,15 @@ import { css, cx } from "@/styled-system/css";
 import type { SidebarControl } from "./sidebar-control";
 
 export type SidebarMode = "outline" | "folder";
+
+/** The strip left at the edge of a classic window while a sidebar is collapsed. */
+const RAIL_WIDTH = 24;
+
+/** What a collapsed classic sidebar leaves at the window edge, so it can be opened again. */
+export interface SidebarRail {
+  label: string;
+  onExpand: () => void;
+}
 
 const KEYBOARD_STEP = 16;
 
@@ -38,6 +47,25 @@ const handle = css({
 const handleAtStart = css({ insetInlineEnd: "0" });
 const handleAtEnd = css({ insetInlineStart: "0" });
 const handleDragging = css({ backgroundColor: "brand/40" });
+const railBase = css({
+  position: "absolute",
+  insetBlock: "0",
+  insetInline: "0",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  backgroundColor: "surface.0",
+});
+const railAtStart = css({
+  borderInlineEndWidth: "hairline",
+  borderInlineEndStyle: "solid",
+  borderInlineEndColor: "border",
+});
+const railAtEnd = css({
+  borderInlineStartWidth: "hairline",
+  borderInlineStartStyle: "solid",
+  borderInlineStartColor: "border",
+});
 const frame = css({
   display: "flex",
   flexDirection: "column",
@@ -88,17 +116,21 @@ interface SidebarSlotProps {
   shown: boolean;
   width: number;
   onWidthChange: (width: number) => void;
+  /** What the edge shows while a classic sidebar is collapsed; absent when the window folds by itself. */
+  rail?: SidebarRail | undefined;
   children: JSX.Element;
 }
 
 /**
  * Where a sidebar sits next to the document. Collapsing animates the width and the document
- * takes the freed room; inert keeps a hidden sidebar out of the tab order. The edge towards the
+ * takes the freed room; inert keeps a hidden sidebar out of the tab order. A classic window
+ * leaves a rail at the edge so a collapsed sidebar can be opened again. The edge towards the
  * document is a handle that resizes the sidebar by dragging or with the arrow keys; double-click
  * restores the initial width.
  */
 export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
   const [dragging, setDragging] = createSignal(false);
+  const folded = () => !props.shown && props.rail !== undefined;
   const resize = (width: number) =>
     props.onWidthChange(Math.min(SIDEBAR_WIDTH.max, Math.max(SIDEBAR_WIDTH.min, width)));
   /** How far the pointer is from the window edge this sidebar sits at. */
@@ -109,45 +141,60 @@ export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
     <div
       // The resize handle belongs to the sidebar as far as the immersive window's hover goes
       data-sidebar={props.side}
-      inert={!props.shown}
-      style={{ width: props.shown ? `${props.width}px` : "0px" }}
+      style={{ width: props.shown ? `${props.width}px` : folded() ? `${RAIL_WIDTH}px` : "0px" }}
       class={cx(
         slot,
         // Following the pointer while dragging must not lag behind an animation
         !dragging() && resizing,
       )}
     >
-      <div class={fullHeight} style={{ width: `${props.width}px` }}>
+      <div class={fullHeight} inert={!props.shown} style={{ width: `${props.width}px` }}>
         {props.children}
       </div>
-      <div
-        role="separator"
-        aria-orientation="vertical"
-        aria-valuenow={props.width}
-        aria-valuemin={SIDEBAR_WIDTH.min}
-        aria-valuemax={SIDEBAR_WIDTH.max}
-        tabindex="0"
-        class={cx(
-          handle,
-          props.side === "start" ? handleAtStart : handleAtEnd,
-          dragging() && handleDragging,
+      <Show when={!props.shown ? props.rail : undefined}>
+        {(rail) => (
+          <div class={cx(railBase, props.side === "start" ? railAtStart : railAtEnd)}>
+            <IconButton
+              label={rail().label}
+              size="icon-2xs"
+              class={quietButton}
+              onClick={rail().onExpand}
+            >
+              <ChevronRight class={cx(rtlFlip, props.side === "end" && rotate180)} />
+            </IconButton>
+          </div>
         )}
-        onPointerDown={(event) => {
-          event.preventDefault();
-          event.currentTarget.setPointerCapture(event.pointerId);
-          setDragging(true);
-        }}
-        onPointerMove={(event) => dragging() && resize(fromEdge(event.clientX))}
-        onLostPointerCapture={() => setDragging(false)}
-        onDblClick={() => resize(SIDEBAR_WIDTH.initial)}
-        onKeyDown={(event) => {
-          if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
-          event.preventDefault();
-          // The handle moves towards the window edge on its right or its left
-          const grows = ((event.key === "ArrowRight") === (props.side === "start")) !== isRtl();
-          resize(props.width + (grows ? KEYBOARD_STEP : -KEYBOARD_STEP));
-        }}
-      />
+      </Show>
+      <Show when={props.shown}>
+        <div
+          role="separator"
+          aria-orientation="vertical"
+          aria-valuenow={props.width}
+          aria-valuemin={SIDEBAR_WIDTH.min}
+          aria-valuemax={SIDEBAR_WIDTH.max}
+          tabindex="0"
+          class={cx(
+            handle,
+            props.side === "start" ? handleAtStart : handleAtEnd,
+            dragging() && handleDragging,
+          )}
+          onPointerDown={(event) => {
+            event.preventDefault();
+            event.currentTarget.setPointerCapture(event.pointerId);
+            setDragging(true);
+          }}
+          onPointerMove={(event) => dragging() && resize(fromEdge(event.clientX))}
+          onLostPointerCapture={() => setDragging(false)}
+          onDblClick={() => resize(SIDEBAR_WIDTH.initial)}
+          onKeyDown={(event) => {
+            if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+            event.preventDefault();
+            // The handle moves towards the window edge on its right or its left
+            const grows = ((event.key === "ArrowRight") === (props.side === "start")) !== isRtl();
+            resize(props.width + (grows ? KEYBOARD_STEP : -KEYBOARD_STEP));
+          }}
+        />
+      </Show>
     </div>
   );
 };
