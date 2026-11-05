@@ -87,7 +87,14 @@ const countLabel = css({
   color: "tertiary",
   fontVariantNumeric: "tabular-nums",
 });
-const list = css({ display: "flex", minHeight: "0", flexDirection: "column", gap: "0.5" });
+const list = css({
+  display: "flex",
+  maxHeight: "80",
+  minHeight: "0",
+  flexDirection: "column",
+  gap: "0.5",
+  marginBlockStart: "2",
+});
 
 /** Typing must not ask the main process for the whole folder once per keystroke. */
 const SEARCH_DELAY_MS = 150;
