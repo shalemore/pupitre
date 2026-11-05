@@ -39,15 +39,10 @@ import { recentFiles } from "@/lib/recent-files";
 import { isImmersive, settings, updateSettings } from "@/lib/settings";
 import { quietButton, rtlFlip } from "@/lib/styles";
 import type { TextStats } from "@/lib/text-stats";
-import { cx } from "@/styled-system/css";
 import { createDocumentActions } from "./document-actions";
 import {
   card,
-  cardImmersive,
   content,
-  contentEnd,
-  contentEndSplit,
-  contentGap,
   dirtyDot,
   documentArea,
   editorArea,
@@ -62,7 +57,7 @@ import { Overlays, type Overlay } from "./main-window/overlays";
 import { SidebarRegion } from "./main-window/sidebar-region";
 import { createSidebarWidths } from "./main-window/sidebar-widths";
 import { WordCount } from "./main-window/word-count";
-import { frameBorderBottom, windowClassic, windowFrame, windowImmersive } from "./window-chrome";
+import { barDivider, windowFrame } from "./window-chrome";
 
 type FindMode = "closed" | "find" | "replace";
 /** The outline of a document nothing is folded in yet, and of no document at all. */
@@ -580,10 +575,10 @@ export const MainWindow: Component = () => {
     <div
       data-window-style={settings().windowStyle}
       onPointerMove={(event) => chrome.onPointerMove(event)}
-      class={cx(windowFrame, isImmersive() ? windowImmersive : windowClassic)}
+      class={windowFrame({ immersive: isImmersive() })}
     >
       {/* Folding the title bar away animates its height, and the card moves up into the room */}
-      <TitleBar folded={!chrome.titleBarVisible()} class={cx(!isImmersive() && frameBorderBottom)}>
+      <TitleBar folded={!chrome.titleBarVisible()} class={barDivider({ classic: !isImmersive() })}>
         <Show
           when={tabBarShown()}
           fallback={
@@ -633,11 +628,7 @@ export const MainWindow: Component = () => {
         onKeyDown={(event) => {
           if (!event.ctrlKey && !event.metaKey && !event.altKey) chrome.hide();
         }}
-        class={cx(
-          content,
-          // The card keeps an even gap to the window edges, the title bar and the sidebars
-          isImmersive() && cx(contentGap, split() ? contentEndSplit : contentEnd),
-        )}
+        class={content({ immersive: isImmersive(), split: split() })}
       >
         <SidebarRegion
           immersive={isImmersive()}
@@ -660,7 +651,7 @@ export const MainWindow: Component = () => {
           onModeChange={setPreferredMode}
         >
           {/* An immersive window shows the document as a card on the window background, which also holds the title bar and the sidebar */}
-          <div class={cx(card, isImmersive() && cardImmersive)}>
+          <div class={card({ immersive: isImmersive() })}>
             <div class={documentArea}>
               <Show
                 when={session.activeTab()}

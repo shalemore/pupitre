@@ -23,25 +23,36 @@ import { desktop } from "@/lib/desktop";
 import { fileNameOf } from "@/lib/file";
 import { isImmersive } from "@/lib/settings";
 import { workspace } from "@/lib/workspace";
-import { css, cx } from "@/styled-system/css";
-import {
-  frameBorderBottom,
-  frameBorderEnd,
-  windowClassic,
-  windowFrame,
-  windowImmersive,
-} from "./window-chrome";
+import { cva, css, cx } from "@/styled-system/css";
+import { barDivider, windowFrame } from "./window-chrome";
 
 const settingsFrame = css({ userSelect: "none" });
 const title = css({ fontWeight: "semibold", color: "foreground", letterSpacing: "wide" });
-const tabs = css({ display: "flex", flex: "1", overflow: "hidden" });
-const tabsImmersive = css({
-  gap: "var(--pref-immersive-gap)",
-  paddingBlockEnd: "var(--pref-immersive-gap)",
-  paddingInlineEnd: "var(--pref-immersive-gap)",
+const tabs = cva({
+  base: { display: "flex", flex: "1", overflow: "hidden" },
+  variants: {
+    immersive: {
+      true: {
+        gap: "var(--pref-immersive-gap)",
+        paddingBlockEnd: "var(--pref-immersive-gap)",
+        paddingInlineEnd: "var(--pref-immersive-gap)",
+      },
+    },
+  },
 });
-const sidebar = css({ width: "48", flexShrink: 0, padding: "3" });
-const sidebarClassic = css({ backgroundColor: "surface.0" });
+const settingsSidebar = cva({
+  base: { width: "48", flexShrink: 0, padding: "3" },
+  variants: {
+    classic: {
+      true: {
+        backgroundColor: "surface.0",
+        borderInlineEndWidth: "hairline",
+        borderInlineEndStyle: "solid",
+        borderInlineEndColor: "border",
+      },
+    },
+  },
+});
 const scopeBlock = css({ marginBlockEnd: "3", "& > * + *": { marginBlockStart: "1" } });
 const scopeRow = css({ display: "flex", alignItems: "center", gap: "1", paddingInlineStart: "2" });
 const scopeName = css({
@@ -54,11 +65,13 @@ const scopeName = css({
   color: "muted.foreground",
 });
 const separator = css({ marginBlock: "2" });
-const page = css({ flex: "1", padding: "6" });
-const pageImmersive = css({
-  borderRadius: "lg",
-  backgroundColor: "surface.1",
-  boxShadow: "sm",
+const page = cva({
+  base: { flex: "1", padding: "6" },
+  variants: {
+    immersive: {
+      true: { borderRadius: "lg", backgroundColor: "surface.1", boxShadow: "sm" },
+    },
+  },
 });
 
 export const SettingsWindow: Component = () => {
@@ -73,8 +86,8 @@ export const SettingsWindow: Component = () => {
   });
 
   return (
-    <div class={cx(windowFrame, settingsFrame, isImmersive() ? windowImmersive : windowClassic)}>
-      <TitleBar class={cx(!isImmersive() && frameBorderBottom)}>
+    <div class={cx(windowFrame({ immersive: isImmersive() }), settingsFrame)}>
+      <TitleBar class={barDivider({ classic: !isImmersive() })}>
         <span class={title}>{t().settings.title}</span>
       </TitleBar>
 
@@ -82,9 +95,9 @@ export const SettingsWindow: Component = () => {
       <Tabs
         orientation="vertical"
         defaultValue="general"
-        class={cx(tabs, isImmersive() && tabsImmersive)}
+        class={tabs({ immersive: isImmersive() })}
       >
-        <aside class={cx(sidebar, !isImmersive() && cx(frameBorderEnd, sidebarClassic))}>
+        <aside class={settingsSidebar({ classic: !isImmersive() })}>
           <Show when={workspace().root}>
             {(root) => (
               <div class={scopeBlock}>
@@ -142,7 +155,7 @@ export const SettingsWindow: Component = () => {
           </TabsList>
         </aside>
 
-        <ScrollView as="main" class={cx(page, isImmersive() && pageImmersive)}>
+        <ScrollView as="main" class={page({ immersive: isImmersive() })}>
           <TabsContent value="general">
             <GeneralSection />
           </TabsContent>

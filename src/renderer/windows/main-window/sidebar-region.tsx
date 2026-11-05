@@ -3,8 +3,7 @@ import { Sidebar, SidebarPanel, SidebarSlot, type SidebarMode } from "@/features
 import type { SidebarControl } from "@/features/sidebar/sidebar-control";
 import { t } from "@/i18n";
 import { fileNameOf } from "@/lib/file";
-import { cx } from "@/styled-system/css";
-import { frameBorderEnd, frameBorderStart } from "../window-chrome";
+import { sidebarDivider } from "../window-chrome";
 
 interface SidebarRegionProps {
   /** The document card, which sits between the two sidebars. */
@@ -44,7 +43,7 @@ export const SidebarRegion: Component<SidebarRegionProps> = (props) => {
           when={props.split}
           fallback={
             <Sidebar
-              class={cx(!props.immersive && frameBorderEnd)}
+              class={sidebarDivider({ side: "start", classic: !props.immersive })}
               mode={props.mode}
               control={props.startControl}
               hasOutline={props.hasOutline}
@@ -70,7 +69,7 @@ export const SidebarRegion: Component<SidebarRegionProps> = (props) => {
                 titleAction={props.folderTitleAction}
                 action={props.folderAction}
                 control={props.startControl}
-                class={cx(!props.immersive && frameBorderEnd)}
+                class={sidebarDivider({ side: "start", classic: !props.immersive })}
               >
                 {props.folderTree(root)}
               </SidebarPanel>
@@ -92,7 +91,7 @@ export const SidebarRegion: Component<SidebarRegionProps> = (props) => {
             side="end"
             title={t().sidebar.outline}
             control={props.endControl}
-            class={cx(!props.immersive && frameBorderStart)}
+            class={sidebarDivider({ side: "end", classic: !props.immersive })}
           >
             {props.outline}
           </SidebarPanel>

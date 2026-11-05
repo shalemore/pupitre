@@ -1,4 +1,4 @@
-import { css } from "@/styled-system/css";
+import { cva, css } from "@/styled-system/css";
 
 /** The classes of the main window: the title bar and the card the document stands on. */
 
@@ -45,34 +45,54 @@ export const titleEnd = css({
   justifyContent: "flex-end",
   overflow: "hidden",
 });
-export const content = css({
-  flex: "1",
-  minHeight: 0,
-  display: "flex",
-  overflow: "hidden",
-  _print: { display: "block", overflow: "visible" },
+/**
+ * The row the card and the sidebars stand in. An immersive window keeps an even gap to its edges,
+ * and in a split layout the end sidebar reaches the window edge.
+ */
+export const content = cva({
+  base: {
+    flex: "1",
+    minHeight: 0,
+    display: "flex",
+    overflow: "hidden",
+    _print: { display: "block", overflow: "visible" },
+  },
+  variants: {
+    immersive: {
+      true: {
+        gap: "var(--pref-immersive-gap)",
+        paddingBlock: "var(--pref-immersive-gap)",
+        paddingInlineStart: 0,
+        _print: { padding: 0 },
+      },
+    },
+    split: { true: {}, false: {} },
+  },
+  compoundVariants: [
+    { immersive: true, split: true, css: { paddingInlineEnd: 0 } },
+    { immersive: true, split: false, css: { paddingInlineEnd: "var(--pref-immersive-gap)" } },
+  ],
 });
-export const contentGap = css({
-  gap: "var(--pref-immersive-gap)",
-  paddingBlock: "var(--pref-immersive-gap)",
-  paddingInlineStart: 0,
-  _print: { padding: 0 },
-});
-export const contentEnd = css({ paddingInlineEnd: "var(--pref-immersive-gap)" });
-export const contentEndSplit = css({ paddingInlineEnd: 0 });
-export const card = css({
-  flex: "1",
-  minWidth: 0,
-  display: "flex",
-  flexDirection: "column",
-  overflow: "hidden",
-  _print: { display: "block", overflow: "visible" },
-});
-export const cardImmersive = css({
-  borderRadius: "lg",
-  backgroundColor: "surface.1",
-  boxShadow: "sm",
-  _print: { borderRadius: 0, boxShadow: "none" },
+/** The document stands on a card of its own in an immersive window, and lies flat on a classic one. */
+export const card = cva({
+  base: {
+    flex: "1",
+    minWidth: 0,
+    display: "flex",
+    flexDirection: "column",
+    overflow: "hidden",
+    _print: { display: "block", overflow: "visible" },
+  },
+  variants: {
+    immersive: {
+      true: {
+        borderRadius: "lg",
+        backgroundColor: "surface.1",
+        boxShadow: "sm",
+        _print: { borderRadius: 0, boxShadow: "none" },
+      },
+    },
+  },
 });
 export const documentArea = css({
   flex: "1",
