@@ -8,6 +8,7 @@ import {
   resolveSettings,
   SETTING_KEYS,
   settingsSchema,
+  splitSidebarState,
   withoutSetting,
 } from "./settings";
 
@@ -87,6 +88,36 @@ describe("patchSettingsFile", () => {
         expect(settings).toEqual({ ...DEFAULT_SETTINGS, ...changes });
       }),
     );
+  });
+});
+
+describe("splitSidebarState", () => {
+  it("moves a classic window's collapsed state to its own key", () => {
+    const file = { windowStyle: "classic", sidebarPinnedStart: true };
+    expect(splitSidebarState(file, true)).toBe(true);
+    expect(file).toEqual({ windowStyle: "classic", sidebarCollapsedStart: true });
+  });
+
+  it("leaves the pin of an immersive window alone", () => {
+    const file = { sidebarPinnedStart: true };
+    expect(splitSidebarState(file, false)).toBe(false);
+    expect(file).toEqual({ sidebarPinnedStart: true });
+  });
+
+  it("leaves an open classic sidebar without an entry", () => {
+    const file = { sidebarPinnedStart: false, sidebarPinnedEnd: true };
+    expect(splitSidebarState(file, true)).toBe(true);
+    expect(file).toEqual({ sidebarCollapsedEnd: true });
+  });
+
+  it("keeps a classic key the file already has", () => {
+    const file = { sidebarPinnedStart: true, sidebarCollapsedStart: false };
+    expect(splitSidebarState(file, true)).toBe(true);
+    expect(file).toEqual({ sidebarCollapsedStart: false });
+  });
+
+  it("leaves a file without a pin as it is", () => {
+    expect(splitSidebarState({}, true)).toBe(false);
   });
 });
 

@@ -85,6 +85,50 @@ function sidebarControlTitle(side: SidebarSide): string {
     : t().settings.pinSidebars;
 }
 
+/** The switch of one sidebar, which edits its state in the key of the current window style. */
+const SidebarStateField: Component<{ side: SidebarSide }> = (props) => {
+  const field = () => {
+    if (props.side === "start") {
+      return isImmersive()
+        ? {
+            name: "sidebarPinnedStart" as const,
+            checked: settings().sidebarPinnedStart,
+            onChange: (value: boolean) => void updateSettings({ sidebarPinnedStart: value }),
+          }
+        : {
+            name: "sidebarCollapsedStart" as const,
+            checked: settings().sidebarCollapsedStart,
+            onChange: (value: boolean) => void updateSettings({ sidebarCollapsedStart: value }),
+          };
+    }
+    return isImmersive()
+      ? {
+          name: "sidebarPinnedEnd" as const,
+          checked: settings().sidebarPinnedEnd,
+          onChange: (value: boolean) => void updateSettings({ sidebarPinnedEnd: value }),
+        }
+      : {
+          name: "sidebarCollapsedEnd" as const,
+          checked: settings().sidebarCollapsedEnd,
+          onChange: (value: boolean) => void updateSettings({ sidebarCollapsedEnd: value }),
+        };
+  };
+  const title = () => sidebarControlTitle(props.side);
+
+  return (
+    <SettingField
+      nested
+      name={field().name}
+      title={title()}
+      description={
+        isImmersive() && props.side === "start" ? t().settings.pinSidebarsDesc : undefined
+      }
+    >
+      <Switch checked={field().checked} onChange={field().onChange} aria-label={title()} />
+    </SettingField>
+  );
+};
+
 export const AppearanceSection: Component = () => (
   <SettingsSection title={t().settings.appearance}>
     <Show when={missingThemeMessages().length > 0}>
@@ -316,26 +360,9 @@ export const AppearanceSection: Component = () => (
           </SettingField>
         </Show>
         <Show when={settings().sidebarVisible}>
-          <SettingField
-            nested
-            name="sidebarPinnedStart"
-            title={sidebarControlTitle("start")}
-            description={isImmersive() ? t().settings.pinSidebarsDesc : undefined}
-          >
-            <Switch
-              checked={settings().sidebarPinnedStart}
-              onChange={(sidebarPinnedStart) => void updateSettings({ sidebarPinnedStart })}
-              aria-label={t().settings.pinSidebars}
-            />
-          </SettingField>
+          <SidebarStateField side="start" />
           <Show when={settings().sidebarLayout === "split"}>
-            <SettingField nested name="sidebarPinnedEnd" title={sidebarControlTitle("end")}>
-              <Switch
-                checked={settings().sidebarPinnedEnd}
-                onChange={(sidebarPinnedEnd) => void updateSettings({ sidebarPinnedEnd })}
-                aria-label={t().settings.pinSidebars}
-              />
-            </SettingField>
+            <SidebarStateField side="end" />
           </Show>
         </Show>
       </div>

@@ -88,6 +88,13 @@ export const settingsSchema = z.object({
    */
   sidebarPinnedStart: z.boolean().catch(false),
   sidebarPinnedEnd: z.boolean().catch(false),
+  /**
+   * A classic window keeps its sidebars open unless they are collapsed. The state is kept apart
+   * from the immersive pin, which means the opposite and has its own default, so that changing the
+   * window style leaves each style's sidebars as the user left them.
+   */
+  sidebarCollapsedStart: z.boolean().catch(false),
+  sidebarCollapsedEnd: z.boolean().catch(false),
   showWordCount: z.boolean().catch(true),
   focusMode: z.boolean().catch(false),
   /** Whether focus mode keeps the line being written sharp, or the whole block around it. */
@@ -193,6 +200,27 @@ export function resolveSettings(file: unknown): Settings {
 
 /** A settings file: an object that holds the settings that differ from what they would be without it. */
 export const settingsFileSchema = z.record(z.string(), z.unknown()).catch({});
+
+/**
+ * A classic window used to keep its collapsed sidebars in the keys the immersive pin reads, where
+ * the same value means the opposite. Moves that state into the classic keys, so that what the
+ * window shows now survives, and drops it from the pin, which then starts from its own default.
+ * Says whether the file changed.
+ */
+export function splitSidebarState(file: Record<string, unknown>, classic: boolean): boolean {
+  if (!classic) return false;
+  let changed = false;
+  for (const side of ["Start", "End"] as const) {
+    const pinned = `sidebarPinned${side}`;
+    if (!(pinned in file)) continue;
+    const collapsed = `sidebarCollapsed${side}`;
+    // An open sidebar needs no entry; it is what a classic window shows without one
+    if (!(collapsed in file) && file[pinned] !== false) file[collapsed] = file[pinned];
+    delete file[pinned];
+    changed = true;
+  }
+  return changed;
+}
 
 /**
  * The file after a patch. A value equal to `unset`, what the setting is without an entry in the

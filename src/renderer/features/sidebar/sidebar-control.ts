@@ -11,8 +11,9 @@ export interface SidebarControl {
 }
 
 /**
- * The pin setting means "stay open" in an immersive window; a classic window stores the opposite,
- * the collapsed state, in the same key. Reading and writing it go through here so no caller has to
+ * An immersive window stores whether a sidebar stays open as its pin; a classic one stores the
+ * opposite, whether it is collapsed. Each style keeps its own key, so a window-style change does
+ * not turn one into the other. Reading and writing them go through here so no caller has to
  * remember which way round it is.
  *
  * `onCollapsed` lets a classic window fold the sidebar at once, rather than waiting for the pointer
@@ -23,19 +24,30 @@ export function createSidebarControl(
   immersive: Accessor<boolean>,
   onCollapsed: () => void,
 ): SidebarControl {
-  const stored = () =>
-    side === "start" ? settings().sidebarPinnedStart : settings().sidebarPinnedEnd;
-  const store = (open: boolean) =>
-    void updateSettings(
-      side === "start" ? { sidebarPinnedStart: open } : { sidebarPinnedEnd: open },
-    );
+  const open = () => {
+    if (immersive()) {
+      return side === "start" ? settings().sidebarPinnedStart : settings().sidebarPinnedEnd;
+    }
+    return side === "start" ? !settings().sidebarCollapsedStart : !settings().sidebarCollapsedEnd;
+  };
+  const store = (next: boolean) => {
+    if (immersive()) {
+      void updateSettings(
+        side === "start" ? { sidebarPinnedStart: next } : { sidebarPinnedEnd: next },
+      );
+    } else {
+      void updateSettings(
+        side === "start" ? { sidebarCollapsedStart: !next } : { sidebarCollapsedEnd: !next },
+      );
+    }
+  };
 
   return {
-    open: () => (immersive() ? stored() : !stored()),
+    open,
     button: () => (immersive() ? "pin" : "collapse"),
-    setOpen: (open) => {
-      store(immersive() ? open : !open);
-      if (!immersive() && !open) onCollapsed();
+    setOpen: (next) => {
+      store(next);
+      if (!immersive() && !next) onCollapsed();
     },
   };
 }

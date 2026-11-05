@@ -12,6 +12,7 @@ import {
   type SettingKey,
   type Settings,
   settingsFileSchema,
+  splitSidebarState,
   withoutSetting,
   WORKSPACE_FILE,
 } from "@shared/settings";
@@ -77,6 +78,9 @@ function settingsFile(): Record<string, unknown> {
   if (file === undefined) {
     const { settings, exists } = readSettingsFile(getSettingsPath());
     firstRun = !exists;
+    if (splitSidebarState(settings, settings["windowStyle"] !== "immersive")) {
+      writeJsonFile(getSettingsPath(), settings);
+    }
     file = settings;
   }
   return file;
@@ -185,6 +189,9 @@ export function setWorkspace(root: string | null): void {
   } else if (workspace?.root !== root) {
     const path = join(root, WORKSPACE_FILE);
     const { settings, exists } = readSettingsFile(path);
+    // The style the folder will run in, which its own file may choose over the global one
+    const style = settings["windowStyle"] ?? resolveSettings(settingsFile()).windowStyle;
+    if (splitSidebarState(settings, style !== "immersive")) writeJsonFile(path, settings);
     workspace = { root, path, exists, file: settings };
     workspaceActive = exists;
   } else {
