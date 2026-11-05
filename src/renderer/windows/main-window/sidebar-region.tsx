@@ -45,6 +45,7 @@ export const SidebarRegion: Component<SidebarRegionProps> = (props) => {
         side="start"
         shown={props.startShown}
         width={props.startWidth}
+        label={t().sidebar.folder}
         onWidthChange={props.onStartWidth}
         rail={props.startRail}
       >
@@ -94,6 +95,7 @@ export const SidebarRegion: Component<SidebarRegionProps> = (props) => {
           side="end"
           shown={props.endShown}
           width={props.endWidth}
+          label={t().sidebar.outline}
           onWidthChange={props.onEndWidth}
           rail={props.endRail}
         >

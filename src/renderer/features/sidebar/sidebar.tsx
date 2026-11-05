@@ -38,15 +38,17 @@ const handle = css({
   position: "absolute",
   insetBlock: "0",
   zIndex: "10",
-  width: "[1px]",
+  width: "1",
   cursor: "col-resize",
   outlineStyle: "none",
-  _hover: { backgroundColor: "brand/30" },
-  _focusVisible: { backgroundColor: "brand/30" },
+  borderStyle: "solid",
+  borderColor: "transparent",
+  _hover: { borderColor: "brand/30" },
+  _focusVisible: { borderColor: "brand/30" },
 });
-const handleAtStart = css({ insetInlineEnd: "0" });
-const handleAtEnd = css({ insetInlineStart: "0" });
-const handleDragging = css({ backgroundColor: "brand/40" });
+const handleAtStart = css({ insetInlineEnd: "0", borderInlineEndWidth: "hairline" });
+const handleAtEnd = css({ insetInlineStart: "0", borderInlineStartWidth: "hairline" });
+const handleDragging = css({ borderColor: "brand/40" });
 const railBase = css({
   position: "absolute",
   insetBlock: "0",
@@ -115,6 +117,8 @@ interface SidebarSlotProps {
   side: SidebarSide;
   shown: boolean;
   width: number;
+  /** Names the resize handle for anyone who cannot see it. */
+  label: string;
   onWidthChange: (width: number) => void;
   /** What the edge shows while a classic sidebar is collapsed; absent when the window folds by itself. */
   rail?: SidebarRail | undefined;
@@ -168,6 +172,7 @@ export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
       <Show when={props.shown}>
         <div
           role="separator"
+          aria-label={props.label}
           aria-orientation="vertical"
           aria-valuenow={props.width}
           aria-valuemin={SIDEBAR_WIDTH.min}
