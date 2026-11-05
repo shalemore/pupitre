@@ -16,23 +16,18 @@ import { IMAGE_FILE, type AppCommand } from "@shared/desktop-api";
 import { isInsideFolder } from "@shared/paths";
 import { TitleBar } from "@/components/title-bar";
 import { IconButton, ToggleIconButton } from "@/components/ui";
-import { CommandPalette } from "@/features/command-palette/command-palette";
 import { FindBar } from "@/features/editor/find-bar";
 import { ImagePreview } from "@/features/editor/images/image-preview";
 import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
 import type { MatchStats } from "@/features/editor/search";
-import { TableSizeDialog } from "@/features/editor/tables/table-size-dialog";
 import { MenuBar, MenuButton } from "@/features/menu-bar";
-import { QuickOpen } from "@/features/quick-open";
 import { FolderSortButton } from "@/features/sidebar/folder-sort-button";
 import { FolderTree } from "@/features/sidebar/folder-tree";
 import { OutlineList } from "@/features/sidebar/outline-list";
 import { SIDEBAR_WIDTH, type SidebarMode } from "@/features/sidebar/sidebar";
 import { createSidebarControl } from "@/features/sidebar/sidebar-control";
 import { TabsBar } from "@/features/tabs-bar";
-import { VersionHistory } from "@/features/version-history";
 import { WelcomeScreen } from "@/features/welcome/welcome-screen";
-import { WorkspaceSearch } from "@/features/workspace-search";
 import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
 import { documentPosition } from "@/lib/document/positions";
@@ -63,6 +58,7 @@ import {
   titleGrid,
   titleStart,
 } from "./main-window-styles";
+import { Overlays, type Overlay } from "./main-window/overlays";
 import { SidebarRegion } from "./main-window/sidebar-region";
 import { WordCount } from "./main-window/word-count";
 import { frameBorderBottom, windowClassic, windowFrame, windowImmersive } from "./window-chrome";
@@ -109,11 +105,7 @@ export const MainWindow: Component = () => {
   const [folderView, setFolderView] = createSignal<string>();
   const [preferredMode, setPreferredMode] = createSignal<SidebarMode>("outline");
   const [findMode, setFindMode] = createSignal<FindMode>("closed");
-  const [paletteOpen, setPaletteOpen] = createSignal(false);
-  const [historyOpen, setHistoryOpen] = createSignal(false);
-  const [quickOpenOpen, setQuickOpenOpen] = createSignal(false);
-  const [workspaceSearchOpen, setWorkspaceSearchOpen] = createSignal(false);
-  const [tableSizeOpen, setTableSizeOpen] = createSignal(false);
+  const [overlay, setOverlay] = createSignal<Overlay>();
   // A match to select once the editor holds the document it was found in
   const [matchToReveal, setMatchToReveal] = createSignal<
     { path: string; from: number; to: number } | undefined
@@ -316,7 +308,7 @@ export const MainWindow: Component = () => {
         // document; only another document is a reason to close these and unfold the chrome
         if (id === previous) return;
         setFindMode("closed");
-        setHistoryOpen(false);
+        if (overlay() === "history") setOverlay(undefined);
         // A picture has no outline, counts or heading; the editor fills these in again when it
         // shows the text of the next document
         setOutline([]);
@@ -341,12 +333,12 @@ export const MainWindow: Component = () => {
   );
 
   const closeWorkspaceSearch = () => {
-    setWorkspaceSearchOpen(false);
+    setOverlay(undefined);
     editor()?.focus();
   };
 
   const openWorkspaceMatch = async (path: string, from: number, to: number) => {
-    setWorkspaceSearchOpen(false);
+    setOverlay(undefined);
     setMatchToReveal({ path, from, to });
     await session.openPath(path, false);
     // The file could not be read, so the match has nowhere to appear
@@ -433,12 +425,12 @@ export const MainWindow: Component = () => {
 
   /** Puts the caret back where the table would go, for a size dialog that was not answered. */
   const closeTableSize = () => {
-    setTableSizeOpen(false);
+    setOverlay(undefined);
     editor()?.focus();
   };
 
   const insertTable = (rows: number, columns: number) => {
-    setTableSizeOpen(false);
+    setOverlay(undefined);
     editor()?.insertTable(rows, columns);
   };
 
@@ -465,7 +457,7 @@ export const MainWindow: Component = () => {
       case "file.open-folder":
         return void openFolder();
       case "file.quick-open":
-        return setQuickOpenOpen(true);
+        return setOverlay("quick-open");
       case "file.open-path":
         return void session.openPath(command.path);
       case "file.save":
@@ -485,7 +477,7 @@ export const MainWindow: Component = () => {
       case "file.export-image":
         return void exportDocument("image");
       case "file.version-history":
-        return setHistoryOpen(true);
+        return setOverlay("history");
       case "edit.find":
         return openFind("find");
       case "edit.replace":
@@ -497,13 +489,13 @@ export const MainWindow: Component = () => {
       case "edit.insert-image":
         return void editor()?.insertImage();
       case "edit.insert-table":
-        return setTableSizeOpen(true);
+        return setOverlay("table-size");
       case "edit.search-workspace":
-        return setWorkspaceSearchOpen(true);
+        return setOverlay("workspace-search");
       case "view.toggle-sidebar":
         return void updateSettings({ sidebarVisible: !settings().sidebarVisible });
       case "view.command-palette":
-        return setPaletteOpen(true);
+        return setOverlay("palette");
       case "view.next-tab":
         return session.nextTab();
       case "view.previous-tab":
@@ -710,40 +702,18 @@ export const MainWindow: Component = () => {
         </SidebarRegion>
       </div>
 
-      <Show when={paletteOpen()}>
-        <CommandPalette onClose={() => setPaletteOpen(false)} />
-      </Show>
-
-      <Show when={tableSizeOpen()}>
-        <TableSizeDialog onInsert={insertTable} onClose={closeTableSize} />
-      </Show>
-
-      {/* The versions belong to a file, so a document that has none has no panel to offer */}
-      <Show when={historyOpen() && session.activeDocument()?.path}>
-        {(path) => (
-          <VersionHistory
-            path={path()}
-            onRestore={(markdown) => editor()?.replaceDocument(markdown)}
-            onClose={() => setHistoryOpen(false)}
-          />
-        )}
-      </Show>
-
-      <Show when={quickOpenOpen()}>
-        <QuickOpen
-          root={folderRoot()}
-          onClose={() => setQuickOpenOpen(false)}
-          onOpen={(path) => void session.openPath(path)}
-        />
-      </Show>
-
-      <Show when={workspaceSearchOpen()}>
-        <WorkspaceSearch
-          root={folderRoot()}
-          onOpenMatch={(path, from, to) => void openWorkspaceMatch(path, from, to)}
-          onClose={closeWorkspaceSearch}
-        />
-      </Show>
+      <Overlays
+        overlay={overlay()}
+        historyPath={session.activeDocument()?.path}
+        folderRoot={folderRoot()}
+        onClose={() => setOverlay(undefined)}
+        onCloseTable={closeTableSize}
+        onCloseSearch={closeWorkspaceSearch}
+        onRestore={(markdown) => editor()?.replaceDocument(markdown)}
+        onInsertTable={insertTable}
+        onOpenPath={(path) => void session.openPath(path)}
+        onOpenMatch={(path, from, to) => void openWorkspaceMatch(path, from, to)}
+      />
     </div>
   );
 };
