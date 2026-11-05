@@ -193,7 +193,7 @@ const CollapseButton: Component<{
 /** The button that pins a sidebar open, or collapses it in a classic window. */
 const ControlButton: Component<{ side: SidebarSide; control: SidebarControl }> = (props) => (
   <Show
-    when={props.control.kind() === "pin"}
+    when={props.control.button() === "pin"}
     fallback={
       <CollapseButton
         side={props.side}

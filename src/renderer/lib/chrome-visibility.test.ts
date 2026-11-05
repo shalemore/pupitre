@@ -27,13 +27,13 @@ describe("chromeVisibility", () => {
   it("folds the chrome while writing and shows it before the first work", () => {
     expect(chromeVisibility(state, options, 1400)).toEqual({
       titleBar: false,
-      start: false,
-      end: false,
+      startSidebar: false,
+      endSidebar: false,
     });
     expect(chromeVisibility({ ...state, writing: false }, options, 1400)).toEqual({
       titleBar: true,
-      start: true,
-      end: true,
+      startSidebar: true,
+      endSidebar: true,
     });
   });
 
@@ -47,13 +47,13 @@ describe("chromeVisibility", () => {
   it("brings each sidebar back from its own edge", () => {
     expect(at({ near: { top: false, start: true, end: false } })).toEqual({
       titleBar: false,
-      start: true,
-      end: false,
+      startSidebar: true,
+      endSidebar: false,
     });
     expect(at({ near: { top: false, start: false, end: true } })).toEqual({
       titleBar: false,
-      start: false,
-      end: true,
+      startSidebar: false,
+      endSidebar: true,
     });
   });
 
@@ -66,8 +66,8 @@ describe("chromeVisibility", () => {
     };
     expect(chromeVisibility(state, pinned, 1400)).toEqual({
       titleBar: true,
-      start: true,
-      end: true,
+      startSidebar: true,
+      endSidebar: true,
     });
   });
 
@@ -75,19 +75,19 @@ describe("chromeVisibility", () => {
     const idle = { ...state, writing: false };
     expect(chromeVisibility(idle, options, 1000)).toEqual({
       titleBar: true,
-      start: true,
-      end: false,
+      startSidebar: true,
+      endSidebar: false,
     });
     expect(chromeVisibility(idle, options, 700)).toEqual({
       titleBar: true,
-      start: false,
-      end: false,
+      startSidebar: false,
+      endSidebar: false,
     });
     // A pinned end sidebar stays, and the start one gives way instead
     expect(chromeVisibility(idle, { ...options, endPinned: () => true }, 700)).toEqual({
       titleBar: true,
-      start: false,
-      end: true,
+      startSidebar: false,
+      endSidebar: true,
     });
   });
 
@@ -95,30 +95,30 @@ describe("chromeVisibility", () => {
     const classic: ChromeOptions = { ...options, immersive: () => false };
     expect(chromeVisibility(state, classic, 1400)).toEqual({
       titleBar: true,
-      start: false,
-      end: false,
+      startSidebar: false,
+      endSidebar: false,
     });
     expect(
       chromeVisibility({ ...state, near: { top: false, start: true, end: false } }, classic, 1400),
-    ).toEqual({ titleBar: true, start: true, end: false });
+    ).toEqual({ titleBar: true, startSidebar: true, endSidebar: false });
   });
 
   it("keeps a sidebar the layout has no place for hidden, whatever the pointer asks", () => {
     const idle = { ...state, writing: false, near: { top: false, start: true, end: true } };
     expect(chromeVisibility(idle, { ...options, startWanted: () => false }, 1400)).toMatchObject({
-      start: false,
-      end: true,
+      startSidebar: false,
+      endSidebar: true,
     });
   });
 
   it("keeps the chrome out after a menu pick until the next write or scroll", () => {
     expect(chromeVisibility({ ...state, writing: false, kept: true }, options, 1400)).toEqual({
       titleBar: true,
-      start: true,
-      end: true,
+      startSidebar: true,
+      endSidebar: true,
     });
     expect(
       chromeVisibility({ ...state, writing: false }, { ...options, canFold: () => false }, 1400),
-    ).toEqual({ titleBar: true, start: true, end: true });
+    ).toEqual({ titleBar: true, startSidebar: true, endSidebar: true });
   });
 });

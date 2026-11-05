@@ -5,8 +5,8 @@ import type { SidebarSide } from "./sidebar";
 export interface SidebarControl {
   /** Whether the sidebar stays open when the window folds its chrome. */
   readonly open: Accessor<boolean>;
-  /** What the button in the sidebar title does: pin it open, or collapse it, as a classic window does. */
-  readonly kind: Accessor<"pin" | "collapse">;
+  /** The button the sidebar title shows: the pin of an immersive window, the collapse of a classic one. */
+  readonly button: Accessor<"pin" | "collapse">;
   readonly setOpen: (open: boolean) => void;
 }
 
@@ -32,7 +32,7 @@ export function createSidebarControl(
 
   return {
     open: () => (immersive() ? stored() : !stored()),
-    kind: () => (immersive() ? "pin" : "collapse"),
+    button: () => (immersive() ? "pin" : "collapse"),
     setOpen: (open) => {
       store(immersive() ? open : !open);
       if (!immersive() && !open) onCollapsed();

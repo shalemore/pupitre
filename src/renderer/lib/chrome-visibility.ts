@@ -16,8 +16,8 @@ export interface ChromeOptions {
 
 export interface ChromeVisibility {
   readonly titleBar: boolean;
-  readonly start: boolean;
-  readonly end: boolean;
+  readonly startSidebar: boolean;
+  readonly endSidebar: boolean;
 }
 
 /** Room the document keeps beside the sidebars: a narrower one wraps so hard it stops reading. */
@@ -49,10 +49,10 @@ export function chromeVisibility(
   return {
     titleBar:
       !options.immersive() || options.titleBarPinned() || shown(state.near.top && state.topReached),
-    start:
+    startSidebar:
       options.startWanted() &&
       sidebarShown(state.near.start, options.startPinned(), shown(state.near.start, startFolded())),
-    end:
+    endSidebar:
       options.endWanted() &&
       sidebarShown(state.near.end, options.endPinned(), shown(state.near.end, endFolded())),
   };

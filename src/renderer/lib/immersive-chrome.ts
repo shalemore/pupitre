@@ -50,8 +50,8 @@ export function createImmersiveChrome(options: ChromeOptions) {
     ),
   );
   const titleBarVisible = () => visibility().titleBar;
-  const sidebarVisible = () => visibility().start;
-  const endSidebarVisible = () => visibility().end;
+  const sidebarVisible = () => visibility().startSidebar;
+  const endSidebarVisible = () => visibility().endSidebar;
 
   // The traffic lights belong to the title bar
   if (isMacOS) {
