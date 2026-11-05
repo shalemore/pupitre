@@ -5,6 +5,7 @@ import { t } from "@/i18n";
 import { distanceFromEnd, distanceFromStart, isRtl } from "@/lib/rtl";
 import { quietButton, rtlFlip } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
+import type { SidebarControl } from "./sidebar-control";
 
 export type SidebarMode = "outline" | "folder";
 
@@ -189,15 +190,24 @@ const CollapseButton: Component<{
   </ToggleIconButton>
 );
 
-interface PinProps {
-  /**
-   * The stored pin value. An immersive window keeps the sidebar open while it is set; a classic
-   * window, where the same value is reused, keeps the sidebar collapsed instead.
-   */
-  pinned: boolean;
-  onPinnedChange?: ((pinned: boolean) => void) | undefined;
-  /** Whether the button collapses the sidebar rather than pinning it, as a classic window does. */
-  collapsing?: boolean | undefined;
+/** The button that pins a sidebar open, or collapses it in a classic window. */
+const ControlButton: Component<{ side: SidebarSide; control: SidebarControl }> = (props) => (
+  <Show
+    when={props.control.kind() === "pin"}
+    fallback={
+      <CollapseButton
+        side={props.side}
+        collapsed={!props.control.open()}
+        onChange={(collapsed) => props.control.setOpen(!collapsed)}
+      />
+    }
+  >
+    <PinButton pinned={props.control.open()} onChange={props.control.setOpen} />
+  </Show>
+);
+
+interface ControlProps {
+  control?: SidebarControl | undefined;
 }
 
 const SidebarTitle: Component<
@@ -208,7 +218,7 @@ const SidebarTitle: Component<
     /** A control at the far end of the row, such as the folder's sort menu. */
     action?: JSX.Element;
     side: SidebarSide;
-  } & PinProps
+  } & ControlProps
 > = (props) => (
   <div class={titleRow}>
     <div class={titleMain}>
@@ -218,14 +228,8 @@ const SidebarTitle: Component<
       {props.titleAction}
     </div>
     {props.action}
-    <Show when={props.onPinnedChange}>
-      {(onChange) =>
-        props.collapsing ? (
-          <CollapseButton side={props.side} collapsed={props.pinned} onChange={onChange()} />
-        ) : (
-          <PinButton pinned={props.pinned} onChange={onChange()} />
-        )
-      }
+    <Show when={props.control}>
+      {(control) => <ControlButton side={props.side} control={control()} />}
     </Show>
   </div>
 );
@@ -241,7 +245,7 @@ export const SidebarPanel: Component<
     action?: JSX.Element;
     class?: string | undefined;
     children: JSX.Element;
-  } & PinProps
+  } & ControlProps
 > = (props) => (
   <SidebarFrame class={props.class}>
     <SidebarTitle
@@ -249,15 +253,13 @@ export const SidebarPanel: Component<
       titleAction={props.titleAction}
       action={props.action}
       side={props.side}
-      pinned={props.pinned}
-      onPinnedChange={props.onPinnedChange}
-      collapsing={props.collapsing}
+      control={props.control}
     />
     <ScrollView class={grow}>{props.children}</ScrollView>
   </SidebarFrame>
 );
 
-interface SidebarProps extends PinProps {
+interface SidebarProps extends ControlProps {
   mode: SidebarMode;
   /** Which modes can be shown now; the switch appears only when both can. */
   hasOutline: boolean;
@@ -279,7 +281,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
   const both = () => props.hasOutline && props.hasFolder;
   return (
     <SidebarFrame class={props.class}>
-      <Show when={both() || props.onPinnedChange}>
+      <Show when={both() || props.control}>
         <div class={modeRow}>
           <Show when={both()}>
             <SegmentedControl<SidebarMode>
@@ -292,14 +294,8 @@ export const Sidebar: Component<SidebarProps> = (props) => {
               ]}
             />
           </Show>
-          <Show when={props.onPinnedChange}>
-            {(onChange) =>
-              props.collapsing ? (
-                <CollapseButton side="start" collapsed={props.pinned} onChange={onChange()} />
-              ) : (
-                <PinButton pinned={props.pinned} onChange={onChange()} />
-              )
-            }
+          <Show when={props.control}>
+            {(control) => <ControlButton side="start" control={control()} />}
           </Show>
         </div>
       </Show>
@@ -309,7 +305,6 @@ export const Sidebar: Component<SidebarProps> = (props) => {
           titleAction={props.folderTitleAction}
           action={props.folderAction}
           side="start"
-          pinned={props.pinned}
         />
       </Show>
       {/* Both stay mounted so the expanded folders survive a switch to the outline */}
