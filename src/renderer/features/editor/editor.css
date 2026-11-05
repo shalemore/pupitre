@@ -551,15 +551,13 @@
 
   /*
    * The handle and the bar are interface rather than document, so they are sized in rem like the
-   * corner of a code block; most of their look lives in images.ts. Fading opacity and visibility
-   * together is one transition no utility expresses, so it stays on these selectors, which the
-   * frame's placement and hiding rules need anyway.
+   * corner of a code block; most of their look lives in images.ts. They fade with the pointer or the
+   * focus on the frame; only the fading transition is written here, which a utility cannot express
+   * without also taking over the hiding and placement rules below.
    */
   .md-image-handle,
   .md-image-toolbar {
-    transition:
-      opacity var(--transition-duration-ui),
-      visibility var(--transition-duration-ui);
+    transition: opacity var(--transition-duration-ui);
   }
 
   /*

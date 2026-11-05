@@ -94,7 +94,7 @@ export function imageDom(
   if (controls) {
     const commit = write ?? ((change) => writeImage(view, block, change));
     const toolbar = alignmentToolbar(view, commit, size);
-    frame.append(resizeHandle(view, block, commit, frame, image), toolbar);
+    frame.append(resizeHandle(view, block, commit, image), toolbar);
     // A picture narrower than its bar cannot hold the bar inside; the bar hangs under it instead
     const placeToolbar = () => {
       frame.toggleAttribute(
