@@ -12,7 +12,7 @@ export const EditorSection: Component = () => (
   <SettingsSection title={t().settings.editor}>
     <Show when={desktop.initialState.capabilities.systemFonts}>
       <SettingGroup>
-        <SettingField name="bodyFont" title={t().settings.bodyFont}>
+        <SettingField heading name="bodyFont" title={t().settings.bodyFont}>
           <FontSelect
             value={settings().bodyFont}
             onChange={(bodyFont) => void updateSettings({ bodyFont })}
@@ -48,6 +48,7 @@ export const EditorSection: Component = () => (
 
     <SettingGroup>
       <SettingField
+        heading
         name="fontSize"
         title={t().settings.fontSize}
         description={`${settings().fontSize}px`}
@@ -107,6 +108,7 @@ export const EditorSection: Component = () => (
 
       <div>
         <SettingField
+          heading
           name="focusMode"
           title={t().settings.focusMode}
           description={t().settings.focusModeDesc}
@@ -175,6 +177,7 @@ export const EditorSection: Component = () => (
 
     <SettingGroup>
       <SettingField
+        heading
         name="smartQuotes"
         title={t().settings.smartQuotes}
         description={t().settings.smartQuotesDesc}
@@ -212,7 +215,7 @@ export const EditorSection: Component = () => (
     </SettingGroup>
 
     <SettingGroup>
-      <SettingField name="cursorShape" title={t().settings.cursorShape}>
+      <SettingField heading name="cursorShape" title={t().settings.cursorShape}>
         <Select<Settings["cursorShape"]>
           value={settings().cursorShape}
           onChange={(cursorShape) => void updateSettings({ cursorShape })}
@@ -240,7 +243,7 @@ export const EditorSection: Component = () => (
     </SettingGroup>
 
     <SettingGroup>
-      <SettingField name="scrollbar" title={t().settings.scrollbar}>
+      <SettingField heading name="scrollbar" title={t().settings.scrollbar}>
         <Select<Settings["scrollbar"]>
           value={settings().scrollbar}
           onChange={(scrollbar) => void updateSettings({ scrollbar })}

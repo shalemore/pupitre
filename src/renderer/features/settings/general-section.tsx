@@ -26,7 +26,7 @@ const DefaultAppRow: Component = () => {
     }
   };
   return (
-    <SettingRow title={t().settings.defaultApp} description={description()}>
+    <SettingRow heading title={t().settings.defaultApp} description={description()}>
       <Button
         variant="outline"
         size="sm"
@@ -41,7 +41,7 @@ const DefaultAppRow: Component = () => {
 export const GeneralSection: Component = () => (
   <SettingsSection title={t().settings.general}>
     <SettingGroup>
-      <SettingField name="locale" title={t().settings.language}>
+      <SettingField heading name="locale" title={t().settings.language}>
         <Select<LanguageSetting>
           value={settings().locale}
           onChange={(locale) => void updateSettings({ locale })}
@@ -69,6 +69,7 @@ export const GeneralSection: Component = () => (
 
     <SettingGroup>
       <SettingField
+        heading
         name="autoSave"
         title={t().settings.autoSave}
         description={t().settings.autoSaveDesc}

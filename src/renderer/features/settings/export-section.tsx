@@ -8,7 +8,7 @@ import { SettingField, SettingGroup, SettingsSection } from "./settings-section"
 export const ExportSection: Component = () => (
   <SettingsSection title={t().settings.export} description={t().settings.exportDesc}>
     <SettingGroup>
-      <SettingField name="pdfPageSize" title={t().settings.pdfPageSize}>
+      <SettingField heading name="pdfPageSize" title={t().settings.pdfPageSize}>
         <Select<Settings["pdfPageSize"]>
           value={settings().pdfPageSize}
           onChange={(pdfPageSize) => void updateSettings({ pdfPageSize })}
@@ -38,6 +38,7 @@ export const ExportSection: Component = () => (
 
     <SettingGroup>
       <SettingField
+        heading
         name="pdfPageNumbers"
         title={t().settings.pdfPageNumbers}
         description={t().settings.pdfPageNumbersDesc}

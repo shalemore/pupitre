@@ -205,10 +205,10 @@ export function showSettingsWindow(): void {
     return;
   }
   settingsWindow = createWindow("settings", {
-    width: 720,
-    height: 560,
-    minWidth: 540,
-    minHeight: 440,
+    width: 960,
+    height: 680,
+    minWidth: 640,
+    minHeight: 480,
     minimizable: false,
     maximizable: false,
   });

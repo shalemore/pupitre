@@ -94,7 +94,7 @@ export const AppearanceSection: Component = () => (
     </Show>
 
     <SettingGroup>
-      <SettingField name="colorScheme" title={t().settings.colorScheme}>
+      <SettingField heading name="colorScheme" title={t().settings.colorScheme}>
         <Select<Settings["colorScheme"]>
           value={settings().colorScheme}
           onChange={(colorScheme) => void updateSettings({ colorScheme })}
@@ -149,7 +149,12 @@ export const AppearanceSection: Component = () => (
     </SettingGroup>
 
     <SettingGroup>
-      <SettingField name="uiFont" title={t().settings.uiFont} description={t().settings.uiFontDesc}>
+      <SettingField
+        heading
+        name="uiFont"
+        title={t().settings.uiFont}
+        description={t().settings.uiFontDesc}
+      >
         <FontSelect
           value={settings().uiFont}
           onChange={(uiFont) => void updateSettings({ uiFont })}
@@ -194,7 +199,7 @@ export const AppearanceSection: Component = () => (
     </SettingGroup>
 
     <SettingGroup>
-      <SettingField name="windowStyle" title={t().settings.windowStyle}>
+      <SettingField heading name="windowStyle" title={t().settings.windowStyle}>
         <Select<Settings["windowStyle"]>
           value={settings().windowStyle}
           onChange={(windowStyle) => void updateSettings({ windowStyle })}
@@ -261,7 +266,7 @@ export const AppearanceSection: Component = () => (
 
     <SettingGroup>
       <div>
-        <SettingField name="sidebarVisible" title={t().settings.showOutline}>
+        <SettingField heading name="sidebarVisible" title={t().settings.showOutline}>
           <Switch
             checked={settings().sidebarVisible}
             onChange={(sidebarVisible) => void updateSettings({ sidebarVisible })}

@@ -9,45 +9,30 @@ import { ExportSection } from "@/features/settings/export-section";
 import { GeneralSection } from "@/features/settings/general-section";
 import { MarkdownSection } from "@/features/settings/markdown-section";
 import { t } from "@/i18n";
-import { isImmersive } from "@/lib/settings";
-import { cva, css, cx } from "@/styled-system/css";
+import { css, cx } from "@/styled-system/css";
 import { SettingsNav } from "./settings-nav";
 import { barDivider, windowFrame } from "./window-chrome";
 
 const settingsFrame = css({ userSelect: "none" });
-const title = css({ fontWeight: "semibold", color: "foreground", letterSpacing: "wide" });
-const tabs = cva({
-  base: { display: "flex", flex: "1", overflow: "hidden" },
-  variants: {
-    immersive: {
-      true: {
-        gap: "var(--pref-immersive-gap)",
-        paddingBlockEnd: "var(--pref-immersive-gap)",
-        paddingInlineEnd: "var(--pref-immersive-gap)",
-      },
-    },
-  },
+const title = css({ textStyle: "sm", fontWeight: "semibold", color: "foreground" });
+const tabs = css({ display: "flex", flex: "1", minHeight: "0", overflow: "hidden" });
+const settingsSidebar = css({
+  display: "flex",
+  width: { base: "52", md: "60" },
+  flexShrink: 0,
+  flexDirection: "column",
+  paddingBlock: "4",
+  paddingInline: "3",
+  backgroundColor: "surface.0",
+  borderInlineEndWidth: "hairline",
+  borderInlineEndStyle: "solid",
+  borderInlineEndColor: "border",
 });
-const settingsSidebar = cva({
-  base: { width: "48", flexShrink: 0, padding: "3" },
-  variants: {
-    classic: {
-      true: {
-        backgroundColor: "surface.0",
-        borderInlineEndWidth: "hairline",
-        borderInlineEndStyle: "solid",
-        borderInlineEndColor: "border",
-      },
-    },
-  },
-});
-const page = cva({
-  base: { flex: "1", padding: "6" },
-  variants: {
-    immersive: {
-      true: { borderRadius: "lg", backgroundColor: "surface.1", boxShadow: "sm" },
-    },
-  },
+const page = css({
+  flex: "1",
+  minWidth: "0",
+  paddingBlock: { base: "8", md: "10" },
+  paddingInline: { base: "6", md: "10" },
 });
 
 export const SettingsWindow: Component = () => {
@@ -62,22 +47,18 @@ export const SettingsWindow: Component = () => {
   });
 
   return (
-    <div class={cx(windowFrame({ immersive: isImmersive() }), settingsFrame)}>
-      <TitleBar class={barDivider({ classic: !isImmersive() })}>
+    <div class={cx(windowFrame({ immersive: false }), settingsFrame)}>
+      <TitleBar class={barDivider({ classic: true })}>
         <span class={title}>{t().settings.title}</span>
       </TitleBar>
 
-      {/* An immersive window shows the page as a card on the window background, like the main window; nothing here folds away */}
-      <Tabs
-        orientation="vertical"
-        defaultValue="general"
-        class={tabs({ immersive: isImmersive() })}
-      >
-        <aside class={settingsSidebar({ classic: !isImmersive() })}>
+      {/* The settings window keeps the same two panes whatever the window style of the documents is */}
+      <Tabs orientation="vertical" defaultValue="general" class={tabs}>
+        <aside class={settingsSidebar}>
           <SettingsNav />
         </aside>
 
-        <ScrollView as="main" class={page({ immersive: isImmersive() })}>
+        <ScrollView as="main" class={page}>
           <TabsContent value="general">
             <GeneralSection />
           </TabsContent>

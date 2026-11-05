@@ -7,24 +7,22 @@ import { resetSetting, settings } from "@/lib/settings";
 import { workspace } from "@/lib/workspace";
 import { css } from "@/styled-system/css";
 
-const section = css({ maxWidth: "xl" });
+const section = css({ maxWidth: "2xl" });
+const header = css({ marginBlockEnd: "8" });
 const title = css({
-  textStyle: "xs",
+  textStyle: "xl",
   fontWeight: "semibold",
-  textTransform: "uppercase",
-  letterSpacing: "wider",
-  color: "muted.foreground",
+  letterSpacing: "tight",
+  color: "foreground",
 });
 const description = css({
-  marginBlockStart: "1.5",
-  textStyle: "2xs",
+  marginBlockStart: "2",
+  maxWidth: "xl",
+  textStyle: "sm",
   lineHeight: "relaxed",
   color: "muted.foreground",
 });
-const groups = css({
-  marginBlockStart: "3",
-  "& > :not(:last-child)": { marginBlockEnd: "6" },
-});
+const groups = css({ display: "flex", flexDirection: "column", gap: "8" });
 const group = css({
   "& > :not(:last-child)": {
     borderBottomWidth: "hairline",
@@ -32,7 +30,7 @@ const group = css({
     borderColor: "border.subtle",
   },
 });
-const nested = css({ paddingInlineStart: "4" });
+const nested = css({ paddingInlineStart: "5" });
 const titleRow = css({ display: "flex", alignItems: "center", gap: "1.5" });
 const resetButton = css({ animationName: "appear", animationDuration: "snap" });
 
@@ -41,10 +39,12 @@ export const SettingsSection: ParentComponent<{ title: string; description?: str
   props,
 ) => (
   <section class={section}>
-    <h2 class={title}>{props.title}</h2>
-    <Show when={props.description}>
-      <p class={description}>{props.description}</p>
-    </Show>
+    <div class={header}>
+      <h2 class={title}>{props.title}</h2>
+      <Show when={props.description}>
+        <p class={description}>{props.description}</p>
+      </Show>
+    </div>
     <div class={groups}>{props.children}</div>
   </section>
 );
@@ -58,6 +58,8 @@ export interface SettingFieldProps {
   description?: string | undefined;
   /** The row depends on the one above it and is indented under it. */
   nested?: boolean;
+  /** The row opens a group: its title is drawn as the group's heading. */
+  heading?: boolean | undefined;
 }
 
 /**
@@ -73,6 +75,7 @@ export const SettingField: ParentComponent<SettingFieldProps> = (props) => {
   return (
     <SettingRow
       class={props.nested ? nested : undefined}
+      heading={props.heading}
       title={
         <span class={titleRow}>
           {props.title}

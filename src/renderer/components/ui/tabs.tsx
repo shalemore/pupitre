@@ -8,18 +8,18 @@ import { css, cx } from "@/styled-system/css";
  */
 export const Tabs = KobalteTabs;
 
-const list = css({ display: "flex", flexDirection: "column", gap: "1", outlineStyle: "none" });
+const list = css({ display: "flex", flexDirection: "column", gap: "0.5", outlineStyle: "none" });
 const trigger = css({
   layerStyle: "interactive",
   display: "flex",
   width: "full",
   alignItems: "center",
-  gap: "2",
+  gap: "2.5",
   borderRadius: "md",
-  paddingInline: "3",
-  paddingBlock: "1.5",
+  paddingInline: "2.5",
+  paddingBlock: "2",
   textAlign: "start",
-  textStyle: "xs",
+  textStyle: "sm",
   color: "muted.foreground",
   outlineStyle: "none",
   cursor: "pointer",

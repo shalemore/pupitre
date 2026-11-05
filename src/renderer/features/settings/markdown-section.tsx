@@ -11,7 +11,7 @@ const monoField = css({ width: "36", fontFamily: "mono" });
 export const MarkdownSection: Component = () => (
   <SettingsSection title={t().settings.markdown} description={t().settings.markdownDesc}>
     <SettingGroup>
-      <SettingField name="bulletMarker" title={t().settings.bulletMarker}>
+      <SettingField heading name="bulletMarker" title={t().settings.bulletMarker}>
         <Select<Settings["bulletMarker"]>
           value={settings().bulletMarker}
           onChange={(bulletMarker) => void updateSettings({ bulletMarker })}
@@ -38,7 +38,7 @@ export const MarkdownSection: Component = () => (
     </SettingGroup>
 
     <SettingGroup>
-      <SettingField name="emphasisMarker" title={t().settings.emphasisMarker}>
+      <SettingField heading name="emphasisMarker" title={t().settings.emphasisMarker}>
         <Select<Settings["emphasisMarker"]>
           value={settings().emphasisMarker}
           onChange={(emphasisMarker) => void updateSettings({ emphasisMarker })}
@@ -61,8 +61,10 @@ export const MarkdownSection: Component = () => (
           aria-label={t().settings.strongMarker}
         />
       </SettingField>
+    </SettingGroup>
 
-      <SettingField name="fenceMarker" title={t().settings.fenceMarker}>
+    <SettingGroup>
+      <SettingField heading name="fenceMarker" title={t().settings.fenceMarker}>
         <Select<Settings["fenceMarker"]>
           value={settings().fenceMarker}
           onChange={(fenceMarker) => void updateSettings({ fenceMarker })}
@@ -89,7 +91,7 @@ export const MarkdownSection: Component = () => (
     </SettingGroup>
 
     <SettingGroup>
-      <SettingField name="lineEnding" title={t().settings.lineEnding}>
+      <SettingField heading name="lineEnding" title={t().settings.lineEnding}>
         <Select<Settings["lineEnding"]>
           value={settings().lineEnding}
           onChange={(lineEnding) => void updateSettings({ lineEnding })}
