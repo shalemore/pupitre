@@ -185,10 +185,12 @@ export const TableView: Component<TableViewProps> = (props) => {
         <Show
           when={isActive(cell.row, cell.column)}
           fallback={
-            <InlineContent
-              items={source()?.items ?? []}
-              renderImage={(image) => <TableCellImage view={props.view} image={image} />}
-            />
+            <span dir="auto">
+              <InlineContent
+                items={source()?.items ?? []}
+                renderImage={(image) => <TableCellImage view={props.view} image={image} />}
+              />
+            </span>
           }
         >
           <input
