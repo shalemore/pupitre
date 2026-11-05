@@ -1,3 +1,5 @@
+import { SHORTCUTS } from "@shared/shortcuts";
+
 /** The shortcut the main window handles itself. */
 export type AppShortcut =
   | { kind: "zoom"; command: "in" | "out" | "reset" }
@@ -26,6 +28,10 @@ const ZOOM_BY_KEY = new Map<string, "in" | "out" | "reset">([
   [")", "reset"],
 ]);
 
+/** The key an accelerator ends with, such as the "d" of CmdOrCtrl+Shift+D. */
+const keyOf = (accelerator: string) =>
+  accelerator.slice(accelerator.lastIndexOf("+") + 1).toLowerCase();
+
 /**
  * The shortcut a keystroke asks for, if any. Electron's menu accelerators cannot be trusted with
  * these keys: `Ctrl+Plus` only fires with Shift held and needs both spellings, and "-" is not a
@@ -40,11 +46,12 @@ export function shortcutOf(input: Keystroke, platform: NodeJS.Platform): AppShor
   const command = platform === "darwin" ? input.meta : input.control;
   if (!command) return undefined;
   const key = input.key.toLowerCase();
-  if (input.shift && key === "d") {
+  if (input.shift && key === keyOf(SHORTCUTS.toggleTheme)) {
     return input.isAutoRepeat ? undefined : { kind: "toggleTheme" };
   }
-  // The key the app reset the zoom with before the menu listed Ctrl+0
-  if (input.shift && key === "r") return { kind: "zoom", command: "reset" };
+  if (input.shift && key === keyOf(SHORTCUTS.legacyResetZoom)) {
+    return { kind: "zoom", command: "reset" };
+  }
   const zoom = ZOOM_BY_KEY.get(input.key);
   return zoom === undefined ? undefined : { kind: "zoom", command: zoom };
 }

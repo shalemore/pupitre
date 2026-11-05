@@ -17,6 +17,7 @@ import {
   withGroupSeparators,
 } from "@shared/menu";
 import { type BooleanSettingKey, isBooleanSettingKey } from "@shared/settings";
+import { replaceShortcut, SHORTCUTS } from "@shared/shortcuts";
 import { diagnosticsInfo } from "../diagnostics/diagnostics";
 import { REPOSITORY_URL, reportIssueUrl } from "../diagnostics/report-issue";
 import { clearRecentFiles, getRecentFiles } from "../files/recent-files";
@@ -81,7 +82,7 @@ function buildTemplate(): SettingMenu[] {
   };
   const preferences: MenuItemConstructorOptions = {
     label: labels.preferences,
-    accelerator: "CmdOrCtrl+,",
+    accelerator: SHORTCUTS.preferences,
     click: showSettingsWindow,
   };
   const recentMenu: MenuItemConstructorOptions[] =
@@ -125,35 +126,35 @@ function buildTemplate(): SettingMenu[] {
       submenu: [
         {
           label: labels.newFile,
-          accelerator: "CmdOrCtrl+N",
+          accelerator: SHORTCUTS.newFile,
           click: () => dispatchToMainWindow({ id: "file.new" }),
         },
         {
           label: labels.openFile,
-          accelerator: "CmdOrCtrl+O",
+          accelerator: SHORTCUTS.openFile,
           click: () => dispatchToMainWindow({ id: "file.open" }),
         },
         {
           label: labels.openFolder,
-          accelerator: "CmdOrCtrl+Shift+O",
+          accelerator: SHORTCUTS.openFolder,
           click: () => dispatchToMainWindow({ id: "file.open-folder" }),
         },
         {
           label: labels.quickOpen,
-          accelerator: "CmdOrCtrl+P",
+          accelerator: SHORTCUTS.quickOpen,
           click: () => dispatchToMainWindow({ id: "file.quick-open" }),
         },
         { label: labels.openRecent, submenu: recentMenu },
         separator,
         {
           label: labels.save,
-          accelerator: "CmdOrCtrl+S",
+          accelerator: SHORTCUTS.save,
           enabled: hasText,
           click: () => dispatchToMainWindow({ id: "file.save" }),
         },
         {
           label: labels.saveAs,
-          accelerator: "CmdOrCtrl+Shift+S",
+          accelerator: SHORTCUTS.saveAs,
           enabled: hasText,
           click: () => dispatchToMainWindow({ id: "file.save-as" }),
         },
@@ -187,13 +188,13 @@ function buildTemplate(): SettingMenu[] {
         separator,
         {
           label: labels.closeTab,
-          accelerator: "CmdOrCtrl+W",
+          accelerator: SHORTCUTS.closeTab,
           enabled: hasDocument,
           click: () => dispatchToMainWindow({ id: "file.close-tab" }),
         },
         {
           label: labels.reopenTab,
-          accelerator: "CmdOrCtrl+Shift+T",
+          accelerator: SHORTCUTS.reopenTab,
           // Only a tab that was closed can come back, and closing one is the only thing that changes that
           enabled: documentState.canReopenTab,
           click: () => dispatchToMainWindow({ id: "file.reopen-tab" }),
@@ -201,7 +202,7 @@ function buildTemplate(): SettingMenu[] {
         {
           label: labels.closeWindow,
           // Ctrl+W closes a tab as it does everywhere else, so the window takes the longer one
-          accelerator: "CmdOrCtrl+Shift+W",
+          accelerator: SHORTCUTS.closeWindow,
           click: () => dispatchToMainWindow({ id: "window.close" }),
         },
         separator,
@@ -220,7 +221,7 @@ function buildTemplate(): SettingMenu[] {
         { label: labels.copy, role: "copy" },
         {
           label: labels.copyHtml,
-          accelerator: "CmdOrCtrl+Shift+C",
+          accelerator: SHORTCUTS.copyHtml,
           enabled: hasText,
           click: () => dispatchToMainWindow({ id: "edit.copy-html" }),
         },
@@ -230,7 +231,7 @@ function buildTemplate(): SettingMenu[] {
           // Electron gives this role no accelerator outside macOS, and the main window inserts the
           // clipboard's text itself so that the rich-text paste conversion does not see it; any
           // other window pastes through the role
-          accelerator: "CmdOrCtrl+Shift+V",
+          accelerator: SHORTCUTS.pastePlain,
           click: () => {
             const window = BrowserWindow.getFocusedWindow();
             if (window !== null && window !== getMainWindow()) {
@@ -244,19 +245,19 @@ function buildTemplate(): SettingMenu[] {
         separator,
         {
           label: labels.find,
-          accelerator: "CmdOrCtrl+F",
+          accelerator: SHORTCUTS.find,
           enabled: hasText,
           click: () => dispatchToMainWindow({ id: "edit.find" }),
         },
         {
           label: labels.replace,
-          accelerator: isMac ? "Cmd+Alt+F" : "Ctrl+H",
+          accelerator: replaceShortcut(process.platform),
           enabled: hasText,
           click: () => dispatchToMainWindow({ id: "edit.replace" }),
         },
         {
           label: labels.searchInFolder,
-          accelerator: "CmdOrCtrl+Shift+F",
+          accelerator: SHORTCUTS.searchWorkspace,
           click: () => dispatchToMainWindow({ id: "edit.search-workspace" }),
         },
       ],
@@ -288,7 +289,7 @@ function buildTemplate(): SettingMenu[] {
         separator,
         {
           label: labels.insertImage,
-          accelerator: "CmdOrCtrl+Shift+I",
+          accelerator: SHORTCUTS.insertImage,
           click: () => dispatchToMainWindow({ id: "edit.insert-image" }),
         },
       ],
@@ -299,18 +300,18 @@ function buildTemplate(): SettingMenu[] {
       submenu: [
         {
           label: labels.commandPalette,
-          accelerator: "CmdOrCtrl+Shift+P",
+          accelerator: SHORTCUTS.commandPalette,
           click: () => dispatchToMainWindow({ id: "view.command-palette" }),
         },
         separator,
         {
           label: labels.toggleSidebar,
-          accelerator: "CmdOrCtrl+Shift+L",
+          accelerator: SHORTCUTS.toggleSidebar,
           click: () => dispatchToMainWindow({ id: "view.toggle-sidebar" }),
         },
         {
           label: labels.toggleTheme,
-          accelerator: "CmdOrCtrl+Shift+D",
+          accelerator: SHORTCUTS.toggleTheme,
           // The window reads this key itself so that a held key does not strobe the scheme; on
           // Windows and Linux the menu only shows it (see shortcuts.ts)
           registerAccelerator: false,
@@ -320,13 +321,13 @@ function buildTemplate(): SettingMenu[] {
         // Ctrl+Tab stays Ctrl on every platform: Cmd+Tab is the system's own window switcher
         {
           label: labels.nextTab,
-          accelerator: "Control+Tab",
+          accelerator: SHORTCUTS.nextTab,
           enabled: hasDocument,
           click: () => dispatchToMainWindow({ id: "view.next-tab" }),
         },
         {
           label: labels.previousTab,
-          accelerator: "Control+Shift+Tab",
+          accelerator: SHORTCUTS.previousTab,
           enabled: hasDocument,
           click: () => dispatchToMainWindow({ id: "view.previous-tab" }),
         },
@@ -334,7 +335,7 @@ function buildTemplate(): SettingMenu[] {
         {
           label: labels.focusMode,
           type: "checkbox",
-          accelerator: "F8",
+          accelerator: SHORTCUTS.focusMode,
           checked: getSettings().focusMode,
           setting: "focusMode",
           click: () => updateSettings({ focusMode: !getSettings().focusMode }),
@@ -342,7 +343,7 @@ function buildTemplate(): SettingMenu[] {
         {
           label: labels.typewriterMode,
           type: "checkbox",
-          accelerator: "F9",
+          accelerator: SHORTCUTS.typewriterMode,
           checked: getSettings().typewriterMode,
           setting: "typewriterMode",
           click: () => updateSettings({ typewriterMode: !getSettings().typewriterMode }),
@@ -350,24 +351,24 @@ function buildTemplate(): SettingMenu[] {
         {
           label: labels.sourceMode,
           type: "checkbox",
-          accelerator: "CmdOrCtrl+/",
+          accelerator: SHORTCUTS.sourceMode,
           checked: getSettings().sourceMode,
           setting: "sourceMode",
           click: () => updateSettings({ sourceMode: !getSettings().sourceMode }),
         },
         separator,
         // The main row, the keypad, and the spellings Electron reads for the same keys
-        ...shortcutItems(labels.zoomIn, ["CmdOrCtrl+Plus", "CmdOrCtrl+=", "CmdOrCtrl+numadd"], () =>
+        ...shortcutItems(labels.zoomIn, [SHORTCUTS.zoomIn, "CmdOrCtrl+=", "CmdOrCtrl+numadd"], () =>
           stepZoom("in"),
         ),
-        ...shortcutItems(labels.zoomOut, ["CmdOrCtrl+-", "CmdOrCtrl+numsub"], () =>
+        ...shortcutItems(labels.zoomOut, [SHORTCUTS.zoomOut, "CmdOrCtrl+numsub"], () =>
           stepZoom("out"),
         ),
         // Ctrl+0 is what other apps reset the zoom with; Shift+0 is ")" and the keypad's zero
         // carries Ins. Ctrl+Shift+R stays as the key the app used before
         ...shortcutItems(
           labels.resetZoom,
-          ["CmdOrCtrl+0", "CmdOrCtrl+num0", "CmdOrCtrl+Shift+0", "CmdOrCtrl+Shift+R"],
+          [SHORTCUTS.resetZoom, "CmdOrCtrl+num0", "CmdOrCtrl+Shift+0", SHORTCUTS.legacyResetZoom],
           resetZoom,
         ),
         separator,

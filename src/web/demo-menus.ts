@@ -15,6 +15,7 @@ import {
   withGroupSeparators,
 } from "@shared/menu";
 import type { Settings } from "@shared/settings";
+import { SHORTCUTS } from "@shared/shortcuts";
 
 /**
  * The demo's menu, described the way the app's main process describes its own. The page draws the
@@ -72,7 +73,7 @@ export function createDemoMenus(source: DemoMenuSource) {
           // No entry for opening a folder: the demo has one folder and it is open already
           {
             label: m.quickOpen,
-            shortcut: "CmdOrCtrl+P",
+            shortcut: SHORTCUTS.quickOpen,
             run: send({ id: "file.quick-open" }),
           },
           divider,
@@ -89,13 +90,13 @@ export function createDemoMenus(source: DemoMenuSource) {
           divider,
           {
             label: m.closeTab,
-            shortcut: "CmdOrCtrl+W",
+            shortcut: SHORTCUTS.closeTab,
             enabled: hasDocument,
             run: send({ id: "file.close-tab" }),
           },
           {
             label: m.reopenTab,
-            shortcut: "CmdOrCtrl+Shift+T",
+            shortcut: SHORTCUTS.reopenTab,
             // Only a tab that was closed can come back, and closing one is the only thing that changes that
             enabled: canReopenTab,
             run: send({ id: "file.reopen-tab" }),
@@ -107,7 +108,7 @@ export function createDemoMenus(source: DemoMenuSource) {
           // Ctrl+C stays the browser's own, so the demo draws only the copy the renderer builds
           {
             label: m.copyHtml,
-            shortcut: "CmdOrCtrl+Shift+C",
+            shortcut: SHORTCUTS.copyHtml,
             run: send({ id: "edit.copy-html" }),
           },
           divider,
@@ -117,7 +118,7 @@ export function createDemoMenus(source: DemoMenuSource) {
           // finds nothing rather than reaching for the file system
           {
             label: m.searchInFolder,
-            shortcut: "CmdOrCtrl+Shift+F",
+            shortcut: SHORTCUTS.searchWorkspace,
             run: send({ id: "edit.search-workspace" }),
           },
         ];
@@ -133,7 +134,7 @@ export function createDemoMenus(source: DemoMenuSource) {
           divider,
           {
             label: m.insertImage,
-            shortcut: "CmdOrCtrl+Shift+I",
+            shortcut: SHORTCUTS.insertImage,
             run: send({ id: "edit.insert-image" }),
           },
         ];
@@ -141,32 +142,36 @@ export function createDemoMenus(source: DemoMenuSource) {
         return [
           {
             label: m.commandPalette,
-            shortcut: "CmdOrCtrl+Shift+P",
+            shortcut: SHORTCUTS.commandPalette,
             run: send({ id: "view.command-palette" }),
           },
           divider,
           { label: m.toggleSidebar, run: send({ id: "view.toggle-sidebar" }) },
           {
             label: m.sourceMode,
-            shortcut: "CmdOrCtrl+/",
+            shortcut: SHORTCUTS.sourceMode,
             checked: source.settings().sourceMode,
             run: () => source.updateSettings({ sourceMode: !source.settings().sourceMode }),
           },
-          { label: m.nextTab, shortcut: "Control+Tab", run: send({ id: "view.next-tab" }) },
+          {
+            label: m.nextTab,
+            shortcut: SHORTCUTS.nextTab,
+            run: send({ id: "view.next-tab" }),
+          },
           {
             label: m.previousTab,
-            shortcut: "Control+Shift+Tab",
+            shortcut: SHORTCUTS.previousTab,
             run: send({ id: "view.previous-tab" }),
           },
           {
             label: m.focusMode,
-            shortcut: "F8",
+            shortcut: SHORTCUTS.focusMode,
             checked: source.settings().focusMode,
             run: () => source.updateSettings({ focusMode: !source.settings().focusMode }),
           },
           {
             label: m.typewriterMode,
-            shortcut: "F9",
+            shortcut: SHORTCUTS.typewriterMode,
             checked: source.settings().typewriterMode,
             run: () => source.updateSettings({ typewriterMode: !source.settings().typewriterMode }),
           },
