@@ -1,3 +1,4 @@
+import { I18nProvider } from "@kobalte/core/i18n";
 import { onCleanup, onMount, Show, type ParentComponent } from "solid-js";
 import { TITLE_BAR_HEIGHT } from "@shared/desktop-api";
 import { desktop } from "@/lib/desktop";
@@ -105,7 +106,9 @@ export const TitleBar: ParentComponent<{ class?: string; folded?: boolean }> = (
       <Show when={side === "left"}>
         <CaptionButtons side="left" />
       </Show>
-      {props.children}
+      {/* The bar draws its menus and tabs left to right in every UI language, so Kobalte must use
+          the same direction for the arrow keys and popup edges */}
+      <I18nProvider locale="en-US">{props.children}</I18nProvider>
       <Show when={side === "right"}>
         <CaptionButtons side="right" />
       </Show>
