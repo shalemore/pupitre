@@ -101,7 +101,8 @@ export const documentArea = css({
   overflow: "hidden",
   _print: { display: "block", overflow: "visible" },
 });
-export const grow = css({ flex: "1" });
+/** The welcome screen takes the room the document would have. */
+export const welcomeArea = css({ flex: "1" });
 export const editorArea = css({
   flex: "1",
   height: "full",

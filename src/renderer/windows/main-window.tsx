@@ -47,7 +47,7 @@ import {
   documentArea,
   editorArea,
   ellipsis,
-  grow,
+  welcomeArea,
   titleCenter,
   titleEnd,
   titleGrid,
@@ -656,7 +656,7 @@ export const MainWindow: Component = () => {
               <Show
                 when={session.activeTab()}
                 fallback={
-                  <main class={grow}>
+                  <main class={welcomeArea}>
                     <WelcomeScreen
                       recentFiles={recentFiles()}
                       onNewDocument={session.newDocument}
