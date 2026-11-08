@@ -1,5 +1,4 @@
 import { DOCUMENT_FILE } from "@pupitre/desktop-api";
-import { decodeUriPart } from "@shared/uri";
 
 export function fileNameOf(path: string): string {
   return path.split(/[\\/]/).pop() ?? path;
@@ -37,16 +36,6 @@ export function parentFolder(path: string): string | undefined {
   if (cut === 0) return trimmed.startsWith("/") ? "/" : trimmed.slice(0, 1);
   const parent = trimmed.slice(0, cut);
   return /^[A-Za-z]:$/.test(parent) ? `${parent}${trimmed[cut] ?? "\\"}` : parent;
-}
-
-/**
- * The path a file: URL names. Its path starts with a slash before a Windows drive letter, and a
- * network share carries its server in the host, which a UNC path writes as a leading doubled slash.
- */
-export function pathFromFileUrl(url: URL): string {
-  const host = decodeUriPart(url.host);
-  const path = decodeUriPart(url.pathname).replace(/^\/(?=[A-Za-z]:)/, "");
-  return host === "" ? path : `//${host}${path}`;
 }
 
 /** Text files conventionally end with a newline; otherwise Git and similar tools warn "No newline at end of file". */

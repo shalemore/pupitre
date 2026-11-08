@@ -1,4 +1,4 @@
-import { escapeHtml } from "@/lib/html";
+import { escapeHtml } from "@pupitre/utils";
 
 /** Rendered formulas by display mode and source; widgets are rebuilt while scrolling and editing. */
 const cache = new Map<string, Promise<string>>();

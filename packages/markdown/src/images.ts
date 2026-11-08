@@ -2,9 +2,7 @@ import { syntaxTree } from "@codemirror/language";
 import { type EditorState, Facet } from "@codemirror/state";
 import type { EditorView } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
-import { decodeUriPart } from "@shared/uri";
-import { pathFromFileUrl } from "@/lib/file";
-import { escapeHtml } from "@/lib/html";
+import { decodeUriPart, escapeHtml, pathFromFileUrl } from "@pupitre/utils";
 import { referenceTarget } from "./references";
 
 /** file:// URL of the document's folder, to resolve relative image paths; undefined if unsaved. */

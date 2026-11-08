@@ -1,9 +1,9 @@
 import { copyFile, mkdir, rename, writeFile } from "node:fs/promises";
 import { basename, dirname, format, join, normalize, parse, resolve } from "node:path";
 import type { FolderEntry } from "@pupitre/desktop-api";
+import { decodeUriPart } from "@pupitre/utils";
 import { net, shell } from "electron";
 import { moveFile } from "move-file";
-import { decodeUriPart } from "@shared/uri";
 import { exists } from "./exists";
 
 /**

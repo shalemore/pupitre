@@ -3,13 +3,16 @@ import type { EditorState } from "@codemirror/state";
 import type { EditorView } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
 import { DOCUMENT_EXTENSIONS } from "@pupitre/desktop-api";
+import {
+  autolinkDestination,
+  collectHeadings,
+  documentBaseUrl,
+  findHeadingByAnchor,
+  referenceTarget,
+} from "@pupitre/markdown";
+import { pathFromFileUrl } from "@pupitre/utils";
 import { scrollToDocument } from "@/features/editor/scroll";
 import { desktop } from "@/lib/desktop";
-import { pathFromFileUrl } from "@/lib/file";
-import { autolinkDestination } from "@/lib/markdown/autolink-destination";
-import { documentBaseUrl } from "@/lib/markdown/images";
-import { referenceTarget } from "@/lib/markdown/references";
-import { collectHeadings, findHeadingByAnchor } from "@/lib/markdown/structure";
 
 /**
  * Following a link in the document: web and mail addresses open in the browser, an anchor scrolls

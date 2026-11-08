@@ -1,7 +1,7 @@
 import { syntaxTree } from "@codemirror/language";
 import { type EditorState, type Extension } from "@codemirror/state";
 import { type EditorView, ViewPlugin } from "@codemirror/view";
-import type { HeadingUpdate } from "@/lib/markdown/structure";
+import type { HeadingUpdate } from "@pupitre/markdown";
 
 export interface DocumentObserver {
   onDocChange: (state: EditorState, update?: HeadingUpdate) => void;

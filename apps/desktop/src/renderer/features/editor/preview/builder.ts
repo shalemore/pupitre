@@ -7,7 +7,7 @@ import {
 } from "@codemirror/state";
 import { Decoration, type DecorationSet, type EditorView } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
-import { detailsAnimation } from "@/lib/markdown/details";
+import { detailsAnimation } from "@pupitre/markdown";
 
 /**
  * The decoration builder the live preview fills while it walks the syntax tree: line classes and

@@ -1,8 +1,34 @@
 import { describe, expect, it } from "vitest";
-import editorCss from "@/features/editor/editor.css?raw";
-import { markdownState } from "@/lib/markdown/testing";
 import { documentHtml, markdownFragment } from "./document-html";
-import { pageStyle } from "./page-style";
+import { type PageEnvironment, pageStyle } from "./page-style";
+import { markdownState } from "./testing";
+
+/** No stylesheet is passed: the page keeps the rules written in the renderer itself. */
+const editorCss = "";
+
+const PAGE: PageEnvironment = {
+  tokens: {
+    page: "#ffffff",
+    card: "#ffffff",
+    text: "#111111",
+    soft: "#333333",
+    faint: "#666666",
+    accent: "#aa3300",
+    danger: "#bb0000",
+    note: "#aa3300",
+    tip: "#007733",
+    important: "#aa3300",
+    warning: "#bb0000",
+    caution: "#bb0000",
+    bodyFont: "system-ui, sans-serif",
+    codeFont: "ui-monospace, monospace",
+    fontSize: "16px",
+    lineHeight: "1.5",
+    contentWidth: "42rem",
+    syntax: [],
+  },
+  themeCss: "",
+};
 
 describe("exporting footnotes", () => {
   it("gives every reference of a footnote its own way back", async () => {
@@ -46,14 +72,14 @@ describe("exporting autolinks", () => {
 describe("exporting anchors written as HTML", () => {
   it("keeps the target of an anchor-only paragraph", async () => {
     const markdown = '<a id="quick-start"></a>\n\nJump to [the start](#quick-start).\n';
-    const html = await documentHtml(markdownState(markdown), "Title", editorCss);
+    const html = await documentHtml(markdownState(markdown), "Title", editorCss, { page: PAGE });
     expect(html).toContain('<a class="md-link" id="quick-start"></a>');
     expect(html).toContain('<a class="md-link" href="#quick-start">the start</a>');
   });
 
   it("keeps the link an inline HTML anchor stands for", async () => {
     const markdown = 'Visit <a href="https://example.com" title="Example">the site</a> now.\n';
-    const html = await documentHtml(markdownState(markdown), "Title", editorCss);
+    const html = await documentHtml(markdownState(markdown), "Title", editorCss, { page: PAGE });
     expect(html).toContain(
       '<a class="md-link" href="https://example.com" title="Example" target="_blank" rel="noreferrer">the site</a>',
     );
@@ -61,19 +87,19 @@ describe("exporting anchors written as HTML", () => {
 
   it("keeps a target written with the legacy name attribute", async () => {
     const markdown = '<a name="legacy"></a>\n\nJump to [the target](#legacy).\n';
-    const html = await documentHtml(markdownState(markdown), "Title", editorCss);
+    const html = await documentHtml(markdownState(markdown), "Title", editorCss, { page: PAGE });
     expect(html).toContain('<a class="md-link" id="legacy"></a>');
   });
 
   it("keeps the target of an anchor that is never closed", async () => {
     const markdown = 'Text <a id="open"> more text\n';
-    const html = await documentHtml(markdownState(markdown), "Title", editorCss);
+    const html = await documentHtml(markdownState(markdown), "Title", editorCss, { page: PAGE });
     expect(html).toContain('<a class="md-link" id="open"> more text</a>');
   });
 
   it("keeps a target inside a rendered HTML block", async () => {
     const markdown = '<div><a id="inside">Text</a></div>\n';
-    const html = await documentHtml(markdownState(markdown), "Title", editorCss);
+    const html = await documentHtml(markdownState(markdown), "Title", editorCss, { page: PAGE });
     expect(html).toContain('id="inside"');
     expect(html).toContain("md-link");
   });
@@ -82,7 +108,7 @@ describe("exporting anchors written as HTML", () => {
 describe("exporting comments", () => {
   it("leaves comments out of the page", async () => {
     const markdown = "Alpha <!-- hidden --> beta.\n\n<!-- a block comment -->\n\nGamma.\n";
-    const html = await documentHtml(markdownState(markdown), "Title", editorCss);
+    const html = await documentHtml(markdownState(markdown), "Title", editorCss, { page: PAGE });
     expect(html).not.toContain("hidden");
     expect(html).not.toContain("block comment");
     expect(html).toContain("Alpha");
@@ -118,7 +144,7 @@ describe("exporting a page", () => {
   ].join("\n");
 
   it("marks the markup with the classes the document theme styles", async () => {
-    const html = await documentHtml(markdownState(markdown), "Title", editorCss);
+    const html = await documentHtml(markdownState(markdown), "Title", editorCss, { page: PAGE });
     expect(html).toContain('<h1 class="md-heading md-h1">');
     expect(html).toContain('<blockquote class="md-quote">');
     expect(html).toContain('<hr class="md-hr">');
@@ -148,7 +174,7 @@ describe("copying as a fragment", () => {
 
 describe("the stylesheet of an exported page", () => {
   it("writes the document rules when no stylesheet of the app can be read", () => {
-    const css = pageStyle(editorCss);
+    const css = pageStyle(editorCss, PAGE);
     expect(css).toContain("@layer export-base, editor, document-theme, export-page;");
     expect(css).toContain(".md-list-bullet::before");
     expect(css).toContain("--md-quote-bar");

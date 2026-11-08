@@ -1,12 +1,12 @@
 import type { ChangeDesc, EditorState } from "@codemirror/state";
-import { debounce } from "@solid-primitives/scheduled";
 import {
   canShiftHeadings,
   collectHeadings,
   type HeadingUpdate,
   mergeHeadings,
   type OutlineHeading,
-} from "@/lib/markdown/structure";
+} from "@pupitre/markdown";
+import { debounce } from "@solid-primitives/scheduled";
 
 const OUTLINE_DEBOUNCE_MS = 150;
 

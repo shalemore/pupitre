@@ -1,15 +1,19 @@
 import { Decoration, type EditorView, WidgetType } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
+import {
+  emojiFor,
+  footnoteReferences,
+  imageOf,
+  mathOf,
+  referenceTarget,
+  resolveUrl,
+  type DocumentImage,
+} from "@pupitre/markdown";
 import { ImageWidget } from "@/features/editor/images/image-widget";
 import { EmojiWidget } from "@/features/editor/widgets/emoji-widget";
 import { MathWidget } from "@/features/editor/widgets/math-widget";
 import { relabelOnLocaleChange } from "@/features/editor/widgets/relabel-on-locale";
 import { t } from "@/i18n";
-import { emojiFor } from "@/lib/markdown/emoji";
-import { footnoteReferences } from "@/lib/markdown/footnotes";
-import { type DocumentImage, imageOf, resolveUrl } from "@/lib/markdown/images";
-import { mathOf } from "@/lib/markdown/math";
-import { referenceTarget } from "@/lib/markdown/references";
 import { type DecorationBuilder, touches } from "./builder";
 
 /**

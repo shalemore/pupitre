@@ -2,8 +2,8 @@ import { DocInput } from "@codemirror/language";
 import { ChangeSet, Text } from "@codemirror/state";
 import { TreeFragment } from "@lezer/common";
 import type { ChangedRange, Tree } from "@lezer/common";
+import { markdownLanguage } from "@pupitre/markdown";
 import { describe, expect, test } from "vitest";
-import { markdownLanguage } from "@/lib/markdown/language";
 
 /**
  * The cost of reading a document, measured on the language the editor parses with, so a change to

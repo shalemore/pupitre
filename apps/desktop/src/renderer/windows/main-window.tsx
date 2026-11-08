@@ -1,4 +1,5 @@
 import { IMAGE_FILE, MARKDOWN_FILE, type AppCommand } from "@pupitre/desktop-api";
+import { headingKey, type OutlineHeading } from "@pupitre/markdown";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { scheduleIdle } from "@solid-primitives/scheduled";
 import {
@@ -29,7 +30,6 @@ import { documentPosition } from "@/lib/document/positions";
 import { createDocumentSession } from "@/lib/document/session";
 import { isolateFileName } from "@/lib/file";
 import { createImmersiveChrome } from "@/lib/immersive-chrome";
-import { headingKey, type OutlineHeading } from "@/lib/markdown/outline-heading";
 import { recentFiles } from "@/lib/recent-files";
 import { isImmersive, settings, updateSettings } from "@/lib/settings";
 import { SIDEBAR_WIDTH } from "@/lib/sidebar";

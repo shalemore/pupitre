@@ -1,11 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { textOfHtml, withoutScripts } from "./html";
-
-describe("textOfHtml", () => {
-  it("drops tags and comments and reads the characters they stand for", () => {
-    expect(textOfHtml("<b>Bold</b> &amp; <!-- gone -->plain")).toBe("Bold & plain");
-  });
-});
+import { withoutScripts } from "./html";
 
 describe("withoutScripts", () => {
   it("leaves a page that has none as it was written", () => {

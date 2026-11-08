@@ -1,16 +1,17 @@
 import type { Extension } from "@codemirror/state";
 import { EditorView, WidgetType } from "@codemirror/view";
+import {
+  decorateHtmlBlock,
+  openingTagAt,
+  parseImageTag,
+  RAW_HTML_SANITIZE_OPTIONS,
+  resolveAgainst,
+  VOID_TAGS,
+} from "@pupitre/markdown";
 import DOMPurify from "dompurify";
 import { imageDom, watchHtmlImages } from "@/features/editor/images/image-widget";
 import { fadeOut } from "@/features/editor/leave";
 import { isLiteralText } from "@/features/editor/smart-typing";
-import {
-  RAW_HTML_SANITIZE_OPTIONS,
-  VOID_TAGS,
-  decorateHtmlBlock,
-  openingTagAt,
-} from "@/lib/markdown/html";
-import { parseImageTag, resolveAgainst } from "@/lib/markdown/images";
 
 /**
  * The editor side of raw HTML: closing a tag as it is typed, the line break of an inline

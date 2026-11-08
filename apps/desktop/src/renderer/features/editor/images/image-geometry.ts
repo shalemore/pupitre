@@ -1,4 +1,4 @@
-import { type ImageSize, imageStyle } from "@/lib/markdown/images";
+import { type ImageSize, imageStyle } from "@pupitre/markdown";
 
 /**
  * The inline geometry of a picture: the declarations its source carries, the width a drag shows

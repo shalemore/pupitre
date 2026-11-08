@@ -1,7 +1,6 @@
 import { EditorView } from "@codemirror/view";
+import { isRenderableHtml, markdownView, marked } from "@pupitre/markdown";
 import { describe, expect, it } from "vitest";
-import { isRenderableHtml } from "@/lib/markdown/html";
-import { markdownView, marked } from "@/lib/markdown/testing";
 import { closeInlineTags, HtmlBlockWidget } from "./html-widget";
 
 /** Types `text` the way CodeMirror does: the first input handler that takes it decides. */

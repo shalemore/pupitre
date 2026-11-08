@@ -5,6 +5,8 @@
     { "path": "../../packages/settings" },
     { "path": "../../packages/desktop-api" },
     { "path": "../../packages/panda-preset" },
+    { "path": "../../packages/utils" },
+    { "path": "../../packages/markdown" },
     { "path": "../../packages/plugin-sdk" },
     { "path": "../../packages/ui" },
     { "path": "./tsconfig.node.json" },

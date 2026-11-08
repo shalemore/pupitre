@@ -1,13 +1,12 @@
 import { redo, undo } from "@codemirror/commands";
 import type { ChangeSpec } from "@codemirror/state";
 import type { EditorView } from "@codemirror/view";
+import { columnCount, editCell, imageIn, insertRow, type TableModel } from "@pupitre/markdown";
 import { type Accessor, type Component, createSelector, Index, type Setter, Show } from "solid-js";
 import { Dynamic } from "solid-js/web";
 import { openImageMenu } from "@/features/editor/images/image-menu";
 import { openLink } from "@/features/editor/preview/links";
 import { InlineContent } from "@/features/editor/tables/inline-view";
-import { imageIn } from "@/lib/markdown/images";
-import { columnCount, editCell, insertRow, type TableModel } from "@/lib/markdown/table-model";
 import { css, cx } from "@/styled-system/css";
 import { type CellPosition, TableCellImage } from "./table-cell";
 import { TableToolbar } from "./table-toolbar";

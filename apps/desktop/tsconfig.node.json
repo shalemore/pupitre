@@ -16,7 +16,8 @@
     { "path": "../../packages/i18n" },
     { "path": "../../packages/settings" },
     { "path": "../../packages/desktop-api" },
-    { "path": "../../packages/panda-preset" }
+    { "path": "../../packages/panda-preset" },
+    { "path": "../../packages/utils" }
   ],
   "include": [
     "../../oxlint.config.ts",

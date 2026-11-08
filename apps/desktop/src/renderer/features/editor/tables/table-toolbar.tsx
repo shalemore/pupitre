@@ -1,5 +1,18 @@
 import type { ChangeSpec } from "@codemirror/state";
 import type { EditorView } from "@codemirror/view";
+import {
+  type Alignment,
+  alignColumn,
+  columnCount,
+  deleteColumn,
+  deleteRow,
+  deleteTable,
+  insertColumn,
+  insertRow,
+  moveColumn,
+  moveRow,
+  type TableModel,
+} from "@pupitre/markdown";
 import { IconButton, Separator } from "@pupitre/ui";
 import { rtlFlip } from "@pupitre/ui/styles";
 import {
@@ -21,19 +34,6 @@ import {
 } from "lucide-solid";
 import { type Accessor, type Component, type JSX, Show } from "solid-js";
 import { t } from "@/i18n";
-import {
-  type Alignment,
-  alignColumn,
-  columnCount,
-  deleteColumn,
-  deleteRow,
-  deleteTable,
-  insertColumn,
-  insertRow,
-  moveColumn,
-  moveRow,
-  type TableModel,
-} from "@/lib/markdown/table-model";
 import { css, cx } from "@/styled-system/css";
 import type { CellPosition } from "./table-cell";
 

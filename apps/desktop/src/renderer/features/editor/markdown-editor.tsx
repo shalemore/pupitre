@@ -30,7 +30,27 @@ import {
 import { Compartment, EditorState, type Extension, Prec } from "@codemirror/state";
 import { type Command, EditorView, keymap, placeholder } from "@codemirror/view";
 import type { FormatAction } from "@pupitre/desktop-api/format-actions";
+import {
+  alertTitles,
+  codeHighlight,
+  codeLanguageFor,
+  diagramTheme,
+  documentBaseUrl,
+  documentFilePath,
+  documentHtml,
+  findActiveHeading,
+  FULL_PARSE_TIMEOUT_MS,
+  imageAlt,
+  imageMarkdown,
+  markdownFragment,
+  markdownLanguage,
+  type OutlineHeading,
+  prerenderDiagrams,
+  prerenderMath,
+  textDirection,
+} from "@pupitre/markdown";
 import { ScrollView } from "@pupitre/ui";
+import { escapeHtml } from "@pupitre/utils";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { debounce } from "@solid-primitives/scheduled";
 import { createEffect, on, onCleanup, onMount, type Component } from "solid-js";
@@ -38,30 +58,21 @@ import { messageOf } from "@shared/errors";
 import { imageCaptionClick, imageInput } from "@/features/editor/images/image-widget";
 import { closeInlineTags } from "@/features/editor/widgets/html-widget";
 import { t } from "@/i18n";
+import { desktop } from "@/lib/desktop";
 import {
   type DocumentPosition,
   flushDocumentPositions,
   rememberDocumentPosition,
 } from "@/lib/document/positions";
 import { reportFailure } from "@/lib/errors";
-import { escapeHtml } from "@/lib/html";
 import { pickImage, saveImageNextTo } from "@/lib/image-files";
-import { alertTitles } from "@/lib/markdown/alerts";
-import { codeHighlight } from "@/lib/markdown/code-highlight";
-import { codeLanguageFor } from "@/lib/markdown/code-languages";
-import { documentHtml, markdownFragment } from "@/lib/markdown/document-html";
-import { documentBaseUrl, documentFilePath, imageAlt, imageMarkdown } from "@/lib/markdown/images";
-import { FULL_PARSE_TIMEOUT_MS, markdownLanguage } from "@/lib/markdown/language";
-import { prerenderMath } from "@/lib/markdown/math";
-import { diagramTheme, prerenderDiagrams, readDiagramTheme } from "@/lib/markdown/mermaid";
-import { findActiveHeading, type OutlineHeading } from "@/lib/markdown/structure";
-import { textDirection } from "@/lib/markdown/text-direction";
 import { type PendingImages } from "@/lib/pending-images";
 import { settings } from "@/lib/settings";
 import { type TextStats } from "@/lib/text-stats";
 import { themeApplied } from "@/lib/theme";
 import { withViewTransition } from "@/lib/view-transition";
 import { cursorStyle, restartCursorBlink } from "./cursor";
+import { readDiagramTheme } from "./diagram-theme";
 import { documentKind, documentTitle, textDocumentHtml } from "./document";
 import { documentObserver } from "./document-observer";
 import { createStatsTracker } from "./document-stats";
@@ -75,6 +86,7 @@ import {
 } from "./format-commands";
 import { leavingBlocks } from "./leave";
 import { createOutlineTracker } from "./outline";
+import { pageEnvironment } from "./page-environment";
 import { pasteHtml } from "./paste-html";
 import { livePreview, setPrinting } from "./preview/live-preview";
 import { renderedBlocks } from "./preview/rendered-blocks";
@@ -658,7 +670,11 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           return textDocumentHtml(documentTitle(props.documentPath), view.state.doc.toString());
         }
         forceParsing(view, view.state.doc.length, FULL_PARSE_TIMEOUT_MS);
-        return documentHtml(view.state, documentTitle(props.documentPath), editorCss);
+        return documentHtml(view.state, documentTitle(props.documentPath), editorCss, {
+          page: pageEnvironment(),
+          readImage: (imagePath) => desktop.invoke("image:data-url", imagePath).catch(() => null),
+          diagramTheme: readDiagramTheme(),
+        });
       },
       toHtmlFragment: async () => {
         const { from, to } = view.state.selection.main;

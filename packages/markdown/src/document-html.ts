@@ -1,36 +1,24 @@
 import { ensureSyntaxTree, syntaxTree } from "@codemirror/language";
 import { EditorState } from "@codemirror/state";
 import type { SyntaxNode } from "@lezer/common";
+import { escapeHtml, pathFromFileUrl } from "@pupitre/utils";
 import DOMPurify from "dompurify";
-import { desktop } from "@/lib/desktop";
-import { pathFromFileUrl } from "@/lib/file";
-import { escapeHtml } from "@/lib/html";
-import { alertTitles, alertType } from "@/lib/markdown/alerts";
-import { fencedText } from "@/lib/markdown/block-text";
-import { detailsSection } from "@/lib/markdown/details";
-import { footnoteLabel } from "@/lib/markdown/footnotes";
-import {
-  RAW_HTML_SANITIZE_OPTIONS,
-  decorateHtmlBlock,
-  isRenderableHtml,
-} from "@/lib/markdown/html";
-import {
-  documentBaseUrl,
-  type ImageSize,
-  imageStyle,
-  parseImageTag,
-  resolveUrl,
-} from "@/lib/markdown/images";
-import { type InlineItem, inlineItems } from "@/lib/markdown/inline";
-import { FULL_PARSE_TIMEOUT_MS, markdownLanguage } from "@/lib/markdown/language";
-import { mathFence, mathOf } from "@/lib/markdown/math";
-import { renderMath } from "@/lib/markdown/mathjax";
-import { diagramTheme, readDiagramTheme, renderDiagram } from "@/lib/markdown/mermaid";
-import { HEADING_LEVEL } from "@/lib/markdown/structure";
-import { columnCount, readTable } from "@/lib/markdown/table-model";
-import { baseDirection } from "@/lib/markdown/text-direction";
+import { alertTitles, alertType } from "./alerts";
+import { fencedText } from "./block-text";
 import { codeHtml } from "./code-html";
-import { pageStyle } from "./page-style";
+import { detailsSection } from "./details";
+import { footnoteLabel } from "./footnotes";
+import { RAW_HTML_SANITIZE_OPTIONS, decorateHtmlBlock, isRenderableHtml } from "./html";
+import { documentBaseUrl, type ImageSize, imageStyle, parseImageTag, resolveUrl } from "./images";
+import { type InlineItem, inlineItems } from "./inline";
+import { FULL_PARSE_TIMEOUT_MS, markdownLanguage } from "./language";
+import { mathFence, mathOf } from "./math";
+import { renderMath } from "./mathjax";
+import { diagramTheme, type DiagramTheme, renderDiagram } from "./mermaid";
+import { type PageEnvironment, pageStyle } from "./page-style";
+import { HEADING_LEVEL } from "./structure";
+import { columnCount, readTable } from "./table-model";
+import { baseDirection } from "./text-direction";
 
 /**
  * A document as HTML: as one self-contained page for File › Export as HTML, and as a fragment of
@@ -74,6 +62,10 @@ interface ExportContext {
    * rather than only beside the document it came from.
    */
   readonly embedImages: boolean;
+  /** Reads a local picture as a data URL; the host owns the file system. */
+  readonly readImage: ((path: string) => Promise<string | null>) | undefined;
+  /** The diagram colors to use when the editor state carries none of its own. */
+  readonly diagramTheme: DiagramTheme | undefined;
 }
 
 /** The font code keeps where no stylesheet of Pupitre's follows the markup. */
@@ -107,8 +99,8 @@ async function embeddedImage(ctx: ExportContext, source: string): Promise<string
   } catch {
     return undefined;
   }
-  if (url.protocol !== "file:") return undefined;
-  const data = await desktop.invoke("image:data-url", pathFromFileUrl(url)).catch(() => null);
+  if (url.protocol !== "file:" || ctx.readImage === undefined) return undefined;
+  const data = await ctx.readImage(pathFromFileUrl(url)).catch(() => null);
   return data ?? undefined;
 }
 
@@ -199,7 +191,7 @@ async function displayMath(tex: string): Promise<string> {
 async function diagram(ctx: ExportContext, source: string): Promise<string> {
   const theme = ctx.state.facet(diagramTheme);
   try {
-    const drawing = Object.keys(theme).length > 0 ? theme : readDiagramTheme();
+    const drawing = Object.keys(theme).length > 0 ? theme : (ctx.diagramTheme ?? {});
     return `<div class="md-mermaid">${await renderDiagram(source, drawing)}</div>`;
   } catch {
     return `<pre><code class="language-mermaid">${escapeHtml(source)}</code></pre>`;
@@ -526,11 +518,21 @@ async function contentOf(ctx: ExportContext): Promise<string> {
   return [body, footnotes].filter((part) => part !== "").join("\n");
 }
 
+export interface DocumentHtmlOptions {
+  /** The colors, fonts and theme CSS the host resolved for the page. */
+  page: PageEnvironment;
+  /** Reads a local picture as a data URL; without it, pictures keep their file addresses. */
+  readImage?: ((path: string) => Promise<string | null>) | undefined;
+  /** The diagram colors to use when the editor state carries none of its own. */
+  diagramTheme?: DiagramTheme | undefined;
+}
+
 /** The document as a page of its own, titled `title` and styled by the theme in use. */
 export async function documentHtml(
   state: EditorState,
   title: string,
   editorCss: string,
+  options: DocumentHtmlOptions,
 ): Promise<string> {
   const ctx: ExportContext = {
     state,
@@ -538,6 +540,8 @@ export async function documentHtml(
     referenceCounts: new Map(),
     inlineStyles: false,
     embedImages: true,
+    readImage: options.readImage,
+    diagramTheme: options.diagramTheme,
   };
   const body = await contentOf(ctx);
   const textDirection = baseDirection(state.doc);
@@ -550,7 +554,7 @@ export async function documentHtml(
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${escapeHtml(title)}</title>
 <style>
-${pageStyle(editorCss)}</style>
+${pageStyle(editorCss, options.page)}</style>
 </head>
 <body>
 <article class="md-document">
@@ -573,6 +577,8 @@ export async function markdownFragment(source: EditorState, markdown: string): P
     referenceCounts: new Map(),
     inlineStyles: true,
     embedImages: false,
+    readImage: undefined,
+    diagramTheme: undefined,
   };
   return `<div class="md-document">\n${await contentOf(ctx)}\n</div>`;
 }

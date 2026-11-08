@@ -38,7 +38,7 @@ wraps itself in `offstage-windows`, so its windows stay off the screen on Window
   the shared code in Node, and the renderer in jsdom; the renderer project loads `apps/desktop/src/web/host.ts`
   as `window.desktop`, so modules that reach for the host still import. Pure functions are the first
   thing to cover; a test that needs layout or a native dialog belongs in the E2E suite.
-- `apps/desktop/src/renderer/lib/markdown/testing.ts` builds the editor's state and tree for tests. A document
+- `@pupitre/markdown`'s `testing.ts` builds the editor's state and tree for tests. A document
   is written with `|` marking the cursor and with two of them around a selection, so the test reads
   the way the text looks in the editor.
 - `apps/desktop/e2e/` drives the built app (`apps/desktop/out/main/index.js`) over Playwright, after `pnpm run build`. Each
@@ -270,7 +270,7 @@ only make code generation easier.
   document is the Markdown text itself: every marker is a real character, copying copies
   Markdown, and files are saved exactly as they were edited. Never add a serializer.
 - All syntax comes from one Lezer tree (`@lezer/markdown` with GFM, subscript, superscript and
-  emoji, plus the extensions in `lib/markdown/`, such as `front-matter.ts`, `highlight.ts`,
+  emoji, plus the extensions in `@pupitre/markdown`, such as `front-matter.ts`, `highlight.ts`,
   `math.ts` and `footnotes.ts`). Support a new syntax by adding a Lezer `MarkdownConfig`, then
   render it with the one rule every construct follows: its markers (or, for a rendered block, its
   source) are hidden unless a selection touches it. Inline syntax and line styles live in
@@ -278,7 +278,7 @@ only make code generation easier.
   `<details>`) in its `rendered-blocks.ts`, because CodeMirror only takes block decorations from a
   state field. The model both the editor and the
   export read — the syntax, the text a reader sees, tables, pictures and the page renderers — is
-  `lib/markdown/`, so exporting needs no editor. Do not hand-roll Markdown parsing.
+  `@pupitre/markdown`, so exporting needs no editor. Do not hand-roll Markdown parsing.
 - `features/editor/markdown-editor.tsx` owns the `EditorView` and exposes a small imperative
   handle (`getMarkdown`, `replaceDocument`, search, scrolling, formatting, `persistImages`,
   `prepareForPrint`, `toHtml`, `toHtmlFragment`). Formatting commands edit the source text

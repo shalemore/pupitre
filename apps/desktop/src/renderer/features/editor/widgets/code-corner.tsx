@@ -1,5 +1,6 @@
 import { LanguageDescription, syntaxTree } from "@codemirror/language";
 import { type EditorView, WidgetType } from "@codemirror/view";
+import { codeLanguages, fencedText } from "@pupitre/markdown";
 import { truncateStyle } from "@pupitre/ui/styles";
 import { debounce } from "@solid-primitives/scheduled";
 import { Check, Copy } from "lucide-solid";
@@ -7,8 +8,6 @@ import { createMemo, createSignal, For, Show, type Component } from "solid-js";
 import { render } from "solid-js/web";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
-import { fencedText } from "@/lib/markdown/block-text";
-import { codeLanguages } from "@/lib/markdown/code-languages";
 import { css, cx } from "@/styled-system/css";
 
 const COPIED_MS = 1500;

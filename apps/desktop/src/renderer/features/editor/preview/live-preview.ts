@@ -2,14 +2,16 @@ import { syntaxTree } from "@codemirror/language";
 import type { Extension } from "@codemirror/state";
 import { type DecorationSet, EditorView, ViewPlugin, type ViewUpdate } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
+import {
+  detailsAnimationChanged,
+  footnoteTarget,
+  HEADING_LEVEL,
+  htmlBlockPreview,
+  isRenderableHtml,
+  markers,
+  parseImageTag,
+} from "@pupitre/markdown";
 import { openImageMenu } from "@/features/editor/images/image-menu";
-import { detailsAnimationChanged } from "@/lib/markdown/details";
-import { footnoteTarget } from "@/lib/markdown/footnotes";
-import { isRenderableHtml } from "@/lib/markdown/html";
-import { htmlBlockPreview } from "@/lib/markdown/html-block";
-import { parseImageTag } from "@/lib/markdown/images";
-import { markers } from "@/lib/markdown/markers";
-import { HEADING_LEVEL } from "@/lib/markdown/structure";
 import {
   showsRendering,
   visitBlockquote,

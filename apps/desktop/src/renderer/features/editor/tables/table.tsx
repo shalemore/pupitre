@@ -1,9 +1,9 @@
 import { syntaxTree } from "@codemirror/language";
 import { type EditorView, ViewPlugin, type ViewUpdate, WidgetType } from "@codemirror/view";
+import { readTable, type TableModel } from "@pupitre/markdown";
 import { createSignal, type Setter } from "solid-js";
 import { render } from "solid-js/web";
 import { fadeOut } from "@/features/editor/leave";
-import { readTable, type TableModel } from "@/lib/markdown/table-model";
 import type { CellPosition } from "./table-cell";
 import { TableView } from "./table-view";
 

@@ -1,6 +1,6 @@
 import { type EditorState, StateEffect, StateField } from "@codemirror/state";
 import type { SyntaxNode } from "@lezer/common";
-import { textOfHtml } from "@/lib/html";
+import { textOfHtml } from "@pupitre/utils";
 
 /**
  * Collapsible `<details>` sections whose content is Markdown.

@@ -1,8 +1,8 @@
 import type { FormatAction } from "@pupitre/desktop-api/format-actions";
+import { fullTree, marked, markdownView } from "@pupitre/markdown";
 import { DEFAULT_SETTINGS } from "@pupitre/settings";
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
-import { fullTree, marked, markdownView } from "@/lib/markdown/testing";
 import { insertParagraphBreak, type MarkdownStyle, runFormatAction } from "./format-commands";
 
 const style: MarkdownStyle = DEFAULT_SETTINGS;

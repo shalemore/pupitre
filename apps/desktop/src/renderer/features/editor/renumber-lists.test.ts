@@ -1,5 +1,5 @@
+import { markdownState, updated } from "@pupitre/markdown";
 import { describe, expect, it } from "vitest";
-import { markdownState, updated } from "@/lib/markdown/testing";
 import { orderedListNumbers } from "./renumber-lists";
 
 describe("renumbering ordered lists", () => {

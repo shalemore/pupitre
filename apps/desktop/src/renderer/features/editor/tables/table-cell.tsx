@@ -1,8 +1,7 @@
 import type { EditorView } from "@codemirror/view";
+import { imageIn, InlineImage, setImageLayout } from "@pupitre/markdown";
 import { type Component, createEffect, onCleanup } from "solid-js";
 import { imageDom } from "@/features/editor/images/image-widget";
-import { imageIn, setImageLayout } from "@/lib/markdown/images";
-import type { InlineImage } from "@/lib/markdown/inline";
 import { css } from "@/styled-system/css";
 
 export interface CellPosition {

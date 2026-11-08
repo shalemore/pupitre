@@ -1,8 +1,6 @@
+import { imageStyle, renderMath, type InlineImage, type InlineItem } from "@pupitre/markdown";
 import { type Component, createResource, For, type JSX, Match, Switch } from "solid-js";
 import { Dynamic } from "solid-js/web";
-import { imageStyle } from "@/lib/markdown/images";
-import { type InlineImage, type InlineItem } from "@/lib/markdown/inline";
-import { renderMath } from "@/lib/markdown/mathjax";
 
 const MathItem: Component<{ tex: string; display: boolean }> = (props) => {
   const [svg] = createResource(

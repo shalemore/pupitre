@@ -1,8 +1,8 @@
 import { syntaxTree } from "@codemirror/language";
 import type { ChangeSet, EditorState } from "@codemirror/state";
 import type { Tree } from "@lezer/common";
+import { textOfHtml } from "@pupitre/utils";
 import GithubSlugger from "github-slugger";
-import { textOfHtml } from "@/lib/html";
 import type { OutlineHeading } from "./outline-heading";
 
 export type { OutlineHeading } from "./outline-heading";

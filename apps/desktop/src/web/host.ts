@@ -24,12 +24,12 @@ import {
   settingsFileSchema,
   withoutSetting,
 } from "@pupitre/settings";
+import { toLf } from "@pupitre/utils";
 import { readDraftSession } from "@shared/draft";
 import { compareFolderEntries, UNTIMED } from "@shared/folder-sort";
 import { isHiddenName } from "@shared/hidden";
 import { isInsideFolder } from "@shared/paths";
 import { pinKeyOf } from "@shared/pins";
-import { toLf } from "@shared/text";
 import { createDemoMenus } from "./demo-menus";
 import about from "./demo/about.md?raw";
 import { showUnsavedDialog } from "./unsaved-dialog";

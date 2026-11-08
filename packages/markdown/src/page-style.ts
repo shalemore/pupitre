@@ -1,61 +1,43 @@
-import { CONTENT_WIDTHS, DEFAULT_SETTINGS } from "@pupitre/settings";
-import { FALLBACK_FONTS } from "@/lib/fonts";
-import type { AlertType } from "@/lib/markdown/alerts";
-import { CODE_COLOR_TOKENS, codeHighlightStyle } from "@/lib/markdown/code-highlight";
-import { activeThemeCss, isDarkColor, toHex } from "@/lib/theme";
-import { readToken, type TokenName } from "@/lib/tokens";
+import { isDarkColor } from "@pupitre/utils";
+import type { AlertType } from "./alerts";
+import { codeHighlightStyle } from "./code-highlight";
 
 /**
  * The stylesheet of an exported page. An export is ordinary HTML (`h1`, `p`, `ul`, `pre`), so the
  * document's own line layout does not apply to it; the markup carries the editor's `md-*` classes
  * instead, and the page takes the rules that style those classes: the editor's own and the active
- * theme's, with the tokens resolved from the window. An export then looks like the page it was
- * made from rather than like a browser default.
+ * theme's, with the tokens resolved by the host. An export then looks like the page it was made
+ * from rather than like a browser default.
  */
 
-/** The colors, fonts and measures of the page, taken from the variables the theme and the settings set. */
-function readTokens() {
-  const root = getComputedStyle(document.documentElement);
-  const raw = (name: string) => root.getPropertyValue(name).trim();
-  const token = (name: TokenName) => readToken(root, name);
-  /*
-   * A host without a canvas (a test, or a renderer that never draws) still gets a page: a color
-   * that cannot be converted stays as the theme wrote it, and CSS reads both forms.
-   */
-  const hexOf = (color: string) => {
-    if (color === "") return "#000000";
-    try {
-      return toHex(color);
-    } catch {
-      return color;
-    }
-  };
-  const hex = (name: TokenName, fallback?: TokenName) =>
-    hexOf(token(name) || (fallback === undefined ? "" : token(fallback)));
-  return {
-    page: hex("ui-surface-1"),
-    card: hex("ui-surface-0"),
-    text: hex("ui-text-primary"),
-    soft: hex("ui-text-secondary"),
-    faint: hex("ui-text-muted"),
-    accent: hex("ui-brand"),
-    danger: hex("ui-danger"),
-    note: hex("alert-note", "ui-brand"),
-    tip: hex("alert-tip", "ui-success"),
-    important: hex("alert-important", "ui-brand"),
-    warning: hex("alert-warning", "ui-danger"),
-    caution: hex("alert-caution", "ui-danger"),
-    bodyFont: token("pref-font-family") || token("font-document") || FALLBACK_FONTS.document,
-    codeFont: token("pref-code-font") || token("font-mono") || FALLBACK_FONTS.code,
-    fontSize: token("pref-font-size") || `${DEFAULT_SETTINGS.fontSize}px`,
-    lineHeight: token("pref-line-height") || String(DEFAULT_SETTINGS.lineHeight),
-    contentWidth: token("pref-content-width") || CONTENT_WIDTHS[DEFAULT_SETTINGS.contentWidth],
-    /** The code colors, under the names the highlighter reads them by (code-highlight.ts). */
-    syntax: CODE_COLOR_TOKENS.map((name) => ({
-      name: `--syntax-${name}`,
-      color: hexOf(raw(`--syntax-${name}`)),
-    })),
-  };
+/** The colors, fonts and measures of the page, resolved from the theme and the settings by the host. */
+export interface PageTokens {
+  page: string;
+  card: string;
+  text: string;
+  soft: string;
+  faint: string;
+  accent: string;
+  danger: string;
+  note: string;
+  tip: string;
+  important: string;
+  warning: string;
+  caution: string;
+  bodyFont: string;
+  codeFont: string;
+  fontSize: string;
+  lineHeight: string;
+  contentWidth: string;
+  /** The code colors, under the names the highlighter reads them by (code-highlight.ts). */
+  syntax: readonly { name: string; color: string }[];
+}
+
+/** What the host knows and the page renderer cannot read on its own. */
+export interface PageEnvironment {
+  tokens: PageTokens;
+  /** The active theme's CSS; its color-scheme queries are settled for the exported page. */
+  themeCss: string;
 }
 
 /** The colors of the GitHub alerts, each from the theme token of its own name. */
@@ -173,8 +155,7 @@ function editorStyle(editorCss: string): string {
  * The active theme's CSS, with its color-scheme queries settled for the scheme of the exported
  * page: a file opened elsewhere has no way to know the Color Scheme the app is set to.
  */
-function themeRules(dark: boolean): string {
-  const css = activeThemeCss();
+function themeRules(css: string, dark: boolean): string {
   if (css === "") return "";
   return css.replace(
     /@media\s*\(\s*prefers-color-scheme:\s*(dark|light)\s*\)/gi,
@@ -184,10 +165,10 @@ function themeRules(dark: boolean): string {
 }
 
 /** The whole stylesheet of an exported document, as the text of a `<style>` element. */
-export function pageStyle(editorCss: string): string {
-  const tokens = readTokens();
+export function pageStyle(editorCss: string, environment: PageEnvironment): string {
+  const { tokens } = environment;
   const dark = isDarkColor(tokens.page);
-  const theme = themeRules(dark);
+  const theme = themeRules(environment.themeCss, dark);
   const editor = editorStyle(editorCss);
   return `
 @layer export-base, editor, document-theme, export-page;

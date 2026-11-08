@@ -1,10 +1,9 @@
 import type { EditorState } from "@codemirror/state";
 import { Decoration, type EditorView, WidgetType } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
+import { alertTitles, alertType, mathFence } from "@pupitre/markdown";
 import { AlertTitleWidget } from "@/features/editor/widgets/alert-widget";
 import { CodeCornerWidget, type FenceInfo } from "@/features/editor/widgets/code-corner";
-import { alertTitles, alertType } from "@/lib/markdown/alerts";
-import { mathFence } from "@/lib/markdown/math";
 import { type DecorationBuilder, lineRange, touches } from "./builder";
 
 /**

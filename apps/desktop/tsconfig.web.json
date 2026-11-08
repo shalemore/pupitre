@@ -24,6 +24,8 @@
     { "path": "../../packages/settings" },
     { "path": "../../packages/desktop-api" },
     { "path": "../../packages/panda-preset" },
+    { "path": "../../packages/utils" },
+    { "path": "../../packages/markdown" },
     { "path": "../../packages/ui" }
   ],
   // The benchmark parses through the renderer's language, so it is checked with the DOM lib

@@ -1,8 +1,8 @@
 import { LanguageDescription } from "@codemirror/language";
 import { highlightTree } from "@lezer/highlight";
-import { escapeHtml } from "@/lib/html";
-import { codeHighlightStyle } from "@/lib/markdown/code-highlight";
-import { codeLanguages } from "@/lib/markdown/code-languages";
+import { escapeHtml } from "@pupitre/utils";
+import { codeHighlightStyle } from "./code-highlight";
+import { codeLanguages } from "./code-languages";
 
 /**
  * Syntax highlighting of the code blocks of an exported page.

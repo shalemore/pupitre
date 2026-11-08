@@ -62,7 +62,6 @@ apps/desktop/
       components/    what several features share; the primitives come from @pupitre/ui
       lib/           helpers and state shared across features
       lib/document/  the open tabs and the document in each
-      lib/markdown/  the Markdown model the editor and the export both read
       themes/<x>/    one folder per theme
     web/         the browser demo: an index.html and its `window.desktop`
   e2e/         Playwright specs, run against the built app
@@ -73,7 +72,9 @@ packages/
   desktop-api/   the IPC contract: channels, events, commands and menu descriptors
   i18n/          the locale dictionaries and the translation schema
   settings/      the settings schema, defaults and workspace rules
+  markdown/      the Markdown model, its Lezer syntax and the page renderers
   panda-preset/  the tokens, text styles and keyframes both Panda configs read
+  utils/         pure helpers for text, HTML, file URLs and colors
   ui/            the Solid primitives, generated from the shared preset
   plugin-sdk/    the contract a plugin author builds against
 patches/       the pnpm patches applied on install
@@ -102,7 +103,7 @@ the tab id the editor carries grows with it, so undo history never crosses into 
 ## One tree, no serializer
 
 The document is the Markdown text itself. `@codemirror/lang-markdown` and the Lezer configurations
-beside it in `lib/markdown/` — `front-matter.ts`, `math.ts`, `footnotes.ts`, `highlight.ts` — parse
+in `@pupitre/markdown` — `front-matter.ts`, `math.ts`, `footnotes.ts`, `highlight.ts` — parse
 it into a single tree, and a file is saved exactly as it was typed, whatever the editor drew. There
 is no serializer, and adding one would make a second source of truth for the document.
 
@@ -110,7 +111,7 @@ Rendering is decorations over that tree. An inline construct hides its markers u
 touches it, in `features/editor/preview/`; a block that replaces whole lines — a table, a formula,
 a diagram, HTML — does it from a state field in its `rendered-blocks.ts`, because CodeMirror takes
 block decorations from nowhere else. A new syntax is a Lezer `MarkdownConfig` and a rule over it;
-the HTML export reads the same source and shares the model in `lib/markdown/`, so it depends on the
+the HTML export reads the same source and shares the model in `@pupitre/markdown`, so it depends on the
 document rather than on the editor.
 
 ## Themes and settings

@@ -1,5 +1,5 @@
 import type { SyntaxNode, Tree } from "@lezer/common";
-import { toLf } from "@shared/text";
+import { toLf } from "@pupitre/utils";
 import { markdownParser } from "./language";
 import { readableTextFrom } from "./structure";
 

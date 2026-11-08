@@ -1,8 +1,8 @@
 import { isUtf8 } from "node:buffer";
 import type { LineEnding, TextEncoding } from "@pupitre/desktop-api";
+import { toLf } from "@pupitre/utils";
 import type { BrowserWindow } from "electron";
 import iconv from "iconv-lite";
-import { toLf } from "@shared/text";
 import { choose } from "../dialog-choice";
 import { t } from "../i18n";
 

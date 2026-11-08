@@ -1,6 +1,7 @@
 import { ContextMenu } from "@kobalte/core/context-menu";
 import type { FolderEntry } from "@pupitre/desktop-api";
 import type { MenuEntry } from "@pupitre/desktop-api/menu";
+import { excerptOf } from "@pupitre/markdown";
 import { IconButton, ListItem, rowIndent } from "@pupitre/ui";
 import { FLOATING_PANEL, menuPanel } from "@pupitre/ui/styles";
 import { ArrowRight, ChevronRight, CircleAlert, FileText, Folder } from "lucide-solid";
@@ -19,7 +20,6 @@ import {
 import { MenuEntries } from "@/components/menu-popup";
 import { currentLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
-import { excerptOf } from "@/lib/markdown/excerpt";
 import { settings } from "@/lib/settings";
 import { cx } from "@/styled-system/css";
 import {

@@ -8,27 +8,29 @@ import {
 } from "@codemirror/state";
 import { Decoration, type DecorationSet, EditorView, type WidgetType } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
+import {
+  collectHeadings,
+  detailsAnimation,
+  detailsSection,
+  diagramTheme,
+  documentBaseUrl,
+  fencedText,
+  hasVisibleContent,
+  htmlBlockPreview,
+  inlineItems,
+  isRenderableHtml,
+  mathFence,
+  mathOf,
+  readTable,
+  toggledDetails,
+  toggleDetails,
+} from "@pupitre/markdown";
 import { TableWidget, tableCursor } from "@/features/editor/tables/table";
 import { SummaryWidget } from "@/features/editor/widgets/details-widget";
 import { HtmlBlockWidget } from "@/features/editor/widgets/html-widget";
 import { MathWidget } from "@/features/editor/widgets/math-widget";
 import { MermaidWidget } from "@/features/editor/widgets/mermaid-widget";
 import { TOC_MARKER, TocWidget } from "@/features/editor/widgets/toc";
-import { fencedText } from "@/lib/markdown/block-text";
-import {
-  detailsAnimation,
-  detailsSection,
-  toggledDetails,
-  toggleDetails,
-} from "@/lib/markdown/details";
-import { isRenderableHtml } from "@/lib/markdown/html";
-import { htmlBlockPreview } from "@/lib/markdown/html-block";
-import { documentBaseUrl } from "@/lib/markdown/images";
-import { hasVisibleContent, inlineItems } from "@/lib/markdown/inline";
-import { mathFence, mathOf } from "@/lib/markdown/math";
-import { diagramTheme } from "@/lib/markdown/mermaid";
-import { collectHeadings } from "@/lib/markdown/structure";
-import { readTable } from "@/lib/markdown/table-model";
 import { lineRange, printingChanged, revealingRanges, touches } from "./builder";
 
 /**

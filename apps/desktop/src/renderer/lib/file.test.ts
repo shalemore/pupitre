@@ -1,11 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  fileNameOf,
-  parentFolder,
-  pathFromFileUrl,
-  withoutDocumentExtension,
-  withTrailingNewline,
-} from "./file";
+import { fileNameOf, parentFolder, withoutDocumentExtension, withTrailingNewline } from "./file";
 
 describe("file helpers", () => {
   it("reads the name of a path with either separator", () => {
@@ -16,18 +10,6 @@ describe("file helpers", () => {
   it("drops the Markdown extension only", () => {
     expect(withoutDocumentExtension("today.md")).toBe("today");
     expect(withoutDocumentExtension("archive.tar.gz")).toBe("archive.tar.gz");
-  });
-
-  it("reads the path a file: URL names", () => {
-    expect(pathFromFileUrl(new URL("file:///home/me/notes/today.md"))).toBe(
-      "/home/me/notes/today.md",
-    );
-    expect(pathFromFileUrl(new URL("file:///C:/notes/today%20note.md"))).toBe(
-      "C:/notes/today note.md",
-    );
-    expect(pathFromFileUrl(new URL("file://server/share/notes/today.md"))).toBe(
-      "//server/share/notes/today.md",
-    );
   });
 
   it("ends a file with one newline", () => {

@@ -9,11 +9,8 @@ import {
 import type { Command, EditorView, KeyBinding } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
 import { FORMAT_ACTIONS, type FormatAction } from "@pupitre/desktop-api/format-actions";
+import { emptyTableSource, footnoteLabel, htmlElementContent, htmlTag } from "@pupitre/markdown";
 import type { Settings } from "@pupitre/settings";
-import { footnoteLabel } from "@/lib/markdown/footnotes";
-import { htmlTag } from "@/lib/markdown/html";
-import { htmlElementContent } from "@/lib/markdown/html-block";
-import { emptyTableSource } from "@/lib/markdown/table-model";
 
 /**
  * Formatting as text edits: every action inserts or removes Markdown syntax in the source, the

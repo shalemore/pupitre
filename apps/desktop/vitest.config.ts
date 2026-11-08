@@ -24,6 +24,11 @@ export default defineConfig({
             "../../packages/*/src/**/*.test.ts",
             "scripts/**/*.test.ts",
           ],
+          // The Markdown model and the HTML helpers read the DOM, so they run in the renderer
+          exclude: [
+            "../../packages/markdown/src/**/*.test.ts",
+            "../../packages/utils/src/**/*.test.ts",
+          ],
         },
       },
       {
@@ -32,7 +37,11 @@ export default defineConfig({
         test: {
           name: "renderer",
           environment: "jsdom",
-          include: ["src/renderer/**/*.test.{ts,tsx}"],
+          include: [
+            "src/renderer/**/*.test.{ts,tsx}",
+            "../../packages/markdown/src/**/*.test.ts",
+            "../../packages/utils/src/**/*.test.ts",
+          ],
           // The renderer reads window.desktop at import time; the web demo's host provides one
           // that keeps everything in memory
           setupFiles: ["src/web/host.ts"],

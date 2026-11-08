@@ -1,6 +1,6 @@
 import { EditorState } from "@codemirror/state";
+import { markdownState } from "@pupitre/markdown";
 import { describe, expect, it } from "vitest";
-import { markdownState } from "@/lib/markdown/testing";
 import { countTextFast, type TextStats } from "@/lib/text-stats";
 import { countDocument, countRange, createStatsTracker } from "./document-stats";
 

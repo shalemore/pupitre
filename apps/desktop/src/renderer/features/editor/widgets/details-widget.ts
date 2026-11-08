@@ -2,7 +2,7 @@ import { syntaxTree } from "@codemirror/language";
 import type { EditorState } from "@codemirror/state";
 import { type EditorView, WidgetType } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
-import { animateDetails, detailsSection, toggleDetails } from "@/lib/markdown/details";
+import { animateDetails, detailsSection, toggleDetails } from "@pupitre/markdown";
 import { readDuration } from "@/lib/motion";
 
 /** The opening block a section starts with, from the position its summary stands for. */
