@@ -8,11 +8,11 @@ This file is the single source of project conventions for humans and coding agen
 | Command                       | Purpose                                                       |
 | :---------------------------- | :------------------------------------------------------------ |
 | `pnpm run dev`                | Start Electron with the Vite dev server (HMR)                 |
-| `pnpm run build`              | Bundle main, preload and renderer into `out/`                 |
+| `pnpm run build`              | Bundle main, preload and renderer into `apps/desktop/out/`    |
 | `pnpm run check:bundle`       | Fail when a renderer chunk passes its size budget             |
 | `pnpm run dev:web`            | Serve the web demo (renderer on the browser host)             |
-| `pnpm run build:web`          | Build the web demo into `out/web`                             |
-| `pnpm run dist`               | Build and package installers into `release/`                  |
+| `pnpm run build:web`          | Build the web demo into `apps/desktop/out/web`                |
+| `pnpm run dist`               | Build and package installers into `apps/desktop/release/`     |
 | `pnpm test`                   | Run the unit tests (Vitest)                                   |
 | `pnpm run test:coverage`      | Run the unit tests with coverage and check its floor          |
 | `pnpm run test:e2e`           | Drive the built app with Playwright (`build` first)           |
@@ -35,25 +35,25 @@ wraps itself in `offstage-windows`, so its windows stay off the screen on Window
 ## Tests
 
 - Unit tests sit next to what they test (`*.test.ts`). `vitest.config.ts` runs the main process and
-  the shared code in Node, and the renderer in jsdom; the renderer project loads `src/web/host.ts`
+  the shared code in Node, and the renderer in jsdom; the renderer project loads `apps/desktop/src/web/host.ts`
   as `window.desktop`, so modules that reach for the host still import. Pure functions are the first
   thing to cover; a test that needs layout or a native dialog belongs in the E2E suite.
-- `src/renderer/lib/markdown/testing.ts` builds the editor's state and tree for tests. A document
+- `apps/desktop/src/renderer/lib/markdown/testing.ts` builds the editor's state and tree for tests. A document
   is written with `|` marking the cursor and with two of them around a selection, so the test reads
   the way the text looks in the editor.
-- `e2e/` drives the built app (`out/main/index.js`) over Playwright, after `pnpm run build`. Each
+- `apps/desktop/e2e/` drives the built app (`apps/desktop/out/main/index.js`) over Playwright, after `pnpm run build`. Each
   launch gets its own `--user-data-dir`, so a run does not touch the settings, drafts or lock of a
   dev instance. Send commands through `window.desktop.invoke("app:dispatch", …)`: native menu
   shortcuts do not fire from CDP key events. Native message boxes are stubbed in the main process
   (`answerDialogs`), because a real one would block the run.
 - On Linux the E2E suite needs a display: CI runs it under `xvfb-run -a`. On Windows, run it with
-  `pnpm exec offstage-windows pnpm exec playwright test` to keep the windows off the screen.
-- `patches/@lezer+markdown+1.8.1.patch` fixes an upstream incremental-parse bug: a block that a
+  `pnpm --filter pupitre exec offstage-windows playwright test` to keep the windows off the screen.
+- `patches/@lezer__markdown@1.8.1.patch` fixes an upstream incremental-parse bug: a block that a
   table ended (a paragraph, a footnote definition, a math block) is reused with its old end when
-  the table stops parsing, which splits it in two. `patch-package` applies the patch on install; the
-  dependency is pinned to 1.8.1 so the patch and the package cannot drift apart. The property test
-  includes tables and `reads a paragraph back together…` fails if the patch stops applying. Remove
-  both when the fix is in the version we use.
+  the table stops parsing, which splits it in two. `pnpm.patchedDependencies` applies the patch on
+  install; the dependency is pinned to 1.8.1 so the patch and the package cannot drift apart. The
+  property test includes tables and `reads a paragraph back together…` fails if the patch stops
+  applying. Remove both when the fix is in the version we use.
 
 ## Testing the running app
 
@@ -82,7 +82,7 @@ import { _electron as electron } from "playwright-core";
 // works while the user's own `pnpm run dev` is open; the last argument is the file to open.
 const app = await electron.launch({
   args: [
-    "out/main/index.js",
+    "apps/desktop/out/main/index.js",
     "--user-data-dir=<temp dir>",
     // A window Chromium believes is covered stops its timers and animations
     "--disable-features=CalculateNativeWinOcclusion",
@@ -123,11 +123,15 @@ await app.evaluate(({ dialog }) => {
 
 ## Process Layout
 
-The folder map lives in [docs/architecture.md](docs/architecture.md#the-folder-layout), so the two
-cannot drift apart. What matters for a change is the direction of imports:
+The repository is a pnpm workspace: `apps/desktop/` is the Electron app and `packages/` holds what
+it shares, so another app or a published package can use the same code. The folder map lives in
+[docs/architecture.md](docs/architecture.md#the-folder-layout), so the two cannot drift apart. What
+matters for a change is the direction of imports:
 
-- `shared/` is the code both processes can use; it never imports the renderer, the main process or
-  the preload.
+- A package is the bottom of the tree: it never imports `apps/desktop`, its processes or its
+  renderer. Packages use relative imports inside themselves, never the app's `@/` or `@shared/`.
+- `apps/desktop/src/shared/` is the code both processes can use; it never imports the renderer, the
+  main process or the preload.
 - `renderer/lib/` and `renderer/components/` are shared by features. A feature may use them, never
   the other way around.
 - Two features are independent: `features/a` never imports `features/b`. What several features need
@@ -139,18 +143,19 @@ cannot drift apart. What matters for a change is the direction of imports:
 `pnpm run check:architecture` enforces these edges, so a misplaced import fails the build rather
 than waiting for a review to notice it.
 
-- `src/shared/desktop-api.ts` is the IPC contract. Every channel is declared there once and both
+- `packages/desktop-api/src/desktop-api.ts` is the IPC contract; the app re-exports it at
+  `apps/desktop/src/shared/desktop-api.ts`. Every channel is declared there once and both
   `ipcMain.handle` and `window.desktop.invoke` are typed from it. Never call `ipcRenderer` or
   Node APIs from the renderer.
 - The renderer only talks to its host through `window.desktop`, so another host can run it. The web
-  demo (`src/web/host.ts`) keeps files in memory and settings in localStorage; a new channel in
+  demo (`apps/desktop/src/web/host.ts`) keeps files in memory and settings in localStorage; a new channel in
   `InvokeChannels` has to be given a handler there too, which the compiler enforces.
 - `lib/document/session.ts` owns the open tabs and the life cycle of the document in each: the
   `savedMarkdown` decides whether a tab is dirty, `diskContent` what the file held when it was last
   read, so a save can tell the file changed elsewhere. The editor only holds the text of the tab on
   show.
 - The renderer builds write `THIRD-PARTY-NOTICES.txt` with the license of every package that was
-  bundled (`scripts/third-party-notices.ts`); electron-builder ships it in `resources/` and the web
+  bundled (`apps/desktop/scripts/third-party-notices.ts`); electron-builder ships it in `resources/` and the web
   demo serves it. A license that asks for more than its text gets a note in `NOTES` there.
 - The main process owns all privileged work: file system access, native dialogs, menus, the
   settings file and auto updates. The renderer asks for it through IPC.
@@ -159,7 +164,7 @@ than waiting for a review to notice it.
 - Windows run with `sandbox: true` and `contextIsolation: true`. External URLs open in the system
   browser through `setWindowOpenHandler`; never load remote content into an app window.
 - Settings live in the main process (`settings.json` in `userData`) and are validated with the zod
-  schema in `src/shared/settings.ts`. Every window receives the same snapshot through the
+  schema in `packages/settings/src/settings.ts`. Every window receives the same snapshot through the
   `settings:changed` broadcast, including the window that made the change.
 - A folder can have its own settings in `.pupitre/settings.json` (`WORKSPACE_FILE`), in the format
   of the global file. Its values are laid over the global ones key by key, and resetting one in a
@@ -194,7 +199,7 @@ only make code generation easier.
 - **Use the design scales.** Sizes, radii, durations and curves come from the tokens in
   `panda.config.ts` (they alias the custom properties in `app.css`, so a theme can still change
   them), and colors from the semantic tokens; no arbitrary values such as `2.875rem`,
-  `200ms` or hex colors in components. Build on the `components/ui` primitives (`Button`, `Input`,
+  `200ms` or hex colors in components. Build on the `@pupitre/ui` primitives (`Button`, `Input`,
   `ListItem`, `SegmentedControl`, `Callout`, `Kbd`, `ScrollView`, …) before styling a raw
   element, and keep one closed border per surface: controls inside a bordered panel use fills.
 
@@ -214,7 +219,7 @@ only make code generation easier.
 - File and folder names use `kebab-case` (`find-bar.tsx`, `settings-store.ts`). Components are
   `PascalCase`, hooks/primitives are `useXxx`/`createXxx`, constants are `UPPER_SNAKE_CASE`.
 - Organise the renderer by feature: `features/<feature>` holds the components, state and helpers
-  that only that feature uses. Generic UI primitives live in `components/ui`, cross-feature
+  that only that feature uses. Generic UI primitives live in `packages/ui`, cross-feature
   helpers in `lib`. Do not create folders just to group a single file.
 - Import internal modules directly. Barrel files (`index.ts`) are only for deliberate public
   boundaries such as `components/ui`.
@@ -226,7 +231,7 @@ only make code generation easier.
 ## Comments and Language
 
 - User-facing text never appears as a literal in components. Add it to every dictionary in
-  `src/shared/i18n/locales/` (all locales, typed by `TranslationSchema`). The app is called
+  `packages/i18n/src/locales/` (all locales, typed by `TranslationSchema`). The app is called
   `Pupitre` in every language: the name is never translated, transliterated or spelled in another
   script, whatever grammar does around it. How a dictionary is written, which sources settle a
   term and what not to invent are in `docs/translation-guide.md`.
@@ -289,7 +294,7 @@ only make code generation easier.
 
 ## Themes
 
-- A theme is a folder `src/renderer/themes/<name>/` with an `index.css`; the folder name is the
+- A theme is a folder `apps/desktop/src/renderer/themes/<name>/` with an `index.css`; the folder name is the
   name shown in settings. `themes/pupitre` is the default.
 - `lib/theme.ts` discovers themes with `import.meta.glob` and injects the active one into the
   `document-theme` layer at runtime. Every window (main and settings) loads the same theme.

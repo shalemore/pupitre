@@ -19,9 +19,9 @@ than with a key in the repository, which is why the job asks for `id-token: writ
 `attestations: write`. They run after the build steps, so a run that cannot sign one fails the
 release instead of publishing files that nothing vouches for.
 
-The files to attest come from `scripts/release-artifacts.ts`, which prints the installers in
-`release/` (`nsis` `.exe`, `.dmg`, `.zip`, `.AppImage`, `.deb`) and exits non-zero when there are
-none. `release/*` itself is not used: the folder also holds the unpacked app folders and the update
+The files to attest come from `apps/desktop/scripts/release-artifacts.ts`, which prints the installers
+in `apps/desktop/release/` (`nsis` `.exe`, `.dmg`, `.zip`, `.AppImage`, `.deb`) and exits non-zero when
+there are none. `release/*` itself is not used: the folder also holds the unpacked app folders and the update
 metadata, and an attestation over a directory says nothing.
 
 ### Verifying a download

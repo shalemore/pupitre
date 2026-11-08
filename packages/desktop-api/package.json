@@ -21,5 +21,8 @@
   },
   "dependencies": {
     "@pupitre/settings": "workspace:*"
+  },
+  "devDependencies": {
+    "@tsconfig/strictest": "^2.0.8"
   }
 }

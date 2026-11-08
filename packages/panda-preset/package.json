@@ -11,6 +11,9 @@
       "import": "./src/index.ts"
     }
   },
+  "devDependencies": {
+    "@tsconfig/strictest": "^2.0.8"
+  },
   "peerDependencies": {
     "@pandacss/dev": "^2.4.0"
   }

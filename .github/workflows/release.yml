@@ -7,7 +7,7 @@ on:
     # A release exists only when the version changes; a push that only changes dependencies runs
     # the version check and skips the release jobs.
     paths:
-      - package.json
+      - apps/desktop/package.json
       - pnpm-lock.yaml
   workflow_dispatch:
     inputs:
@@ -88,6 +88,7 @@ jobs:
       # A repository without them builds the same installers, unsigned.
       - name: Build and publish the macOS installers
         if: matrix.platform == 'macos-latest'
+        working-directory: apps/desktop
         run: |
           # A missing secret arrives as an empty string; electron-builder would read it as a certificate path
           [ -n "$CSC_LINK" ] || unset CSC_LINK CSC_KEY_PASSWORD
@@ -102,6 +103,7 @@ jobs:
 
       - name: Build and publish the Windows installers
         if: matrix.platform == 'windows-latest'
+        working-directory: apps/desktop
         run: pnpm run build && pnpm exec electron-builder --publish always
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -110,6 +112,7 @@ jobs:
 
       - name: Build and publish the Linux packages
         if: matrix.platform == 'ubuntu-latest'
+        working-directory: apps/desktop
         run: pnpm run build && pnpm exec electron-builder --publish always
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -122,7 +125,7 @@ jobs:
         run: |
           {
             echo "paths<<INSTALLERS"
-            node scripts/release-artifacts.ts
+            node apps/desktop/scripts/release-artifacts.ts apps/desktop/release
             echo "INSTALLERS"
           } >> "$GITHUB_OUTPUT"
 
@@ -238,7 +241,7 @@ jobs:
           # The version may be given with or without the leading v
           VERSION="${VERSION#v}"
           gh release download "v$VERSION" --pattern '*-win-x64.exe' --dir dist
-          node scripts/scoop-manifest.ts dist/*-win-x64.exe dist
+          node apps/desktop/scripts/scoop-manifest.ts dist/*-win-x64.exe dist
           gh release upload "v$VERSION" dist/*.scoop.json dist/*.sha256 --clobber
         env:
           GH_TOKEN: ${{ github.token }}

@@ -179,7 +179,7 @@ for (const token of TOKEN_NAMES) {
 for (const token of referencedTokens(pandaPreset.theme?.extend?.tokens)) {
   if (!known.has(token)) {
     problems.push({
-      file: "packages/panda-preset/src/index.ts",
+      file: "../../packages/panda-preset/src/index.ts",
       line: 1,
       message: `\`${token}\` is aliased by a Panda token but no stylesheet declares it`,
     });

@@ -1,6 +1,6 @@
 # Translating Pupitre
 
-The dictionaries in `src/shared/i18n/locales/` are written by AI. The maintainers speak Simplified
+The dictionaries in `packages/i18n/src/locales/` are written by AI. The maintainers speak Simplified
 Chinese and English; most languages have no native reviewer, so a plausible string is not evidence
 that it is right. This file records how a translation is chosen, what to check and where the
 answers came from, so the next person or model does not repeat a settled mistake.
@@ -375,7 +375,7 @@ These are the failure modes seen in this repository, not hypothetical ones.
 No tool can prove that a sentence means what the English means. These catch the mechanical layer:
 
 - `pnpm run typecheck` and `pnpm test` — the dictionaries are typed by `TranslationSchema`; a missing
-  key or a broken function fails the build. `src/shared/i18n/typography.test.ts` checks the two
+  key or a broken function fails the build. `packages/i18n/src/typography.test.ts` checks the two
   rules a machine can check: every UI ellipsis is U+2026, and Chinese keeps a space between Han and
   Latin letters or digits.
 - `pnpm run lint` — formatting, lint rules and import order (oxfmt's `sortImports`). It does not spell-check.

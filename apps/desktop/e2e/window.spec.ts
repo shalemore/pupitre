@@ -1,8 +1,11 @@
+import { join } from "node:path";
 import { expect, test } from "@playwright/test";
 import { close, launch } from "./app";
 
+const README = join(import.meta.dirname, "../../../README.md");
+
 test("the desktop window draws no web splash", async () => {
-  const app = await launch({ files: ["README.md"] });
+  const app = await launch({ files: [README] });
   try {
     // The desktop entry has no splash at all; the browser demo's is its own HTML file
     expect(await app.page.locator("#boot-splash").count()).toBe(0);
@@ -14,7 +17,7 @@ test("the desktop window draws no web splash", async () => {
 });
 
 test("steps the zoom of the page with Ctrl and the plus and minus keys", async () => {
-  const app = await launch({ files: ["README.md"] });
+  const app = await launch({ files: [README] });
   try {
     await app.page.locator(".cm-content").waitFor();
     const width = () => app.page.evaluate(() => innerWidth);
@@ -46,7 +49,7 @@ test("steps the zoom of the page with Ctrl and the plus and minus keys", async (
 });
 
 test("typing folds the immersive chrome under a pointer resting at the top", async () => {
-  const app = await launch({ files: ["README.md"], settings: { windowStyle: "immersive" } });
+  const app = await launch({ files: [README], settings: { windowStyle: "immersive" } });
   try {
     await app.page.locator(".cm-content").waitFor();
     // What the reader sees and can reach: the bar's height and focusability, and the room the

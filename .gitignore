@@ -1,19 +1,19 @@
 /node_modules
 **/node_modules
-/out
-/release
-/test-results
-/playwright-report
-/blob-report
-/coverage
-/src/renderer/styled-system
+/apps/desktop/out
+/apps/desktop/release
+/apps/desktop/test-results
+/apps/desktop/playwright-report
+/apps/desktop/blob-report
+/apps/desktop/coverage
+/apps/desktop/src/renderer/styled-system
+/apps/desktop/.perf-fixtures
 /packages/*/styled-system
 /packages/*/src/styled-system
 /packages/*/dist
 pnpm-debug.log*
 *.log
 .DS_Store
-/.perf-fixtures
 
 # Notes the agent leaves for the developer about a finding, see .claude/skills/issue-driven-fixes
 /NOTE-*.md

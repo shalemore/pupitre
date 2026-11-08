@@ -41,6 +41,7 @@ jobs:
       # electron-builder sets the fuses while it packages, so a folder build is the only way to read
       # them back without cutting a release. The build lands in release/, which git ignores.
       - name: Package the Linux app and read its fuses back
+        working-directory: apps/desktop
         run: |
           pnpm exec electron-builder --linux dir
           fuses="$(FORCE_COLOR=0 pnpm exec electron-fuses read --app release/linux-unpacked/pupitre)"

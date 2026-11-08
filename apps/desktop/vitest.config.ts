@@ -21,7 +21,7 @@ export default defineConfig({
           include: [
             "src/main/**/*.test.ts",
             "src/shared/**/*.test.ts",
-            "packages/**/*.test.ts",
+            "../../packages/*/src/**/*.test.ts",
             "scripts/**/*.test.ts",
           ],
         },
@@ -41,14 +41,14 @@ export default defineConfig({
     ],
     coverage: {
       provider: "v8",
-      include: ["src/**/*.{ts,tsx}", "packages/**/*.{ts,tsx}"],
+      include: ["src/**/*.{ts,tsx}", "../../packages/*/src/**/*.{ts,tsx}"],
       exclude: [
         "src/**/*.test.{ts,tsx}",
-        "packages/**/*.test.{ts,tsx}",
+        "../../packages/*/src/**/*.test.{ts,tsx}",
         "src/**/testing.ts",
-        "packages/i18n/src/locales/**",
+        "../../packages/i18n/src/locales/**",
         "src/**/*.d.ts",
-        "packages/**/dist/**",
+        "../../packages/*/dist/**",
       ],
       reporter: ["text-summary", "html", "lcov"],
       // A floor that only catches a shrinking suite; raise it as more of the app is covered.

@@ -1,5 +1,6 @@
-# The app lives at the repository root; packages/ holds what it shares with others.
+# apps/ holds the Electron app; packages/ holds what it shares with others.
 packages:
+  - apps/*
   - packages/*
 
 # Dependencies with native build steps. pnpm 10 blocks every other package's scripts by default.

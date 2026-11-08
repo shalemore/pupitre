@@ -12,7 +12,7 @@ pnpm run bench
 
 Runs `bench/parse.bench.ts` with `vitest.bench.config.ts` in Node, for about a minute, and prints a
 Vitest table of every case: the mean, the slowest sample and how many samples were taken. The document is parsed with
-`markdownLanguage` from `src/renderer/lib/markdown/language.ts`, so the benchmark reads
+`markdownLanguage` from `apps/desktop/src/renderer/lib/markdown/language.ts`, so the benchmark reads
 GFM, front matter, math, footnotes, highlight, emoji and sub/superscript exactly as the editor does.
 
 What it reads:
@@ -35,7 +35,7 @@ pnpm run build
 pnpm run test:perf
 ```
 
-`pnpm run test:perf` runs only `e2e/performance.spec.ts`, through `playwright.perf.config.ts`.
+`pnpm run test:perf` runs only `apps/desktop/e2e/performance.spec.ts`, through `playwright.perf.config.ts`.
 `pnpm run test:e2e` ignores it: it opens documents of megabytes and takes minutes, and what it says
 belongs to the machine it ran on.
 
@@ -170,7 +170,7 @@ pnpm run build
 pnpm run check:bundle
 ```
 
-`scripts/check-bundle-size.ts` reads `out/renderer/assets/*.js`, prints the total and the largest
+`apps/desktop/scripts/check-bundle-size.ts` reads `apps/desktop/out/renderer/assets/*.js`, prints the total and the largest
 chunks, and fails when a budget is exceeded. The budgets are constants in the script:
 
 - **17 MiB for the renderer JavaScript in total**;
@@ -191,7 +191,7 @@ pnpm run dist
 ```
 
 The Windows x64 NSIS installer of this build is **108 MiB**; the unpacked app is 357 MiB. Two
-things are left out of the package: the browser demo in `out/web` (built for GitHub Pages, never
+things are left out of the package: the browser demo in `apps/desktop/out/web` (built for GitHub Pages, never
 loaded by the desktop app) and the third-party notices that already travel as an extra resource
 beside `app.asar`. Chromium's own locales are limited to the languages Pupitre speaks, which takes
 the locales folder from 49 MiB to 24 MiB; the installer uses maximum compression.

@@ -16,15 +16,15 @@
       "@/*": ["./src/renderer/*"],
       "@shared/*": ["./src/shared/*"],
       "@root/*": ["./*"],
-      "@agents/*": ["./agents/*"]
+      "@agents/*": ["../../agents/*"]
     }
   },
   "references": [
-    { "path": "./packages/i18n" },
-    { "path": "./packages/settings" },
-    { "path": "./packages/desktop-api" },
-    { "path": "./packages/panda-preset" },
-    { "path": "./packages/ui" }
+    { "path": "../../packages/i18n" },
+    { "path": "../../packages/settings" },
+    { "path": "../../packages/desktop-api" },
+    { "path": "../../packages/panda-preset" },
+    { "path": "../../packages/ui" }
   ],
   // The benchmark parses through the renderer's language, so it is checked with the DOM lib
   "include": ["src/renderer", "src/shared", "src/web", "bench"]

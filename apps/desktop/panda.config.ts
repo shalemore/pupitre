@@ -21,7 +21,7 @@ export default defineConfig({
   include: [
     "./src/renderer/**/*.{ts,tsx}",
     "./src/web/**/*.{ts,tsx}",
-    "./packages/ui/src/**/*.{ts,tsx}",
+    "../../packages/ui/src/**/*.{ts,tsx}",
   ],
   outdir: "src/renderer/styled-system",
   // The app imports through the renderer's alias and the UI package through a sibling path; Panda
@@ -34,6 +34,6 @@ export default defineConfig({
     tokens: ["@/styled-system/tokens", "./styled-system/tokens"],
   },
   // Generated code is not a source the scanner should read back
-  exclude: ["./src/renderer/styled-system", "./packages/ui/src/styled-system"],
+  exclude: ["./src/renderer/styled-system", "../../packages/ui/src/styled-system"],
   layers: { tokens: "theme", recipes: "components" },
 });

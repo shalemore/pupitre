@@ -1,13 +1,13 @@
 // Prints the installers a build left in release/, one per line, for the release workflow to sign
 // an attestation for.
-// Usage: node scripts/release-artifacts.ts
+// Usage: node scripts/release-artifacts.ts [release folder]
 // release/ also holds the unpacked app folders and the update metadata, so the files are picked by
 // the extensions electron-builder names its targets with rather than the folder being handed over.
 // The paths are written with forward slashes on every platform, which is the form the glob of the
 // attestation actions reads.
 import { existsSync, readdirSync } from "node:fs";
 
-const RELEASE_DIR = "release";
+const RELEASE_DIR = process.argv[2] ?? "release";
 
 /** The targets in electron-builder.yml: nsis, dmg, zip, AppImage and deb. */
 const INSTALLER_EXTENSIONS = [".exe", ".dmg", ".zip", ".AppImage", ".deb"];

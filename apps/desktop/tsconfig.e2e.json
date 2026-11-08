@@ -12,9 +12,9 @@
     "noEmit": true
   },
   "references": [
-    { "path": "./packages/i18n" },
-    { "path": "./packages/settings" },
-    { "path": "./packages/desktop-api" }
+    { "path": "../../packages/i18n" },
+    { "path": "../../packages/settings" },
+    { "path": "../../packages/desktop-api" }
   ],
   "include": [
     "e2e",

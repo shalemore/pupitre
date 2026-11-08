@@ -27,14 +27,14 @@ built:
   neither of those is covered by the integrity check. The two belong together: one says the archive
   is the one that was built, the other says the archive is all that can run.
 
-`grantFileProtocolExtraPrivileges` stays on. The packaged windows load `out/renderer/index.html`
+`grantFileProtocolExtraPrivileges` stays on. The packaged windows load `apps/desktop/out/renderer/index.html`
 over `file://`, and the pages rely on the extra privileges that protocol gets in Electron; turning
 the fuse off would break them.
 
 What a build really has is readable from the packaged binary:
 
 ```sh
-pnpm exec electron-fuses read --app release/win-unpacked/Pupitre.exe
+pnpm --filter pupitre exec electron-fuses read --app release/win-unpacked/Pupitre.exe
 ```
 
 ## Secrets

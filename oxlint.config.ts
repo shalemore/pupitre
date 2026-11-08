@@ -18,10 +18,11 @@ export default defineConfig({
   },
   ignorePatterns: [
     "**/node_modules/**",
-    "out/**",
-    "release/**",
+    "apps/desktop/out/**",
+    "apps/desktop/release/**",
     "packages/*/dist/**",
-    // Panda generates it; there is nothing to fix by hand there
-    "src/renderer/styled-system/**",
+    // Panda generates them; there is nothing to fix by hand there
+    "apps/desktop/src/renderer/styled-system/**",
+    "packages/*/src/styled-system/**",
   ],
 });

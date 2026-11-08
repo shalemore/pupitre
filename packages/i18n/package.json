@@ -10,5 +10,9 @@
       "types": "./dist/index.d.ts",
       "import": "./src/index.ts"
     }
+  },
+  "devDependencies": {
+    "@tsconfig/strictest": "^2.0.8",
+    "vitest": "^5.0.5"
   }
 }
