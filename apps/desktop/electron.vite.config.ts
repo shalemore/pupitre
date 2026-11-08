@@ -26,6 +26,7 @@ export default defineConfig({
         input: {
           index: resolve("src/renderer/index.html"),
           pluginHost: resolve("src/renderer/plugin-host/index.html"),
+          pluginSurface: resolve("src/renderer/plugin-host/surface.html"),
         },
       },
     },

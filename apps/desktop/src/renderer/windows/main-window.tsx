@@ -37,6 +37,7 @@ import { documentPosition } from "@/lib/document/positions";
 import { createDocumentSession } from "@/lib/document/session";
 import { isolateFileName } from "@/lib/file";
 import { createImmersiveChrome } from "@/lib/immersive-chrome";
+import { loadPlugins } from "@/lib/plugins";
 import { recentFiles } from "@/lib/recent-files";
 import { isImmersive, settings, updateSettings } from "@/lib/settings";
 import { SIDEBAR_WIDTH } from "@/lib/sidebar";
@@ -46,6 +47,11 @@ import { card, content, documentArea, editorArea, welcomeArea } from "./main-win
 import { FolderActions, ParentFolderButton } from "./main-window/folder-actions";
 import { MainTitleContent } from "./main-window/main-title-content";
 import { Overlays, type Overlay } from "./main-window/overlays";
+import {
+  hasBackgroundPlugin,
+  PluginBackground,
+  PluginPointer,
+} from "./main-window/plugin-surfaces";
 import { SidebarRegion } from "./main-window/sidebar-region";
 import { createSidebarWidths } from "./main-window/sidebar-widths";
 import { WordCount } from "./main-window/word-count";
@@ -572,6 +578,7 @@ export const MainWindow: Component = () => {
   };
 
   onMount(() => {
+    loadPlugins();
     // Capture, so the wheel that folds the chrome does not also scroll the document under it
     const area = contentArea;
     if (area !== undefined) {
@@ -686,7 +693,7 @@ export const MainWindow: Component = () => {
           onModeChange={setPreferredMode}
         >
           {/* An immersive window shows the document as a card on the window background, which also holds the title bar and the sidebar */}
-          <div class={card({ immersive: isImmersive() })}>
+          <div class={card({ immersive: isImmersive(), clear: hasBackgroundPlugin() })}>
             <div class={documentArea}>
               <Show
                 when={session.activeTab()}
@@ -703,6 +710,7 @@ export const MainWindow: Component = () => {
               >
                 {(tab) => (
                   <main class={editorArea}>
+                    <PluginBackground />
                     <Show when={findMode() !== "closed"}>
                       <FindBar
                         showReplace={findMode() === "replace"}
@@ -754,6 +762,7 @@ export const MainWindow: Component = () => {
         </SidebarRegion>
       </div>
 
+      <PluginPointer />
       <Show when={overlay()} keyed>
         {(current) => <Overlays overlay={current} />}
       </Show>

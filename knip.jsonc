@@ -10,6 +10,7 @@
         // The plugin preload and host page are entries of their own in electron.vite.config.ts
         "src/preload/plugin.ts",
         "src/renderer/plugin-host/host.ts",
+        "src/renderer/plugin-host/surface.ts",
       ],
     },
     "packages/*": {

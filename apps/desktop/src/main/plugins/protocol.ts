@@ -81,6 +81,9 @@ async function serve(request: Request): Promise<Response> {
     if (path === "/__host__/" || path === "/__host__/index.html") {
       return fileResponse(join(renderer, "plugin-host/index.html"), HOST_CSP);
     }
+    if (path === "/__surface__/" || path === "/__surface__/surface.html") {
+      return fileResponse(join(renderer, "plugin-host/surface.html"), HOST_CSP);
+    }
     if (path.startsWith("/assets/")) {
       // Vite writes the host page's scripts and styles beside the renderer's; `/assets/` is the
       // app's own, so a plugin's file of that name is served from its folder only under another name

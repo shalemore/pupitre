@@ -113,6 +113,7 @@ export const pandaPreset = definePreset({
           captionButton: { value: "2.875rem" },
         },
         zIndex: {
+          behind: { value: "-1" },
           1: { value: "1" },
           10: { value: "10" },
           40: { value: "40" },

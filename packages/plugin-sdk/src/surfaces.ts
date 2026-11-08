@@ -39,6 +39,25 @@ export interface PointerContext extends SurfaceContext {
   onPointer(listener: (sample: PointerSample) => void): () => void;
 }
 
+/**
+ * What the app and the page of a surface say to each other. The page posts `ready`; the app posts
+ * the theme and, for a pointer layer, the pointer samples. The page never sees the app's DOM.
+ */
+export interface SurfaceStateMessage {
+  channel: "pupitre:surface";
+  kind: SurfaceKind;
+  theme?: SurfaceTheme;
+  pointer?: PointerSample;
+}
+
+export interface SurfaceReadyMessage {
+  channel: "pupitre:surface";
+  type: "ready";
+  kind: SurfaceKind;
+}
+
+export type SurfaceMessage = SurfaceStateMessage | SurfaceReadyMessage;
+
 export interface BackgroundDefinition {
   /** Draws on the canvas; the returned function releases whatever setup acquired. */
   setup(context: SurfaceContext): void | (() => void);

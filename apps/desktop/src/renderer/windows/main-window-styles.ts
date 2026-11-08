@@ -91,6 +91,10 @@ export const card = cva({
         _print: { borderRadius: "[0]", boxShadow: "none" },
       },
     },
+    // A background plugin draws on the window, so the card must not paint over it
+    clear: {
+      true: { backgroundColor: "transparent", boxShadow: "none" },
+    },
   },
 });
 export const documentArea = css({
@@ -107,5 +111,7 @@ export const editorArea = css({
   height: "full",
   overflow: "hidden",
   position: "relative",
+  // Keeps a background canvas's negative layer over the card but under the text
+  isolation: "isolate",
   _print: { height: "auto", overflow: "visible" },
 });
