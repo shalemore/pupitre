@@ -1,8 +1,8 @@
+import type { ImportedTheme } from "@pupitre/desktop-api";
+import { DEFAULT_LOCALE, LOCALE_CODES, type SupportedLocale } from "@pupitre/i18n";
+import { DEFAULT_SETTINGS, type Settings } from "@pupitre/settings";
 import { createMemo, createRoot, createSignal } from "solid-js";
 import { z } from "zod";
-import type { ImportedTheme } from "@shared/desktop-api";
-import { DEFAULT_LOCALE, LOCALE_CODES, type SupportedLocale } from "@shared/i18n";
-import { DEFAULT_SETTINGS, type Settings } from "@shared/settings";
 import { desktop } from "@/lib/desktop";
 import { readToken } from "@/lib/tokens";
 

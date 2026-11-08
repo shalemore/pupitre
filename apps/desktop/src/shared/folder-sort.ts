@@ -1,4 +1,4 @@
-import type { FolderEntry } from "./desktop-api";
+import type { FolderEntry } from "@pupitre/desktop-api";
 import { nameCollator } from "./name-collator";
 
 /** What an entry that the host cannot date sorts as: the end of the list. */

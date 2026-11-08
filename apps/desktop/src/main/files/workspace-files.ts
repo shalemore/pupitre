@@ -1,7 +1,7 @@
 import type { Dirent } from "node:fs";
 import { readdir } from "node:fs/promises";
 import { join, relative, sep } from "node:path";
-import { DOCUMENT_FILE, type FolderFile } from "@shared/desktop-api";
+import { DOCUMENT_FILE, type FolderFile } from "@pupitre/desktop-api";
 import { isHiddenName } from "@shared/hidden";
 import { nameCollator } from "@shared/name-collator";
 import { createIOLimit } from "./io-limit";

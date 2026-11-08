@@ -1,6 +1,6 @@
+import { SETTING_RANGES, type Settings } from "@pupitre/settings";
+import { Select, Slider, Switch } from "@pupitre/ui";
 import { Show, type Component } from "solid-js";
-import { SETTING_RANGES, type Settings } from "@shared/settings";
-import { Select, Slider, Switch } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { formatDecimal } from "@/lib/number-format";

@@ -1,10 +1,10 @@
-import { contextBridge, ipcRenderer, webUtils } from "electron";
 import {
   type DesktopApi,
   INITIAL_STATE_SYNC,
   type InitialState,
   type RendererEvents,
-} from "@shared/desktop-api";
+} from "@pupitre/desktop-api";
+import { contextBridge, ipcRenderer, webUtils } from "electron";
 
 // Fetched synchronously so the first paint already uses the right language and colors; later
 // changes arrive as events

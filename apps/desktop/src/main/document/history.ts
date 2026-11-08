@@ -2,10 +2,10 @@ import { hash } from "node:crypto";
 import { rmSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
+import type { HistoryEntry } from "@pupitre/desktop-api";
 import { app } from "electron";
 import log from "electron-log/main";
 import { z } from "zod";
-import type { HistoryEntry } from "@shared/desktop-api";
 import { readJsonFile, writeJsonFile } from "../json-file";
 
 const MAX_VERSIONS_PER_DOCUMENT = 20;

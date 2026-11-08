@@ -1,5 +1,5 @@
+import { Button, Input, Sheet } from "@pupitre/ui";
 import { createSignal, onMount, type Component } from "solid-js";
-import { Button, Input, Sheet } from "@/components/ui";
 import { t } from "@/i18n";
 import { css } from "@/styled-system/css";
 

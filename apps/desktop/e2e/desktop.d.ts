@@ -1,4 +1,4 @@
-import type { DesktopApi } from "../src/shared/desktop-api";
+import type { DesktopApi } from "@pupitre/desktop-api";
 
 declare global {
   interface Window {

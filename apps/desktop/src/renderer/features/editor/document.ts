@@ -1,4 +1,4 @@
-import { MARKDOWN_FILE } from "@shared/desktop-api";
+import { MARKDOWN_FILE } from "@pupitre/desktop-api";
 import { t } from "@/i18n";
 import { fileNameOf, withoutDocumentExtension } from "@/lib/file";
 import { escapeHtml } from "@/lib/html";

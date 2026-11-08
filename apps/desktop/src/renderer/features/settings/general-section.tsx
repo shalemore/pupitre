@@ -1,7 +1,7 @@
+import type { DefaultAppResult } from "@pupitre/desktop-api";
+import type { Settings } from "@pupitre/settings";
+import { Button, Select, SettingRow, Switch } from "@pupitre/ui";
 import { createSignal, Show, type Component } from "solid-js";
-import type { DefaultAppResult } from "@shared/desktop-api";
-import type { Settings } from "@shared/settings";
-import { Button, Select, SettingRow, Switch } from "@/components/ui";
 import { type LanguageSetting, SUPPORTED_LOCALES, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { settings, updateSettings } from "@/lib/settings";

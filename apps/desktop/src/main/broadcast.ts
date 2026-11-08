@@ -1,5 +1,5 @@
+import type { RendererEvents } from "@pupitre/desktop-api";
 import { BrowserWindow, type WebContents } from "electron";
-import type { RendererEvents } from "@shared/desktop-api";
 
 /** Sends an event to one window, typed by the contract the renderer listens on. */
 export function sendTo<K extends keyof RendererEvents>(

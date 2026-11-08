@@ -55,7 +55,7 @@ apps/desktop/
       export/        the image and PDF export
       diagnostics/   the log and the issue report
     preload/     contextBridge that exposes the typed `window.desktop` API
-    shared/      Code both sides use, re-exporting what a package owns
+    shared/      Code both sides use that is not part of a published contract
     renderer/    SolidJS UI, one bundle for both windows
       windows/       one component per window
       features/<x>/  one feature's components, state and helpers

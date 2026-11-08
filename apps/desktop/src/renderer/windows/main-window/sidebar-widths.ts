@@ -1,6 +1,6 @@
+import type { SidebarWidths } from "@pupitre/desktop-api";
 import { debounce } from "@solid-primitives/scheduled";
 import { createEffect, createSignal, on } from "solid-js";
-import type { SidebarWidths } from "@shared/desktop-api";
 import { desktop } from "@/lib/desktop";
 import { SIDEBAR_WIDTH } from "@/lib/sidebar";
 

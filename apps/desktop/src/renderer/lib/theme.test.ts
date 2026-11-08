@@ -1,6 +1,6 @@
 import themeSchema from "@agents/skills/theming-pupitre/theme.schema.json";
+import { DEFAULT_LOCALE, LOCALE_CODES } from "@pupitre/i18n";
 import { describe, expect, it, vi } from "vitest";
-import { DEFAULT_LOCALE, LOCALE_CODES } from "@shared/i18n";
 import {
   activeThemeCss,
   applyTheme,

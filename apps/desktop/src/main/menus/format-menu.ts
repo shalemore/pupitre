@@ -1,6 +1,6 @@
+import type { AppCommand } from "@pupitre/desktop-api";
+import { shortcutOf, type FormatAction } from "@pupitre/desktop-api/format-actions";
 import type { MenuItemConstructorOptions } from "electron";
-import type { AppCommand } from "@shared/desktop-api";
-import { shortcutOf, type FormatAction } from "@shared/format-actions";
 import { t } from "../i18n";
 
 /**

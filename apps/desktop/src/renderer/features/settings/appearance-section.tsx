@@ -1,7 +1,7 @@
+import { SETTING_RANGES, type Settings } from "@pupitre/settings";
+import { Callout, IconButton, Select, Slider, Switch } from "@pupitre/ui";
 import { FolderOpen, Globe } from "lucide-solid";
 import { For, Show, type Component } from "solid-js";
-import { SETTING_RANGES, type Settings } from "@shared/settings";
-import { Callout, IconButton, Select, Slider, Switch } from "@/components/ui";
 import { currentLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { formatPercent } from "@/lib/number-format";

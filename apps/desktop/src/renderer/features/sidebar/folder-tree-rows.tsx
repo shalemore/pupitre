@@ -1,4 +1,8 @@
 import { ContextMenu } from "@kobalte/core/context-menu";
+import type { FolderEntry } from "@pupitre/desktop-api";
+import type { MenuEntry } from "@pupitre/desktop-api/menu";
+import { IconButton, ListItem, rowIndent } from "@pupitre/ui";
+import { FLOATING_PANEL, menuPanel } from "@pupitre/ui/styles";
 import { ArrowRight, ChevronRight, CircleAlert, FileText, Folder } from "lucide-solid";
 import {
   type Component,
@@ -12,15 +16,11 @@ import {
   onMount,
   Show,
 } from "solid-js";
-import type { FolderEntry } from "@shared/desktop-api";
-import type { MenuEntry } from "@shared/menu";
 import { MenuEntries } from "@/components/menu-popup";
-import { IconButton, ListItem, rowIndent } from "@/components/ui";
 import { currentLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { excerptOf } from "@/lib/markdown/excerpt";
 import { settings } from "@/lib/settings";
-import { FLOATING_PANEL, menuPanel } from "@/lib/styles";
 import { cx } from "@/styled-system/css";
 import {
   arrow,

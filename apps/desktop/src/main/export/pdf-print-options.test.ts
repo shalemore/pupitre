@@ -1,5 +1,5 @@
+import { DEFAULT_SETTINGS, type Settings } from "@pupitre/settings";
 import { describe, expect, it } from "vitest";
-import { DEFAULT_SETTINGS, type Settings } from "@shared/settings";
 import { pdfPrintOptions } from "./pdf-print-options";
 
 function optionsFor(patch: Partial<Settings>) {

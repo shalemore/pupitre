@@ -13,7 +13,7 @@ import {
   ViewPlugin,
   type ViewUpdate,
 } from "@codemirror/view";
-import type { Settings } from "@shared/settings";
+import type { Settings } from "@pupitre/settings";
 
 /**
  * Writing modes, each a self-contained extension that the editor switches with a compartment

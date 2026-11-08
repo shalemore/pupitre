@@ -1,5 +1,5 @@
+import type { Settings } from "@pupitre/settings";
 import type { PrintToPDFOptions } from "electron";
-import type { Settings } from "@shared/settings";
 
 /** The sheet of each page size the settings offer, named as printToPDF takes it. */
 const PAGE_SIZES: Readonly<Record<Settings["pdfPageSize"], "A4" | "Letter" | "Legal">> = {

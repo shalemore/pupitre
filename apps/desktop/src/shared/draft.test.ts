@@ -1,5 +1,5 @@
+import type { Draft } from "@pupitre/desktop-api";
 import { describe, expect, it } from "vitest";
-import type { Draft } from "./desktop-api";
 import { readDraftSession } from "./draft";
 
 const draft: Draft = {

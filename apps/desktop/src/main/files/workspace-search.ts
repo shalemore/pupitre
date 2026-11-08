@@ -6,7 +6,7 @@ import type {
   WorkspaceMatch,
   WorkspaceSearchOptions,
   WorkspaceSearchResponse,
-} from "@shared/desktop-api";
+} from "@pupitre/desktop-api";
 import { nameCollator } from "@shared/name-collator";
 import { decodeBestEffort } from "./encoding";
 import { isWorkspaceDocument, isWorkspaceFolder, relativeTo } from "./workspace-files";

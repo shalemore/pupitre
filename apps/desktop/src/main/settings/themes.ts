@@ -1,9 +1,9 @@
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { isDeepStrictEqual } from "node:util";
+import type { ImportedTheme } from "@pupitre/desktop-api";
 import { watch, type FSWatcher } from "chokidar";
 import { app, shell } from "electron";
-import type { ImportedTheme } from "@shared/desktop-api";
 import { broadcast } from "../broadcast";
 import { createDebouncedTask } from "../debounced-task";
 import { readThemesFromRoot } from "./theme-folders";

@@ -1,5 +1,5 @@
+import type { UpdateStatus } from "@pupitre/desktop-api";
 import { describe, expect, it } from "vitest";
-import type { UpdateStatus } from "@shared/desktop-api";
 import { type UpdateLabels, updateActionOf } from "./update-action";
 
 const labels: UpdateLabels = {

@@ -1,10 +1,10 @@
+import { Button, Kbd, ListItem, ScrollView } from "@pupitre/ui";
+import { truncateStyle } from "@pupitre/ui/styles";
 import { FilePlus, FolderOpen } from "lucide-solid";
 import { For, Show, type Component } from "solid-js";
-import { Button, Kbd, ListItem, ScrollView } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
 import { fileNameOf } from "@/lib/file";
-import { truncateStyle } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 import { LookChooser } from "./look-chooser";
 

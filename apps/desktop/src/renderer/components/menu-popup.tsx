@@ -8,13 +8,13 @@ import {
   MenuSubContent,
   MenuSubTrigger,
 } from "@kobalte/core/menu";
+import type { MenuEntry } from "@pupitre/desktop-api/menu";
+import { Separator } from "@pupitre/ui";
+import { FLOATING_PANEL, menuPanel, rtlFlip, truncate } from "@pupitre/ui/styles";
 import { Check, ChevronRight } from "lucide-solid";
 import { For, Show, type Component } from "solid-js";
-import type { MenuEntry } from "@shared/menu";
-import { Separator } from "@/components/ui";
 import { isRtl } from "@/lib/rtl";
 import { settings } from "@/lib/settings";
-import { FLOATING_PANEL, menuPanel, rtlFlip, truncate } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 
 type MenuItemEntry = Extract<MenuEntry, { type: "item" }>;

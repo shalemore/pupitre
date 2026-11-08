@@ -1,9 +1,9 @@
 import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
+import type { UpdateStatus } from "@pupitre/desktop-api";
 import { app, Notification } from "electron";
 import log from "electron-log/main";
 import electronUpdater from "electron-updater";
-import type { UpdateStatus } from "@shared/desktop-api";
 import { messageOf } from "@shared/errors";
 import { broadcast } from "./broadcast";
 import { t } from "./i18n";

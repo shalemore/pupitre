@@ -1,7 +1,7 @@
 import { stat } from "node:fs/promises";
 import { basename, join, resolve } from "node:path";
+import type { PinnedEntry } from "@pupitre/desktop-api";
 import { z } from "zod";
-import type { PinnedEntry } from "@shared/desktop-api";
 import { pinKeyOf } from "@shared/pins";
 import { isInside } from "../is-inside";
 import { readJsonFile, writeJsonFile } from "../json-file";

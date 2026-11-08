@@ -1,4 +1,14 @@
 import { basename } from "node:path";
+import type { DocumentState } from "@pupitre/desktop-api";
+import { INLINE_FORMAT_ACTIONS, PARAGRAPH_MENU_GROUPS } from "@pupitre/desktop-api/format-actions";
+import {
+  formatShortcut,
+  type MenuEntry,
+  type Menus,
+  menusOf,
+  withGroupSeparators,
+} from "@pupitre/desktop-api/menu";
+import { type BooleanSettingKey, isBooleanSettingKey } from "@pupitre/settings";
 import {
   app,
   BrowserWindow,
@@ -7,16 +17,6 @@ import {
   type MenuItemConstructorOptions,
   shell,
 } from "electron";
-import type { DocumentState } from "@shared/desktop-api";
-import { INLINE_FORMAT_ACTIONS, PARAGRAPH_MENU_GROUPS } from "@shared/format-actions";
-import {
-  formatShortcut,
-  type MenuEntry,
-  type Menus,
-  menusOf,
-  withGroupSeparators,
-} from "@shared/menu";
-import { type BooleanSettingKey, isBooleanSettingKey } from "@shared/settings";
 import { replaceShortcut, SHORTCUTS } from "@shared/shortcuts";
 import { diagnosticsInfo } from "../diagnostics/diagnostics";
 import { REPOSITORY_URL, reportIssueUrl } from "../diagnostics/report-issue";

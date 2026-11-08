@@ -1,8 +1,8 @@
 import { copyFile, mkdir, rename, writeFile } from "node:fs/promises";
 import { basename, dirname, format, join, normalize, parse, resolve } from "node:path";
+import type { FolderEntry } from "@pupitre/desktop-api";
 import { net, shell } from "electron";
 import { moveFile } from "move-file";
-import type { FolderEntry } from "@shared/desktop-api";
 import { decodeUriPart } from "@shared/uri";
 import { exists } from "./exists";
 

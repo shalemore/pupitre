@@ -1,8 +1,8 @@
 import { Progress } from "@kobalte/core/progress";
+import type { UpdateStatus } from "@pupitre/desktop-api";
+import { Button, Callout } from "@pupitre/ui";
 import { CheckCircle2, Download, RefreshCw } from "lucide-solid";
 import { createMemo, Show, type Component } from "solid-js";
-import type { UpdateStatus } from "@shared/desktop-api";
-import { Button, Callout } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { formatPercent } from "@/lib/number-format";

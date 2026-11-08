@@ -1,10 +1,10 @@
+import { IconButton, ToggleIconButton } from "@pupitre/ui";
+import { quietButton, rtlFlip } from "@pupitre/ui/styles";
 import { CornerRightUp, Eye } from "lucide-solid";
 import { Show, type Component } from "solid-js";
-import { IconButton, ToggleIconButton } from "@/components/ui";
 import { FolderSortButton } from "@/features/sidebar/folder-sort-button";
 import { t } from "@/i18n";
 import { parentFolder } from "@/lib/file";
-import { quietButton, rtlFlip } from "@/lib/styles";
 
 interface ParentFolderButtonProps {
   /** The folder the sidebar shows; absent while no folder is open. */

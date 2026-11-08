@@ -1,4 +1,4 @@
-import { TOP_MENUS, type MenuEntry, type Menus, type TopMenu } from "@shared/menu";
+import { TOP_MENUS, type MenuEntry, type Menus, type TopMenu } from "@pupitre/desktop-api/menu";
 import { matchRanges } from "@/lib/fuzzy";
 
 /** One entry of the palette: something a menu runs, with the menus it lives under. */

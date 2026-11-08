@@ -1,6 +1,6 @@
+import { TITLE_BAR_CLEARANCE } from "@pupitre/desktop-api";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { createEffect, createMemo, createSignal } from "solid-js";
-import { TITLE_BAR_CLEARANCE } from "@shared/desktop-api";
 import { desktop, isMacOS } from "@/lib/desktop";
 import { distanceFromEnd, distanceFromStart } from "@/lib/rtl";
 import { chromeVisibility, type ChromeOptions } from "./chrome-visibility";

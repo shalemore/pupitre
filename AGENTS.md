@@ -143,8 +143,7 @@ matters for a change is the direction of imports:
 `pnpm run check:architecture` enforces these edges, so a misplaced import fails the build rather
 than waiting for a review to notice it.
 
-- `packages/desktop-api/src/desktop-api.ts` is the IPC contract; the app re-exports it at
-  `apps/desktop/src/shared/desktop-api.ts`. Every channel is declared there once and both
+- `@pupitre/desktop-api` is the IPC contract. Every channel is declared there once and both
   `ipcMain.handle` and `window.desktop.invoke` are typed from it. Never call `ipcRenderer` or
   Node APIs from the renderer.
 - The renderer only talks to its host through `window.desktop`, so another host can run it. The web

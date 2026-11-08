@@ -1,6 +1,6 @@
+import type { DraftSession } from "@pupitre/desktop-api";
+import { LINE_ENDINGS, TEXT_ENCODINGS } from "@pupitre/desktop-api";
 import { z } from "zod";
-import type { DraftSession } from "./desktop-api";
-import { LINE_ENDINGS, TEXT_ENCODINGS } from "./desktop-api";
 
 /**
  * A draft comes back from a file a crash may have cut short, so a host reads one only when it is

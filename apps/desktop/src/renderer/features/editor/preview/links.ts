@@ -2,7 +2,7 @@ import { syntaxTree } from "@codemirror/language";
 import type { EditorState } from "@codemirror/state";
 import type { EditorView } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
-import { DOCUMENT_EXTENSIONS } from "@shared/desktop-api";
+import { DOCUMENT_EXTENSIONS } from "@pupitre/desktop-api";
 import { scrollToDocument } from "@/features/editor/scroll";
 import { desktop } from "@/lib/desktop";
 import { pathFromFileUrl } from "@/lib/file";

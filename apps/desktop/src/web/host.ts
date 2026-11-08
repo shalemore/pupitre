@@ -13,13 +13,8 @@ import {
   type PinnedEntry,
   type RendererEvents,
   type UnsavedChoice,
-} from "@shared/desktop-api";
-import { readDraftSession } from "@shared/draft";
-import { compareFolderEntries, UNTIMED } from "@shared/folder-sort";
-import { isHiddenName } from "@shared/hidden";
-import { getDictionary, resolveLocale } from "@shared/i18n";
-import { isInsideFolder } from "@shared/paths";
-import { pinKeyOf } from "@shared/pins";
+} from "@pupitre/desktop-api";
+import { getDictionary, resolveLocale } from "@pupitre/i18n";
 import {
   DEFAULT_SETTINGS,
   patchSettingsFile,
@@ -28,7 +23,12 @@ import {
   type Settings,
   settingsFileSchema,
   withoutSetting,
-} from "@shared/settings";
+} from "@pupitre/settings";
+import { readDraftSession } from "@shared/draft";
+import { compareFolderEntries, UNTIMED } from "@shared/folder-sort";
+import { isHiddenName } from "@shared/hidden";
+import { isInsideFolder } from "@shared/paths";
+import { pinKeyOf } from "@shared/pins";
 import { toLf } from "@shared/text";
 import { createDemoMenus } from "./demo-menus";
 import about from "./demo/about.md?raw";

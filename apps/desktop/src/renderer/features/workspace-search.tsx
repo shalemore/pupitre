@@ -1,4 +1,19 @@
 import { Combobox as KobalteCombobox } from "@kobalte/core/combobox";
+import type {
+  WorkspaceFileMatches,
+  WorkspaceMatch,
+  WorkspaceSearchOptions,
+  WorkspaceSearchResponse,
+} from "@pupitre/desktop-api";
+import {
+  Badge,
+  Input,
+  ScrollView,
+  Sheet,
+  ToggleIconButton,
+  type ScrollViewProps,
+} from "@pupitre/ui";
+import { truncateStyle } from "@pupitre/ui/styles";
 import { debounce } from "@solid-primitives/scheduled";
 import { CaseSensitive, Regex, WholeWord } from "lucide-solid";
 import {
@@ -11,24 +26,9 @@ import {
   onMount,
   Show,
 } from "solid-js";
-import type {
-  WorkspaceFileMatches,
-  WorkspaceMatch,
-  WorkspaceSearchOptions,
-  WorkspaceSearchResponse,
-} from "@shared/desktop-api";
-import {
-  Badge,
-  Input,
-  ScrollView,
-  Sheet,
-  ToggleIconButton,
-  type ScrollViewProps,
-} from "@/components/ui";
 import { t } from "@/i18n";
 import { FocusFirstRow, ShowFocusedRow } from "@/lib/combobox-rows";
 import { desktop } from "@/lib/desktop";
-import { truncateStyle } from "@/lib/styles";
 import { css } from "@/styled-system/css";
 
 const optionButton = css({

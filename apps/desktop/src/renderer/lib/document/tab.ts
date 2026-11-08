@@ -1,4 +1,4 @@
-import { IMAGE_FILE, type LineEnding, type TextEncoding } from "@shared/desktop-api";
+import { IMAGE_FILE, type LineEnding, type TextEncoding } from "@pupitre/desktop-api";
 import type { PendingImages } from "@/lib/pending-images";
 
 /** The file behind a tab, the way it was opened and is written back. */

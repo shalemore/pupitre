@@ -1,4 +1,7 @@
 import { ContextMenu } from "@kobalte/core/context-menu";
+import type { FolderEntry } from "@pupitre/desktop-api";
+import type { MenuEntry } from "@pupitre/desktop-api/menu";
+import { FLOATING_PANEL, menuPanel } from "@pupitre/ui/styles";
 import {
   type Component,
   createEffect,
@@ -11,15 +14,12 @@ import {
   onCleanup,
   Show,
 } from "solid-js";
-import type { FolderEntry } from "@shared/desktop-api";
 import { messageOf } from "@shared/errors";
-import type { MenuEntry } from "@shared/menu";
 import { isInsideFolder, relativeToFolder } from "@shared/paths";
 import { MenuEntries } from "@/components/menu-popup";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { reportFailure } from "@/lib/errors";
-import { FLOATING_PANEL, menuPanel } from "@/lib/styles";
 import { cx } from "@/styled-system/css";
 import { FolderChildren, FolderRow, type RowMenu, type TreeContext } from "./folder-tree-rows";
 import { divider, sectionLabel, stack, treeRoot } from "./folder-tree-styles";

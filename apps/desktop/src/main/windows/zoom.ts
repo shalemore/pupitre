@@ -1,5 +1,5 @@
+import { ZOOM_STEPS, zoomFactor } from "@pupitre/settings";
 import type { WebContents } from "electron";
-import { ZOOM_STEPS, zoomFactor } from "@shared/settings";
 import { getSettings, updateSettings } from "../settings/settings-store";
 
 /** The zoom commands a menu entry or a key can ask for. */

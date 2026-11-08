@@ -5,8 +5,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { _electron as electron } from "@playwright/test";
 import type { ElectronApplication, Page } from "@playwright/test";
-import type { AppCommand } from "../src/shared/desktop-api";
-import type { Settings } from "../src/shared/settings";
+import type { AppCommand } from "@pupitre/desktop-api";
+import type { Settings } from "@pupitre/settings";
 
 /** Playwright starts in the repository root, where `npm run build` left `out/`. */
 const ROOT = process.cwd();

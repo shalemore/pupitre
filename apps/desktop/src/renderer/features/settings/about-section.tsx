@@ -1,7 +1,7 @@
+import { Button, SettingRow } from "@pupitre/ui";
 import pkg from "@root/package.json";
 import { BookOpen, FolderOpen } from "lucide-solid";
 import { Show, type Component } from "solid-js";
-import { Button, SettingRow } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { css } from "@/styled-system/css";

@@ -1,7 +1,7 @@
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
+import type { DefaultAppResult } from "@pupitre/desktop-api";
 import { shell } from "electron";
-import type { DefaultAppResult } from "@shared/desktop-api";
 
 /**
  * Making Pupitre the default app for Markdown files. The installers register Pupitre as a handler

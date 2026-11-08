@@ -1,6 +1,6 @@
+import type { CaptionSide } from "@pupitre/desktop-api";
 import { Copy, Minus, Square, X } from "lucide-solid";
 import { createSignal, onCleanup, Show, type Component } from "solid-js";
-import type { CaptionSide } from "@shared/desktop-api";
 import { t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
 import { css, cx } from "@/styled-system/css";

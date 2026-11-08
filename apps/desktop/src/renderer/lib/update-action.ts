@@ -1,5 +1,5 @@
-import type { UpdateStatus } from "@shared/desktop-api";
-import type { TranslationSchema } from "@shared/i18n";
+import type { UpdateStatus } from "@pupitre/desktop-api";
+import type { TranslationSchema } from "@pupitre/i18n";
 
 /** The words the update button uses, so a test needs no dictionary of its own. */
 export type UpdateLabels = Pick<

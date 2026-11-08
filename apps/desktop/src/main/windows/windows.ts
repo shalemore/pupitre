@@ -1,6 +1,13 @@
 import { execFileSync } from "node:child_process";
 import { join } from "node:path";
 import {
+  TITLE_BAR_HEIGHT,
+  type AppCommand,
+  type CaptionSide,
+  type WindowColors,
+} from "@pupitre/desktop-api";
+import type { Settings } from "@pupitre/settings";
+import {
   app,
   BrowserWindow,
   type BrowserWindowConstructorOptions,
@@ -8,13 +15,6 @@ import {
   shell,
   type WebContents,
 } from "electron";
-import {
-  TITLE_BAR_HEIGHT,
-  type AppCommand,
-  type CaptionSide,
-  type WindowColors,
-} from "@shared/desktop-api";
-import type { Settings } from "@shared/settings";
 import { sendTo } from "../broadcast";
 import { setupContextMenu } from "../menus/context-menu";
 import { toggleColorScheme } from "../settings/color-scheme";

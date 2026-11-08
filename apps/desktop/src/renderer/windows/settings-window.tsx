@@ -1,7 +1,7 @@
+import { ScrollView, Tabs, TabsContent } from "@pupitre/ui";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { createEffect, onMount, type Component } from "solid-js";
 import { TitleBar } from "@/components/title-bar";
-import { ScrollView, Tabs, TabsContent } from "@/components/ui";
 import { AboutSection } from "@/features/settings/about-section";
 import { AppearanceSection } from "@/features/settings/appearance-section";
 import { EditorSection } from "@/features/settings/editor-section";

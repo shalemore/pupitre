@@ -1,6 +1,6 @@
+import { CONTEXT_MENU_FORMAT_ACTIONS } from "@pupitre/desktop-api/format-actions";
+import { withGroupSeparators } from "@pupitre/desktop-api/menu";
 import { BrowserWindow, Menu, type MenuItemConstructorOptions, type WebContents } from "electron";
-import { CONTEXT_MENU_FORMAT_ACTIONS } from "@shared/format-actions";
-import { withGroupSeparators } from "@shared/menu";
 import { sendTo } from "../broadcast";
 import { t } from "../i18n";
 import { formatItems } from "./format-menu";

@@ -1,6 +1,6 @@
 import type { Extension } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
-import type { Settings } from "@shared/settings";
+import type { Settings } from "@pupitre/settings";
 
 /**
  * The shape and blinking of the caret. They are CSS (editor.css, keyed by these attributes) on the

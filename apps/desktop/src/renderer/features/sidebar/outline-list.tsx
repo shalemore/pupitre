@@ -1,9 +1,9 @@
+import { ListItem, rowIndent } from "@pupitre/ui";
+import { OUTLINE_ROW, truncateStyle } from "@pupitre/ui/styles";
 import { ChevronRight } from "lucide-solid";
 import { createMemo, createSelector, Index, Show, type Component } from "solid-js";
-import { ListItem, rowIndent } from "@/components/ui";
 import { t } from "@/i18n";
 import { headingKey, type OutlineHeading } from "@/lib/markdown/outline-heading";
-import { OUTLINE_ROW, truncateStyle } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 
 interface OutlineListProps {

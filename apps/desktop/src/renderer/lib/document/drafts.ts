@@ -1,5 +1,5 @@
+import type { Draft, DraftSession } from "@pupitre/desktop-api";
 import { debounce } from "@solid-primitives/scheduled";
-import type { Draft, DraftSession } from "@shared/desktop-api";
 import { desktop } from "@/lib/desktop";
 import type { DocumentEditor } from "./editor";
 import { isImageTab, isTabDirty, type Tab } from "./tab";

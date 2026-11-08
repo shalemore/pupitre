@@ -1,5 +1,7 @@
 import type { ChangeSpec } from "@codemirror/state";
 import type { EditorView } from "@codemirror/view";
+import { IconButton, Separator } from "@pupitre/ui";
+import { rtlFlip } from "@pupitre/ui/styles";
 import {
   ArrowDown,
   ArrowLeft,
@@ -18,7 +20,6 @@ import {
   X,
 } from "lucide-solid";
 import { type Accessor, type Component, type JSX, Show } from "solid-js";
-import { IconButton, Separator } from "@/components/ui";
 import { t } from "@/i18n";
 import {
   type Alignment,
@@ -33,7 +34,6 @@ import {
   moveRow,
   type TableModel,
 } from "@/lib/markdown/table-model";
-import { rtlFlip } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 import type { CellPosition } from "./table-cell";
 

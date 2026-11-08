@@ -1,6 +1,6 @@
 import { resolve } from "node:path";
+import { DOCUMENT_FILE, IMAGE_FILE } from "@pupitre/desktop-api";
 import { app } from "electron";
-import { DOCUMENT_FILE, IMAGE_FILE } from "@shared/desktop-api";
 import { createMainWindow, dispatchToMainWindow, getMainWindow } from "../windows/windows";
 
 let launchFile: string | undefined;

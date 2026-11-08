@@ -1,10 +1,10 @@
 import { Tabs as KobalteTabs } from "@kobalte/core/tabs";
+import { IconButton } from "@pupitre/ui";
+import { truncateStyle } from "@pupitre/ui/styles";
 import { X } from "lucide-solid";
 import { createEffect, For, Show, type Component } from "solid-js";
-import { IconButton } from "@/components/ui";
 import { t } from "@/i18n";
 import { isTabDirty, type Tab } from "@/lib/document/tab";
-import { truncateStyle } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 
 export interface TabsBarProps {

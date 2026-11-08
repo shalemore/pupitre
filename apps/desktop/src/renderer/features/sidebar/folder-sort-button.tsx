@@ -1,9 +1,9 @@
+import type { MenuEntry } from "@pupitre/desktop-api/menu";
+import type { Settings } from "@pupitre/settings";
+import { IconButton } from "@pupitre/ui";
 import { ArrowUpDown } from "lucide-solid";
 import { Show, type Component } from "solid-js";
-import type { MenuEntry } from "@shared/menu";
-import type { Settings } from "@shared/settings";
 import { MenuPopup } from "@/components/menu-popup";
-import { IconButton } from "@/components/ui";
 import { t } from "@/i18n";
 import { createMenu } from "@/lib/menu-state";
 import { settings, updateSettings } from "@/lib/settings";

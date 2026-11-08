@@ -1,3 +1,4 @@
+import { IMAGE_FILE, MARKDOWN_FILE, type AppCommand } from "@pupitre/desktop-api";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { scheduleIdle } from "@solid-primitives/scheduled";
 import {
@@ -11,7 +12,6 @@ import {
   Show,
   type Component,
 } from "solid-js";
-import { IMAGE_FILE, MARKDOWN_FILE, type AppCommand } from "@shared/desktop-api";
 import { isInsideFolder } from "@shared/paths";
 import { TitleBar } from "@/components/title-bar";
 import { FindBar } from "@/features/editor/find-bar";

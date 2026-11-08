@@ -1,10 +1,10 @@
-import { app } from "electron";
 import {
   getDictionary,
   resolveLocale,
   type SupportedLocale,
   type TranslationSchema,
-} from "@shared/i18n";
+} from "@pupitre/i18n";
+import { app } from "electron";
 import { getSettings } from "./settings/settings-store";
 
 export function currentLocale(): SupportedLocale {

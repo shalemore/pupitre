@@ -1,9 +1,9 @@
 import { RadioGroup } from "@kobalte/core/radio-group";
+import type { Settings } from "@pupitre/settings";
+import { PRESSABLE } from "@pupitre/ui/styles";
 import type { JSX } from "solid-js";
-import type { Settings } from "@shared/settings";
 import { t } from "@/i18n";
 import { settings, updateSettings } from "@/lib/settings";
-import { PRESSABLE } from "@/lib/styles";
 import { css, cx } from "@/styled-system/css";
 
 interface LookOptionProps {

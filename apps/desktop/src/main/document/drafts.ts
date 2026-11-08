@@ -1,7 +1,7 @@
 import { rmSync } from "node:fs";
 import { join } from "node:path";
+import { type DraftSession } from "@pupitre/desktop-api";
 import { app } from "electron";
-import { type DraftSession } from "@shared/desktop-api";
 import { readDraftSession } from "@shared/draft";
 import { createDebouncedTask } from "../debounced-task";
 import { readJsonFile, writeJsonFile } from "../json-file";

@@ -1,11 +1,10 @@
-import type { AppCommand, DocumentState } from "@shared/desktop-api";
+import type { AppCommand, DocumentState } from "@pupitre/desktop-api";
 import {
   INLINE_FORMAT_ACTIONS,
   PARAGRAPH_MENU_GROUPS,
   shortcutOf,
   type FormatAction,
-} from "@shared/format-actions";
-import type { TranslationSchema } from "@shared/i18n";
+} from "@pupitre/desktop-api/format-actions";
 import {
   formatShortcut,
   type MenuEntry,
@@ -13,8 +12,9 @@ import {
   menusOf,
   type TopMenu,
   withGroupSeparators,
-} from "@shared/menu";
-import type { Settings } from "@shared/settings";
+} from "@pupitre/desktop-api/menu";
+import type { TranslationSchema } from "@pupitre/i18n";
+import type { Settings } from "@pupitre/settings";
 import { SHORTCUTS } from "@shared/shortcuts";
 
 /**

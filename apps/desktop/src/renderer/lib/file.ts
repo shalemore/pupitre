@@ -1,4 +1,4 @@
-import { DOCUMENT_FILE } from "@shared/desktop-api";
+import { DOCUMENT_FILE } from "@pupitre/desktop-api";
 import { decodeUriPart } from "@shared/uri";
 
 export function fileNameOf(path: string): string {

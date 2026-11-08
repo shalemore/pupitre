@@ -1,6 +1,6 @@
 import { Combobox as KobalteCombobox } from "@kobalte/core/combobox";
+import { Input, ScrollView, Sheet, type ScrollViewProps } from "@pupitre/ui";
 import { createMemo, createSignal, type JSX, onMount, Show } from "solid-js";
-import { Input, ScrollView, Sheet, type ScrollViewProps } from "@/components/ui";
 import { FocusFirstRow, ShowFocusedRow } from "@/lib/combobox-rows";
 import { css } from "@/styled-system/css";
 

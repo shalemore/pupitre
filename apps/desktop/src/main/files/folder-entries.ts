@@ -1,7 +1,7 @@
 import { readdir } from "node:fs/promises";
 import { join } from "node:path";
+import type { FolderEntry } from "@pupitre/desktop-api";
 import type { Attributes } from "winattr";
-import type { FolderEntry } from "@shared/desktop-api";
 import { isHiddenName } from "@shared/hidden";
 import { createIOLimit } from "./io-limit";
 

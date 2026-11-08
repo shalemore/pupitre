@@ -2,21 +2,6 @@ import { mkdir, open, readFile, stat, writeFile } from "node:fs/promises";
 import { basename, dirname, extname, isAbsolute, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
-  BrowserWindow,
-  ClipboardItem,
-  clipboard,
-  dialog,
-  ipcMain,
-  type IpcMainInvokeEvent,
-  type FileFilter,
-  type OpenDialogOptions,
-  nativeTheme,
-  shell,
-  type WebContents,
-} from "electron";
-import log from "electron-log/main";
-import writeFileAtomic from "write-file-atomic";
-import {
   type DeletedFileChoice,
   type DocumentLocation,
   type ExternalChangeChoice,
@@ -32,12 +17,27 @@ import {
   DOCUMENT_FILE,
   IMAGE_EXTENSIONS,
   PREVIEW_BYTES,
-} from "@shared/desktop-api";
+} from "@pupitre/desktop-api";
+import { intlLocale } from "@pupitre/i18n";
+import type { Settings } from "@pupitre/settings";
+import {
+  BrowserWindow,
+  ClipboardItem,
+  clipboard,
+  dialog,
+  ipcMain,
+  type IpcMainInvokeEvent,
+  type FileFilter,
+  type OpenDialogOptions,
+  nativeTheme,
+  shell,
+  type WebContents,
+} from "electron";
+import log from "electron-log/main";
+import writeFileAtomic from "write-file-atomic";
 import { formatFileSize } from "@shared/file-size";
 import { compareFolderEntries, UNTIMED } from "@shared/folder-sort";
 import { isHiddenName } from "@shared/hidden";
-import { intlLocale } from "@shared/i18n";
-import type { Settings } from "@shared/settings";
 import { choose, type Answer } from "./dialog-choice";
 import { clearDraft, readDraft, writeDraft } from "./document/drafts";
 import { listVersions, MAX_SNAPSHOT_BYTES, readVersion, recordVersion } from "./document/history";

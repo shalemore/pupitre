@@ -1,8 +1,8 @@
 import type { EditorView } from "@codemirror/view";
+import type { MenuEntry } from "@pupitre/desktop-api/menu";
 import type { Component } from "solid-js";
 import { render } from "solid-js/web";
 import { messageOf } from "@shared/errors";
-import type { MenuEntry } from "@shared/menu";
 import { LocaleProvider } from "@/components/locale-provider";
 import { MenuPopup } from "@/components/menu-popup";
 import { t } from "@/i18n";

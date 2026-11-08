@@ -1,7 +1,7 @@
+import { LINE_ENDINGS } from "@pupitre/desktop-api";
 import { BrowserWindow, dialog } from "electron";
 import fc from "fast-check";
 import { describe, expect, it, vi } from "vitest";
-import { LINE_ENDINGS } from "@shared/desktop-api";
 import {
   declaredEncoding,
   decodeDocument,
@@ -20,7 +20,7 @@ vi.mock("electron", () => ({
   dialog: { showMessageBox: vi.fn<typeof import("electron").dialog.showMessageBox>() },
 }));
 vi.mock("../i18n", async () => {
-  const { getDictionary } = await import("@shared/i18n");
+  const { getDictionary } = await import("@pupitre/i18n");
   return { t: () => getDictionary("en-US") };
 });
 

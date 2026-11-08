@@ -1,4 +1,4 @@
-import { truncateStyle } from "@/lib/styles";
+import { truncateStyle } from "@pupitre/ui/styles";
 import { css } from "@/styled-system/css";
 
 /** The classes of the folder tree: its rows, the field that renames one, and the tree itself. */

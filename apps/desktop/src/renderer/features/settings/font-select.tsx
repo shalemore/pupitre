@@ -1,7 +1,7 @@
+import { TITLE_BAR_CLEARANCE } from "@pupitre/desktop-api";
+import { Combobox, IconButton, type SelectOption } from "@pupitre/ui";
 import { RefreshCw } from "lucide-solid";
 import { createResource, createRoot, type Component, type JSX, Show } from "solid-js";
-import { TITLE_BAR_CLEARANCE } from "@shared/desktop-api";
-import { Combobox, IconButton, type SelectOption } from "@/components/ui";
 import { t } from "@/i18n";
 import { desktop, isMacOS } from "@/lib/desktop";
 import { GENERIC_FAMILIES, listFontFamilies, type FontFamily } from "@/lib/fonts";

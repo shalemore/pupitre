@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { extname, resolve } from "node:path";
-import type { ImportedTheme } from "@shared/desktop-api";
+import type { ImportedTheme } from "@pupitre/desktop-api";
 import { nameCollator } from "@shared/name-collator";
 import { isInside } from "../is-inside";
 

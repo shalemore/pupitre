@@ -1,4 +1,4 @@
-import { CONTENT_WIDTHS, DEFAULT_SETTINGS } from "@shared/settings";
+import { CONTENT_WIDTHS, DEFAULT_SETTINGS } from "@pupitre/settings";
 import { FALLBACK_FONTS } from "@/lib/fonts";
 import type { AlertType } from "@/lib/markdown/alerts";
 import { CODE_COLOR_TOKENS, codeHighlightStyle } from "@/lib/markdown/code-highlight";

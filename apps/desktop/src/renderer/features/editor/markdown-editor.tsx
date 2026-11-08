@@ -29,12 +29,12 @@ import {
 } from "@codemirror/search";
 import { Compartment, EditorState, type Extension, Prec } from "@codemirror/state";
 import { type Command, EditorView, keymap, placeholder } from "@codemirror/view";
+import type { FormatAction } from "@pupitre/desktop-api/format-actions";
+import { ScrollView } from "@pupitre/ui";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { debounce } from "@solid-primitives/scheduled";
 import { createEffect, on, onCleanup, onMount, type Component } from "solid-js";
 import { messageOf } from "@shared/errors";
-import type { FormatAction } from "@shared/format-actions";
-import { ScrollView } from "@/components/ui";
 import { imageCaptionClick, imageInput } from "@/features/editor/images/image-widget";
 import { closeInlineTags } from "@/features/editor/widgets/html-widget";
 import { t } from "@/i18n";

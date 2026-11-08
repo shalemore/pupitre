@@ -1,8 +1,7 @@
 import { statSync } from "node:fs";
 import { join } from "node:path";
 import { isDeepStrictEqual } from "node:util";
-import { app, nativeTheme, shell } from "electron";
-import type { WorkspaceState } from "@shared/desktop-api";
+import type { WorkspaceState } from "@pupitre/desktop-api";
 import {
   DEFAULT_SETTINGS,
   isWorkspaceKey,
@@ -15,7 +14,8 @@ import {
   splitSidebarState,
   withoutSetting,
   WORKSPACE_FILE,
-} from "@shared/settings";
+} from "@pupitre/settings";
+import { app, nativeTheme, shell } from "electron";
 import { broadcast } from "../broadcast";
 import { readJsonFile, writeJsonFile } from "../json-file";
 

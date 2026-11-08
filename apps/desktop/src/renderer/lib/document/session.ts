@@ -1,11 +1,11 @@
-import { debounce } from "@solid-primitives/scheduled";
-import { batch, createEffect, createMemo, createSignal, on, onCleanup } from "solid-js";
 import {
   IMAGE_FILE,
   type DraftSession,
   type LineEnding,
   type OpenedDocument,
-} from "@shared/desktop-api";
+} from "@pupitre/desktop-api";
+import { debounce } from "@solid-primitives/scheduled";
+import { batch, createEffect, createMemo, createSignal, on, onCleanup } from "solid-js";
 import { messageOf } from "@shared/errors";
 import { currentLocale, t } from "@/i18n";
 import { desktop } from "@/lib/desktop";
