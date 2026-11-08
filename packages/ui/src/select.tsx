@@ -37,9 +37,9 @@ const item = css({
   alignItems: "center",
   justifyContent: "space-between",
   gap: "4",
-  borderRadius: "lg",
+  borderRadius: "sm",
   paddingInline: "2.5",
-  paddingBlock: "1.5",
+  paddingBlock: "1",
   textStyle: "xs",
   outlineStyle: "none",
   cursor: "pointer",
@@ -74,7 +74,7 @@ const trigger = cva({
     alignItems: "center",
     justifyContent: "space-between",
     gap: "2",
-    borderRadius: "md",
+    borderRadius: "sm",
     outlineStyle: "none",
     cursor: "pointer",
     layerStyle: "interactive",
@@ -124,8 +124,9 @@ const chevron = css({
 const content = css({
   zIndex: "50",
   minWidth: "var(--kb-popper-anchor-width)",
+  borderRadius: "sm",
   transformOrigin: "var(--kb-popper-content-transform-origin)",
-  padding: "1",
+  padding: "0.5",
 });
 const listbox = css({ outlineStyle: "none" });
 

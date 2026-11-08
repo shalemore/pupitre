@@ -20,7 +20,7 @@ const groupTitle = css({
 const footer = css({
   display: "flex",
   alignItems: "center",
-  gap: "1",
+  justifyContent: "space-between",
   marginBlockStart: "auto",
   paddingInline: "2.5",
 });
