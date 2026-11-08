@@ -79,7 +79,7 @@ export interface PluginCommand {
 export interface PluginDefinition<S extends PluginSettingsDefinition = PluginSettingsDefinition> {
   /** The settings the plugin reads; the host renders and stores them. */
   settings?: S;
-  /** Commands the host lists in the palette and the Plugins menu. */
+  /** Commands the host lists in the command palette, namespaced by the plugin's id. */
   commands?: readonly PluginCommand[];
   activate(context: PluginContext, settings: z.infer<S["schema"]>): void | Promise<void>;
   deactivate?(): void | Promise<void>;
