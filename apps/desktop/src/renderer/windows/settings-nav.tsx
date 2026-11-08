@@ -17,21 +17,6 @@ import { Dynamic } from "solid-js/web";
 import { workspace } from "@/lib/workspace";
 import { css } from "@/styled-system/css";
 
-const brand = css({
-  display: "flex",
-  alignItems: "center",
-  gap: "2.5",
-  paddingInline: "2.5",
-  marginBlockEnd: "6",
-});
-const brandLogo = css({
-  width: "7",
-  height: "7",
-  flexShrink: 0,
-  borderRadius: "md",
-  boxShadow: "sm",
-});
-const brandName = css({ textStyle: "sm", fontWeight: "semibold", color: "foreground" });
 const footer = css({
   display: "flex",
   flexDirection: "column",
@@ -84,10 +69,6 @@ const WorkspaceScope: Component = () => (
 /** The settings pages, with the folder scope and the version at the bottom. */
 export const SettingsNav: Component = () => (
   <>
-    <div class={brand}>
-      <img src="./logo.svg" alt="" class={brandLogo} />
-      <span class={brandName}>Pupitre</span>
-    </div>
     <TabsList>
       <For each={SECTIONS}>
         {(section) => (
