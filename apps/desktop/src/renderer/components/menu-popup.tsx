@@ -41,7 +41,7 @@ const item = css({
   width: "full",
   alignItems: "center",
   gap: "6",
-  borderRadius: "md",
+  borderRadius: "sm",
   paddingInline: "2.5",
   paddingBlock: "1.5",
   textAlign: "start",

@@ -35,6 +35,7 @@ export const menuPanel = css({
   flexDirection: "column",
   overflowY: "auto",
   overscrollBehavior: "contain",
+  borderRadius: "sm",
   padding: "1",
   textStyle: "xs",
   color: "foreground",

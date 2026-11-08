@@ -31,7 +31,7 @@ const item = css({
   alignItems: "center",
   justifyContent: "space-between",
   gap: "3",
-  borderRadius: "lg",
+  borderRadius: "sm",
   paddingInline: "2.5",
   paddingBlock: "1.5",
   textStyle: "xs",
@@ -94,6 +94,7 @@ const content = css({
   zIndex: "50",
   width: "var(--kb-popper-anchor-width)",
   minWidth: "64",
+  borderRadius: "sm",
   transformOrigin: "var(--kb-popper-content-transform-origin)",
   padding: "1",
 });
