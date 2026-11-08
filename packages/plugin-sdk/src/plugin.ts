@@ -1,8 +1,6 @@
 import type { z } from "zod";
-import type { PluginSettings } from "./settings";
-
-/** Text the host shows: one string, or an English fallback and translations keyed by locale. */
-export type LocalizedText = string | ({ en: string } & Partial<Record<string, string>>);
+import type { LocalizedText } from "./localized";
+import type { PluginSettingsDefinition } from "./settings";
 
 /** A range in the document the editor counts in the code points of its own text. */
 export interface PluginSelection {
@@ -78,12 +76,12 @@ export interface PluginCommand {
   run(context: PluginContext): void | Promise<void>;
 }
 
-export interface PluginDefinition<S extends PluginSettings = PluginSettings> {
+export interface PluginDefinition<S extends PluginSettingsDefinition = PluginSettingsDefinition> {
   /** The settings the plugin reads; the host renders and stores them. */
   settings?: S;
   /** Commands the host lists in the palette and the Plugins menu. */
   commands?: readonly PluginCommand[];
-  activate(context: PluginContext, settings: z.infer<S>): void | Promise<void>;
+  activate(context: PluginContext, settings: z.infer<S["schema"]>): void | Promise<void>;
   deactivate?(): void | Promise<void>;
 }
 
@@ -98,7 +96,7 @@ function isRegister(value: unknown): value is Register {
  * Names a plugin and hands it to the host that is loading it. The call is a no-op outside a
  * host, so a built-in plugin can be imported like any other module.
  */
-export function definePlugin<S extends PluginSettings>(
+export function definePlugin<S extends PluginSettingsDefinition>(
   definition: PluginDefinition<S>,
 ): PluginDefinition<S> {
   const register: unknown = Reflect.get(globalThis, "__pupitreRegister");

@@ -1,3 +1,4 @@
+export * from "./localized";
 export * from "./manifest";
 export * from "./permissions";
 export * from "./plugin";

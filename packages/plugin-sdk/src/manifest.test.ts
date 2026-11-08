@@ -8,6 +8,18 @@ describe("pluginManifestSchema", () => {
     expect(parseManifest(minimal)).toEqual({ ...minimal, permissions: [] });
   });
 
+  it("keeps a name and description the plugin translated itself", () => {
+    const name = { en: "Trail", "zh-CN": "拖尾" };
+    const description = { en: "Draws a trail behind the pointer", "zh-CN": "在指针后绘制拖尾" };
+
+    expect(parseManifest({ ...minimal, name, description })).toEqual({
+      ...minimal,
+      name,
+      description,
+      permissions: [],
+    });
+  });
+
   it("keeps the modules and permissions a manifest declares", () => {
     const manifest = {
       ...minimal,

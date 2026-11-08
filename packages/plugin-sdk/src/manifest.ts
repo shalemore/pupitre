@@ -15,12 +15,18 @@ export const pluginSurfacesSchema = z.object({
   pointer: z.string().min(1).optional(),
 });
 
+/** A string, or English with the other locales the plugin ships its own text in. */
+const localizedTextSchema = z.union([
+  z.string().min(1),
+  z.object({ en: z.string().min(1) }).catchall(z.string().min(1)),
+]);
+
 export const pluginManifestSchema = z.object({
   /** Names the plugin and its folder; never changes when the plugin updates. */
   id: z.string().regex(ID, "must be lowercase letters, digits, dots or hyphens"),
-  name: z.string().min(1),
+  name: localizedTextSchema,
   version: z.string().regex(VERSION, "must be a semantic version"),
-  description: z.string().optional(),
+  description: localizedTextSchema.optional(),
   author: z.string().optional(),
   license: z.string().optional(),
   homepage: z.url().optional(),
