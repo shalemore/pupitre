@@ -1,8 +1,6 @@
 import { desktop } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
 import { IconButton, SegmentedControl, Separator, TabsList, TabsTrigger } from "@pupitre/ui";
-import { truncateStyle } from "@pupitre/ui/styles";
-import { fileNameOf } from "@pupitre/utils";
 import pkg from "@root/package.json";
 import {
   FileCode2,
@@ -34,30 +32,17 @@ const brandLogo = css({
   boxShadow: "sm",
 });
 const brandName = css({ textStyle: "sm", fontWeight: "semibold", color: "foreground" });
-const scopeBlock = css({
-  marginBlockEnd: "5",
-  padding: "2.5",
-  borderRadius: "lg",
-  borderWidth: "hairline",
-  borderStyle: "solid",
-  borderColor: "border.subtle",
-  backgroundColor: "surface.1",
-  "& > * + *": { marginBlockStart: "2" },
-});
-const scopeRow = css({ display: "flex", alignItems: "center", gap: "1", paddingInlineStart: "1" });
-const scopeName = css(truncateStyle, {
-  minWidth: "0",
-  flex: "1",
-  textStyle: "xs",
-  color: "muted.foreground",
-});
-const separator = css({ marginBlock: "2" });
-const version = css({
+const footer = css({
+  display: "flex",
+  flexDirection: "column",
+  gap: "3",
   marginBlockStart: "auto",
   paddingInline: "2.5",
-  textStyle: "2xs",
-  color: "tertiary",
 });
+const scopeRow = css({ display: "flex", alignItems: "center", gap: "1" });
+const scopeControl = css({ flex: "1", minWidth: "0" });
+const separator = css({ marginBlock: "2" });
+const version = css({ textStyle: "2xs", color: "tertiary" });
 
 /** What each settings page is called and drawn with; a separator opens each group of pages. */
 const SECTIONS = [
@@ -73,43 +58,36 @@ const SECTIONS = [
 /** The folder's settings, shown while the settings window is using them, or the global ones. */
 const WorkspaceScope: Component = () => (
   <Show when={workspace().root}>
-    {(root) => (
-      <div class={scopeBlock}>
-        <SegmentedControl<"global" | "folder">
-          value={workspace().active ? "folder" : "global"}
-          onChange={(scope) => void desktop.invoke("workspace:use", scope === "folder")}
-          options={[
-            { value: "global", label: t().settings.scopeGlobal },
-            { value: "folder", label: t().settings.scopeFolder },
-          ]}
-        />
-        <div class={scopeRow}>
-          <span dir="auto" class={scopeName} title={root()}>
-            {fileNameOf(root())}
-          </span>
-          <Show when={workspace().exists}>
-            <IconButton
-              label={t().settings.revealSettingsFile}
-              size="icon-2xs"
-              onClick={() => void desktop.invoke("workspace:reveal")}
-            >
-              <FolderOpen />
-            </IconButton>
-          </Show>
-        </div>
-      </div>
-    )}
+    <div class={scopeRow}>
+      <SegmentedControl<"global" | "folder">
+        class={scopeControl}
+        value={workspace().active ? "folder" : "global"}
+        onChange={(scope) => void desktop.invoke("workspace:use", scope === "folder")}
+        options={[
+          { value: "global", label: t().settings.scopeGlobal },
+          { value: "folder", label: t().settings.scopeFolder },
+        ]}
+      />
+      <Show when={workspace().exists}>
+        <IconButton
+          label={t().settings.revealSettingsFile}
+          size="icon-2xs"
+          onClick={() => void desktop.invoke("workspace:reveal")}
+        >
+          <FolderOpen />
+        </IconButton>
+      </Show>
+    </div>
   </Show>
 );
 
-/** The settings pages, and the folder scope when a folder is open. */
+/** The settings pages, with the folder scope and the version at the bottom. */
 export const SettingsNav: Component = () => (
   <>
     <div class={brand}>
       <img src="./logo.svg" alt="" class={brandLogo} />
       <span class={brandName}>Pupitre</span>
     </div>
-    <WorkspaceScope />
     <TabsList>
       <For each={SECTIONS}>
         {(section) => (
@@ -125,6 +103,9 @@ export const SettingsNav: Component = () => (
         )}
       </For>
     </TabsList>
-    <span class={version}>v{pkg.version}</span>
+    <footer class={footer}>
+      <WorkspaceScope />
+      <span class={version}>v{pkg.version}</span>
+    </footer>
   </>
 );
