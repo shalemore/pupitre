@@ -23,6 +23,8 @@ export type MenuEntry =
       checked?: boolean;
       /** The setting a check box stands for, so the window shows its live value rather than a snapshot. */
       setting?: BooleanSettingKey;
+      /** The check stands for the setting being off, as "Hide Sidebars" does for showing them. */
+      invert?: boolean;
       submenu?: readonly MenuEntry[];
     };
 

@@ -102,7 +102,9 @@ export const MenuEntries: Component<{
   const hasChecks = () => props.entries.some((entry) => entry.type === "item" && isCheck(entry));
   // A check that stands for a setting follows the live value, not the snapshot the menu opened with
   const checked = (entry: MenuItemEntry): boolean =>
-    entry.setting === undefined ? entry.checked === true : settings()[entry.setting];
+    entry.setting === undefined
+      ? entry.checked === true
+      : settings()[entry.setting] !== (entry.invert === true);
 
   return (
     <For each={props.entries}>

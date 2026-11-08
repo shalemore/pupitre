@@ -146,7 +146,12 @@ export function createDemoMenus(source: DemoMenuSource) {
             run: send({ id: "view.command-palette" }),
           },
           divider,
-          { label: m.toggleSidebar, run: send({ id: "view.toggle-sidebar" }) },
+          {
+            label: m.hideSidebar,
+            shortcut: SHORTCUTS.toggleSidebar,
+            checked: !source.settings().sidebarVisible,
+            run: () => source.updateSettings({ sidebarVisible: !source.settings().sidebarVisible }),
+          },
           {
             label: m.sourceMode,
             shortcut: SHORTCUTS.sourceMode,

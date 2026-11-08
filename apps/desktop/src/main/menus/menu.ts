@@ -34,6 +34,8 @@ const separator: MenuItemConstructorOptions = { type: "separator" };
 /** A menu item that a drawn check box follows the setting of. */
 type SettingMenu = Omit<MenuItemConstructorOptions, "submenu"> & {
   setting?: BooleanSettingKey;
+  /** The label names the setting being off, so the drawn check has to turn around. */
+  invert?: boolean;
   submenu?: SettingMenu[] | Menu;
 };
 
@@ -310,9 +312,13 @@ function buildTemplate(): SettingMenu[] {
         },
         separator,
         {
-          label: labels.toggleSidebar,
+          label: labels.hideSidebar,
+          type: "checkbox",
           accelerator: SHORTCUTS.toggleSidebar,
-          click: () => dispatchToMainWindow({ id: "view.toggle-sidebar" }),
+          checked: !getSettings().sidebarVisible,
+          setting: "sidebarVisible",
+          invert: true,
+          click: () => updateSettings({ sidebarVisible: !getSettings().sidebarVisible }),
         },
         {
           label: labels.toggleTheme,
@@ -470,6 +476,7 @@ function entriesOf(items: readonly MenuItem[]): MenuEntry[] {
     if (item.type === "separator") return [{ type: "separator" }];
     const shortcut = shortcutOf(item);
     const setting = settingOf(item);
+    const invert: unknown = "invert" in item ? item.invert : undefined;
     // Electron gives an item without a submenu null there, whatever its types say
     const submenu: Menu | undefined = item.submenu ?? undefined;
     return [
@@ -482,6 +489,7 @@ function entriesOf(items: readonly MenuItem[]): MenuEntry[] {
         enabled: item.enabled,
         ...(item.type === "checkbox" ? { checked: item.checked } : {}),
         ...(setting === undefined ? {} : { setting }),
+        ...(invert === true ? { invert: true } : {}),
         ...(submenu === undefined ? {} : { submenu: entriesOf(submenu.items) }),
       },
     ];
