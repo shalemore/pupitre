@@ -1,6 +1,7 @@
 import { getSearchQuery, SearchQuery } from "@codemirror/search";
 import type { EditorState } from "@codemirror/state";
 import type { EditorView } from "@codemirror/view";
+import { nextSlice } from "@/lib/time-slice";
 
 export interface SearchOptions {
   search: string;
@@ -59,7 +60,7 @@ async function countMatchesInSlices(
       if (match.value.from === from && match.value.to === to) current = total;
       if (total >= MAX_COUNTED_MATCHES) return { current, total, capped: true };
     }
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await nextSlice();
     if (cancelled()) return undefined;
     return runSlice();
   };

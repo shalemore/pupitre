@@ -3,6 +3,7 @@ import type { ChangeSet, EditorState } from "@codemirror/state";
 import { readableText } from "@pupitre/markdown";
 import { debounce } from "@solid-primitives/scheduled";
 import { countText, countTextFast, type TextStats } from "@/lib/text-stats";
+import { nextSlice } from "@/lib/time-slice";
 
 /**
  * Counting walks the whole document, and `Intl.Segmenter` takes about a second per megabyte. A
@@ -47,12 +48,6 @@ export function countRange(state: EditorState, from: number, to: number): TextSt
   }
   const text = readableText(state, from, to);
   return text.length <= EXACT_TEXT_LIMIT ? countText(text) : countTextFast(text);
-}
-
-function nextSlice(): Promise<void> {
-  // A timer rather than an idle callback: the count has to keep moving even while the editor is
-  // busy with a keystroke, and an idle slot that never comes would leave the title bar empty
-  return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
 /**
