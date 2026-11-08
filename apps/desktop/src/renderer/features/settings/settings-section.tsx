@@ -32,7 +32,12 @@ const group = css({
 });
 const nested = css({ paddingInlineStart: "5" });
 const titleRow = css({ display: "flex", alignItems: "center", gap: "1.5" });
-const resetButton = css({ animationName: "appear", animationDuration: "snap" });
+// The icon is taller than the title's line; negative margins keep the row from growing when it appears
+const resetButton = css({
+  animationName: "appear",
+  animationDuration: "snap",
+  marginBlock: "-0.5",
+});
 
 /** A titled page of settings; its children are groups. */
 export const SettingsSection: ParentComponent<{ title: string; description?: string }> = (
