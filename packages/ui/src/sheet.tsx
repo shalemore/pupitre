@@ -1,7 +1,7 @@
 import { Dialog } from "@kobalte/core/dialog";
 import type { Component, JSX } from "solid-js";
-import { FLOATING_PANEL, srOnly } from "@/lib/styles";
-import { css, cx } from "@/styled-system/css";
+import { css, cx } from "./styled-system/css";
+import { FLOATING_PANEL, srOnly } from "./styles";
 
 export interface SheetProps {
   /** Names the dialog, for anyone who cannot see the window it covers. */

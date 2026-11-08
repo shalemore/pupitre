@@ -2,10 +2,10 @@ import { Combobox as KobalteCombobox } from "@kobalte/core/combobox";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { Check, ChevronDown } from "lucide-solid";
 import { createSignal, Show } from "solid-js";
-import { FLOATING_PANEL, truncateStyle } from "@/lib/styles";
-import { css, cx } from "@/styled-system/css";
 import { ScrollView, type ScrollViewProps } from "./scroll-view";
 import type { SelectOption } from "./select";
+import { css, cx } from "./styled-system/css";
+import { FLOATING_PANEL, truncateStyle } from "./styles";
 
 export interface ComboboxProps {
   value: string;

@@ -1,5 +1,5 @@
 import { type JSX, splitProps } from "solid-js";
-import { css, cx } from "@/styled-system/css";
+import { css, cx } from "./styled-system/css";
 
 const kbd = css({
   fontFamily: "mono",

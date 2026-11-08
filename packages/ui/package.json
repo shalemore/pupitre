@@ -1,0 +1,36 @@
+{
+  "name": "@pupitre/ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./src/index.ts"
+    },
+    "./styles": {
+      "types": "./dist/styles.d.ts",
+      "import": "./src/styles.ts"
+    }
+  },
+  "scripts": {
+    "prepare": "panda codegen"
+  },
+  "dependencies": {
+    "@kobalte/core": "^0.13.14",
+    "@solid-primitives/event-listener": "^2.4.6",
+    "@solid-primitives/scheduled": "^1.5.3",
+    "lucide-solid": "^1.16.0"
+  },
+  "devDependencies": {
+    "@pandacss/dev": "^2.4.0",
+    "@pandacss/preset-base": "^2.4.0",
+    "@pandacss/preset-panda": "^2.4.0",
+    "@pupitre/panda-preset": "workspace:*"
+  },
+  "peerDependencies": {
+    "solid-js": "^1.9.5"
+  }
+}

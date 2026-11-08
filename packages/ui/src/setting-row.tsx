@@ -1,5 +1,5 @@
 import { type JSX, Show, splitProps } from "solid-js";
-import { css, cx } from "@/styled-system/css";
+import { css, cx } from "./styled-system/css";
 
 export interface SettingRowProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "title"> {
   title: JSX.Element;

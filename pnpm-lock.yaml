@@ -105,9 +105,15 @@ importers:
       '@pupitre/i18n':
         specifier: workspace:*
         version: link:packages/i18n
+      '@pupitre/panda-preset':
+        specifier: workspace:*
+        version: link:packages/panda-preset
       '@pupitre/settings':
         specifier: workspace:*
         version: link:packages/settings
+      '@pupitre/ui':
+        specifier: workspace:*
+        version: link:packages/ui
       '@solid-primitives/event-listener':
         specifier: ^2.4.6
         version: 2.4.6(solid-js@1.9.17)
@@ -240,6 +246,12 @@ importers:
 
   packages/i18n: {}
 
+  packages/panda-preset:
+    dependencies:
+      '@pandacss/dev':
+        specifier: ^2.4.0
+        version: 2.4.0(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(postcss@8.5.31)
+
   packages/settings:
     dependencies:
       '@pupitre/i18n':
@@ -248,6 +260,37 @@ importers:
       zod:
         specifier: ^4.6.7
         version: 4.6.7
+
+  packages/ui:
+    dependencies:
+      '@kobalte/core':
+        specifier: ^0.13.14
+        version: 0.13.14(solid-js@1.9.17)
+      '@solid-primitives/event-listener':
+        specifier: ^2.4.6
+        version: 2.4.6(solid-js@1.9.17)
+      '@solid-primitives/scheduled':
+        specifier: ^1.5.3
+        version: 1.5.3(solid-js@1.9.17)
+      lucide-solid:
+        specifier: ^1.16.0
+        version: 1.61.0(solid-js@1.9.17)
+      solid-js:
+        specifier: ^1.9.5
+        version: 1.9.17
+    devDependencies:
+      '@pandacss/dev':
+        specifier: ^2.4.0
+        version: 2.4.0(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(postcss@8.5.31)
+      '@pandacss/preset-base':
+        specifier: ^2.4.0
+        version: 2.4.0
+      '@pandacss/preset-panda':
+        specifier: ^2.4.0
+        version: 2.4.0
+      '@pupitre/panda-preset':
+        specifier: workspace:*
+        version: link:../panda-preset
 
 packages:
 

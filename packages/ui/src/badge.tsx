@@ -1,5 +1,5 @@
 import { type JSX, splitProps } from "solid-js";
-import { cva, cx, type RecipeVariantProps } from "@/styled-system/css";
+import { cva, cx, type RecipeVariantProps } from "./styled-system/css";
 
 const badgeVariants = cva({
   base: {

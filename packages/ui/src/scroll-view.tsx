@@ -9,9 +9,9 @@ import {
   type ValidComponent,
 } from "solid-js";
 import { Dynamic } from "solid-js/web";
-import { settings } from "@/lib/settings";
-import { SCROLL_FADE } from "@/lib/styles";
-import { css, cx } from "@/styled-system/css";
+import { useScrollViewPreferences } from "./scroll-view-preferences";
+import { css, cx } from "./styled-system/css";
+import { SCROLL_FADE } from "./styles";
 
 const IDLE_MS = 1200;
 /** Space kept free at both ends of the track, so the thumb clears rounded corners. */
@@ -108,6 +108,7 @@ export function ScrollView(props: ScrollViewProps) {
   const [scrolling, setScrolling] = createSignal(false);
   const [hovering, setHovering] = createSignal(false);
   const [dragging, setDragging] = createSignal(false);
+  const preferences = useScrollViewPreferences();
   let element: HTMLDivElement | undefined;
   let trackElement: HTMLDivElement | undefined;
   let dragStart = { pointerY: 0, scrollTop: 0 };
@@ -120,7 +121,7 @@ export function ScrollView(props: ScrollViewProps) {
   const stopScrolling = debounce(() => setScrolling(false), IDLE_MS);
 
   const visible = () => {
-    const { scrollbar } = settings();
+    const { scrollbar } = preferences();
     return (
       scrollbar === "always" || (scrolling() && scrollbar === "auto") || dragging() || hovering()
     );
@@ -165,7 +166,7 @@ export function ScrollView(props: ScrollViewProps) {
       data-slot="scroll-view"
       data-overflow={overflow() || undefined}
       data-scroll-view
-      class={cx(view, settings().scrollFade && SCROLL_FADE, local.class)}
+      class={cx(view, preferences().fade && SCROLL_FADE, local.class)}
       onScroll={() => {
         update();
         setScrolling(true);
@@ -179,7 +180,7 @@ export function ScrollView(props: ScrollViewProps) {
         class={sticky}
         style={{ "margin-inline-end": `-${thumbGeometry().padding}px` }}
       >
-        <Show when={settings().scrollbar !== "never" && thumbGeometry().height > 0}>
+        <Show when={preferences().scrollbar !== "never" && thumbGeometry().height > 0}>
           <div
             ref={(node) => (trackElement = node)}
             class={track}

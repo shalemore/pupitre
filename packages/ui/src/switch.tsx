@@ -1,5 +1,5 @@
 import { Switch as KobalteSwitch } from "@kobalte/core/switch";
-import { css } from "@/styled-system/css";
+import { css } from "./styled-system/css";
 
 export interface SwitchProps {
   checked: boolean;

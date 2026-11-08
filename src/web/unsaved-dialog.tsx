@@ -1,7 +1,7 @@
 import { onMount, type Component } from "solid-js";
 import { render } from "solid-js/web";
 import type { UnsavedChoice } from "@shared/desktop-api";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui";
 import { css, cx } from "@/styled-system/css";
 
 const panel = css({

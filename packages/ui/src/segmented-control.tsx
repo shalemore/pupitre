@@ -1,7 +1,7 @@
 import { SegmentedControl as KobalteSegmentedControl } from "@kobalte/core/segmented-control";
 import { For, type JSX } from "solid-js";
-import { truncate } from "@/lib/styles";
-import { css, cx } from "@/styled-system/css";
+import { css, cx } from "./styled-system/css";
+import { truncate } from "./styles";
 
 export interface SegmentedOption<T extends string> {
   value: T;

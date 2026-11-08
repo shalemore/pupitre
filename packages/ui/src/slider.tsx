@@ -1,5 +1,5 @@
 import { Slider as KobalteSlider } from "@kobalte/core/slider";
-import { css } from "@/styled-system/css";
+import { css } from "./styled-system/css";
 
 export interface SliderProps {
   value: number;

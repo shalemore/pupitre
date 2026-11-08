@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import pandaConfig from "../panda.config.ts";
+import { pandaPreset } from "@pupitre/panda-preset";
 import { TOKEN_NAMES } from "../src/shared/design-tokens.ts";
 
 /**
@@ -175,11 +175,11 @@ for (const token of TOKEN_NAMES) {
   }
 }
 
-// A token the Panda config aliases is declared too: a typo there would silently fall back
-for (const token of referencedTokens(pandaConfig.theme.extend?.tokens)) {
+// A token the Panda preset aliases is declared too: a typo there would silently fall back
+for (const token of referencedTokens(pandaPreset.theme?.extend?.tokens)) {
   if (!known.has(token)) {
     problems.push({
-      file: "panda.config.ts",
+      file: "packages/panda-preset/src/index.ts",
       line: 1,
       message: `\`${token}\` is aliased by a Panda token but no stylesheet declares it`,
     });

@@ -1,6 +1,6 @@
 import { type JSX, splitProps } from "solid-js";
-import { PRESSABLE } from "@/lib/styles";
-import { cva, cx, type RecipeVariantProps } from "@/styled-system/css";
+import { cva, cx, type RecipeVariantProps } from "./styled-system/css";
+import { PRESSABLE } from "./styles";
 
 export const buttonVariants = cva({
   base: {

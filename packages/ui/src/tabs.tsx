@@ -1,6 +1,6 @@
 import { Tabs as KobalteTabs } from "@kobalte/core/tabs";
 import type { JSX } from "solid-js";
-import { css, cx } from "@/styled-system/css";
+import { css, cx } from "./styled-system/css";
 
 /**
  * Vertical tabs for the settings window sidebar. Arrow-key navigation, focus management and ARIA attributes are handled by Kobalte,

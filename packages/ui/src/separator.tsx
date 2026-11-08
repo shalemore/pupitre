@@ -1,6 +1,6 @@
 import { Separator as KobalteSeparator } from "@kobalte/core/separator";
 import { type JSX, splitProps } from "solid-js";
-import { css, cx } from "@/styled-system/css";
+import { css, cx } from "./styled-system/css";
 
 export interface SeparatorProps extends JSX.HTMLAttributes<HTMLDivElement> {
   orientation?: "horizontal" | "vertical";

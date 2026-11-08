@@ -1,7 +1,7 @@
 import { ToggleButton as KobalteToggleButton } from "@kobalte/core/toggle-button";
 import { type JSX, splitProps } from "solid-js";
-import { css, cx } from "@/styled-system/css";
 import { buttonVariants, type ButtonProps } from "./button";
+import { css, cx } from "./styled-system/css";
 
 export interface ToggleIconButtonProps {
   /** Whether the button is on. */

@@ -7,6 +7,8 @@
 /blob-report
 /coverage
 /src/renderer/styled-system
+/packages/*/styled-system
+/packages/*/src/styled-system
 /packages/*/dist
 pnpm-debug.log*
 *.log

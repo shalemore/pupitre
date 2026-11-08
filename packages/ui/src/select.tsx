@@ -1,10 +1,10 @@
 import { Select as KobalteSelect } from "@kobalte/core/select";
 import { Check, ChevronDown } from "lucide-solid";
 import { type JSX, Show } from "solid-js";
-import { FLOATING_PANEL, truncate, truncateStyle } from "@/lib/styles";
-import { css, cx } from "@/styled-system/css";
 import { Badge } from "./badge";
 import { ScrollView, type ScrollViewProps } from "./scroll-view";
+import { css, cx } from "./styled-system/css";
+import { FLOATING_PANEL, truncate, truncateStyle } from "./styles";
 
 export interface SelectOption<T extends string = string> {
   value: T;

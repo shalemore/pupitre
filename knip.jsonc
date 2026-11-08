@@ -25,6 +25,6 @@
     // exported for those who write against it
     "src/shared/desktop-api.ts": ["types"],
     // The ui barrel is a public boundary: a primitive's option type is exported for its callers
-    "src/renderer/components/ui/segmented-control.tsx": ["types"],
+    "packages/ui/src/segmented-control.tsx": ["types"],
   },
 }

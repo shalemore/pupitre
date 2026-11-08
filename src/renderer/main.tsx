@@ -1,10 +1,29 @@
 import "@/app.css";
+import type { JSX } from "solid-js";
 import { render } from "solid-js/web";
 import { LocaleProvider } from "@/components/locale-provider";
+import { ScrollViewPreferencesProvider } from "@/components/ui";
 import { setupAppearance } from "@/lib/appearance";
+import { settings } from "@/lib/settings";
 import { MainWindow } from "@/windows/main-window";
 
 setupAppearance();
+
+// The scrollbar and edge fade are settings of the app; the UI package only knows their shape
+const scrollPreferences = () => ({
+  scrollbar: settings().scrollbar,
+  fade: settings().scrollFade,
+});
+
+function Root(props: { children: JSX.Element }) {
+  return (
+    <LocaleProvider>
+      <ScrollViewPreferencesProvider value={scrollPreferences}>
+        {props.children}
+      </ScrollViewPreferencesProvider>
+    </LocaleProvider>
+  );
+}
 
 const container = document.getElementById("root");
 if (container) {
@@ -14,9 +33,9 @@ if (container) {
     void import("@/windows/settings-window").then(({ SettingsWindow }) =>
       render(
         () => (
-          <LocaleProvider>
+          <Root>
             <SettingsWindow />
-          </LocaleProvider>
+          </Root>
         ),
         container,
       ),
@@ -24,9 +43,9 @@ if (container) {
   } else {
     render(
       () => (
-        <LocaleProvider>
+        <Root>
           <MainWindow />
-        </LocaleProvider>
+        </Root>
       ),
       container,
     );

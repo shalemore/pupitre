@@ -4,6 +4,8 @@
     { "path": "./packages/i18n" },
     { "path": "./packages/settings" },
     { "path": "./packages/desktop-api" },
+    { "path": "./packages/panda-preset" },
+    { "path": "./packages/ui" },
     { "path": "./tsconfig.node.json" },
     { "path": "./tsconfig.web.json" },
     { "path": "./tsconfig.e2e.json" }
