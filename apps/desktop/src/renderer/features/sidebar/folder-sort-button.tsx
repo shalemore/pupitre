@@ -2,28 +2,17 @@ import type { MenuEntry } from "@pupitre/desktop-api/menu";
 import { t } from "@pupitre/i18n/solid";
 import type { Settings } from "@pupitre/settings";
 import { IconButton } from "@pupitre/ui";
+import { quietButton } from "@pupitre/ui/styles";
 import { ArrowUpDown } from "lucide-solid";
 import { Show, type Component } from "solid-js";
 import { MenuPopup } from "@/components/menu-popup";
 import { createMenu } from "@/lib/menu-state";
 import { settings, updateSettings } from "@/lib/settings";
-import { css } from "@/styled-system/css";
 
 type FolderSort = Settings["folderSort"];
 
 /** The orders the menu offers, in the order it shows them. */
 const SORTS: readonly FolderSort[] = ["name", "modified", "created"];
-
-const sortButton = css({
-  flexShrink: 0,
-  color: "tertiary",
-  opacity: 0.5,
-  transitionProperty: "opacity",
-  transitionDuration: "ui",
-  transitionTimingFunction: "outExpo",
-  _hover: { opacity: 1 },
-  _focusVisible: { opacity: 1 },
-});
 
 function labelOf(sort: FolderSort): string {
   switch (sort) {
@@ -61,7 +50,7 @@ export const FolderSortButton: Component<{
         size="icon-2xs"
         aria-haspopup="menu"
         aria-expanded={panel.open() !== undefined}
-        class={sortButton}
+        class={quietButton}
         onClick={(event) => {
           if (panel.open() !== undefined) panel.close();
           // A press on the button while the menu is open closes it from outside first, and the

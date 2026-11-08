@@ -6,6 +6,7 @@ import { truncateGrow } from "@pupitre/ui/styles";
 import { type Component, createMemo, createResource } from "solid-js";
 import { formatFileSize } from "@shared/file-size";
 import { PaletteSheet } from "@/components/palette-sheet";
+import { dateTimeFormat } from "@/lib/date-format";
 import { css } from "@/styled-system/css";
 
 export interface VersionHistoryProps {
@@ -38,17 +39,10 @@ export const VersionHistory: Component<VersionHistoryProps> = (props) => {
     () => props.path,
     (path) => desktop.invoke("history:list", path),
   );
-  const timeFormat = createMemo(
-    () =>
-      new Intl.DateTimeFormat(intlLocale(currentLocale()), {
-        dateStyle: "medium",
-        timeStyle: "short",
-      }),
-  );
   const rows = createMemo(() =>
     (versions() ?? []).map((entry): VersionRow => ({
       entry,
-      time: timeFormat().format(entry.savedAt),
+      time: dateTimeFormat().format(entry.savedAt),
     })),
   );
 

@@ -2,7 +2,7 @@ import { ContextMenu } from "@kobalte/core/context-menu";
 import type { FolderEntry } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import type { MenuEntry } from "@pupitre/desktop-api/menu";
-import { currentLocale, t } from "@pupitre/i18n/solid";
+import { t } from "@pupitre/i18n/solid";
 import { excerptOf } from "@pupitre/markdown";
 import { IconButton, ListItem, rowIndent } from "@pupitre/ui";
 import { FLOATING_PANEL, menuPanel } from "@pupitre/ui/styles";
@@ -12,7 +12,6 @@ import {
   createEffect,
   createMemo,
   createResource,
-  createRoot,
   For,
   on,
   onCleanup,
@@ -20,6 +19,7 @@ import {
   Show,
 } from "solid-js";
 import { MenuEntries } from "@/components/menu-popup";
+import { dateTimeFormat } from "@/lib/date-format";
 import { settings } from "@/lib/settings";
 import { cx } from "@/styled-system/css";
 import {
@@ -48,13 +48,6 @@ export interface RowMenu {
   entries: readonly MenuEntry[];
   actions: ReadonlyMap<string, () => void>;
 }
-
-/** The date and time under a file row, written the way the interface language writes them. */
-const dateFormat = createRoot(() =>
-  createMemo(
-    () => new Intl.DateTimeFormat(currentLocale(), { dateStyle: "medium", timeStyle: "short" }),
-  ),
-);
 
 export interface TreeContext {
   /** Whether the row at `path` is the document shown in the editor. */
@@ -234,7 +227,7 @@ export const FolderRow: Component<{
   const date = createMemo(() => {
     const time = props.entry.time;
     if (time === undefined || isDirectory() || settings().folderSort === "name") return undefined;
-    return dateFormat().format(time);
+    return dateTimeFormat().format(time);
   });
 
   return (
