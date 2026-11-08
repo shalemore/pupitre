@@ -2,10 +2,15 @@
   "$schema": "./node_modules/knip/schema.json",
   // The electron-vite, Vite, Vitest and Playwright plugins read their own configs, so the entries
   // they cannot see are the ones listed here.
-  "entry": [
-    // `npm run test:perf` runs this config; the Playwright plugin only reads playwright.config.ts
-    "playwright.perf.config.ts",
-  ],
+  "workspaces": {
+    ".": {
+      // `pnpm run test:perf` runs this config; the Playwright plugin only reads playwright.config.ts
+      "entry": ["playwright.perf.config.ts"],
+    },
+    "packages/*": {
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+  },
   "ignoreBinaries": [
     // A Linux system tool: src/main/windows.ts reads where the desktop puts the caption buttons
     "gsettings",

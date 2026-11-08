@@ -374,11 +374,11 @@ These are the failure modes seen in this repository, not hypothetical ones.
 
 No tool can prove that a sentence means what the English means. These catch the mechanical layer:
 
-- `npm run typecheck` and `npm test` — the dictionaries are typed by `TranslationSchema`; a missing
+- `pnpm run typecheck` and `pnpm test` — the dictionaries are typed by `TranslationSchema`; a missing
   key or a broken function fails the build. `src/shared/i18n/typography.test.ts` checks the two
   rules a machine can check: every UI ellipsis is U+2026, and Chinese keeps a space between Han and
   Latin letters or digits.
-- `npm run lint` — formatting, lint rules and import order (oxfmt's `sortImports`). It does not spell-check.
+- `pnpm run lint` — formatting, lint rules and import order (oxfmt's `sortImports`). It does not spell-check.
 - CI runs `lint`, `typecheck`, `knip`, `test:coverage`, `build`, `check:bundle`, `test:e2e` and
   `build:web`. None of them spell-check a dictionary; spelling and grammar need the external tools
   below.
@@ -435,7 +435,7 @@ file and point to it from the locale file in one line.
 - [ ] The only ASCII `...` left is the Smart Dashes input example; every other UI ellipsis is `…`.
 - [ ] Quotes, dashes, commas and question marks are the language's own.
 - [ ] `Pupitre`, file names, code, formats and keys are unchanged.
-- [ ] `npm run lint`, `npm run typecheck` and `npm test` pass.
+- [ ] `pnpm run lint`, `pnpm run typecheck` and `pnpm test` pass.
 
 ## Known gaps
 

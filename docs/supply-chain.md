@@ -8,7 +8,7 @@ repository settings a workflow cannot turn on itself.
 `release.yml` builds the installers of three platforms in parallel jobs and collects them in one
 draft release. Each build job also leaves, beside them:
 
-- `pupitre-<platform>.cdx.json`, the CycloneDX SBOM of the dependencies `npm sbom` resolves from the
+- `pupitre-<platform>.cdx.json`, the CycloneDX SBOM of the dependencies `pnpm sbom` resolves from the
   lockfile.
 - A build provenance attestation for every installer of that job, signed by GitHub Actions, which
   names the repository, the commit and the workflow run the file came from.
@@ -68,7 +68,7 @@ path, since they are part of this repository and reviewed with it.
 
 Renovate keeps those digests current. `renovate.json` extends `config:recommended` for the usual
 update policy and `:pinDigests`, which writes the SHA and the comment when a new version of an action
-is out, and enables lock file maintenance so `package-lock.json` is refreshed without a dependency
+is out, and enables lock file maintenance so `pnpm-lock.yaml` is refreshed without a dependency
 changing. Its pull requests go through CI like any other change. Renovate has to be installed on the
 repository — the hosted app for a public repository — before any of it runs.
 
@@ -83,7 +83,7 @@ A repository owner does these once, in Settings:
   advisory that only the maintainers see, instead of a public issue. [SECURITY.md](../SECURITY.md)
   sends a reporter there.
 - **Dependabot alerts** and the dependency graph (Settings › Code security) — turns on the alerts the
-  npm advisories in `package-lock.json` produce. Alerts are what an updated lockfile closes, and
+  npm advisories in `pnpm-lock.yaml` produce. Alerts are what an updated lockfile closes, and
   Dependabot can open the pull request for one.
 - **Code scanning** — the CodeQL and Scorecard workflows upload their SARIF to it, and enabling it
   is what makes the Security tab show the alerts at all.

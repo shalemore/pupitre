@@ -12,6 +12,11 @@
     "allowImportingTsExtensions": true,
     "paths": { "@shared/*": ["./src/shared/*"] }
   },
+  "references": [
+    { "path": "./packages/i18n" },
+    { "path": "./packages/settings" },
+    { "path": "./packages/desktop-api" }
+  ],
   "include": [
     "oxlint.config.ts",
     "electron.vite.config.ts",

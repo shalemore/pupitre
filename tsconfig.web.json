@@ -19,6 +19,11 @@
       "@agents/*": ["./agents/*"]
     }
   },
+  "references": [
+    { "path": "./packages/i18n" },
+    { "path": "./packages/settings" },
+    { "path": "./packages/desktop-api" }
+  ],
   // The benchmark parses through the renderer's language, so it is checked with the DOM lib
   "include": ["src/renderer", "src/shared", "src/web", "bench"]
 }

@@ -2,7 +2,7 @@ import { readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 /**
- * Checks the size of the renderer bundle after `npm run build`. Mermaid and MathJax are chunks the
+ * Checks the size of the renderer bundle after `pnpm run build`. Mermaid and MathJax are chunks the
  * app loads when a document needs them, so a change that imports one of them eagerly, or a second
  * copy of a dependency, shows up here as a jump long before a user notices a slow start. The
  * budgets are the 0.7.2 sizes with room for ordinary dependency updates; they are not a target to
@@ -34,7 +34,7 @@ function readChunks(): Chunk[] {
   try {
     names = readdirSync(ASSETS);
   } catch {
-    console.error(`${ASSETS} is missing: run \`npm run build\` before \`npm run check:bundle\`.`);
+    console.error(`${ASSETS} is missing: run \`pnpm run build\` before \`pnpm run check:bundle\`.`);
     process.exit(1);
   }
   return names

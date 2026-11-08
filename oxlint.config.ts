@@ -17,9 +17,10 @@ export default defineConfig({
     "unicorn/consistent-function-scoping": "off",
   },
   ignorePatterns: [
-    "node_modules/**",
+    "**/node_modules/**",
     "out/**",
     "release/**",
+    "packages/*/dist/**",
     // Panda generates it; there is nothing to fix by hand there
     "src/renderer/styled-system/**",
   ],

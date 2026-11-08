@@ -1,0 +1,20 @@
+# The app lives at the repository root; packages/ holds what it shares with others.
+packages:
+  - packages/*
+
+# Dependencies with native build steps. pnpm 10 blocks every other package's scripts by default.
+onlyBuiltDependencies:
+  - "@parcel/watcher"
+  - fsevents
+
+ignoredBuiltDependencies:
+  - electron-winstaller
+
+# Kept from the npm manifest; pnpm reads them here.
+overrides:
+  minimatch: ^11.0.3
+  "rimraf@^6>glob": ^14.0.3
+
+# The upstream incremental-parse fix, in pnpm's package-root patch format.
+patchedDependencies:
+  "@lezer/markdown@1.8.1": patches/@lezer__markdown@1.8.1.patch

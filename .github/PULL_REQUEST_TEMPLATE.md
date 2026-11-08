@@ -8,13 +8,13 @@ Closes #
 
 ## Tests
 
-- [ ] `npm run lint`
-- [ ] `npm run typecheck`
-- [ ] `npm run knip`
+- [ ] `pnpm run lint`
+- [ ] `pnpm run typecheck`
+- [ ] `pnpm run knip`
 - [ ] `npm test`
-- [ ] `npm run build`
-- [ ] `npm run check:bundle`
-- [ ] `npm run test:e2e`, when the change touches the main process, the IPC contract or a covered
+- [ ] `pnpm run build`
+- [ ] `pnpm run check:bundle`
+- [ ] `pnpm run test:e2e`, when the change touches the main process, the IPC contract or a covered
       flow
 
 ## Before you ask for a review

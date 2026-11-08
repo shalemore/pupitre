@@ -1,13 +1,13 @@
 # Performance
 
 Three measurements sit outside the default checks: the parser benchmark, the end-to-end timings and
-the size of the renderer bundle. None of them runs in `npm test` or in the CI test step; the bundle
+the size of the renderer bundle. None of them runs in `pnpm test` or in the CI test step; the bundle
 check is the only one CI runs, right after the build.
 
 ## The parser benchmark
 
 ```sh
-npm run bench
+pnpm run bench
 ```
 
 Runs `bench/parse.bench.ts` with `vitest.bench.config.ts` in Node, for about a minute, and prints a
@@ -31,12 +31,12 @@ timings below, indirectly, because the app has to draw a document to show it.
 ## The end-to-end spec
 
 ```sh
-npm run build
-npm run test:perf
+pnpm run build
+pnpm run test:perf
 ```
 
-`npm run test:perf` runs only `e2e/performance.spec.ts`, through `playwright.perf.config.ts`.
-`npm run test:e2e` ignores it: it opens documents of megabytes and takes minutes, and what it says
+`pnpm run test:perf` runs only `e2e/performance.spec.ts`, through `playwright.perf.config.ts`.
+`pnpm run test:e2e` ignores it: it opens documents of megabytes and takes minutes, and what it says
 belongs to the machine it ran on.
 
 The script wraps Playwright in `offstage-windows`, which keeps the app's windows off the screen on
@@ -45,7 +45,7 @@ macOS and Linux. `OFFSTAGE=0` in the environment puts the windows back on screen
 to watch. The same command without npm is:
 
 ```sh
-npx offstage-windows npx playwright test --config=playwright.perf.config.ts
+pnpm exec offstage-windows pnpm exec playwright test --config=playwright.perf.config.ts
 ```
 
 What it measures, on the built app:
@@ -145,7 +145,7 @@ GitHub's documentation is Markdown with front matter, tables, fences, links and 
 _War and Peace_ from Project Gutenberg is long prose. Both are downloaded, never committed:
 
 ```sh
-npm run perf:fixtures
+pnpm run perf:fixtures
 ```
 
 The script writes `markdown-100mb.md`, `markdown-200mb.md` and `prose-100mb.md` to
@@ -166,8 +166,8 @@ has more non-ASCII text and more lines to scan; typing and find stay in the same
 ## Bundle size
 
 ```sh
-npm run build
-npm run check:bundle
+pnpm run build
+pnpm run check:bundle
 ```
 
 `scripts/check-bundle-size.ts` reads `out/renderer/assets/*.js`, prints the total and the largest
@@ -182,12 +182,12 @@ window, the sample documents and the editor moved into their own chunks; the edi
 its own CodeMirror and language data only when a document is shown. The check exists to catch a
 change that pulls code into the entry which is meant to load on demand — Mermaid and MathJax are
 the large ones, and an eager import of either shows up as a chunk growing past the limit. CI runs
-the check after `npm run build`.
+the check after `pnpm run build`.
 
 ## Installer size
 
 ```sh
-npm run dist
+pnpm run dist
 ```
 
 The Windows x64 NSIS installer of this build is **108 MiB**; the unpacked app is 357 MiB. Two
@@ -208,36 +208,36 @@ Measured on 2026-10-27 on an AMD Ryzen 7 7840H, 28 GiB, Windows 11 x64, Node 26.
 this machine's, and neither another machine nor the same machine on another day will reproduce them
 closely: use them to see a change against a run of your own, not as a target.
 
-| Parser benchmark (`npm run bench`) |   Mean |
-| :--------------------------------- | -----: |
-| full parse of 1 MB of prose        | 328 ms |
-| full parse of 1 MB of tables       | 231 ms |
-| reparse after one typed character  | 4.2 ms |
+| Parser benchmark (`pnpm run bench`) |   Mean |
+| :---------------------------------- | -----: |
+| full parse of 1 MB of prose         | 328 ms |
+| full parse of 1 MB of tables        | 231 ms |
+| reparse after one typed character   | 4.2 ms |
 
-| End-to-end (`npm run test:perf`) |   Result |
-| :------------------------------- | -------: |
-| cold start to `.cm-content`      |   1.32 s |
-| open 200 KB to the tail          |   1.55 s |
-| typing 200 KB, median            |    21 ms |
-| typing 200 KB, p95               |    30 ms |
-| open 5 MB to the tail            |   1.43 s |
-| counts 5 MB, from launch         |   1.45 s |
-| typing 5 MB, median              |    26 ms |
-| typing 5 MB, p95                 |    36 ms |
-| main-process RSS after 5 MB      |  151 MiB |
-| open 100 MB to the tail          |   1.73 s |
-| counts 100 MB, from launch       |   2.03 s |
-| select all 100 MB                |    22 ms |
-| find typing 100 MB, median       |    20 ms |
-| find typing 100 MB, p95          |    22 ms |
-| find next 100 MB                 |    23 ms |
-| main-process RSS after 100 MB    |  349 MiB |
-| open 200 MB to the tail          |   1.63 s |
-| counts 200 MB, from launch       |   3.28 s |
-| main-process RSS after 200 MB    |  548 MiB |
-| open 500 MB to the tail          |   2.72 s |
-| counts 500 MB, from launch       |   7.43 s |
-| main-process RSS after 500 MB    | 1149 MiB |
+| End-to-end (`pnpm run test:perf`) |   Result |
+| :-------------------------------- | -------: |
+| cold start to `.cm-content`       |   1.32 s |
+| open 200 KB to the tail           |   1.55 s |
+| typing 200 KB, median             |    21 ms |
+| typing 200 KB, p95                |    30 ms |
+| open 5 MB to the tail             |   1.43 s |
+| counts 5 MB, from launch          |   1.45 s |
+| typing 5 MB, median               |    26 ms |
+| typing 5 MB, p95                  |    36 ms |
+| main-process RSS after 5 MB       |  151 MiB |
+| open 100 MB to the tail           |   1.73 s |
+| counts 100 MB, from launch        |   2.03 s |
+| select all 100 MB                 |    22 ms |
+| find typing 100 MB, median        |    20 ms |
+| find typing 100 MB, p95           |    22 ms |
+| find next 100 MB                  |    23 ms |
+| main-process RSS after 100 MB     |  349 MiB |
+| open 200 MB to the tail           |   1.63 s |
+| counts 200 MB, from launch        |   3.28 s |
+| main-process RSS after 200 MB     |  548 MiB |
+| open 500 MB to the tail           |   2.72 s |
+| counts 500 MB, from launch        |   7.43 s |
+| main-process RSS after 500 MB     | 1149 MiB |
 
 The count includes the launch and the open: subtracting them leaves about 0.02 s for 5 MB, 0.30 s
 for 100 MB, 1.65 s for 200 MB and 4.7 s for 500 MB. That is one scan of the whole document; after

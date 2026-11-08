@@ -1,14 +1,15 @@
 # Contributing
 
-Needs Node.js 22 or later.
+Needs Node.js 22 or later and pnpm 10; `packageManager` in `package.json` pins the version, and
+`corepack enable` or `npm install -g pnpm@10` provides it.
 
 ```sh
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
-Run `npm run lint`, `npm run typecheck`, `npm run knip`, `npm test`, `npm run build` and `npm run check:bundle`
-before sending a change. `npm run test:e2e` drives the built app; run `npm run build` first. Commits
+Run `pnpm run lint`, `pnpm run typecheck`, `pnpm run knip`, `pnpm test`, `pnpm run build` and `pnpm run check:bundle`
+before sending a change. `pnpm run test:e2e` drives the built app; run `pnpm run build` first. Commits
 follow [Conventional Commits](https://www.conventionalcommits.org). Project conventions are in
 [AGENTS.md](AGENTS.md).
 

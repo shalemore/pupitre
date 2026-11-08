@@ -8,7 +8,7 @@ import { promisify } from "node:util";
  * sources are downloaded into a folder that is not committed: the Markdown comes from GitHub's
  * documentation (CC BY 4.0), and the prose from Project Gutenberg (public domain in the US).
  *
- * Run `npm run perf:fixtures`, then point the manual probes at `.perf-fixtures/`.
+ * Run `pnpm run perf:fixtures`, then point the manual probes at `.perf-fixtures/`.
  */
 
 const run = promisify(execFile);

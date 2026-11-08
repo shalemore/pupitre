@@ -62,13 +62,13 @@ jobs:
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
 
       - uses: ./.github/actions/setup-node
-      - run: npm run build:web
+      - run: pnpm run build:web
 
       - name: Build the stable demo
         working-directory: stable
         run: |
-          npm ci
-          npm run build:web
+          if [ -f pnpm-lock.yaml ]; then pnpm install --frozen-lockfile; else npm ci; fi
+          pnpm run build:web
 
       # The demo uses relative asset URLs, so the same output works at / and at /test/.
       - name: Assemble the two sites

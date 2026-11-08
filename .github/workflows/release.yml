@@ -8,7 +8,7 @@ on:
     # the version check and skips the release jobs.
     paths:
       - package.json
-      - package-lock.json
+      - pnpm-lock.yaml
   workflow_dispatch:
     inputs:
       scoop:
@@ -91,7 +91,7 @@ jobs:
         run: |
           # A missing secret arrives as an empty string; electron-builder would read it as a certificate path
           [ -n "$CSC_LINK" ] || unset CSC_LINK CSC_KEY_PASSWORD
-          npm run build && npx electron-builder --publish always
+          pnpm run build && pnpm exec electron-builder --publish always
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_LINK: ${{ secrets.CSC_LINK }}
@@ -102,7 +102,7 @@ jobs:
 
       - name: Build and publish the Windows installers
         if: matrix.platform == 'windows-latest'
-        run: npm run build && npx electron-builder --publish always
+        run: pnpm run build && pnpm exec electron-builder --publish always
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
@@ -110,7 +110,7 @@ jobs:
 
       - name: Build and publish the Linux packages
         if: matrix.platform == 'ubuntu-latest'
-        run: npm run build && npx electron-builder --publish always
+        run: pnpm run build && pnpm exec electron-builder --publish always
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -126,10 +126,10 @@ jobs:
             echo "INSTALLERS"
           } >> "$GITHUB_OUTPUT"
 
-      # npm writes the CycloneDX SBOM of the dependencies it resolves from the lockfile
+      # pnpm writes the CycloneDX SBOM of the dependencies it resolves from the lockfile
       - name: Generate the SBOM
         shell: bash
-        run: npm sbom --sbom-format=cyclonedx > "pupitre-${{ matrix.platform }}.cdx.json"
+        run: pnpm sbom --format cyclonedx > "pupitre-${{ matrix.platform }}.cdx.json"
 
       # Both attestations cover every installer of the job, and each is signed with the identity of
       # this workflow run. They run after the build, so a run that cannot sign one fails the
@@ -181,7 +181,7 @@ jobs:
 
       - name: Generate release notes and publish release
         run: |
-          previous=$(git describe --tags --abbrev=0 2>/dev/null || true)
+          previous=$(git describe --tags --abbrev=0 --match 'v*' 2>/dev/null || true)
           section() {
             lines=$(git log ${previous:+"$previous..HEAD"} --no-merges --format=%s \
               | { grep -E "^($2)(\([^)]*\))?$3: " || true; } \

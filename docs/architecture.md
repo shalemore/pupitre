@@ -117,12 +117,12 @@ laid over the global values key by key and written by the first change made whil
 
 ## Building, testing, releasing
 
-`npm run build` runs electron-vite over three targets into `out/main`, `out/preload` and
-`out/renderer`; the renderer configuration is shared with the demo, which `npm run build:web` writes
+`pnpm run build` runs electron-vite over three targets into `out/main`, `out/preload` and
+`out/renderer`; the renderer configuration is shared with the demo, which `pnpm run build:web` writes
 to `out/web`, and it emits `THIRD-PARTY-NOTICES.txt` from what it bundled.
 
-`npm test` runs the main process and the shared code in Node and the renderer in jsdom, while
-`npm run test:e2e` drives the built app from `e2e/`, the only place a native dialog or a real window
+`pnpm test` runs the main process and the shared code in Node and the renderer in jsdom, while
+`pnpm run test:e2e` drives the built app from `e2e/`, the only place a native dialog or a real window
 is checked. Lint, the CSS and layer-boundary checks, typecheck, knip, the tests, the bundle size
 check and both builds run on CI.
 

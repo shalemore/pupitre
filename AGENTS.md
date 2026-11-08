@@ -5,28 +5,28 @@ This file is the single source of project conventions for humans and coding agen
 
 ## Commands
 
-| Command                      | Purpose                                                       |
-| :--------------------------- | :------------------------------------------------------------ |
-| `npm run dev`                | Start Electron with the Vite dev server (HMR)                 |
-| `npm run build`              | Bundle main, preload and renderer into `out/`                 |
-| `npm run check:bundle`       | Fail when a renderer chunk passes its size budget             |
-| `npm run dev:web`            | Serve the web demo (renderer on the browser host)             |
-| `npm run build:web`          | Build the web demo into `out/web`                             |
-| `npm run dist`               | Build and package installers into `release/`                  |
-| `npm test`                   | Run the unit tests (Vitest)                                   |
-| `npm run test:coverage`      | Run the unit tests with coverage and check its floor          |
-| `npm run test:e2e`           | Drive the built app with Playwright (`build` first)           |
-| `npm run test:perf`          | Time the built app by hand, minutes long (`build`)            |
-| `npm run bench`              | Benchmark the parser by hand, a minute long                   |
-| `npm run typecheck`          | Type-check every project (`tsrs -b`)                          |
-| `npm run lint`               | Check formatting, lint, CSS layers and layer boundaries       |
-| `npm run check:css`          | Check that app.css rules sit in layers and theme tokens exist |
-| `npm run check:architecture` | Check that no import crosses a layer boundary                 |
-| `npm run knip`               | Find dead files, unused exports and dependencies              |
-| `npm run fix`                | Apply formatting and safe lint fixes                          |
+| Command                       | Purpose                                                       |
+| :---------------------------- | :------------------------------------------------------------ |
+| `pnpm run dev`                | Start Electron with the Vite dev server (HMR)                 |
+| `pnpm run build`              | Bundle main, preload and renderer into `out/`                 |
+| `pnpm run check:bundle`       | Fail when a renderer chunk passes its size budget             |
+| `pnpm run dev:web`            | Serve the web demo (renderer on the browser host)             |
+| `pnpm run build:web`          | Build the web demo into `out/web`                             |
+| `pnpm run dist`               | Build and package installers into `release/`                  |
+| `pnpm test`                   | Run the unit tests (Vitest)                                   |
+| `pnpm run test:coverage`      | Run the unit tests with coverage and check its floor          |
+| `pnpm run test:e2e`           | Drive the built app with Playwright (`build` first)           |
+| `pnpm run test:perf`          | Time the built app by hand, minutes long (`build`)            |
+| `pnpm run bench`              | Benchmark the parser by hand, a minute long                   |
+| `pnpm run typecheck`          | Type-check every project (`tsrs -b`)                          |
+| `pnpm run lint`               | Check formatting, lint, CSS layers and layer boundaries       |
+| `pnpm run check:css`          | Check that app.css rules sit in layers and theme tokens exist |
+| `pnpm run check:architecture` | Check that no import crosses a layer boundary                 |
+| `pnpm run knip`               | Find dead files, unused exports and dependencies              |
+| `pnpm run fix`                | Apply formatting and safe lint fixes                          |
 
 Before considering a change done, `lint`, `typecheck`, `knip`, `test`, `build` and `check:bundle`
-must all pass. Run `npm run test:e2e` as well once the change touches the main process, the IPC
+must all pass. Run `pnpm run test:e2e` as well once the change touches the main process, the IPC
 contract or a flow it covers. Keep the coverage floor: it only catches a suite that shrank, and goes
 up as more of the app is covered. `bench` and `test:perf` report numbers that belong to the machine
 they ran on: run them for a change that could move them, not on every pull request. `test:perf`
@@ -41,13 +41,13 @@ wraps itself in `offstage-windows`, so its windows stay off the screen on Window
 - `src/renderer/lib/markdown/testing.ts` builds the editor's state and tree for tests. A document
   is written with `|` marking the cursor and with two of them around a selection, so the test reads
   the way the text looks in the editor.
-- `e2e/` drives the built app (`out/main/index.js`) over Playwright, after `npm run build`. Each
+- `e2e/` drives the built app (`out/main/index.js`) over Playwright, after `pnpm run build`. Each
   launch gets its own `--user-data-dir`, so a run does not touch the settings, drafts or lock of a
   dev instance. Send commands through `window.desktop.invoke("app:dispatch", …)`: native menu
   shortcuts do not fire from CDP key events. Native message boxes are stubbed in the main process
   (`answerDialogs`), because a real one would block the run.
 - On Linux the E2E suite needs a display: CI runs it under `xvfb-run -a`. On Windows, run it with
-  `npx offstage-windows npx playwright test` to keep the windows off the screen.
+  `pnpm exec offstage-windows pnpm exec playwright test` to keep the windows off the screen.
 - `patches/@lezer+markdown+1.8.1.patch` fixes an upstream incremental-parse bug: a block that a
   table ended (a paragraph, a footnote definition, a math block) is reused with its old end when
   the table stops parsing, which splits it in two. `patch-package` applies the patch on install; the
@@ -63,23 +63,23 @@ nothing touches the system mouse or keyboard. Write throwaway scripts outside th
 the scratchpad, and import `playwright-core` by absolute path or run them from the repository root.
 
 A window takes the focus when it opens, so a plain launch keeps popping up over whatever the user
-is doing. Run the launcher on a hidden Windows desktop instead: `npx offstage-windows node
+is doing. Run the launcher on a hidden Windows desktop instead: `pnpm exec offstage-windows node
 script.mjs`. The script itself does not change, the app renders and screenshots as usual, and its
 windows never reach the screen. `OFFSTAGE=0` puts them back on screen for a run you want to watch,
 and on macOS or Linux the wrapper only passes the command through. It builds a small helper with
 the C# compiler that ships with Windows on first use, so endpoint protection may comment on it.
 
-A full `npm run build` for every tweak is slow and rarely needed. For renderer work, `npm run
+A full `pnpm run build` for every tweak is slow and rarely needed. For renderer work, `pnpm run
 dev:web` serves the same renderer with HMR, and the installed Chrome can be driven against it with
-`chromium.launch({ channel: "chrome" })`; `npm run typecheck` and `npm run lint` are the quick
+`chromium.launch({ channel: "chrome" })`; `pnpm run typecheck` and `pnpm run lint` are the quick
 checks in between. Build when the main process, the IPC contract or the packaged app is what
 changed, and once at the end.
 
 ```js
 import { _electron as electron } from "playwright-core";
 
-// Run `npm run build` first. A separate user data dir avoids the single-instance lock, so this
-// works while the user's own `npm run dev` is open; the last argument is the file to open.
+// Run `pnpm run build` first. A separate user data dir avoids the single-instance lock, so this
+// works while the user's own `pnpm run dev` is open; the last argument is the file to open.
 const app = await electron.launch({
   args: [
     "out/main/index.js",
@@ -98,7 +98,7 @@ await page.screenshot({ path: "<temp dir>/shot.png" }); // then look at the imag
 await app.close();
 ```
 
-- To attach to a running dev server with HMR instead, start `npx offstage-windows npm run
+- To attach to a running dev server with HMR instead, start `pnpm exec offstage-windows pnpm run
   dev:debug` (port 9222) and use `chromium.connectOverCDP("http://127.0.0.1:9222")`; it needs the
   user's own dev app closed.
 - Main-process state is reachable with `app.evaluate`, the page with `page.evaluate`/locators.
@@ -136,7 +136,7 @@ cannot drift apart. What matters for a change is the direction of imports:
 - The renderer never imports the main process or the preload, and the main process never imports the
   UI.
 
-`npm run check:architecture` enforces these edges, so a misplaced import fails the build rather
+`pnpm run check:architecture` enforces these edges, so a misplaced import fails the build rather
 than waiting for a review to notice it.
 
 - `src/shared/desktop-api.ts` is the IPC contract. Every channel is declared there once and both
@@ -218,7 +218,7 @@ only make code generation easier.
   helpers in `lib`. Do not create folders just to group a single file.
 - Import internal modules directly. Barrel files (`index.ts`) are only for deliberate public
   boundaries such as `components/ui`.
-- Imports are ordered by oxfmt's `sortImports`, which `npm run lint` checks and `npm run fix`
+- Imports are ordered by oxfmt's `sortImports`, which `pnpm run lint` checks and `pnpm run fix`
   applies: `node:` builtins, packages, `@shared/*`, `@/*`, then relative paths, alphabetically
   inside each group. Imports for their side effects come first, in the order they run.
 - Remove dead code instead of leaving it around "for later".

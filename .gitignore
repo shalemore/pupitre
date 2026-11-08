@@ -1,4 +1,5 @@
 /node_modules
+**/node_modules
 /out
 /release
 /test-results
@@ -6,6 +7,8 @@
 /blob-report
 /coverage
 /src/renderer/styled-system
+/packages/*/dist
+pnpm-debug.log*
 *.log
 .DS_Store
 /.perf-fixtures

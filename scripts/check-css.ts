@@ -12,7 +12,7 @@ import { TOKEN_NAMES } from "../src/shared/design-tokens.ts";
  * 2. A theme only reads tokens that exist. A mistyped `var(--ui-brand-hovr)` is otherwise silent:
  *    the property simply falls back to its initial value.
  *
- * Run by `npm run lint`, so a regression fails before it reaches a release.
+ * Run by `pnpm run lint`, so a regression fails before it reaches a release.
  */
 
 const APP_CSS = "src/renderer/app.css";
