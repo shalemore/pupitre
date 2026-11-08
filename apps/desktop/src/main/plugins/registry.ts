@@ -62,10 +62,8 @@ export function pluginStyles(): readonly PluginStyle[] {
   return styles;
 }
 
-function publish(): readonly PluginInfo[] {
-  const plugins = listPlugins();
-  broadcast("plugins:changed", plugins);
-  return plugins;
+function publish(): void {
+  broadcast("plugins:changed", listPlugins());
 }
 
 /** The installed plugin, its folder and manifest, or an error for a plugin that is not there. */

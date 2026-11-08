@@ -3,10 +3,8 @@ import { cpSync, existsSync, lstatSync, mkdirSync, readdirSync, renameSync, rmSy
 import { basename, isAbsolute, join, resolve } from "node:path";
 import type { PluginCommandInfo, PluginInfo } from "@pupitre/desktop-api";
 import {
-  type LocalizedText,
   type Permission,
   type PluginManifest,
-  type PluginSettingText,
   localizedTextSchema,
   permissionSchema,
   parseManifest,
@@ -30,15 +28,7 @@ export const pluginCommandSchema = z.object({
 });
 const commandsSchema = z.array(pluginCommandSchema);
 
-/** What a plugin declared about its settings, without the values the user chose. */
-export interface StoredSettingsMeta {
-  schema: Record<string, unknown>;
-  title?: LocalizedText | undefined;
-  description?: LocalizedText | undefined;
-  fields?: Record<string, PluginSettingText> | undefined;
-}
-
-const settingsMetaSchema = z.object({
+export const settingsMetaSchema = z.object({
   schema: z.record(z.string(), z.unknown()),
   title: localizedTextSchema.optional(),
   description: localizedTextSchema.optional(),
@@ -52,6 +42,9 @@ const settingsMetaSchema = z.object({
     )
     .optional(),
 });
+
+/** What a plugin declared about its settings, without the values the user chose. */
+export type StoredSettingsMeta = z.infer<typeof settingsMetaSchema>;
 
 /** What the main process remembers about a plugin between runs. */
 export interface PluginState {

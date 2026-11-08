@@ -18,6 +18,7 @@ import {
   pluginCommandSchema,
   readPlugin,
   readSettingsValues,
+  settingsMetaSchema,
   writeCommands,
   writeSettingsMeta,
   writeSettingsValues,
@@ -60,19 +61,8 @@ const lineParams = z.object({ line: z.number().int().positive() });
 const keyParams = z.object({ key: z.string().min(1).max(256) });
 const valueParams = keyParams.extend({ value: z.unknown() });
 const notificationParams = z.object({ message: localizedTextSchema });
-const settingsMetaParams = z.object({
-  schema: z.record(z.string(), z.unknown()),
-  title: localizedTextSchema.optional(),
-  description: localizedTextSchema.optional(),
-  fields: z
-    .record(
-      z.string(),
-      z.object({
-        title: localizedTextSchema,
-        description: localizedTextSchema.optional(),
-      }),
-    )
-    .optional(),
+/** The stored metadata plus the defaults the host keeps only on the first report. */
+const settingsMetaParams = settingsMetaSchema.extend({
   defaults: z.record(z.string(), z.unknown()).optional(),
 });
 const networkParams = z.object({
