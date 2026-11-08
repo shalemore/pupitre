@@ -24,6 +24,7 @@
     }
   },
   "dependencies": {
+    "@pupitre/plugin-sdk": "workspace:*",
     "@pupitre/settings": "workspace:*"
   },
   "devDependencies": {

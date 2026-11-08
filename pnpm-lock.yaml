@@ -216,6 +216,9 @@ importers:
 
   packages/desktop-api:
     dependencies:
+      '@pupitre/plugin-sdk':
+        specifier: workspace:*
+        version: link:../plugin-sdk
       '@pupitre/settings':
         specifier: workspace:*
         version: link:../settings

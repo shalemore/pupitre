@@ -76,6 +76,14 @@ import { currentLocale, t } from "./i18n";
 import { showAboutDialog } from "./menus/about";
 import { clickMenuItem, menuSnapshot, setDocumentState } from "./menus/menu";
 import {
+  grantPluginPermissions,
+  installPlugin,
+  listPlugins,
+  revealPlugin,
+  setPluginEnabled,
+  uninstallPlugin,
+} from "./plugins/registry";
+import {
   getSettings,
   getSettingsPath,
   getWorkspaceState,
@@ -405,6 +413,7 @@ export function registerIpcHandlers(): void {
         systemFonts: true,
         zoom: true,
         folderParent: true,
+        plugins: true,
       },
       recentFiles: getRecentFiles(),
       captionSide: getCaptionSide(event.sender),
@@ -675,4 +684,11 @@ export function registerIpcHandlers(): void {
   handle("updater:check", () => checkForUpdates().catch(() => {}));
   handle("updater:download", () => downloadUpdate().catch(() => {}));
   handle("updater:install", () => installUpdate());
+
+  handle("plugins:list", () => listPlugins());
+  handle("plugins:install", (event) => installPlugin(senderWindow(event)));
+  handle("plugins:set-enabled", (_event, id, enabled) => setPluginEnabled(id, enabled));
+  handle("plugins:grant", (_event, id, permissions) => grantPluginPermissions(id, permissions));
+  handle("plugins:uninstall", (_event, id) => uninstallPlugin(id));
+  handle("plugins:reveal", (_event, id) => revealPlugin(id));
 }

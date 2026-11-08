@@ -3,6 +3,11 @@ import { permissionSchema } from "./permissions";
 
 /** A folder name: lowercase letters, digits, dots and hyphens, starting and ending with one. */
 const ID = /^[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$/;
+
+/** The id of a plugin, which also names its folder under `plugins/`. */
+export const pluginIdSchema = z
+  .string()
+  .regex(ID, "must be lowercase letters, digits, dots or hyphens");
 /** A version of the plugin itself, with the prerelease and build parts semantic versioning adds. */
 const VERSION = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/;
 
@@ -23,7 +28,7 @@ const localizedTextSchema = z.union([
 
 export const pluginManifestSchema = z.object({
   /** Names the plugin and its folder; never changes when the plugin updates. */
-  id: z.string().regex(ID, "must be lowercase letters, digits, dots or hyphens"),
+  id: pluginIdSchema,
   name: localizedTextSchema,
   version: z.string().regex(VERSION, "must be a semantic version"),
   description: localizedTextSchema.optional(),

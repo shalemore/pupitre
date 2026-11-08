@@ -1,3 +1,4 @@
+import type { Permission, PluginManifest } from "@pupitre/plugin-sdk";
 import type { SettingKey, Settings } from "@pupitre/settings";
 import type { FormatAction } from "./format-actions";
 import type { Menus } from "./menu";
@@ -203,6 +204,16 @@ export interface WorkspaceState {
   exists: boolean;
   /** The settings that have a value of their own in the folder. */
   overrides: readonly SettingKey[];
+}
+
+/** One plugin installed under `userData/plugins`, as the settings window lists it. */
+export interface PluginInfo {
+  id: string;
+  manifest: PluginManifest;
+  /** A plugin runs only while enabled; the user chooses. */
+  enabled: boolean;
+  /** The permissions the user allowed. A plugin cannot be enabled while this misses one it asks for. */
+  granted: readonly Permission[];
 }
 
 export type UpdateStatus =
@@ -472,6 +483,15 @@ export interface InvokeChannels {
   "updater:check": () => void;
   "updater:download": () => void;
   "updater:install": () => void;
+  /** The plugins installed under `userData/plugins`. */
+  "plugins:list": () => readonly PluginInfo[];
+  /** Asks for a plugin folder and copies it into place, disabled until the user grants what it asks for; null when they gave up. */
+  "plugins:install": () => PluginInfo | null;
+  "plugins:set-enabled": (id: string, enabled: boolean) => void;
+  /** Replaces what the user allows; a plugin can only be enabled while every requested permission is allowed. */
+  "plugins:grant": (id: string, permissions: readonly Permission[]) => void;
+  "plugins:uninstall": (id: string) => void;
+  "plugins:reveal": (id: string) => void;
 }
 
 /** Events the main process pushes to the renderer through `webContents.send`. */
@@ -488,6 +508,8 @@ export interface RendererEvents {
   "updater:status": UpdateStatus;
   "app:command": AppCommand;
   "window:maximized-changed": boolean;
+  /** A plugin was installed, removed or had its state changed. */
+  "plugins:changed": readonly PluginInfo[];
 }
 
 /**
@@ -507,6 +529,8 @@ export interface HostCapabilities {
   zoom: boolean;
   /** Walk from an open folder to the one that holds it; the demo's folder has nothing above it. */
   folderParent: boolean;
+  /** Install and run plugins; the demo has no folder to install one from. */
+  plugins: boolean;
 }
 
 /** State a window needs before its first paint; fetched synchronously by the preload script. */
