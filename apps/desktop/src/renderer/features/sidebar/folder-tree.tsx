@@ -70,6 +70,7 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
   const [failures, setFailures] = createSignal<Readonly<Record<string, string>>>({});
   const [renaming, setRenaming] = createSignal<string>();
   const [focusAfterRename, setFocusAfterRename] = createSignal<string>();
+  const [newFile, setNewFile] = createSignal<string>();
   const [expanded, setExpanded] = createSignal<ReadonlySet<string>>(new Set());
   const [menuOpen, setMenuOpen] = createSignal(false);
   const [hiddenFolders, setHiddenFolders] = createSignal<ReadonlySet<string>>(new Set());
@@ -117,10 +118,14 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
 
   const rename = (path: string, name: string) => {
     setRenaming(undefined);
+    // A file just created opens once its author has named it; the row does not take the focus back
+    const created = newFile() === path;
+    if (created) setNewFile(undefined);
     void run(async () => {
       const next = await desktop.invoke("path:rename", path, name);
       await movePins(path, next);
-      setFocusAfterRename(next);
+      if (created) await openFile(next);
+      else setFocusAfterRename(next);
       return { old: path, path: next };
     });
   };
@@ -128,7 +133,9 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
   const cancelRename = () => {
     const path = renaming();
     setRenaming(undefined);
-    if (path !== undefined) setFocusAfterRename(path);
+    if (path === undefined) return;
+    if (newFile() === path) setNewFile(undefined);
+    setFocusAfterRename(path);
   };
 
   // A new entry is named right away, so the folder it went into is opened for its row to show the field
@@ -137,6 +144,7 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
       const name = kind === "directory" ? t().sidebar.newFolder : t().common.untitledFileName;
       const path = await desktop.invoke("folder:create", parent, name, kind);
       setExpanded((current) => withMember(current, parent, true));
+      setNewFile(kind === "file" ? path : undefined);
       setRenaming(path);
       return undefined;
     });
