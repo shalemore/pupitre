@@ -86,6 +86,7 @@ import { createStatsTracker } from "./document-stats";
 import { folding, foldingKeymap } from "./folding";
 import {
   formatKeymap,
+  insertFenceBreak,
   insertParagraphBreak,
   insertTable,
   type MarkdownStyle,
@@ -280,7 +281,12 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
                 })),
                 pairingCompartment.of(markdownPairing(settings().autoPairMarkdown)),
                 // Ahead of lang-markdown's Enter, which only continues lists and quotes
-                Prec.highest(keymap.of([{ key: "Enter", run: insertParagraphBreak }])),
+                Prec.highest(
+                  keymap.of([
+                    { key: "Enter", run: insertFenceBreak },
+                    { key: "Enter", run: insertParagraphBreak },
+                  ]),
+                ),
               ]
             : []),
           keymap.of([

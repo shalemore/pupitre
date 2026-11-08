@@ -571,6 +571,33 @@ export function runFormatAction(
   }
 }
 
+/**
+ * Enter at the end of a fence that opened a code block writes the blank line to type in and the
+ * closing fence, so the block is a pair from the first Enter. A closed block or any other line
+ * keeps the usual Enter.
+ */
+export const insertFenceBreak: Command = (view) => {
+  const { state } = view;
+  const { main } = state.selection;
+  const line = state.doc.lineAt(main.head);
+  if (!main.empty || main.head !== line.to) return false;
+  let block = syntaxTree(state).resolveInner(main.head, -1);
+  while (block.parent && block.name !== "FencedCode") block = block.parent;
+  if (block.name !== "FencedCode" || state.doc.lineAt(block.from).number !== line.number)
+    return false;
+  const [mark, closing] = block.getChildren("CodeMark");
+  if (mark === undefined || closing !== undefined) return false;
+  const marker = state.doc.sliceString(mark.from, mark.to);
+  const indent = state.doc.sliceString(line.from, mark.from);
+  view.dispatch({
+    changes: { from: main.head, insert: `\n\n${indent}${marker}` },
+    selection: { anchor: main.head + 1 },
+    scrollIntoView: true,
+    userEvent: "input",
+  });
+  return true;
+};
+
 const PARAGRAPH_BLOCK = /^(?:Paragraph|ATXHeading[1-6])$/;
 
 /**
