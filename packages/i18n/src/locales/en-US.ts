@@ -264,6 +264,9 @@ export const enUS = {
     zoom: "Zoom",
     animationsOn: "On",
     animationsOff: "Off",
+    pluginEffects: "Plugin Effects",
+    pluginEffectsDesc:
+      "Draws a plugin's styles, backgrounds and pointer effects; its commands and settings keep working when this is off",
     showOutline: "Show Sidebars",
     sidebarLayout: "Sidebar Layout",
     sidebarLayoutDesc: "Folder and outline on opposite sides, or together in one sidebar",

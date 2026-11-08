@@ -55,6 +55,8 @@ export const settingsSchema = z.object({
   /** Font of menus, sidebar and dialogs; empty means the platform's interface font. */
   uiFont: z.string().catch(""),
   animations: z.enum(["system", "on", "off"]).catch("system"),
+  /** Whether plugin styles and canvases draw; the way out when one of them misbehaves. */
+  pluginEffects: z.boolean().catch(true),
   /** Zoom of the main window in percent; Ctrl+plus, Ctrl+minus and Ctrl+wheel step it. */
   zoom: z.number().min(SETTING_RANGES.zoom.min).max(SETTING_RANGES.zoom.max).catch(100),
   /** Read when a window is created, so a change applies to windows opened afterwards. */

@@ -1,6 +1,6 @@
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import type { PluginInfo } from "@pupitre/desktop-api";
+import type { PluginInfo, PluginStyle } from "@pupitre/desktop-api";
 import { pluginIdSchema, type Permission, type PluginManifest } from "@pupitre/plugin-sdk";
 import { dialog, shell, type BrowserWindow } from "electron";
 import log from "electron-log/main";
@@ -17,25 +17,49 @@ import {
   writeSettingsValues,
   writeState,
 } from "./plugin-files";
+import { readPluginStyle } from "./styles";
 
 /** What a plugin's settings may weigh, so the file stays a preference, not a database. */
 const MAX_SETTINGS_BYTES = 64 * 1024;
 
-/** The plugins installed under the user's data folder, sorted by id. */
-export function listPlugins(): readonly PluginInfo[] {
+interface InstalledPlugin {
+  folder: string;
+  info: PluginInfo;
+}
+
+/** Every plugin folder under the user's data folder that reads, sorted by id. */
+function installedPlugins(): InstalledPlugin[] {
   const root = pluginsFolder();
   if (!existsSync(root)) return [];
-  const plugins: PluginInfo[] = [];
+  const plugins: InstalledPlugin[] = [];
   for (const entry of readdirSync(root, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue;
-    const plugin = readPlugin(join(root, entry.name));
-    if (plugin === undefined) {
+    const folder = join(root, entry.name);
+    const info = readPlugin(folder);
+    if (info === undefined) {
       log.warn(`Skipped the plugin folder ${entry.name}`);
       continue;
     }
-    plugins.push(plugin);
+    plugins.push({ folder, info });
   }
-  return plugins.toSorted((a, b) => a.id.localeCompare(b.id));
+  return plugins.toSorted((a, b) => a.info.id.localeCompare(b.info.id));
+}
+
+/** The plugins installed under the user's data folder, sorted by id. */
+export function listPlugins(): readonly PluginInfo[] {
+  return installedPlugins().map((plugin) => plugin.info);
+}
+
+/** The stylesheets of the running plugins that were granted `ui:styles`. */
+export function pluginStyles(): readonly PluginStyle[] {
+  const styles: PluginStyle[] = [];
+  for (const { folder, info } of installedPlugins()) {
+    if (!info.enabled || info.manifest.styles === undefined) continue;
+    if (!info.granted.includes("ui:styles")) continue;
+    const css = readPluginStyle(folder, info.manifest.styles);
+    if (css !== undefined) styles.push({ id: info.id, css });
+  }
+  return styles;
 }
 
 function publish(): readonly PluginInfo[] {

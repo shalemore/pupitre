@@ -251,6 +251,9 @@ export const viVN = {
     zoom: "Thu phóng",
     animationsOn: "Bật",
     animationsOff: "Tắt",
+    pluginEffects: "Hiệu ứng plugin",
+    pluginEffectsDesc:
+      "Vẽ kiểu dáng, nền và hiệu ứng con trỏ của plugin; lệnh và cài đặt vẫn hoạt động khi tắt mục này",
     showOutline: "Hiện thanh bên",
     sidebarLayout: "Bố cục thanh bên",
     sidebarLayoutDesc: "Thư mục và dàn ý ở hai bên đối diện, hoặc gộp chung trong một thanh bên",

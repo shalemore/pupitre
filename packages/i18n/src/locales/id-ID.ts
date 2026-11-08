@@ -252,6 +252,9 @@ export const idID = {
     zoom: "Zoom",
     animationsOn: "Aktif",
     animationsOff: "Nonaktif",
+    pluginEffects: "Efek Plugin",
+    pluginEffectsDesc:
+      "Menggambar gaya, latar, dan efek penunjuk plugin; perintah dan pengaturannya tetap berfungsi saat ini dimatikan",
     showOutline: "Tampilkan bilah samping",
     sidebarLayout: "Tata Letak Bilah Samping",
     sidebarLayoutDesc:

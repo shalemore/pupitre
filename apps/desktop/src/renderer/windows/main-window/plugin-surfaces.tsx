@@ -127,6 +127,7 @@ const SurfaceHost: Component<{ plugin: PluginInfo; kind: SurfaceKind }> = (props
 
 /** The first running plugin that draws a background, or the one that draws over the window. */
 function surfacePlugin(kind: SurfaceKind): PluginInfo | undefined {
+  if (!settings().pluginEffects) return undefined;
   return plugins().find(
     (plugin) => plugin.enabled && plugin.manifest.surfaces?.[kind] !== undefined,
   );

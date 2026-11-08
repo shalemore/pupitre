@@ -256,6 +256,9 @@ export const esES = {
     zoom: "Zoom",
     animationsOn: "Activadas",
     animationsOff: "Desactivadas",
+    pluginEffects: "Efectos de complementos",
+    pluginEffectsDesc:
+      "Dibuja los estilos, fondos y efectos de puntero de los complementos; sus comandos y ajustes siguen funcionando al desactivarlo",
     showOutline: "Mostrar barras laterales",
     sidebarLayout: "Diseño de la barra lateral",
     sidebarLayoutDesc: "Carpeta y esquema en lados opuestos, o juntos en una sola barra lateral",

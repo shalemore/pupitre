@@ -253,6 +253,8 @@ export const thTH = {
     zoom: "ซูม",
     animationsOn: "เปิด",
     animationsOff: "ปิด",
+    pluginEffects: "เอฟเฟกต์ปลั๊กอิน",
+    pluginEffectsDesc: "วาดสไตล์ พื้นหลัง และเอฟเฟกต์ตัวชี้ของปลั๊กอิน คำสั่งและการตั้งค่ายังทำงานเมื่อปิดตัวเลือกนี้",
     showOutline: "แสดงแถบด้านข้าง",
     sidebarLayout: "เลย์เอาต์แถบด้านข้าง",
     sidebarLayoutDesc: "แสดงโฟลเดอร์และโครงร่างคนละฝั่ง หรือรวมไว้ในแถบด้านข้างเดียว",

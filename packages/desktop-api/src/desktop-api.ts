@@ -241,6 +241,12 @@ export interface PluginInfo {
   commands?: readonly PluginCommandInfo[];
 }
 
+/** The stylesheet of a running plugin, with its assets already inlined. */
+export interface PluginStyle {
+  id: string;
+  css: string;
+}
+
 /** What a plugin page asks the open editor for; the main process forwards one of these. */
 export type PluginDocumentRequest =
   | { id: number; method: "read" }
@@ -521,6 +527,7 @@ export interface InvokeChannels {
   "updater:install": () => void;
   /** The plugins installed under `userData/plugins`. */
   "plugins:list": () => readonly PluginInfo[];
+  "plugins:styles": () => readonly PluginStyle[];
   /** Asks for a plugin folder and copies it into place, disabled until the user grants what it asks for; null when they gave up. */
   "plugins:install": () => PluginInfo | null;
   "plugins:set-enabled": (id: string, enabled: boolean) => void;

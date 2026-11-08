@@ -255,6 +255,8 @@ export const zhTW = {
     zoom: "縮放",
     animationsOn: "開啟",
     animationsOff: "關閉",
+    pluginEffects: "外掛程式效果",
+    pluginEffectsDesc: "繪製外掛程式的樣式、背景和指標效果；關閉後外掛程式指令和設定仍會運作",
     showOutline: "顯示側邊欄",
     sidebarLayout: "側邊欄版面配置",
     sidebarLayoutDesc: "資料夾和大綱分列兩側，或合併在同一個側邊欄裡",

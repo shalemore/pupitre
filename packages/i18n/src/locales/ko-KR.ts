@@ -257,6 +257,9 @@ export const koKR = {
     zoom: "확대/축소",
     animationsOn: "켜기",
     animationsOff: "끄기",
+    pluginEffects: "플러그인 효과",
+    pluginEffectsDesc:
+      "플러그인의 스타일, 배경, 포인터 효과를 그립니다. 끄더라도 명령과 설정은 계속 작동합니다",
     showOutline: "사이드바 표시",
     sidebarLayout: "사이드바 레이아웃",
     sidebarLayoutDesc: "폴더와 개요를 양쪽에 나누거나 하나의 사이드바에 함께 표시합니다",

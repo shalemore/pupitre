@@ -259,6 +259,9 @@ export const trTR = {
     zoom: "Yakınlaştırma",
     animationsOn: "Açık",
     animationsOff: "Kapalı",
+    pluginEffects: "Eklenti Efektleri",
+    pluginEffectsDesc:
+      "Eklentinin stillerini, arka planlarını ve işaretçi efektlerini çizer; bu kapalıyken komutları ve ayarları çalışmaya devam eder",
     showOutline: "Kenar Çubuklarını Göster",
     sidebarLayout: "Kenar Çubuğu Düzeni",
     sidebarLayoutDesc:

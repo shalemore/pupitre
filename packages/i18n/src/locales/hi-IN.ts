@@ -251,6 +251,9 @@ export const hiIN = {
     zoom: "ज़ूम",
     animationsOn: "चालू",
     animationsOff: "बंद",
+    pluginEffects: "प्लगइन प्रभाव",
+    pluginEffectsDesc:
+      "प्लगइन की शैलियाँ, पृष्ठभूमियाँ और पॉइंटर प्रभाव बनाता है; इसे बंद करने पर भी प्लगइन के कमांड और सेटिंग्स काम करते रहते हैं",
     showOutline: "साइडबार दिखाएँ",
     sidebarLayout: "साइडबार लेआउट",
     sidebarLayoutDesc: "फ़ोल्डर और रूपरेखा आमने-सामने के किनारों पर, या एक साइडबार में साथ-साथ",

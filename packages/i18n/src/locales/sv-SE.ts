@@ -260,6 +260,9 @@ export const svSE = {
     zoom: "Zoom",
     animationsOn: "På",
     animationsOff: "Av",
+    pluginEffects: "Plugineffekter",
+    pluginEffectsDesc:
+      "Ritar pluginens stilar, bakgrunder och pekareffekter; kommandon och inställningar fungerar fortfarande när detta är av",
     showOutline: "Visa sidofält",
     sidebarLayout: "Layout för sidofält",
     sidebarLayoutDesc: "Mapp och disposition på varsin sida, eller samlade i ett sidofält",

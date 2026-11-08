@@ -254,6 +254,9 @@ export const faIR = {
     zoom: "بزرگ‌نمایی",
     animationsOn: "روشن",
     animationsOff: "خاموش",
+    pluginEffects: "جلوه‌های افزونه",
+    pluginEffectsDesc:
+      "سبک‌ها، پس‌زمینه‌ها و جلوه‌های نشانگر افزونه‌ها را ترسیم می‌کند؛ فرمان‌ها و تنظیمات با خاموش بودن آن همچنان کار می‌کنند",
     showOutline: "نمایش نوارهای کناری",
     sidebarLayout: "چیدمان نوار کناری",
     sidebarLayoutDesc: "پوشه و طرح کلی در دو طرف مقابل، یا با هم در یک نوار کناری",

@@ -8,6 +8,7 @@ import { FolderOpen, Plus, Trash2 } from "lucide-solid";
 import { For, onMount, Show, type Component, type JSX } from "solid-js";
 import { reportFailure } from "@/lib/errors";
 import { loadPlugins, plugins } from "@/lib/plugins";
+import { settings, updateSettings } from "@/lib/settings";
 import { css } from "@/styled-system/css";
 import { SettingGroup, SettingsSection } from "./settings-section";
 
@@ -133,15 +134,15 @@ function fieldControl(
 /** The fields a plugin declared, drawn from its schema and named in its own words. */
 const PluginSettingsForm: Component<{ plugin: PluginInfo }> = (props) => {
   const fields = () => {
-    const settings = props.plugin.settings;
-    return settings === undefined ? [] : fieldEntries(settings.schema);
+    const declared = props.plugin.settings;
+    return declared === undefined ? [] : fieldEntries(declared.schema);
   };
   const update = (key: string, value: unknown) => {
-    const settings = props.plugin.settings;
-    if (settings === undefined) return;
+    const declared = props.plugin.settings;
+    if (declared === undefined) return;
     attempt(() =>
       desktop.invoke("plugins:update-settings", props.plugin.id, {
-        ...settings.values,
+        ...declared.values,
         [key]: value,
       }),
     );
@@ -268,6 +269,20 @@ export const PluginsSection: Component = () => {
           <span>{t().settings.installPlugin}</span>
         </Button>
       </div>
+      <Show when={plugins().length > 0}>
+        <SettingGroup>
+          <SettingRow
+            title={t().settings.pluginEffects}
+            description={t().settings.pluginEffectsDesc}
+          >
+            <Switch
+              checked={settings().pluginEffects}
+              aria-label={t().settings.pluginEffects}
+              onChange={(pluginEffects) => void updateSettings({ pluginEffects })}
+            />
+          </SettingRow>
+        </SettingGroup>
+      </Show>
       <Show when={plugins().length > 0} fallback={<p class={empty}>{t().settings.noPlugins}</p>}>
         <SettingGroup>
           <For each={plugins()}>{(plugin) => <PluginRow plugin={plugin} />}</For>

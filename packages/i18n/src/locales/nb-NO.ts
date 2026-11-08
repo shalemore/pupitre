@@ -260,6 +260,9 @@ export const nbNO = {
     zoom: "Zoom",
     animationsOn: "På",
     animationsOff: "Av",
+    pluginEffects: "Plugineffekter",
+    pluginEffectsDesc:
+      "Tegner pluginers stiler, bakgrunner og pekereffekter; kommandoer og innstillinger virker fortsatt når dette er av",
     showOutline: "Vis sidefelt",
     sidebarLayout: "Oppsett av sidefelt",
     sidebarLayoutDesc: "Mappe og disposisjon på hver sin side, eller samlet i ett sidefelt",

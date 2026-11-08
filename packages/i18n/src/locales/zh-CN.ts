@@ -255,6 +255,8 @@ export const zhCN = {
     zoom: "缩放",
     animationsOn: "开启",
     animationsOff: "关闭",
+    pluginEffects: "插件效果",
+    pluginEffectsDesc: "绘制插件的样式、背景和指针效果；关闭后插件命令和设置仍会工作",
     showOutline: "显示侧边栏",
     sidebarLayout: "侧边栏布局",
     sidebarLayoutDesc: "文件夹和大纲分列两侧，或合并在同一个侧边栏里",

@@ -8,6 +8,7 @@
  *   components       component classes a theme may replace (floating-panel, pressable, ...)
  *   utilities        the styles Panda generates for a component's element
  *   document-theme   the active theme, injected at runtime (lib/theme.ts)
+ *   plugin           a plugin's styles, scoped to the document (lib/plugin-styles.ts)
  *   preferences      user settings, applied by appearance.ts and the block at the end of this file
  *
  * A style rule must live in one of these layers: an unlayered rule outranks every layer and no
@@ -15,7 +16,7 @@
  * reads is defined. @keyframes are the exception: they have no layers and a later definition wins,
  * so a theme replaces one by defining it again.
  */
-@layer reset, base, editor, theme, components, utilities, document-theme, preferences;
+@layer reset, base, editor, theme, components, utilities, document-theme, plugin, preferences;
 
 @import "./features/editor/editor.css";
 

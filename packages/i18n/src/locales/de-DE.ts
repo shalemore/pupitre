@@ -259,6 +259,9 @@ export const deDE = {
     zoom: "Zoom",
     animationsOn: "An",
     animationsOff: "Aus",
+    pluginEffects: "Plugin-Effekte",
+    pluginEffectsDesc:
+      "Zeichnet Stile, Hintergründe und Zeigereffekte von Plugins; Befehle und Einstellungen funktionieren weiterhin, wenn dies aus ist",
     showOutline: "Seitenleisten anzeigen",
     sidebarLayout: "Seitenleisten-Layout",
     sidebarLayoutDesc:

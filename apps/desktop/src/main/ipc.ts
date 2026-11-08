@@ -80,6 +80,7 @@ import {
   grantPluginPermissions,
   installPlugin,
   listPlugins,
+  pluginStyles,
   revealPlugin,
   runPluginCommand,
   setPluginEnabled,
@@ -689,6 +690,7 @@ export function registerIpcHandlers(): void {
   handle("updater:install", () => installUpdate());
 
   handle("plugins:list", () => listPlugins());
+  handle("plugins:styles", () => pluginStyles());
   handle("plugins:install", (event) => installPlugin(senderWindow(event)));
   handle("plugins:set-enabled", (_event, id, enabled) => setPluginEnabled(id, enabled));
   handle("plugins:grant", (_event, id, permissions) => grantPluginPermissions(id, permissions));

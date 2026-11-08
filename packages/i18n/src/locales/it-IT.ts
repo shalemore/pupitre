@@ -256,6 +256,9 @@ export const itIT = {
     zoom: "Zoom",
     animationsOn: "Attive",
     animationsOff: "Disattivate",
+    pluginEffects: "Effetti dei plugin",
+    pluginEffectsDesc:
+      "Disegna stili, sfondi ed effetti del puntatore dei plugin; i comandi e le impostazioni continuano a funzionare quando è disattivato",
     showOutline: "Mostra le barre laterali",
     sidebarLayout: "Layout della barra laterale",
     sidebarLayoutDesc:

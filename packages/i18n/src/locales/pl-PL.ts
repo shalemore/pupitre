@@ -265,6 +265,9 @@ export const plPL = {
     zoom: "Powiększenie",
     animationsOn: "Włączone",
     animationsOff: "Wyłączone",
+    pluginEffects: "Efekty wtyczek",
+    pluginEffectsDesc:
+      "Rysuje style, tła i efekty wskaźnika wtyczek; polecenia i ustawienia nadal działają, gdy jest to wyłączone",
     showOutline: "Pokaż paski boczne",
     sidebarLayout: "Układ paska bocznego",
     sidebarLayoutDesc: "Folder i konspekt po przeciwnych stronach lub razem w jednym pasku bocznym",

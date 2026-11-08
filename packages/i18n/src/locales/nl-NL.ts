@@ -262,6 +262,9 @@ export const nlNL = {
     zoom: "Zoom",
     animationsOn: "Aan",
     animationsOff: "Uit",
+    pluginEffects: "Plug-ineffecten",
+    pluginEffectsDesc:
+      "Tekent de stijlen, achtergronden en aanwijzereffecten van plug-ins; opdrachten en instellingen blijven werken als dit uit staat",
     showOutline: "Zijbalken tonen",
     sidebarLayout: "Indeling van de zijbalk",
     sidebarLayoutDesc: "Map en overzicht aan weerszijden, of samen in één zijbalk",

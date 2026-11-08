@@ -262,6 +262,9 @@ export const isIS = {
     zoom: "Aðdráttur",
     animationsOn: "Á",
     animationsOff: "Af",
+    pluginEffects: "Viðbótaráhrif",
+    pluginEffectsDesc:
+      "Teiknar stíla, bakgrunna og bendiláhrif viðbóta; skipanir og stillingar virka áfram þegar þetta er slökkt",
     showOutline: "Sýna hliðarstikur",
     sidebarLayout: "Útlit hliðarstiku",
     sidebarLayoutDesc: "Mappa og yfirlit sitt hvorum megin, eða saman í einni hliðarstiku",

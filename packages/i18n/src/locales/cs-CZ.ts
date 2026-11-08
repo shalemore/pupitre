@@ -263,6 +263,9 @@ export const csCZ = {
     zoom: "Přiblížení",
     animationsOn: "Zapnuto",
     animationsOff: "Vypnuto",
+    pluginEffects: "Efekty pluginů",
+    pluginEffectsDesc:
+      "Vykresluje styly, pozadí a efekty ukazatele pluginů; příkazy a nastavení fungují i po vypnutí",
     showOutline: "Zobrazit postranní panely",
     sidebarLayout: "Rozvržení postranního panelu",
     sidebarLayoutDesc: "Složka a osnova na protilehlých stranách, nebo společně v jednom panelu",

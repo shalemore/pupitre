@@ -256,6 +256,9 @@ export const ptBR = {
     zoom: "Zoom",
     animationsOn: "Ativadas",
     animationsOff: "Desativadas",
+    pluginEffects: "Efeitos de plugins",
+    pluginEffectsDesc:
+      "Desenha os estilos, fundos e efeitos de ponteiro dos plugins; os comandos e ajustes continuam funcionando quando isto está desativado",
     showOutline: "Mostrar barras laterais",
     sidebarLayout: "Layout da barra lateral",
     sidebarLayoutDesc: "Pasta e estrutura em lados opostos, ou juntas em uma única barra lateral",

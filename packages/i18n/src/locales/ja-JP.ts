@@ -256,6 +256,9 @@ export const jaJP = {
     zoom: "拡大率",
     animationsOn: "オン",
     animationsOff: "オフ",
+    pluginEffects: "プラグインの効果",
+    pluginEffectsDesc:
+      "プラグインのスタイル、背景、ポインター効果を描画します。オフにしてもコマンドと設定は動作します",
     showOutline: "サイドバーを表示",
     sidebarLayout: "サイドバーのレイアウト",
     sidebarLayoutDesc: "フォルダーとアウトラインを左右に分けるか、1 つのサイドバーにまとめます",

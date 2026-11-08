@@ -256,6 +256,9 @@ export const frFR = {
     zoom: "Zoom",
     animationsOn: "Activées",
     animationsOff: "Désactivées",
+    pluginEffects: "Effets des plugins",
+    pluginEffectsDesc:
+      "Dessine les styles, les arrière-plans et les effets de pointeur des plugins ; ses commandes et réglages continuent de fonctionner quand cette option est désactivée",
     showOutline: "Afficher les barres latérales",
     sidebarLayout: "Disposition de la barre latérale",
     sidebarLayoutDesc: "Dossier et plan de chaque côté, ou réunis dans une seule barre latérale",

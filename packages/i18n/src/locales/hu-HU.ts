@@ -262,6 +262,9 @@ export const huHU = {
     zoom: "Nagyítás",
     animationsOn: "Be",
     animationsOff: "Ki",
+    pluginEffects: "Bővítményeffektek",
+    pluginEffectsDesc:
+      "A bővítmények stílusait, háttereit és mutatóeffektjeit rajzolja; kikapcsolva a parancsok és beállítások tovább működnek",
     showOutline: "Oldalsávok megjelenítése",
     sidebarLayout: "Oldalsáv elrendezése",
     sidebarLayoutDesc: "A mappa és a vázlat átellenes oldalakon, vagy együtt egyetlen oldalsávban",

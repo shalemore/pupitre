@@ -258,6 +258,9 @@ export const fiFI = {
     zoom: "Zoomaus",
     animationsOn: "Päällä",
     animationsOff: "Pois",
+    pluginEffects: "Laajennustehosteet",
+    pluginEffectsDesc:
+      "Piirtää laajennusten tyylit, taustat ja osoittimen tehosteet; komennot ja asetukset toimivat silti, kun tämä on pois päältä",
     showOutline: "Näytä sivupalkit",
     sidebarLayout: "Sivupalkin asettelu",
     sidebarLayoutDesc: "Kansio ja jäsennys vastakkaisilla puolilla tai yhdessä sivupalkissa",

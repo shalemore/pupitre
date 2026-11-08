@@ -259,6 +259,9 @@ export const daDK = {
     zoom: "Zoom",
     animationsOn: "Til",
     animationsOff: "Fra",
+    pluginEffects: "Plugineffekter",
+    pluginEffectsDesc:
+      "Tegner pluginers typografi, baggrunde og markøreffekter; kommandoer og indstillinger virker stadig, når den er slået fra",
     showOutline: "Vis sidepaneler",
     // Microsoft Danish uses "sidepanel" for a sidebar; "sidebjælke" is not the UI term
     sidebarLayout: "Layout af sidepanel",

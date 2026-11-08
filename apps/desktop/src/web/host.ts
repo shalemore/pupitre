@@ -324,6 +324,7 @@ const handlers: Handlers = {
   "themes:list": () => [],
   "themes:reveal": nothing,
   "plugins:list": () => [],
+  "plugins:styles": () => [],
   "plugins:install": () => null,
   "plugins:set-enabled": nothing,
   "plugins:grant": nothing,
