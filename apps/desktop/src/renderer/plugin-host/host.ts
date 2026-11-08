@@ -5,11 +5,9 @@ import type {
   PluginResponse,
   PluginSelection,
 } from "@pupitre/plugin-sdk";
+import { isRecord } from "@pupitre/utils";
 import { z } from "zod";
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
+import { loadScript } from "./load-script";
 
 function isBridge(value: unknown): value is PluginBridge {
   return isRecord(value) && typeof value["invoke"] === "function";
@@ -55,16 +53,6 @@ const query = new URLSearchParams(location.search);
 const id = query.get("id");
 const main = query.get("main");
 if (id === null || main === null) throw new Error("The plugin host URL is incomplete");
-
-function loadScript(src: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const script = document.createElement("script");
-    script.src = src;
-    script.addEventListener("load", () => resolve());
-    script.addEventListener("error", () => reject(new Error(`Could not load ${src}`)));
-    document.head.append(script);
-  });
-}
 
 async function text(method: string, params?: unknown): Promise<string> {
   const value = await bridge.invoke(method, params);
@@ -148,8 +136,17 @@ if (definition.commands !== undefined && definition.commands.length > 0) {
   });
 }
 
-const loaded = await bridge.invoke("settings.get");
-await definition.activate(context, isRecord(loaded) ? loaded : {});
+const declared = definition.settings;
+/** The settings file is the user's to edit, so it is parsed before the plugin sees it. */
+function valuesFrom(value: unknown): Record<string, unknown> {
+  if (declared === undefined) return {};
+  const parsed = declared.schema.safeParse(isRecord(value) ? value : {});
+  if (parsed.success) return parsed.data;
+  console.error("The plugin settings do not match its schema", parsed.error);
+  return declared.schema.parse({});
+}
+
+await definition.activate(context, valuesFrom(await bridge.invoke("settings.get")));
 
 bridge.onCommand((commandId) => {
   const command = definition.commands?.find((entry) => entry.id === commandId);
@@ -167,7 +164,7 @@ bridge.onSettings((next) => {
   void (async () => {
     try {
       await definition.deactivate?.();
-      await definition.activate(context, isRecord(next) ? next : {});
+      await definition.activate(context, valuesFrom(next));
     } catch (error: unknown) {
       console.error("The plugin could not apply its settings", error);
     }

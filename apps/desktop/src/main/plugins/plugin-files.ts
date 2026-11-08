@@ -12,6 +12,7 @@ import {
   parseManifest,
   pluginIdSchema,
 } from "@pupitre/plugin-sdk";
+import { isRecord } from "@pupitre/utils";
 import { z } from "zod";
 import { isInside } from "../is-inside";
 import { readJsonFile, writeJsonFile } from "../json-file";
@@ -90,10 +91,6 @@ export function readSettingsMeta(folder: string): StoredSettingsMeta | undefined
 
 export function writeSettingsMeta(folder: string, meta: StoredSettingsMeta): void {
   writeJsonFile(join(folder, SETTINGS_META_FILE), meta);
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 export function readSettingsValues(folder: string): Record<string, unknown> {

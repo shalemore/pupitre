@@ -23,18 +23,7 @@ const pending = new Map<
 >();
 
 function withId(id: number, input: DocumentRequestInput): PluginDocumentRequest {
-  switch (input.method) {
-    case "read":
-      return { id, method: "read" };
-    case "replace":
-      return { id, method: "replace", text: input.text };
-    case "insert":
-      return { id, method: "insert", text: input.text };
-    case "selection":
-      return { id, method: "selection" };
-    case "scrollToLine":
-      return { id, method: "scrollToLine", line: input.line };
-  }
+  return { id, ...input };
 }
 
 /**

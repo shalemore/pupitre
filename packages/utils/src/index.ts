@@ -3,6 +3,7 @@ export * from "./duration";
 export * from "./errors";
 export * from "./file-name";
 export * from "./html-text";
+export * from "./objects";
 export * from "./path";
 export * from "./text";
 export * from "./uri";

@@ -7,10 +7,8 @@ import type {
   SurfaceStateMessage,
   SurfaceTheme,
 } from "@pupitre/plugin-sdk";
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
+import { isRecord } from "@pupitre/utils";
+import { loadScript } from "./load-script";
 
 function isTheme(value: unknown): value is SurfaceTheme {
   return (
@@ -122,16 +120,6 @@ let registered: unknown;
 Reflect.set(globalThis, "__pupitreSurfaceRegister", (definition: unknown) => {
   registered = definition;
 });
-
-function loadScript(src: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const script = document.createElement("script");
-    script.src = src;
-    script.addEventListener("load", () => resolve());
-    script.addEventListener("error", () => reject(new Error(`Could not load ${src}`)));
-    document.head.append(script);
-  });
-}
 
 interface SurfaceDefinition {
   setup(context: SurfaceContext | PointerContext): void | (() => void);

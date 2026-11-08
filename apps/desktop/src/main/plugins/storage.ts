@@ -1,13 +1,10 @@
 import { join } from "node:path";
+import { isRecord } from "@pupitre/utils";
 import { readJsonFile, writeJsonFile } from "../json-file";
 
 const STORAGE_FILE = "storage.json";
 /** A plugin keeps a little state, not a database. */
 const MAX_BYTES = 1024 * 1024;
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
 
 function read(folder: string): Record<string, unknown> {
   const value = readJsonFile(join(folder, STORAGE_FILE));
