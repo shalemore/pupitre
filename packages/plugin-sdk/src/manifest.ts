@@ -45,10 +45,7 @@ export type PluginManifest = z.output<typeof pluginManifestSchema>;
 /** What a manifest file may leave out; the defaults fill it in when it is parsed. */
 export type PluginManifestInput = z.input<typeof pluginManifestSchema>;
 
-/**
- * Names a manifest without a cast. The host validates the file with `pluginManifestSchema`
- * before it uses anything in it.
- */
+/** The host validates the file with `pluginManifestSchema` before it uses anything in it. */
 export function defineManifest(manifest: PluginManifestInput): PluginManifestInput {
   return manifest;
 }

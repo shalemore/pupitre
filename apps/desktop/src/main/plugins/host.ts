@@ -9,7 +9,7 @@ const hosts = new Map<string, BrowserWindow>();
 const plugins = new Map<number, string>();
 const protocolSessions = new Set<string>();
 
-/** The hidden window hosting one plugin, while it runs. */
+/** The plugin whose host window sent a call, if a host window sent it. */
 export function pluginIdForSender(webContents: WebContents): string | undefined {
   return plugins.get(webContents.id);
 }

@@ -48,7 +48,7 @@ system trash.
 | :------------ | :------------------------------------------------------------------------------------------- |
 | `id`          | Names the plugin and its folder. Lowercase letters, digits, dots and hyphens; never changes. |
 | `name`        | `LocalizedText`: a string, or English plus any locales the plugin translates.                |
-| `version`     | Semantic version. The user consents again when an update changes the permissions.            |
+| `version`     | Semantic version. Any version change asks for consent again.                                 |
 | `engines`     | Optional; the Pupitre versions the plugin supports, as a semver range.                       |
 | `main`        | The classic script the host page loads. Optional for a plugin that only styles.              |
 | `styles`      | A CSS file the app injects for the document. Needs `ui:styles`.                              |
@@ -71,8 +71,7 @@ export default defineConfig({
 });
 ```
 
-The SDK's runtime is bundled into that file. Keep `zod` out of the bundle if you prefer; the host
-does not provide it.
+The SDK and zod are bundled into that file; the host provides neither.
 
 ## A plugin
 
@@ -115,9 +114,8 @@ export default definePlugin({
 });
 ```
 
-`activate` runs once when the plugin starts; `deactivate` runs before it stops or applies changed
-settings. A change of settings calls `deactivate`, then `activate` with the new values. Commands
-appear in the command palette.
+`activate` runs when the plugin starts. A settings change calls `deactivate`, then `activate` with
+the new values; disabling the plugin closes its window. Commands appear in the command palette.
 
 The context is the whole runtime API:
 
@@ -142,15 +140,15 @@ converts the schema to JSON Schema and the Plugins page draws a form for the fie
 booleans, numbers, strings and string enums. Everything the user sees for a plugin's settings comes
 from the plugin, in its own `LocalizedText`; the app's dictionaries only hold the page around it.
 
-Values live in `userData/plugins/<id>/settings.json`, globally for the user. They are validated
-against the plugin's schema when the plugin starts. `activate` receives the parsed values, with the
-schema's defaults filled in.
+Values live in `userData/plugins/<id>/settings.json`, globally for the user. The host parses them
+against the plugin's schema before every `activate`, with the schema's defaults filled in.
 
 ## Commands
 
-A command is `{ id, title, run(context) }`. The id is unique inside the plugin; the palette prefixes
-it with the plugin's id. Commands run in the plugin's hidden window, not in the window showing the
-document, and reach the editor only through the `document` and `editor` brokers.
+A command is `{ id, title, run(context) }`. The id is unique inside the plugin; the palette groups
+its commands under the plugin's localized name. Commands run in the plugin's hidden window, not in
+the window showing the document, and reach the editor only through the `document` and `editor`
+brokers.
 
 ## Surfaces
 

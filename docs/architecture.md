@@ -132,12 +132,10 @@ one that defines their classes.
 
 ## Installed plugins
 
-A plugin the user installs is not compiled in. `main/plugins/` scans `userData/plugins/<id>/`,
-serves its files through `pupitre-plugin://<id>/`, and runs each enabled one in a hidden window
-with its own in-memory session and no Node. Its commands are namespaced into the palette, its
-styles reach the document through the `plugin` layer, and its background and pointer modules draw
-on sandboxed canvas iframes. The manifest, the permissions and the runtime API are the contract in
-`@pupitre/plugin-sdk`; `docs/plugins.md` describes them for plugin authors.
+A plugin the user installs is not compiled in: `main/plugins/` scans `userData/plugins/<id>/`,
+serves it through `pupitre-plugin://<id>/` and runs each enabled one in a hidden window of its own.
+`@pupitre/plugin-sdk` is its contract; `docs/plugins.md` covers the manifest, permissions, runtime
+and surfaces for plugin authors.
 
 ## Themes and settings
 

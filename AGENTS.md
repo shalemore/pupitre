@@ -104,7 +104,7 @@ await app.close();
 - Main-process state is reachable with `app.evaluate`, the page with `page.evaluate`/locators.
 - Native menu shortcuts (`Ctrl+S`, `Ctrl+,`) do not fire from CDP key events. Send the command the
   menu would: `page.evaluate(() => window.desktop.invoke("app:dispatch", { id: "file.save" }))`
-  (the ids are `AppCommand` in `shared/desktop-api.ts`).
+  (the ids are `AppCommand` in `@pupitre/desktop-api`).
 - Native message boxes block the app and cannot be clicked, so a test would hang. Replace
   `dialog.showMessageBox` in the main process before the step that opens one: record the call and
   return the button to press. File pickers (`showOpenDialog`, `showSaveDialog`) can be stubbed the
@@ -204,25 +204,15 @@ than waiting for a review to notice it.
 - Text a plugin shows — its manifest name and description, setting titles, command titles — lives
   in the plugin's own `LocalizedText` and is resolved with `localize`. Only app chrome (the Plugins
   page, permission names) belongs in the app's dictionaries.
-- A plugin defines its settings with zod (`defineSettings`); its host page sends the JSON Schema
-  and the defaults to the main process, which stores the values and draws a form for booleans,
-  numbers, strings and string enums in the Plugins page. The plugin's schema is the source of truth;
-  the app never holds a setting a plugin declares.
-- A plugin's commands reach the command palette, namespaced by its id. Picking one calls
-  `plugins:run-command`, which sends the command to that plugin's host window.
-- The three visual surfaces are owned by the app. `styles` is injected into the `plugin` cascade
-  layer, scoped to `.md-document`, with its relative `url()`s inlined and `@import`, `!important`,
-  `@property`, `expression()` and external URLs refused (`main/plugins/styles.ts`). The background
-  and pointer modules draw on canvases in sandboxed iframes served by `protocol.ts`; the app posts
-  the theme and pointer samples in and accepts only `ready` back. One enabled plugin draws each
-  layer.
-- The Plugins page's **Plugin Effects** switch removes the stylesheets and both canvas layers
-  without stopping the plugins; commands and settings keep working. `pluginEffects` is an app
-  setting, tested by the renderer, not a plugin setting.
-- `@pupitre/plugin-sdk` is the publishable package: `tsdown` bundles `dist/index.js` and
-  `dist/trusted.js` with their `.d.ts` files, `publishConfig` points the exports at them, and
-  `pnpm --filter @pupitre/plugin-sdk build` refreshes them. The workspace imports the package from
-  `src` so no build step is needed in development. `docs/plugins.md` is the author guide.
+- A plugin's settings and commands are its own: zod schema, defaults, titles and command text all
+  come from the plugin. The host stores settings and draws the form; the palette groups commands
+  under the plugin's localized name and runs them in its host window.
+- The app owns the visual surfaces. A stylesheet goes into the `plugin` layer scoped to
+  `.md-document`; the background and pointer modules draw on sandboxed canvas iframes, one enabled
+  plugin per layer. The Plugins page's **Plugin Effects** switch (`pluginEffects`) removes all of
+  them without stopping the plugins. The rules for a plugin author are in `docs/plugins.md`.
+- `@pupitre/plugin-sdk` is publishable: `pnpm --filter @pupitre/plugin-sdk build` writes `dist`,
+  `publishConfig` points the exports there, and the workspace imports `src` in development.
 
 ## Code Style
 
@@ -326,7 +316,7 @@ only make code generation easier.
   `math.ts` and `footnotes.ts`). Support a new syntax by adding a Lezer `MarkdownConfig`, then
   render it with the one rule every construct follows: its markers (or, for a rendered block, its
   source) are hidden unless a selection touches it. Inline syntax and line styles live in
-  `features/editor/preview/`; blocks that replace whole lines (tables, math, diagrams, HTML,
+  `plugins/source-mode/src/preview/`; blocks that replace whole lines (tables, math, diagrams, HTML,
   `<details>`) in its `rendered-blocks.ts`, because CodeMirror only takes block decorations from a
   state field. The model both the editor and the
   export read — the syntax, the text a reader sees, tables, pictures and the page renderers — is
