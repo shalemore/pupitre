@@ -5,14 +5,7 @@ import { pluginIdSchema, type Permission, type PluginManifest } from "@pupitre/p
 import { app, dialog, shell, type BrowserWindow } from "electron";
 import log from "electron-log/main";
 import { broadcast } from "../broadcast";
-import {
-  installCopy,
-  MANIFEST_FILE,
-  readPlugin,
-  readState,
-  removePlugin,
-  writeState,
-} from "./plugin-files";
+import { installCopy, MANIFEST_FILE, readPlugin, readState, writeState } from "./plugin-files";
 
 /** Where the user's plugins live; the app's own are compiled in and need no folder. */
 function pluginsFolder(): string {
@@ -93,9 +86,10 @@ export function grantPluginPermissions(id: string, permissions: readonly Permiss
   publish();
 }
 
-export function uninstallPlugin(id: string): void {
+/** The folder goes to the system trash, so a plugin removed by mistake can be put back. */
+export async function uninstallPlugin(id: string): Promise<void> {
   pluginIdSchema.parse(id);
-  removePlugin(pluginsFolder(), id);
+  await shell.trashItem(join(pluginsFolder(), id));
   publish();
 }
 

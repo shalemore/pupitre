@@ -131,9 +131,3 @@ export function installCopy(source: string, root: string): PluginInfo {
   writeState(target, state);
   return { id: manifest.id, manifest, enabled: state.enabled, granted: state.granted };
 }
-
-/** Removes an installed plugin, whatever state it was left in. */
-export function removePlugin(root: string, id: string): void {
-  pluginIdSchema.parse(id);
-  rmSync(join(root, id), { recursive: true, force: true });
-}

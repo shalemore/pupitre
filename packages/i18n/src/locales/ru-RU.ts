@@ -401,6 +401,10 @@ export const ruRU = {
     pdfMarginNarrow: "Узкие",
     pdfMarginNormal: "Обычные",
     pdfMarginWide: "Широкие",
+    plugins: "Плагины",
+    installPlugin: "Установить плагин…",
+    noPlugins: "Плагины не установлены",
+    permissions: "Разрешения",
   },
   format: {
     bold: "Полужирный",

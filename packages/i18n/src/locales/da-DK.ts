@@ -398,6 +398,10 @@ export const daDK = {
     pdfMarginNarrow: "Smalle",
     pdfMarginNormal: "Normal",
     pdfMarginWide: "Brede",
+    plugins: "Plugins",
+    installPlugin: "Installér plugin…",
+    noPlugins: "Ingen plugins installeret",
+    permissions: "Tilladelser",
   },
   format: {
     bold: "Fed",

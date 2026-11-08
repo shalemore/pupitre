@@ -384,6 +384,10 @@ export const hiIN = {
     pdfMarginNarrow: "संकीर्ण",
     pdfMarginNormal: "सामान्य",
     pdfMarginWide: "चौड़े",
+    plugins: "प्लगइन",
+    installPlugin: "प्लगइन इंस्टॉल करें…",
+    noPlugins: "कोई प्लगइन इंस्टॉल नहीं है",
+    permissions: "अनुमतियाँ",
   },
   format: {
     bold: "बोल्ड",

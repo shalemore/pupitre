@@ -402,6 +402,10 @@ export const deDE = {
     pdfMarginNarrow: "Schmal",
     pdfMarginNormal: "Normal",
     pdfMarginWide: "Breit",
+    plugins: "Plugins",
+    installPlugin: "Plugin installieren…",
+    noPlugins: "Keine Plugins installiert",
+    permissions: "Berechtigungen",
   },
   format: {
     bold: "Fett",

@@ -390,6 +390,10 @@ export const idID = {
     pdfMarginNarrow: "Sempit",
     pdfMarginNormal: "Normal",
     pdfMarginWide: "Lebar",
+    plugins: "Plugin",
+    installPlugin: "Instal plugin…",
+    noPlugins: "Tidak ada plugin yang terinstal",
+    permissions: "Izin",
   },
   format: {
     bold: "Tebal",

@@ -399,6 +399,10 @@ export const esES = {
     pdfMarginNarrow: "Estrechos",
     pdfMarginNormal: "Normal",
     pdfMarginWide: "Anchos",
+    plugins: "Complementos",
+    installPlugin: "Instalar complemento…",
+    noPlugins: "No hay complementos instalados",
+    permissions: "Permisos",
   },
   format: {
     bold: "Negrita",

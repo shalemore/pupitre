@@ -392,6 +392,10 @@ export const koKR = {
     pdfMarginNarrow: "좁게",
     pdfMarginNormal: "보통",
     pdfMarginWide: "넓게",
+    plugins: "플러그인",
+    installPlugin: "플러그인 설치…",
+    noPlugins: "설치된 플러그인이 없습니다",
+    permissions: "권한",
   },
   format: {
     bold: "굵게",

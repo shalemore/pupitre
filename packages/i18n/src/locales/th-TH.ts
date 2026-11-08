@@ -386,6 +386,10 @@ export const thTH = {
     pdfMarginNarrow: "แคบ",
     pdfMarginNormal: "ปกติ",
     pdfMarginWide: "กว้าง",
+    plugins: "ปลั๊กอิน",
+    installPlugin: "ติดตั้งปลั๊กอิน…",
+    noPlugins: "ยังไม่มีปลั๊กอินที่ติดตั้ง",
+    permissions: "สิทธิ์",
   },
   format: {
     bold: "ตัวหนา",

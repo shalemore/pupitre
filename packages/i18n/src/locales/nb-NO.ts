@@ -399,6 +399,10 @@ export const nbNO = {
     pdfMarginNarrow: "Smale",
     pdfMarginNormal: "Normale",
     pdfMarginWide: "Brede",
+    plugins: "Plugins",
+    installPlugin: "Installer plugin…",
+    noPlugins: "Ingen plugins installert",
+    permissions: "Tillatelser",
   },
   format: {
     bold: "Fet",

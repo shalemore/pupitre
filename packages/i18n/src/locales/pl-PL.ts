@@ -406,6 +406,10 @@ export const plPL = {
     pdfMarginNarrow: "Wąskie",
     pdfMarginNormal: "Normalne",
     pdfMarginWide: "Szerokie",
+    plugins: "Wtyczki",
+    installPlugin: "Zainstaluj wtyczkę…",
+    noPlugins: "Brak zainstalowanych wtyczek",
+    permissions: "Uprawnienia",
   },
   format: {
     bold: "Pogrubienie",

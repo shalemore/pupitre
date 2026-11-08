@@ -390,6 +390,10 @@ export const zhTW = {
     pdfMarginNarrow: "窄",
     pdfMarginNormal: "標準",
     pdfMarginWide: "寬",
+    plugins: "外掛程式",
+    installPlugin: "安裝外掛程式…",
+    noPlugins: "尚未安裝外掛程式",
+    permissions: "權限",
   },
   format: {
     bold: "粗體",

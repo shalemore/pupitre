@@ -46,11 +46,10 @@ export function Switch(props: SwitchProps) {
       checked={props.checked}
       onChange={props.onChange}
       disabled={props.disabled ?? false}
-      aria-label={props["aria-label"]}
       class={root}
     >
       {/* `_peerFocusVisible` reads this marker class beside the control */}
-      <KobalteSwitch.Input class="peer" />
+      <KobalteSwitch.Input class="peer" aria-label={props["aria-label"]} />
       <KobalteSwitch.Control data-slot="switch-control" class={control}>
         <KobalteSwitch.Thumb data-slot="switch-thumb" class={thumb} />
       </KobalteSwitch.Control>

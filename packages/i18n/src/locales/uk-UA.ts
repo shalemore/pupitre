@@ -402,6 +402,10 @@ export const ukUA = {
     pdfMarginNarrow: "Вузькі",
     pdfMarginNormal: "Звичайні",
     pdfMarginWide: "Широкі",
+    plugins: "Плагіни",
+    installPlugin: "Встановити плагін…",
+    noPlugins: "Плагіни не встановлено",
+    permissions: "Дозволи",
   },
   format: {
     bold: "Напівжирний",

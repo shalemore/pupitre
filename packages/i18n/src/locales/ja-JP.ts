@@ -394,6 +394,10 @@ export const jaJP = {
     pdfMarginNarrow: "狭い",
     pdfMarginNormal: "標準",
     pdfMarginWide: "広い",
+    plugins: "プラグイン",
+    installPlugin: "プラグインをインストール…",
+    noPlugins: "インストールされたプラグインはありません",
+    permissions: "権限",
   },
   format: {
     bold: "太字",

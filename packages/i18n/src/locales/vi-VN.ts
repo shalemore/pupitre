@@ -388,6 +388,10 @@ export const viVN = {
     pdfMarginNarrow: "Hẹp",
     pdfMarginNormal: "Bình thường",
     pdfMarginWide: "Rộng",
+    plugins: "Plugin",
+    installPlugin: "Cài đặt plugin…",
+    noPlugins: "Chưa cài đặt plugin nào",
+    permissions: "Quyền",
   },
   format: {
     bold: "In đậm",

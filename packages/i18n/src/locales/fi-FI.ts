@@ -396,6 +396,10 @@ export const fiFI = {
     pdfMarginNarrow: "Kapeat",
     pdfMarginNormal: "Normaalit",
     pdfMarginWide: "Leveät",
+    plugins: "Laajennukset",
+    installPlugin: "Asenna laajennus…",
+    noPlugins: "Ei asennettuja laajennuksia",
+    permissions: "Käyttöoikeudet",
   },
   format: {
     bold: "Lihavointi",

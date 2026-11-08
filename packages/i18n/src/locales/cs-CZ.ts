@@ -401,6 +401,10 @@ export const csCZ = {
     pdfMarginNarrow: "Úzké",
     pdfMarginNormal: "Normální",
     pdfMarginWide: "Široké",
+    plugins: "Pluginy",
+    installPlugin: "Nainstalovat plugin…",
+    noPlugins: "Nejsou nainstalované žádné pluginy",
+    permissions: "Oprávnění",
   },
   format: {
     bold: "Tučně",

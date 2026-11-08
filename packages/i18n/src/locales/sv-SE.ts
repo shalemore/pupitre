@@ -398,6 +398,10 @@ export const svSE = {
     pdfMarginNarrow: "Smal",
     pdfMarginNormal: "Normal",
     pdfMarginWide: "Bred",
+    plugins: "Plugin",
+    installPlugin: "Installera plugin…",
+    noPlugins: "Inga plugin installerade",
+    permissions: "Behörigheter",
   },
   format: {
     bold: "Fet",

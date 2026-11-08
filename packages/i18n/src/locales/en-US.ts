@@ -400,6 +400,10 @@ export const enUS = {
     defaultAppManual:
       "In Finder, select a .md file, choose File › Get Info, pick Pupitre under Open With and click Change All",
     defaultAppFailed: "Could not change the default app; set it in your system settings",
+    plugins: "Plugins",
+    installPlugin: "Install Plugin…",
+    noPlugins: "No plugins installed",
+    permissions: "Permissions",
   },
   format: {
     bold: "Bold",

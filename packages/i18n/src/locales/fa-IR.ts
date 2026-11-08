@@ -391,6 +391,10 @@ export const faIR = {
     pdfMarginNarrow: "باریک",
     pdfMarginNormal: "معمولی",
     pdfMarginWide: "پهن",
+    plugins: "افزونه‌ها",
+    installPlugin: "نصب افزونه…",
+    noPlugins: "هیچ افزونه‌ای نصب نشده است",
+    permissions: "مجوزها",
   },
   format: {
     bold: "پررنگ",

@@ -400,6 +400,10 @@ export const isIS = {
     pdfMarginNarrow: "Þröngar",
     pdfMarginNormal: "Venjulegar",
     pdfMarginWide: "Víðar",
+    plugins: "Viðbætur",
+    installPlugin: "Setja upp viðbót…",
+    noPlugins: "Engar viðbætur uppsettar",
+    permissions: "Heimildir",
   },
   format: {
     bold: "Feitletra",

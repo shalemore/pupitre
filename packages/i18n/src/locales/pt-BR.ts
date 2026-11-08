@@ -396,6 +396,10 @@ export const ptBR = {
     pdfMarginNarrow: "Estreitas",
     pdfMarginNormal: "Normais",
     pdfMarginWide: "Largas",
+    plugins: "Plugins",
+    installPlugin: "Instalar plugin…",
+    noPlugins: "Nenhum plugin instalado",
+    permissions: "Permissões",
   },
   format: {
     bold: "Negrito",

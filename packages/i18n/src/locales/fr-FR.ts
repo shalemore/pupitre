@@ -399,6 +399,10 @@ export const frFR = {
     pdfMarginNarrow: "Étroites",
     pdfMarginNormal: "Normales",
     pdfMarginWide: "Larges",
+    plugins: "Plugins",
+    installPlugin: "Installer un plugin…",
+    noPlugins: "Aucun plugin installé",
+    permissions: "Autorisations",
   },
   format: {
     bold: "Gras",

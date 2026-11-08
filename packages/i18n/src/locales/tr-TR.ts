@@ -400,6 +400,10 @@ export const trTR = {
     pdfMarginNarrow: "Dar",
     pdfMarginNormal: "Normal",
     pdfMarginWide: "Geniş",
+    plugins: "Eklentiler",
+    installPlugin: "Eklenti yükle…",
+    noPlugins: "Yüklü eklenti yok",
+    permissions: "İzinler",
   },
   format: {
     bold: "Kalın",

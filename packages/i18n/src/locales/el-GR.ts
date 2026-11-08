@@ -404,6 +404,10 @@ export const elGR = {
     pdfMarginNarrow: "Στενά",
     pdfMarginNormal: "Κανονικά",
     pdfMarginWide: "Πλατιά",
+    plugins: "Πρόσθετα",
+    installPlugin: "Εγκατάσταση πρόσθετου…",
+    noPlugins: "Δεν υπάρχουν εγκατεστημένα πρόσθετα",
+    permissions: "Δικαιώματα",
   },
   format: {
     bold: "Έντονα",

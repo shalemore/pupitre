@@ -388,6 +388,10 @@ export const zhCN = {
     pdfMarginNarrow: "窄",
     pdfMarginNormal: "标准",
     pdfMarginWide: "宽",
+    plugins: "插件",
+    installPlugin: "安装插件…",
+    noPlugins: "未安装插件",
+    permissions: "权限",
   },
   format: {
     bold: "加粗",

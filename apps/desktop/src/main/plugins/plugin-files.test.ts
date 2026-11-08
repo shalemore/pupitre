@@ -2,7 +2,7 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { installCopy, readPlugin, readState, removePlugin, writeState } from "./plugin-files";
+import { installCopy, readPlugin, readState, writeState } from "./plugin-files";
 
 const folders: string[] = [];
 
@@ -122,17 +122,5 @@ describe("installCopy", () => {
     const root = await folder();
 
     expect(() => installCopy(source, root)).toThrow("must stay inside");
-  });
-});
-
-describe("removePlugin", () => {
-  it("removes the plugin folder", async () => {
-    const source = await pluginFolder();
-    const root = await folder();
-    installCopy(source, root);
-
-    removePlugin(root, "hello");
-
-    expect(readPlugin(join(root, "hello"))).toBeUndefined();
   });
 });

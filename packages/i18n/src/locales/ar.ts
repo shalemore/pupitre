@@ -402,6 +402,10 @@ export const ar = {
     pdfMarginNarrow: "ضيقة",
     pdfMarginNormal: "عادية",
     pdfMarginWide: "واسعة",
+    plugins: "الإضافات",
+    installPlugin: "تثبيت إضافة…",
+    noPlugins: "لا توجد إضافات مثبتة",
+    permissions: "الأذونات",
   },
   format: {
     bold: "غامق",

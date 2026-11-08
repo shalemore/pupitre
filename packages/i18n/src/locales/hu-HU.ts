@@ -404,6 +404,10 @@ export const huHU = {
     pdfMarginNarrow: "Keskeny",
     pdfMarginNormal: "Normál",
     pdfMarginWide: "Széles",
+    plugins: "Bővítmények",
+    installPlugin: "Bővítmény telepítése…",
+    noPlugins: "Nincs telepített bővítmény",
+    permissions: "Engedélyek",
   },
   format: {
     bold: "Félkövér",

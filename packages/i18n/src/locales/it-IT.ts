@@ -397,6 +397,10 @@ export const itIT = {
     pdfMarginNarrow: "Stretti",
     pdfMarginNormal: "Normali",
     pdfMarginWide: "Ampi",
+    plugins: "Plugin",
+    installPlugin: "Installa plugin…",
+    noPlugins: "Nessun plugin installato",
+    permissions: "Autorizzazioni",
   },
   format: {
     bold: "Grassetto",

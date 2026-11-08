@@ -4,7 +4,16 @@ import { IconButton, SegmentedControl, Separator, TabsList, TabsTrigger } from "
 import { truncateStyle } from "@pupitre/ui/styles";
 import { fileNameOf } from "@pupitre/utils";
 import pkg from "@root/package.json";
-import { FileCode2, FolderOpen, Info, Palette, Printer, Settings2, Type } from "lucide-solid";
+import {
+  FileCode2,
+  FolderOpen,
+  Info,
+  Palette,
+  Printer,
+  Puzzle,
+  Settings2,
+  Type,
+} from "lucide-solid";
 import { For, Show, type Component } from "solid-js";
 import { Dynamic } from "solid-js/web";
 import { workspace } from "@/lib/workspace";
@@ -57,7 +66,8 @@ const SECTIONS = [
   { value: "editor", icon: Type, label: () => t().settings.editor, separated: true },
   { value: "markdown", icon: FileCode2, label: () => t().settings.markdown, separated: false },
   { value: "export", icon: Printer, label: () => t().settings.export, separated: false },
-  { value: "about", icon: Info, label: () => t().settings.about, separated: true },
+  { value: "plugins", icon: Puzzle, label: () => t().settings.plugins, separated: true },
+  { value: "about", icon: Info, label: () => t().settings.about, separated: false },
 ] as const;
 
 /** The folder's settings, shown while the settings window is using them, or the global ones. */

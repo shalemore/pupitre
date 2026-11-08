@@ -9,6 +9,7 @@ import { EditorSection } from "@/features/settings/editor-section";
 import { ExportSection } from "@/features/settings/export-section";
 import { GeneralSection } from "@/features/settings/general-section";
 import { MarkdownSection } from "@/features/settings/markdown-section";
+import { PluginsSection } from "@/features/settings/plugins-section";
 import { css, cx } from "@/styled-system/css";
 import { SettingsNav } from "./settings-nav";
 import { barDivider, windowFrame } from "./window-chrome";
@@ -73,6 +74,9 @@ export const SettingsWindow: Component = () => {
           </TabsContent>
           <TabsContent value="export">
             <ExportSection />
+          </TabsContent>
+          <TabsContent value="plugins">
+            <PluginsSection />
           </TabsContent>
           <TabsContent value="about">
             <AboutSection />

@@ -404,6 +404,10 @@ export const nlNL = {
     pdfMarginNarrow: "Smal",
     pdfMarginNormal: "Normaal",
     pdfMarginWide: "Breed",
+    plugins: "Plug-ins",
+    installPlugin: "Plug-in installeren…",
+    noPlugins: "Geen plug-ins geïnstalleerd",
+    permissions: "Machtigingen",
   },
   format: {
     bold: "Vet",
