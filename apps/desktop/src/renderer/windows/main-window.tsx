@@ -24,6 +24,7 @@ import {
   type Component,
 } from "solid-js";
 import { isInsideFolder } from "@shared/paths";
+import { PopupLayer } from "@/components/popup-layer";
 import { TitleBar } from "@/components/title-bar";
 import { FindBar } from "@/features/editor/find-bar";
 import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
@@ -635,6 +636,7 @@ export const MainWindow: Component = () => {
       onPointerMove={(event) => chrome.onPointerMove(event)}
       class={windowFrame({ immersive: isImmersive() })}
     >
+      <PopupLayer />
       {/* Folding the title bar away animates its height, and the card moves up into the room */}
       <TitleBar folded={!chrome.titleBarVisible()} class={barDivider({ classic: !isImmersive() })}>
         <MainTitleContent

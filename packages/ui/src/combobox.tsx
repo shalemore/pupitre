@@ -2,6 +2,7 @@ import { Combobox as KobalteCombobox } from "@kobalte/core/combobox";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { Check, ChevronDown } from "lucide-solid";
 import { createSignal, Show } from "solid-js";
+import { popupLayer } from "./popup-layer";
 import { ScrollView, type ScrollViewProps } from "./scroll-view";
 import type { SelectOption } from "./select";
 import { css, cx } from "./styled-system/css";
@@ -240,7 +241,7 @@ export function Combobox(props: ComboboxProps) {
           </KobalteCombobox.Icon>
         </KobalteCombobox.Trigger>
       </KobalteCombobox.Control>
-      <KobalteCombobox.Portal>
+      <KobalteCombobox.Portal mount={popupLayer()}>
         <KobalteCombobox.Content
           ref={(element) => (contentElement = element)}
           data-slot="combobox-content"

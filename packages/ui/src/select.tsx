@@ -2,6 +2,7 @@ import { Select as KobalteSelect } from "@kobalte/core/select";
 import { Check, ChevronDown } from "lucide-solid";
 import { type JSX, Show } from "solid-js";
 import { Badge } from "./badge";
+import { popupLayer } from "./popup-layer";
 import { ScrollView, type ScrollViewProps } from "./scroll-view";
 import { cva, css, cx } from "./styled-system/css";
 import { FLOATING_PANEL, truncate, truncateStyle } from "./styles";
@@ -223,7 +224,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
           <ChevronDown class={chevronIcon({ variant: props.variant })} />
         </KobalteSelect.Icon>
       </KobalteSelect.Trigger>
-      <KobalteSelect.Portal>
+      <KobalteSelect.Portal mount={popupLayer()}>
         <KobalteSelect.Content data-slot="select-content" class={cx(FLOATING_PANEL, content)}>
           <KobalteSelect.Listbox
             as={(listboxProps: ScrollViewProps) => <ScrollView as="ul" {...listboxProps} />}

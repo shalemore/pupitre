@@ -2,6 +2,7 @@ import { t } from "@pupitre/i18n/solid";
 import { ScrollView, Tabs, TabsContent } from "@pupitre/ui";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { createEffect, onMount, type Component } from "solid-js";
+import { PopupLayer } from "@/components/popup-layer";
 import { TitleBar } from "@/components/title-bar";
 import { AboutSection } from "@/features/settings/about-section";
 import { AppearanceSection } from "@/features/settings/appearance-section";
@@ -49,6 +50,7 @@ export const SettingsWindow: Component = () => {
 
   return (
     <div class={cx(windowFrame({ immersive: false }), settingsFrame)}>
+      <PopupLayer />
       <TitleBar class={barDivider({ classic: true })}>
         <span class={title}>{t().settings.title}</span>
       </TitleBar>

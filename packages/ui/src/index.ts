@@ -7,6 +7,7 @@ export * from "./icon-button";
 export * from "./input";
 export * from "./kbd";
 export * from "./list-item";
+export * from "./popup-layer";
 export * from "./scroll-view";
 export * from "./scroll-view-preferences";
 export * from "./segmented-control";

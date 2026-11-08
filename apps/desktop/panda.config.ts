@@ -12,8 +12,16 @@ import { pandaPreset } from "@pupitre/panda-preset";
 export default defineConfig({
   presets: ["@pandacss/preset-base", "@pandacss/preset-panda", pandaPreset],
   // The app and the main process must agree on the bar's height, so the token comes from the
-  // constant the native window is given rather than a second number in the stylesheet
-  theme: { extend: { tokens: { sizes: { titleBar: { value: `${TITLE_BAR_HEIGHT}px` } } } } },
+  // constant the native window is given rather than a second number in the stylesheet. The spacing
+  // scale names the same height, for a panel inset below the bar.
+  theme: {
+    extend: {
+      tokens: {
+        sizes: { titleBar: { value: `${TITLE_BAR_HEIGHT}px` } },
+        spacing: { titleBar: { value: `${TITLE_BAR_HEIGHT}px` } },
+      },
+    },
+  },
   // Native controls come with borders, margins and a background of their own; the reset takes
   // them away so the app's styles decide every one of them
   preflight: true,
