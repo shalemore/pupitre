@@ -130,6 +130,15 @@ Plugins are leaves like packages: `check:architecture` keeps them from reaching 
 one another, and the app's Panda config scans their source, so the app's stylesheet stays the only
 one that defines their classes.
 
+## Installed plugins
+
+A plugin the user installs is not compiled in. `main/plugins/` scans `userData/plugins/<id>/`,
+serves its files through `pupitre-plugin://<id>/`, and runs each enabled one in a hidden window
+with its own in-memory session and no Node. Its commands are namespaced into the palette, its
+styles reach the document through the `plugin` layer, and its background and pointer modules draw
+on sandboxed canvas iframes. The manifest, the permissions and the runtime API are the contract in
+`@pupitre/plugin-sdk`; `docs/plugins.md` describes them for plugin authors.
+
 ## Themes and settings
 
 A theme is a folder `apps/desktop/src/renderer/themes/<name>/` with an `index.css`, and the folder name is the

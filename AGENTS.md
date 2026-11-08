@@ -204,6 +204,25 @@ than waiting for a review to notice it.
 - Text a plugin shows — its manifest name and description, setting titles, command titles — lives
   in the plugin's own `LocalizedText` and is resolved with `localize`. Only app chrome (the Plugins
   page, permission names) belongs in the app's dictionaries.
+- A plugin defines its settings with zod (`defineSettings`); its host page sends the JSON Schema
+  and the defaults to the main process, which stores the values and draws a form for booleans,
+  numbers, strings and string enums in the Plugins page. The plugin's schema is the source of truth;
+  the app never holds a setting a plugin declares.
+- A plugin's commands reach the command palette, namespaced by its id. Picking one calls
+  `plugins:run-command`, which sends the command to that plugin's host window.
+- The three visual surfaces are owned by the app. `styles` is injected into the `plugin` cascade
+  layer, scoped to `.md-document`, with its relative `url()`s inlined and `@import`, `!important`,
+  `@property`, `expression()` and external URLs refused (`main/plugins/styles.ts`). The background
+  and pointer modules draw on canvases in sandboxed iframes served by `protocol.ts`; the app posts
+  the theme and pointer samples in and accepts only `ready` back. One enabled plugin draws each
+  layer.
+- The Plugins page's **Plugin Effects** switch removes the stylesheets and both canvas layers
+  without stopping the plugins; commands and settings keep working. `pluginEffects` is an app
+  setting, tested by the renderer, not a plugin setting.
+- `@pupitre/plugin-sdk` is the publishable package: `tsdown` bundles `dist/index.js` and
+  `dist/trusted.js` with their `.d.ts` files, `publishConfig` points the exports at them, and
+  `pnpm --filter @pupitre/plugin-sdk build` refreshes them. The workspace imports the package from
+  `src` so no build step is needed in development. `docs/plugins.md` is the author guide.
 
 ## Code Style
 
