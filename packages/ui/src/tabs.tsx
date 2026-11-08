@@ -19,7 +19,7 @@ const trigger = css({
   paddingInline: "2.5",
   paddingBlock: "2",
   textAlign: "start",
-  textStyle: "sm",
+  textStyle: "xs",
   color: "muted.foreground",
   outlineStyle: "none",
   cursor: "pointer",

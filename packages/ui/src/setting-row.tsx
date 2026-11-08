@@ -17,10 +17,10 @@ const row = css({
   paddingBlock: "3",
 });
 const text = css({ display: "flex", minWidth: "0", flexDirection: "column", gap: "1" });
-const title = css({ textStyle: "sm", fontWeight: "medium", color: "foreground" });
-const headingTitle = css({ textStyle: "base", fontWeight: "semibold" });
+const title = css({ textStyle: "xs", fontWeight: "medium", color: "foreground" });
+const headingTitle = css({ textStyle: "sm", fontWeight: "semibold" });
 const description = css({
-  textStyle: "sm",
+  textStyle: "2xs",
   lineHeight: "relaxed",
   color: "muted.foreground",
   overflowWrap: "anywhere",

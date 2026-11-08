@@ -10,7 +10,7 @@ import { css } from "@/styled-system/css";
 const section = css({ maxWidth: "2xl" });
 const header = css({ marginBlockEnd: "8" });
 const title = css({
-  textStyle: "xl",
+  textStyle: "base",
   fontWeight: "semibold",
   letterSpacing: "tight",
   color: "foreground",
@@ -18,7 +18,7 @@ const title = css({
 const description = css({
   marginBlockStart: "2",
   maxWidth: "xl",
-  textStyle: "sm",
+  textStyle: "xs",
   lineHeight: "relaxed",
   color: "muted.foreground",
 });

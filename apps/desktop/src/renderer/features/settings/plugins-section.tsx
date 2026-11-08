@@ -13,7 +13,7 @@ import { css } from "@/styled-system/css";
 import { SettingGroup, SettingsSection } from "./settings-section";
 
 const toolbar = css({ marginBlockEnd: "4" });
-const empty = css({ textStyle: "sm", color: "muted.foreground" });
+const empty = css({ textStyle: "xs", color: "muted.foreground" });
 const titleRow = css({ display: "flex", alignItems: "baseline", gap: "2" });
 const version = css({
   textStyle: "2xs",

@@ -15,7 +15,7 @@ import { SettingsNav } from "./settings-nav";
 import { barDivider, windowFrame } from "./window-chrome";
 
 const settingsFrame = css({ userSelect: "none" });
-const title = css({ textStyle: "sm", fontWeight: "semibold", color: "foreground" });
+const title = css({ textStyle: "xs", fontWeight: "semibold", color: "foreground" });
 const tabs = css({ display: "flex", flex: "1", minHeight: "0", overflow: "hidden" });
 const settingsSidebar = css({
   display: "flex",
