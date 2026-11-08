@@ -1,5 +1,5 @@
 import { EditorView, ViewPlugin, type ViewUpdate } from "@codemirror/view";
-import { readDuration } from "@/lib/motion";
+import { readDuration } from "@pupitre/utils";
 
 /**
  * Whether an editor's DOM is about to change because the text did, rather than because the view

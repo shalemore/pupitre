@@ -11,7 +11,7 @@ import {
   markers,
   parseImageTag,
 } from "@pupitre/markdown";
-import { openImageMenu } from "@/features/editor/images/image-menu";
+import { sourceModeHost } from "../host";
 import {
   showsRendering,
   visitBlockquote,
@@ -378,7 +378,7 @@ const livePreviewPlugin = ViewPlugin.fromClass(
       },
       // A right-click on a picture offers what can be done with the file behind it
       contextmenu(event, view) {
-        return openImageMenu(view, event);
+        return sourceModeHost().openImageMenu(view, event);
       },
     },
   },

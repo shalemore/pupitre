@@ -41,6 +41,7 @@ export default defineConfig({
             "src/renderer/**/*.test.{ts,tsx}",
             "../../packages/markdown/src/**/*.test.ts",
             "../../packages/utils/src/**/*.test.ts",
+            "../../plugins/*/src/**/*.test.{ts,tsx}",
           ],
           // The renderer reads window.desktop at import time; the web demo's host provides one
           // that keeps everything in memory
@@ -50,10 +51,15 @@ export default defineConfig({
     ],
     coverage: {
       provider: "v8",
-      include: ["src/**/*.{ts,tsx}", "../../packages/*/src/**/*.{ts,tsx}"],
+      include: [
+        "src/**/*.{ts,tsx}",
+        "../../packages/*/src/**/*.{ts,tsx}",
+        "../../plugins/*/src/**/*.{ts,tsx}",
+      ],
       exclude: [
         "src/**/*.test.{ts,tsx}",
         "../../packages/*/src/**/*.test.{ts,tsx}",
+        "../../plugins/*/src/**/*.test.{ts,tsx}",
         "src/**/testing.ts",
         "../../packages/i18n/src/locales/**",
         "src/**/*.d.ts",

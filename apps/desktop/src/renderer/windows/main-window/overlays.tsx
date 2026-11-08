@@ -1,6 +1,6 @@
+import { TableSizeDialog } from "@pupitre/plugin-source-mode";
 import type { Component } from "solid-js";
 import { CommandPalette } from "@/features/command-palette/command-palette";
-import { TableSizeDialog } from "@/features/editor/tables/table-size-dialog";
 import { QuickOpen } from "@/features/quick-open";
 import { VersionHistory } from "@/features/version-history";
 import { WorkspaceSearch } from "@/features/workspace-search";

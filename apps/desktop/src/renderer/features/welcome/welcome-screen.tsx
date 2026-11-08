@@ -2,9 +2,9 @@ import { desktop, isMacOS } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
 import { Button, Kbd, ListItem, ScrollView } from "@pupitre/ui";
 import { truncateStyle } from "@pupitre/ui/styles";
+import { fileNameOf } from "@pupitre/utils";
 import { FilePlus, FolderOpen } from "lucide-solid";
 import { For, Show, type Component } from "solid-js";
-import { fileNameOf } from "@/lib/file";
 import { css, cx } from "@/styled-system/css";
 import { LookChooser } from "./look-chooser";
 

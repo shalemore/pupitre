@@ -1,3 +1,4 @@
+import { readDuration } from "@pupitre/utils";
 import BezierEasing from "bezier-easing";
 import { settings } from "@/lib/settings";
 import { readToken } from "@/lib/tokens";
@@ -23,16 +24,6 @@ interface Bezier {
 export interface Timing {
   duration: number;
   ease: (t: number) => number;
-}
-
-/** A duration token from the stylesheet in milliseconds, or 0 when it cannot be read. */
-export function readDuration(value: string): number {
-  const length = Number.parseFloat(value);
-  if (!Number.isFinite(length)) return 0;
-  const trimmed = value.trim();
-  if (trimmed.endsWith("ms")) return length;
-  if (trimmed.endsWith("s")) return length * 1000;
-  return 0;
 }
 
 function parseBezier(value: string): Bezier | undefined {

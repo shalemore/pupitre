@@ -1,9 +1,5 @@
 import { DOCUMENT_FILE } from "@pupitre/desktop-api";
 
-export function fileNameOf(path: string): string {
-  return path.split(/[\\/]/).pop() ?? path;
-}
-
 /** A document's name without its Markdown extension, for naming what is exported from it. */
 export function withoutDocumentExtension(name: string): string {
   return name.replace(DOCUMENT_FILE, "");

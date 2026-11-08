@@ -27,7 +27,7 @@ import {
   searchPanelOpen,
   setSearchQuery,
 } from "@codemirror/search";
-import { Compartment, EditorState, type Extension, Prec } from "@codemirror/state";
+import { Compartment, EditorState, Prec } from "@codemirror/state";
 import { type Command, EditorView, keymap, placeholder } from "@codemirror/view";
 import { desktop } from "@pupitre/desktop-api/client";
 import type { FormatAction } from "@pupitre/desktop-api/format-actions";
@@ -51,13 +51,20 @@ import {
   prerenderMath,
   textDirection,
 } from "@pupitre/markdown";
+import {
+  closeInlineTags,
+  imageCaptionClick,
+  imageInput,
+  markdownPairing,
+  scrollToDocument,
+  setPrinting,
+  smartTyping,
+} from "@pupitre/plugin-source-mode";
 import { ScrollView } from "@pupitre/ui";
 import { escapeHtml, messageOf } from "@pupitre/utils";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { debounce } from "@solid-primitives/scheduled";
 import { createEffect, on, onCleanup, onMount, type Component } from "solid-js";
-import { imageCaptionClick, imageInput } from "@/features/editor/images/image-widget";
-import { closeInlineTags } from "@/features/editor/widgets/html-widget";
 import {
   type DocumentPosition,
   flushDocumentPositions,
@@ -84,21 +91,16 @@ import {
   type MarkdownStyle,
   runFormatAction,
 } from "./format-commands";
-import { leavingBlocks } from "./leave";
 import { createOutlineTracker } from "./outline";
 import { pageEnvironment } from "./page-environment";
 import { pasteHtml } from "./paste-html";
-import { livePreview, setPrinting } from "./preview/live-preview";
-import { renderedBlocks } from "./preview/rendered-blocks";
 import { renumberOrderedLists } from "./renumber-lists";
-import { scrollToDocument } from "./scroll";
 import {
   createMatchCounter,
   type MatchStats,
   type SearchOptions,
   selectedSearchText,
 } from "./search";
-import { markdownPairing, smartTyping } from "./smart-typing";
 import { layeredStyles, scrollArea } from "./styles";
 import editorCss from "./editor.css?raw";
 
@@ -196,10 +198,6 @@ function markdownStyle(): MarkdownStyle {
  * What shows the document rendered, or nothing in source mode, where the source of every construct
  * is the document: the markers, the tables, the images and the diagrams as they were written.
  */
-function previewOf(sourceMode: boolean): Extension {
-  return sourceMode ? [] : [livePreview, renderedBlocks, leavingBlocks];
-}
-
 /** How long a scroll or a keystroke settles before the place in the document is measured and saved. */
 const POSITION_SAVE_DEBOUNCE_MS = 150;
 
@@ -240,7 +238,6 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     const baseUrlCompartment = new Compartment();
     const documentPathCompartment = new Compartment();
     const diagramThemeCompartment = new Compartment();
-    const previewCompartment = new Compartment();
     const pairingCompartment = new Compartment();
     const languageCompartment = new Compartment();
 
@@ -310,7 +307,6 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
                 alertTitles.of(t().editor.alerts),
               ]
             : []),
-          previewCompartment.of(markdown ? previewOf(settings().sourceMode) : []),
           baseUrlCompartment.of(markdown ? documentBaseUrl.of(props.baseUrl) : []),
           documentPathCompartment.of(markdown ? documentFilePath.of(props.documentPath) : []),
           diagramThemeCompartment.of(markdown ? diagramTheme.of(readDiagramTheme()) : []),
@@ -371,22 +367,14 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       if (!markdown || sourceConfigured === sourceMode) return;
       sourceConfigured = sourceMode;
       const reconfigure = () =>
-        view.dispatch({ effects: previewCompartment.reconfigure(previewOf(sourceMode)) });
+        view.dispatch({
+          effects: pluginsCompartment.reconfigure(pluginExtensions({ ...settings(), sourceMode })),
+        });
       // The markers, the renderings and every line's height change at once: the window cross-fades
       // the two states instead of the document flashing from one to the other
       if (animate) withViewTransition(reconfigure);
       else reconfigure();
     };
-
-    // The setting may be changed from the View menu, the settings window or a folder's own file
-    createEffect(
-      on(
-        () => settings().sourceMode,
-        (sourceMode) => {
-          if (markdown) showSource(sourceMode);
-        },
-      ),
-    );
 
     // Only the characters that pair change, so the setting swaps that one extension and keeps the
     // text, the caret and the undo history as they are
@@ -410,15 +398,21 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       const next = settings();
       const previous = previousSettings;
       previousSettings = next;
-      view.dispatch({
-        effects: [
-          pluginsCompartment.reconfigure(pluginExtensions(next)),
-          spellcheckCompartment.reconfigure(
-            EditorView.contentAttributes.of({ spellcheck: String(next.spellcheck) }),
-          ),
-          cursorCompartment.reconfigure(cursorStyle(next.cursorShape, next.cursorBlink)),
-        ],
-      });
+      const reconfigure = () =>
+        view.dispatch({
+          effects: [
+            pluginsCompartment.reconfigure(pluginExtensions(next)),
+            spellcheckCompartment.reconfigure(
+              EditorView.contentAttributes.of({ spellcheck: String(next.spellcheck) }),
+            ),
+            cursorCompartment.reconfigure(cursorStyle(next.cursorShape, next.cursorBlink)),
+          ],
+        });
+      // Source mode changes every line's height at once: the window cross-fades the two states
+      // instead of the document flashing from one to the other
+      if (markdown && next.sourceMode !== previous.sourceMode) withViewTransition(reconfigure);
+      else reconfigure();
+      sourceConfigured = next.sourceMode;
       pluginSettingsChanged(view, next, previous);
     });
 

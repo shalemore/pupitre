@@ -123,13 +123,14 @@ await app.evaluate(({ dialog }) => {
 
 ## Process Layout
 
-The repository is a pnpm workspace: `apps/desktop/` is the Electron app and `packages/` holds what
-it shares, so another app or a published package can use the same code. The folder map lives in
-[docs/architecture.md](docs/architecture.md#the-folder-layout), so the two cannot drift apart. What
-matters for a change is the direction of imports:
+The repository is a pnpm workspace: `apps/desktop/` is the Electron app, `packages/` holds what it
+shares and `plugins/` holds the built-in plugins, so another app or a published package can use the
+same code. The folder map lives in [docs/architecture.md](docs/architecture.md#the-folder-layout),
+so the two cannot drift apart. What matters for a change is the direction of imports:
 
-- A package is the bottom of the tree: it never imports `apps/desktop`, its processes or its
-  renderer. Packages use relative imports inside themselves, never the app's `@/` or `@shared/`.
+- A package and a plugin are the bottom of the tree: neither imports `apps/desktop`, its processes
+  or its renderer, and a plugin never imports another plugin. Both use relative imports inside
+  themselves, never the app's `@/` or `@shared/`.
 - `apps/desktop/src/shared/` is the code both processes can use; it never imports the renderer, the
   main process or the preload.
 - `renderer/lib/` and `renderer/components/` are shared by features. A feature may use them, never
@@ -171,6 +172,21 @@ than waiting for a review to notice it.
   which are read before a folder is open or have nothing to do with one. The file is created by the
   first change made while it is in use, never by switching to it. Whatever else a folder gets later,
   such as its own themes, belongs under `.pupitre/` too.
+
+## Plugins
+
+- A built-in plugin is a workspace package under `plugins/<name>/` that exports a `TrustedPlugin`
+  from `@pupitre/plugin-sdk/trusted`. It is compiled into the app and may return CodeMirror
+  extensions, but it never imports the app.
+- `apps/desktop/src/renderer/plugins/registry.ts` is the composition root: it lists the built-in
+  plugins and implements the host interfaces they ask for. What a plugin needs from the app's
+  chrome, dialogs or animation settings is one small interface (`plugins/source-mode/src/host.ts`),
+  never an app import.
+- A plugin types its settings as the slice of `Settings` it reads, so it never sees or changes a
+  setting it does not use.
+- A plugin package's `index.ts` exports only what the host uses; everything else stays internal.
+- The app's Panda config scans `plugins/*/src`, and plugin code imports `css`/`cx` from
+  `@pupitre/ui`; the app's stylesheet remains the only generated one.
 
 ## Code Style
 

@@ -6,11 +6,11 @@ import {
 } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import { currentLocale, t } from "@pupitre/i18n/solid";
-import { messageOf } from "@pupitre/utils";
+import { fileNameOf, messageOf } from "@pupitre/utils";
 import { debounce } from "@solid-primitives/scheduled";
 import { batch, createEffect, createMemo, createSignal, on, onCleanup } from "solid-js";
 import { reportFailure } from "@/lib/errors";
-import { fileNameOf, withTrailingNewline } from "@/lib/file";
+import { withTrailingNewline } from "@/lib/file";
 import { createPendingImages, type PendingImages } from "@/lib/pending-images";
 import { recentFiles } from "@/lib/recent-files";
 import { getSampleDocument } from "@/lib/samples/sample-document";

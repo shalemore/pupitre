@@ -1,12 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { fileNameOf, parentFolder, withoutDocumentExtension, withTrailingNewline } from "./file";
+import { parentFolder, withoutDocumentExtension, withTrailingNewline } from "./file";
 
 describe("file helpers", () => {
-  it("reads the name of a path with either separator", () => {
-    expect(fileNameOf("C:\\notes\\today.md")).toBe("today.md");
-    expect(fileNameOf("/home/me/notes/today.md")).toBe("today.md");
-  });
-
   it("drops the Markdown extension only", () => {
     expect(withoutDocumentExtension("today.md")).toBe("today");
     expect(withoutDocumentExtension("archive.tar.gz")).toBe("archive.tar.gz");

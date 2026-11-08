@@ -3,7 +3,7 @@ import type { EditorState } from "@codemirror/state";
 import { type EditorView, WidgetType } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
 import { animateDetails, detailsSection, toggleDetails } from "@pupitre/markdown";
-import { readDuration } from "@/lib/motion";
+import { readDuration } from "@pupitre/utils";
 
 /** The opening block a section starts with, from the position its summary stands for. */
 function openingBlock(state: EditorState, pos: number): SyntaxNode | undefined {

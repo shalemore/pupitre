@@ -1,5 +1,5 @@
+import { readDuration } from "@pupitre/utils";
 import { createSignal, onCleanup } from "solid-js";
-import { readDuration } from "@/lib/motion";
 import { readToken } from "@/lib/tokens";
 
 /** How long the panel's exit animation runs, from the duration token the closed state asks for. */

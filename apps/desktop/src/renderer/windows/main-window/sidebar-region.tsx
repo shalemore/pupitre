@@ -1,4 +1,5 @@
 import { t } from "@pupitre/i18n/solid";
+import { fileNameOf } from "@pupitre/utils";
 import { Show, type Component, type JSX } from "solid-js";
 import {
   Sidebar,
@@ -8,7 +9,6 @@ import {
   type SidebarRail,
 } from "@/features/sidebar/sidebar";
 import type { SidebarControl } from "@/features/sidebar/sidebar-control";
-import { fileNameOf } from "@/lib/file";
 import { sidebarDivider } from "@/windows/window-chrome";
 
 interface SidebarRegionProps {

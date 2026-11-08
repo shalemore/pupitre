@@ -6,8 +6,8 @@ import {
   type ImageSize,
   imageAt,
 } from "@pupitre/markdown";
-import { relabelOnLocaleChange } from "@/features/editor/widgets/relabel-on-locale";
-import { css, cx } from "@/styled-system/css";
+import { css, cx } from "@pupitre/ui";
+import { relabelOnLocaleChange } from "../widgets/relabel-on-locale";
 import { applyImageWidth } from "./image-geometry";
 
 /**

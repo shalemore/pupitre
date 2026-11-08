@@ -9,9 +9,9 @@ import {
   VOID_TAGS,
 } from "@pupitre/markdown";
 import DOMPurify from "dompurify";
-import { imageDom, watchHtmlImages } from "@/features/editor/images/image-widget";
-import { fadeOut } from "@/features/editor/leave";
-import { isLiteralText } from "@/features/editor/smart-typing";
+import { imageDom, watchHtmlImages } from "../images/image-widget";
+import { fadeOut } from "../leave";
+import { isLiteralText } from "../smart-typing";
 
 /**
  * The editor side of raw HTML: closing a tag as it is typed, the line break of an inline

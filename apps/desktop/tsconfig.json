@@ -9,7 +9,7 @@
     { "path": "../../packages/markdown" },
     { "path": "../../packages/plugin-sdk" },
     { "path": "../../plugins/writing-modes" },
-    { "path": "../../packages/plugin-sdk" },
+    { "path": "../../plugins/source-mode" },
     { "path": "../../packages/ui" },
     { "path": "./tsconfig.node.json" },
     { "path": "./tsconfig.web.json" },

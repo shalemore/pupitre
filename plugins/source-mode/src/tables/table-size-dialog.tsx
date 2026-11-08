@@ -1,7 +1,6 @@
 import { t } from "@pupitre/i18n/solid";
-import { Button, Input, Sheet } from "@pupitre/ui";
+import { Button, css, Input, Sheet } from "@pupitre/ui";
 import { createSignal, onMount, type Component } from "solid-js";
-import { css } from "@/styled-system/css";
 
 /** The rows count the header, so three rows are a header row and two body rows. */
 const ROWS = { min: 1, max: 20, initial: 3 } as const;

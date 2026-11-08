@@ -22,16 +22,14 @@ export default defineConfig({
     "./src/renderer/**/*.{ts,tsx}",
     "./src/web/**/*.{ts,tsx}",
     "../../packages/ui/src/**/*.{ts,tsx}",
+    "../../plugins/*/src/**/*.{ts,tsx}",
   ],
   outdir: "src/renderer/styled-system",
-  // The app imports through the renderer's alias and the UI package through a sibling path; Panda
-  // only extracts the styles of a file whose helpers it can name, so both paths are listed here
+  // The app imports through the renderer's alias, the UI package through a sibling path and the
+  // plugins through the package's own entry; Panda only extracts the styles of a file whose
+  // helpers it can name, so every path is listed here
   importMap: {
-    css: ["@/styled-system/css", "./styled-system/css"],
-    recipes: ["@/styled-system/recipes", "./styled-system/recipes"],
-    patterns: ["@/styled-system/patterns", "./styled-system/patterns"],
-    jsx: ["@/styled-system/jsx", "./styled-system/jsx"],
-    tokens: ["@/styled-system/tokens", "./styled-system/tokens"],
+    css: ["@/styled-system/css", "./styled-system/css", "@pupitre/ui"],
   },
   // Generated code is not a source the scanner should read back
   exclude: ["./src/renderer/styled-system", "../../packages/ui/src/styled-system"],

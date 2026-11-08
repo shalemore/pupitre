@@ -10,10 +10,10 @@ import {
   resolveUrl,
   type DocumentImage,
 } from "@pupitre/markdown";
-import { ImageWidget } from "@/features/editor/images/image-widget";
-import { EmojiWidget } from "@/features/editor/widgets/emoji-widget";
-import { MathWidget } from "@/features/editor/widgets/math-widget";
-import { relabelOnLocaleChange } from "@/features/editor/widgets/relabel-on-locale";
+import { ImageWidget } from "../images/image-widget";
+import { EmojiWidget } from "../widgets/emoji-widget";
+import { MathWidget } from "../widgets/math-widget";
+import { relabelOnLocaleChange } from "../widgets/relabel-on-locale";
 import { type DecorationBuilder, touches } from "./builder";
 
 /**

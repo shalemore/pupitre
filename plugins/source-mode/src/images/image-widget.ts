@@ -12,7 +12,7 @@ import {
   sameImageSize,
   setImageLayout,
 } from "@pupitre/markdown";
-import { relabelOnLocaleChange } from "@/features/editor/widgets/relabel-on-locale";
+import { relabelOnLocaleChange } from "../widgets/relabel-on-locale";
 import { alignmentToolbar, resizeHandle, TOOLBAR_INSET } from "./image-controls";
 import { applyImageLayout } from "./image-geometry";
 import { watchImage } from "./image-loading";

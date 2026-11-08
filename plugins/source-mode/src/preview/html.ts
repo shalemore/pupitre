@@ -7,7 +7,7 @@ import {
   isFormattingTag,
   parseImageTag,
 } from "@pupitre/markdown";
-import { LineBreakWidget } from "@/features/editor/widgets/html-widget";
+import { LineBreakWidget } from "../widgets/html-widget";
 import { type DecorationBuilder, touches } from "./builder";
 import { placeImage } from "./inline";
 

@@ -2,6 +2,7 @@ import { IMAGE_FILE, MARKDOWN_FILE, type AppCommand } from "@pupitre/desktop-api
 import { desktop } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
 import { headingKey, type OutlineHeading } from "@pupitre/markdown";
+import { ImagePreview } from "@pupitre/plugin-source-mode";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { scheduleIdle } from "@solid-primitives/scheduled";
 import {
@@ -18,7 +19,6 @@ import {
 import { isInsideFolder } from "@shared/paths";
 import { TitleBar } from "@/components/title-bar";
 import { FindBar } from "@/features/editor/find-bar";
-import { ImagePreview } from "@/features/editor/images/image-preview";
 import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
 import type { MatchStats } from "@/features/editor/search";
 import { FolderTree } from "@/features/sidebar/folder-tree";

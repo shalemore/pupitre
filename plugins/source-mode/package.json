@@ -1,0 +1,39 @@
+{
+  "name": "@pupitre/plugin-source-mode",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@codemirror/autocomplete": "^6.20.4",
+    "@codemirror/commands": "^6.11.1",
+    "@codemirror/language": "^6.13.1",
+    "@codemirror/state": "^6.7.6",
+    "@codemirror/view": "^6.43.15",
+    "@lezer/common": "^1.5.4",
+    "@pupitre/desktop-api": "workspace:*",
+    "@pupitre/i18n": "workspace:*",
+    "@pupitre/markdown": "workspace:*",
+    "@pupitre/plugin-sdk": "workspace:*",
+    "@pupitre/ui": "workspace:*",
+    "@pupitre/utils": "workspace:*",
+    "@solid-primitives/scheduled": "^1.5.3",
+    "dompurify": "^3.4.17",
+    "lucide-solid": "^1.16.0"
+  },
+  "devDependencies": {
+    "@tsconfig/strictest": "^2.0.8",
+    "solid-js": "^1.9.5",
+    "vitest": "^5.0.5"
+  },
+  "peerDependencies": {
+    "solid-js": "^1.9.5"
+  }
+}

@@ -1,5 +1,5 @@
 import { EditorView } from "@codemirror/view";
-import { motionEnabled, scrollTiming } from "@/lib/motion";
+import { sourceModeHost } from "./host";
 
 let frame: number | undefined;
 let stopListening: (() => void) | undefined;
@@ -55,13 +55,13 @@ export function scrollToDocument(view: EditorView, pos: number): void {
     });
   };
 
-  if (!motionEnabled()) {
+  if (!sourceModeHost().motionEnabled()) {
     scroller.scrollTop = view.lineBlockAt(pos).top;
     settle(0);
     return;
   }
 
-  const { duration, ease } = scrollTiming();
+  const { duration, ease } = sourceModeHost().scrollTiming();
   const start = scroller.scrollTop;
   const started = performance.now();
   // The pointer takes the scroll back over the moment it moves the page

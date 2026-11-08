@@ -14,7 +14,7 @@ import {
   moveRow,
   type TableModel,
 } from "@pupitre/markdown";
-import { IconButton, Separator } from "@pupitre/ui";
+import { css, cx, IconButton, Separator } from "@pupitre/ui";
 import { rtlFlip } from "@pupitre/ui/styles";
 import {
   ArrowDown,
@@ -34,7 +34,6 @@ import {
   X,
 } from "lucide-solid";
 import { type Accessor, type Component, type JSX, Show } from "solid-js";
-import { css, cx } from "@/styled-system/css";
 import type { CellPosition } from "./table-cell";
 
 const ToolButton: Component<{

@@ -25,12 +25,12 @@ import {
   toggledDetails,
   toggleDetails,
 } from "@pupitre/markdown";
-import { TableWidget, tableCursor } from "@/features/editor/tables/table";
-import { SummaryWidget } from "@/features/editor/widgets/details-widget";
-import { HtmlBlockWidget } from "@/features/editor/widgets/html-widget";
-import { MathWidget } from "@/features/editor/widgets/math-widget";
-import { MermaidWidget } from "@/features/editor/widgets/mermaid-widget";
-import { TOC_MARKER, TocWidget } from "@/features/editor/widgets/toc";
+import { TableWidget, tableCursor } from "../tables/table";
+import { SummaryWidget } from "../widgets/details-widget";
+import { HtmlBlockWidget } from "../widgets/html-widget";
+import { MathWidget } from "../widgets/math-widget";
+import { MermaidWidget } from "../widgets/mermaid-widget";
+import { TOC_MARKER, TocWidget } from "../widgets/toc";
 import { lineRange, printingChanged, revealingRanges, touches } from "./builder";
 
 /**

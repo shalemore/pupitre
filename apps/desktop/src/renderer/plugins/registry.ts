@@ -1,14 +1,20 @@
 import type { Extension } from "@codemirror/state";
 import type { EditorView } from "@codemirror/view";
 import type { TrustedPlugin } from "@pupitre/plugin-sdk/trusted";
+import { configureSourceModeHost, sourceMode } from "@pupitre/plugin-source-mode";
 import { writingModes } from "@pupitre/plugin-writing-modes";
 import type { Settings } from "@pupitre/settings";
+import { openImageMenu } from "@/features/editor/image-menu";
+import { motionEnabled, scrollTiming } from "@/lib/motion";
 
 /**
  * The trusted plugins compiled into the app, in the order their extensions reach the editor.
  * They read the app's own settings, so a setting the user already had keeps its meaning.
  */
-const builtinPlugins: readonly TrustedPlugin<Settings>[] = [writingModes];
+const builtinPlugins: readonly TrustedPlugin<Settings>[] = [writingModes, sourceMode];
+
+// The rendering draws with the app's own chrome and follows its animation setting
+configureSourceModeHost({ openImageMenu, motionEnabled, scrollTiming });
 
 /** The editor extensions every enabled plugin contributes for these settings. */
 export function pluginExtensions(settings: Settings): Extension {

@@ -3,12 +3,12 @@ import { type EditorView, WidgetType } from "@codemirror/view";
 import { desktop } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
 import { codeLanguages, fencedText } from "@pupitre/markdown";
+import { css, cx } from "@pupitre/ui";
 import { truncateStyle } from "@pupitre/ui/styles";
 import { debounce } from "@solid-primitives/scheduled";
 import { Check, Copy } from "lucide-solid";
 import { createMemo, createSignal, For, Show, type Component } from "solid-js";
 import { render } from "solid-js/web";
-import { css, cx } from "@/styled-system/css";
 
 const COPIED_MS = 1500;
 

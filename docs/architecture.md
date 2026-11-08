@@ -77,6 +77,9 @@ packages/
   utils/         pure helpers for text, HTML, file URLs and colors
   ui/            the Solid primitives, generated from the shared preset
   plugin-sdk/    the contract a plugin author builds against
+plugins/
+  writing-modes/ focus mode and typewriter mode
+  source-mode/   the rendered document: preview, tables, images, widgets
 patches/       the pnpm patches applied on install
 docs/          these notes and the mockups
 ```
@@ -108,11 +111,24 @@ it into a single tree, and a file is saved exactly as it was typed, whatever the
 is no serializer, and adding one would make a second source of truth for the document.
 
 Rendering is decorations over that tree. An inline construct hides its markers unless a selection
-touches it, in `features/editor/preview/`; a block that replaces whole lines — a table, a formula,
-a diagram, HTML — does it from a state field in its `rendered-blocks.ts`, because CodeMirror takes
-block decorations from nowhere else. A new syntax is a Lezer `MarkdownConfig` and a rule over it;
-the HTML export reads the same source and shares the model in `@pupitre/markdown`, so it depends on the
-document rather than on the editor.
+touches it, in `plugins/source-mode/src/preview/`; a block that replaces whole lines — a table, a
+formula, a diagram, HTML — does it from a state field in its `rendered-blocks.ts`, because
+CodeMirror takes block decorations from nowhere else. A new syntax is a Lezer `MarkdownConfig` and
+a rule over it; the HTML export reads the same source and shares the model in `@pupitre/markdown`,
+so it depends on the document rather than on the editor.
+
+## Built-in plugins
+
+Focus mode, typewriter mode and the rendered document are plugins under `plugins/`. Each package
+exports a `TrustedPlugin` from `@pupitre/plugin-sdk/trusted`: it is compiled into the app, reads the
+app's settings and returns the CodeMirror extensions those settings ask for.
+`apps/desktop/src/renderer/plugins/registry.ts` is the only place that lists them and the only place
+that knows what they need from the app. A plugin that draws with the app's chrome asks through a
+small host interface, such as `plugins/source-mode/src/host.ts`, rather than importing it.
+
+Plugins are leaves like packages: `check:architecture` keeps them from reaching into the app or into
+one another, and the app's Panda config scans their source, so the app's stylesheet stays the only
+one that defines their classes.
 
 ## Themes and settings
 

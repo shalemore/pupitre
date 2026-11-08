@@ -1,6 +1,6 @@
+import { css } from "@pupitre/ui";
+import { fileNameOf } from "@pupitre/utils";
 import { type Component, Show } from "solid-js";
-import { fileNameOf } from "@/lib/file";
-import { css } from "@/styled-system/css";
 
 const container = css({
   width: "full",
