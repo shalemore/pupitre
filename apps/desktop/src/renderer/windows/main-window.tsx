@@ -1,8 +1,15 @@
-import { IMAGE_FILE, MARKDOWN_FILE, type AppCommand } from "@pupitre/desktop-api";
+import {
+  IMAGE_FILE,
+  MARKDOWN_FILE,
+  type AppCommand,
+  type PluginDocumentRequest,
+  type PluginDocumentResponse,
+} from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
 import { headingKey, type OutlineHeading } from "@pupitre/markdown";
 import { ImagePreview } from "@pupitre/plugin-source-mode";
+import { messageOf } from "@pupitre/utils";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { scheduleIdle } from "@solid-primitives/scheduled";
 import {
@@ -57,6 +64,33 @@ const isImagePath = (path: string | undefined) => path !== undefined && IMAGE_FI
  */
 function unhandledCommand(command: never): never {
   throw new Error(`Unhandled command: ${JSON.stringify(command)}`);
+}
+
+/** Runs what a plugin asked of the open editor; the bridge carries the answer back. */
+function answerDocumentRequest(
+  handle: MarkdownEditorHandle | undefined,
+  request: PluginDocumentRequest,
+): PluginDocumentResponse {
+  if (handle === undefined) return { ok: false, message: "No document is open" };
+  try {
+    switch (request.method) {
+      case "read":
+        return { ok: true, value: handle.getMarkdown() };
+      case "replace":
+        handle.replaceDocument(request.text);
+        return { ok: true, value: undefined };
+      case "insert":
+        handle.pastePlainText(request.text);
+        return { ok: true, value: undefined };
+      case "selection":
+        return { ok: true, value: handle.getSelection() };
+      case "scrollToLine":
+        handle.scrollToLine(request.line);
+        return { ok: true, value: undefined };
+    }
+  } catch (error: unknown) {
+    return { ok: false, message: messageOf(error) };
+  }
 }
 
 /** CodeMirror and the editor around it load when a document is shown, not with the welcome screen. */
@@ -570,10 +604,18 @@ export const MainWindow: Component = () => {
       void session.openPath(desktop.getPathForFile(file));
     });
     const unlistenCommands = desktop.on("app:command", runCommand);
+    const unlistenPlugins = desktop.on("plugin:document-request", (request) => {
+      void desktop.invoke(
+        "plugin:document-response",
+        request.id,
+        answerDocumentRequest(editor(), request),
+      );
+    });
 
     onCleanup(() => {
       session.dispose();
       unlistenCommands();
+      unlistenPlugins();
     });
   });
 

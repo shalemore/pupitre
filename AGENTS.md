@@ -189,6 +189,21 @@ than waiting for a review to notice it.
 - A plugin package's `index.ts` exports only what the host uses; everything else stays internal.
 - The app's Panda config scans `plugins/*/src`, and plugin code imports `css`/`cx` from
   `@pupitre/ui`; the app's stylesheet remains the only generated one.
+- An installed plugin lives under `userData/plugins/<id>/`. `main/plugins/plugin-files.ts` reads
+  and copies it, `registry.ts` owns its enabled/granted state, and `host.ts` runs each enabled
+  plugin in a hidden window with `sandbox: true`, its own in-memory session and no Node. The
+  window loads the app-owned page under `pupitre-plugin://<id>/__host__/`; the plugin supplies only
+  a classic IIFE bundle named by its manifest, never its own HTML.
+- The plugin page gets one API, `window.__pupitre.invoke`, from `preload/plugin.ts`. The main
+  process accepts a call only from a host window it created, only while the plugin is enabled,
+  only for a method its manifest and `state.json` granted, and only after validating the
+  parameters. Nothing from `window.desktop` reaches it.
+- The plugin protocol handler is registered on each plugin's session as well as the default one;
+  `protocol.handle` does not cross sessions. Every path is resolved through `realpath` and kept
+  inside the plugin folder.
+- Text a plugin shows — its manifest name and description, setting titles, command titles — lives
+  in the plugin's own `LocalizedText` and is resolved with `localize`. Only app chrome (the Plugins
+  page, permission names) belongs in the app's dictionaries.
 
 ## Code Style
 

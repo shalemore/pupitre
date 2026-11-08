@@ -4,8 +4,13 @@
   // they cannot see are the ones listed here.
   "workspaces": {
     "apps/*": {
-      // `pnpm run test:perf` runs this config; the Playwright plugin only reads playwright.config.ts
-      "entry": ["playwright.perf.config.ts"],
+      "entry": [
+        // `pnpm run test:perf` runs this config; the Playwright plugin only reads playwright.config.ts
+        "playwright.perf.config.ts",
+        // The plugin preload and host page are entries of their own in electron.vite.config.ts
+        "src/preload/plugin.ts",
+        "src/renderer/plugin-host/host.ts",
+      ],
     },
     "packages/*": {
       "project": ["src/**/*.{ts,tsx}"],

@@ -1,9 +1,17 @@
+import { z } from "zod";
+
 /**
  * Text the host shows on a plugin's behalf: one string for every locale, or English with the
  * locales the plugin translates. The text belongs to the plugin, so the app's dictionaries never
  * carry another package's words.
  */
 export type LocalizedText = string | ({ en: string } & Readonly<Record<string, string>>);
+
+/** The same shape, for a value read from a manifest or across the RPC boundary. */
+export const localizedTextSchema = z.union([
+  z.string().min(1),
+  z.object({ en: z.string().min(1) }).catchall(z.string().min(1)),
+]);
 
 /**
  * The text in `locale`, falling back to the language without its region and then to English. Tags

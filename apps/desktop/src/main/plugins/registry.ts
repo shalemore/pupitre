@@ -2,15 +2,12 @@ import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import type { PluginInfo } from "@pupitre/desktop-api";
 import { pluginIdSchema, type Permission, type PluginManifest } from "@pupitre/plugin-sdk";
-import { app, dialog, shell, type BrowserWindow } from "electron";
+import { dialog, shell, type BrowserWindow } from "electron";
 import log from "electron-log/main";
 import { broadcast } from "../broadcast";
+import { startPlugin, stopPlugin } from "./host";
+import { pluginsFolder } from "./paths";
 import { installCopy, MANIFEST_FILE, readPlugin, readState, writeState } from "./plugin-files";
-
-/** Where the user's plugins live; the app's own are compiled in and need no folder. */
-function pluginsFolder(): string {
-  return join(app.getPath("userData"), "plugins");
-}
 
 /** The plugins installed under the user's data folder, sorted by id. */
 export function listPlugins(): readonly PluginInfo[] {
@@ -69,6 +66,8 @@ export function setPluginEnabled(id: string, enabled: boolean): void {
   const state = readState(folder, manifest);
   if (enabled) requireGrants(manifest, state.granted);
   writeState(folder, { ...state, enabled, version: manifest.version });
+  if (enabled) void startPlugin(id, manifest);
+  else stopPlugin(id);
   publish();
 }
 
@@ -83,12 +82,14 @@ export function grantPluginPermissions(id: string, permissions: readonly Permiss
     version: manifest.version,
     granted,
   });
+  if (!complete) stopPlugin(id);
   publish();
 }
 
 /** The folder goes to the system trash, so a plugin removed by mistake can be put back. */
 export async function uninstallPlugin(id: string): Promise<void> {
   pluginIdSchema.parse(id);
+  stopPlugin(id);
   await shell.trashItem(join(pluginsFolder(), id));
   publish();
 }

@@ -117,6 +117,10 @@ export interface MarkdownEditorHandle {
   replaceDocument: (text: string) => void;
   scrollTo: (pos: number) => void;
   getSelectedText: () => string;
+  /** The selection as the editor sees it, or the caret as an empty range. */
+  getSelection: () => { from: number; to: number; text: string };
+  /** Brings a one-based line into view and leaves the caret at its start. */
+  scrollToLine: (line: number) => void;
   /** Inserts the clipboard's text at the caret without the rich-text conversion a paste applies. */
   pastePlainText: (text: string) => void;
   /** Selects a range of the text, scrolls it into view and gives the editor the focus; used to show a match found in the folder. */
@@ -527,6 +531,14 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       }
     };
 
+    const scrollToPosition = (pos: number) => {
+      // The caret goes with the scroll, so the outline marks the heading that was chosen even
+      // when the document is too short to bring it to the top
+      view.dispatch({ selection: { anchor: pos } });
+      scrollToDocument(view, pos);
+      view.focus();
+    };
+
     props.ref({
       getMarkdown: () => view.state.doc.toString(),
       getMarkdownLength: () => view.state.doc.length,
@@ -547,12 +559,11 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         );
         view.focus();
       },
-      scrollTo: (pos) => {
-        // The caret goes with the scroll, so the outline marks the heading that was chosen even
-        // when the document is too short to bring it to the top
-        view.dispatch({ selection: { anchor: pos } });
-        scrollToDocument(view, pos);
-        view.focus();
+      scrollTo: scrollToPosition,
+      scrollToLine: (line) => {
+        // A plugin counts lines from one; a request past either end still lands in the document
+        const number = Math.min(Math.max(1, Math.trunc(line)), view.state.doc.lines);
+        scrollToPosition(view.state.doc.line(number).from);
       },
       revealRange: (from, to) => {
         // The document may have been edited since the search read it from disk
@@ -565,6 +576,10 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
         view.focus();
       },
       getSelectedText: () => selectedSearchText(view.state),
+      getSelection: () => {
+        const { from, to } = view.state.selection.main;
+        return { from, to, text: view.state.sliceDoc(from, to) };
+      },
       pastePlainText: (text) => {
         view.focus();
         view.dispatch(view.state.replaceSelection(text), {

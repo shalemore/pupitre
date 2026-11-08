@@ -75,6 +75,7 @@ import { searchWorkspace } from "./files/workspace-search";
 import { currentLocale, t } from "./i18n";
 import { showAboutDialog } from "./menus/about";
 import { clickMenuItem, menuSnapshot, setDocumentState } from "./menus/menu";
+import { handleDocumentResponse } from "./plugins/document-bridge";
 import {
   grantPluginPermissions,
   installPlugin,
@@ -691,4 +692,7 @@ export function registerIpcHandlers(): void {
   handle("plugins:grant", (_event, id, permissions) => grantPluginPermissions(id, permissions));
   handle("plugins:uninstall", (_event, id) => uninstallPlugin(id));
   handle("plugins:reveal", (_event, id) => revealPlugin(id));
+  handle("plugin:document-response", (_event, id, response) =>
+    handleDocumentResponse(id, response),
+  );
 }

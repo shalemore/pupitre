@@ -216,6 +216,17 @@ export interface PluginInfo {
   granted: readonly Permission[];
 }
 
+/** What a plugin page asks the open editor for; the main process forwards one of these. */
+export type PluginDocumentRequest =
+  | { id: number; method: "read" }
+  | { id: number; method: "replace"; text: string }
+  | { id: number; method: "insert"; text: string }
+  | { id: number; method: "selection" }
+  | { id: number; method: "scrollToLine"; line: number };
+
+/** The editor's answer to a plugin's request; a failure crosses back as a message. */
+export type PluginDocumentResponse = { ok: true; value: unknown } | { ok: false; message: string };
+
 export type UpdateStatus =
   | { kind: "idle" }
   | { kind: "checking" }
@@ -492,6 +503,8 @@ export interface InvokeChannels {
   "plugins:grant": (id: string, permissions: readonly Permission[]) => void;
   "plugins:uninstall": (id: string) => void;
   "plugins:reveal": (id: string) => void;
+  /** The window's answer to a plugin's request for the open document. */
+  "plugin:document-response": (id: number, response: PluginDocumentResponse) => void;
 }
 
 /** Events the main process pushes to the renderer through `webContents.send`. */
@@ -510,6 +523,8 @@ export interface RendererEvents {
   "window:maximized-changed": boolean;
   /** A plugin was installed, removed or had its state changed. */
   "plugins:changed": readonly PluginInfo[];
+  /** A plugin page asks the main window for the open document. */
+  "plugin:document-request": PluginDocumentRequest;
 }
 
 /**

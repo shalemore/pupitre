@@ -52,6 +52,12 @@ test("typing folds the immersive chrome under a pointer resting at the top", asy
   const app = await launch({ files: [README], settings: { windowStyle: "immersive" } });
   try {
     await app.page.locator(".cm-content").waitFor();
+    // A narrow display folds the sidebars by design; this test is about the pointer, so it asks
+    // for a window wide enough to hold both of them
+    await app.app.evaluate(({ BrowserWindow }) => {
+      BrowserWindow.getAllWindows()[0]?.setContentSize(1180, 780);
+    });
+    await app.page.waitForFunction(() => window.innerWidth >= 1180);
     // What the reader sees and can reach: the bar's height and focusability, and the room the
     // sidebars take beside the document
     const chrome = () =>

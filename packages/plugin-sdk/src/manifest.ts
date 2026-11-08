@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { localizedTextSchema } from "./localized";
 import { permissionSchema } from "./permissions";
 
 /** A folder name: lowercase letters, digits, dots and hyphens, starting and ending with one. */
@@ -19,12 +20,6 @@ export const pluginSurfacesSchema = z.object({
   background: z.string().min(1).optional(),
   pointer: z.string().min(1).optional(),
 });
-
-/** A string, or English with the other locales the plugin ships its own text in. */
-const localizedTextSchema = z.union([
-  z.string().min(1),
-  z.object({ en: z.string().min(1) }).catchall(z.string().min(1)),
-]);
 
 export const pluginManifestSchema = z.object({
   /** Names the plugin and its folder; never changes when the plugin updates. */
