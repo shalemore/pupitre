@@ -1,6 +1,6 @@
+import { t } from "@pupitre/i18n/solid";
 import { Button, Input, Sheet } from "@pupitre/ui";
 import { createSignal, onMount, type Component } from "solid-js";
-import { t } from "@/i18n";
 import { css } from "@/styled-system/css";
 
 /** The rows count the header, so three rows are a header row and two body rows. */

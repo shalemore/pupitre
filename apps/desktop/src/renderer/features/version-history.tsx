@@ -1,10 +1,11 @@
 import type { HistoryEntry } from "@pupitre/desktop-api";
+import { desktop } from "@pupitre/desktop-api/client";
+import { intlLocale } from "@pupitre/i18n";
+import { currentLocale, t } from "@pupitre/i18n/solid";
 import { truncateGrow } from "@pupitre/ui/styles";
 import { type Component, createMemo, createResource } from "solid-js";
 import { formatFileSize } from "@shared/file-size";
 import { PaletteSheet } from "@/components/palette-sheet";
-import { currentLocale, intlLocale, t } from "@/i18n";
-import { desktop } from "@/lib/desktop";
 import { css } from "@/styled-system/css";
 
 export interface VersionHistoryProps {

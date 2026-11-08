@@ -1,9 +1,9 @@
+import { desktop } from "@pupitre/desktop-api/client";
+import { t } from "@pupitre/i18n/solid";
 import { Kbd } from "@pupitre/ui";
 import { dim, shrinkNone, truncateGrow } from "@pupitre/ui/styles";
 import { createMemo, createResource, Show } from "solid-js";
 import { PaletteSheet } from "@/components/palette-sheet";
-import { t } from "@/i18n";
-import { desktop } from "@/lib/desktop";
 import { commandsFromMenus, filterCommands } from "./commands";
 
 export interface CommandPaletteProps {

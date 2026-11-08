@@ -1,4 +1,6 @@
 import { IMAGE_FILE, MARKDOWN_FILE, type AppCommand } from "@pupitre/desktop-api";
+import { desktop } from "@pupitre/desktop-api/client";
+import { t } from "@pupitre/i18n/solid";
 import { headingKey, type OutlineHeading } from "@pupitre/markdown";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { scheduleIdle } from "@solid-primitives/scheduled";
@@ -24,8 +26,6 @@ import { OutlineList } from "@/features/sidebar/outline-list";
 import type { SidebarMode, SidebarRail } from "@/features/sidebar/sidebar";
 import { createSidebarControl } from "@/features/sidebar/sidebar-control";
 import { WelcomeScreen } from "@/features/welcome/welcome-screen";
-import { t } from "@/i18n";
-import { desktop } from "@/lib/desktop";
 import { documentPosition } from "@/lib/document/positions";
 import { createDocumentSession } from "@/lib/document/session";
 import { isolateFileName } from "@/lib/file";

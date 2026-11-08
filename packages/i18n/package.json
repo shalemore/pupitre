@@ -9,10 +9,18 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./src/index.ts"
+    },
+    "./solid": {
+      "types": "./dist/solid.d.ts",
+      "import": "./src/solid.ts"
     }
   },
   "devDependencies": {
     "@tsconfig/strictest": "^2.0.8",
+    "solid-js": "^1.9.5",
     "vitest": "^5.0.5"
+  },
+  "peerDependencies": {
+    "solid-js": "^1.9.5"
   }
 }

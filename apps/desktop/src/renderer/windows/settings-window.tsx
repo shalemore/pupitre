@@ -1,3 +1,4 @@
+import { t } from "@pupitre/i18n/solid";
 import { ScrollView, Tabs, TabsContent } from "@pupitre/ui";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { createEffect, onMount, type Component } from "solid-js";
@@ -8,7 +9,6 @@ import { EditorSection } from "@/features/settings/editor-section";
 import { ExportSection } from "@/features/settings/export-section";
 import { GeneralSection } from "@/features/settings/general-section";
 import { MarkdownSection } from "@/features/settings/markdown-section";
-import { t } from "@/i18n";
 import { css, cx } from "@/styled-system/css";
 import { SettingsNav } from "./settings-nav";
 import { barDivider, windowFrame } from "./window-chrome";

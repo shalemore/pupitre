@@ -1,4 +1,4 @@
-import { desktop } from "@/lib/desktop";
+import { desktop } from "@pupitre/desktop-api/client";
 
 /** Tells the user in a dialog that an action failed, with what it failed on under the title. */
 export async function reportFailure(title: string, ...detail: readonly string[]): Promise<void> {

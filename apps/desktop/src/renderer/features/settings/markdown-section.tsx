@@ -1,7 +1,7 @@
+import { t } from "@pupitre/i18n/solid";
 import type { Settings } from "@pupitre/settings";
 import { Input, Select } from "@pupitre/ui";
 import type { Component } from "solid-js";
-import { t } from "@/i18n";
 import { settings, updateSettings } from "@/lib/settings";
 import { css } from "@/styled-system/css";
 import { SettingField, SettingGroup, SettingsSection } from "./settings-section";

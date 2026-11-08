@@ -1,8 +1,8 @@
+import { desktop } from "@pupitre/desktop-api/client";
+import { currentDirection, currentLocale } from "@pupitre/i18n/solid";
 import { CONTENT_WIDTHS } from "@pupitre/settings";
 import { createPrefersDark } from "@solid-primitives/media";
 import { createEffect, createMemo, createRoot } from "solid-js";
-import { currentDirection, currentLocale } from "@/i18n";
-import { desktop } from "@/lib/desktop";
 import { codeFontFamily, documentFontFamily, interfaceFontFamily } from "@/lib/fonts";
 import { settings } from "@/lib/settings";
 import { applyTheme, DEFAULT_THEME, importedThemes, readWindowColors, themes } from "@/lib/theme";

@@ -1,8 +1,8 @@
+import { desktop } from "@pupitre/desktop-api/client";
+import { t } from "@pupitre/i18n/solid";
 import { SETTING_RANGES, type Settings } from "@pupitre/settings";
 import { Select, Slider, Switch } from "@pupitre/ui";
 import { Show, type Component } from "solid-js";
-import { t } from "@/i18n";
-import { desktop } from "@/lib/desktop";
 import { formatDecimal } from "@/lib/number-format";
 import { settings, updateSettings } from "@/lib/settings";
 import { FontSelect, RefreshFontsButton, themeFontLabel } from "./font-select";

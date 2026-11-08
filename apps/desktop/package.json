@@ -60,6 +60,8 @@
     "@pupitre/i18n": "workspace:*",
     "@pupitre/markdown": "workspace:*",
     "@pupitre/panda-preset": "workspace:*",
+    "@pupitre/plugin-sdk": "workspace:*",
+    "@pupitre/plugin-writing-modes": "workspace:*",
     "@pupitre/settings": "workspace:*",
     "@pupitre/ui": "workspace:*",
     "@pupitre/utils": "workspace:*",

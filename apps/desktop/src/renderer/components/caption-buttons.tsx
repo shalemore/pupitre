@@ -1,8 +1,8 @@
 import type { CaptionSide } from "@pupitre/desktop-api";
+import { desktop } from "@pupitre/desktop-api/client";
+import { t } from "@pupitre/i18n/solid";
 import { Copy, Minus, Square, X } from "lucide-solid";
 import { createSignal, onCleanup, Show, type Component } from "solid-js";
-import { t } from "@/i18n";
-import { desktop } from "@/lib/desktop";
 import { css, cx } from "@/styled-system/css";
 
 const controls = css({

@@ -1,7 +1,7 @@
-import { messageOf } from "@shared/errors";
+import { desktop } from "@pupitre/desktop-api/client";
+import { t } from "@pupitre/i18n/solid";
+import { messageOf } from "@pupitre/utils";
 import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
-import { t } from "@/i18n";
-import { desktop } from "@/lib/desktop";
 import type { DocumentSession } from "@/lib/document/session";
 import { reportFailure } from "@/lib/errors";
 import { withoutDocumentExtension } from "@/lib/file";

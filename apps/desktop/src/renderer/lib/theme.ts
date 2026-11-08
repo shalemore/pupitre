@@ -1,10 +1,10 @@
 import type { ImportedTheme } from "@pupitre/desktop-api";
+import { desktop } from "@pupitre/desktop-api/client";
 import { DEFAULT_LOCALE, LOCALE_CODES, type SupportedLocale } from "@pupitre/i18n";
 import { DEFAULT_SETTINGS, type Settings } from "@pupitre/settings";
 import { toHex } from "@pupitre/utils";
 import { createMemo, createRoot, createSignal } from "solid-js";
 import { z } from "zod";
-import { desktop } from "@/lib/desktop";
 import { readToken } from "@/lib/tokens";
 
 /** The schemes a theme can provide; following the system is a choice of the app, not of a theme. */

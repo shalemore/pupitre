@@ -1,13 +1,13 @@
 import { Menubar } from "@kobalte/core/menubar";
+import { desktop } from "@pupitre/desktop-api/client";
 import { TOP_MENUS, type MenuEntry, type Menus, type TopMenu } from "@pupitre/desktop-api/menu";
+import { t } from "@pupitre/i18n/solid";
 import { IconButton } from "@pupitre/ui";
 import { FLOATING_PANEL, menuPanel } from "@pupitre/ui/styles";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { Menu } from "lucide-solid";
 import { createSignal, For, Show, type Component } from "solid-js";
 import { MenuEntries, MenuPopup } from "@/components/menu-popup";
-import { t } from "@/i18n";
-import { desktop } from "@/lib/desktop";
 import { createMenu } from "@/lib/menu-state";
 import { css, cx } from "@/styled-system/css";
 

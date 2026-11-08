@@ -1,9 +1,9 @@
+import { desktop } from "@pupitre/desktop-api/client";
+import { currentLocale, t } from "@pupitre/i18n/solid";
 import { SETTING_RANGES, type Settings } from "@pupitre/settings";
 import { Callout, IconButton, Select, Slider, Switch } from "@pupitre/ui";
 import { FolderOpen, Globe } from "lucide-solid";
 import { For, Show, type Component } from "solid-js";
-import { currentLocale, t } from "@/i18n";
-import { desktop } from "@/lib/desktop";
 import { formatPercent } from "@/lib/number-format";
 import { isImmersive, settings, updateSettings } from "@/lib/settings";
 import type { SidebarSide } from "@/lib/sidebar";

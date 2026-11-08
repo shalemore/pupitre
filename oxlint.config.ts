@@ -24,5 +24,6 @@ export default defineConfig({
     // Panda generates them; there is nothing to fix by hand there
     "apps/desktop/src/renderer/styled-system/**",
     "packages/*/src/styled-system/**",
+    "plugins/*/dist/**",
   ],
 });

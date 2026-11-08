@@ -1,8 +1,8 @@
+import { t } from "@pupitre/i18n/solid";
 import { IconButton, ScrollView, SegmentedControl, ToggleIconButton } from "@pupitre/ui";
 import { quietButton, rtlFlip, truncateStyle } from "@pupitre/ui/styles";
 import { ChevronRight, Folder, ListTree, Pin } from "lucide-solid";
 import { createSignal, type Component, type JSX, Show } from "solid-js";
-import { t } from "@/i18n";
 import { distanceFromEnd, distanceFromStart, isRtl } from "@/lib/rtl";
 import { SIDEBAR_WIDTH, type SidebarSide } from "@/lib/sidebar";
 import { css, cx } from "@/styled-system/css";

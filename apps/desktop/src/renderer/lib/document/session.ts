@@ -4,11 +4,11 @@ import {
   type LineEnding,
   type OpenedDocument,
 } from "@pupitre/desktop-api";
+import { desktop } from "@pupitre/desktop-api/client";
+import { currentLocale, t } from "@pupitre/i18n/solid";
+import { messageOf } from "@pupitre/utils";
 import { debounce } from "@solid-primitives/scheduled";
 import { batch, createEffect, createMemo, createSignal, on, onCleanup } from "solid-js";
-import { messageOf } from "@shared/errors";
-import { currentLocale, t } from "@/i18n";
-import { desktop } from "@/lib/desktop";
 import { reportFailure } from "@/lib/errors";
 import { fileNameOf, withTrailingNewline } from "@/lib/file";
 import { createPendingImages, type PendingImages } from "@/lib/pending-images";

@@ -8,6 +8,8 @@
     { "path": "../../packages/utils" },
     { "path": "../../packages/markdown" },
     { "path": "../../packages/plugin-sdk" },
+    { "path": "../../plugins/writing-modes" },
+    { "path": "../../packages/plugin-sdk" },
     { "path": "../../packages/ui" },
     { "path": "./tsconfig.node.json" },
     { "path": "./tsconfig.web.json" },

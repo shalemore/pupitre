@@ -1,9 +1,9 @@
+import { desktop } from "@pupitre/desktop-api/client";
+import { t } from "@pupitre/i18n/solid";
 import { Button, SettingRow } from "@pupitre/ui";
 import pkg from "@root/package.json";
 import { BookOpen, FolderOpen } from "lucide-solid";
 import { Show, type Component } from "solid-js";
-import { t } from "@/i18n";
-import { desktop } from "@/lib/desktop";
 import { css } from "@/styled-system/css";
 import { SettingGroup, SettingsSection } from "./settings-section";
 import { UpdateButton, UpdateStatusPanel } from "./update-section";

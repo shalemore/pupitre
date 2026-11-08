@@ -1,7 +1,7 @@
 import { MARKDOWN_FILE } from "@pupitre/desktop-api";
+import { t } from "@pupitre/i18n/solid";
 import { codeLanguageFor, pageStyle } from "@pupitre/markdown";
 import { escapeHtml } from "@pupitre/utils";
-import { t } from "@/i18n";
 import { fileNameOf, withoutDocumentExtension } from "@/lib/file";
 import { pageEnvironment } from "./page-environment";
 import editorCss from "./editor.css?raw";

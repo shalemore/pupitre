@@ -1,8 +1,8 @@
+import { isMacOS } from "@pupitre/desktop-api/client";
 import { truncate } from "@pupitre/ui/styles";
 import { Show, type Component, type JSX } from "solid-js";
 import { MenuBar, MenuButton } from "@/features/menu-bar";
 import { TabsBar } from "@/features/tabs-bar";
-import { isMacOS } from "@/lib/desktop";
 import type { Tab } from "@/lib/document/tab";
 import { dirtyDot, titleCenter, titleEnd, titleGrid, titleStart } from "../main-window-styles";
 

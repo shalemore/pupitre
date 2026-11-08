@@ -1,6 +1,6 @@
 import { type EditorView, WidgetType } from "@codemirror/view";
 import { type DiagramTheme, renderDiagram } from "@pupitre/markdown";
-import { messageOf } from "@shared/errors";
+import { messageOf } from "@pupitre/utils";
 import { fadeOut } from "@/features/editor/leave";
 import { onReveal, onScrollbar } from "@/features/editor/widget-events";
 

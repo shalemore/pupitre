@@ -1,7 +1,7 @@
 import { I18nProvider } from "@kobalte/core/i18n";
 import { TITLE_BAR_HEIGHT } from "@pupitre/desktop-api";
+import { desktop } from "@pupitre/desktop-api/client";
 import { onCleanup, onMount, Show, type ParentComponent } from "solid-js";
-import { desktop } from "@/lib/desktop";
 import { css, cx } from "@/styled-system/css";
 import { CaptionButtons } from "./caption-buttons";
 

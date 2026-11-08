@@ -105,6 +105,12 @@ importers:
       '@pupitre/panda-preset':
         specifier: workspace:*
         version: link:../../packages/panda-preset
+      '@pupitre/plugin-sdk':
+        specifier: workspace:*
+        version: link:../../packages/plugin-sdk
+      '@pupitre/plugin-writing-modes':
+        specifier: workspace:*
+        version: link:../../plugins/writing-modes
       '@pupitre/settings':
         specifier: workspace:*
         version: link:../../packages/settings
@@ -223,6 +229,9 @@ importers:
       '@tsconfig/strictest':
         specifier: ^2.0.8
         version: 2.0.8
+      solid-js:
+        specifier: ^1.9.5
+        version: 1.9.17
       vitest:
         specifier: ^5.0.5
         version: 5.0.5(@types/node@24.19.2)(@vitest/coverage-v8@5.0.5)(jsdom@30.1.3(@noble/hashes@2.4.0))(vite@8.3.5(@types/node@24.19.2)(jiti@2.7.0)(yaml@2.9.1))
@@ -309,6 +318,12 @@ importers:
 
   packages/plugin-sdk:
     devDependencies:
+      '@codemirror/state':
+        specifier: ^6.7.6
+        version: 6.7.6
+      '@codemirror/view':
+        specifier: ^6.43.15
+        version: 6.43.15
       '@tsconfig/strictest':
         specifier: ^2.0.8
         version: 2.0.8
@@ -377,6 +392,28 @@ importers:
       vitest:
         specifier: ^5.0.5
         version: 5.0.5(@types/node@24.19.2)(@vitest/coverage-v8@5.0.5)(jsdom@30.1.3(@noble/hashes@2.4.0))(vite@8.3.5(@types/node@24.19.2)(jiti@2.7.0)(yaml@2.9.1))
+
+  plugins/writing-modes:
+    dependencies:
+      '@codemirror/language':
+        specifier: ^6.13.1
+        version: 6.13.1
+      '@codemirror/state':
+        specifier: ^6.7.6
+        version: 6.7.6
+      '@codemirror/view':
+        specifier: ^6.43.15
+        version: 6.43.15
+      '@pupitre/plugin-sdk':
+        specifier: workspace:*
+        version: link:../../packages/plugin-sdk
+      '@pupitre/settings':
+        specifier: workspace:*
+        version: link:../../packages/settings
+    devDependencies:
+      '@tsconfig/strictest':
+        specifier: ^2.0.8
+        version: 2.0.8
 
 packages:
 

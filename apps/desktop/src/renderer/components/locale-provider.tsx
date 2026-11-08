@@ -1,6 +1,6 @@
 import { I18nProvider } from "@kobalte/core/i18n";
+import { currentLocale } from "@pupitre/i18n/solid";
 import type { ParentComponent } from "solid-js";
-import { currentLocale } from "@/i18n";
 
 /**
  * Tells Kobalte the locale the app is set to. Without it Kobalte reads the direction from the

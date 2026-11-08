@@ -26,6 +26,8 @@
     { "path": "../../packages/panda-preset" },
     { "path": "../../packages/utils" },
     { "path": "../../packages/markdown" },
+    { "path": "../../packages/plugin-sdk" },
+    { "path": "../../plugins/writing-modes" },
     { "path": "../../packages/ui" }
   ],
   // The benchmark parses through the renderer's language, so it is checked with the DOM lib

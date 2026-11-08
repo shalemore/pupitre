@@ -17,6 +17,10 @@
     "./format-actions": {
       "types": "./dist/format-actions.d.ts",
       "import": "./src/format-actions.ts"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "import": "./src/client.ts"
     }
   },
   "dependencies": {

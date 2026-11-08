@@ -2,9 +2,9 @@ import { randomUUID } from "node:crypto";
 import { rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { messageOf } from "@pupitre/utils";
 import { BrowserWindow, nativeImage, screen, type NativeImage, type WebContents } from "electron";
 import { z } from "zod";
-import { messageOf } from "@shared/errors";
 
 /** Width of the exported document, in CSS pixels, before it is scaled up. */
 const DOCUMENT_WIDTH = 900;

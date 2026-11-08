@@ -1,9 +1,9 @@
 import { TITLE_BAR_CLEARANCE } from "@pupitre/desktop-api";
+import { desktop, isMacOS } from "@pupitre/desktop-api/client";
+import { t } from "@pupitre/i18n/solid";
 import { Combobox, IconButton, type SelectOption } from "@pupitre/ui";
 import { RefreshCw } from "lucide-solid";
 import { createResource, createRoot, type Component, type JSX, Show } from "solid-js";
-import { t } from "@/i18n";
-import { desktop, isMacOS } from "@/lib/desktop";
 import { GENERIC_FAMILIES, listFontFamilies, type FontFamily } from "@/lib/fonts";
 import { themeApplied } from "@/lib/theme";
 import { readToken, type TokenName } from "@/lib/tokens";

@@ -1,6 +1,6 @@
+import { desktop } from "@pupitre/desktop-api/client";
 import type { SettingKey, Settings } from "@pupitre/settings";
 import { createSignal } from "solid-js";
-import { desktop } from "@/lib/desktop";
 
 // The main process owns the settings and broadcasts every change, including changes made by this
 // window, so all windows always render the same values

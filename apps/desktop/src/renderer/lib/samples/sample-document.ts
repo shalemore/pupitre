@@ -1,4 +1,4 @@
-import type { SupportedLocale } from "@/i18n";
+import type { SupportedLocale } from "@pupitre/i18n";
 
 /**
  * The example document for each language, loaded when one is opened. They are raw files rather

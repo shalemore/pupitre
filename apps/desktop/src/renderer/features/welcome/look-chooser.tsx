@@ -1,8 +1,8 @@
 import { RadioGroup } from "@kobalte/core/radio-group";
+import { t } from "@pupitre/i18n/solid";
 import type { Settings } from "@pupitre/settings";
 import { PRESSABLE } from "@pupitre/ui/styles";
 import type { JSX } from "solid-js";
-import { t } from "@/i18n";
 import { settings, updateSettings } from "@/lib/settings";
 import { css, cx } from "@/styled-system/css";
 

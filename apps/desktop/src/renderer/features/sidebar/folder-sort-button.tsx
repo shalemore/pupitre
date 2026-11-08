@@ -1,10 +1,10 @@
 import type { MenuEntry } from "@pupitre/desktop-api/menu";
+import { t } from "@pupitre/i18n/solid";
 import type { Settings } from "@pupitre/settings";
 import { IconButton } from "@pupitre/ui";
 import { ArrowUpDown } from "lucide-solid";
 import { Show, type Component } from "solid-js";
 import { MenuPopup } from "@/components/menu-popup";
-import { t } from "@/i18n";
 import { createMenu } from "@/lib/menu-state";
 import { settings, updateSettings } from "@/lib/settings";
 import { css } from "@/styled-system/css";

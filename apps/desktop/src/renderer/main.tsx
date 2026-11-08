@@ -1,4 +1,5 @@
 import "@/app.css";
+import "@/lib/locale";
 import { ScrollViewPreferencesProvider } from "@pupitre/ui";
 import type { JSX } from "solid-js";
 import { render } from "solid-js/web";

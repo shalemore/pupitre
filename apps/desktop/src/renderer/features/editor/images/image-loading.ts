@@ -1,6 +1,6 @@
 import type { EditorView } from "@codemirror/view";
+import { t } from "@pupitre/i18n/solid";
 import { relabelOnLocaleChange } from "@/features/editor/widgets/relabel-on-locale";
-import { t } from "@/i18n";
 import { hasTransparency } from "./image-alpha";
 import { clearImageRoom, reserveImageRoom } from "./image-geometry";
 

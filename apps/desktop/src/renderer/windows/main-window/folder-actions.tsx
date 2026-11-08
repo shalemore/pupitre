@@ -1,9 +1,9 @@
+import { t } from "@pupitre/i18n/solid";
 import { IconButton, ToggleIconButton } from "@pupitre/ui";
 import { quietButton, rtlFlip } from "@pupitre/ui/styles";
 import { CornerRightUp, Eye } from "lucide-solid";
 import { Show, type Component } from "solid-js";
 import { FolderSortButton } from "@/features/sidebar/folder-sort-button";
-import { t } from "@/i18n";
 import { parentFolder } from "@/lib/file";
 
 interface ParentFolderButtonProps {

@@ -1,4 +1,4 @@
-import { desktop } from "@/lib/desktop";
+import { desktop } from "@pupitre/desktop-api/client";
 
 /** The type of a picked picture, kept on the File so a document without a file can show it before the save. */
 const IMAGE_TYPES: Readonly<Record<string, string>> = {

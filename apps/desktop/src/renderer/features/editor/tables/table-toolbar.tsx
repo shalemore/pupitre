@@ -1,5 +1,6 @@
 import type { ChangeSpec } from "@codemirror/state";
 import type { EditorView } from "@codemirror/view";
+import { t } from "@pupitre/i18n/solid";
 import {
   type Alignment,
   alignColumn,
@@ -33,7 +34,6 @@ import {
   X,
 } from "lucide-solid";
 import { type Accessor, type Component, type JSX, Show } from "solid-js";
-import { t } from "@/i18n";
 import { css, cx } from "@/styled-system/css";
 import type { CellPosition } from "./table-cell";
 

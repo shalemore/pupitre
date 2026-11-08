@@ -1,9 +1,9 @@
 import { Tabs as KobalteTabs } from "@kobalte/core/tabs";
+import { t } from "@pupitre/i18n/solid";
 import { IconButton } from "@pupitre/ui";
 import { truncateStyle } from "@pupitre/ui/styles";
 import { X } from "lucide-solid";
 import { createEffect, For, Show, type Component } from "solid-js";
-import { t } from "@/i18n";
 import { isTabDirty, type Tab } from "@/lib/document/tab";
 import { css, cx } from "@/styled-system/css";
 

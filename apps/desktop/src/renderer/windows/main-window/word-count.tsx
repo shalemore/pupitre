@@ -1,5 +1,5 @@
+import { t } from "@pupitre/i18n/solid";
 import { createMemo, type Component, Show } from "solid-js";
-import { t } from "@/i18n";
 import type { TextStats } from "@/lib/text-stats";
 import { css } from "@/styled-system/css";
 

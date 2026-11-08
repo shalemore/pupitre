@@ -10,6 +10,9 @@
     "packages/*": {
       "project": ["src/**/*.{ts,tsx}"],
     },
+    "plugins/*": {
+      "project": ["src/**/*.{ts,tsx}"],
+    },
   },
   "ignoreBinaries": [
     // A Linux system tool: src/main/windows.ts reads where the desktop puts the caption buttons

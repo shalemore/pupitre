@@ -1,3 +1,4 @@
+import { t } from "@pupitre/i18n/solid";
 import { Badge, Button, IconButton, Input, ToggleIconButton } from "@pupitre/ui";
 import {
   CaseSensitive,
@@ -9,7 +10,6 @@ import {
   X,
 } from "lucide-solid";
 import { createEffect, createSignal, on, Show, type Component, type JSX } from "solid-js";
-import { t } from "@/i18n";
 import { css, cx } from "@/styled-system/css";
 import type { MatchStats, SearchOptions } from "./search";
 

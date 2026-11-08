@@ -1,11 +1,11 @@
+import { desktop } from "@pupitre/desktop-api/client";
+import { t } from "@pupitre/i18n/solid";
 import { IconButton, SegmentedControl, Separator, TabsList, TabsTrigger } from "@pupitre/ui";
 import { truncateStyle } from "@pupitre/ui/styles";
 import pkg from "@root/package.json";
 import { FileCode2, FolderOpen, Info, Palette, Printer, Settings2, Type } from "lucide-solid";
 import { For, Show, type Component } from "solid-js";
 import { Dynamic } from "solid-js/web";
-import { t } from "@/i18n";
-import { desktop } from "@/lib/desktop";
 import { fileNameOf } from "@/lib/file";
 import { workspace } from "@/lib/workspace";
 import { css } from "@/styled-system/css";

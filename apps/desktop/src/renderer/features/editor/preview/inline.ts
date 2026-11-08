@@ -1,5 +1,6 @@
 import { Decoration, type EditorView, WidgetType } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
+import { t } from "@pupitre/i18n/solid";
 import {
   emojiFor,
   footnoteReferences,
@@ -13,7 +14,6 @@ import { ImageWidget } from "@/features/editor/images/image-widget";
 import { EmojiWidget } from "@/features/editor/widgets/emoji-widget";
 import { MathWidget } from "@/features/editor/widgets/math-widget";
 import { relabelOnLocaleChange } from "@/features/editor/widgets/relabel-on-locale";
-import { t } from "@/i18n";
 import { type DecorationBuilder, touches } from "./builder";
 
 /**

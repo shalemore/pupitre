@@ -29,7 +29,9 @@ import {
 } from "@codemirror/search";
 import { Compartment, EditorState, type Extension, Prec } from "@codemirror/state";
 import { type Command, EditorView, keymap, placeholder } from "@codemirror/view";
+import { desktop } from "@pupitre/desktop-api/client";
 import type { FormatAction } from "@pupitre/desktop-api/format-actions";
+import { t } from "@pupitre/i18n/solid";
 import {
   alertTitles,
   codeHighlight,
@@ -50,15 +52,12 @@ import {
   textDirection,
 } from "@pupitre/markdown";
 import { ScrollView } from "@pupitre/ui";
-import { escapeHtml } from "@pupitre/utils";
+import { escapeHtml, messageOf } from "@pupitre/utils";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { debounce } from "@solid-primitives/scheduled";
 import { createEffect, on, onCleanup, onMount, type Component } from "solid-js";
-import { messageOf } from "@shared/errors";
 import { imageCaptionClick, imageInput } from "@/features/editor/images/image-widget";
 import { closeInlineTags } from "@/features/editor/widgets/html-widget";
-import { t } from "@/i18n";
-import { desktop } from "@/lib/desktop";
 import {
   type DocumentPosition,
   flushDocumentPositions,
@@ -71,6 +70,7 @@ import { settings } from "@/lib/settings";
 import { type TextStats } from "@/lib/text-stats";
 import { themeApplied } from "@/lib/theme";
 import { withViewTransition } from "@/lib/view-transition";
+import { pluginExtensions, pluginSettingsChanged, restoresScroll } from "@/plugins/registry";
 import { cursorStyle, restartCursorBlink } from "./cursor";
 import { readDiagramTheme } from "./diagram-theme";
 import { documentKind, documentTitle, textDocumentHtml } from "./document";
@@ -100,7 +100,6 @@ import {
 } from "./search";
 import { markdownPairing, smartTyping } from "./smart-typing";
 import { layeredStyles, scrollArea } from "./styles";
-import { focusMode, holdLine, typewriterMode } from "./writing-modes";
 import editorCss from "./editor.css?raw";
 
 export interface MarkdownEditorHandle {
@@ -235,8 +234,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     const matches = createMatchCounter((next) => props.onMatchStatsChange(next));
     const outline = createOutlineTracker((next) => props.onOutlineChange(next));
 
-    const focusCompartment = new Compartment();
-    const typewriterCompartment = new Compartment();
+    const pluginsCompartment = new Compartment();
     const spellcheckCompartment = new Compartment();
     const cursorCompartment = new Compartment();
     const baseUrlCompartment = new Compartment();
@@ -325,8 +323,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           }),
           layeredStyles,
           ...(markdown ? [placeholder(t().editor.placeholder)] : []),
-          focusCompartment.of([]),
-          typewriterCompartment.of([]),
+          pluginsCompartment.of(pluginExtensions(settings())),
           spellcheckCompartment.of([]),
           cursorCompartment.of([]),
           restartCursorBlink,
@@ -406,47 +403,24 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       ),
     );
 
+    // A built-in plugin reads the app's own settings. A change swaps the extensions it adds and
+    // lets it react to what an extension alone cannot, such as scrolling to the caret.
+    let previousSettings = settings();
     createEffect(() => {
-      const {
-        focusMode: focus,
-        focusModeGrain,
-        typewriterMode: typewriter,
-        typewriterPosition,
-        typewriterFixed,
-        spellcheck,
-        cursorShape,
-        cursorBlink,
-      } = settings();
+      const next = settings();
+      const previous = previousSettings;
+      previousSettings = next;
       view.dispatch({
         effects: [
-          focusCompartment.reconfigure(focus ? focusMode(focusModeGrain) : []),
-          typewriterCompartment.reconfigure(
-            typewriter ? typewriterMode(typewriterPosition, typewriterFixed) : [],
-          ),
+          pluginsCompartment.reconfigure(pluginExtensions(next)),
           spellcheckCompartment.reconfigure(
-            EditorView.contentAttributes.of({ spellcheck: String(spellcheck) }),
+            EditorView.contentAttributes.of({ spellcheck: String(next.spellcheck) }),
           ),
-          cursorCompartment.reconfigure(cursorStyle(cursorShape, cursorBlink)),
+          cursorCompartment.reconfigure(cursorStyle(next.cursorShape, next.cursorBlink)),
         ],
       });
+      pluginSettingsChanged(view, next, previous);
     });
-
-    // A held line takes its place at once, whether the mode is switched on or moved
-    createEffect(
-      on(
-        () =>
-          settings().typewriterMode && settings().typewriterFixed
-            ? settings().typewriterPosition
-            : false,
-        (position) => {
-          if (position) {
-            view.dispatch({
-              effects: holdLine(view.state.selection.main.head, position),
-            });
-          }
-        },
-      ),
-    );
 
     // Save As and a rename move the document without rebuilding the editor, and the place it is at
     // belongs to the file it now lives in
@@ -499,7 +473,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       // A file can have grown shorter since it was last read, so its places sit at its end at most
       const length = view.state.doc.length;
       view.dispatch({ selection: { anchor: Math.min(initialPosition.caret, length) } });
-      if (settings().typewriterMode) {
+      if (!restoresScroll(settings())) {
         // Typewriter mode holds the line being written in place and scrolls there itself; the line
         // that was at the top would only fight it
         restoring = false;

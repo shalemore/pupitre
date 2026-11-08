@@ -3,6 +3,7 @@ import type { EditorState } from "@codemirror/state";
 import type { EditorView } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
 import { DOCUMENT_EXTENSIONS } from "@pupitre/desktop-api";
+import { desktop } from "@pupitre/desktop-api/client";
 import {
   autolinkDestination,
   collectHeadings,
@@ -12,7 +13,6 @@ import {
 } from "@pupitre/markdown";
 import { pathFromFileUrl } from "@pupitre/utils";
 import { scrollToDocument } from "@/features/editor/scroll";
-import { desktop } from "@/lib/desktop";
 
 /**
  * Following a link in the document: web and mail addresses open in the browser, an anchor scrolls

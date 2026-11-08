@@ -2,6 +2,7 @@
 packages:
   - apps/*
   - packages/*
+  - plugins/*
 
 # Dependencies with native build steps. pnpm 10 blocks every other package's scripts by default.
 onlyBuiltDependencies:

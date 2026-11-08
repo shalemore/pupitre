@@ -5,6 +5,8 @@ import type {
   WorkspaceSearchOptions,
   WorkspaceSearchResponse,
 } from "@pupitre/desktop-api";
+import { desktop } from "@pupitre/desktop-api/client";
+import { t } from "@pupitre/i18n/solid";
 import {
   Badge,
   Input,
@@ -26,9 +28,7 @@ import {
   onMount,
   Show,
 } from "solid-js";
-import { t } from "@/i18n";
 import { FocusFirstRow, ShowFocusedRow } from "@/lib/combobox-rows";
-import { desktop } from "@/lib/desktop";
 import { css } from "@/styled-system/css";
 
 const optionButton = css({
