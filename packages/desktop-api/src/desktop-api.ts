@@ -1,4 +1,9 @@
-import type { Permission, PluginManifest } from "@pupitre/plugin-sdk";
+import type {
+  LocalizedText,
+  Permission,
+  PluginManifest,
+  PluginSettingText,
+} from "@pupitre/plugin-sdk";
 import type { SettingKey, Settings } from "@pupitre/settings";
 import type { FormatAction } from "./format-actions";
 import type { Menus } from "./menu";
@@ -206,6 +211,16 @@ export interface WorkspaceState {
   overrides: readonly SettingKey[];
 }
 
+/** What a plugin's settings form draws, and the values it starts from. */
+export interface PluginSettingsInfo {
+  /** The JSON Schema the plugin's host page sent, already reduced to the fields a form can draw. */
+  schema: Readonly<Record<string, unknown>>;
+  title?: LocalizedText | undefined;
+  description?: LocalizedText | undefined;
+  fields?: Readonly<Record<string, PluginSettingText>> | undefined;
+  values: Readonly<Record<string, unknown>>;
+}
+
 /** One plugin installed under `userData/plugins`, as the settings window lists it. */
 export interface PluginInfo {
   id: string;
@@ -214,6 +229,8 @@ export interface PluginInfo {
   enabled: boolean;
   /** The permissions the user allowed. A plugin cannot be enabled while this misses one it asks for. */
   granted: readonly Permission[];
+  /** The settings the plugin declared, once its host page has run. */
+  settings?: PluginSettingsInfo;
 }
 
 /** What a plugin page asks the open editor for; the main process forwards one of these. */
@@ -503,6 +520,8 @@ export interface InvokeChannels {
   "plugins:grant": (id: string, permissions: readonly Permission[]) => void;
   "plugins:uninstall": (id: string) => void;
   "plugins:reveal": (id: string) => void;
+  /** Replaces the values the form of a plugin's settings holds; the master validates them. */
+  "plugins:update-settings": (id: string, values: Readonly<Record<string, unknown>>) => void;
   /** The window's answer to a plugin's request for the open document. */
   "plugin:document-response": (id: number, response: PluginDocumentResponse) => void;
 }

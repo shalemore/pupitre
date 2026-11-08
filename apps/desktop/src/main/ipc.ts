@@ -83,6 +83,7 @@ import {
   revealPlugin,
   setPluginEnabled,
   uninstallPlugin,
+  updatePluginSettings,
 } from "./plugins/registry";
 import {
   getSettings,
@@ -692,6 +693,7 @@ export function registerIpcHandlers(): void {
   handle("plugins:grant", (_event, id, permissions) => grantPluginPermissions(id, permissions));
   handle("plugins:uninstall", (_event, id) => uninstallPlugin(id));
   handle("plugins:reveal", (_event, id) => revealPlugin(id));
+  handle("plugins:update-settings", (_event, id, values) => updatePluginSettings(id, values));
   handle("plugin:document-response", (_event, id, response) =>
     handleDocumentResponse(id, response),
   );

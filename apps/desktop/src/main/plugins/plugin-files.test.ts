@@ -2,7 +2,16 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { installCopy, readPlugin, readState, writeState } from "./plugin-files";
+import {
+  installCopy,
+  readPlugin,
+  readSettingsMeta,
+  readSettingsValues,
+  readState,
+  writeSettingsMeta,
+  writeSettingsValues,
+  writeState,
+} from "./plugin-files";
 
 const folders: string[] = [];
 
@@ -73,6 +82,37 @@ describe("readPlugin", () => {
     await writeFile(join(root, "main.js"), "");
 
     expect(readPlugin(plugin)).toBeUndefined();
+  });
+});
+
+describe("plugin settings", () => {
+  it("reads the metadata and the values stored beside the manifest", async () => {
+    const root = await folder();
+    const plugin = join(root, "hello");
+    await mkdir(plugin);
+    await writeFile(
+      join(plugin, "manifest.json"),
+      JSON.stringify({ id: "hello", name: "Hello", version: "1.0.0" }),
+    );
+    const schema = { type: "object", properties: { speed: { type: "number" } } };
+    writeSettingsMeta(plugin, { schema, title: { en: "Trail" } });
+    writeSettingsValues(plugin, { speed: 3 });
+
+    expect(readPlugin(plugin)?.settings).toEqual({
+      schema,
+      title: { en: "Trail" },
+      values: { speed: 3 },
+    });
+  });
+
+  it("ignores metadata that is not a settings declaration", async () => {
+    const root = await folder();
+    const plugin = join(root, "hello");
+    await mkdir(plugin);
+    await writeFile(join(plugin, "settings.meta.json"), JSON.stringify({ schema: "nope" }));
+
+    expect(readSettingsMeta(plugin)).toBeUndefined();
+    expect(readSettingsValues(plugin)).toEqual({});
   });
 });
 

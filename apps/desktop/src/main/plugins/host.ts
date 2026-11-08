@@ -81,6 +81,11 @@ export async function startPlugin(id: string, manifest: PluginManifest): Promise
   }
 }
 
+/** The window of a running plugin, so the main process can send it its settings. */
+export function pluginWindow(id: string): BrowserWindow | undefined {
+  return hosts.get(id);
+}
+
 export function stopPlugin(id: string): void {
   const window = hosts.get(id);
   if (window === undefined) return;

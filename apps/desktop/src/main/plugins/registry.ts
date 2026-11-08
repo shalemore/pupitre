@@ -5,9 +5,20 @@ import { pluginIdSchema, type Permission, type PluginManifest } from "@pupitre/p
 import { dialog, shell, type BrowserWindow } from "electron";
 import log from "electron-log/main";
 import { broadcast } from "../broadcast";
-import { startPlugin, stopPlugin } from "./host";
+import { pluginWindow, startPlugin, stopPlugin } from "./host";
 import { pluginsFolder } from "./paths";
-import { installCopy, MANIFEST_FILE, readPlugin, readState, writeState } from "./plugin-files";
+import {
+  installCopy,
+  MANIFEST_FILE,
+  readPlugin,
+  readSettingsMeta,
+  readState,
+  writeSettingsValues,
+  writeState,
+} from "./plugin-files";
+
+/** What a plugin's settings may weigh, so the file stays a preference, not a database. */
+const MAX_SETTINGS_BYTES = 64 * 1024;
 
 /** The plugins installed under the user's data folder, sorted by id. */
 export function listPlugins(): readonly PluginInfo[] {
@@ -97,4 +108,19 @@ export async function uninstallPlugin(id: string): Promise<void> {
 export function revealPlugin(id: string): void {
   const { folder } = installed(id);
   shell.showItemInFolder(join(folder, MANIFEST_FILE));
+}
+
+/** The form the settings window drew sends the whole set of values back. */
+export function updatePluginSettings(id: string, values: Readonly<Record<string, unknown>>): void {
+  const { folder } = installed(id);
+  if (readSettingsMeta(folder) === undefined) throw new Error("The plugin declares no settings");
+  const text = JSON.stringify(values);
+  if (text === undefined || Buffer.byteLength(text, "utf8") > MAX_SETTINGS_BYTES) {
+    throw new Error("The plugin settings are too large");
+  }
+  const copy: Record<string, unknown> = { ...values };
+  writeSettingsValues(folder, copy);
+  // The plugin page listens through the preload bridge; the values are already its own
+  pluginWindow(id)?.webContents.send("plugin:settings", copy);
+  publish();
 }

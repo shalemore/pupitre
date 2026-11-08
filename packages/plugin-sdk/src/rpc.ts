@@ -23,6 +23,8 @@ export type RpcResponse = { id: number } & RpcResult<unknown>;
 /** What the plugin preload exposes as `window.__pupitre`; the host page calls it. */
 export interface PluginBridge {
   invoke(method: string, params?: unknown): Promise<unknown>;
+  /** Called again when the user changes the plugin's settings. */
+  onSettings(listener: (settings: unknown) => void): void;
 }
 
 export function rpcFailure(code: PluginErrorCode, message: string): RpcResult<never> {

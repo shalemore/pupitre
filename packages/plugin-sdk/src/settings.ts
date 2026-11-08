@@ -4,7 +4,7 @@ import type { LocalizedText } from "./localized";
 /** The words the host draws around one setting field. */
 export interface PluginSettingText {
   title: LocalizedText;
-  description?: LocalizedText;
+  description?: LocalizedText | undefined;
 }
 
 /**

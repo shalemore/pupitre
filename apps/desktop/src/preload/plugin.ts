@@ -21,4 +21,8 @@ async function invoke(method: string, params?: unknown): Promise<unknown> {
   throw new Error(result.error.message);
 }
 
-contextBridge.exposeInMainWorld("__pupitre", { invoke });
+function onSettings(listener: (settings: unknown) => void): void {
+  ipcRenderer.on("plugin:settings", (_event, settings: unknown) => listener(settings));
+}
+
+contextBridge.exposeInMainWorld("__pupitre", { invoke, onSettings });

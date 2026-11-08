@@ -5,6 +5,7 @@ import type {
   PluginResponse,
   PluginSelection,
 } from "@pupitre/plugin-sdk";
+import { z } from "zod";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -126,5 +127,31 @@ const context: PluginContext = {
 };
 
 await loadScript(new URL(main, `pupitre-plugin://${id}/`).href);
-if (!isDefinition(registered)) throw new Error("The plugin did not register a definition");
-await registered.activate(context, {});
+const definition = registered;
+if (!isDefinition(definition)) throw new Error("The plugin did not register a definition");
+
+// The schema and the words around it belong to the plugin; the app only stores and draws them
+const settings = definition.settings;
+if (settings !== undefined) {
+  await bridge.invoke("host.settings", {
+    schema: z.toJSONSchema(settings.schema, { io: "input" }),
+    title: settings.title,
+    description: settings.description,
+    fields: settings.fields,
+    defaults: settings.schema.parse({}),
+  });
+}
+
+const loaded = await bridge.invoke("settings.get");
+await definition.activate(context, isRecord(loaded) ? loaded : {});
+
+bridge.onSettings((next) => {
+  void (async () => {
+    try {
+      await definition.deactivate?.();
+      await definition.activate(context, isRecord(next) ? next : {});
+    } catch (error: unknown) {
+      console.error("The plugin could not apply its settings", error);
+    }
+  })();
+});

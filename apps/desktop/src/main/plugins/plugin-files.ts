@@ -3,8 +3,11 @@ import { cpSync, existsSync, lstatSync, mkdirSync, readdirSync, renameSync, rmSy
 import { basename, isAbsolute, join, resolve } from "node:path";
 import type { PluginInfo } from "@pupitre/desktop-api";
 import {
+  type LocalizedText,
   type Permission,
   type PluginManifest,
+  type PluginSettingText,
+  localizedTextSchema,
   permissionSchema,
   parseManifest,
   pluginIdSchema,
@@ -16,6 +19,31 @@ import { readJsonFile, writeJsonFile } from "../json-file";
 /** The file a plugin's manifest sits in, and the file the host keeps its state in. */
 export const MANIFEST_FILE = "manifest.json";
 const STATE_FILE = "state.json";
+const SETTINGS_META_FILE = "settings.meta.json";
+const SETTINGS_FILE = "settings.json";
+
+/** What a plugin declared about its settings, without the values the user chose. */
+export interface StoredSettingsMeta {
+  schema: Record<string, unknown>;
+  title?: LocalizedText | undefined;
+  description?: LocalizedText | undefined;
+  fields?: Record<string, PluginSettingText> | undefined;
+}
+
+const settingsMetaSchema = z.object({
+  schema: z.record(z.string(), z.unknown()),
+  title: localizedTextSchema.optional(),
+  description: localizedTextSchema.optional(),
+  fields: z
+    .record(
+      z.string(),
+      z.object({
+        title: localizedTextSchema,
+        description: localizedTextSchema.optional(),
+      }),
+    )
+    .optional(),
+});
 
 /** What the main process remembers about a plugin between runs. */
 export interface PluginState {
@@ -46,6 +74,28 @@ export function readState(folder: string, manifest: PluginManifest): PluginState
 
 export function writeState(folder: string, state: PluginState): void {
   writeJsonFile(join(folder, STATE_FILE), state);
+}
+
+export function readSettingsMeta(folder: string): StoredSettingsMeta | undefined {
+  const parsed = settingsMetaSchema.safeParse(readJsonFile(join(folder, SETTINGS_META_FILE)));
+  return parsed.success ? parsed.data : undefined;
+}
+
+export function writeSettingsMeta(folder: string, meta: StoredSettingsMeta): void {
+  writeJsonFile(join(folder, SETTINGS_META_FILE), meta);
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+export function readSettingsValues(folder: string): Record<string, unknown> {
+  const value = readJsonFile(join(folder, SETTINGS_FILE));
+  return isRecord(value) ? value : {};
+}
+
+export function writeSettingsValues(folder: string, values: Record<string, unknown>): void {
+  writeJsonFile(join(folder, SETTINGS_FILE), values);
 }
 
 /** A module path a manifest declares, checked to stay inside the plugin's own folder. */
@@ -88,7 +138,12 @@ export function readPlugin(folder: string): PluginInfo | undefined {
   }
   if (manifest.id !== id || moduleProblem(folder, manifest) !== undefined) return undefined;
   const state = readState(folder, manifest);
-  return { id, manifest, enabled: state.enabled, granted: state.granted };
+  const info: PluginInfo = { id, manifest, enabled: state.enabled, granted: state.granted };
+  const settings = readSettingsMeta(folder);
+  if (settings !== undefined) {
+    info.settings = { ...settings, values: readSettingsValues(folder) };
+  }
+  return info;
 }
 
 /** A symbolic link could point anywhere, so a plugin folder may not hold one. */

@@ -14,7 +14,13 @@ import { currentLocale } from "../i18n";
 import { requestDocument } from "./document-bridge";
 import { pluginIdForSender } from "./host";
 import { pluginsFolder } from "./paths";
-import { readPlugin } from "./plugin-files";
+import {
+  readPlugin,
+  readSettingsValues,
+  writeSettingsMeta,
+  writeSettingsValues,
+  type StoredSettingsMeta,
+} from "./plugin-files";
 import { deleteValue, getValue, setValue } from "./storage";
 
 /** The permission each method needs; a method not named here cannot be called. */
@@ -33,10 +39,18 @@ const PERMISSIONS = {
   "network.fetch": "network",
 } as const satisfies Record<string, Permission>;
 
-type Method = keyof typeof PERMISSIONS;
+/** Methods the app itself calls through the same bridge; they need no permission. */
+const HOST_METHODS = ["host.settings", "settings.get"] as const;
+
+type HostMethod = (typeof HOST_METHODS)[number];
+type Method = keyof typeof PERMISSIONS | HostMethod;
 
 function isMethod(value: string): value is Method {
-  return Object.hasOwn(PERMISSIONS, value);
+  return Object.hasOwn(PERMISSIONS, value) || HOST_METHODS.some((method) => method === value);
+}
+
+function isPermissionMethod(method: Method): method is keyof typeof PERMISSIONS {
+  return Object.hasOwn(PERMISSIONS, method);
 }
 
 const textParams = z.object({ text: z.string() });
@@ -44,6 +58,21 @@ const lineParams = z.object({ line: z.number().int().positive() });
 const keyParams = z.object({ key: z.string().min(1).max(256) });
 const valueParams = keyParams.extend({ value: z.unknown() });
 const notificationParams = z.object({ message: localizedTextSchema });
+const settingsMetaParams = z.object({
+  schema: z.record(z.string(), z.unknown()),
+  title: localizedTextSchema.optional(),
+  description: localizedTextSchema.optional(),
+  fields: z
+    .record(
+      z.string(),
+      z.object({
+        title: localizedTextSchema,
+        description: localizedTextSchema.optional(),
+      }),
+    )
+    .optional(),
+  defaults: z.record(z.string(), z.unknown()).optional(),
+});
 const networkParams = z.object({
   url: z.string(),
   init: z
@@ -107,6 +136,20 @@ async function execute(
       return undefined;
     case "network.fetch":
       return fetchUrl(networkParams.parse(params));
+    case "host.settings": {
+      const meta = settingsMetaParams.parse(params);
+      const stored: StoredSettingsMeta = { schema: meta.schema };
+      if (meta.title !== undefined) stored.title = meta.title;
+      if (meta.description !== undefined) stored.description = meta.description;
+      if (meta.fields !== undefined) stored.fields = meta.fields;
+      writeSettingsMeta(folder, stored);
+      if (Object.keys(readSettingsValues(folder)).length === 0 && meta.defaults !== undefined) {
+        writeSettingsValues(folder, meta.defaults);
+      }
+      return undefined;
+    }
+    case "settings.get":
+      return readSettingsValues(join(pluginsFolder(), id));
   }
 }
 
@@ -134,10 +177,12 @@ async function run(id: string, method: Method, params: unknown): Promise<RpcResu
   const plugin = readPlugin(join(pluginsFolder(), id));
   if (plugin === undefined) return rpcFailure("denied", "The plugin is not installed");
   if (!plugin.enabled) return rpcFailure("denied", "The plugin is not enabled");
-  const permission = PERMISSIONS[method];
-  const allowed =
-    plugin.manifest.permissions.includes(permission) && plugin.granted.includes(permission);
-  if (!allowed) return rpcFailure("denied", `The plugin was not granted ${permission}`);
+  if (isPermissionMethod(method)) {
+    const permission = PERMISSIONS[method];
+    const allowed =
+      plugin.manifest.permissions.includes(permission) && plugin.granted.includes(permission);
+    if (!allowed) return rpcFailure("denied", `The plugin was not granted ${permission}`);
+  }
   try {
     return { ok: true, value: await execute(id, plugin.manifest, method, params) };
   } catch (error: unknown) {
