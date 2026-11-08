@@ -98,13 +98,8 @@ function documentAddress(state: EditorState, source: string): string {
 async function embeddedImage(ctx: ExportContext, source: string): Promise<string | undefined> {
   if (!ctx.embedImages || /^(?:https?:|data:)/i.test(source)) return undefined;
   const base = ctx.state.facet(documentBaseUrl);
-  if (base === undefined) return undefined;
-  let url: URL;
-  try {
-    url = new URL(source, base);
-  } catch {
-    return undefined;
-  }
+  if (base === undefined || !URL.canParse(source, base)) return undefined;
+  const url = new URL(source, base);
   if (url.protocol !== "file:" || ctx.readImage === undefined) return undefined;
   const data = await ctx.readImage(pathFromFileUrl(url)).catch(() => null);
   return data ?? undefined;

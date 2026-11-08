@@ -36,13 +36,8 @@ function imageSource(destination: string): string {
  */
 export function documentFolder(state: EditorState): string | undefined {
   const base = state.facet(documentBaseUrl);
-  if (base === undefined) return undefined;
-  let url: URL;
-  try {
-    url = new URL(base);
-  } catch {
-    return undefined;
-  }
+  if (base === undefined || !URL.canParse(base)) return undefined;
+  const url = new URL(base);
   if (url.protocol !== "file:") return undefined;
   const folder = pathFromFileUrl(url).replace(/\/+$/, "");
   return folder === "" ? "/" : folder;
@@ -69,12 +64,8 @@ const ABSOLUTE_PATH = /^(?:[a-z]:[\\/]|[\\/])/i;
 export function imageOrigin(folder: string, src: string): ImageOrigin | undefined {
   if (WEB_ADDRESS.test(src)) return { kind: "remote", url: src };
   if (FILE_ADDRESS.test(src)) {
-    let url: URL;
-    try {
-      url = new URL(src);
-    } catch {
-      return undefined;
-    }
+    if (!URL.canParse(src)) return undefined;
+    const url = new URL(src);
     if (url.protocol !== "file:") return undefined;
     return { kind: "file", path: pathFromFileUrl(url) };
   }
