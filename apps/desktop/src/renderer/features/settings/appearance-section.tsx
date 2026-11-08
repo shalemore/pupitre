@@ -5,8 +5,8 @@ import { Callout, IconButton, Select, Slider, Switch } from "@pupitre/ui";
 import { FolderOpen, Globe } from "lucide-solid";
 import { For, Show, type Component } from "solid-js";
 import { formatPercent } from "@/lib/number-format";
-import { isImmersive, settings, updateSettings } from "@/lib/settings";
-import type { SidebarSide } from "@/lib/sidebar";
+import { isImmersive, settings, updateSetting, updateSettings } from "@/lib/settings";
+import { sidebarState, type SidebarSide } from "@/lib/sidebar";
 import { DEFAULT_THEME, type ThemeInfo, themeDisplayName, themes } from "@/lib/theme";
 import { css } from "@/styled-system/css";
 import { FontSelect, themeFontLabel } from "./font-select";
@@ -87,44 +87,23 @@ function sidebarControlTitle(side: SidebarSide): string {
 
 /** The switch of one sidebar, which edits its state in the key of the current window style. */
 const SidebarStateField: Component<{ side: SidebarSide }> = (props) => {
-  const field = () => {
-    if (props.side === "start") {
-      return isImmersive()
-        ? {
-            name: "sidebarPinnedStart" as const,
-            checked: settings().sidebarPinnedStart,
-            onChange: (value: boolean) => void updateSettings({ sidebarPinnedStart: value }),
-          }
-        : {
-            name: "sidebarCollapsedStart" as const,
-            checked: settings().sidebarCollapsedStart,
-            onChange: (value: boolean) => void updateSettings({ sidebarCollapsedStart: value }),
-          };
-    }
-    return isImmersive()
-      ? {
-          name: "sidebarPinnedEnd" as const,
-          checked: settings().sidebarPinnedEnd,
-          onChange: (value: boolean) => void updateSettings({ sidebarPinnedEnd: value }),
-        }
-      : {
-          name: "sidebarCollapsedEnd" as const,
-          checked: settings().sidebarCollapsedEnd,
-          onChange: (value: boolean) => void updateSettings({ sidebarCollapsedEnd: value }),
-        };
-  };
+  const state = () => sidebarState(props.side, isImmersive());
   const title = () => sidebarControlTitle(props.side);
 
   return (
     <SettingField
       nested
-      name={field().name}
+      name={state().key}
       title={title()}
       description={
         isImmersive() && props.side === "start" ? t().settings.pinSidebarsDesc : undefined
       }
     >
-      <Switch checked={field().checked} onChange={field().onChange} aria-label={title()} />
+      <Switch
+        checked={settings()[state().key]}
+        onChange={(value) => void updateSetting(state().key, value)}
+        aria-label={title()}
+      />
     </SettingField>
   );
 };

@@ -1,6 +1,6 @@
 import type { Accessor } from "solid-js";
-import { settings, updateSettings } from "@/lib/settings";
-import type { SidebarSide } from "@/lib/sidebar";
+import { settings, updateSetting } from "@/lib/settings";
+import { sidebarState, type SidebarSide } from "@/lib/sidebar";
 
 export interface SidebarControl {
   /** Whether the sidebar stays open when the window folds its chrome. */
@@ -25,21 +25,12 @@ export function createSidebarControl(
   onCollapsed: () => void,
 ): SidebarControl {
   const open = () => {
-    if (immersive()) {
-      return side === "start" ? settings().sidebarPinnedStart : settings().sidebarPinnedEnd;
-    }
-    return side === "start" ? !settings().sidebarCollapsedStart : !settings().sidebarCollapsedEnd;
+    const { key, closed } = sidebarState(side, immersive());
+    return closed ? !settings()[key] : settings()[key];
   };
   const store = (next: boolean) => {
-    if (immersive()) {
-      void updateSettings(
-        side === "start" ? { sidebarPinnedStart: next } : { sidebarPinnedEnd: next },
-      );
-    } else {
-      void updateSettings(
-        side === "start" ? { sidebarCollapsedStart: !next } : { sidebarCollapsedEnd: !next },
-      );
-    }
+    const { key, closed } = sidebarState(side, immersive());
+    void updateSetting(key, closed ? !next : next);
   };
 
   return {

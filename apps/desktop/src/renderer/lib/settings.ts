@@ -16,6 +16,13 @@ export function updateSettings(patch: Partial<Settings>): Promise<void> {
   return desktop.invoke("settings:update", patch);
 }
 
+/** Writes one setting by its key, with the value the setting itself takes. */
+export function updateSetting<K extends SettingKey>(key: K, value: Settings[K]): Promise<void> {
+  const patch: Partial<Settings> = {};
+  patch[key] = value;
+  return updateSettings(patch);
+}
+
 export function resetSetting(key: SettingKey): Promise<void> {
   return desktop.invoke("settings:reset", key);
 }
