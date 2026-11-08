@@ -1,5 +1,4 @@
 import { I18nProvider } from "@kobalte/core/i18n";
-import { TITLE_BAR_HEIGHT } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import { onCleanup, onMount, Show, type ParentComponent } from "solid-js";
 import { css, cx } from "@/styled-system/css";
@@ -14,7 +13,7 @@ const GIVE_WAY = ["count"];
 
 const titleBar = css({
   width: "full",
-  height: `[${TITLE_BAR_HEIGHT}px]`,
+  height: "titleBar",
   overflow: "hidden",
   flexShrink: 0,
   display: "flex",
@@ -33,8 +32,8 @@ const titleBar = css({
 /**
  * The window title bar. It is draggable as a whole and leaves room for the native caption buttons
  * or traffic lights (see .app-title-bar in app.css); the main window on Windows and Linux gets
- * caption buttons drawn here instead. Its height comes from TITLE_BAR_HEIGHT, which the main
- * process also gives the native buttons and the traffic lights.
+ * caption buttons drawn here instead. Its height is the titleBar token, built from the constant the
+ * main process gives the native buttons and the traffic lights.
  */
 export const TitleBar: ParentComponent<{ class?: string; folded?: boolean }> = (props) => {
   const side = desktop.initialState.captionSide;
