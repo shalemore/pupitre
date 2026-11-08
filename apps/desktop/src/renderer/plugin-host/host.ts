@@ -142,8 +142,26 @@ if (settings !== undefined) {
   });
 }
 
+if (definition.commands !== undefined && definition.commands.length > 0) {
+  await bridge.invoke("host.commands", {
+    commands: definition.commands.map((command) => ({ id: command.id, title: command.title })),
+  });
+}
+
 const loaded = await bridge.invoke("settings.get");
 await definition.activate(context, isRecord(loaded) ? loaded : {});
+
+bridge.onCommand((commandId) => {
+  const command = definition.commands?.find((entry) => entry.id === commandId);
+  if (command === undefined) return;
+  void (async () => {
+    try {
+      await command.run(context);
+    } catch (error: unknown) {
+      console.error(`The command ${commandId} failed`, error);
+    }
+  })();
+});
 
 bridge.onSettings((next) => {
   void (async () => {

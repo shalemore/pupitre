@@ -330,6 +330,7 @@ const handlers: Handlers = {
   "plugins:uninstall": nothing,
   "plugins:reveal": nothing,
   "plugins:update-settings": nothing,
+  "plugins:run-command": nothing,
   "plugin:document-response": nothing,
   "workspace:set": nothing,
   "workspace:get": () => ({ root: null, active: false, exists: false, overrides: [] }),

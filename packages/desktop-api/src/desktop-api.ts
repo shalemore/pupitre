@@ -211,6 +211,12 @@ export interface WorkspaceState {
   overrides: readonly SettingKey[];
 }
 
+/** A command a running plugin offers to the palette, named in the plugin's own words. */
+export interface PluginCommandInfo {
+  id: string;
+  title: LocalizedText;
+}
+
 /** What a plugin's settings form draws, and the values it starts from. */
 export interface PluginSettingsInfo {
   /** The JSON Schema the plugin's host page sent, already reduced to the fields a form can draw. */
@@ -231,6 +237,8 @@ export interface PluginInfo {
   granted: readonly Permission[];
   /** The settings the plugin declared, once its host page has run. */
   settings?: PluginSettingsInfo;
+  /** The commands the plugin offered to the palette, once its host page has run. */
+  commands?: readonly PluginCommandInfo[];
 }
 
 /** What a plugin page asks the open editor for; the main process forwards one of these. */
@@ -522,6 +530,8 @@ export interface InvokeChannels {
   "plugins:reveal": (id: string) => void;
   /** Replaces the values the form of a plugin's settings holds; the master validates them. */
   "plugins:update-settings": (id: string, values: Readonly<Record<string, unknown>>) => void;
+  /** Asks a running plugin to run one of the commands it offered. */
+  "plugins:run-command": (id: string, commandId: string) => void;
   /** The window's answer to a plugin's request for the open document. */
   "plugin:document-response": (id: number, response: PluginDocumentResponse) => void;
 }

@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { cpSync, existsSync, lstatSync, mkdirSync, readdirSync, renameSync, rmSync } from "node:fs";
 import { basename, isAbsolute, join, resolve } from "node:path";
-import type { PluginInfo } from "@pupitre/desktop-api";
+import type { PluginCommandInfo, PluginInfo } from "@pupitre/desktop-api";
 import {
   type LocalizedText,
   type Permission,
@@ -21,6 +21,13 @@ export const MANIFEST_FILE = "manifest.json";
 const STATE_FILE = "state.json";
 const SETTINGS_META_FILE = "settings.meta.json";
 const SETTINGS_FILE = "settings.json";
+const COMMANDS_FILE = "commands.json";
+
+export const pluginCommandSchema = z.object({
+  id: z.string().min(1).max(128),
+  title: localizedTextSchema,
+});
+const commandsSchema = z.array(pluginCommandSchema);
 
 /** What a plugin declared about its settings, without the values the user chose. */
 export interface StoredSettingsMeta {
@@ -98,6 +105,15 @@ export function writeSettingsValues(folder: string, values: Record<string, unkno
   writeJsonFile(join(folder, SETTINGS_FILE), values);
 }
 
+export function readCommands(folder: string): PluginCommandInfo[] | undefined {
+  const parsed = commandsSchema.safeParse(readJsonFile(join(folder, COMMANDS_FILE)));
+  return parsed.success ? parsed.data : undefined;
+}
+
+export function writeCommands(folder: string, commands: readonly PluginCommandInfo[]): void {
+  writeJsonFile(join(folder, COMMANDS_FILE), commands);
+}
+
 /** A module path a manifest declares, checked to stay inside the plugin's own folder. */
 function modulePath(folder: string, relative: string): string | undefined {
   if (isAbsolute(relative)) return undefined;
@@ -143,6 +159,8 @@ export function readPlugin(folder: string): PluginInfo | undefined {
   if (settings !== undefined) {
     info.settings = { ...settings, values: readSettingsValues(folder) };
   }
+  const commands = readCommands(folder);
+  if (commands !== undefined) info.commands = commands;
   return info;
 }
 

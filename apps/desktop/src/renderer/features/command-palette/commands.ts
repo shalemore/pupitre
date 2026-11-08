@@ -1,15 +1,27 @@
+import type { PluginInfo } from "@pupitre/desktop-api";
 import { TOP_MENUS, type MenuEntry, type Menus, type TopMenu } from "@pupitre/desktop-api/menu";
+import { localize } from "@pupitre/plugin-sdk";
 import { matchRanges } from "@/lib/fuzzy";
 
-/** One entry of the palette: something a menu runs, with the menus it lives under. */
-export interface PaletteCommand {
-  /** The id the menu holds for the entry, which the host runs when it is picked. */
-  id: string;
-  label: string;
-  /** The names of the menus the entry lives under, outermost first, as in "File › Open Recent". */
-  parent: string;
-  shortcut: string | undefined;
-}
+/** One entry of the palette: something a menu or a plugin runs, with the menus it lives under. */
+export type PaletteCommand =
+  | {
+      kind: "menu";
+      /** The id the menu holds for the entry, which the host runs when it is picked. */
+      id: string;
+      label: string;
+      /** The names of the menus the entry lives under, outermost first, as in "File › Open Recent". */
+      parent: string;
+      shortcut: string | undefined;
+    }
+  | {
+      kind: "plugin";
+      pluginId: string;
+      id: string;
+      label: string;
+      parent: string;
+      shortcut: string | undefined;
+    };
 
 /**
  * The commands the menus hold, in menu order: every entry that runs something, under the names of
@@ -32,6 +44,7 @@ export function commandsFromMenus(
         continue;
       }
       commands.push({
+        kind: "menu",
         id: entry.id,
         label: entry.label,
         parent: parents.join(separator),
@@ -40,6 +53,26 @@ export function commandsFromMenus(
     }
   };
   for (const menu of TOP_MENUS) collect(menus[menu], [labelOf(menu)]);
+  return commands;
+}
+
+/** The commands running plugins offered, under the plugin's own name. */
+export function pluginCommands(plugins: readonly PluginInfo[], locale: string): PaletteCommand[] {
+  const commands: PaletteCommand[] = [];
+  for (const plugin of plugins) {
+    if (!plugin.enabled || plugin.commands === undefined) continue;
+    const parent = localize(plugin.manifest.name, locale);
+    for (const command of plugin.commands) {
+      commands.push({
+        kind: "plugin",
+        pluginId: plugin.id,
+        id: command.id,
+        label: localize(command.title, locale),
+        parent,
+        shortcut: undefined,
+      });
+    }
+  }
   return commands;
 }
 

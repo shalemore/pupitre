@@ -15,8 +15,10 @@ import { requestDocument } from "./document-bridge";
 import { pluginIdForSender } from "./host";
 import { pluginsFolder } from "./paths";
 import {
+  pluginCommandSchema,
   readPlugin,
   readSettingsValues,
+  writeCommands,
   writeSettingsMeta,
   writeSettingsValues,
   type StoredSettingsMeta,
@@ -40,7 +42,7 @@ const PERMISSIONS = {
 } as const satisfies Record<string, Permission>;
 
 /** Methods the app itself calls through the same bridge; they need no permission. */
-const HOST_METHODS = ["host.settings", "settings.get"] as const;
+const HOST_METHODS = ["host.settings", "host.commands", "settings.get"] as const;
 
 type HostMethod = (typeof HOST_METHODS)[number];
 type Method = keyof typeof PERMISSIONS | HostMethod;
@@ -146,6 +148,11 @@ async function execute(
       if (Object.keys(readSettingsValues(folder)).length === 0 && meta.defaults !== undefined) {
         writeSettingsValues(folder, meta.defaults);
       }
+      return undefined;
+    }
+    case "host.commands": {
+      const { commands } = z.object({ commands: z.array(pluginCommandSchema) }).parse(params);
+      writeCommands(folder, commands);
       return undefined;
     }
     case "settings.get":

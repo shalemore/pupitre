@@ -25,6 +25,8 @@ export interface PluginBridge {
   invoke(method: string, params?: unknown): Promise<unknown>;
   /** Called again when the user changes the plugin's settings. */
   onSettings(listener: (settings: unknown) => void): void;
+  /** Called with a command id when the user picks one of the plugin's commands. */
+  onCommand(listener: (commandId: string) => void): void;
 }
 
 export function rpcFailure(code: PluginErrorCode, message: string): RpcResult<never> {

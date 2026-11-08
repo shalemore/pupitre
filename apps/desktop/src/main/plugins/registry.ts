@@ -10,6 +10,7 @@ import { pluginsFolder } from "./paths";
 import {
   installCopy,
   MANIFEST_FILE,
+  readCommands,
   readPlugin,
   readSettingsMeta,
   readState,
@@ -108,6 +109,18 @@ export async function uninstallPlugin(id: string): Promise<void> {
 export function revealPlugin(id: string): void {
   const { folder } = installed(id);
   shell.showItemInFolder(join(folder, MANIFEST_FILE));
+}
+
+/** Asks the plugin page to run a command the palette is showing. */
+export function runPluginCommand(id: string, commandId: string): void {
+  const { folder } = installed(id);
+  const commands = readCommands(folder);
+  if (commands === undefined || !commands.some((command) => command.id === commandId)) {
+    throw new Error(`The plugin has no command ${commandId}`);
+  }
+  const window = pluginWindow(id);
+  if (window === undefined) throw new Error("The plugin is not running");
+  window.webContents.send("plugin:command", commandId);
 }
 
 /** The form the settings window drew sends the whole set of values back. */

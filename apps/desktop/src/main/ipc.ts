@@ -81,6 +81,7 @@ import {
   installPlugin,
   listPlugins,
   revealPlugin,
+  runPluginCommand,
   setPluginEnabled,
   uninstallPlugin,
   updatePluginSettings,
@@ -694,6 +695,7 @@ export function registerIpcHandlers(): void {
   handle("plugins:uninstall", (_event, id) => uninstallPlugin(id));
   handle("plugins:reveal", (_event, id) => revealPlugin(id));
   handle("plugins:update-settings", (_event, id, values) => updatePluginSettings(id, values));
+  handle("plugins:run-command", (_event, id, commandId) => runPluginCommand(id, commandId));
   handle("plugin:document-response", (_event, id, response) =>
     handleDocumentResponse(id, response),
   );
