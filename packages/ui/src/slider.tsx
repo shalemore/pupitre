@@ -1,4 +1,5 @@
 import { Slider as KobalteSlider } from "@kobalte/core/slider";
+import { createEffect, createSignal } from "solid-js";
 import { css } from "./styled-system/css";
 
 export interface SliderProps {
@@ -46,22 +47,49 @@ const thumb = css({
 });
 
 export function Slider(props: SliderProps) {
+  // A drag moves a local value: the settings change travels to the main process and back, and the
+  // echo must not pull the thumb back under the pointer while it moves
+  const [value, setValue] = createSignal(props.value);
+  let dragging = false;
+
+  createEffect(() => {
+    const next = props.value;
+    if (!dragging) setValue(next);
+  });
+
   return (
     <KobalteSlider
       data-slot="slider"
-      value={[props.value]}
+      value={[value()]}
       minValue={props.min}
       maxValue={props.max}
       step={props.step}
-      onChange={([value]) => {
-        if (value !== undefined) props.onChange(value);
+      onChange={([next]) => {
+        if (next === undefined) return;
+        setValue(next);
+        props.onChange(next);
+      }}
+      onChangeEnd={() => {
+        dragging = false;
       }}
       aria-label={props["aria-label"]}
       class={root}
     >
-      <KobalteSlider.Track data-slot="slider-track" class={track}>
+      <KobalteSlider.Track
+        data-slot="slider-track"
+        class={track}
+        onPointerDown={() => {
+          dragging = true;
+        }}
+      >
         <KobalteSlider.Fill data-slot="slider-fill" class={fill} />
-        <KobalteSlider.Thumb data-slot="slider-thumb" class={thumb}>
+        <KobalteSlider.Thumb
+          data-slot="slider-thumb"
+          class={thumb}
+          onPointerDown={() => {
+            dragging = true;
+          }}
+        >
           <KobalteSlider.Input />
         </KobalteSlider.Thumb>
       </KobalteSlider.Track>
