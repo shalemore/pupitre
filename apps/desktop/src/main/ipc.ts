@@ -20,6 +20,7 @@ import {
 } from "@pupitre/desktop-api";
 import { intlLocale } from "@pupitre/i18n";
 import type { Settings } from "@pupitre/settings";
+import { fileStem, imageMimeType } from "@pupitre/utils";
 import {
   BrowserWindow,
   ClipboardItem,
@@ -36,7 +37,7 @@ import {
 import log from "electron-log/main";
 import writeFileAtomic from "write-file-atomic";
 import { formatFileSize } from "@shared/file-size";
-import { compareFolderEntries, UNTIMED } from "@shared/folder-sort";
+import { sortFolderEntries } from "@shared/folder-sort";
 import { isHiddenName } from "@shared/hidden";
 import { choose, type Answer } from "./dialog-choice";
 import { clearDraft, readDraft, writeDraft } from "./document/drafts";
@@ -206,7 +207,7 @@ async function saveImage(
   await mkdir(directory, { recursive: true });
   // Pasted screenshots are usually all named image.png; a timestamp keeps them from overwriting existing images
   const extension = extname(fileName) || ".png";
-  const stem = basename(fileName, extension).replace(/[^\p{L}\p{N}._-]+/gu, "-");
+  const stem = fileStem(basename(fileName, extension));
   const name = `${stem}-${Date.now()}${extension}`;
   await writeFile(join(directory, name), data, { flag: "wx" });
   // Paths in Markdown use / and each segment is encoded for spaces and other special characters
@@ -243,30 +244,8 @@ async function listFolder(path: string): Promise<FolderEntry[]> {
     sort === "name"
       ? undefined
       : await Promise.all(entries.map((entry) => limit(() => entryTime(entry.path, sort))));
-  return (
-    entries
-      .map((entry, index) => ({ entry, time: times?.[index] ?? UNTIMED }))
-      .toSorted(compareFolderEntries)
-      // The time the order reads goes with the entry, so the row can show the date it was ordered by
-      .map(({ entry, time }) => {
-        if (sort === "name" || time === UNTIMED) return entry;
-        entry.time = time;
-        return entry;
-      })
-  );
+  return sortFolderEntries(entries, times);
 }
-
-/** The type a data URL names for each picture extension the app can show. */
-const IMAGE_MIME_TYPES: Readonly<Record<string, string>> = {
-  ".png": "image/png",
-  ".jpg": "image/jpeg",
-  ".jpeg": "image/jpeg",
-  ".gif": "image/gif",
-  ".webp": "image/webp",
-  ".svg": "image/svg+xml",
-  ".bmp": "image/bmp",
-  ".avif": "image/avif",
-};
 
 /** Windows whose page layout has been warmed up, see the export handler. */
 const printWarmedUp = new WeakSet<WebContents>();
@@ -527,7 +506,7 @@ export function registerIpcHandlers(): void {
   handle("image:data-url", async (_event, path) => {
     try {
       const file = checkedPath(path);
-      const mime = IMAGE_MIME_TYPES[extname(file).toLowerCase()];
+      const mime = imageMimeType(extname(file));
       if (mime === undefined || (await stat(file)).size > MAX_IMAGE_BYTES) return null;
       return `data:${mime};base64,${(await readFile(file)).toString("base64")}`;
     } catch {

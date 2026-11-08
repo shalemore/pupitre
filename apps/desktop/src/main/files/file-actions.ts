@@ -1,7 +1,7 @@
 import { copyFile, mkdir, rename, writeFile } from "node:fs/promises";
 import { basename, dirname, format, join, normalize, parse, resolve } from "node:path";
 import type { FolderEntry } from "@pupitre/desktop-api";
-import { decodeUriPart } from "@pupitre/utils";
+import { decodeUriPart, fileStem, imageExtensionFor } from "@pupitre/utils";
 import { net, shell } from "electron";
 import { moveFile } from "move-file";
 import { exists } from "./exists";
@@ -89,25 +89,14 @@ export async function copyImageInto(path: string, folder: string): Promise<strin
   return target;
 }
 
-/** The extension of a picture a server names by its type, for an address that has none of its own. */
-const IMAGE_TYPES: Readonly<Record<string, string>> = {
-  "image/png": ".png",
-  "image/jpeg": ".jpg",
-  "image/gif": ".gif",
-  "image/webp": ".webp",
-  "image/svg+xml": ".svg",
-  "image/bmp": ".bmp",
-  "image/avif": ".avif",
-};
-
 /** The name a downloaded picture is written under: the last part of its address, or a name of its own type. */
 function downloadName(url: URL, contentType: string | undefined): string {
   const last = decodeUriPart(url.pathname.split("/").at(-1) ?? "");
-  const name = last.replace(/[^\p{L}\p{N}._-]+/gu, "-");
+  const name = fileStem(last);
   if (/\.[a-z0-9]{1,5}$/i.test(name)) return name;
   const type = (contentType ?? "").split(";")[0]?.trim().toLowerCase() ?? "";
   const stem = name === "" || name === "." ? "image" : name;
-  return `${stem}${IMAGE_TYPES[type] ?? ".png"}`;
+  return `${stem}${imageExtensionFor(type) ?? ".png"}`;
 }
 
 /** Writes the picture behind a web address into `folder`, where the document can link it. */

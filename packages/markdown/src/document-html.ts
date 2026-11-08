@@ -9,7 +9,13 @@ import { codeHtml } from "./code-html";
 import { detailsSection } from "./details";
 import { footnoteLabel } from "./footnotes";
 import { RAW_HTML_SANITIZE_OPTIONS, decorateHtmlBlock, isRenderableHtml } from "./html";
-import { documentBaseUrl, type ImageSize, imageStyle, parseImageTag, resolveUrl } from "./images";
+import {
+  documentBaseUrl,
+  type ImageSize,
+  imageAttributes,
+  parseImageTag,
+  resolveUrl,
+} from "./images";
 import { type InlineItem, inlineItems } from "./inline";
 import { FULL_PARSE_TIMEOUT_MS, markdownLanguage } from "./language";
 import { mathFence, mathOf } from "./math";
@@ -141,13 +147,9 @@ async function imageHtml(
   size: ImageSize,
   inline: boolean,
 ): Promise<string> {
-  const width = size.width === undefined ? "" : ` width="${size.width}"`;
-  const style = imageStyle(size);
-  const declarations = style === "" ? "" : ` style="${style}"`;
-  const titleAttribute = title === "" ? "" : ` title="${escapeHtml(title)}"`;
   // A picture sharing its line is inline, as in the editor: no frame and no rounded corners
   const inlineAttribute = inline ? " data-inline" : "";
-  return `<img class="md-image-preview"${inlineAttribute} src="${escapeHtml(await imageSource(ctx, src))}" alt="${escapeHtml(alt)}"${titleAttribute}${width}${declarations}>`;
+  return `<img class="md-image-preview"${inlineAttribute} src="${escapeHtml(await imageSource(ctx, src))}" alt="${escapeHtml(alt)}"${imageAttributes(size, title)}>`;
 }
 
 async function itemHtml(ctx: ExportContext, item: InlineItem): Promise<string> {

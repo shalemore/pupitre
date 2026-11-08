@@ -2,7 +2,7 @@ import { syntaxTree } from "@codemirror/language";
 import { type EditorState, Facet } from "@codemirror/state";
 import type { EditorView } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
-import { decodeUriPart, escapeHtml, pathFromFileUrl } from "@pupitre/utils";
+import { decodeUriPart, escapeHtml, imageExtensionFor, pathFromFileUrl } from "@pupitre/utils";
 import { referenceTarget } from "./references";
 
 /** file:// URL of the document's folder, to resolve relative image paths; undefined if unsaved. */
@@ -148,17 +148,6 @@ function base64Bytes(payload: string): Uint8Array {
   return Uint8Array.from(binary, (character) => character.charCodeAt(0));
 }
 
-/** The extension of the pictures a data: URL can carry, for a file saved from one. */
-const MIME_EXTENSIONS: Readonly<Record<string, string>> = {
-  "image/avif": ".avif",
-  "image/bmp": ".bmp",
-  "image/gif": ".gif",
-  "image/jpeg": ".jpg",
-  "image/png": ".png",
-  "image/svg+xml": ".svg",
-  "image/webp": ".webp",
-};
-
 /**
  * The file a data: image carries, named after its alt text and its type, so it can be saved beside
  * the document. undefined when the address is not a data: URL or its bytes cannot be read.
@@ -176,7 +165,7 @@ export function dataImageFile(src: string, alt: string): File | undefined {
   } catch {
     return undefined;
   }
-  const extension = MIME_EXTENSIONS[type.toLowerCase()] ?? "";
+  const extension = imageExtensionFor(type) ?? "";
   return new File([bytes.slice()], `${alt === "" ? "image" : alt}${extension}`, { type });
 }
 
@@ -452,14 +441,20 @@ export function imageStyle(size: ImageSize): string {
   }
 }
 
+/** The title, width and alignment attributes a picture carries, in this order. */
+export function imageAttributes(size: ImageSize, title: string): string {
+  const width = size.width === undefined ? "" : ` width="${size.width}"`;
+  const style = imageStyle(size);
+  const declarations = style === "" ? "" : ` style="${style}"`;
+  const titleAttribute = title === "" ? "" : ` title="${escapeHtml(title)}"`;
+  return `${titleAttribute}${width}${declarations}`;
+}
+
 /** The Markdown for a picture: the image it was, until a width or an alignment is written beside it. */
 function imageMarkup(image: TaggedImage): string {
-  const style = imageStyle(image);
-  if (image.width === undefined && style === "") return imageMarkdown(image.alt, image.src);
-  const width = image.width === undefined ? "" : ` width="${image.width}"`;
-  const declarations = style === "" ? "" : ` style="${style}"`;
-  const title = image.title === "" ? "" : ` title="${escapeHtml(image.title)}"`;
-  return `<img src="${escapeHtml(image.src)}" alt="${escapeHtml(image.alt)}"${title}${width}${declarations}>`;
+  const attributes = imageAttributes(image, image.title);
+  if (image.width === undefined && attributes === "") return imageMarkdown(image.alt, image.src);
+  return `<img src="${escapeHtml(image.src)}" alt="${escapeHtml(image.alt)}"${attributes}>`;
 }
 
 /** Whether two sizes place a picture the same way. */

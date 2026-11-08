@@ -26,7 +26,7 @@ import {
 } from "@pupitre/settings";
 import { toLf } from "@pupitre/utils";
 import { readDraftSession } from "@shared/draft";
-import { compareFolderEntries, UNTIMED } from "@shared/folder-sort";
+import { sortFolderEntries, UNTIMED } from "@shared/folder-sort";
 import { isHiddenName } from "@shared/hidden";
 import { isInsideFolder } from "@shared/paths";
 import { pinKeyOf } from "@shared/pins";
@@ -226,14 +226,11 @@ function listFolder(path: string): FolderEntry[] {
     });
   }
   const sort = settings.folderSort;
-  return [...entries.values()]
-    .map((entry) => ({ entry, time: sort === "name" ? UNTIMED : timeOf(entry, sort) }))
-    .toSorted(compareFolderEntries)
-    .map(({ entry, time }) => {
-      if (sort === "name" || time === UNTIMED) return entry;
-      entry.time = time;
-      return entry;
-    });
+  const listed = [...entries.values()];
+  return sortFolderEntries(
+    listed,
+    sort === "name" ? undefined : listed.map((entry) => timeOf(entry, sort)),
+  );
 }
 
 /** The time the demo last wrote an entry, or its newest child for a folder. */

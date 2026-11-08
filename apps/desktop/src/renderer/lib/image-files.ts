@@ -1,23 +1,12 @@
 import { desktop } from "@pupitre/desktop-api/client";
-
-/** The type of a picked picture, kept on the File so a document without a file can show it before the save. */
-const IMAGE_TYPES: Readonly<Record<string, string>> = {
-  png: "image/png",
-  jpg: "image/jpeg",
-  jpeg: "image/jpeg",
-  gif: "image/gif",
-  webp: "image/webp",
-  svg: "image/svg+xml",
-  bmp: "image/bmp",
-  avif: "image/avif",
-};
+import { imageMimeType } from "@pupitre/utils";
 
 /** The image the user picked from disk, as the File a pasted picture arrives as; null when they dropped out of the dialog. */
 export async function pickImage(): Promise<File | null> {
   const picked = await desktop.invoke("image:pick");
   if (picked === null) return null;
   const extension = picked.name.slice(picked.name.lastIndexOf(".") + 1).toLowerCase();
-  const type = IMAGE_TYPES[extension] ?? "";
+  const type = imageMimeType(extension) ?? "";
   // slice() gives the bytes an ArrayBuffer of their own, which is what a Blob takes
   return new File([picked.data.slice()], picked.name, { type });
 }
