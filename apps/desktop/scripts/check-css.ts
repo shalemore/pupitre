@@ -4,13 +4,15 @@ import { pandaPreset } from "@pupitre/panda-preset";
 import { TOKEN_NAMES } from "../src/shared/design-tokens.ts";
 
 /**
- * Checks the two promises the stylesheets make to themes:
+ * Checks the promises the stylesheets make to themes:
  *
  * 1. A style rule in app.css or editor.css belongs to a cascade layer. Unlayered rules outrank
  *    every layer, so a theme could never override one. The only exceptions are the motion switch,
  *    which must beat utilities and inline transitions alike.
  * 2. A theme only reads tokens that exist. A mistyped `var(--ui-brand-hovr)` is otherwise silent:
  *    the property simply falls back to its initial value.
+ * 3. A Panda arbitrary value in a style object is static. Panda extracts class names from source
+ *    text, so an interpolated one matches no generated rule and the element keeps its old style.
  *
  * Run by `pnpm run lint`, so a regression fails before it reaches a release.
  */
@@ -182,6 +184,33 @@ for (const token of referencedTokens(pandaPreset.theme?.extend?.tokens)) {
       file: "../../packages/panda-preset/src/index.ts",
       line: 1,
       message: `\`${token}\` is aliased by a Panda token but no stylesheet declares it`,
+    });
+  }
+}
+
+/** Every source file the app's Panda config scans; generated styles are not a source to read. */
+function* pandaSources(dir: string): Generator<string> {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    if (entry.name === "node_modules" || entry.name === "styled-system") continue;
+    const path = join(dir, entry.name);
+    if (entry.isDirectory()) yield* pandaSources(path);
+    else if (/\.tsx?$/.test(entry.name)) yield path;
+  }
+}
+
+const pluginSources = readdirSync("../../plugins", { withFileTypes: true })
+  .filter((entry) => entry.isDirectory())
+  .map((entry) => `../../plugins/${entry.name}/src`);
+const scanned = ["src/renderer", "../../packages/ui/src", ...pluginSources].flatMap((dir) =>
+  Array.from(pandaSources(dir)),
+);
+for (const file of scanned) {
+  const source = readFileSync(file, "utf8");
+  for (const match of source.matchAll(/`\[\$\{/g)) {
+    problems.push({
+      file,
+      line: lineOf(source, match.index ?? 0),
+      message: "an interpolated Panda arbitrary value matches no generated rule",
     });
   }
 }
