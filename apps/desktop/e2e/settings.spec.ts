@@ -35,7 +35,7 @@ test("an update offers its download in place of the check button, without notes"
     await app.page.evaluate(() => window.desktop.invoke("window:open-settings"));
     const settings = await settingsWindow;
     await settings.waitForLoadState("domcontentloaded");
-    await settings.getByRole("tab").last().click();
+    await settings.getByRole("tab", { name: "About" }).click();
     await app.app.evaluate(({ BrowserWindow }) => {
       for (const window of BrowserWindow.getAllWindows()) {
         window.webContents.send("updater:status", { kind: "available", version: "9.9.9" });

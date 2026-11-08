@@ -242,6 +242,9 @@ export const ar = {
   },
   settings: {
     title: "التفضيلات",
+    groupApplication: "التطبيق",
+    groupWriting: "الكتابة",
+    groupCustomize: "تخصيص",
     general: "عام",
     appearance: "المظهر",
     editor: "المحرر",

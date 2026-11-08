@@ -241,6 +241,9 @@ export const plPL = {
   },
   settings: {
     title: "Ustawienia",
+    groupApplication: "Aplikacja",
+    groupWriting: "Pisanie",
+    groupCustomize: "Dostosuj",
     general: "Ogólne",
     appearance: "Wygląd",
     editor: "Edytor",

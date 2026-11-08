@@ -236,6 +236,9 @@ export const elGR = {
   },
   settings: {
     title: "Προτιμήσεις",
+    groupApplication: "Εφαρμογή",
+    groupWriting: "Γραφή",
+    groupCustomize: "Προσαρμογή",
     general: "Γενικά",
     appearance: "Εμφάνιση",
     editor: "Επεξεργαστής",

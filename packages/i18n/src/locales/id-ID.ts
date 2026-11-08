@@ -228,6 +228,9 @@ export const idID = {
   },
   settings: {
     title: "Preferensi",
+    groupApplication: "Aplikasi",
+    groupWriting: "Penulisan",
+    groupCustomize: "Sesuaikan",
     general: "Umum",
     appearance: "Tampilan",
     editor: "Editor",

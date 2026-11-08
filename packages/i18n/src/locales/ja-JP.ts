@@ -232,6 +232,9 @@ export const jaJP = {
   },
   settings: {
     title: "環境設定",
+    groupApplication: "アプリ",
+    groupWriting: "執筆",
+    groupCustomize: "カスタマイズ",
     general: "一般",
     appearance: "外観",
     editor: "エディター",

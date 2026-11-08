@@ -232,6 +232,9 @@ export const koKR = {
   },
   settings: {
     title: "환경설정",
+    groupApplication: "앱",
+    groupWriting: "글쓰기",
+    groupCustomize: "사용자 지정",
     general: "일반",
     appearance: "모양",
     editor: "편집기",

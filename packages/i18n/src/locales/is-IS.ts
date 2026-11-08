@@ -238,6 +238,9 @@ export const isIS = {
   },
   settings: {
     title: "Stillingar",
+    groupApplication: "Forrit",
+    groupWriting: "Skrif",
+    groupCustomize: "Sérsníða",
     general: "Almennt",
     appearance: "Útlit",
     editor: "Ritill",

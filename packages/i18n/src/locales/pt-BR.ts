@@ -232,6 +232,9 @@ export const ptBR = {
   },
   settings: {
     title: "Preferências",
+    groupApplication: "Aplicativo",
+    groupWriting: "Escrita",
+    groupCustomize: "Personalizar",
     general: "Geral",
     appearance: "Aparência",
     editor: "Editor",

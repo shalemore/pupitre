@@ -234,6 +234,9 @@ export const fiFI = {
   },
   settings: {
     title: "Asetukset",
+    groupApplication: "Sovellus",
+    groupWriting: "Kirjoittaminen",
+    groupCustomize: "Mukauta",
     general: "Yleiset",
     appearance: "Ulkoasu",
     editor: "Editori",

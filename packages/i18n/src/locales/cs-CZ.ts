@@ -239,6 +239,9 @@ export const csCZ = {
   },
   settings: {
     title: "Předvolby",
+    groupApplication: "Aplikace",
+    groupWriting: "Psaní",
+    groupCustomize: "Přizpůsobit",
     general: "Obecné",
     appearance: "Vzhled",
     editor: "Editor",

@@ -112,6 +112,7 @@ export function getWorkspaceState(): WorkspaceState {
     root: workspace?.root ?? null,
     active: workspaceActive,
     exists: workspace?.exists ?? false,
+    settingsPath: workspace?.path ?? null,
     overrides: SETTING_KEYS.filter(
       (key) => isWorkspaceKey(key) && workspace !== undefined && key in workspace.file,
     ),
@@ -208,7 +209,10 @@ export function useWorkspace(active: boolean): void {
 }
 
 export function revealWorkspaceFile(): void {
-  if (workspace?.exists) shell.showItemInFolder(workspace.path);
+  if (!workspace) return;
+  // Before the first change writes it, show where the file will appear
+  if (workspace.exists) shell.showItemInFolder(workspace.path);
+  else void shell.openPath(workspace.root);
 }
 
 export function onSettingsChange(listener: (settings: Settings) => void): () => void {

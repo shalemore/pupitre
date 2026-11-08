@@ -235,6 +235,9 @@ export const trTR = {
   },
   settings: {
     title: "Tercihler",
+    groupApplication: "Uygulama",
+    groupWriting: "Yazma",
+    groupCustomize: "Özelleştir",
     general: "Genel",
     appearance: "Görünüm",
     editor: "Düzenleyici",

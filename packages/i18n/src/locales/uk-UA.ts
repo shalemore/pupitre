@@ -240,6 +240,9 @@ export const ukUA = {
   },
   settings: {
     title: "Параметри",
+    groupApplication: "Програма",
+    groupWriting: "Написання",
+    groupCustomize: "Налаштувати",
     general: "Загальні",
     appearance: "Вигляд",
     editor: "Редактор",

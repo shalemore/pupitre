@@ -7,6 +7,7 @@ const [workspace, setWorkspace] = createSignal<WorkspaceState>({
   root: null,
   active: false,
   exists: false,
+  settingsPath: null,
   overrides: [],
 });
 void desktop.invoke("workspace:get").then(setWorkspace);

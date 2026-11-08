@@ -239,6 +239,9 @@ export const ruRU = {
   },
   settings: {
     title: "Настройки",
+    groupApplication: "Приложение",
+    groupWriting: "Написание",
+    groupCustomize: "Настроить",
     general: "Общие",
     appearance: "Внешний вид",
     editor: "Редактор",

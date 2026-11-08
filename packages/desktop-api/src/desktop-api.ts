@@ -207,6 +207,8 @@ export interface WorkspaceState {
   active: boolean;
   /** Whether the folder has a settings file yet; the first change made while it is active creates it. */
   exists: boolean;
+  /** The folder's settings file, whether or not it has been written yet. */
+  settingsPath: string | null;
   /** The settings that have a value of their own in the folder. */
   overrides: readonly SettingKey[];
 }

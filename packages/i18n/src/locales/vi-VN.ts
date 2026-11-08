@@ -227,6 +227,9 @@ export const viVN = {
   },
   settings: {
     title: "Tùy chọn",
+    groupApplication: "Ứng dụng",
+    groupWriting: "Viết",
+    groupCustomize: "Tùy chỉnh",
     general: "Chung",
     appearance: "Hiển thị",
     editor: "Trình soạn thảo",

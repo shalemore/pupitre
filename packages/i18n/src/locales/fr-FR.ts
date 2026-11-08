@@ -232,6 +232,9 @@ export const frFR = {
   },
   settings: {
     title: "Préférences",
+    groupApplication: "Application",
+    groupWriting: "Rédaction",
+    groupCustomize: "Personnaliser",
     general: "Général",
     appearance: "Apparence",
     editor: "Éditeur",

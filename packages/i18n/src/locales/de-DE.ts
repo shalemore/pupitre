@@ -234,6 +234,9 @@ export const deDE = {
   },
   settings: {
     title: "Einstellungen",
+    groupApplication: "Anwendung",
+    groupWriting: "Schreiben",
+    groupCustomize: "Anpassen",
     general: "Allgemein",
     appearance: "Darstellung",
     editor: "Editor",

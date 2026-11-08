@@ -239,6 +239,9 @@ export const enUS = {
   },
   settings: {
     title: "Preferences",
+    groupApplication: "Application",
+    groupWriting: "Writing",
+    groupCustomize: "Customize",
     general: "General",
     appearance: "Appearance",
     editor: "Editor",

@@ -3,7 +3,7 @@ import { Check, ChevronDown } from "lucide-solid";
 import { type JSX, Show } from "solid-js";
 import { Badge } from "./badge";
 import { ScrollView, type ScrollViewProps } from "./scroll-view";
-import { css, cx } from "./styled-system/css";
+import { cva, css, cx } from "./styled-system/css";
 import { FLOATING_PANEL, truncate, truncateStyle } from "./styles";
 
 export interface SelectOption<T extends string = string> {
@@ -23,6 +23,8 @@ export interface SelectProps<T extends string> {
   value: T;
   options: readonly SelectOption<T>[];
   onChange: (value: T) => void;
+  /** A ghost sits in a row of text, such as a footer, instead of holding a field's frame. */
+  variant?: "default" | "ghost";
   class?: string;
   "aria-label"?: string;
 }
@@ -56,29 +58,54 @@ const itemHint = css(truncateStyle, {
 const itemText = css({ display: "flex", minWidth: "0", flexDirection: "column" });
 const itemLine = css({ display: "flex", minWidth: "0", alignItems: "center", gap: "1.5" });
 const check = css({ width: "3", height: "3", flexShrink: 0, color: "brand" });
-const chevronIcon = css({ width: "3.5", height: "3.5" });
+const chevronIcon = cva({
+  variants: {
+    variant: {
+      default: { width: "3.5", height: "3.5" },
+      ghost: { width: "3", height: "3" },
+    },
+  },
+  defaultVariants: { variant: "default" },
+});
 
-const trigger = css({
-  display: "flex",
-  height: "8",
-  minWidth: "36",
-  alignItems: "center",
-  justifyContent: "space-between",
-  gap: "2",
-  borderRadius: "md",
-  borderWidth: "hairline",
-  borderStyle: "solid",
-  borderColor: "input",
-  backgroundColor: "field",
-  paddingInline: "2.5",
-  textStyle: "xs",
-  color: "foreground",
-  outlineStyle: "none",
-  cursor: "pointer",
-  layerStyle: "interactive",
-  _hover: { backgroundColor: "surface.0" },
-  _focusVisible: { boxShadow: "focus" },
-  _expanded: { borderColor: "brand" },
+const trigger = cva({
+  base: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: "2",
+    borderRadius: "md",
+    outlineStyle: "none",
+    cursor: "pointer",
+    layerStyle: "interactive",
+    _focusVisible: { boxShadow: "focus" },
+  },
+  variants: {
+    variant: {
+      default: {
+        height: "8",
+        minWidth: "36",
+        borderWidth: "hairline",
+        borderStyle: "solid",
+        borderColor: "input",
+        backgroundColor: "field",
+        paddingInline: "2.5",
+        textStyle: "xs",
+        color: "foreground",
+        _hover: { backgroundColor: "surface.0" },
+        _expanded: { borderColor: "brand" },
+      },
+      ghost: {
+        height: "6",
+        paddingInline: "1.5",
+        textStyle: "2xs",
+        color: "tertiary",
+        _hover: { backgroundColor: "accent", color: "foreground" },
+        _expanded: { color: "foreground" },
+      },
+    },
+  },
+  defaultVariants: { variant: "default" },
 });
 const value = css(truncateStyle, {
   display: "flex",
@@ -156,7 +183,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
       <KobalteSelect.Trigger
         data-slot="select-trigger"
         aria-label={props["aria-label"]}
-        class={cx(trigger, props.class)}
+        class={cx(trigger({ variant: props.variant }), props.class)}
       >
         <KobalteSelect.Value<SelectOption<T>> class={value}>
           {(state) => (
@@ -178,7 +205,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
           )}
         </KobalteSelect.Value>
         <KobalteSelect.Icon class={chevron}>
-          <ChevronDown class={chevronIcon} />
+          <ChevronDown class={chevronIcon({ variant: props.variant })} />
         </KobalteSelect.Icon>
       </KobalteSelect.Trigger>
       <KobalteSelect.Portal>

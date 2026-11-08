@@ -232,6 +232,9 @@ export const itIT = {
   },
   settings: {
     title: "Preferenze",
+    groupApplication: "Applicazione",
+    groupWriting: "Scrittura",
+    groupCustomize: "Personalizza",
     general: "Generale",
     appearance: "Aspetto",
     editor: "Editor",

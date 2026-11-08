@@ -237,6 +237,9 @@ export const huHU = {
   },
   settings: {
     title: "Beállítások",
+    groupApplication: "Alkalmazás",
+    groupWriting: "Írás",
+    groupCustomize: "Testreszabás",
     general: "Általános",
     appearance: "Megjelenés",
     editor: "Szerkesztő",

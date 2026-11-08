@@ -235,6 +235,9 @@ export const daDK = {
   },
   settings: {
     title: "Indstillinger",
+    groupApplication: "Program",
+    groupWriting: "Skrivning",
+    groupCustomize: "Tilpas",
     general: "Generelt",
     appearance: "Udseende",
     editor: "Editor",

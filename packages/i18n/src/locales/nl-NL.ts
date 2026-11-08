@@ -237,6 +237,9 @@ export const nlNL = {
   },
   settings: {
     title: "Voorkeuren",
+    groupApplication: "Toepassing",
+    groupWriting: "Schrijven",
+    groupCustomize: "Aanpassen",
     general: "Algemeen",
     appearance: "Weergave",
     editor: "Editor",

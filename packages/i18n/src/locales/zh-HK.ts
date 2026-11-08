@@ -231,6 +231,9 @@ export const zhHK = {
   },
   settings: {
     title: "偏好設定",
+    groupApplication: "應用程式",
+    groupWriting: "寫作",
+    groupCustomize: "自訂",
     general: "一般",
     appearance: "外觀",
     editor: "編輯器",

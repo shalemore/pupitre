@@ -230,6 +230,9 @@ export const faIR = {
   },
   settings: {
     title: "تنظیمات",
+    groupApplication: "برنامه",
+    groupWriting: "نوشتن",
+    groupCustomize: "سفارشی‌سازی",
     general: "عمومی",
     appearance: "ظاهر",
     editor: "ویرایشگر",

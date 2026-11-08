@@ -231,6 +231,9 @@ export const zhCN = {
   },
   settings: {
     title: "偏好设置",
+    groupApplication: "应用",
+    groupWriting: "写作",
+    groupCustomize: "自定义",
     general: "常规",
     appearance: "外观",
     editor: "编辑器",

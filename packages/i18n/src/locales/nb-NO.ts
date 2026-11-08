@@ -236,6 +236,9 @@ export const nbNO = {
   },
   settings: {
     title: "Innstillinger",
+    groupApplication: "Program",
+    groupWriting: "Skriving",
+    groupCustomize: "Tilpass",
     general: "Generelt",
     appearance: "Utseende",
     editor: "Redigerer",

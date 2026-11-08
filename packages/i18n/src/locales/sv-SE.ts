@@ -236,6 +236,9 @@ export const svSE = {
   },
   settings: {
     title: "Inställningar",
+    groupApplication: "Program",
+    groupWriting: "Skrivande",
+    groupCustomize: "Anpassa",
     general: "Allmänt",
     appearance: "Utseende",
     editor: "Redigerare",

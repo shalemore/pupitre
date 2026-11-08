@@ -227,6 +227,9 @@ export const hiIN = {
   },
   settings: {
     title: "प्राथमिकताएँ",
+    groupApplication: "ऐप",
+    groupWriting: "लेखन",
+    groupCustomize: "अनुकूलित करें",
     general: "सामान्य",
     appearance: "दिखावट",
     editor: "संपादक",

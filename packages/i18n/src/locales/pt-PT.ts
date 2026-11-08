@@ -231,6 +231,9 @@ export const ptPT = {
   },
   settings: {
     title: "Preferências",
+    groupApplication: "Aplicação",
+    groupWriting: "Escrita",
+    groupCustomize: "Personalizar",
     general: "Geral",
     appearance: "Aparência",
     editor: "Editor",

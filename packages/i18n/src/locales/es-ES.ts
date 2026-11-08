@@ -231,6 +231,9 @@ export const esES = {
   },
   settings: {
     title: "Preferencias",
+    groupApplication: "Aplicación",
+    groupWriting: "Escritura",
+    groupCustomize: "Personalizar",
     general: "General",
     appearance: "Apariencia",
     editor: "Editor",

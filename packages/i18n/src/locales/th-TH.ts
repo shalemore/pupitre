@@ -229,6 +229,9 @@ export const thTH = {
   },
   settings: {
     title: "การตั้งค่า",
+    groupApplication: "แอป",
+    groupWriting: "การเขียน",
+    groupCustomize: "ปรับแต่ง",
     general: "ทั่วไป",
     appearance: "รูปลักษณ์",
     editor: "ตัวแก้ไข",
