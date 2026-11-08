@@ -190,7 +190,7 @@ export interface DocumentImage extends TaggedImage {
 }
 
 /** An attribute of a tag, quoted or bare, as an inline `<img>` tag writes them. */
-const TAG_ATTRIBUTE = /([a-z][\w:-]*)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+))/gi;
+const TAG_ATTRIBUTE = /(?:^|\s)([a-z][\w:-]*)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+))/gi;
 
 const TAG_ENTITIES: Readonly<Record<string, string>> = {
   amp: "&",
@@ -209,7 +209,7 @@ function attributeText(value: string): string {
   );
 }
 
-const STYLE_DECLARATION = /([a-z-]+)\s*:\s*([^;]*)/gi;
+const STYLE_DECLARATION = /(?:^|[;\s])([a-z-]+)\s*:\s*([^;]*)/gi;
 
 /**
  * The alignment the margins of a style attribute declare: an image with a width only sits where the

@@ -19,6 +19,18 @@ describe("image titles", () => {
   });
 });
 
+describe("parseImageTag", () => {
+  it("reads the alignment a style declares", () => {
+    expect(
+      parseImageTag('<img src="pic.png" style="display:block;margin-inline:auto 0">')?.alignment,
+    ).toBe("right");
+  });
+
+  it("does not rescan a long attribute name from every character", () => {
+    expect(parseImageTag(`<img ${"a".repeat(200_000)}>`)).toBeUndefined();
+  });
+});
+
 describe("imageOrigin", () => {
   it("reads a file: address as a path on this machine", () => {
     expect(imageOrigin("C:/docs", "file:///C:/pics/a.png")).toEqual({
