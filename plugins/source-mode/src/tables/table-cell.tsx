@@ -2,7 +2,7 @@ import type { EditorView } from "@codemirror/view";
 import { imageIn, InlineImage, setImageLayout } from "@pupitre/markdown";
 import { css } from "@pupitre/ui";
 import { type Component, createEffect, onCleanup } from "solid-js";
-import { imageDom } from "../images/image-widget";
+import { imageDom } from "#images/image-widget";
 
 export interface CellPosition {
   row: number;

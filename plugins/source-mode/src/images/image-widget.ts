@@ -12,10 +12,10 @@ import {
   sameImageSize,
   setImageLayout,
 } from "@pupitre/markdown";
-import { relabelOnLocaleChange } from "../widgets/relabel-on-locale";
 import { alignmentToolbar, resizeHandle, TOOLBAR_INSET } from "./image-controls";
 import { applyImageLayout } from "./image-geometry";
 import { watchImage } from "./image-loading";
+import { relabelOnLocaleChange } from "#widgets/relabel-on-locale";
 
 /** The controls of a picture are not places to type, so the editor leaves their events alone. */
 const CONTROLS = ".md-image-handle, .md-image-toolbar, .md-image-retry, .md-image-caption-hint";

@@ -12,7 +12,7 @@ import {
   referenceTarget,
 } from "@pupitre/markdown";
 import { pathFromFileUrl } from "@pupitre/utils";
-import { scrollToDocument } from "../scroll";
+import { scrollToDocument } from "#scroll";
 
 /**
  * Following a link in the document: web and mail addresses open in the browser, an anchor scrolls

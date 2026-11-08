@@ -10,11 +10,11 @@ import {
   resolveUrl,
   type DocumentImage,
 } from "@pupitre/markdown";
-import { ImageWidget } from "../images/image-widget";
-import { EmojiWidget } from "../widgets/emoji-widget";
-import { MathWidget } from "../widgets/math-widget";
-import { relabelOnLocaleChange } from "../widgets/relabel-on-locale";
 import { type DecorationBuilder, touches } from "./builder";
+import { ImageWidget } from "#images/image-widget";
+import { EmojiWidget } from "#widgets/emoji-widget";
+import { MathWidget } from "#widgets/math-widget";
+import { relabelOnLocaleChange } from "#widgets/relabel-on-locale";
 
 /**
  * The live preview of inline constructs: links, pictures, footnotes, emoji and inline math.

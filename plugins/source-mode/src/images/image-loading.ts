@@ -1,8 +1,8 @@
 import type { EditorView } from "@codemirror/view";
 import { t } from "@pupitre/i18n/solid";
-import { relabelOnLocaleChange } from "../widgets/relabel-on-locale";
 import { hasTransparency } from "./image-alpha";
 import { clearImageRoom, reserveImageRoom } from "./image-geometry";
+import { relabelOnLocaleChange } from "#widgets/relabel-on-locale";
 
 /**
  * How a picture loads: the skeleton a slow download shows, the retries a failed one makes, and

@@ -5,6 +5,15 @@
   "type": "module",
   "sideEffects": false,
   "types": "./dist/index.d.ts",
+  "imports": {
+    "#*": [
+      "./src/*",
+      "./src/*.ts",
+      "./src/*.tsx",
+      "./src/*/index.ts",
+      "./src/*/index.tsx"
+    ]
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

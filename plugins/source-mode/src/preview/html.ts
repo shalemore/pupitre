@@ -7,9 +7,9 @@ import {
   isFormattingTag,
   parseImageTag,
 } from "@pupitre/markdown";
-import { LineBreakWidget } from "../widgets/html-widget";
 import { type DecorationBuilder, touches } from "./builder";
 import { placeImage } from "./inline";
+import { LineBreakWidget } from "#widgets/html-widget";
 
 /**
  * The live preview of raw HTML: formatting tags paired like Markdown formats, the inline line

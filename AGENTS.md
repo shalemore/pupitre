@@ -129,8 +129,10 @@ same code. The folder map lives in [docs/architecture.md](docs/architecture.md#t
 so the two cannot drift apart. What matters for a change is the direction of imports:
 
 - A package and a plugin are the bottom of the tree: neither imports `apps/desktop`, its processes
-  or its renderer, and a plugin never imports another plugin. Both use relative imports inside
-  themselves, never the app's `@/` or `@shared/`.
+  or its renderer, and a plugin never imports another plugin. Inside a package, a sibling is
+  imported relatively and a module in another folder through the package's own `#` subpath
+  (`"imports"` in its `package.json`), never the app's `@/` or `@shared/`. The `imports` array lists
+  the source path first for Vite and the `.ts`/`.tsx` fallbacks after it for TypeScript.
 - `apps/desktop/src/shared/` is the code both processes can use; it never imports the renderer, the
   main process or the preload.
 - `renderer/lib/` and `renderer/components/` are shared by features. A feature may use them, never

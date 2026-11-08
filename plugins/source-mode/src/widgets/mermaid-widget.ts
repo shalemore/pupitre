@@ -1,8 +1,8 @@
 import { type EditorView, WidgetType } from "@codemirror/view";
 import { type DiagramTheme, renderDiagram } from "@pupitre/markdown";
 import { messageOf } from "@pupitre/utils";
-import { fadeOut } from "../leave";
-import { onReveal, onScrollbar } from "../widget-events";
+import { fadeOut } from "#leave";
+import { onReveal, onScrollbar } from "#widget-events";
 
 /**
  * The diagram source an element shows, so that a rendering that finishes after a newer one was

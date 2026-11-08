@@ -11,7 +11,6 @@ import {
   markers,
   parseImageTag,
 } from "@pupitre/markdown";
-import { sourceModeHost } from "../host";
 import {
   showsRendering,
   visitBlockquote,
@@ -23,6 +22,7 @@ import { DecorationBuilder, lineRange, printing, printingChanged, touches } from
 import { visitHtmlBlock, visitInlineHtml } from "./html";
 import { visitEmoji, visitFootnote, visitImage, visitInlineMath, visitLink } from "./inline";
 import { followLink, linkAt } from "./links";
+import { sourceModeHost } from "#host";
 
 export { setPrinting } from "./builder";
 

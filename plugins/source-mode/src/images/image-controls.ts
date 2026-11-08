@@ -7,8 +7,8 @@ import {
   imageAt,
 } from "@pupitre/markdown";
 import { css, cx } from "@pupitre/ui";
-import { relabelOnLocaleChange } from "../widgets/relabel-on-locale";
 import { applyImageWidth } from "./image-geometry";
+import { relabelOnLocaleChange } from "#widgets/relabel-on-locale";
 
 /**
  * The controls of a picture: the corner handle that resizes it and the bar that aligns it. Both

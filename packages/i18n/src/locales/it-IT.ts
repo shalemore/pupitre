@@ -1,4 +1,4 @@
-import type { TranslationSchema } from "../types";
+import type { TranslationSchema } from "#types";
 
 export const itIT = {
   common: {

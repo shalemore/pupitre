@@ -25,13 +25,13 @@ import {
   toggledDetails,
   toggleDetails,
 } from "@pupitre/markdown";
-import { TableWidget, tableCursor } from "../tables/table";
-import { SummaryWidget } from "../widgets/details-widget";
-import { HtmlBlockWidget } from "../widgets/html-widget";
-import { MathWidget } from "../widgets/math-widget";
-import { MermaidWidget } from "../widgets/mermaid-widget";
-import { TOC_MARKER, TocWidget } from "../widgets/toc";
 import { lineRange, printingChanged, revealingRanges, touches } from "./builder";
+import { TableWidget, tableCursor } from "#tables/table";
+import { SummaryWidget } from "#widgets/details-widget";
+import { HtmlBlockWidget } from "#widgets/html-widget";
+import { MathWidget } from "#widgets/math-widget";
+import { MermaidWidget } from "#widgets/mermaid-widget";
+import { TOC_MARKER, TocWidget } from "#widgets/toc";
 
 /**
  * Blocks that are shown rendered (tables, display math, diagrams, HTML, `<details>`, `[TOC]`), with the same rule as the live preview:

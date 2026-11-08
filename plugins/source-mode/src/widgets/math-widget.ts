@@ -1,7 +1,7 @@
 import { type EditorView, WidgetType } from "@codemirror/view";
 import { renderMath } from "@pupitre/markdown";
-import { fadeOut } from "../leave";
-import { onReveal, onScrollbar } from "../widget-events";
+import { fadeOut } from "#leave";
+import { onReveal, onScrollbar } from "#widget-events";
 
 /**
  * The formula an element shows, so that a rendering that finishes after a newer one was asked for

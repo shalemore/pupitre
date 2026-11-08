@@ -5,11 +5,11 @@ import { columnCount, editCell, imageIn, insertRow, type TableModel } from "@pup
 import { css, cx } from "@pupitre/ui";
 import { type Accessor, type Component, createSelector, Index, type Setter, Show } from "solid-js";
 import { Dynamic } from "solid-js/web";
-import { sourceModeHost } from "../host";
-import { openLink } from "../preview/links";
 import { InlineContent } from "./inline-view";
 import { type CellPosition, TableCellImage } from "./table-cell";
 import { TableToolbar } from "./table-toolbar";
+import { sourceModeHost } from "#host";
+import { openLink } from "#preview/links";
 
 /**
  * Tables are always shown rendered and edited in place, like the rest of the live preview: the
