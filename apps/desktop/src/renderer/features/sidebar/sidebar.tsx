@@ -272,8 +272,6 @@ interface ControlProps {
 const SidebarTitle: Component<
   {
     title: string;
-    /** A control that belongs to the name itself, such as the folder's parent button. */
-    titleAction?: JSX.Element;
     /** A control at the far end of the row, such as the folder's sort menu. */
     action?: JSX.Element;
     side: SidebarSide;
@@ -284,7 +282,6 @@ const SidebarTitle: Component<
       <div dir="auto" class={titleText} title={props.title}>
         {props.title}
       </div>
-      {props.titleAction}
     </div>
     {props.action}
     <Show when={props.control}>
@@ -298,8 +295,6 @@ export const SidebarPanel: Component<
   {
     side: SidebarSide;
     title: string;
-    /** A control that belongs to the name itself, such as the folder's parent button. */
-    titleAction?: JSX.Element;
     /** A control at the far end of the row, such as the sort menu of the folder. */
     action?: JSX.Element;
     class?: string | undefined;
@@ -309,7 +304,6 @@ export const SidebarPanel: Component<
   <SidebarFrame class={props.class}>
     <SidebarTitle
       title={props.title}
-      titleAction={props.titleAction}
       action={props.action}
       side={props.side}
       control={props.control}
@@ -325,8 +319,6 @@ interface SidebarProps extends ControlProps {
   hasFolder: boolean;
   /** Name of the folder shown in folder mode. */
   folderName: string;
-  /** A control that belongs to the folder name, such as its parent button. */
-  folderTitleAction?: JSX.Element;
   /** A control at the far end of the folder title, such as the sort menu. */
   folderAction?: JSX.Element;
   onModeChange: (mode: SidebarMode) => void;
@@ -359,12 +351,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
         </div>
       </Show>
       <Show when={props.mode === "folder"}>
-        <SidebarTitle
-          title={props.folderName}
-          titleAction={props.folderTitleAction}
-          action={props.folderAction}
-          side="start"
-        />
+        <SidebarTitle title={props.folderName} action={props.folderAction} side="start" />
       </Show>
       {/* Both stay mounted so the expanded folders survive a switch to the outline */}
       <ScrollView class={cx(grow, props.mode !== "outline" && hidden)}>{props.outline}</ScrollView>

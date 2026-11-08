@@ -1,37 +1,9 @@
 import { t } from "@pupitre/i18n/solid";
-import { IconButton, ToggleIconButton } from "@pupitre/ui";
-import { quietButton, rtlFlip } from "@pupitre/ui/styles";
-import { CornerRightUp, Eye } from "lucide-solid";
+import { ToggleIconButton } from "@pupitre/ui";
+import { quietButton } from "@pupitre/ui/styles";
+import { Eye } from "lucide-solid";
 import { Show, type Component } from "solid-js";
 import { FolderSortButton } from "@/features/sidebar/folder-sort-button";
-import { parentFolder } from "@/lib/file";
-
-interface ParentFolderButtonProps {
-  /** The folder the sidebar shows; absent while no folder is open. */
-  root: string | undefined;
-  /** Whether the host can move up the tree at all. */
-  canGoUp: boolean;
-  onGoUp: (path: string) => void;
-}
-
-/** The button up to the folder that holds the one on show, right beside its name. */
-export const ParentFolderButton: Component<ParentFolderButtonProps> = (props) => {
-  const parent = () => (props.root === undefined ? undefined : parentFolder(props.root));
-  return (
-    <Show when={props.canGoUp ? parent() : undefined}>
-      {(path) => (
-        <IconButton
-          label={t().sidebar.parentFolder}
-          size="icon-2xs"
-          class={quietButton}
-          onClick={() => props.onGoUp(path())}
-        >
-          <CornerRightUp class={rtlFlip} />
-        </IconButton>
-      )}
-    </Show>
-  );
-};
 
 interface FolderActionsProps {
   /** Whether a level on show holds an entry the eye could reveal. */

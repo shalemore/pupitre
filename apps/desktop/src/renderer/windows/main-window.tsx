@@ -45,7 +45,7 @@ import { SIDEBAR_WIDTH } from "@/lib/sidebar";
 import type { TextStats } from "@/lib/text-stats";
 import { createDocumentActions } from "./document-actions";
 import { card, content, documentArea, editorArea, welcomeArea } from "./main-window-styles";
-import { FolderActions, ParentFolderButton } from "./main-window/folder-actions";
+import { FolderActions } from "./main-window/folder-actions";
 import { MainTitleContent } from "./main-window/main-title-content";
 import { Overlays, type Overlay } from "./main-window/overlays";
 import {
@@ -333,6 +333,7 @@ export const MainWindow: Component = () => {
       activePath={session.activeDocument()?.path}
       onOpenFile={(path) => session.openPath(path, false)}
       onOpenFolder={showFolder}
+      onGoUp={desktop.initialState.capabilities.folderParent ? showFolder : undefined}
       onPathChanged={(oldPath, newPath) => {
         // A renamed folder keeps the sidebar showing it, and a renamed document keeps its editor
         if (openedFolder() === oldPath) setOpenedFolder(newPath);
@@ -675,13 +676,6 @@ export const MainWindow: Component = () => {
           mode={sidebarMode()}
           hasOutline={session.activeDocument() !== undefined}
           folderRoot={folderRoot()}
-          folderTitleAction={
-            <ParentFolderButton
-              root={folderRoot()}
-              canGoUp={desktop.initialState.capabilities.folderParent}
-              onGoUp={showFolder}
-            />
-          }
           folderAction={
             <FolderActions
               hasHidden={folderHasHidden()}

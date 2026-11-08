@@ -31,7 +31,6 @@ interface SidebarRegionProps {
   mode: SidebarMode;
   hasOutline: boolean;
   folderRoot: string | undefined;
-  folderTitleAction: JSX.Element;
   folderAction: JSX.Element;
   outline: JSX.Element;
   folderTree: (root: string) => JSX.Element;
@@ -62,7 +61,6 @@ export const SidebarRegion: Component<SidebarRegionProps> = (props) => {
               hasOutline={props.hasOutline}
               hasFolder={props.folderRoot !== undefined}
               folderName={folderName()}
-              folderTitleAction={props.folderTitleAction}
               folderAction={props.folderAction}
               onModeChange={props.onModeChange}
               outline={props.outline}
@@ -79,7 +77,6 @@ export const SidebarRegion: Component<SidebarRegionProps> = (props) => {
               <SidebarPanel
                 side="start"
                 title={folderName()}
-                titleAction={props.folderTitleAction}
                 action={props.folderAction}
                 control={props.startControl}
                 class={sidebarDivider({ side: "start", classic: !props.immersive })}

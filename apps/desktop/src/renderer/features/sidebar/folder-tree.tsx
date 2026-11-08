@@ -3,8 +3,10 @@ import type { FolderEntry } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import type { MenuEntry } from "@pupitre/desktop-api/menu";
 import { t } from "@pupitre/i18n/solid";
+import { ListItem, rowIndent } from "@pupitre/ui";
 import { FLOATING_PANEL, menuPanel } from "@pupitre/ui/styles";
 import { messageOf } from "@pupitre/utils";
+import { Folder } from "lucide-solid";
 import {
   type Component,
   createEffect,
@@ -20,9 +22,18 @@ import {
 import { isInsideFolder, relativeToFolder } from "@shared/paths";
 import { MenuEntries } from "@/components/menu-popup";
 import { reportFailure } from "@/lib/errors";
+import { parentFolder } from "@/lib/file";
 import { cx } from "@/styled-system/css";
 import { FolderChildren, FolderRow, type RowMenu, type TreeContext } from "./folder-tree-rows";
-import { divider, sectionLabel, stack, treeRoot } from "./folder-tree-styles";
+import {
+  blockTruncate,
+  divider,
+  fileIcon,
+  indentIcon,
+  sectionLabel,
+  stack,
+  treeRoot,
+} from "./folder-tree-styles";
 
 interface FolderTreeProps {
   root: string;
@@ -31,6 +42,8 @@ interface FolderTreeProps {
   onOpenFile: (path: string) => Promise<string | undefined>;
   /** Opens a folder as the tree's root. */
   onOpenFolder: (path: string) => void;
+  /** Opens the folder that holds `root`; absent when the host cannot move up the tree. */
+  onGoUp?: ((path: string) => void) | undefined;
   /** Tells the window that a document or a folder root moved, so the open document follows it. */
   onPathChanged?: (oldPath: string, newPath: string) => void;
   /** Tells the window that a menu or the rename field holds the sidebar, so the immersive chrome stays put. */
@@ -183,6 +196,14 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
   const reveal = (path: string) => perform(() => desktop.invoke("path:reveal", path));
   const copyPath = (path: string) => perform(() => desktop.invoke("clipboard:write-text", path));
 
+  // The parent entry sits at the top of the folder's own entries, under the pins
+  const parent = () => {
+    const goUp = props.onGoUp;
+    if (goUp === undefined) return undefined;
+    const path = parentFolder(props.root);
+    return path === undefined ? undefined : { path, goUp };
+  };
+
   const menuOf = (entry: FolderEntry): RowMenu => {
     const actions = new Map<string, () => void>();
     const item = (id: string, label: string, act: () => void): MenuEntry => {
@@ -263,6 +284,22 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
             </For>
           </div>
           <div class={divider} />
+        </Show>
+        <Show when={parent()}>
+          {(target) => (
+            <ListItem
+              data-slot="parent-folder"
+              aria-label={t().sidebar.parentFolder}
+              title={t().sidebar.parentFolder}
+              style={rowIndent(0, 6)}
+              onClick={() => target().goUp(target().path)}
+              onContextMenu={(event) => event.stopPropagation()}
+            >
+              <span class={indentIcon} />
+              <Folder class={fileIcon} />
+              <span class={blockTruncate}>..</span>
+            </ListItem>
+          )}
         </Show>
         <FolderChildren path={props.root} depth={0} tree={tree} />
       </ContextMenu.Trigger>
