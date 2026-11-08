@@ -1,5 +1,6 @@
 import { join } from "node:path";
 import { expect, test } from "@playwright/test";
+import { TITLE_BAR_HEIGHT } from "@pupitre/desktop-api";
 import { close, launch } from "./app";
 
 const README = join(import.meta.dirname, "../../../README.md");
@@ -11,6 +12,21 @@ test("the desktop window draws no web splash", async () => {
     expect(await app.page.locator("#boot-splash").count()).toBe(0);
     await app.page.locator(".cm-content").waitFor();
     expect(await app.page.locator("#boot-splash").count()).toBe(0);
+  } finally {
+    await close(app);
+  }
+});
+
+test("gives the title bar the height the window chrome was built for", async () => {
+  const app = await launch({ files: [README] });
+  try {
+    const bar = app.page.locator(".app-title-bar");
+    await bar.waitFor();
+    // Panda builds the class from source text, so a height it cannot read would leave the bar at
+    // the height of its contents
+    expect(await bar.evaluate((element) => element.getBoundingClientRect().height)).toBe(
+      TITLE_BAR_HEIGHT,
+    );
   } finally {
     await close(app);
   }
