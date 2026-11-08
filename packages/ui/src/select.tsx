@@ -32,18 +32,28 @@ export interface SelectProps<T extends string> {
 // Kobalte treats a selected key of "" as "nothing selected" and shows the placeholder instead of the label, so an option with an empty value needs a stand-in key
 const EMPTY_VALUE_KEY = "__empty__";
 
-const item = css({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  gap: "4",
-  borderRadius: "sm",
-  paddingInline: "2.5",
-  paddingBlock: "1",
-  textStyle: "xs",
-  outlineStyle: "none",
-  cursor: "pointer",
-  _highlighted: { backgroundColor: "accent" },
+// An option keeps the height of the trigger it belongs to, so the open list does not look top-heavy
+const item = cva({
+  base: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: "4",
+    borderRadius: "sm",
+    paddingInline: "2.5",
+    paddingBlock: "1",
+    textStyle: "xs",
+    outlineStyle: "none",
+    cursor: "pointer",
+    _highlighted: { backgroundColor: "accent" },
+  },
+  variants: {
+    compact: {
+      true: { minHeight: "6" },
+      false: { minHeight: "8" },
+    },
+  },
+  defaultVariants: { compact: false },
 });
 const itemLabel = css(truncateStyle, {
   minWidth: "0",
@@ -150,7 +160,11 @@ export function Select<T extends string>(props: SelectProps<T>) {
       fitViewport
       overflowPadding={8}
       itemComponent={(itemProps) => (
-        <KobalteSelect.Item data-slot="select-item" item={itemProps.item} class={cx("group", item)}>
+        <KobalteSelect.Item
+          data-slot="select-item"
+          item={itemProps.item}
+          class={cx("group", item({ compact: props.variant === "ghost" }))}
+        >
           <span class={itemText}>
             <span class={itemLine}>
               <KobalteSelect.ItemLabel class={itemLabel} style={itemProps.item.rawValue.style}>
