@@ -72,13 +72,38 @@ export function hasVisibleContent(items: readonly InlineItem[]): boolean {
   return false;
 }
 
+/** The classes the content of an inline construct takes, keyed by its Lezer node name. */
+const INLINE_CLASSES = {
+  StrongEmphasis: "md-strong",
+  Emphasis: "md-em",
+  Strikethrough: "md-strike",
+  Highlight: "md-tag md-tag-mark",
+  Subscript: "md-tag md-tag-sub",
+  Superscript: "md-tag md-tag-sup",
+  InlineCode: "md-code",
+  Link: "md-link",
+  Autolink: "md-link",
+  Image: "md-image",
+} as const;
+
+type InlineNode = keyof typeof INLINE_CLASSES;
+
+function isInlineNode(name: string): name is InlineNode {
+  return Object.hasOwn(INLINE_CLASSES, name);
+}
+
+/** The classes the live preview puts on an inline node, or none for a node no rule styles. */
+export function inlineNodeClass(name: string): string | undefined {
+  return isInlineNode(name) ? INLINE_CLASSES[name] : undefined;
+}
+
 const ELEMENT_TAGS: Record<string, { tag: string; class: string }> = {
-  StrongEmphasis: { tag: "strong", class: "md-strong" },
-  Emphasis: { tag: "em", class: "md-em" },
-  Strikethrough: { tag: "del", class: "md-strike" },
-  Highlight: { tag: "mark", class: "md-tag md-tag-mark" },
-  Subscript: { tag: "sub", class: "md-tag md-tag-sub" },
-  Superscript: { tag: "sup", class: "md-tag md-tag-sup" },
+  StrongEmphasis: { tag: "strong", class: INLINE_CLASSES.StrongEmphasis },
+  Emphasis: { tag: "em", class: INLINE_CLASSES.Emphasis },
+  Strikethrough: { tag: "del", class: INLINE_CLASSES.Strikethrough },
+  Highlight: { tag: "mark", class: INLINE_CLASSES.Highlight },
+  Subscript: { tag: "sub", class: INLINE_CLASSES.Subscript },
+  Superscript: { tag: "sup", class: INLINE_CLASSES.Superscript },
 };
 
 interface AnchorAttributes {

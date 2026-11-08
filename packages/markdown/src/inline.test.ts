@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { hasVisibleContent, inlineItems } from "./inline";
+import { hasVisibleContent, inlineItems, inlineNodeClass } from "./inline";
 import { firstNode, markdownState } from "./testing";
 
 function visible(markdown: string): boolean {
@@ -19,5 +19,17 @@ describe("paragraph content", () => {
     expect(visible('<a id="target"></a>\n')).toBe(false);
     expect(visible('<a name="target"></a>\n')).toBe(false);
     expect(visible('<a id="target"></a> <a href="https://example.com"></a>\n')).toBe(false);
+  });
+});
+
+describe("inlineNodeClass", () => {
+  it("names the class the preview styles an inline node with", () => {
+    expect(inlineNodeClass("StrongEmphasis")).toBe("md-strong");
+    expect(inlineNodeClass("InlineCode")).toBe("md-code");
+    expect(inlineNodeClass("Link")).toBe("md-link");
+  });
+
+  it("returns nothing for a node no rule styles", () => {
+    expect(inlineNodeClass("Paragraph")).toBeUndefined();
   });
 });

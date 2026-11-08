@@ -7,6 +7,7 @@ import {
   footnoteTarget,
   HEADING_LEVEL,
   htmlBlockPreview,
+  inlineNodeClass,
   isRenderableHtml,
   markers,
   parseImageTag,
@@ -46,33 +47,6 @@ export { setPrinting } from "./builder";
 const INLINE_CONTAINER =
   /^(?:Paragraph|Task|(?:ATX|Setext)Heading\d|TableCell|Emphasis|StrongEmphasis|Strikethrough|Highlight|Superscript|Subscript|Link)$/;
 
-/** The rendered content of inline formats; their markers are handled separately. */
-function inlineClass(name: string): string | undefined {
-  switch (name) {
-    case "StrongEmphasis":
-      return "md-strong";
-    case "Emphasis":
-      return "md-em";
-    case "Strikethrough":
-      return "md-strike";
-    case "Highlight":
-      return "md-tag md-tag-mark";
-    case "Subscript":
-      return "md-tag md-tag-sub";
-    case "Superscript":
-      return "md-tag md-tag-sup";
-    case "InlineCode":
-      return "md-code";
-    case "Link":
-    case "Autolink":
-      return "md-link";
-    case "Image":
-      return "md-image";
-    default:
-      return undefined;
-  }
-}
-
 /** Line classes of leaf blocks that are styled as a whole. */
 function blockClass(name: string): string | undefined {
   const heading = HEADING_LEVEL.exec(name);
@@ -107,7 +81,7 @@ function visit(builder: DecorationBuilder, node: SyntaxNode): boolean {
   // A setext underline is not part of the heading's text; it is styled as syntax below
   if (block) builder.lineClass(node.from, name.startsWith("Setext") ? node.from : node.to, block);
   if (INLINE_CONTAINER.test(name)) visitInlineHtml(builder, node);
-  const inline = builder.alertMarkers.has(node.from) ? undefined : inlineClass(name);
+  const inline = builder.alertMarkers.has(node.from) ? undefined : inlineNodeClass(name);
   if (inline) {
     // Only the text between the opening and closing markers, so revealed syntax is not
     // underlined or struck through along with it
