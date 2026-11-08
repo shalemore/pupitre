@@ -1,5 +1,5 @@
 import type { PluginInfo } from "@pupitre/desktop-api";
-import type { PointerKind, PointerSample, SurfaceKind } from "@pupitre/plugin-sdk";
+import type { Permission, PointerKind, PointerSample, SurfaceKind } from "@pupitre/plugin-sdk";
 import { createEffect, createSignal, on, onCleanup, onMount, Show, type Component } from "solid-js";
 import { isSurfaceReady, surfaceTheme } from "@/lib/plugin-surface";
 import { plugins } from "@/lib/plugins";
@@ -125,22 +125,29 @@ const SurfaceHost: Component<{ plugin: PluginInfo; kind: SurfaceKind }> = (props
   );
 };
 
-/** The first running plugin that draws a background, or the one that draws over the window. */
+const SURFACE_PERMISSION: Readonly<Record<SurfaceKind, Permission>> = {
+  background: "ui:background",
+  pointer: "ui:pointer",
+};
+
+/** The first running plugin granted its layer, either behind the document or over the window. */
 function surfacePlugin(kind: SurfaceKind): PluginInfo | undefined {
   if (!settings().pluginEffects) return undefined;
   return plugins().find(
-    (plugin) => plugin.enabled && plugin.manifest.surfaces?.[kind] !== undefined,
+    (plugin) =>
+      plugin.enabled &&
+      plugin.granted.includes(SURFACE_PERMISSION[kind]) &&
+      plugin.manifest.surfaces?.[kind] !== undefined,
   );
 }
 
-/** A canvas page behind the document. Its plugin is the first running one that offers one. */
+/** A canvas page behind the document, from the first running plugin that offers one. */
 export const PluginBackground: Component = () => (
   <Show when={surfacePlugin("background")}>
     {(plugin) => <SurfaceHost plugin={plugin()} kind="background" />}
   </Show>
 );
 
-/** A canvas page over the whole window, fed the pointer and never taking its events. */
 export const PluginPointer: Component = () => (
   <Show when={surfacePlugin("pointer")}>
     {(plugin) => <SurfaceHost plugin={plugin()} kind="pointer" />}
