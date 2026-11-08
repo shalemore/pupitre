@@ -1,4 +1,4 @@
-import { readFile, realpath } from "node:fs/promises";
+import { readFile, realpath, stat } from "node:fs/promises";
 import { extname, join, resolve } from "node:path";
 import { pluginIdSchema } from "@pupitre/plugin-sdk";
 import { protocol, type Session } from "electron";
@@ -39,11 +39,16 @@ const HOST_CSP = [
   "form-action 'none'",
 ].join("; ");
 
+/** A file a plugin page may load; a huge one would be read into the main process's memory. */
+const MAX_FILE_BYTES = 64 * 1024 * 1024;
+
 function contentType(path: string): string {
   return MIME[extname(path).toLowerCase()] ?? "application/octet-stream";
 }
 
 async function fileResponse(path: string, heap: string): Promise<Response> {
+  const info = await stat(path);
+  if (!info.isFile() || info.size > MAX_FILE_BYTES) return notFound();
   return new Response(await readFile(path), {
     headers: {
       "content-type": contentType(path),
@@ -87,7 +92,9 @@ async function serve(request: Request): Promise<Response> {
     if (path.startsWith("/assets/")) {
       // Vite writes the host page's scripts and styles beside the renderer's; `/assets/` is the
       // app's own, so a plugin's file of that name is served from its folder only under another name
-      return fileResponse(join(renderer, "assets", path.slice("/assets/".length)), HOST_CSP);
+      const assets = join(renderer, "assets");
+      const target = join(assets, path.slice("/assets/".length));
+      return isInside(assets, target) ? fileResponse(target, HOST_CSP) : notFound();
     }
 
     const folder = join(pluginsFolder(), id);
