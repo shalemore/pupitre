@@ -5,7 +5,7 @@ they were written on: there is no telemetry, and nothing is uploaded.
 
 ## Where the files are
 
-`src/main/diagnostics/diagnostics.ts` sends the log to `main.log` in the folder Electron reports as
+`apps/desktop/src/main/diagnostics/diagnostics.ts` sends the log to `main.log` in the folder Electron reports as
 `app.getPath("logs")`, and starts Electron's crash reporter with `uploadToServer: false`, so Crashpad
 keeps its dumps in `app.getPath("crashDumps")`. Both follow the app's data folder:
 
@@ -47,10 +47,10 @@ The file takes `info` and above, which is the startup line and any error that es
 stack. To watch a run more closely, set `PUPITRE_LOG_LEVEL` for it:
 
 ```sh
-PUPITRE_LOG_LEVEL=debug npm run dev
+PUPITRE_LOG_LEVEL=debug pnpm run dev
 ```
 
-On Windows PowerShell that is `$env:PUPITRE_LOG_LEVEL = "debug"; npm run dev`, and a packaged app
+On Windows PowerShell that is `$env:PUPITRE_LOG_LEVEL = "debug"; pnpm run dev`, and a packaged app
 started from a terminal reads the same variable. The levels are `silly`, `debug`, `verbose`, `info`,
 `warn` and `error`, from the noisiest to the quietest; a value the app does not know leaves the log
 at `info`, and the log says so.

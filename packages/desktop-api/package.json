@@ -1,0 +1,33 @@
+{
+  "name": "@pupitre/desktop-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./src/index.ts"
+    },
+    "./menu": {
+      "types": "./dist/menu.d.ts",
+      "import": "./src/menu.ts"
+    },
+    "./format-actions": {
+      "types": "./dist/format-actions.d.ts",
+      "import": "./src/format-actions.ts"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "import": "./src/client.ts"
+    }
+  },
+  "dependencies": {
+    "@pupitre/plugin-sdk": "workspace:*",
+    "@pupitre/settings": "workspace:*"
+  },
+  "devDependencies": {
+    "@tsconfig/strictest": "^2.0.8"
+  }
+}

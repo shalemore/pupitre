@@ -8,7 +8,7 @@ repository settings a workflow cannot turn on itself.
 `release.yml` builds the installers of three platforms in parallel jobs and collects them in one
 draft release. Each build job also leaves, beside them:
 
-- `pupitre-<platform>.cdx.json`, the CycloneDX SBOM of the dependencies `npm sbom` resolves from the
+- `pupitre-<platform>.cdx.json`, the CycloneDX SBOM of the dependencies `pnpm sbom` resolves from the
   lockfile.
 - A build provenance attestation for every installer of that job, signed by GitHub Actions, which
   names the repository, the commit and the workflow run the file came from.
@@ -19,9 +19,9 @@ than with a key in the repository, which is why the job asks for `id-token: writ
 `attestations: write`. They run after the build steps, so a run that cannot sign one fails the
 release instead of publishing files that nothing vouches for.
 
-The files to attest come from `scripts/release-artifacts.ts`, which prints the installers in
-`release/` (`nsis` `.exe`, `.dmg`, `.zip`, `.AppImage`, `.deb`) and exits non-zero when there are
-none. `release/*` itself is not used: the folder also holds the unpacked app folders and the update
+The files to attest come from `apps/desktop/scripts/release-artifacts.ts`, which prints the installers
+in `apps/desktop/release/` (`nsis` `.exe`, `.dmg`, `.zip`, `.AppImage`, `.deb`) and exits non-zero when
+there are none. `release/*` itself is not used: the folder also holds the unpacked app folders and the update
 metadata, and an attestation over a directory says nothing.
 
 ### Verifying a download
@@ -68,7 +68,7 @@ path, since they are part of this repository and reviewed with it.
 
 Renovate keeps those digests current. `renovate.json` extends `config:recommended` for the usual
 update policy and `:pinDigests`, which writes the SHA and the comment when a new version of an action
-is out, and enables lock file maintenance so `package-lock.json` is refreshed without a dependency
+is out, and enables lock file maintenance so `pnpm-lock.yaml` is refreshed without a dependency
 changing. Its pull requests go through CI like any other change. Renovate has to be installed on the
 repository — the hosted app for a public repository — before any of it runs.
 
@@ -83,7 +83,7 @@ A repository owner does these once, in Settings:
   advisory that only the maintainers see, instead of a public issue. [SECURITY.md](../SECURITY.md)
   sends a reporter there.
 - **Dependabot alerts** and the dependency graph (Settings › Code security) — turns on the alerts the
-  npm advisories in `package-lock.json` produce. Alerts are what an updated lockfile closes, and
+  npm advisories in `pnpm-lock.yaml` produce. Alerts are what an updated lockfile closes, and
   Dependabot can open the pull request for one.
 - **Code scanning** — the CodeQL and Scorecard workflows upload their SARIF to it, and enabling it
   is what makes the Security tab show the alerts at all.

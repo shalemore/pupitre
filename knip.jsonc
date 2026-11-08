@@ -2,10 +2,26 @@
   "$schema": "./node_modules/knip/schema.json",
   // The electron-vite, Vite, Vitest and Playwright plugins read their own configs, so the entries
   // they cannot see are the ones listed here.
-  "entry": [
-    // `npm run test:perf` runs this config; the Playwright plugin only reads playwright.config.ts
-    "playwright.perf.config.ts",
-  ],
+  "workspaces": {
+    "apps/*": {
+      "entry": [
+        // `pnpm run test:perf` runs this config; the Playwright plugin only reads playwright.config.ts
+        "playwright.perf.config.ts",
+        // The plugin preload and host page are entries of their own in electron.vite.config.ts
+        "src/preload/plugin.ts",
+        "src/renderer/plugin-host/host.ts",
+        "src/renderer/plugin-host/surface.ts",
+        // The plugin the end-to-end suite installs; the app loads its modules, not the test
+        "e2e/fixtures/plugins/*/*.js",
+      ],
+    },
+    "packages/*": {
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/*": {
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+  },
   "ignoreBinaries": [
     // A Linux system tool: src/main/windows.ts reads where the desktop puts the caption buttons
     "gsettings",
@@ -18,8 +34,8 @@
   "ignoreIssues": {
     // The IPC contract: the types are what a host implements and a window calls with, so they stay
     // exported for those who write against it
-    "src/shared/desktop-api.ts": ["types"],
+    "apps/desktop/src/shared/desktop-api.ts": ["types"],
     // The ui barrel is a public boundary: a primitive's option type is exported for its callers
-    "src/renderer/components/ui/segmented-control.tsx": ["types"],
+    "packages/ui/src/segmented-control.tsx": ["types"],
   },
 }

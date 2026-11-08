@@ -27,14 +27,14 @@ built:
   neither of those is covered by the integrity check. The two belong together: one says the archive
   is the one that was built, the other says the archive is all that can run.
 
-`grantFileProtocolExtraPrivileges` stays on. The packaged windows load `out/renderer/index.html`
+`grantFileProtocolExtraPrivileges` stays on. The packaged windows load `apps/desktop/out/renderer/index.html`
 over `file://`, and the pages rely on the extra privileges that protocol gets in Electron; turning
 the fuse off would break them.
 
 What a build really has is readable from the packaged binary:
 
 ```sh
-npx --no-install electron-fuses read --app release/win-unpacked/Pupitre.exe
+pnpm --filter pupitre exec electron-fuses read --app release/win-unpacked/Pupitre.exe
 ```
 
 ## Secrets
@@ -111,11 +111,11 @@ certificate from the macOS build, where electron-builder would read the empty va
 
 ## Local builds
 
-`npm run dist` on a machine without those variables produces an unsigned app and does not notarize
+`pnpm run dist` on a machine without those variables produces an unsigned app and does not notarize
 it. The `afterSign` hook returns as soon as one of the Apple credentials is missing, so the package
 step never waits on Apple for a build that is not being released.
 
 To sign and notarize locally, put `CSC_LINK` (a path to the `.p12` works as well as base64) and
 `CSC_KEY_PASSWORD` in the environment for the signature, and `APPLE_ID`,
-`APPLE_APP_SPECIFIC_PASSWORD` and `APPLE_TEAM_ID` for the notarization, then run `npm run dist`. It
+`APPLE_APP_SPECIFIC_PASSWORD` and `APPLE_TEAM_ID` for the notarization, then run `pnpm run dist`. It
 runs the same hook the workflow does.

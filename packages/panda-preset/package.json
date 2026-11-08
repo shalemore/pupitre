@@ -1,0 +1,20 @@
+{
+  "name": "@pupitre/panda-preset",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./src/index.ts"
+    }
+  },
+  "devDependencies": {
+    "@tsconfig/strictest": "^2.0.8"
+  },
+  "peerDependencies": {
+    "@pandacss/dev": "^2.4.0"
+  }
+}

@@ -1,0 +1,312 @@
+import type { EditorState } from "@codemirror/state";
+import type { SyntaxNode } from "@lezer/common";
+import { autolinkDestination } from "./autolink-destination";
+import { emojiFor } from "./emoji";
+import { formattingTagClass, htmlTag, isFormattingTag } from "./html";
+import { type ImageAlignment, imageOf, parseImageTag, resolveUrl } from "./images";
+import { markers } from "./markers";
+import { referenceTarget } from "./references";
+
+/**
+ * Inline Markdown rendered as elements, for widgets that replace their source (table cells) and for
+ * the HTML export, which writes the items as markup. It is built from the same Lezer tree as the
+ * live preview, so both read the syntax alike. Inline HTML other than formatting tags is left out
+ * and its text kept.
+ */
+
+export type InlineItem =
+  | { type: "text"; text: string }
+  | { type: "break" }
+  | { type: "element"; tag: string; class?: string; children: InlineItem[] }
+  | { type: "link"; href: string; children: InlineItem[] }
+  | {
+      /**
+       * An anchor written as raw HTML. Unlike a link it may carry no destination at all: a target
+       * on a line of its own is what in-page links point at.
+       */
+      type: "anchor";
+      href: string | undefined;
+      id: string | undefined;
+      title: string | undefined;
+      children: InlineItem[];
+    }
+  | {
+      type: "image";
+      src: string;
+      alt: string;
+      title: string;
+      width: number | undefined;
+      alignment: ImageAlignment | undefined;
+      /** The source range of the picture, for the controls a table cell offers it. */
+      from: number;
+      to: number;
+    }
+  | { type: "math"; tex: string; display: boolean }
+  | { type: "footnote"; label: string };
+
+export type InlineImage = Extract<InlineItem, { type: "image" }>;
+
+/**
+ * Whether rendered inline items put anything on the page. An anchor with no content, such as a
+ * target on a line of its own, is not visible; text, a picture, a formula, a footnote or a line
+ * break is.
+ */
+export function hasVisibleContent(items: readonly InlineItem[]): boolean {
+  for (const item of items) {
+    switch (item.type) {
+      case "text":
+        if (item.text.trim() !== "") return true;
+        break;
+      case "anchor":
+      case "element":
+      case "link":
+        if (hasVisibleContent(item.children)) return true;
+        break;
+      case "break":
+      case "image":
+      case "math":
+      case "footnote":
+        return true;
+    }
+  }
+  return false;
+}
+
+/** The classes the content of an inline construct takes, keyed by its Lezer node name. */
+const INLINE_CLASSES = {
+  StrongEmphasis: "md-strong",
+  Emphasis: "md-em",
+  Strikethrough: "md-strike",
+  Highlight: "md-tag md-tag-mark",
+  Subscript: "md-tag md-tag-sub",
+  Superscript: "md-tag md-tag-sup",
+  InlineCode: "md-code",
+  Link: "md-link",
+  Autolink: "md-link",
+  Image: "md-image",
+} as const;
+
+type InlineNode = keyof typeof INLINE_CLASSES;
+
+function isInlineNode(name: string): name is InlineNode {
+  return Object.hasOwn(INLINE_CLASSES, name);
+}
+
+/** The classes the live preview puts on an inline node, or none for a node no rule styles. */
+export function inlineNodeClass(name: string): string | undefined {
+  return isInlineNode(name) ? INLINE_CLASSES[name] : undefined;
+}
+
+const ELEMENT_TAGS: Record<string, { tag: string; class: string }> = {
+  StrongEmphasis: { tag: "strong", class: INLINE_CLASSES.StrongEmphasis },
+  Emphasis: { tag: "em", class: INLINE_CLASSES.Emphasis },
+  Strikethrough: { tag: "del", class: INLINE_CLASSES.Strikethrough },
+  Highlight: { tag: "mark", class: INLINE_CLASSES.Highlight },
+  Subscript: { tag: "sub", class: INLINE_CLASSES.Subscript },
+  Superscript: { tag: "sup", class: INLINE_CLASSES.Superscript },
+};
+
+interface AnchorAttributes {
+  href?: string;
+  id?: string;
+  /** The legacy spelling of a target, which HTML resolves like an `id`. */
+  name?: string;
+  title?: string;
+}
+
+interface OpenElement {
+  tag: string;
+  items: InlineItem[];
+  attributes?: AnchorAttributes;
+}
+
+const ANCHOR_ATTRIBUTE = /\b(href|id|name|title)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+))/gi;
+
+/** The attributes an inline `<a>` tag carries that the page needs; the first spelling wins. */
+function anchorAttributes(source: string): AnchorAttributes {
+  const attributes: AnchorAttributes = {};
+  for (const [, name, quoted, single, bare] of source.matchAll(ANCHOR_ATTRIBUTE)) {
+    const value = quoted ?? single ?? bare ?? "";
+    switch (name?.toLowerCase()) {
+      case "href":
+        attributes.href ??= value;
+        break;
+      case "id":
+        attributes.id ??= value;
+        break;
+      case "name":
+        attributes.name ??= value;
+        break;
+      case "title":
+        attributes.title ??= value;
+        break;
+    }
+  }
+  return attributes;
+}
+
+/** An anchor item, with the target its tag names, whether written as `id` or the legacy `name`. */
+function anchorItem(element: OpenElement): InlineItem {
+  const { href, id, name, title } = element.attributes ?? {};
+  return { type: "anchor", href, id: id ?? name, title, children: element.items };
+}
+
+/** The items between `from` and `to`, children of `parent`. */
+export function inlineItems(
+  state: EditorState,
+  parent: SyntaxNode,
+  from = parent.from,
+  to = parent.to,
+): InlineItem[] {
+  const text = (start: number, end: number) => state.sliceDoc(start, end);
+  // Open formatting tags, innermost last; items collect into the top entry
+  const stack: OpenElement[] = [{ tag: "", items: [] }];
+  const push = (item: InlineItem) => stack.at(-1)?.items.push(item);
+  let pos = from;
+
+  for (let child = parent.firstChild; child; child = child.nextSibling) {
+    if (child.to <= from || child.from >= to) continue;
+    if (child.from > pos) push({ type: "text", text: text(pos, child.from) });
+    pos = child.to;
+    // The content of a format sits between its first two markers (`**`…`**`, `[`…`]`)
+    const [open, close] = markers(child);
+    const start = open?.to ?? child.from;
+    const end = close?.from ?? child.to;
+    const inner = () => inlineItems(state, child, start, end);
+    switch (child.name) {
+      case "StrongEmphasis":
+      case "Emphasis":
+      case "Strikethrough":
+      case "Highlight":
+      case "Subscript":
+      case "Superscript": {
+        const element = ELEMENT_TAGS[child.name] ?? { tag: "span", class: "" };
+        push({ type: "element", ...element, children: inner() });
+        break;
+      }
+      case "InlineCode":
+        push({
+          type: "element",
+          tag: "code",
+          class: "md-code",
+          children: [{ type: "text", text: text(start, end) }],
+        });
+        break;
+      case "InlineMath":
+        push({ type: "math", tex: text(start, end), display: start - child.from === 2 });
+        break;
+      case "Link": {
+        const url = child.getChild("URL");
+        const href =
+          url !== null ? text(url.from, url.to) : referenceTarget(state, child, start, end)?.href;
+        // A bracketed run that resolves to nothing is not a link: CommonMark keeps its brackets
+        // and its content as written, so inline HTML inside it still reaches the page
+        if (href === undefined) {
+          if (start > child.from) push({ type: "text", text: text(child.from, start) });
+          for (const item of inner()) push(item);
+          if (child.to > end) push({ type: "text", text: text(end, child.to) });
+          break;
+        }
+        push({ type: "link", href, children: inner() });
+        break;
+      }
+      case "Autolink":
+      case "URL": {
+        const url = child.name === "URL" ? child : child.getChild("URL");
+        const written = url ? text(url.from, url.to) : "";
+        const href = url ? autolinkDestination(written) : "";
+        push({ type: "link", href, children: [{ type: "text", text: written }] });
+        break;
+      }
+      case "Image": {
+        const image = imageOf(state, child);
+        if (image === undefined) {
+          // Without a destination there is no picture; CommonMark leaves the source as text
+          push({ type: "text", text: text(child.from, child.to) });
+          break;
+        }
+        push({
+          type: "image",
+          src: resolveUrl(state, image.src),
+          alt: image.alt,
+          title: image.title,
+          width: image.width,
+          alignment: image.alignment,
+          from: image.from,
+          to: image.to,
+        });
+        break;
+      }
+      case "FootnoteReference":
+        push({ type: "footnote", label: text(start, end) });
+        break;
+      case "Emoji": {
+        const source = text(child.from, child.to);
+        push({ type: "text", text: emojiFor(source) ?? source });
+        break;
+      }
+      // A comment is source the reader never sees, in the page as in the preview
+      case "Comment":
+        break;
+      case "Escape":
+        push({ type: "text", text: text(child.from + 1, child.to) });
+        break;
+      case "HardBreak":
+        push({ type: "break" });
+        break;
+      case "HTMLTag": {
+        const source = text(child.from, child.to);
+        const picture = parseImageTag(source);
+        if (picture) {
+          push({
+            type: "image",
+            src: resolveUrl(state, picture.src),
+            alt: picture.alt,
+            title: picture.title,
+            width: picture.width,
+            alignment: picture.alignment,
+            from: child.from,
+            to: child.to,
+          });
+          break;
+        }
+        const tag = htmlTag(source);
+        if (tag?.name === "br") push({ type: "break" });
+        // An anchor is a target the page keeps even when it shows nothing, as in `<a id="x"></a>`
+        else if (tag?.name === "a" && !tag.closing) {
+          stack.push({ tag: "a", items: [], attributes: anchorAttributes(source) });
+        } else if (tag?.name === "a" && stack.length > 1 && stack.at(-1)?.tag === "a") {
+          const anchor = stack.pop();
+          if (anchor) push(anchorItem(anchor));
+        } else if (tag && isFormattingTag(tag.name) && !tag.closing)
+          stack.push({ tag: tag.name, items: [] });
+        else if (tag?.closing && stack.length > 1 && stack.at(-1)?.tag === tag.name) {
+          const element = stack.pop();
+          if (element) {
+            push({
+              type: "element",
+              tag: element.tag,
+              class: formattingTagClass(element.tag),
+              children: element.items,
+            });
+          }
+        }
+        break;
+      }
+      default:
+        // A task's `[x]` is a marker too, though its name ends in "Marker" rather than "Mark"
+        if (!child.name.endsWith("Mark") && child.name !== "TaskMarker")
+          push({ type: "text", text: text(child.from, child.to) });
+    }
+  }
+  if (to > pos) push({ type: "text", text: text(pos, to) });
+  // A tag that was never closed keeps its content; an anchor keeps its target too, since raw HTML
+  // closes it at the end of the line
+  while (stack.length > 1) {
+    const element = stack.pop();
+    if (!element) continue;
+    if (element.tag === "a") stack.at(-1)?.items.push(anchorItem(element));
+    else stack.at(-1)?.items.push(...element.items);
+  }
+  return stack[0]?.items ?? [];
+}

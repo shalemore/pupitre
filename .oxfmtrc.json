@@ -32,10 +32,12 @@
   },
   "ignorePatterns": [
     "node_modules/**",
-    "out/**",
-    "release/**",
+    "apps/desktop/out/**",
+    "apps/desktop/release/**",
     "package-lock.json",
     "docs/design/app-icon.html",
-    "src/renderer/styled-system/**"
+    "apps/desktop/src/renderer/styled-system/**",
+    "packages/*/src/styled-system/**",
+    "plugins/*/dist/**"
   ]
 }

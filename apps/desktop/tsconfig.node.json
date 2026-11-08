@@ -1,0 +1,37 @@
+{
+  "extends": "@tsconfig/strictest/tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ESNext"],
+    "types": ["node"],
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "paths": { "@shared/*": ["./src/shared/*"] }
+  },
+  "references": [
+    { "path": "../../packages/i18n" },
+    { "path": "../../packages/settings" },
+    { "path": "../../packages/desktop-api" },
+    { "path": "../../packages/plugin-sdk" },
+    { "path": "../../packages/panda-preset" },
+    { "path": "../../packages/utils" }
+  ],
+  "include": [
+    "../../oxlint.config.ts",
+    "electron.vite.config.ts",
+    "vite.shared.ts",
+    "panda.config.ts",
+    "../../packages/*/panda.config.ts",
+    "vite.web.config.ts",
+    "vitest.config.ts",
+    "vitest.bench.config.ts",
+    "scripts",
+    "src/main",
+    "src/preload",
+    "src/shared"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "hello",
+  "name": { "en": "Hello", "zh-CN": "你好" },
+  "description": { "en": "A plugin the end-to-end tests install" },
+  "version": "1.0.0",
+  "main": "main.js",
+  "styles": "style.css",
+  "surfaces": { "background": "background.js" },
+  "permissions": ["document:read", "document:write", "storage", "ui:styles", "ui:background"]
+}

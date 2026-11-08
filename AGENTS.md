@@ -5,28 +5,28 @@ This file is the single source of project conventions for humans and coding agen
 
 ## Commands
 
-| Command                      | Purpose                                                       |
-| :--------------------------- | :------------------------------------------------------------ |
-| `npm run dev`                | Start Electron with the Vite dev server (HMR)                 |
-| `npm run build`              | Bundle main, preload and renderer into `out/`                 |
-| `npm run check:bundle`       | Fail when a renderer chunk passes its size budget             |
-| `npm run dev:web`            | Serve the web demo (renderer on the browser host)             |
-| `npm run build:web`          | Build the web demo into `out/web`                             |
-| `npm run dist`               | Build and package installers into `release/`                  |
-| `npm test`                   | Run the unit tests (Vitest)                                   |
-| `npm run test:coverage`      | Run the unit tests with coverage and check its floor          |
-| `npm run test:e2e`           | Drive the built app with Playwright (`build` first)           |
-| `npm run test:perf`          | Time the built app by hand, minutes long (`build`)            |
-| `npm run bench`              | Benchmark the parser by hand, a minute long                   |
-| `npm run typecheck`          | Type-check every project (`tsrs -b`)                          |
-| `npm run lint`               | Check formatting, lint, CSS layers and layer boundaries       |
-| `npm run check:css`          | Check that app.css rules sit in layers and theme tokens exist |
-| `npm run check:architecture` | Check that no import crosses a layer boundary                 |
-| `npm run knip`               | Find dead files, unused exports and dependencies              |
-| `npm run fix`                | Apply formatting and safe lint fixes                          |
+| Command                       | Purpose                                                       |
+| :---------------------------- | :------------------------------------------------------------ |
+| `pnpm run dev`                | Start Electron with the Vite dev server (HMR)                 |
+| `pnpm run build`              | Bundle main, preload and renderer into `apps/desktop/out/`    |
+| `pnpm run check:bundle`       | Fail when a renderer chunk passes its size budget             |
+| `pnpm run dev:web`            | Serve the web demo (renderer on the browser host)             |
+| `pnpm run build:web`          | Build the web demo into `apps/desktop/out/web`                |
+| `pnpm run dist`               | Build and package installers into `apps/desktop/release/`     |
+| `pnpm test`                   | Run the unit tests (Vitest)                                   |
+| `pnpm run test:coverage`      | Run the unit tests with coverage and check its floor          |
+| `pnpm run test:e2e`           | Drive the built app with Playwright (`build` first)           |
+| `pnpm run test:perf`          | Time the built app by hand, minutes long (`build`)            |
+| `pnpm run bench`              | Benchmark the parser by hand, a minute long                   |
+| `pnpm run typecheck`          | Type-check every project (`tsrs -b`)                          |
+| `pnpm run lint`               | Check formatting, lint, CSS layers and layer boundaries       |
+| `pnpm run check:css`          | Check that app.css rules sit in layers and theme tokens exist |
+| `pnpm run check:architecture` | Check that no import crosses a layer boundary                 |
+| `pnpm run knip`               | Find dead files, unused exports and dependencies              |
+| `pnpm run fix`                | Apply formatting and safe lint fixes                          |
 
 Before considering a change done, `lint`, `typecheck`, `knip`, `test`, `build` and `check:bundle`
-must all pass. Run `npm run test:e2e` as well once the change touches the main process, the IPC
+must all pass. Run `pnpm run test:e2e` as well once the change touches the main process, the IPC
 contract or a flow it covers. Keep the coverage floor: it only catches a suite that shrank, and goes
 up as more of the app is covered. `bench` and `test:perf` report numbers that belong to the machine
 they ran on: run them for a change that could move them, not on every pull request. `test:perf`
@@ -35,25 +35,25 @@ wraps itself in `offstage-windows`, so its windows stay off the screen on Window
 ## Tests
 
 - Unit tests sit next to what they test (`*.test.ts`). `vitest.config.ts` runs the main process and
-  the shared code in Node, and the renderer in jsdom; the renderer project loads `src/web/host.ts`
+  the shared code in Node, and the renderer in jsdom; the renderer project loads `apps/desktop/src/web/host.ts`
   as `window.desktop`, so modules that reach for the host still import. Pure functions are the first
   thing to cover; a test that needs layout or a native dialog belongs in the E2E suite.
-- `src/renderer/lib/markdown/testing.ts` builds the editor's state and tree for tests. A document
+- `@pupitre/markdown`'s `testing.ts` builds the editor's state and tree for tests. A document
   is written with `|` marking the cursor and with two of them around a selection, so the test reads
   the way the text looks in the editor.
-- `e2e/` drives the built app (`out/main/index.js`) over Playwright, after `npm run build`. Each
+- `apps/desktop/e2e/` drives the built app (`apps/desktop/out/main/index.js`) over Playwright, after `pnpm run build`. Each
   launch gets its own `--user-data-dir`, so a run does not touch the settings, drafts or lock of a
   dev instance. Send commands through `window.desktop.invoke("app:dispatch", …)`: native menu
   shortcuts do not fire from CDP key events. Native message boxes are stubbed in the main process
   (`answerDialogs`), because a real one would block the run.
 - On Linux the E2E suite needs a display: CI runs it under `xvfb-run -a`. On Windows, run it with
-  `npx offstage-windows npx playwright test` to keep the windows off the screen.
-- `patches/@lezer+markdown+1.8.1.patch` fixes an upstream incremental-parse bug: a block that a
+  `pnpm --filter pupitre exec offstage-windows playwright test` to keep the windows off the screen.
+- `patches/@lezer__markdown@1.8.1.patch` fixes an upstream incremental-parse bug: a block that a
   table ended (a paragraph, a footnote definition, a math block) is reused with its old end when
-  the table stops parsing, which splits it in two. `patch-package` applies the patch on install; the
-  dependency is pinned to 1.8.1 so the patch and the package cannot drift apart. The property test
-  includes tables and `reads a paragraph back together…` fails if the patch stops applying. Remove
-  both when the fix is in the version we use.
+  the table stops parsing, which splits it in two. `pnpm.patchedDependencies` applies the patch on
+  install; the dependency is pinned to 1.8.1 so the patch and the package cannot drift apart. The
+  property test includes tables and `reads a paragraph back together…` fails if the patch stops
+  applying. Remove both when the fix is in the version we use.
 
 ## Testing the running app
 
@@ -63,26 +63,26 @@ nothing touches the system mouse or keyboard. Write throwaway scripts outside th
 the scratchpad, and import `playwright-core` by absolute path or run them from the repository root.
 
 A window takes the focus when it opens, so a plain launch keeps popping up over whatever the user
-is doing. Run the launcher on a hidden Windows desktop instead: `npx offstage-windows node
+is doing. Run the launcher on a hidden Windows desktop instead: `pnpm exec offstage-windows node
 script.mjs`. The script itself does not change, the app renders and screenshots as usual, and its
 windows never reach the screen. `OFFSTAGE=0` puts them back on screen for a run you want to watch,
 and on macOS or Linux the wrapper only passes the command through. It builds a small helper with
 the C# compiler that ships with Windows on first use, so endpoint protection may comment on it.
 
-A full `npm run build` for every tweak is slow and rarely needed. For renderer work, `npm run
+A full `pnpm run build` for every tweak is slow and rarely needed. For renderer work, `pnpm run
 dev:web` serves the same renderer with HMR, and the installed Chrome can be driven against it with
-`chromium.launch({ channel: "chrome" })`; `npm run typecheck` and `npm run lint` are the quick
+`chromium.launch({ channel: "chrome" })`; `pnpm run typecheck` and `pnpm run lint` are the quick
 checks in between. Build when the main process, the IPC contract or the packaged app is what
 changed, and once at the end.
 
 ```js
 import { _electron as electron } from "playwright-core";
 
-// Run `npm run build` first. A separate user data dir avoids the single-instance lock, so this
-// works while the user's own `npm run dev` is open; the last argument is the file to open.
+// Run `pnpm run build` first. A separate user data dir avoids the single-instance lock, so this
+// works while the user's own `pnpm run dev` is open; the last argument is the file to open.
 const app = await electron.launch({
   args: [
-    "out/main/index.js",
+    "apps/desktop/out/main/index.js",
     "--user-data-dir=<temp dir>",
     // A window Chromium believes is covered stops its timers and animations
     "--disable-features=CalculateNativeWinOcclusion",
@@ -98,13 +98,13 @@ await page.screenshot({ path: "<temp dir>/shot.png" }); // then look at the imag
 await app.close();
 ```
 
-- To attach to a running dev server with HMR instead, start `npx offstage-windows npm run
+- To attach to a running dev server with HMR instead, start `pnpm exec offstage-windows pnpm run
   dev:debug` (port 9222) and use `chromium.connectOverCDP("http://127.0.0.1:9222")`; it needs the
   user's own dev app closed.
 - Main-process state is reachable with `app.evaluate`, the page with `page.evaluate`/locators.
 - Native menu shortcuts (`Ctrl+S`, `Ctrl+,`) do not fire from CDP key events. Send the command the
   menu would: `page.evaluate(() => window.desktop.invoke("app:dispatch", { id: "file.save" }))`
-  (the ids are `AppCommand` in `shared/desktop-api.ts`).
+  (the ids are `AppCommand` in `@pupitre/desktop-api`).
 - Native message boxes block the app and cannot be clicked, so a test would hang. Replace
   `dialog.showMessageBox` in the main process before the step that opens one: record the call and
   return the button to press. File pickers (`showOpenDialog`, `showSaveDialog`) can be stubbed the
@@ -123,11 +123,18 @@ await app.evaluate(({ dialog }) => {
 
 ## Process Layout
 
-The folder map lives in [docs/architecture.md](docs/architecture.md#the-folder-layout), so the two
-cannot drift apart. What matters for a change is the direction of imports:
+The repository is a pnpm workspace: `apps/desktop/` is the Electron app, `packages/` holds what it
+shares and `plugins/` holds the built-in plugins, so another app or a published package can use the
+same code. The folder map lives in [docs/architecture.md](docs/architecture.md#the-folder-layout),
+so the two cannot drift apart. What matters for a change is the direction of imports:
 
-- `shared/` is the code both processes can use; it never imports the renderer, the main process or
-  the preload.
+- A package and a plugin are the bottom of the tree: neither imports `apps/desktop`, its processes
+  or its renderer, and a plugin never imports another plugin. Inside a package, a sibling is
+  imported relatively and a module in another folder through the package's own `#` subpath
+  (`"imports"` in its `package.json`), never the app's `@/` or `@shared/`. The `imports` array lists
+  the source path first for Vite and the `.ts`/`.tsx` fallbacks after it for TypeScript.
+- `apps/desktop/src/shared/` is the code both processes can use; it never imports the renderer, the
+  main process or the preload.
 - `renderer/lib/` and `renderer/components/` are shared by features. A feature may use them, never
   the other way around.
 - Two features are independent: `features/a` never imports `features/b`. What several features need
@@ -136,21 +143,21 @@ cannot drift apart. What matters for a change is the direction of imports:
 - The renderer never imports the main process or the preload, and the main process never imports the
   UI.
 
-`npm run check:architecture` enforces these edges, so a misplaced import fails the build rather
+`pnpm run check:architecture` enforces these edges, so a misplaced import fails the build rather
 than waiting for a review to notice it.
 
-- `src/shared/desktop-api.ts` is the IPC contract. Every channel is declared there once and both
+- `@pupitre/desktop-api` is the IPC contract. Every channel is declared there once and both
   `ipcMain.handle` and `window.desktop.invoke` are typed from it. Never call `ipcRenderer` or
   Node APIs from the renderer.
 - The renderer only talks to its host through `window.desktop`, so another host can run it. The web
-  demo (`src/web/host.ts`) keeps files in memory and settings in localStorage; a new channel in
+  demo (`apps/desktop/src/web/host.ts`) keeps files in memory and settings in localStorage; a new channel in
   `InvokeChannels` has to be given a handler there too, which the compiler enforces.
 - `lib/document/session.ts` owns the open tabs and the life cycle of the document in each: the
   `savedMarkdown` decides whether a tab is dirty, `diskContent` what the file held when it was last
   read, so a save can tell the file changed elsewhere. The editor only holds the text of the tab on
   show.
 - The renderer builds write `THIRD-PARTY-NOTICES.txt` with the license of every package that was
-  bundled (`scripts/third-party-notices.ts`); electron-builder ships it in `resources/` and the web
+  bundled (`apps/desktop/scripts/third-party-notices.ts`); electron-builder ships it in `resources/` and the web
   demo serves it. A license that asks for more than its text gets a note in `NOTES` there.
 - The main process owns all privileged work: file system access, native dialogs, menus, the
   settings file and auto updates. The renderer asks for it through IPC.
@@ -159,7 +166,7 @@ than waiting for a review to notice it.
 - Windows run with `sandbox: true` and `contextIsolation: true`. External URLs open in the system
   browser through `setWindowOpenHandler`; never load remote content into an app window.
 - Settings live in the main process (`settings.json` in `userData`) and are validated with the zod
-  schema in `src/shared/settings.ts`. Every window receives the same snapshot through the
+  schema in `packages/settings/src/settings.ts`. Every window receives the same snapshot through the
   `settings:changed` broadcast, including the window that made the change.
 - A folder can have its own settings in `.pupitre/settings.json` (`WORKSPACE_FILE`), in the format
   of the global file. Its values are laid over the global ones key by key, and resetting one in a
@@ -167,6 +174,45 @@ than waiting for a review to notice it.
   which are read before a folder is open or have nothing to do with one. The file is created by the
   first change made while it is in use, never by switching to it. Whatever else a folder gets later,
   such as its own themes, belongs under `.pupitre/` too.
+
+## Plugins
+
+- A built-in plugin is a workspace package under `plugins/<name>/` that exports a `TrustedPlugin`
+  from `@pupitre/plugin-sdk/trusted`. It is compiled into the app and may return CodeMirror
+  extensions, but it never imports the app.
+- `apps/desktop/src/renderer/plugins/registry.ts` is the composition root: it lists the built-in
+  plugins and implements the host interfaces they ask for. What a plugin needs from the app's
+  chrome, dialogs or animation settings is one small interface (`plugins/source-mode/src/host.ts`),
+  never an app import.
+- A plugin types its settings as the slice of `Settings` it reads, so it never sees or changes a
+  setting it does not use.
+- A plugin package's `index.ts` exports only what the host uses; everything else stays internal.
+- The app's Panda config scans `plugins/*/src`, and plugin code imports `css`/`cx` from
+  `@pupitre/ui`; the app's stylesheet remains the only generated one.
+- An installed plugin lives under `userData/plugins/<id>/`. `main/plugins/plugin-files.ts` reads
+  and copies it, `registry.ts` owns its enabled/granted state, and `host.ts` runs each enabled
+  plugin in a hidden window with `sandbox: true`, its own in-memory session and no Node. The
+  window loads the app-owned page under `pupitre-plugin://<id>/__host__/`; the plugin supplies only
+  a classic IIFE bundle named by its manifest, never its own HTML.
+- The plugin page gets one API, `window.__pupitre.invoke`, from `preload/plugin.ts`. The main
+  process accepts a call only from a host window it created, only while the plugin is enabled,
+  only for a method its manifest and `state.json` granted, and only after validating the
+  parameters. Nothing from `window.desktop` reaches it.
+- The plugin protocol handler is registered on each plugin's session as well as the default one;
+  `protocol.handle` does not cross sessions. Every path is resolved through `realpath` and kept
+  inside the plugin folder.
+- Text a plugin shows — its manifest name and description, setting titles, command titles — lives
+  in the plugin's own `LocalizedText` and is resolved with `localize`. Only app chrome (the Plugins
+  page, permission names) belongs in the app's dictionaries.
+- A plugin's settings and commands are its own: zod schema, defaults, titles and command text all
+  come from the plugin. The host stores settings and draws the form; the palette groups commands
+  under the plugin's localized name and runs them in its host window.
+- The app owns the visual surfaces. A stylesheet goes into the `plugin` layer scoped to
+  `.md-document`; the background and pointer modules draw on sandboxed canvas iframes, one enabled
+  plugin per layer. The Plugins page's **Plugin Effects** switch (`pluginEffects`) removes all of
+  them without stopping the plugins. The rules for a plugin author are in `docs/plugins.md`.
+- `@pupitre/plugin-sdk` is publishable: `pnpm --filter @pupitre/plugin-sdk build` writes `dist`,
+  `publishConfig` points the exports there, and the workspace imports `src` in development.
 
 ## Code Style
 
@@ -194,7 +240,7 @@ only make code generation easier.
 - **Use the design scales.** Sizes, radii, durations and curves come from the tokens in
   `panda.config.ts` (they alias the custom properties in `app.css`, so a theme can still change
   them), and colors from the semantic tokens; no arbitrary values such as `2.875rem`,
-  `200ms` or hex colors in components. Build on the `components/ui` primitives (`Button`, `Input`,
+  `200ms` or hex colors in components. Build on the `@pupitre/ui` primitives (`Button`, `Input`,
   `ListItem`, `SegmentedControl`, `Callout`, `Kbd`, `ScrollView`, …) before styling a raw
   element, and keep one closed border per surface: controls inside a bordered panel use fills.
 
@@ -214,11 +260,11 @@ only make code generation easier.
 - File and folder names use `kebab-case` (`find-bar.tsx`, `settings-store.ts`). Components are
   `PascalCase`, hooks/primitives are `useXxx`/`createXxx`, constants are `UPPER_SNAKE_CASE`.
 - Organise the renderer by feature: `features/<feature>` holds the components, state and helpers
-  that only that feature uses. Generic UI primitives live in `components/ui`, cross-feature
+  that only that feature uses. Generic UI primitives live in `packages/ui`, cross-feature
   helpers in `lib`. Do not create folders just to group a single file.
 - Import internal modules directly. Barrel files (`index.ts`) are only for deliberate public
   boundaries such as `components/ui`.
-- Imports are ordered by oxfmt's `sortImports`, which `npm run lint` checks and `npm run fix`
+- Imports are ordered by oxfmt's `sortImports`, which `pnpm run lint` checks and `pnpm run fix`
   applies: `node:` builtins, packages, `@shared/*`, `@/*`, then relative paths, alphabetically
   inside each group. Imports for their side effects come first, in the order they run.
 - Remove dead code instead of leaving it around "for later".
@@ -226,7 +272,7 @@ only make code generation easier.
 ## Comments and Language
 
 - User-facing text never appears as a literal in components. Add it to every dictionary in
-  `src/shared/i18n/locales/` (all locales, typed by `TranslationSchema`). The app is called
+  `packages/i18n/src/locales/` (all locales, typed by `TranslationSchema`). The app is called
   `Pupitre` in every language: the name is never translated, transliterated or spelled in another
   script, whatever grammar does around it. How a dictionary is written, which sources settle a
   term and what not to invent are in `docs/translation-guide.md`.
@@ -266,15 +312,15 @@ only make code generation easier.
   document is the Markdown text itself: every marker is a real character, copying copies
   Markdown, and files are saved exactly as they were edited. Never add a serializer.
 - All syntax comes from one Lezer tree (`@lezer/markdown` with GFM, subscript, superscript and
-  emoji, plus the extensions in `lib/markdown/`, such as `front-matter.ts`, `highlight.ts`,
+  emoji, plus the extensions in `@pupitre/markdown`, such as `front-matter.ts`, `highlight.ts`,
   `math.ts` and `footnotes.ts`). Support a new syntax by adding a Lezer `MarkdownConfig`, then
   render it with the one rule every construct follows: its markers (or, for a rendered block, its
   source) are hidden unless a selection touches it. Inline syntax and line styles live in
-  `features/editor/preview/`; blocks that replace whole lines (tables, math, diagrams, HTML,
+  `plugins/source-mode/src/preview/`; blocks that replace whole lines (tables, math, diagrams, HTML,
   `<details>`) in its `rendered-blocks.ts`, because CodeMirror only takes block decorations from a
   state field. The model both the editor and the
   export read — the syntax, the text a reader sees, tables, pictures and the page renderers — is
-  `lib/markdown/`, so exporting needs no editor. Do not hand-roll Markdown parsing.
+  `@pupitre/markdown`, so exporting needs no editor. Do not hand-roll Markdown parsing.
 - `features/editor/markdown-editor.tsx` owns the `EditorView` and exposes a small imperative
   handle (`getMarkdown`, `replaceDocument`, search, scrolling, formatting, `persistImages`,
   `prepareForPrint`, `toHtml`, `toHtmlFragment`). Formatting commands edit the source text
@@ -289,7 +335,7 @@ only make code generation easier.
 
 ## Themes
 
-- A theme is a folder `src/renderer/themes/<name>/` with an `index.css`; the folder name is the
+- A theme is a folder `apps/desktop/src/renderer/themes/<name>/` with an `index.css`; the folder name is the
   name shown in settings. `themes/pupitre` is the default.
 - `lib/theme.ts` discovers themes with `import.meta.glob` and injects the active one into the
   `document-theme` layer at runtime. Every window (main and settings) loads the same theme.
