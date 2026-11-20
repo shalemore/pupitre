@@ -218,10 +218,8 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
   let container: HTMLDivElement | undefined;
 
   // Saved documents store pasted images in a folder next to them; unsaved ones keep them in memory
-  const uploadImage = async (file: File): Promise<string> => {
-    const documentPath = untrack(() => props.documentPath);
-    return documentPath ? saveImageNextTo(documentPath, file) : props.pendingImages.add(file);
-  };
+  const uploadImage = async (file: File): Promise<string> =>
+    props.documentPath ? saveImageNextTo(props.documentPath, file) : props.pendingImages.add(file);
 
   const isMarkdown = () => documentKind(props.documentPath) === "markdown";
 
@@ -244,8 +242,9 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
   let sourceConfigured = untrack(() => settings().sourceMode);
   // The props follow the document the window shows, and by the time this editor is cleaned up that
   // is already the next one; what it showed itself is kept here instead. It starts as the document
-  // the editor is built for, and the effect below keeps it current
-  let path = untrack(() => props.documentPath);
+  // the editor is built for and follows the prop from then on — a writable derived signal, the
+  // way Solid asks local state that mirrors a prop to be seeded.
+  const [path, setPath] = createSignal(() => props.documentPath);
 
   /**
    * Applies `value` to the editor once it exists, and again whenever the value changes: the view is
@@ -309,7 +308,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
   applyToEditor(
     () => props.documentPath,
     (view, nextPath) => {
-      path = nextPath;
+      setPath(nextPath);
       view.dispatch({
         effects: documentPathCompartment.reconfigure(documentFilePath.of(nextPath)),
       });
@@ -351,13 +350,14 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     const savePosition = () => {
       if (restoring) return;
       // A document with no file behind it has no place to come back to
-      if (path === undefined) return;
+      const documentPath = path();
+      if (documentPath === undefined) return;
       // The place is kept as the text that was read, not as a scroll height: CodeMirror only
       // estimates the height of the lines above the window until they have been in view, so a
       // height comes back a line or two away from where it was
       const height = scroller.getBoundingClientRect().top - view.documentTop;
       const top = view.lineBlockAtHeight(height);
-      rememberDocumentPosition(path, {
+      rememberDocumentPosition(documentPath, {
         caret: view.state.selection.main.head,
         topLine: top.from,
         topOffset: top.top - height,
