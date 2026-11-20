@@ -67,7 +67,6 @@
     "@pupitre/utils": "workspace:*",
     "@solid-primitives/event-listener": "^3.0.0",
     "@solid-primitives/media": "^4.0.0",
-    "@solid-primitives/scheduled": "^2.0.0",
     "@solidjs/vite-plugin": "^3.0.1",
     "@solidjs/web": "^2.0.3",
     "@types/node": "^24.19.2",

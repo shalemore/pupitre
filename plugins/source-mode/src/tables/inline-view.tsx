@@ -19,46 +19,49 @@ export const InlineContent: Component<{
   <For each={props.items}>
     {(item) => (
       <Switch>
-        <Match when={item.type === "text" && item}>{(text) => text().text}</Match>
+        {/* `item` is a plain value; a keyed Match hands the narrowed item itself to the child */}
+        <Match when={item.type === "text" ? item : false} keyed>
+          {(text) => text.text}
+        </Match>
         <Match when={item.type === "break"}>
           <br />
         </Match>
-        <Match when={item.type === "element" && item}>
+        <Match when={item.type === "element" ? item : false} keyed>
           {(element) => (
-            <Dynamic component={element().tag} class={element().class}>
-              <InlineContent items={element().children} renderImage={props.renderImage} />
+            <Dynamic component={element.tag} class={element.class}>
+              <InlineContent items={element.children} renderImage={props.renderImage} />
             </Dynamic>
           )}
         </Match>
-        <Match when={item.type === "link" && item}>
+        <Match when={item.type === "link" ? item : false} keyed>
           {(link) => (
             // A span, not an anchor: a click places the cursor and Ctrl+click follows the link
-            <span class="md-link" title={link().href}>
-              <InlineContent items={link().children} renderImage={props.renderImage} />
+            <span class="md-link" title={link.href}>
+              <InlineContent items={link.children} renderImage={props.renderImage} />
             </span>
           )}
         </Match>
-        <Match when={item.type === "image" && item}>
+        <Match when={item.type === "image" ? item : false} keyed>
           {(image) =>
             props.renderImage ? (
-              props.renderImage(image())
+              props.renderImage(image)
             ) : (
               <img
                 class="md-image-preview"
-                src={image().src}
-                alt={image().alt}
-                title={image().title}
-                width={image().width}
-                style={imageStyle(image())}
+                src={image.src}
+                alt={image.alt}
+                title={image.title}
+                width={image.width}
+                style={imageStyle(image)}
               />
             )
           }
         </Match>
-        <Match when={item.type === "math" && item}>
-          {(math) => <MathItem tex={math().tex} display={math().display} />}
+        <Match when={item.type === "math" ? item : false} keyed>
+          {(math) => <MathItem tex={math.tex} display={math.display} />}
         </Match>
-        <Match when={item.type === "footnote" && item}>
-          {(note) => <sup class="md-footnote-ref">{note().label}</sup>}
+        <Match when={item.type === "footnote" ? item : false} keyed>
+          {(note) => <sup class="md-footnote-ref">{note.label}</sup>}
         </Match>
       </Switch>
     )}
