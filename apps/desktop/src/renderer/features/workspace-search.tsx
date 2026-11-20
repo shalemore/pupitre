@@ -8,7 +8,7 @@ import { desktop } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
 import { Badge, Input, ScrollView, Sheet, ToggleIconButton } from "@pupitre/ui";
 import { truncateStyle } from "@pupitre/ui/styles";
-import { debounce } from "@solid-primitives/scheduled";
+import { debounce } from "@pupitre/utils";
 import type { JSX } from "@solidjs/web";
 import {
   Command,

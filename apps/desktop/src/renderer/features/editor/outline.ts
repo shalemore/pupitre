@@ -6,7 +6,7 @@ import {
   mergeHeadings,
   type OutlineHeading,
 } from "@pupitre/markdown";
-import { debounce } from "@solid-primitives/scheduled";
+import { debounce } from "@pupitre/utils";
 
 const OUTLINE_DEBOUNCE_MS = 150;
 

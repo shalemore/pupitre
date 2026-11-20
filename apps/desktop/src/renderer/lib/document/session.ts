@@ -6,8 +6,7 @@ import {
 } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import { currentLocale, t } from "@pupitre/i18n/solid";
-import { fileNameOf, messageOf } from "@pupitre/utils";
-import { debounce } from "@solid-primitives/scheduled";
+import { debounce, fileNameOf, messageOf } from "@pupitre/utils";
 import { createEffect, createMemo, createSignal, onCleanup } from "solid-js";
 import { reportFailure } from "@/lib/errors";
 import { withTrailingNewline } from "@/lib/file";
@@ -722,11 +721,13 @@ export function createDocumentSession(getEditor: () => DocumentEditorWithImages 
   );
 
   // The draft holds every tab with unsaved changes: written once typing pauses, and dropped as soon
-  // as no tab has any left, so a crash never brings back what is already on disk
+  // as no tab has any left, so a crash never brings back what is already on disk. Nothing is read
+  // from the tabs before startup has finished, so the answer is undefined until what an earlier
+  // session left has been restored; an empty session then says nothing about the draft on disk
   createEffect(
-    () => startupDone() && tabs().some((tab) => !tab.discarded && isTabDirty(tab)),
+    () => (startupDone() ? tabs().some((tab) => !tab.discarded && isTabDirty(tab)) : undefined),
     (hasDraft) => {
-      if (!startupDone()) return;
+      if (hasDraft === undefined) return;
       if (!hasDraft) {
         drafts.dropDraft();
         return;
