@@ -1,4 +1,3 @@
-import type { JSX } from "@solidjs/web";
 import {
   Select as UiSelect,
   SelectContent,
@@ -12,23 +11,19 @@ import {
 import { Check, ChevronDown } from "lucide-solid";
 import { For, Show } from "solid-js";
 import { Badge } from "./badge";
+import { optionKey, optionOfKey, type SelectOption } from "./option";
 import { popupLayer } from "./popup-layer";
 import { ScrollView } from "./scroll-view";
 import { cva, css, cx } from "./styled-system/css";
-import { FLOATING_PANEL, truncate, truncateStyle } from "./styles";
-
-export interface SelectOption<T extends string = string> {
-  value: T;
-  label: string;
-  /** A dim suffix shown after the label, such as a folder when two themes share a name. */
-  hint?: string | undefined;
-  /** A small tag after the label, such as where a theme was found. */
-  badge?: string | undefined;
-  /** Secondary text shown with the label, such as a localized font name; also searchable. */
-  description?: string | undefined;
-  /** Style of the label; the font list uses it to preview each font in its own face. */
-  style?: JSX.CSSProperties | undefined;
-}
+import {
+  FLOATING_PANEL,
+  PANEL_COLLISION_PADDING,
+  PANEL_SIDE_OFFSET,
+  chevronTurn,
+  listboxReset,
+  truncate,
+  truncateStyle,
+} from "./styles";
 
 export interface SelectProps<T extends string> {
   value: T;
@@ -39,8 +34,6 @@ export interface SelectProps<T extends string> {
   class?: string;
   "aria-label"?: string;
 }
-
-const EMPTY_VALUE_KEY = "__empty__";
 
 // An option keeps the height of the trigger it belongs to, so the open list does not look top-heavy
 const item = cva({
@@ -134,13 +127,7 @@ const value = css(truncateStyle, {
   alignItems: "center",
   gap: "1.5",
 });
-const chevron = css({
-  color: "muted.foreground",
-  transitionProperty: "transform",
-  transitionDuration: "base",
-  transitionTimingFunction: "outExpo",
-  "[data-open] &": { transform: "rotate(180deg)" },
-});
+const chevron = css({ color: "muted.foreground" }, chevronTurn);
 const content = css({
   zIndex: "50",
   minWidth: "var(--anchor-width)",
@@ -148,19 +135,16 @@ const content = css({
   transformOrigin: "var(--transform-origin)",
   padding: "0.5",
 });
-const listbox = css({ outlineStyle: "none" });
 
 /** A dropdown on top of UI SDK, which handles keyboard navigation, typeahead and ARIA. */
 export function Select<T extends string>(props: SelectProps<T>) {
-  const keyOf = (val: T): string => (val === "" ? EMPTY_VALUE_KEY : val);
-  const selected = () => props.options.find((option) => option.value === props.value);
+  const selected = () => optionOfKey(props.options, optionKey(props.value));
 
   return (
     <UiSelect
-      value={keyOf(props.value)}
+      value={optionKey(props.value)}
       onValueChange={(next) => {
-        if (next === null) return;
-        const option = props.options.find((candidate) => keyOf(candidate.value) === next);
+        const option = optionOfKey(props.options, next);
         if (option) props.onChange(option.value);
       }}
     >
@@ -198,8 +182,8 @@ export function Select<T extends string>(props: SelectProps<T>) {
         data-slot="select-content"
         side="bottom"
         align="end"
-        sideOffset={6}
-        collisionPadding={8}
+        sideOffset={PANEL_SIDE_OFFSET}
+        collisionPadding={PANEL_COLLISION_PADDING}
         container={popupLayer()}
         class={cx(FLOATING_PANEL, content)}
       >
@@ -208,7 +192,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
             <ScrollView
               as="ul"
               {...listProps}
-              class={listbox}
+              class={listboxReset}
               style={{
                 "max-height": "min(18rem, calc(var(--available-height, 30rem) - 0.5rem))",
               }}
@@ -219,7 +203,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
             {(option) => (
               <SelectItem
                 data-slot="select-item"
-                value={keyOf(option.value)}
+                value={optionKey(option.value)}
                 label={option.label}
                 class={cx("group", item({ compact: props.variant === "ghost" }))}
               >

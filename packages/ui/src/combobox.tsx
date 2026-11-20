@@ -10,11 +10,18 @@ import {
 } from "@ui-sdk/solid/combobox";
 import { Check, ChevronDown } from "lucide-solid";
 import { createMemo, createSignal, For, Show } from "solid-js";
+import { optionKey, optionOfKey, type SelectOption } from "./option";
 import { popupLayer } from "./popup-layer";
 import { ScrollView } from "./scroll-view";
-import type { SelectOption } from "./select";
 import { css, cx } from "./styled-system/css";
-import { FLOATING_PANEL, truncateStyle } from "./styles";
+import {
+  FLOATING_PANEL,
+  PANEL_COLLISION_PADDING,
+  PANEL_SIDE_OFFSET,
+  chevronTurn,
+  listboxReset,
+  truncateStyle,
+} from "./styles";
 
 export interface ComboboxProps {
   value: string;
@@ -27,10 +34,8 @@ export interface ComboboxProps {
   overflowPadding?: number | undefined;
 }
 
-const EMPTY_VALUE_KEY = "__empty__";
-
-function matches(option: SelectOption, input: string): boolean {
-  const query = input.trim().toLocaleLowerCase();
+/** Whether an option matches a query that is already trimmed and lower-cased. */
+function matches(option: SelectOption, query: string): boolean {
   return (
     option.label.toLocaleLowerCase().includes(query) ||
     (option.description?.toLocaleLowerCase().includes(query) ?? false)
@@ -95,12 +100,7 @@ const trigger = css({
   color: "muted.foreground",
   cursor: "pointer",
 });
-const icon = css({
-  transitionProperty: "transform",
-  transitionDuration: "base",
-  transitionTimingFunction: "outExpo",
-  "[data-open] &": { transform: "rotate(180deg)" },
-});
+const icon = css(chevronTurn);
 const content = css({
   zIndex: "50",
   width: "var(--anchor-width)",
@@ -109,34 +109,30 @@ const content = css({
   transformOrigin: "var(--transform-origin)",
   padding: "1",
 });
-const listbox = css({ outlineStyle: "none" });
-
 /**
  * A searchable dropdown for long lists such as fonts; descriptions (such as localized font names)
  * are searchable too. Opening it lists everything and brings the current value into view; the
  * list narrows only once the user types.
  */
 export function Combobox(props: ComboboxProps) {
-  const keyOf = (val: string): string => (val === "" ? EMPTY_VALUE_KEY : val);
-  const selected = () => props.options.find((option) => option.value === props.value);
+  const selected = () => optionOfKey(props.options, optionKey(props.value));
   const [query, setQuery] = createSignal("");
   const [typing, setTyping] = createSignal(false);
-  const label = () => props["aria-label"] ?? "";
+  const ariaLabel = () => props["aria-label"] ?? "";
   const placeholder = () => props.placeholder ?? "";
-  const collisionPadding = () => props.overflowPadding ?? 8;
+  const collisionPadding = () => props.overflowPadding ?? PANEL_COLLISION_PADDING;
   let listboxElement: HTMLElement | undefined;
 
   const filtered = createMemo(() => {
-    const q = typing() ? query() : "";
-    return q === "" ? props.options : props.options.filter((option) => matches(option, q));
+    const typed = typing() ? query().trim().toLocaleLowerCase() : "";
+    return typed === "" ? props.options : props.options.filter((option) => matches(option, typed));
   });
 
   return (
     <UiCombobox
-      value={keyOf(props.value)}
+      value={optionKey(props.value)}
       onValueChange={(next) => {
-        if (next === null) return;
-        const option = props.options.find((candidate) => keyOf(candidate.value) === next);
+        const option = optionOfKey(props.options, next);
         if (option) props.onChange(option.value);
       }}
       onQueryChange={(next, details) => {
@@ -151,16 +147,18 @@ export function Combobox(props: ComboboxProps) {
         requestAnimationFrame(() => {
           const selectedItem = listboxElement?.querySelector<HTMLElement>("[data-selected]");
           if (!listboxElement || !selectedItem) return;
-          const box = listboxElement.getBoundingClientRect();
-          const rect = selectedItem.getBoundingClientRect();
-          listboxElement.scrollTop += rect.top - box.top - (box.height - rect.height) / 2;
+          const listBox = listboxElement.getBoundingClientRect();
+          const selectedBox = selectedItem.getBoundingClientRect();
+          // Centre the row in the list; scrolling it into view would move the page behind it too
+          listboxElement.scrollTop +=
+            selectedBox.top - listBox.top - (listBox.height - selectedBox.height) / 2;
         });
       }}
     >
       <div data-slot="combobox-control" class={cx(control, props.class)}>
         <ComboboxInput
           data-slot="combobox-input"
-          aria-label={label()}
+          aria-label={ariaLabel()}
           placeholder={placeholder()}
           class={input}
           onFocus={(e) => e.currentTarget.select()}
@@ -176,7 +174,7 @@ export function Combobox(props: ComboboxProps) {
         data-slot="combobox-content"
         side="bottom"
         align="start"
-        sideOffset={6}
+        sideOffset={PANEL_SIDE_OFFSET}
         collisionPadding={collisionPadding()}
         container={popupLayer()}
         class={cx(FLOATING_PANEL, content)}
@@ -191,7 +189,7 @@ export function Combobox(props: ComboboxProps) {
                 const listRef = listProps["ref"];
                 if (typeof listRef === "function") listRef(element);
               }}
-              class={listbox}
+              class={listboxReset}
               style={{
                 "max-height": "min(20rem, calc(var(--available-height, 40rem) - 0.5rem))",
               }}
@@ -202,7 +200,7 @@ export function Combobox(props: ComboboxProps) {
             {(option) => (
               <ComboboxItem
                 data-slot="combobox-item"
-                value={keyOf(option.value)}
+                value={optionKey(option.value)}
                 label={option.label}
                 class={cx("group", item)}
               >

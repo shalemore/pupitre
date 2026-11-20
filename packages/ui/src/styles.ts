@@ -63,3 +63,19 @@ export const FLOATING_PANEL = "floating-panel";
 export const PRESSABLE = "pressable";
 export const OUTLINE_ROW = "outline-row";
 export const SCROLL_FADE = "scroll-fade";
+
+/* What a panel keeps from what it hangs from, and from the window edge, in the pixels UI SDK's
+   positioning takes rather than the spacing tokens the styles use. */
+export const PANEL_SIDE_OFFSET = 6;
+export const PANEL_COLLISION_PADDING = 8;
+
+/** The list a dropdown or a combobox lays its rows in: the panel draws the surface. */
+export const listboxReset = css({ outlineStyle: "none" });
+
+/** The caret that turns while the popup it names is open. */
+export const chevronTurn = css.raw({
+  transitionProperty: "transform",
+  transitionDuration: "base",
+  transitionTimingFunction: "outExpo",
+  "[data-open] &": { transform: "rotate(180deg)" },
+});
