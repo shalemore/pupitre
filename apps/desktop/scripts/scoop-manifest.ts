@@ -55,7 +55,11 @@ if (installerPath === undefined || outDir === undefined) {
   process.exit(1);
 }
 
-const pkg = readPackage(await readFile("package.json", "utf8"));
+// The script reads its own package.json, not the one in the working directory: a release runs it
+// from the repository root, where package.json describes the workspace instead of the app.
+const manifestSource = new URL("../package.json", import.meta.url);
+
+const pkg = readPackage(await readFile(manifestSource, "utf8"));
 const { name, version, description, homepage, license } = pkg;
 const repo = pkg.repositoryUrl.replace(/^git\+/, "").replace(/\.git$/, "");
 
