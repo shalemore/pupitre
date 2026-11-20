@@ -1,4 +1,12 @@
-import { Combobox as KobalteCombobox } from "@kobalte/core/combobox";
+import type { JSX } from "@solidjs/web";
+import {
+  Command,
+  CommandGroup,
+  CommandGroupLabel,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@ui-sdk/solid/command";
 import type {
   WorkspaceFileMatches,
   WorkspaceMatch,
@@ -22,13 +30,11 @@ import {
   createEffect,
   createMemo,
   createSignal,
-  type Component,
-  type JSX,
-  on,
-  onMount,
+  For,
+  onSettled,
   Show,
+  type Component,
 } from "solid-js";
-import { FocusFirstRow, ShowFocusedRow } from "@/lib/combobox-rows";
 import { css } from "@/styled-system/css";
 
 const optionButton = css({
@@ -175,9 +181,8 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
       matches: file.matches.map((match) => ({ path: file.path, match, index: index++ })),
     }));
   });
-  const matchCount = createMemo(() =>
-    groups().reduce((count, group) => count + group.matches.length, 0),
-  );
+  const rowByIndex = createMemo(() => groups().flatMap((group) => group.matches));
+  const matchCount = createMemo(() => rowByIndex().length);
   const noResults = () =>
     props.root !== undefined && query() !== "" && answer()?.kind === "ok" && matchCount() === 0;
 
@@ -203,71 +208,49 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
   const searchSoon = debounce(() => void search(), SEARCH_DELAY_MS);
 
   createEffect(
-    on([() => props.root, query, caseSensitive, wholeWord, regexp], () => searchSoon(), {
-      defer: true,
-    }),
+    () => [props.root, query(), caseSensitive(), wholeWord(), regexp()] as const,
+    () => searchSoon(),
+    { defer: true },
   );
 
   // An input method commits its candidate with Enter, which must not open the match under it
-  onMount(() => {
+  onSettled(() => {
     input?.focus();
-    // The key events are delegated at the document, so stopping the propagation here keeps the
-    // combobox from seeing a commit Enter at all
-    input?.addEventListener(
-      "keydown",
-      (event) => {
-        if (event.isComposing) event.stopPropagation();
-      },
-      true,
-    );
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.isComposing) event.stopPropagation();
+    };
+    input?.addEventListener("keydown", onKeyDown, true);
+    return () => input?.removeEventListener("keydown", onKeyDown, true);
   });
 
   const open = (row: MatchRow) => props.onOpenMatch(row.path, row.match.from, row.match.to);
 
   return (
     <Sheet title={t().workspaceSearch.title} placement="top" onClose={props.onClose}>
-      <KobalteCombobox<MatchRow, MatchGroup>
-        open
-        options={groups()}
-        optionGroupChildren="matches"
-        optionValue={(row) => String(row.index)}
-        optionTextValue={() => ""}
-        // Picking closes the sheet, and the query is what the field keeps until it does
-        optionLabel={() => query()}
-        defaultFilter={() => true}
-        allowsEmptyCollection
-        closeOnSelection={false}
-        triggerMode="input"
-        onInputChange={setQuery}
-        onChange={(row) => {
-          if (row !== null) open(row);
+      <Command
+        filter={() => true}
+        query={query()}
+        onQueryChange={(next) => setQuery(next)}
+        onAction={(value) => {
+          const row = rowByIndex()[Number(value)];
+          if (row !== undefined) open(row);
         }}
-        itemComponent={(itemProps) => (
-          <KobalteCombobox.Item item={itemProps.item} class={item}>
-            <span class={lineNumber}>{itemProps.item.rawValue.match.line}</span>
-            <span dir="auto" class={matchText}>
-              <MatchLine match={itemProps.item.rawValue.match} />
-            </span>
-          </KobalteCombobox.Item>
-        )}
-        sectionComponent={(sectionProps) => (
-          <KobalteCombobox.Section class={section}>
-            <span dir="auto" class={sectionLabel}>
-              {sectionProps.section.rawValue.file.relative}
-            </span>
-            <Badge variant="muted" size="sm">
-              {sectionProps.section.rawValue.matches.length}
-            </Badge>
-          </KobalteCombobox.Section>
-        )}
       >
-        <KobalteCombobox.Control class={control}>
-          <KobalteCombobox.Input
-            as={Input}
-            ref={(element) => (input = element)}
-            dir="auto"
-            placeholder={t().workspaceSearch.placeholder}
-            aria-label={t().workspaceSearch.title}
+        <div class={control}>
+          <CommandInput
+            render={(inputProps) => (
+              <Input
+                {...inputProps}
+                ref={(element) => {
+                  input = element;
+                  const partRef = inputProps["ref"];
+                  if (typeof partRef === "function") partRef(element);
+                }}
+                dir="auto"
+                placeholder={t().workspaceSearch.placeholder}
+                aria-label={t().workspaceSearch.title}
+              />
+            )}
           />
           <div class={optionRow}>
             <OptionButton
@@ -288,7 +271,7 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
               <Regex />
             </OptionButton>
           </div>
-        </KobalteCombobox.Control>
+        </div>
 
         <Show when={props.root === undefined}>
           <p role="status" class={status}>
@@ -311,14 +294,41 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
           </p>
         </Show>
 
-        <KobalteCombobox.Listbox
-          as={(listProps: ScrollViewProps) => (
-            <ScrollView {...listProps} aria-label={t().workspaceSearch.title} class={list} />
+        <CommandList
+          render={(listProps) => (
+            <ScrollView
+              {...(listProps as ScrollViewProps)}
+              aria-label={t().workspaceSearch.title}
+              class={list}
+            />
           )}
-        />
-        <FocusFirstRow />
-        <ShowFocusedRow />
-      </KobalteCombobox>
+        >
+          <For each={groups()}>
+            {(group) => (
+              <CommandGroup>
+                <CommandGroupLabel class={section}>
+                  <span dir="auto" class={sectionLabel}>
+                    {group.file.relative}
+                  </span>
+                  <Badge variant="muted" size="sm">
+                    {group.matches.length}
+                  </Badge>
+                </CommandGroupLabel>
+                <For each={group.matches}>
+                  {(matchRow) => (
+                    <CommandItem value={String(matchRow.index)} class={item}>
+                      <span class={lineNumber}>{matchRow.match.line}</span>
+                      <span dir="auto" class={matchText}>
+                        <MatchLine match={matchRow.match} />
+                      </span>
+                    </CommandItem>
+                  )}
+                </For>
+              </CommandGroup>
+            )}
+          </For>
+        </CommandList>
+      </Command>
     </Sheet>
   );
 };
