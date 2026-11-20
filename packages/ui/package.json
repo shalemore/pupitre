@@ -19,8 +19,6 @@
     "prepare": "panda codegen"
   },
   "dependencies": {
-    "@kobalte/core": "^0.13.14",
-    "@solid-primitives/event-listener": "^3.0.0",
     "@solid-primitives/scheduled": "^2.0.0",
     "@solidjs/web": "^2.0.3",
     "@ui-sdk/core": "^0.1.0-beta.13",

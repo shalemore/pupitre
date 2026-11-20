@@ -1,8 +1,8 @@
-import type { JSX } from "@solidjs/web";
-import { Radio, RadioGroup } from "@ui-sdk/solid/radio";
 import { t } from "@pupitre/i18n/solid";
 import type { Settings } from "@pupitre/settings";
 import { PRESSABLE } from "@pupitre/ui/styles";
+import type { JSX } from "@solidjs/web";
+import { Radio, RadioGroup } from "@ui-sdk/solid/radio";
 import { settings, updateSettings } from "@/lib/settings";
 import { css, cx } from "@/styled-system/css";
 

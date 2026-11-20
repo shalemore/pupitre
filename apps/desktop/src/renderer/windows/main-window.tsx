@@ -343,7 +343,8 @@ export const MainWindow: Component = () => {
   });
 
   createEffect(
-    () => (session.activeDocument() ? `${isolateFileName(session.fileName())} - Pupitre` : "Pupitre"),
+    () =>
+      session.activeDocument() ? `${isolateFileName(session.fileName())} - Pupitre` : "Pupitre",
     (title) => {
       document.title = title;
     },

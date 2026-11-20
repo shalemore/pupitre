@@ -156,7 +156,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
   const selected = () => props.options.find((option) => option.value === props.value);
 
   return (
-    <UiSelect<string>
+    <UiSelect
       value={keyOf(props.value)}
       onValueChange={(next) => {
         if (next === null) return;
@@ -208,8 +208,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
               {...(listProps as ScrollViewProps)}
               class={listbox}
               style={{
-                "max-height":
-                  "min(18rem, calc(var(--available-height, 30rem) - 0.5rem))",
+                "max-height": "min(18rem, calc(var(--available-height, 30rem) - 0.5rem))",
               }}
             />
           )}

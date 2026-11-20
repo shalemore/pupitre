@@ -100,7 +100,12 @@ export function setupAppearance(): void {
         );
         setOptionalProperty(
           "pref-code-font",
-          codeFontFamily(codeFont, fallbackFont, readToken(themeStyle, "font-mono"), fontStackIntent),
+          codeFontFamily(
+            codeFont,
+            fallbackFont,
+            readToken(themeStyle, "font-mono"),
+            fontStackIntent,
+          ),
         );
         setOptionalProperty("pref-ui-font", interfaceFontFamily(uiFont, fallbackFont));
       },

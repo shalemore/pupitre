@@ -6,9 +6,9 @@ import { codeLanguages, fencedText } from "@pupitre/markdown";
 import { css, cx } from "@pupitre/ui";
 import { truncateStyle } from "@pupitre/ui/styles";
 import { debounce } from "@solid-primitives/scheduled";
+import { render } from "@solidjs/web";
 import { Check, Copy } from "lucide-solid";
 import { createMemo, createSignal, For, Show, type Component } from "solid-js";
-import { render } from "@solidjs/web";
 
 const COPIED_MS = 1500;
 

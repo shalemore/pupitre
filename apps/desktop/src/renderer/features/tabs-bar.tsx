@@ -1,7 +1,7 @@
-import { Tabs, TabsList, TabsTab } from "@ui-sdk/solid/tabs";
 import { t } from "@pupitre/i18n/solid";
 import { IconButton } from "@pupitre/ui";
 import { truncateStyle } from "@pupitre/ui/styles";
+import { Tabs, TabsList, TabsTab } from "@ui-sdk/solid/tabs";
 import { X } from "lucide-solid";
 import { createEffect, For, Show, type Component } from "solid-js";
 import { isTabDirty, type Tab } from "@/lib/document/tab";

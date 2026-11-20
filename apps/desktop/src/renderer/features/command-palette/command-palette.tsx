@@ -1,5 +1,5 @@
-import type { Menus } from "@pupitre/desktop-api/menu";
 import { desktop } from "@pupitre/desktop-api/client";
+import type { Menus } from "@pupitre/desktop-api/menu";
 import { currentLocale, t } from "@pupitre/i18n/solid";
 import { Kbd } from "@pupitre/ui";
 import { dim, shrinkNone, truncateGrow } from "@pupitre/ui/styles";

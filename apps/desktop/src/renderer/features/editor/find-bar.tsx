@@ -1,5 +1,6 @@
 import { t } from "@pupitre/i18n/solid";
 import { Badge, Button, IconButton, Input, ToggleIconButton } from "@pupitre/ui";
+import type { JSX } from "@solidjs/web";
 import {
   CaseSensitive,
   ChevronDown,
@@ -9,7 +10,6 @@ import {
   WholeWord,
   X,
 } from "lucide-solid";
-import type { JSX } from "@solidjs/web";
 import { createEffect, createSignal, Show, type Component } from "solid-js";
 import { css, cx } from "@/styled-system/css";
 import type { MatchStats, SearchOptions } from "./search";
@@ -126,8 +126,8 @@ export const FindBar: Component<FindBarProps> = (props) => {
       wholeWord: wholeWord(),
       regexp: regexp(),
     }),
-    (options) => {
-      props.onSearchChange(options);
+    (next) => {
+      props.onSearchChange(next);
     },
   );
 

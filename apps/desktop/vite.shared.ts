@@ -1,7 +1,7 @@
 import { resolve } from "node:path";
 import { pandacss } from "@pandacss/vite";
-import type { AliasOptions } from "vite";
 import solid from "@solidjs/vite-plugin";
+import type { AliasOptions } from "vite";
 import { thirdPartyNotices } from "./scripts/third-party-notices.js";
 
 export const alias: AliasOptions = {

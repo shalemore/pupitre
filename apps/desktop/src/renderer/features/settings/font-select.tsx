@@ -2,8 +2,8 @@ import { TITLE_BAR_CLEARANCE } from "@pupitre/desktop-api";
 import { desktop, isMacOS } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
 import { Combobox, IconButton, type SelectOption } from "@pupitre/ui";
-import { RefreshCw } from "lucide-solid";
 import type { JSX } from "@solidjs/web";
+import { RefreshCw } from "lucide-solid";
 import { createRoot, createSignal, type Component, Show } from "solid-js";
 import { GENERIC_FAMILIES, listFontFamilies, type FontFamily } from "@/lib/fonts";
 import { themeApplied } from "@/lib/theme";
@@ -74,7 +74,7 @@ export interface FontSelectProps {
 export const FontSelect: Component<FontSelectProps> = (props) => {
   const options = (): SelectOption[] => [
     { value: "", label: props.emptyLabel },
-    ...(fonts.list()).map(({ family, localizedName }) => ({
+    ...fonts.list().map(({ family, localizedName }) => ({
       value: family,
       label: family,
       description: localizedName,

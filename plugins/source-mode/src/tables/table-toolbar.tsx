@@ -16,6 +16,7 @@ import {
 } from "@pupitre/markdown";
 import { css, cx, IconButton, Separator } from "@pupitre/ui";
 import { rtlFlip } from "@pupitre/ui/styles";
+import type { JSX } from "@solidjs/web";
 import {
   ArrowDown,
   ArrowLeft,
@@ -33,7 +34,6 @@ import {
   TextAlignStart,
   X,
 } from "lucide-solid";
-import type { JSX } from "@solidjs/web";
 import { type Accessor, type Component, Show } from "solid-js";
 import type { CellPosition } from "./table-cell";
 

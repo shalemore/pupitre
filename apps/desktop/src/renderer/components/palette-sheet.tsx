@@ -1,6 +1,6 @@
+import { Input, ScrollView, Sheet, type ScrollViewProps } from "@pupitre/ui";
 import type { JSX } from "@solidjs/web";
 import { Command, CommandInput, CommandItem, CommandList } from "@ui-sdk/solid/command";
-import { Input, ScrollView, Sheet, type ScrollViewProps } from "@pupitre/ui";
 import { createMemo, createSignal, For, onSettled, Show } from "solid-js";
 import { css } from "@/styled-system/css";
 

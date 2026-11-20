@@ -1,11 +1,11 @@
-import { Menu as UiMenu, MenuContent, MenuTrigger } from "@ui-sdk/solid/menu";
-import { Menubar } from "@ui-sdk/solid/menubar";
 import { desktop } from "@pupitre/desktop-api/client";
 import { TOP_MENUS, type MenuEntry, type Menus, type TopMenu } from "@pupitre/desktop-api/menu";
 import { t } from "@pupitre/i18n/solid";
 import { IconButton } from "@pupitre/ui";
 import { FLOATING_PANEL, menuPanel } from "@pupitre/ui/styles";
 import { makeEventListener } from "@solid-primitives/event-listener";
+import { Menu as UiMenu, MenuContent, MenuTrigger } from "@ui-sdk/solid/menu";
+import { Menubar } from "@ui-sdk/solid/menubar";
 import { Menu } from "lucide-solid";
 import { createSignal, For, Show, type Component } from "solid-js";
 import { MenuEntries, MenuPopup } from "@/components/menu-popup";

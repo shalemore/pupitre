@@ -2,7 +2,10 @@ import type { JSX } from "@solidjs/web";
 import { omit, Show } from "solid-js";
 import { css, cx } from "./styled-system/css";
 
-export interface SettingRowProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "title" | "class"> {
+export interface SettingRowProps extends Omit<
+  JSX.HTMLAttributes<HTMLDivElement>,
+  "title" | "class"
+> {
   title: JSX.Element;
   description?: JSX.Element | undefined;
   /** Draws the row as the heading of the settings under it, with its own control on the right. */

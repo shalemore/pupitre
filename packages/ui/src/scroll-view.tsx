@@ -10,7 +10,10 @@ const IDLE_MS = 1200;
 const TRACK_INSET = 8;
 const MIN_THUMB = 24;
 
-export interface ScrollViewProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "onScroll" | "class"> {
+export interface ScrollViewProps extends Omit<
+  JSX.HTMLAttributes<HTMLDivElement>,
+  "onScroll" | "class"
+> {
   /** The element to render, for lists and landmarks that must keep their own tag. */
   as?: ValidComponent | keyof JSX.IntrinsicElements;
   class?: string | undefined;

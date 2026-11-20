@@ -1,8 +1,8 @@
 import { t } from "@pupitre/i18n/solid";
 import { isModified, isWorkspaceKey, type SettingKey } from "@pupitre/settings";
 import { IconButton, SettingRow } from "@pupitre/ui";
-import { RotateCcw } from "lucide-solid";
 import type { JSX } from "@solidjs/web";
+import { RotateCcw } from "lucide-solid";
 import { type ParentComponent, Show } from "solid-js";
 import { resetSetting, settings } from "@/lib/settings";
 import { workspace } from "@/lib/workspace";

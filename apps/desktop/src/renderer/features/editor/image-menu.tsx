@@ -13,8 +13,8 @@ import {
   relinkImage,
 } from "@pupitre/markdown";
 import { messageOf } from "@pupitre/utils";
-import type { Component } from "solid-js";
 import { render } from "@solidjs/web";
+import type { Component } from "solid-js";
 import { LocaleProvider } from "@/components/locale-provider";
 import { MenuPopup } from "@/components/menu-popup";
 import { reportFailure } from "@/lib/errors";

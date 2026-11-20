@@ -1,4 +1,3 @@
-import { Menu, MenuContent, MenuContextTrigger } from "@ui-sdk/solid/menu";
 import type { FolderEntry } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import type { MenuEntry } from "@pupitre/desktop-api/menu";
@@ -6,6 +5,7 @@ import { t } from "@pupitre/i18n/solid";
 import { excerptOf } from "@pupitre/markdown";
 import { IconButton, ListItem, rowIndent } from "@pupitre/ui";
 import { FLOATING_PANEL, menuPanel } from "@pupitre/ui/styles";
+import { Menu, MenuContent, MenuContextTrigger } from "@ui-sdk/solid/menu";
 import { ArrowRight, ChevronRight, CircleAlert, FileText, Folder } from "lucide-solid";
 import {
   type Component,
@@ -138,8 +138,7 @@ export const FolderChildren: Component<FolderChildrenProps> = (props) => {
   // out whether an eye is needed. The flag is there even while hidden entries are shown, so the
   // eye can turn them off again.
   createEffect(
-    () =>
-      entries().some((entry) => entry.hidden === true && !props.tree.pinned().has(entry.path)),
+    () => entries().some((entry) => entry.hidden === true && !props.tree.pinned().has(entry.path)),
     (hasHidden) => {
       props.tree.onLevelHiddenChange(props.path, hasHidden);
       return () => props.tree.onLevelHiddenChange(props.path, false);

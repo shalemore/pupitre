@@ -1,3 +1,6 @@
+import type { MenuEntry } from "@pupitre/desktop-api/menu";
+import { Separator } from "@pupitre/ui";
+import { FLOATING_PANEL, menuPanel, rtlFlip, truncate } from "@pupitre/ui/styles";
 import {
   Menu,
   MenuCheckboxItem,
@@ -7,9 +10,6 @@ import {
   MenuSubContent,
   MenuSubTrigger,
 } from "@ui-sdk/solid/menu";
-import type { MenuEntry } from "@pupitre/desktop-api/menu";
-import { Separator } from "@pupitre/ui";
-import { FLOATING_PANEL, menuPanel, rtlFlip, truncate } from "@pupitre/ui/styles";
 import { Check, ChevronRight } from "lucide-solid";
 import { For, Show, type Component } from "solid-js";
 import { isRtl } from "@/lib/rtl";

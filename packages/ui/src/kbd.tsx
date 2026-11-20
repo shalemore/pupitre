@@ -11,7 +11,9 @@ const kbd = css({
 });
 
 /** A keyboard shortcut shown next to an action; it takes the color of its surroundings. */
-export function Kbd(props: Omit<JSX.HTMLAttributes<HTMLElement>, "class"> & { class?: string | undefined }) {
+export function Kbd(
+  props: Omit<JSX.HTMLAttributes<HTMLElement>, "class"> & { class?: string | undefined },
+) {
   const rest = omit(props, "class");
 
   return <kbd data-slot="kbd" class={cx(kbd, props.class)} {...rest} />;

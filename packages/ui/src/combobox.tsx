@@ -129,7 +129,7 @@ export function Combobox(props: ComboboxProps) {
   });
 
   return (
-    <UiCombobox<string>
+    <UiCombobox
       value={keyOf(props.value)}
       onValueChange={(next) => {
         if (next === null) return;
@@ -188,8 +188,7 @@ export function Combobox(props: ComboboxProps) {
               }}
               class={listbox}
               style={{
-                "max-height":
-                  "min(20rem, calc(var(--available-height, 40rem) - 0.5rem))",
+                "max-height": "min(20rem, calc(var(--available-height, 40rem) - 0.5rem))",
               }}
             />
           )}

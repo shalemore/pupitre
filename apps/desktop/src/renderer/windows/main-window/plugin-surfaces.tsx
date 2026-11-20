@@ -52,7 +52,13 @@ const SurfaceHost: Component<{ plugin: PluginInfo; kind: SurfaceKind }> = (props
   };
 
   createEffect(
-    () => [settings().theme, settings().darkTheme, settings().colorScheme, settings().animations] as const,
+    () =>
+      [
+        settings().theme,
+        settings().darkTheme,
+        settings().colorScheme,
+        settings().animations,
+      ] as const,
     () => {
       requestAnimationFrame(sendTheme);
     },

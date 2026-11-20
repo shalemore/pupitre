@@ -1,4 +1,3 @@
-import { Menu, MenuContent, MenuContextTrigger } from "@ui-sdk/solid/menu";
 import type { FolderEntry } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import type { MenuEntry } from "@pupitre/desktop-api/menu";
@@ -6,15 +5,9 @@ import { t } from "@pupitre/i18n/solid";
 import { ListItem, rowIndent } from "@pupitre/ui";
 import { FLOATING_PANEL, menuPanel } from "@pupitre/ui/styles";
 import { messageOf } from "@pupitre/utils";
+import { Menu, MenuContent, MenuContextTrigger } from "@ui-sdk/solid/menu";
 import { Folder } from "lucide-solid";
-import {
-  type Component,
-  createEffect,
-  createMemo,
-  createSignal,
-  For,
-  Show,
-} from "solid-js";
+import { type Component, createEffect, createMemo, createSignal, For, Show } from "solid-js";
 import { isInsideFolder, relativeToFolder } from "@shared/paths";
 import { MenuEntries } from "@/components/menu-popup";
 import { reportFailure } from "@/lib/errors";
@@ -73,10 +66,14 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
   const [pins, setPinEntries] = createSignal<
     Awaited<ReturnType<typeof desktop.invoke<"folder:pins">>>
   >([]);
-  const loadPins = (root: string) => {
-    void desktop.invoke("folder:pins", root).then(setPinEntries, () => setPinEntries([]));
-  };
-  createEffect(() => props.root, loadPins);
+  const loadPins = (root: string) =>
+    desktop.invoke("folder:pins", root).then(setPinEntries, () => setPinEntries([]));
+  createEffect(
+    () => props.root,
+    (root) => {
+      void loadPins(root);
+    },
+  );
   const refetchPins = () => loadPins(props.root);
   const pinnedPaths = createMemo(() => new Set(pins().map((entry) => entry.path)));
   const pinnedEntries = () => pins();

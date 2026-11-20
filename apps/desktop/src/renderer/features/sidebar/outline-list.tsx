@@ -113,7 +113,10 @@ export const OutlineList: Component<OutlineListProps> = (props) => {
                   aria-hidden={row().hidden ? "true" : undefined}
                   class={cx(OUTLINE_ROW, rowStyle)}
                 >
-                  <Show when={row().hasChildren} fallback={<span aria-hidden="true" class={spacer} />}>
+                  <Show
+                    when={row().hasChildren}
+                    fallback={<span aria-hidden="true" class={spacer} />}
+                  >
                     <button
                       type="button"
                       aria-expanded={!folded(row().heading) ? "true" : "false"}

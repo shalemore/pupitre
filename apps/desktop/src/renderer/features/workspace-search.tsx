@@ -1,12 +1,3 @@
-import type { JSX } from "@solidjs/web";
-import {
-  Command,
-  CommandGroup,
-  CommandGroupLabel,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@ui-sdk/solid/command";
 import type {
   WorkspaceFileMatches,
   WorkspaceMatch,
@@ -25,6 +16,15 @@ import {
 } from "@pupitre/ui";
 import { truncateStyle } from "@pupitre/ui/styles";
 import { debounce } from "@solid-primitives/scheduled";
+import type { JSX } from "@solidjs/web";
+import {
+  Command,
+  CommandGroup,
+  CommandGroupLabel,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@ui-sdk/solid/command";
 import { CaseSensitive, Regex, WholeWord } from "lucide-solid";
 import {
   createEffect,
