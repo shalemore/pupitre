@@ -50,10 +50,17 @@ wraps itself in `offstage-windows`, so its windows stay off the screen on Window
   `pnpm --filter pupitre exec offstage-windows playwright test` to keep the windows off the screen.
 - `patches/@lezer__markdown@1.8.1.patch` fixes an upstream incremental-parse bug: a block that a
   table ended (a paragraph, a footnote definition, a math block) is reused with its old end when
-  the table stops parsing, which splits it in two. `pnpm.patchedDependencies` applies the patch on
-  install; the dependency is pinned to 1.8.1 so the patch and the package cannot drift apart. The
-  property test includes tables and `reads a paragraph back together…` fails if the patch stops
-  applying. Remove both when the fix is in the version we use.
+  the table stops parsing, which splits it in two. Upstream fixed it after 1.8.1 — `050c69d`,
+  "Require a full blank line at the end of a fragment", closing
+  [issue #72](https://code.haverbeke.berlin/lezer/markdown/issues/72) — so the patch goes as soon
+  as a release carries that commit, which 1.8.1 does not. `pnpm.patchedDependencies` applies the
+  patch on install; the dependency is pinned to 1.8.1 so the patch and the package cannot drift
+  apart. The property test includes tables and `reads a paragraph back together…` fails if the
+  patch stops applying.
+- `patches/lucide-solid@1.77.0.patch` lets the icons run on Solid 2: 1.77.0 still imports
+  `solid-js/web` and splits props with `splitProps`, where Solid 2 renamed the entry point to
+  `@solidjs/web` and replaced the split with `omit`. Its `peerDependencies` still name `solid-js
+  ^1.4.7`, so the patch goes when a release supports Solid 2.
 
 ## Testing the running app
 
