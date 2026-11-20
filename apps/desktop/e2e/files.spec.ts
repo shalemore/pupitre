@@ -170,8 +170,9 @@ test("opens a folder from its row", async () => {
   await writeFile(join(root, "src", "app", "file.md"), "# Nested\n");
   const app = await launch({ files: [readme] });
   try {
+    // A row names its path rather than a slot: UI SDK owns `data-slot` on the trigger it wraps
     const row = app.page
-      .locator("[data-sidebar=start] [data-slot=list-item]", { hasText: /^src$/ })
+      .locator("[data-sidebar=start] [data-folder-row]", { hasText: /^src$/ })
       .first();
     await row.hover();
     await row.locator("xpath=..").locator("[data-slot=folder-open]").click();
