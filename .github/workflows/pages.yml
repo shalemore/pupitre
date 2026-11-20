@@ -75,7 +75,11 @@ jobs:
         shell: bash
         run: |
           mkdir -p site/test
-          cp -R stable/apps/desktop/out/web/. site/
+          if [ -d stable/apps/desktop/out/web ]; then
+            cp -R stable/apps/desktop/out/web/. site/
+          else
+            cp -R stable/out/web/. site/
+          fi
           cp -R apps/desktop/out/web/. site/test/
 
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
