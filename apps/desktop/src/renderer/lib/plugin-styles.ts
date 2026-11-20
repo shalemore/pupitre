@@ -1,6 +1,6 @@
 import type { PluginStyle } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
-import { createEffect, createSignal } from "solid-js";
+import { createEffect, createRoot, createSignal } from "solid-js";
 import { settings } from "@/lib/settings";
 
 const [styles, setStyles] = createSignal<readonly PluginStyle[]>([]);
@@ -32,12 +32,20 @@ function applyPluginStyles(css: readonly PluginStyle[]): void {
     .join("\n");
 }
 
-/** Keeps the plugin stylesheets in the window current; called once by the main window. */
-export function setupPluginStyles(): void {
-  desktop.on("plugins:changed", loadPluginStyles);
-  loadPluginStyles();
+/**
+ * The plugins' styles follow the list the main process sends and a setting, so they are applied
+ * from a root of this module's own: a window mounts long after an effect could be created inside
+ * its `onSettled`, which Solid forbids, and the styles outlive every window the way the list does.
+ */
+createRoot(() =>
   createEffect(
     () => (settings().pluginEffects ? styles() : []),
     (css) => applyPluginStyles(css),
-  );
+  ),
+);
+
+/** Points the plugin stylesheets at the main process; called once by the main window. */
+export function setupPluginStyles(): void {
+  desktop.on("plugins:changed", loadPluginStyles);
+  loadPluginStyles();
 }
