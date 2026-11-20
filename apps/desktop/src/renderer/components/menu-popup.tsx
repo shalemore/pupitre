@@ -11,7 +11,7 @@ import {
   MenuSubTrigger,
 } from "@ui-sdk/solid/menu";
 import { Check, ChevronRight } from "lucide-solid";
-import { For, Show, type Component } from "solid-js";
+import { For, Show, createMemo, type Component } from "solid-js";
 import { isRtl } from "@/lib/rtl";
 import { settings } from "@/lib/settings";
 import { css, cx } from "@/styled-system/css";
@@ -104,12 +104,25 @@ export const MenuEntries: Component<{
     entry.setting === undefined
       ? entry.checked === true
       : settings()[entry.setting] !== (entry.invert === true);
+  // The host rebuilds a menu's entries each time it opens, so every record arrives as a fresh
+  // object. A row is keyed by its id, not its identity, so its DOM and highlight survive a re-fetch;
+  // a separator has no id and no state to lose, so its place in the list names it.
+  const keyed = createMemo(() => {
+    let separators = 0;
+    return props.entries.map((entry) => ({
+      key: entry.type === "item" ? entry.id : `separator:${separators++}`,
+      entry,
+    }));
+  });
 
   return (
-    <For each={props.entries}>
-      {(entry) => (
+    <For each={keyed()} keyed={(keyedEntry) => keyedEntry.key}>
+      {(keyedEntry) => (
         <Show
-          when={entry.type === "item" ? entry : undefined}
+          when={(() => {
+            const entry = keyedEntry().entry;
+            return entry.type === "item" ? entry : undefined;
+          })()}
           fallback={<Separator class={separator} />}
         >
           {(itemEntry) => (
