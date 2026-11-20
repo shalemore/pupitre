@@ -22,12 +22,14 @@ export interface TabsProps {
  * attributes are handled by UI SDK, so this only provides the styling.
  */
 export function Tabs(props: TabsProps) {
+  const orientation = () => props.orientation ?? "horizontal";
+
   return (
     <UiTabs
       value={props.value}
       defaultValue={props.defaultValue}
-      onValueChange={props.onValueChange ? (value) => props.onValueChange?.(value) : undefined}
-      orientation={props.orientation ?? "horizontal"}
+      onValueChange={props.onValueChange}
+      orientation={orientation()}
       class={props.class}
     >
       {props.children}

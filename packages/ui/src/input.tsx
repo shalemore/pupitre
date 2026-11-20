@@ -37,10 +37,11 @@ export type InputProps = Omit<JSX.InputHTMLAttributes<HTMLInputElement>, "size" 
 
 export function Input(props: InputProps) {
   const rest = omit(props, "class", "type", "size");
+  const type = () => props.type ?? "text";
 
   return (
     <input
-      type={props.type ?? "text"}
+      type={type()}
       data-slot="input"
       class={cx(inputVariants({ size: props.size }), props.class)}
       {...rest}

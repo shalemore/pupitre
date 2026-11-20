@@ -22,18 +22,16 @@ const pressed = css({ "&[data-pressed]": { color: "brand" } });
 /** A button that shows an icon alone and keeps the pressed state; ghost and small unless it says otherwise. */
 export function ToggleIconButton(props: ToggleIconButtonProps) {
   const rest = omit(props, "label", "variant", "size", "class", "children", "onChange");
+  const variant = () => props.variant ?? "ghost";
+  const size = () => props.size ?? "icon-xs";
 
   return (
     <Toggle
       {...rest}
-      onPressedChange={(next) => props.onChange(next)}
+      onPressedChange={props.onChange}
       title={props.label}
       aria-label={props.label}
-      class={cx(
-        buttonVariants({ variant: props.variant ?? "ghost", size: props.size ?? "icon-xs" }),
-        pressed,
-        props.class,
-      )}
+      class={cx(buttonVariants({ variant: variant(), size: size() }), pressed, props.class)}
     >
       {props.children}
     </Toggle>

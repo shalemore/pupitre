@@ -141,10 +141,11 @@ export type ButtonProps = Omit<JSX.ButtonHTMLAttributes<HTMLButtonElement>, "cla
 
 export function Button(props: ButtonProps) {
   const rest = omit(props, "class", "variant", "size", "type");
+  const type = () => props.type ?? "button";
 
   return (
     <button
-      type={props.type ?? "button"}
+      type={type()}
       data-slot="button"
       class={cx(
         PRESSABLE,

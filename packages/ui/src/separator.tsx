@@ -12,12 +12,13 @@ const horizontal = css({ height: "[1px]", width: "full" });
 const vertical = css({ height: "full", width: "[1px]", alignSelf: "stretch" });
 
 export function Separator(props: SeparatorProps) {
-  const isVertical = () => props.orientation === "vertical";
+  const orientation = () => props.orientation ?? "horizontal";
+  const isVertical = () => orientation() === "vertical";
 
   return (
     <UiSeparator
       data-slot="separator"
-      orientation={props.orientation ?? "horizontal"}
+      orientation={orientation()}
       decorative={props.decorative ?? false}
       class={cx(separator, isVertical() ? vertical : horizontal, props.class)}
     />

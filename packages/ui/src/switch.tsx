@@ -40,12 +40,14 @@ const thumb = css({
 });
 
 export function Switch(props: SwitchProps) {
+  const disabled = () => props.disabled ?? false;
+
   return (
     <UiSwitch
       data-slot="switch"
       checked={props.checked}
-      onCheckedChange={(checked) => props.onChange(checked)}
-      disabled={props.disabled ?? false}
+      onCheckedChange={props.onChange}
+      disabled={disabled()}
       aria-label={props["aria-label"]}
       class={control}
     >

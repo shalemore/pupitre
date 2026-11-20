@@ -11,7 +11,7 @@ import {
 import { Check, ChevronDown } from "lucide-solid";
 import { createMemo, createSignal, For, Show } from "solid-js";
 import { popupLayer } from "./popup-layer";
-import { ScrollView, type ScrollViewProps } from "./scroll-view";
+import { ScrollView } from "./scroll-view";
 import type { SelectOption } from "./select";
 import { css, cx } from "./styled-system/css";
 import { FLOATING_PANEL, truncateStyle } from "./styles";
@@ -121,6 +121,9 @@ export function Combobox(props: ComboboxProps) {
   const selected = () => props.options.find((option) => option.value === props.value);
   const [query, setQuery] = createSignal("");
   const [typing, setTyping] = createSignal(false);
+  const label = () => props["aria-label"] ?? "";
+  const placeholder = () => props.placeholder ?? "";
+  const collisionPadding = () => props.overflowPadding ?? 8;
   let listboxElement: HTMLElement | undefined;
 
   const filtered = createMemo(() => {
@@ -157,8 +160,8 @@ export function Combobox(props: ComboboxProps) {
       <div data-slot="combobox-control" class={cx(control, props.class)}>
         <ComboboxInput
           data-slot="combobox-input"
-          aria-label={props["aria-label"] ?? ""}
-          placeholder={props.placeholder ?? ""}
+          aria-label={label()}
+          placeholder={placeholder()}
           class={input}
           onFocus={(e) => e.currentTarget.select()}
           style={selected()?.style ?? {}}
@@ -174,7 +177,7 @@ export function Combobox(props: ComboboxProps) {
         side="bottom"
         align="start"
         sideOffset={6}
-        collisionPadding={props.overflowPadding ?? 8}
+        collisionPadding={collisionPadding()}
         container={popupLayer()}
         class={cx(FLOATING_PANEL, content)}
       >
@@ -182,7 +185,7 @@ export function Combobox(props: ComboboxProps) {
           render={(listProps) => (
             <ScrollView
               as="ul"
-              {...(listProps as ScrollViewProps)}
+              {...listProps}
               ref={(element) => {
                 listboxElement = element;
                 const listRef = listProps["ref"];

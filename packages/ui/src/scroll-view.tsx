@@ -99,6 +99,7 @@ const thumbHidden = css({ opacity: 0 });
  */
 export function ScrollView(props: ScrollViewProps) {
   const rest = omit(props, "as", "class", "children", "ref");
+  const component = () => props.as ?? "div";
   const [thumbGeometry, setThumb] = createSignal(NO_THUMB);
   const [overflow, setOverflow] = createSignal("");
   const [scrolling, setScrolling] = createSignal(false);
@@ -154,7 +155,7 @@ export function ScrollView(props: ScrollViewProps) {
 
   return (
     <Dynamic
-      component={props.as ?? "div"}
+      component={component()}
       ref={(node: HTMLDivElement) => {
         element = node;
         if (typeof props.ref === "function") props.ref(node);

@@ -14,12 +14,14 @@ export interface IconButtonProps extends Omit<
 /** A button that shows an icon alone; ghost and small unless it says otherwise. */
 export function IconButton(props: IconButtonProps) {
   const rest = omit(props, "label", "variant", "size", "class", "children");
+  const variant = () => props.variant ?? "ghost";
+  const size = () => props.size ?? "icon-xs";
 
   return (
     <Button
       {...rest}
-      variant={props.variant ?? "ghost"}
-      size={props.size ?? "icon-xs"}
+      variant={variant()}
+      size={size()}
       title={props.label}
       aria-label={props.label}
       class={props.class}
