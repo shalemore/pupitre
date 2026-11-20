@@ -97,11 +97,15 @@ const hint = css({ textStyle: "2xs", color: "tertiary" });
 const actionIcon = css({ width: "3.5", height: "3.5" });
 const shortcut = css({ marginInlineStart: "1" });
 
+// Solid turns a literal `src` into an import of a file beside the component, and the logo lives in
+// `public`: naming it through a constant keeps the compiler from resolving it as a module.
+const LOGO_SRC = "./logo.svg";
+
 export const WelcomeScreen: Component<WelcomeScreenProps> = (props) => {
   return (
     <ScrollView data-slot="welcome" class={screen}>
       <div class={content}>
-        <img src="./logo.svg" alt="" class={logo} />
+        <img src={LOGO_SRC} alt="" class={logo} />
 
         <h1 class={title}>{t().common.appName}</h1>
 

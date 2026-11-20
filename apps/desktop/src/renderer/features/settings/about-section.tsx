@@ -39,6 +39,10 @@ const version = css({
 const status = css({ "& > * + *": { marginBlockStart: "2" } });
 const path = css({ fontFamily: "mono", textStyle: "xs" });
 
+// Solid turns a literal `src` into an import of a file beside the component, and the logo lives in
+// `public`: naming it through a constant keeps the compiler from resolving it as a module.
+const LOGO_SRC = "./logo.svg";
+
 export const AboutSection: Component = () => {
   // The file the chosen settings scope writes to, so the row follows the folder switch
   const shownSettingsPath = () => {
@@ -52,7 +56,7 @@ export const AboutSection: Component = () => {
     <SettingsSection title={t().settings.about}>
       <div class={identity}>
         <div class={appCard}>
-          <img src="./logo.svg" alt="" class={logo} />
+          <img src={LOGO_SRC} alt="" class={logo} />
           <div class={nameBlock}>
             <div class={appName}>Pupitre</div>
             <div class={version}>
