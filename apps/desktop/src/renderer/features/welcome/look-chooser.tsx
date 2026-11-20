@@ -1,8 +1,8 @@
-import { RadioGroup } from "@kobalte/core/radio-group";
+import type { JSX } from "@solidjs/web";
+import { Radio, RadioGroup } from "@ui-sdk/solid/radio";
 import { t } from "@pupitre/i18n/solid";
 import type { Settings } from "@pupitre/settings";
 import { PRESSABLE } from "@pupitre/ui/styles";
-import type { JSX } from "solid-js";
 import { settings, updateSettings } from "@/lib/settings";
 import { css, cx } from "@/styled-system/css";
 
@@ -111,14 +111,13 @@ const classicDocument = css({ flex: "1", backgroundColor: "surface.1" });
 const hint = css({ textStyle: "2xs", color: "tertiary" });
 
 const LookOption = (props: LookOptionProps) => (
-  <RadioGroup.Item value={props.value} class={cx(PRESSABLE, option)}>
-    <RadioGroup.ItemInput />
-    <RadioGroup.ItemControl>{props.preview}</RadioGroup.ItemControl>
-    <RadioGroup.ItemLabel class={optionLabel}>
+  <Radio value={props.value} class={cx(PRESSABLE, option)}>
+    <div>{props.preview}</div>
+    <div class={optionLabel}>
       <span class={optionName}>{props.label}</span>
       <span class={optionDescription}>{props.description}</span>
-    </RadioGroup.ItemLabel>
-  </RadioGroup.Item>
+    </div>
+  </Radio>
 );
 
 /**
@@ -129,16 +128,17 @@ export const LookChooser = () => (
   <section class={section}>
     <RadioGroup
       value={settings().windowStyle}
-      onChange={(value) => {
+      onValueChange={(value) => {
         // The group hands back any string; only the two styles the settings hold are worth writing
         if (value === "classic" || value === "immersive")
           void updateSettings({ windowStyle: value });
       }}
+      aria-labelledby="look-chooser-heading"
       class={group}
     >
-      <RadioGroup.Label as="h2" class={groupLabel}>
+      <h2 id="look-chooser-heading" class={groupLabel}>
         {t().welcome.chooseLook}
-      </RadioGroup.Label>
+      </h2>
       <div class={options}>
         <LookOption
           value="immersive"

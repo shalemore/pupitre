@@ -1,6 +1,5 @@
-import { I18nProvider } from "@kobalte/core/i18n";
 import { desktop } from "@pupitre/desktop-api/client";
-import { onCleanup, onMount, Show, type ParentComponent } from "solid-js";
+import { onSettled, Show, type ParentComponent } from "solid-js";
 import { css, cx } from "@/styled-system/css";
 import { CaptionButtons } from "./caption-buttons";
 
@@ -68,7 +67,7 @@ export const TitleBar: ParentComponent<{ class?: string; folded?: boolean }> = (
     }
   };
 
-  onMount(() => {
+  onSettled(() => {
     if (!bar) return;
     fit();
     // The bar resizes with the window, its parts with their text: a language change widens the menus
@@ -83,7 +82,7 @@ export const TitleBar: ParentComponent<{ class?: string; folded?: boolean }> = (
         for (const child of cell.children) observer.observe(child);
       }
     }
-    onCleanup(() => observer.disconnect());
+    return () => observer.disconnect();
   });
 
   return (
@@ -105,9 +104,7 @@ export const TitleBar: ParentComponent<{ class?: string; folded?: boolean }> = (
       <Show when={side === "left"}>
         <CaptionButtons side="left" />
       </Show>
-      {/* The bar draws its menus and tabs left to right in every UI language, so Kobalte must use
-          the same direction for the arrow keys and popup edges */}
-      <I18nProvider locale="en-US">{props.children}</I18nProvider>
+      {props.children}
       <Show when={side === "right"}>
         <CaptionButtons side="right" />
       </Show>

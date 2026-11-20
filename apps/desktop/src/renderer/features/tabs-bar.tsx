@@ -1,4 +1,4 @@
-import { Tabs as KobalteTabs } from "@kobalte/core/tabs";
+import { Tabs, TabsList, TabsTab } from "@ui-sdk/solid/tabs";
 import { t } from "@pupitre/i18n/solid";
 import { IconButton } from "@pupitre/ui";
 import { truncateStyle } from "@pupitre/ui/styles";
@@ -110,16 +110,19 @@ function TabButton(props: TabButtonProps) {
   let element: HTMLDivElement | undefined;
 
   // The shortcuts and a closing neighbour can bring a tab up while it sits past the edge of the strip
-  createEffect(() => {
-    if (props.active) element?.scrollIntoView({ block: "nearest", inline: "nearest" });
-  });
+  createEffect(
+    () => props.active,
+    (active) => {
+      if (active) element?.scrollIntoView({ block: "nearest", inline: "nearest" });
+    },
+  );
 
   return (
     <div
       ref={(node) => (element = node)}
       class={cx("group", tabItem, props.active ? tabActive : tabIdle)}
     >
-      <KobalteTabs.Trigger
+      <TabsTab
         value={String(props.tab.id)}
         title={props.name}
         onClick={() => props.onActivate()}
@@ -138,7 +141,7 @@ function TabButton(props: TabButtonProps) {
         <bdi dir="auto" class={tabName}>
           {props.name}
         </bdi>
-      </KobalteTabs.Trigger>
+      </TabsTab>
       <IconButton
         label={t().menu.closeTab}
         size="icon-2xs"
@@ -160,8 +163,8 @@ function TabButton(props: TabButtonProps) {
  * the bar keeps the tabs inside the part that unfolds with the immersive chrome.
  */
 export const TabsBar: Component<TabsBarProps> = (props) => (
-  <KobalteTabs value={props.activeId === undefined ? "" : String(props.activeId)} class={bar}>
-    <KobalteTabs.List
+  <Tabs value={props.activeId === undefined ? "" : String(props.activeId)} class={bar}>
+    <TabsList
       aria-label={t().tabs.bar}
       // The strip scrolls sideways when the tabs overflow; the wheel follows the row, since a
       // vertical wheel over it has nothing else to do, and the scrollbar only appears when needed
@@ -185,6 +188,6 @@ export const TabsBar: Component<TabsBarProps> = (props) => (
           />
         )}
       </For>
-    </KobalteTabs.List>
-  </KobalteTabs>
+    </TabsList>
+  </Tabs>
 );

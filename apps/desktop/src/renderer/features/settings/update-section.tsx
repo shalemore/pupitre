@@ -1,8 +1,8 @@
-import { Progress } from "@kobalte/core/progress";
 import type { UpdateStatus } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
 import { Button, Callout } from "@pupitre/ui";
+import { Progress, ProgressIndicator, ProgressTrack } from "@ui-sdk/solid/progress";
 import { CheckCircle2, Download, RefreshCw } from "lucide-solid";
 import { createMemo, Show, type Component } from "solid-js";
 import { formatPercent } from "@/lib/number-format";
@@ -34,7 +34,6 @@ const fill = css({
   backgroundColor: "brand",
   transitionProperty: "width",
   transitionDuration: "sheet",
-  width: "var(--kb-progress-fill-width)",
 });
 const destructiveText = css({ color: "destructive" });
 
@@ -109,9 +108,9 @@ export const UpdateStatusPanel: Component<{ currentVersion: string }> = (props) 
               <span class={percent}>{formatPercent(status().percent / 100)}</span>
             </div>
             <Progress value={status().percent} aria-label={t().settings.downloadingUpdate}>
-              <Progress.Track class={track}>
-                <Progress.Fill class={fill} />
-              </Progress.Track>
+              <ProgressTrack class={track}>
+                <ProgressIndicator class={fill} style={{ width: `${status().percent}%` }} />
+              </ProgressTrack>
             </Progress>
           </Callout>
         )}
