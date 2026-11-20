@@ -4,13 +4,11 @@ packages:
   - packages/*
   - plugins/*
 
-# Dependencies with native build steps. pnpm 10 blocks every other package's scripts by default.
-onlyBuiltDependencies:
-  - "@parcel/watcher"
-  - fsevents
-
-ignoredBuiltDependencies:
-  - electron-winstaller
+# Dependencies with native build steps. pnpm 12 blocks every other package's scripts by default.
+allowBuilds:
+  "@parcel/watcher": true
+  fsevents: true
+  electron-winstaller: false
 
 # Kept from the npm manifest; pnpm reads them here.
 overrides:

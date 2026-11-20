@@ -129,10 +129,12 @@ jobs:
             echo "INSTALLERS"
           } >> "$GITHUB_OUTPUT"
 
-      # pnpm writes the CycloneDX SBOM of the dependencies it resolves from the lockfile
+      # Syft writes the CycloneDX SBOM of the resolved dependencies
       - name: Generate the SBOM
-        shell: bash
-        run: pnpm sbom --format cyclonedx > "pupitre-${{ matrix.platform }}.cdx.json"
+        uses: anchore/sbom-action@fffec3d851af758d56fee099cf3fbf8aa8779843 # v0.24.3
+        with:
+          format: cyclonedx-json
+          output-file: pupitre-${{ matrix.platform }}.cdx.json
 
       # Both attestations cover every installer of the job, and each is signed with the identity of
       # this workflow run. They run after the build, so a run that cannot sign one fails the
