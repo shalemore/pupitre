@@ -2,10 +2,11 @@ import themeSchema from "@agents/skills/theming-pupitre/theme.schema.json";
 import { DEFAULT_LOCALE, LOCALE_CODES } from "@pupitre/i18n";
 import { describe, expect, it, vi } from "vitest";
 import {
+  applyThemeCss,
   activeThemeCss,
-  applyTheme,
   localizedText,
   readColorScheme,
+  themeCss,
   themeDisplayName,
   themeMetaSchema,
   type LocalizedText,
@@ -14,7 +15,7 @@ import {
 
 describe("activeThemeCss", () => {
   it("reads the applied theme from the document, not from the module that applied it", async () => {
-    applyTheme("plakat");
+    applyThemeCss(themeCss("plakat"));
     const applied = activeThemeCss();
     expect(applied).toContain("@layer document-theme");
     // A hot update can leave two instances of the module behind; the export code may be given the

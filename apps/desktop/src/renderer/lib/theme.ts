@@ -143,10 +143,8 @@ const builtInThemes: readonly ThemeInfo[] = Object.entries(themeStyles).map(
   },
 );
 
+/** The folders the main process found in the global and project theme folders, and their CSS. */
 const [imported, setImported] = createSignal<readonly ImportedTheme[]>(desktop.initialState.themes);
-
-/** The folders the main process found in the global and project theme folders. */
-export const importedThemes = imported;
 
 void desktop.invoke("themes:list").then(setImported);
 desktop.on("themes:changed", (list) => setImported(list));
@@ -211,8 +209,17 @@ function cssFor(id: string): string | undefined {
   return found?.css ?? builtInCss[id];
 }
 
-export function applyTheme(id: string): void {
-  const css = cssFor(id) ?? cssFor(DEFAULT_THEME) ?? "";
+/**
+ * The stylesheet of a theme: the folder the main process found, or the one built in. Read it where
+ * a change is tracked, such as the compute function of an effect; a theme folder that changes while
+ * the app runs replaces the CSS of the theme that uses it.
+ */
+export function themeCss(id: string): string {
+  return cssFor(id) ?? cssFor(DEFAULT_THEME) ?? "";
+}
+
+/** Puts a theme's stylesheet in the document, and tells whoever copies its colors that it moved. */
+export function applyThemeCss(css: string): void {
   themeStyleElement().textContent = `@layer document-theme {\n${css}\n}`;
   setApplied();
 }

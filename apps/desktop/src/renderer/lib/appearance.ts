@@ -5,7 +5,7 @@ import { createPrefersDark } from "@solid-primitives/media";
 import { createEffect, createMemo, createRoot } from "solid-js";
 import { codeFontFamily, documentFontFamily, interfaceFontFamily } from "@/lib/fonts";
 import { settings } from "@/lib/settings";
-import { applyTheme, DEFAULT_THEME, importedThemes, readWindowColors, themes } from "@/lib/theme";
+import { applyThemeCss, DEFAULT_THEME, readWindowColors, themeCss, themes } from "@/lib/theme";
 import { clearToken, readToken, writeToken, type TokenName } from "@/lib/tokens";
 import { withViewTransition } from "@/lib/view-transition";
 
@@ -35,27 +35,28 @@ export function setupAppearance(): void {
       return light;
     });
 
+    // The CSS is resolved where the change is seen: a theme folder added, changed or removed while
+    // the app runs replaces the stylesheet of the theme that uses it, and the memo hands the effect
+    // a new value only when the theme, that CSS or the dark preference changed
+    const shownTheme = createMemo(() => {
+      const id = activeTheme();
+      return { id, css: themeCss(id), dark: isDark() };
+    });
+
     // Effects run in creation order: the theme is applied before anything reads its values
-    let shownTheme: string | undefined;
-    createEffect(
-      () => {
-        // A theme folder added, changed or removed while the app runs replaces the active CSS too
-        importedThemes();
-        return activeTheme();
-      },
-      (id) => {
-        const apply = () => {
-          applyTheme(id);
-          void desktop.invoke("window:set-colors", { ...readWindowColors(), dark: isDark() });
-        };
-        // The theme the window opens with is already the first paint; a later one cross-fades its
-        // colors in, together with the window frame the main process draws. The list of imported
-        // themes arriving changes nothing to fade.
-        if (shownTheme !== undefined && shownTheme !== id) withViewTransition(apply);
-        else apply();
-        shownTheme = id;
-      },
-    );
+    let appliedTheme: string | undefined;
+    createEffect(shownTheme, ({ id, css, dark }) => {
+      const apply = () => {
+        applyThemeCss(css);
+        void desktop.invoke("window:set-colors", { ...readWindowColors(), dark });
+      };
+      // The theme the window opens with is already the first paint; a later one cross-fades its
+      // colors in, together with the window frame the main process draws. A stylesheet that
+      // changed under the same name arrives without a fade, since the theme it belongs to did not.
+      if (appliedTheme !== undefined && appliedTheme !== id) withViewTransition(apply);
+      else apply();
+      appliedTheme = id;
+    });
     createEffect(
       () => [currentLocale(), currentDirection()] as const,
       ([locale, direction]) => {
