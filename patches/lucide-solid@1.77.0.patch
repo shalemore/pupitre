@@ -1,0 +1,91 @@
+diff --git a/dist/esm/Icon.mjs b/dist/esm/Icon.mjs
+index 79f30859da02c169b5ba427e61ae265ddc530f78..5baa04c5fd46b950ae23157d5e1a2a56a6efd355 100644
+--- a/dist/esm/Icon.mjs
++++ b/dist/esm/Icon.mjs
+@@ -6,7 +6,7 @@
+  */
+ 
+ import { spread, mergeProps, insert, createComponent, Dynamic, template } from 'solid-js/web';
+-import { splitProps, useContext, createMemo, For } from 'solid-js';
++import { omit, useContext, createMemo, For } from 'solid-js';
+ import buildLucideIconNode from './shared/src/build/buildLucideIconNode.mjs';
+ import { hasA11yProp } from './shared/src/utils/hasA11yProp.mjs';
+ import { mergeClasses } from './shared/src/utils/mergeClasses.mjs';
+@@ -14,7 +14,8 @@ import { LucideContext } from './context.mjs';
+ 
+ var _tmpl$ = /*#__PURE__*/template(`<svg>`);
+ const Icon = props => {
+-  const [localProps, rest] = splitProps(props, ['color', 'size', 'width', 'height', 'strokeWidth', 'children', 'class', 'icon', 'iconNode', 'absoluteStrokeWidth', 'nonScalingStroke']);
++  const localProps = props;
++  const rest = omit(props, 'color', 'size', 'width', 'height', 'strokeWidth', 'children', 'class', 'icon', 'iconNode', 'absoluteStrokeWidth', 'nonScalingStroke');
+   const globalProps = useContext(LucideContext);
+   const icon = createMemo(() => localProps.icon ?? {
+     node: localProps.iconNode ?? [],
+diff --git a/dist/source/Icon.jsx b/dist/source/Icon.jsx
+index ec2bcb5b0041c13b6c6e11698df6aefbb5964af1..0703c551e35230e7bd7745923fd0795620f3d91a 100644
+--- a/dist/source/Icon.jsx
++++ b/dist/source/Icon.jsx
+@@ -6,8 +6,8 @@
+ */
+ 
+ // src/Icon.tsx
+-import { createMemo, For, splitProps, useContext } from "solid-js";
+-import { Dynamic } from "solid-js/web";
++import { createMemo, For, omit, useContext } from "solid-js";
++import { Dynamic } from "@solidjs/web";
+ 
+ // ../shared/src/build/defaultAttributes.ts
+ var defaultAttributes = {
+@@ -105,7 +105,9 @@ var hasA11yProp = (props) => {
+ // src/Icon.tsx
+ import { LucideContext } from "./context";
+ var Icon = (props) => {
+-  const [localProps, rest] = splitProps(props, [
++  const localProps = props;
++  const rest = omit(
++    props,
+     "color",
+     "size",
+     "width",
+@@ -117,7 +119,7 @@ var Icon = (props) => {
+     "iconNode",
+     "absoluteStrokeWidth",
+     "nonScalingStroke"
+-  ]);
++  );
+   const globalProps = useContext(LucideContext);
+   const icon = createMemo(
+     () => localProps.icon ?? {
+diff --git a/dist/source/context.jsx b/dist/source/context.jsx
+index 55474d6f0461c8421d20f0be4f58b9da5e2f9ab2..ec88a969a7fafc758e6b92b9da3afc7ec76e33a5 100644
+--- a/dist/source/context.jsx
++++ b/dist/source/context.jsx
+@@ -6,7 +6,7 @@
+ */
+ 
+ // src/context.tsx
+-import { createContext, splitProps } from "solid-js";
++import { createContext, omit } from "solid-js";
+ var LucideContext = createContext({
+   size: 24,
+   color: "currentColor",
+@@ -16,15 +16,16 @@ var LucideContext = createContext({
+   class: ""
+ });
+ function LucideProvider(props) {
+-  const [value, rest] = splitProps(props, [
++  const rest = omit(
++    props,
+     "size",
+     "color",
+     "strokeWidth",
+     "absoluteStrokeWidth",
+     "nonScalingStroke",
+     "class"
+-  ]);
+-  return <LucideContext.Provider value={value}>{rest.children}</LucideContext.Provider>;
++  );
++  return <LucideContext value={props}>{rest.children}</LucideContext>;
+ }
+ export {
+   LucideContext,
