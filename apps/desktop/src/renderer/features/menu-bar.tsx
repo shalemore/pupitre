@@ -148,11 +148,11 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
                 show(menu);
                 return;
               }
-              // A press on the bar is the bar's business: it switches or closes the menu itself.
-              // Without this, a press on another trigger folds the open menu first, and the menu
-              // the click brings up arrives with the rise instead of taking its place.
-              const target = details.event?.target;
-              if (target instanceof Element && target.closest("[data-menu-bar]") !== null) {
+              // A press on another trigger is the bar's business: it switches or closes the menu
+              // itself. Without this, a press folds the open menu first, and the menu the click
+              // brings up arrives with the rise instead of taking its place. Hovering across the
+              // bar switches through the SDK instead, so only a press takes this path.
+              if (details.reason === "trigger-press") {
                 details.cancel();
                 return;
               }
