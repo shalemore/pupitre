@@ -15,6 +15,7 @@ import {
   createEffect,
   createMemo,
   createSignal,
+  isPending,
   lazy,
   onSettled,
   Show,
@@ -698,14 +699,22 @@ export const MainWindow: Component = () => {
               <Show
                 when={session.activeTab()}
                 fallback={
-                  <main class={welcomeArea}>
-                    <WelcomeScreen
-                      recentFiles={recentFiles()}
-                      onNewDocument={session.newDocument}
-                      onOpenFile={session.open}
-                      onOpenRecent={session.openPath}
-                    />
-                  </main>
+                  // While startup is restoring what an earlier session left, the tabs are being
+                  // written on the async path and the frame is held; reading the pending state keeps
+                  // the welcome screen from flashing and then giving way to the document coming back.
+                  <Show
+                    when={isPending(() => session.activeTab())}
+                    fallback={<main class={welcomeArea} />}
+                  >
+                    <main class={welcomeArea}>
+                      <WelcomeScreen
+                        recentFiles={recentFiles()}
+                        onNewDocument={session.newDocument}
+                        onOpenFile={session.open}
+                        onOpenRecent={session.openPath}
+                      />
+                    </main>
+                  </Show>
                 }
               >
                 {(tab) => (
