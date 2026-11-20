@@ -1,0 +1,26 @@
+{
+  "extends": "@tsconfig/strictest/tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.e2e.tsbuildinfo",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "types": ["node"],
+    "paths": { "@shared/*": ["./src/shared/*"] },
+    "noEmit": true
+  },
+  "references": [
+    { "path": "../../packages/i18n" },
+    { "path": "../../packages/settings" },
+    { "path": "../../packages/desktop-api" }
+  ],
+  "include": [
+    "e2e",
+    "playwright.config.ts",
+    "playwright.perf.config.ts",
+    "playwright.shared.ts",
+    "src/shared"
+  ]
+}

@@ -1,0 +1,126 @@
+import { t } from "@pupitre/i18n/solid";
+import type { Settings } from "@pupitre/settings";
+import { Input, Select } from "@pupitre/ui";
+import type { Component } from "solid-js";
+import { settings, updateSettings } from "@/lib/settings";
+import { css } from "@/styled-system/css";
+import { SettingField, SettingGroup, SettingsSection } from "./settings-section";
+
+const monoField = css({ width: "36", fontFamily: "mono" });
+
+export const MarkdownSection: Component = () => (
+  <SettingsSection title={t().settings.markdown} description={t().settings.markdownDesc}>
+    <SettingGroup>
+      <SettingField heading name="bulletMarker" title={t().settings.bulletMarker}>
+        <Select<Settings["bulletMarker"]>
+          value={settings().bulletMarker}
+          onChange={(bulletMarker) => void updateSettings({ bulletMarker })}
+          options={[
+            { value: "-", label: "- item" },
+            { value: "*", label: "* item" },
+            { value: "+", label: "+ item" },
+          ]}
+          aria-label={t().settings.bulletMarker}
+        />
+      </SettingField>
+
+      <SettingField name="incrementListMarker" title={t().settings.orderedList}>
+        <Select<"increment" | "same">
+          value={settings().incrementListMarker ? "increment" : "same"}
+          onChange={(mode) => void updateSettings({ incrementListMarker: mode === "increment" })}
+          options={[
+            { value: "increment", label: t().settings.orderedListIncrement },
+            { value: "same", label: t().settings.orderedListSame },
+          ]}
+          aria-label={t().settings.orderedList}
+        />
+      </SettingField>
+    </SettingGroup>
+
+    <SettingGroup>
+      <SettingField heading name="emphasisMarker" title={t().settings.emphasisMarker}>
+        <Select<Settings["emphasisMarker"]>
+          value={settings().emphasisMarker}
+          onChange={(emphasisMarker) => void updateSettings({ emphasisMarker })}
+          options={[
+            { value: "*", label: "*italic*" },
+            { value: "_", label: "_italic_" },
+          ]}
+          aria-label={t().settings.emphasisMarker}
+        />
+      </SettingField>
+
+      <SettingField name="strongMarker" title={t().settings.strongMarker}>
+        <Select<Settings["strongMarker"]>
+          value={settings().strongMarker}
+          onChange={(strongMarker) => void updateSettings({ strongMarker })}
+          options={[
+            { value: "*", label: "**bold**" },
+            { value: "_", label: "__bold__" },
+          ]}
+          aria-label={t().settings.strongMarker}
+        />
+      </SettingField>
+    </SettingGroup>
+
+    <SettingGroup>
+      <SettingField heading name="fenceMarker" title={t().settings.fenceMarker}>
+        <Select<Settings["fenceMarker"]>
+          value={settings().fenceMarker}
+          onChange={(fenceMarker) => void updateSettings({ fenceMarker })}
+          options={[
+            { value: "`", label: "```" },
+            { value: "~", label: "~~~" },
+          ]}
+          aria-label={t().settings.fenceMarker}
+        />
+      </SettingField>
+
+      <SettingField name="ruleMarker" title={t().settings.ruleMarker}>
+        <Select<Settings["ruleMarker"]>
+          value={settings().ruleMarker}
+          onChange={(ruleMarker) => void updateSettings({ ruleMarker })}
+          options={[
+            { value: "-", label: "---" },
+            { value: "*", label: "***" },
+            { value: "_", label: "___" },
+          ]}
+          aria-label={t().settings.ruleMarker}
+        />
+      </SettingField>
+    </SettingGroup>
+
+    <SettingGroup>
+      <SettingField heading name="lineEnding" title={t().settings.lineEnding}>
+        <Select<Settings["lineEnding"]>
+          value={settings().lineEnding}
+          onChange={(lineEnding) => void updateSettings({ lineEnding })}
+          options={[
+            { value: "auto", label: t().settings.lineEndingAuto },
+            { value: "lf", label: "LF" },
+            { value: "crlf", label: "CRLF" },
+          ]}
+          aria-label={t().settings.lineEnding}
+        />
+      </SettingField>
+
+      <SettingField
+        name="imageFolder"
+        title={t().settings.imageFolder}
+        description={t().settings.imageFolderDesc}
+      >
+        <Input
+          value={settings().imageFolder}
+          // "change" only fires on blur or Enter, so the settings file is not rewritten per keystroke
+          onChange={(e) => {
+            const imageFolder = e.currentTarget.value.trim();
+            if (imageFolder) void updateSettings({ imageFolder });
+            else e.currentTarget.value = settings().imageFolder;
+          }}
+          class={monoField}
+          aria-label={t().settings.imageFolder}
+        />
+      </SettingField>
+    </SettingGroup>
+  </SettingsSection>
+);

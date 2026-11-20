@@ -1,6 +1,6 @@
 # Translating Pupitre
 
-The dictionaries in `src/shared/i18n/locales/` are written by AI. The maintainers speak Simplified
+The dictionaries in `packages/i18n/src/locales/` are written by AI. The maintainers speak Simplified
 Chinese and English; most languages have no native reviewer, so a plausible string is not evidence
 that it is right. This file records how a translation is chosen, what to check and where the
 answers came from, so the next person or model does not repeat a settled mistake.
@@ -164,7 +164,7 @@ listed, change every occurrence, and update the table and its notes.
 - `zh-TW` Finder: `settings.defaultAppManual`; [Apple zh-TW](https://support.apple.com/zh-tw/guide/mac-help/mh35597/mac)
 - `zh-HK` trash: `sidebar.moveToTrash`; [Apple zh-HK](https://support.apple.com/zh-hk/102610)
 - `zh-HK`, `zh-TW` contents: `format.toc`; [Word zh-HK](https://support.microsoft.com/zh-hk/word/training/insert-a-table-of-contents)
-- `zh-CN` compact label: `editor.imageFile.saveAs`; [GB/T 15834](https://people.ubuntu.com/~happyaron/l10n/GB%28T%2915834-2011.html); the app already writes `显示/隐藏侧边栏`
+- `zh-CN` compact label: `editor.imageFile.saveAs`; [GB/T 15834](https://people.ubuntu.com/~happyaron/l10n/GB%28T%2915834-2011.html); a slash in a compact label takes no spaces
 - UI labels, every locale: `menu.openFile`, `menu.saveAs`, `quickOpen.placeholder`; [Microsoft Style Guide](https://learn.microsoft.com/style-guide/punctuation/ellipses), [VS Code zh-Hant](https://github.com/microsoft/vscode-loc/blob/main/i18n/vscode-language-pack-zh-hant/translations/main.i18n.json); the Smart Dashes example keeps the literal `...` the user types
 
 ### Other languages
@@ -288,9 +288,9 @@ These smaller repairs are easy to undo by accident:
 - UI labels use one ellipsis character `…`. Prose uses the Chinese ellipsis `……`. The literal
   `--, --- and ...` in the Smart Dashes description is input the user types, so it stays three
   ASCII periods.
-- A slash between two Chinese words takes no spaces in a compact label (`重命名/另存为`,
-  `显示/隐藏侧边栏`). In a table or running prose, spaces around `/` are acceptable for
-  readability; do not mix the two inside one label.
+- A slash between two Chinese words takes no spaces in a compact label (`重命名/另存为`). In a
+  table or running prose, spaces around `/` are acceptable for readability; do not mix the two
+  inside one label.
 - Prefer verb–object and subject–verb–object sentences. Avoid Europeanized Chinese: chains of 的,
   passive 被 where Chinese would use an active verb, 进行 + noun, 一个 + noun, 对于/关于 openings,
   and 当……的时候 when a plain clause works.
@@ -374,11 +374,11 @@ These are the failure modes seen in this repository, not hypothetical ones.
 
 No tool can prove that a sentence means what the English means. These catch the mechanical layer:
 
-- `npm run typecheck` and `npm test` — the dictionaries are typed by `TranslationSchema`; a missing
-  key or a broken function fails the build. `src/shared/i18n/typography.test.ts` checks the two
+- `pnpm run typecheck` and `pnpm test` — the dictionaries are typed by `TranslationSchema`; a missing
+  key or a broken function fails the build. `packages/i18n/src/typography.test.ts` checks the two
   rules a machine can check: every UI ellipsis is U+2026, and Chinese keeps a space between Han and
   Latin letters or digits.
-- `npm run lint` — formatting, lint rules and import order (oxfmt's `sortImports`). It does not spell-check.
+- `pnpm run lint` — formatting, lint rules and import order (oxfmt's `sortImports`). It does not spell-check.
 - CI runs `lint`, `typecheck`, `knip`, `test:coverage`, `build`, `check:bundle`, `test:e2e` and
   `build:web`. None of them spell-check a dictionary; spelling and grammar need the external tools
   below.
@@ -435,7 +435,7 @@ file and point to it from the locale file in one line.
 - [ ] The only ASCII `...` left is the Smart Dashes input example; every other UI ellipsis is `…`.
 - [ ] Quotes, dashes, commas and question marks are the language's own.
 - [ ] `Pupitre`, file names, code, formats and keys are unchanged.
-- [ ] `npm run lint`, `npm run typecheck` and `npm test` pass.
+- [ ] `pnpm run lint`, `pnpm run typecheck` and `pnpm test` pass.
 
 ## Known gaps
 

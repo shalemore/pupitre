@@ -10,7 +10,7 @@ A theme is CSS. It styles the window and the document; the user's settings still
 ## The folder
 
 - The app reads three places:
-  - the built-in `src/renderer/themes/<name>/`;
+  - the built-in `apps/desktop/src/renderer/themes/<name>/`;
   - the global themes folder, `themes/` under the app's user data;
   - the open project's `.pupitre/themes/<name>/`.
 - The last two are watched while the app runs: adding, changing or removing a folder updates the
@@ -51,7 +51,7 @@ The name shown in settings, and the description kept for later use, come from an
 `theme.schema.json`, next to this guide, validates the file. The relative path above works inside
 this repository; a theme kept elsewhere can use its raw GitHub URL once the repository is public.
 
-Use the app's locale codes (`src/shared/i18n/types.ts`). A language the theme leaves out falls back
+Use the app's locale codes (`packages/i18n/src/types.ts`). A language the theme leaves out falls back
 to the app's default locale (`DEFAULT_LOCALE`, currently `en-US`); if that is missing too, the first
 text in the file is used. A plain string covers every language. Without `theme.json`, the folder
 name is shown. The setting itself stores the folder name, so changing a display name never breaks
@@ -60,7 +60,7 @@ a user's choice.
 The description follows the same rules. The settings do not show it yet; it is there for a later
 theme browser or picker.
 
-The themes shipped in `src/renderer/themes` must name and describe every locale. A theme installed
+The themes shipped in `apps/desktop/src/renderer/themes` must name and describe every locale. A theme installed
 from outside the app may leave languages out and use the fallback.
 
 ## Color schemes

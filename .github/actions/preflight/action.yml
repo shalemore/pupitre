@@ -44,4 +44,4 @@ runs:
     - id: version
       if: steps.evaluate.outputs.skip != 'true'
       shell: bash
-      run: echo "version=$(jq -r .version package.json)" >> "$GITHUB_OUTPUT"
+      run: echo "version=$(jq -r .version apps/desktop/package.json)" >> "$GITHUB_OUTPUT"

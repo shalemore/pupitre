@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$comment": "Keep the locale codes in sync with src/shared/i18n/types.ts.",
+  "$comment": "Keep the locale codes in sync with packages/i18n/src/types.ts.",
   "title": "Pupitre theme metadata",
   "description": "The optional theme.json next to a theme's index.css. The name and description are either one string for every language, or text keyed by the app's locale codes.",
   "type": "object",

@@ -1,0 +1,83 @@
+import type { HistoryEntry } from "@pupitre/desktop-api";
+import { desktop } from "@pupitre/desktop-api/client";
+import { intlLocale } from "@pupitre/i18n";
+import { currentLocale, t } from "@pupitre/i18n/solid";
+import { truncateGrow } from "@pupitre/ui/styles";
+import { type Component, createMemo, createResource } from "solid-js";
+import { formatFileSize } from "@shared/file-size";
+import { PaletteSheet } from "@/components/palette-sheet";
+import { dateTimeFormat } from "@/lib/date-format";
+import { css } from "@/styled-system/css";
+
+export interface VersionHistoryProps {
+  /** The file whose kept versions are listed. */
+  path: string;
+  /** Puts the text of one version back into the editor, as an edit the reader can undo. */
+  onRestore: (markdown: string) => void;
+  onClose: () => void;
+}
+
+/** A version with the time it was overwritten, which is what its row reads. */
+interface VersionRow {
+  entry: HistoryEntry;
+  time: string;
+}
+
+/**
+ * The versions a document had before its file was written over, newest first. Picking one puts its
+ * text back into the editor; nothing on disk changes until the document is saved again.
+ */
+const size = css({
+  flexShrink: 0,
+  fontVariantNumeric: "tabular-nums",
+  opacity: 0.6,
+});
+
+export const VersionHistory: Component<VersionHistoryProps> = (props) => {
+  // Asked once, when the panel opens: what a save adds while it is open belongs to its next opening
+  const [versions] = createResource(
+    () => props.path,
+    (path) => desktop.invoke("history:list", path),
+  );
+  const rows = createMemo(() =>
+    (versions() ?? []).map((entry): VersionRow => ({
+      entry,
+      time: dateTimeFormat().format(entry.savedAt),
+    })),
+  );
+
+  // The query reaches the rows by the time they show, which is the only thing in them to search by
+  const matching = (query: string): VersionRow[] => {
+    const needle = query.trim().toLowerCase();
+    if (needle === "") return rows();
+    return rows().filter((row) => row.time.toLowerCase().includes(needle));
+  };
+
+  const restore = (row: VersionRow) => {
+    void desktop.invoke("history:read", props.path, row.entry.id).then((markdown) => {
+      // The version was taken away since the panel was opened
+      if (markdown !== null) props.onRestore(markdown);
+    });
+  };
+
+  return (
+    <PaletteSheet
+      title={t().history.title}
+      placeholder={t().history.filterPlaceholder}
+      rows={matching}
+      // Nothing is listed before the host answers, so an empty list here really is no history
+      emptyMessage={versions.loading ? undefined : t().history.empty}
+      // With no version to pick, there is nothing the hint could tell about picking one
+      hint={rows().length === 0 ? undefined : t().history.restoreHint}
+      onPick={restore}
+      onClose={props.onClose}
+    >
+      {(row) => (
+        <>
+          <span class={truncateGrow}>{row.time}</span>
+          <span class={size}>{formatFileSize(row.entry.bytes, intlLocale(currentLocale()))}</span>
+        </>
+      )}
+    </PaletteSheet>
+  );
+};

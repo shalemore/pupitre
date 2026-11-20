@@ -1,0 +1,857 @@
+/*
+ * Style layers from lowest to highest. Later layers win, regardless of selector specificity, so a
+ * theme can override the app defaults and user settings always override the theme:
+ *
+ *   theme            the design scales: durations, curves, fonts, radii and shadows
+ *   base             app defaults: tokens, html/body, window chrome, native scrollbars
+ *   editor           the document's layout and default look (features/editor/editor.css)
+ *   components       component classes a theme may replace (floating-panel, pressable, ...)
+ *   utilities        the styles Panda generates for a component's element
+ *   document-theme   the active theme, injected at runtime (lib/theme.ts)
+ *   plugin           a plugin's styles, scoped to the document (lib/plugin-styles.ts)
+ *   preferences      user settings, applied by appearance.ts and the block at the end of this file
+ *
+ * A style rule must live in one of these layers: an unlayered rule outranks every layer and no
+ * theme could ever override it. `scripts/check-css.ts` enforces that, and that every token a theme
+ * reads is defined. @keyframes are the exception: they have no layers and a later definition wins,
+ * so a theme replaces one by defining it again.
+ */
+@layer reset, base, editor, theme, components, utilities, document-theme, plugin, preferences;
+
+@import "./features/editor/editor.css";
+
+/*
+ * Design tokens (following the Claude Design System collected in open-claude-ui, colors in OKLCH):
+ * - Surface steps: 0 window chrome (title bar, sidebar), 1 document canvas, 2 cards, 3 popovers, told apart by small lightness steps and hairline borders;
+ * - A single accent color, terracotta;
+ * - Alpha steps, borders and shadows are derived from the primary text color, so light and dark pair up automatically.
+ * Raw values are defaults for themes to override and live in the base layer; derived tokens are
+ * evaluated at use and follow the theme. How to write a theme: the `theming-pupitre` skill.
+ */
+@layer base {
+  /* The element each window renders into */
+  #root {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+  }
+
+  :root {
+    --ui-surface-0: oklch(0.972 0 0);
+    --ui-surface-1: oklch(0.99 0 0);
+    --ui-surface-2: oklch(1 0 0);
+    --ui-surface-3: oklch(1 0 0);
+
+    --ui-text-primary: oklch(0.185 0 0);
+    --ui-text-secondary: oklch(0.44 0 0);
+    --ui-text-muted: oklch(0.63 0 0);
+
+    --ui-brand: oklch(0.665 0.131 40.6);
+    --ui-brand-hover: oklch(0.6 0.155 39);
+    --ui-danger: oklch(0.637 0.237 25.3);
+    --ui-success: oklch(0.58 0.13 155);
+    --ui-segmented-thumb: oklch(1 0 0);
+    /* Thumbs of switches and sliders */
+    --ui-knob: oklch(1 0 0);
+
+    --ui-shadow-near: oklch(0 0 0 / 5%);
+    --ui-shadow-far: oklch(0 0 0 / 8%);
+    --ui-shadow-float: oklch(0 0 0 / 12%);
+
+    /* Multiplies every corner radius: 0 gives square corners, 2 rounder ones */
+    --ui-radius-scale: 1;
+
+    /* Thickness of a scrollbar, the native one and the thumb ScrollView draws in its place */
+    --ui-scrollbar-thickness: 6px;
+
+    --ui-ring-inner: 0px;
+    --ui-ring-outer: 1px;
+
+    /* Width of the hairlines that separate controls and blocks */
+    --ui-border-width: 1px;
+
+    /*
+     * How the theme wants the fallback font placed in the document stack. `mono` keeps it after the
+     * generic families, so a CJK fallback does not take a monospaced document out of its grid.
+     */
+    --font-stack-intent: text;
+
+    /*
+     * Default look of the document. A theme overrides these the way it overrides colors, and the
+     * editor's own rules read them, so a theme that changes one need not restate the rule.
+     */
+    --md-page-padding-block: 3em;
+    --md-link-underline: none;
+    --md-heading-weight: 650;
+    --md-heading-line-height: 1.3;
+    --md-strong-weight: 650;
+    --md-h1-size: 2em;
+    --md-h2-size: 1.5em;
+    --md-h3-size: 1.25em;
+    --md-h4-size: 1.1em;
+    --md-h5-size: 1em;
+    --md-h6-size: 1em;
+    --md-code-padding: 0.1em 0.25em;
+    --md-code-radius: var(--radius-xs);
+    --md-code-block-size: 0.875em;
+    --md-table-heading-weight: 600;
+    --md-footnote-underline-offset: 0.15em;
+
+    /* Code colors used by the code block highlighter (features/editor/code-highlight.ts) */
+    --syntax-keyword: oklch(0.55 0.2 25);
+    --syntax-string: oklch(0.45 0.12 145);
+    --syntax-special-string: oklch(0.5 0.13 250);
+    --syntax-number: oklch(0.5 0.15 250);
+    --syntax-variable: var(--ui-text-primary);
+    --syntax-definition: oklch(0.5 0.13 55);
+    --syntax-function: oklch(0.5 0.17 300);
+    --syntax-type: oklch(0.5 0.13 55);
+    --syntax-property: oklch(0.5 0.13 250);
+    --syntax-comment: var(--ui-text-muted);
+    --syntax-operator: oklch(0.55 0.2 25);
+    --syntax-punctuation: var(--ui-text-secondary);
+    --syntax-invalid: var(--ui-danger);
+  }
+
+  /*
+   * On a high-density screen a CSS pixel is more than one physical pixel, so a 1px border reads as
+   * a heavy line. Half a pixel lands on one physical pixel at 2x and stays crisp.
+   */
+  @media (min-resolution: 2dppx) {
+    :root {
+      --ui-border-width: 0.5px;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ui-surface-0: oklch(0.145 0 0);
+      --ui-surface-1: oklch(0.185 0 0);
+      --ui-surface-2: oklch(0.205 0 0);
+      --ui-surface-3: oklch(0.23 0 0);
+
+      --ui-text-primary: oklch(0.97 0 0);
+      --ui-text-secondary: oklch(0.72 0 0);
+      --ui-text-muted: oklch(0.51 0 0);
+
+      --ui-brand-hover: oklch(0.7 0.125 40);
+      --ui-danger: oklch(0.704 0.191 22.2);
+      --ui-success: oklch(0.76 0.14 155);
+      --ui-segmented-thumb: oklch(0.36 0 0);
+      --ui-knob: oklch(0.92 0 0);
+
+      --ui-shadow-near: oklch(0 0 0 / 40%);
+      --ui-shadow-far: oklch(0 0 0 / 40%);
+      --ui-shadow-float: oklch(0 0 0 / 65%);
+
+      --ui-ring-inner: 1px;
+      --ui-ring-outer: 0px;
+
+      --syntax-keyword: oklch(0.75 0.15 25);
+      --syntax-string: oklch(0.8 0.12 145);
+      --syntax-special-string: oklch(0.78 0.1 230);
+      --syntax-number: oklch(0.78 0.1 230);
+      --syntax-definition: oklch(0.8 0.12 65);
+      --syntax-function: oklch(0.8 0.1 300);
+      --syntax-type: oklch(0.8 0.12 65);
+      --syntax-property: oklch(0.78 0.1 230);
+      --syntax-operator: oklch(0.75 0.15 25);
+    }
+  }
+
+  :root {
+    --ui-alpha-1: oklch(from var(--ui-text-primary) l c h / 5%);
+    --ui-alpha-2: oklch(from var(--ui-text-primary) l c h / 10%);
+    --ui-alpha-3: oklch(from var(--ui-text-primary) l c h / 20%);
+    --ui-ring-color: oklch(from var(--ui-text-primary) l c h / 10%);
+    --ui-segmented-track: oklch(from var(--ui-text-primary) l c h / 7%);
+    /* Fill of text fields and dropdown triggers: a recess in whatever surface holds them */
+    --ui-field: oklch(from var(--ui-surface-0) l c h / 60%);
+    /*
+     * What a selection washes over the text. Relative to the accent, which already has a value per
+     * colour scheme, so it needs no dark variant of its own; a theme whose accent fills blocks
+     * replaces it, since such a wash would vanish into them.
+     */
+    --ui-selection: oklch(from var(--ui-brand) l c h / 22%);
+    /* ==highlight== in the document, for themes that do not pick their own */
+    --md-highlight: oklch(0.91 0.11 92 / 75%);
+
+    --ui-shadow-sm: 0 1px 2px var(--ui-shadow-near), 0 2px 8px var(--ui-shadow-far);
+    --ui-shadow-md: 0 2px 4px var(--ui-shadow-near), 0 6px 16px var(--ui-shadow-far);
+    --ui-shadow-popover:
+      inset 0 0 0 var(--ui-ring-inner) var(--ui-ring-color),
+      0 0 0 var(--ui-ring-outer) var(--ui-ring-color), 0 8px 24px var(--ui-shadow-float),
+      0 2px 6px var(--ui-shadow-far);
+    --ui-focus-shadow:
+      inset 0 0 0 1px var(--ui-surface-1), 0 0 0 1.5px var(--ui-brand),
+      0 0 6px 1px oklch(from var(--ui-brand) l c h / 30%);
+
+    --foreground: var(--ui-text-primary);
+    --popover: var(--ui-surface-3);
+    --primary: var(--ui-text-primary);
+    --primary-foreground: var(--ui-surface-1);
+    --secondary: var(--ui-alpha-1);
+    --secondary-foreground: var(--ui-text-primary);
+    --muted: var(--ui-alpha-1);
+    --muted-foreground: var(--ui-text-secondary);
+    --accent: var(--ui-alpha-1);
+    --brand: var(--ui-brand);
+    --brand-foreground: oklch(1 0 0);
+    --destructive: var(--ui-danger);
+    --border: var(--ui-alpha-2);
+    --input: var(--ui-alpha-3);
+
+    /*
+     * Diagram (Mermaid) colors: node fill and outline, connecting lines, text and one accent for
+     * notes and highlights. They are converted to hex when a diagram is drawn, so they must be
+     * plain colors, not relative or translucent ones.
+     */
+    --diagram-fill: var(--ui-surface-0);
+    --diagram-stroke: var(--ui-text-muted);
+    --diagram-line: var(--ui-text-secondary);
+    --diagram-text: var(--ui-text-primary);
+    --diagram-accent: var(--ui-brand);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ui-field: oklch(from var(--ui-surface-0) l c h / 40%);
+      --md-highlight: oklch(0.82 0.13 88 / 28%);
+    }
+  }
+
+  /* In the base layer, so a theme may replace the wash itself as well as the token */
+  ::selection {
+    background-color: var(--ui-selection);
+  }
+}
+
+/*
+ * The scales below are the only values components use; a component never invents its own size,
+ * duration or curve.
+ *
+ * Type: text-2xs (11px) captions, descriptions and shortcuts; text-xs (12px) everything else in the
+ * interface, the choices of a dropdown included; text-base and text-xl for headings.
+ *
+ * Radii, by role, nested corners following outer = inner + gap:
+ *   xs marks and search hits, sm small icon buttons and keycaps, md controls and list rows,
+ *   lg cards and status panels (and items inside a p-1 popover),
+ *   xl popovers and floating bars, 2xl dialogs, full pills, dots and thumbs.
+ *
+ * Motion, by role:
+ *   fast (60ms) press feedback and menu highlights; snap (120ms) toggles and indicators;
+ *   ui (150ms) hover and color changes, the default; base (200ms) floating panels and rows
+ *   arriving; sheet (300ms) folding chrome and page fades; slow (450ms) the spring back after
+ *   a press.
+ *   ease-out-expo settles quickly and is the default; ease-snap for things that click into
+ *   place; ease-enter for content arriving; ease-spring overshoots slightly, for releases.
+ */
+@layer theme {
+  :root {
+    /* The type scale; a theme may resize the whole interface from here */
+    --text-2xs: 0.6875rem;
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-xl: 1.25rem;
+
+    --transition-duration-fast: 60ms;
+    --transition-duration-snap: 120ms;
+    --transition-duration-ui: 150ms;
+    --transition-duration-base: 200ms;
+    --transition-duration-sheet: 300ms;
+    --transition-duration-slow: 450ms;
+
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-snap: cubic-bezier(0.32, 0.72, 0, 1);
+    --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
+    /* A damped spring sampled into linear(): about 9% overshoot, settled by the end */
+    --ease-spring: linear(
+      0,
+      0.2459,
+      0.6526,
+      0.9468,
+      1.0764,
+      1.0915,
+      1.0585,
+      1.0219,
+      0.9993,
+      0.9914,
+      0.9921,
+      0.9957,
+      0.9988,
+      1.0004,
+      1
+    );
+
+    /*
+     * The document's own motion, by what moves. This is the one place to change it: a theme sets
+     * these in its own layer, which sits above this one, so its values win without `!important`.
+     *   enter  a marker or a quote's bar appearing while the cursor moves
+     *   block  a formula, a diagram or a table arriving
+     *   line   a line of a code block growing
+     *   leave  a block fading out where the text replaced it
+     *   fold   a details section opening or closing
+     *   view   the window cross-fading a theme change or a view swap
+     */
+    --motion-enter-duration: var(--transition-duration-snap);
+    --motion-enter-ease: var(--ease-enter);
+    --motion-block-duration: var(--transition-duration-base);
+    --motion-block-ease: var(--ease-enter);
+    --motion-line-duration: var(--transition-duration-snap);
+    --motion-line-ease: var(--ease-out-expo);
+    --motion-leave-duration: var(--transition-duration-snap);
+    --motion-leave-ease: var(--ease-out-expo);
+    --motion-fold-duration: var(--transition-duration-sheet);
+    --motion-fold-ease: var(--ease-out-expo);
+    --motion-view-duration: var(--transition-duration-sheet);
+    --motion-view-ease: var(--ease-enter);
+
+    --font-sans:
+      -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Roboto, Helvetica,
+      Arial, sans-serif;
+    /*
+     * Chinese in code takes a Chinese monospace face when one is installed; otherwise it falls back
+     * to the interface font of the system language through system-ui. The generic monospace maps to
+     * a serif face (SimSun) on Chinese Windows, so it stays last.
+     */
+    --font-mono:
+      "JetBrains Mono", "Cascadia Code", "Fira Code", Consolas, "Liberation Mono", Menlo,
+      "Sarasa Mono SC", "Sarasa Mono TC", "Noto Sans Mono CJK SC", "Noto Sans Mono CJK TC",
+      "Source Han Mono SC", "Source Han Mono TC", system-ui, monospace;
+
+    --radius-xs: calc(2px * var(--ui-radius-scale));
+    --radius-sm: calc(4px * var(--ui-radius-scale));
+    --radius-md: calc(6px * var(--ui-radius-scale));
+    --radius-lg: calc(8px * var(--ui-radius-scale));
+    --radius-xl: calc(12px * var(--ui-radius-scale));
+    --radius-2xl: calc(16px * var(--ui-radius-scale));
+    --radius-full: 9999px;
+
+    --shadow-sm: var(--ui-shadow-sm);
+    --shadow-md: var(--ui-shadow-md);
+    --shadow-float: var(--ui-shadow-popover);
+    --shadow-focus: var(--ui-focus-shadow);
+    --shadow-segmented-thumb: inset 0 0 0 1px var(--ui-alpha-2), 0 1px 2px var(--ui-shadow-far);
+
+    /* The red of the native Windows close button and the white on it, so the drawn caption
+       buttons match the system ones */
+    --color-window-close: #c42b1c;
+    --color-window-close-foreground: #ffffff;
+  }
+}
+
+/*
+ * The surface of a panel that floats over the window, such as a dropdown or a menu: every one of
+ * them is the same card around the p-1 its items sit in, and they all arrive the same way. Only
+ * the opacity animates: a panel's shadow is large, and scaling the panel would sweep that shadow
+ * across whatever sits beside it, such as a title bar under the menu labels. A panel leaves at
+ * once: a menu swapped for the one beside it would otherwise keep its border and shadow next to
+ * its successor for a few frames. A theme replaces this one rule to restyle every popover,
+ * dropdown and menu at once; it may also redefine the keyframes, which are global.
+ */
+@keyframes panel-enter {
+  from {
+    opacity: 0;
+    /*
+     * The panel rises from two pixels below where it is laid out. A panel that centres itself sets
+     * --panel-translate-x and -y, which are part of the value here: replacing them with a bare
+     * `0 2px` would slide a centred sheet in from its uncentred corner.
+     */
+    translate: var(--panel-translate-x, 0px) calc(var(--panel-translate-y, 0px) + 2px);
+  }
+}
+
+@keyframes panel-exit {
+  from,
+  to {
+    opacity: 0;
+  }
+}
+
+@layer components {
+  .floating-panel {
+    border-radius: var(--radius-xl);
+    background-color: var(--popover);
+    box-shadow: var(--ui-shadow-popover);
+    /*
+     * Every panel arrives the same way: a short fade with a two-pixel rise. The motion depends
+     * neither on the anchor nor on the panel's size, so a dropdown, a context menu, a title-bar menu
+     * or one that opens from a side all feel alike. Keeping the movement to two pixels leaves the
+     * panel's large shadow in place instead of sweeping it over whatever sits beside the panel.
+     */
+    animation: panel-enter var(--transition-duration-base) var(--ease-enter);
+
+    /* A panel that takes another's place, such as a menu swapped across the title bar, appears at
+       once: replaying the arrival under the pointer reads as a flicker */
+    &[data-instant] {
+      animation: none;
+    }
+
+    /* A theme may keep a closing panel on screen with an animation of its own; it takes no pointer
+       while it folds away */
+    &[data-closed] {
+      pointer-events: none;
+      /* The panel leaves at once. It takes an exit animation to give the presence something to
+         wait for, and that keeps the panel's last frame invisible instead of composited over
+         whatever replaced it */
+      animation: panel-exit var(--transition-duration-fast) var(--ease-out-expo) forwards;
+    }
+  }
+}
+
+/*
+ * An outline row under a folded section keeps its place in the list while it closes, so the rows
+ * below move up with it. `interpolate-size` lets the browser animate to and from `auto`; without
+ * it the row closes at once.
+ */
+@layer components {
+  .outline-row {
+    interpolate-size: allow-keywords;
+    block-size: auto;
+    overflow: clip;
+    transition:
+      block-size var(--transition-duration-sheet) var(--ease-out-expo),
+      opacity var(--transition-duration-sheet) var(--ease-out-expo);
+
+    &[data-folded] {
+      block-size: 0;
+      margin-block-start: 0;
+      opacity: 0;
+    }
+  }
+}
+
+/*
+ * Press feedback for buttons: a quick squeeze on press and a spring back on release. Colors keep
+ * the regular hover timing; only the scale uses the spring.
+ */
+@layer components {
+  .pressable {
+    transition-property: scale, color, background-color, border-color, box-shadow, opacity;
+    transition-duration:
+      var(--transition-duration-slow), var(--transition-duration-ui), var(--transition-duration-ui),
+      var(--transition-duration-ui), var(--transition-duration-ui), var(--transition-duration-ui);
+    transition-timing-function:
+      var(--ease-spring), var(--ease-out-expo), var(--ease-out-expo), var(--ease-out-expo),
+      var(--ease-out-expo), var(--ease-out-expo);
+
+    &:active {
+      scale: 0.97;
+      transition-duration: var(--transition-duration-fast);
+      transition-timing-function: ease-out;
+    }
+  }
+}
+
+/*
+ * Scroll edge fade, set up by ScrollView when the Edge Fade setting is on: content dissolves into
+ * the edges it can still scroll past. The setting only adds the .scroll-fade class; how it looks
+ * is up to this rule, which a theme can replace. ScrollView sets data-overflow to the edges
+ * with more content, and the edge lengths are registered so they transition when scrolling
+ * reaches an end.
+ */
+@property --scroll-fade-top {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --scroll-fade-bottom {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@layer components {
+  /* The menu grows from the corner of the button or entry it hangs from (menu-popup.tsx) */
+  [data-menu-panel] {
+    transform-origin: var(--kb-popper-content-transform-origin, center);
+  }
+
+  .scroll-fade {
+    /*
+     * The edge fades along a curve rather than a straight ramp: opacity is read non-linearly, so a
+     * two-stop gradient leaves a visible edge where the fade begins.
+     */
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(0 0 0 / 5%) calc(var(--scroll-fade-top) * 0.15),
+      rgb(0 0 0 / 18%) calc(var(--scroll-fade-top) * 0.32),
+      rgb(0 0 0 / 38%) calc(var(--scroll-fade-top) * 0.5),
+      rgb(0 0 0 / 64%) calc(var(--scroll-fade-top) * 0.68),
+      rgb(0 0 0 / 88%) calc(var(--scroll-fade-top) * 0.85),
+      black var(--scroll-fade-top),
+      black calc(100% - var(--scroll-fade-bottom)),
+      rgb(0 0 0 / 88%) calc(100% - var(--scroll-fade-bottom) * 0.85),
+      rgb(0 0 0 / 64%) calc(100% - var(--scroll-fade-bottom) * 0.68),
+      rgb(0 0 0 / 38%) calc(100% - var(--scroll-fade-bottom) * 0.5),
+      rgb(0 0 0 / 18%) calc(100% - var(--scroll-fade-bottom) * 0.32),
+      rgb(0 0 0 / 5%) calc(100% - var(--scroll-fade-bottom) * 0.15),
+      transparent
+    );
+    transition-property: --scroll-fade-top, --scroll-fade-bottom;
+    transition-duration: var(--transition-duration-base);
+
+    &[data-overflow~="top"] {
+      --scroll-fade-top: 1.5rem;
+    }
+
+    &[data-overflow~="bottom"] {
+      --scroll-fade-bottom: 1.5rem;
+    }
+  }
+}
+
+@layer base {
+  html,
+  body {
+    background-color: var(--ui-surface-1);
+    color: var(--ui-text-primary);
+    font-family: var(--pref-ui-font, var(--font-sans));
+    -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: auto;
+    text-rendering: auto;
+    user-select: none;
+    -webkit-user-select: none;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  :root[data-platform="darwin"],
+  :root[data-platform="darwin"] :is(body, input, textarea, button, select) {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  input,
+  textarea,
+  button,
+  select {
+    font-family: inherit;
+    letter-spacing: inherit;
+    -webkit-font-smoothing: inherit;
+    -moz-osx-font-smoothing: inherit;
+  }
+
+  textarea {
+    field-sizing: content;
+  }
+
+  /*
+   * Lines break for reading: a heading keeps its lines balanced, and a paragraph does not end with
+   * a lone word. Chromium does both while it lays the text out, so this measures nothing.
+   */
+  :is(h1, h2, h3, h4) {
+    text-wrap: balance;
+  }
+
+  :is(p, li, dd, blockquote) {
+    text-wrap: pretty;
+  }
+
+  ::-webkit-scrollbar {
+    width: var(--ui-scrollbar-thickness);
+    height: var(--ui-scrollbar-thickness);
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--ui-alpha-2);
+    border-radius: var(--radius-full);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--ui-alpha-3);
+  }
+
+  html {
+    color-scheme: light dark;
+    scroll-behavior: smooth;
+  }
+}
+
+/* Animation setting: system follows the OS "reduce motion" preference, off always disables, on always enables */
+@media (prefers-reduced-motion: reduce) {
+  :root[data-motion="system"] *,
+  :root[data-motion="system"] *::before,
+  :root[data-motion="system"] *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:root[data-motion="off"] *,
+:root[data-motion="off"] *::before,
+:root[data-motion="off"] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+/*
+ * View transitions (withViewTransition): the browser paints the window before and after an update
+ * and cross-fades the two images, which is how a swap that reflows every line can move without
+ * CodeMirror's measurements ever seeing the animation. The default cross-fade keeps the app's timing.
+ */
+@layer base {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: var(--motion-view-duration);
+    animation-timing-function: var(--motion-view-ease);
+  }
+}
+
+/*
+ * The title bar hides the parts it can do without as it narrows, and the menu bar clips its own
+ * items once nothing is left to hide (see GIVE_WAY in title-bar.tsx). These belong to the utilities
+ * layer, where their selectors outweigh the `flex` and `shrink-0` classes on those parts.
+ */
+@layer utilities {
+  .app-title-bar[data-compact~="count"] [data-bar-part="count"] {
+    display: none;
+  }
+
+  /*
+   * The title is centered in the window, not in the room left beside the caption buttons: the
+   * grid reaches under them on their side, and its end keeps its content clear of them.
+   */
+  .app-title-bar[data-caption-side="right"] [data-title-grid] {
+    margin-inline-end: calc(-1 * var(--caption-buttons-width));
+  }
+
+  .app-title-bar[data-caption-side="right"] [data-title-grid] > :last-child {
+    padding-inline-end: var(--caption-buttons-width);
+  }
+
+  .app-title-bar[data-caption-side="left"] [data-title-grid] {
+    margin-inline-start: calc(-1 * var(--caption-buttons-width));
+  }
+
+  .app-title-bar[data-caption-side="left"] [data-title-grid] > :first-child {
+    padding-inline-start: var(--caption-buttons-width);
+  }
+}
+
+@layer base {
+  :root {
+    /* Three w-11.5 caption buttons; the title grid reaches under them to center on the window */
+    --caption-buttons-width: 8.625rem;
+  }
+
+  :root[data-platform="darwin"] {
+    /* The traffic lights the native bar draws */
+    --caption-buttons-width: 80px;
+  }
+
+  /*
+   * The window title bar is draggable except for interactive controls. On Windows and Linux the
+   * native caption buttons are drawn by the Window Controls Overlay; the titlebar-area variables
+   * describe the free space between them, so the padding works whichever side the buttons are on
+   * (GNOME can put them on the left). On macOS the traffic lights sit on the left.
+   * Caption buttons do not flip with the text direction, hence physical padding.
+   */
+  .app-title-bar {
+    -webkit-app-region: drag;
+    padding-left: max(0.75rem, env(titlebar-area-x, 0px));
+    padding-right: max(
+      0.75rem,
+      calc(100vw - env(titlebar-area-x, 0px) - env(titlebar-area-width, 100vw))
+    );
+  }
+
+  :root[data-platform="darwin"] .app-title-bar {
+    padding-left: 80px;
+  }
+
+  /* Caption buttons drawn by the page sit flush with the window edge */
+  .app-title-bar[data-caption-buttons="left"] {
+    padding-left: 0;
+  }
+
+  .app-title-bar[data-caption-buttons="right"] {
+    padding-right: 0;
+  }
+
+  .app-no-drag {
+    -webkit-app-region: no-drag;
+  }
+
+  .app-title-bar :is(button, input, select, a) {
+    -webkit-app-region: no-drag;
+  }
+
+  /* Exporting to PDF and printing keep only the document; interface elements carry `_print: { display: "none" }` */
+  @media print {
+    html,
+    body {
+      height: auto;
+      overflow: visible;
+    }
+  }
+}
+
+/*
+ * User preferences: the settings that outrank the theme. They sit above `document-theme` so that
+ * a badly written theme cannot make a setting stop working (see the layer order at the top).
+ */
+@layer preferences {
+  .md-document {
+    box-sizing: content-box;
+    max-width: var(--pref-content-width);
+    /*
+     * The document is centered by the two auto margins, its own and the one the fold gutter takes
+     * on the other side (editor.css): together they split the free room, which puts the document in
+     * the middle and the fold markers right at its edge.
+     */
+    margin-inline: 0 auto;
+    /* Room on both sides of the text; this is app layout and not left to themes */
+    padding-inline: 4.5rem;
+    /* Without a chosen font, fall back to the theme's own font */
+    font-family: var(--pref-font-family, revert-layer);
+    font-size: var(--pref-font-size);
+    line-height: var(--pref-line-height);
+  }
+
+  :is(.md-code, .md-code-block, .md-front-matter, .md-html) {
+    font-family: var(--pref-code-font, revert-layer);
+  }
+
+  /*
+   * A file that is not Markdown shows its text as it is written: code takes the code font and the
+   * whole width rather than the reading column, with no block, card or background of its own.
+   */
+  .md-document[data-document-kind="code"] {
+    max-width: none;
+    font-family: var(--pref-code-font, var(--font-mono));
+  }
+
+  /* The code font choice sets the interface's monospace too: shortcuts, kbd, versions */
+  .font-mono {
+    font-family: var(--pref-code-font, var(--font-mono));
+  }
+
+  /*
+   * Writing modes, see writing-modes.ts. Rendered blocks (tables, math, diagrams) are widgets
+   * rather than lines and are dimmed with the rest.
+   */
+  .md-document.focus-mode > :not(.is-current) {
+    opacity: 0.3;
+  }
+
+  /*
+   * A line that wraps over several rows dims like the rest except where the caret is: the band is
+   * the row it holds, one line height tall from the line's padding, so it covers the row whatever
+   * the fonts make of it. writing-modes.ts only says which row that is.
+   */
+  .md-document.focus-mode > .focus-row {
+    --focus-row-start: calc(var(--focus-pad, 0px) + var(--focus-row) * 1lh);
+    --focus-row-end: calc(var(--focus-row-start) + 1lh);
+    mask-image: linear-gradient(
+      to bottom,
+      rgb(0 0 0 / 0.3) 0 var(--focus-row-start),
+      #000 var(--focus-row-start) var(--focus-row-end),
+      rgb(0 0 0 / 0.3) var(--focus-row-end)
+    );
+  }
+
+  /* Room below the document for its last lines to reach the place the line is held at */
+  .md-document.typewriter-mode[data-typewriter="center"] {
+    padding-block-end: 50vh;
+  }
+
+  .md-document.typewriter-mode[data-typewriter="top"] {
+    padding-block-end: 100vh;
+  }
+
+  /* The margin a line held at the bottom keeps below it, even at the end of the document */
+  .md-document.typewriter-mode[data-typewriter="bottom"] {
+    padding-block-end: var(--typewriter-edge);
+  }
+
+  /*
+   * A held line keeps its place for the first and the last line too, which takes room above as
+   * well. --typewriter-edge is its edge margin (writing-modes.ts).
+   */
+  .md-document.typewriter-mode[data-typewriter-fixed="true"][data-typewriter="center"] {
+    padding-block: 50vh;
+  }
+
+  .md-document.typewriter-mode[data-typewriter-fixed="true"][data-typewriter="top"] {
+    padding-block-start: var(--typewriter-edge);
+  }
+
+  .md-document.typewriter-mode[data-typewriter-fixed="true"][data-typewriter="bottom"] {
+    padding-block-start: calc(100vh - var(--typewriter-edge));
+    padding-block-end: var(--typewriter-edge);
+  }
+
+  /*
+   * Printing. A page has no viewport to hold a line in, so the room typewriter mode and the theme
+   * leave above and below the document goes with it, and so does the dimming.
+   *
+   * These rules sit in this layer rather than after it on purpose: CodeMirror hands the padding
+   * back to the layers with revert-layer, which takes the value of the last layer that sets it, so
+   * an unlayered reset would be undone there. They also weigh as much as the rules they undo, since
+   * logical and physical padding count as one property when the cascade picks a winner.
+   */
+  @media print {
+    .md-document,
+    .md-document.typewriter-mode[data-typewriter][data-typewriter-fixed] {
+      max-width: none;
+      padding: 0;
+      padding-block: 0;
+    }
+
+    .md-document.focus-mode > :not(.is-current),
+    .md-document.focus-mode > .focus-row {
+      opacity: 1;
+      mask-image: none;
+    }
+
+    /* A heading at the foot of a page stays with the text it introduces */
+    .md-document > .md-heading {
+      break-after: avoid;
+    }
+
+    /* Blocks that only read as a whole stay on one page */
+    .md-document
+      > :is(.md-code-block, .md-image-preview, .md-math-block, .md-mermaid, .md-table-block) {
+      break-inside: avoid;
+    }
+
+    /* No page starts or ends with a stray line of a paragraph */
+    .md-document {
+      orphans: 3;
+      widows: 3;
+    }
+
+    /* A caret and a selection are interface, not paper */
+    .cm-cursorLayer,
+    .cm-selectionLayer {
+      display: none;
+    }
+
+    /*
+     * The gaps at the end of the document lead nowhere, and are what pushes a page of their own
+     * once the text ends near the page's edge: CodeMirror keeps the lines themselves blocks, so
+     * the padding that made the gaps is what gives way.
+     */
+    .md-document > .md-blank:last-child {
+      padding-block: 0;
+    }
+
+    .md-document > .cm-line:last-child,
+    .md-document > .cm-line:has(+ .md-blank:last-child) {
+      padding-block-end: 0;
+    }
+  }
+}

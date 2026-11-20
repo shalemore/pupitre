@@ -1,7 +1,7 @@
 <p align="right">English | <a href="README.zh-CN.md">简体中文</a></p>
 
 <p align="left">
-  <img src="src/renderer/public/logo.svg" width="180" height="180" alt="Pupitre" />
+  <img src="apps/desktop/src/renderer/public/logo.svg" width="180" height="180" alt="Pupitre" />
 </p>
 
 <h1 align="left">Pupitre</h1>

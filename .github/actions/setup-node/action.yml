@@ -1,14 +1,18 @@
 name: "Setup Node"
-description: "Set up Node.js and install dependencies from the lockfile"
+description: "Set up Node.js, pnpm and install dependencies from the lockfile"
 
 runs:
   using: "composite"
   steps:
+    - uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
+      with:
+        version: 10.34.9
+
     - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
       with:
         node-version: lts/*
-        cache: npm
+        cache: pnpm
 
     - name: Install dependencies
       shell: bash
-      run: npm ci
+      run: pnpm install --frozen-lockfile
