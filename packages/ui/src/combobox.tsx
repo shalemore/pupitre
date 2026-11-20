@@ -154,21 +154,23 @@ export function Combobox(props: ComboboxProps) {
         });
       }}
     >
-      <div class={cx(control, props.class)}>
+      <div data-slot="combobox-control" class={cx(control, props.class)}>
         <ComboboxInput
+          data-slot="combobox-input"
           aria-label={props["aria-label"] ?? ""}
           placeholder={props.placeholder ?? ""}
           class={input}
           onFocus={(e) => e.currentTarget.select()}
           style={selected()?.style ?? {}}
         />
-        <ComboboxTrigger class={trigger}>
+        <ComboboxTrigger data-slot="combobox-trigger" class={trigger}>
           <span aria-hidden="true" class={icon}>
             <ChevronDown class={chevronIcon} />
           </span>
         </ComboboxTrigger>
       </div>
       <ComboboxContent
+        data-slot="combobox-content"
         side="bottom"
         align="start"
         sideOffset={6}
@@ -196,6 +198,7 @@ export function Combobox(props: ComboboxProps) {
           <For each={filtered()}>
             {(option) => (
               <ComboboxItem
+                data-slot="combobox-item"
                 value={keyOf(option.value)}
                 label={option.label}
                 class={cx("group", item)}

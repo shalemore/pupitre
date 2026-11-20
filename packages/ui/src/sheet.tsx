@@ -57,6 +57,9 @@ const centered = css({
  * A panel over the window, holding a query and the rows it picks. UI SDK traps the focus, gives it
  * back, and closes the sheet on a press beside it or on Escape. It is drawn outside the window's
  * own tree, because the title bar clips its children and the sheet covers them.
+ *
+ * The parts carry `data-sheet` rather than `data-slot`: UI SDK names its own slots with `data-slot`
+ * and its value wins over the one a caller passes, so a sheet's anchor has to be a name of its own.
  */
 export const Sheet: Component<SheetProps> = (props) => (
   <Dialog
@@ -65,9 +68,9 @@ export const Sheet: Component<SheetProps> = (props) => (
       if (!open) props.onClose();
     }}
   >
-    <DialogBackdrop data-slot="sheet-backdrop" class={backdrop} />
+    <DialogBackdrop data-sheet="backdrop" class={backdrop} />
     <DialogContent
-      data-slot="sheet"
+      data-sheet="panel"
       class={cx(FLOATING_PANEL, panel, props.placement === "top" ? atTop : centered)}
       onKeyDown={props.onKeyDown}
     >

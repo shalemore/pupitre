@@ -69,6 +69,7 @@ const label = css({
 export function SegmentedControl<T extends string>(props: SegmentedControlProps<T>) {
   return (
     <UiSegmentedControl
+      data-slot="segmented-control"
       value={props.value}
       onValueChange={(value) => {
         const option = props.options.find((candidate) => candidate.value === value);
@@ -76,10 +77,10 @@ export function SegmentedControl<T extends string>(props: SegmentedControlProps<
       }}
       class={cx(root, props.class)}
     >
-      <SegmentedControlIndicator class={indicator} />
+      <SegmentedControlIndicator data-slot="segmented-indicator" class={indicator} />
       <For each={props.options}>
         {(option) => (
-          <SegmentedControlItem value={option.value} class={label}>
+          <SegmentedControlItem data-slot="segmented-item" value={option.value} class={label}>
             {option.icon}
             <span class={truncate}>{option.label}</span>
           </SegmentedControlItem>

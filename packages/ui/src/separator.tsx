@@ -16,6 +16,7 @@ export function Separator(props: SeparatorProps) {
 
   return (
     <UiSeparator
+      data-slot="separator"
       orientation={props.orientation ?? "horizontal"}
       decorative={props.decorative ?? false}
       class={cx(separator, isVertical() ? vertical : horizontal, props.class)}

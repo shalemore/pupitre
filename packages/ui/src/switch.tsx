@@ -42,6 +42,7 @@ const thumb = css({
 export function Switch(props: SwitchProps) {
   return (
     <UiSwitch
+      data-slot="switch"
       checked={props.checked}
       onCheckedChange={(checked) => props.onChange(checked)}
       disabled={props.disabled ?? false}

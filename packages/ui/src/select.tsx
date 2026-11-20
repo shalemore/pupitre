@@ -165,6 +165,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
       }}
     >
       <SelectTrigger
+        data-slot="select-trigger"
         aria-label={props["aria-label"]}
         class={cx(trigger({ variant: props.variant }), props.class)}
       >
@@ -194,6 +195,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
         </span>
       </SelectTrigger>
       <SelectContent
+        data-slot="select-content"
         side="bottom"
         align="end"
         sideOffset={6}
@@ -216,6 +218,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
           <For each={props.options}>
             {(option) => (
               <SelectItem
+                data-slot="select-item"
                 value={keyOf(option.value)}
                 label={option.label}
                 class={cx("group", item({ compact: props.variant === "ghost" }))}

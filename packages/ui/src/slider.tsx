@@ -73,6 +73,7 @@ export function Slider(props: SliderProps) {
 
   return (
     <UiSlider
+      data-slot="slider"
       value={value()}
       min={props.min}
       max={props.max}
@@ -89,14 +90,16 @@ export function Slider(props: SliderProps) {
       class={root}
     >
       <SliderControl
+        data-slot="slider-control"
         class={control}
         onPointerDown={() => {
           dragging = true;
         }}
       >
-        <SliderTrack class={track}>
-          <SliderIndicator class={fill} />
+        <SliderTrack data-slot="slider-track" class={track}>
+          <SliderIndicator data-slot="slider-fill" class={fill} />
           <SliderThumb
+            data-slot="slider-thumb"
             index={0}
             class={thumb}
             aria-label={props["aria-label"]}
