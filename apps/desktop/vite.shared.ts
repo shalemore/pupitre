@@ -9,6 +9,7 @@ export const alias: AliasOptions = {
   "@": resolve("src/renderer"),
   "@root": resolve("."),
   "@agents": resolve("../../agents"),
+  "solid-js/web": "@solidjs/web",
 };
 
 export const sharedAlias: AliasOptions = { "@shared": resolve("src/shared") };
