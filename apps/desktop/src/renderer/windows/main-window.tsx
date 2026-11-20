@@ -576,58 +576,59 @@ export const MainWindow: Component = () => {
   onSettled(() => {
     loadPlugins();
     setupPluginStyles();
+    const cleanups: (() => void)[] = [];
     // Capture, so the wheel that folds the chrome does not also scroll the document under it
     const area = contentArea;
-    const stopWheel =
-      area === undefined
-        ? undefined
-        : listen(
-            area,
-            "wheel",
-            (event) => {
-              if (!chrome.onWheel(event)) return;
-              event.preventDefault();
-              event.stopPropagation();
-            },
-            { capture: true, passive: false },
-          );
+    if (area !== undefined) {
+      cleanups.push(
+        listen(
+          area,
+          "wheel",
+          (event) => {
+            if (!chrome.onWheel(event)) return;
+            event.preventDefault();
+            event.stopPropagation();
+          },
+          { capture: true, passive: false },
+        ),
+      );
+    }
     void session.restoreOnStartup();
     // The editor is a chunk of its own; fetch it while the welcome screen is idle, so the first
     // document does not wait for both the file and the code that shows it
     requestIdleCallback(() => void import("@/features/editor/markdown-editor"), { timeout: 2000 });
     // A window that closes before the next write of the draft was due keeps the last typing all the same
-    const stopPageHide = listen(window, "pagehide", session.flushDraft);
+    cleanups.push(listen(window, "pagehide", session.flushDraft));
     // dragover's default behavior must be prevented, otherwise drop never fires
-    const stopDragOver = listen(window, "dragover", (event) => event.preventDefault());
-    const stopDrop = listen(window, "drop", (event) => {
-      const file = event.dataTransfer?.files[0];
-      if (file && event.dataTransfer?.items[0]?.webkitGetAsEntry()?.isDirectory) {
+    cleanups.push(listen(window, "dragover", (event) => event.preventDefault()));
+    cleanups.push(
+      listen(window, "drop", (event) => {
+        const file = event.dataTransfer?.files[0];
+        if (file && event.dataTransfer?.items[0]?.webkitGetAsEntry()?.isDirectory) {
+          event.preventDefault();
+          showFolder(desktop.getPathForFile(file));
+          return;
+        }
+        // Images dropped into the editor are handled by the editor; this only takes over Markdown files dropped on the window
+        if (!file || file.type.startsWith("image/")) return;
         event.preventDefault();
-        showFolder(desktop.getPathForFile(file));
-        return;
-      }
-      // Images dropped into the editor are handled by the editor; this only takes over Markdown files dropped on the window
-      if (!file || file.type.startsWith("image/")) return;
-      event.preventDefault();
-      void session.openPath(desktop.getPathForFile(file));
-    });
-    const unlistenCommands = desktop.on("app:command", runCommand);
-    const unlistenPlugins = desktop.on("plugin:document-request", (request) => {
-      void desktop.invoke(
-        "plugin:document-response",
-        request.id,
-        answerDocumentRequest(editor(), request),
-      );
-    });
+        void session.openPath(desktop.getPathForFile(file));
+      }),
+    );
+    cleanups.push(desktop.on("app:command", runCommand));
+    cleanups.push(
+      desktop.on("plugin:document-request", (request) => {
+        void desktop.invoke(
+          "plugin:document-response",
+          request.id,
+          answerDocumentRequest(editor(), request),
+        );
+      }),
+    );
 
     return () => {
-      stopWheel?.();
-      stopPageHide();
-      stopDragOver();
-      stopDrop();
+      for (const cleanup of cleanups) cleanup();
       session.dispose();
-      unlistenCommands();
-      unlistenPlugins();
     };
   });
 
