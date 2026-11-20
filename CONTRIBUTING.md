@@ -1,7 +1,7 @@
 # Contributing
 
-Needs Node.js 22 or later and pnpm 10; `packageManager` in `package.json` pins the version, and
-`corepack enable` or `npm install -g pnpm@10` provides it.
+Needs Node.js 24 or later and pnpm 12; `packageManager` in `package.json` pins the version, and
+`corepack enable` or `npm install -g pnpm@12` provides it.
 
 ```sh
 pnpm install
