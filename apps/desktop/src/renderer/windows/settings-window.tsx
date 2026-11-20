@@ -1,6 +1,5 @@
 import { t } from "@pupitre/i18n/solid";
 import { ScrollView, Tabs, TabsContent } from "@pupitre/ui";
-import { makeEventListener } from "@solid-primitives/event-listener";
 import { createEffect, onSettled, type Component } from "solid-js";
 import { PopupLayer } from "@/components/popup-layer";
 import { TitleBar } from "@/components/title-bar";
@@ -11,6 +10,7 @@ import { ExportSection } from "@/features/settings/export-section";
 import { GeneralSection } from "@/features/settings/general-section";
 import { MarkdownSection } from "@/features/settings/markdown-section";
 import { PluginsSection } from "@/features/settings/plugins-section";
+import { listen } from "@/lib/listen";
 import { css, cx } from "@/styled-system/css";
 import { SettingsNav } from "./settings-nav";
 import { barDivider, windowFrame } from "./window-chrome";
@@ -45,11 +45,11 @@ export const SettingsWindow: Component = () => {
     },
   );
 
-  onSettled(() => {
-    return makeEventListener(window, "keydown", (e) => {
-      if (e.key === "Escape" && !e.defaultPrevented) window.close();
-    });
-  });
+  onSettled(() =>
+    listen(window, "keydown", (event) => {
+      if (event.key === "Escape" && !event.defaultPrevented) window.close();
+    }),
+  );
 
   return (
     <div class={cx(windowFrame({ immersive: false }), settingsFrame)}>

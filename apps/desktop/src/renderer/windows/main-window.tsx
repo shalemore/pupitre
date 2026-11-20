@@ -11,7 +11,6 @@ import { headingKey, type OutlineHeading } from "@pupitre/markdown";
 import { ImagePreview } from "@pupitre/plugin-source-mode";
 import { messageOf } from "@pupitre/utils";
 import { makeEventListener } from "@solid-primitives/event-listener";
-import { scheduleIdle } from "@solid-primitives/scheduled";
 import {
   createEffect,
   createMemo,
@@ -36,6 +35,7 @@ import { documentPosition } from "@/lib/document/positions";
 import { createDocumentSession } from "@/lib/document/session";
 import { isolateFileName } from "@/lib/file";
 import { createImmersiveChrome } from "@/lib/immersive-chrome";
+import { listen } from "@/lib/listen";
 import { setupPluginStyles } from "@/lib/plugin-styles";
 import { loadPlugins } from "@/lib/plugins";
 import { recentFiles } from "@/lib/recent-files";
@@ -365,13 +365,13 @@ export const MainWindow: Component = () => {
   // Close the find bar and the version history when the document changes: the old document's
   // matches and versions mean nothing to the one that replaced it
   createEffect(
-    () => session.activeDocument()?.id,
-    (id, previous) => {
+    () => ({ id: session.activeDocument()?.id, overlay: overlay()?.kind }),
+    (shown, previous) => {
       // A tab patch, such as a keystroke or a save, rebuilds the tabs array without changing the
       // document; only another document is a reason to close these and unfold the chrome
-      if (id === previous) return;
+      if (shown.id === previous?.id) return;
       setFindMode("closed");
-      if (overlay()?.kind === "history") closeOverlay();
+      if (shown.overlay === "history") closeOverlay();
       // A picture has no outline, counts or heading; the editor fills these in again when it
       // shows the text of the next document
       setOutline([]);
@@ -384,13 +384,14 @@ export const MainWindow: Component = () => {
   // The editor of a document is built after the document changed, so the match waits for the
   // handle of the new editor rather than for the document: revealing it on the one that is being
   // torn down would leave the new one at its remembered place instead of at the match
-  createEffect(editor, (handle) => {
-    const match = matchToReveal();
-    if (handle === undefined || match === undefined) return;
-    if (session.activeDocument()?.path !== match.path) return;
-    setMatchToReveal(undefined);
-    handle.revealRange(match.from, match.to);
-  });
+  createEffect(
+    () => ({ handle: editor(), match: matchToReveal(), path: session.activeDocument()?.path }),
+    ({ handle, match, path }) => {
+      if (handle === undefined || match === undefined || path !== match.path) return;
+      setMatchToReveal(undefined);
+      handle.revealRange(match.from, match.to);
+    },
+  );
 
   const closeWorkspaceSearch = () => {
     closeOverlay();
@@ -575,40 +576,41 @@ export const MainWindow: Component = () => {
   onSettled(() => {
     loadPlugins();
     setupPluginStyles();
-    const cleanups: (() => void)[] = [];
     // Capture, so the wheel that folds the chrome does not also scroll the document under it
     const area = contentArea;
-    if (area !== undefined) {
-      const onWheel = (event: WheelEvent) => {
-        if (!chrome.onWheel(event)) return;
-        event.preventDefault();
-        event.stopPropagation();
-      };
-      cleanups.push(makeEventListener(area, "wheel", onWheel, { capture: true, passive: false }));
-    }
+    const stopWheel =
+      area === undefined
+        ? undefined
+        : listen(
+            area,
+            "wheel",
+            (event) => {
+              if (!chrome.onWheel(event)) return;
+              event.preventDefault();
+              event.stopPropagation();
+            },
+            { capture: true, passive: false },
+          );
     void session.restoreOnStartup();
     // The editor is a chunk of its own; fetch it while the welcome screen is idle, so the first
     // document does not wait for both the file and the code that shows it
-    const warmEditor = () => void import("@/features/editor/markdown-editor");
-    scheduleIdle(warmEditor, 2000)();
+    requestIdleCallback(() => void import("@/features/editor/markdown-editor"), { timeout: 2000 });
     // A window that closes before the next write of the draft was due keeps the last typing all the same
-    cleanups.push(makeEventListener(window, "pagehide", session.flushDraft));
+    const stopPageHide = listen(window, "pagehide", session.flushDraft);
     // dragover's default behavior must be prevented, otherwise drop never fires
-    cleanups.push(makeEventListener(window, "dragover", (e) => e.preventDefault()));
-    cleanups.push(
-      makeEventListener(window, "drop", (e) => {
-        const file = e.dataTransfer?.files[0];
-        if (file && e.dataTransfer?.items[0]?.webkitGetAsEntry()?.isDirectory) {
-          e.preventDefault();
-          showFolder(desktop.getPathForFile(file));
-          return;
-        }
-        // Images dropped into the editor are handled by the editor; this only takes over Markdown files dropped on the window
-        if (!file || file.type.startsWith("image/")) return;
-        e.preventDefault();
-        void session.openPath(desktop.getPathForFile(file));
-      }),
-    );
+    const stopDragOver = listen(window, "dragover", (event) => event.preventDefault());
+    const stopDrop = listen(window, "drop", (event) => {
+      const file = event.dataTransfer?.files[0];
+      if (file && event.dataTransfer?.items[0]?.webkitGetAsEntry()?.isDirectory) {
+        event.preventDefault();
+        showFolder(desktop.getPathForFile(file));
+        return;
+      }
+      // Images dropped into the editor are handled by the editor; this only takes over Markdown files dropped on the window
+      if (!file || file.type.startsWith("image/")) return;
+      event.preventDefault();
+      void session.openPath(desktop.getPathForFile(file));
+    });
     const unlistenCommands = desktop.on("app:command", runCommand);
     const unlistenPlugins = desktop.on("plugin:document-request", (request) => {
       void desktop.invoke(
@@ -619,7 +621,10 @@ export const MainWindow: Component = () => {
     });
 
     return () => {
-      for (const cleanup of cleanups) cleanup();
+      stopWheel?.();
+      stopPageHide();
+      stopDragOver();
+      stopDrop();
       session.dispose();
       unlistenCommands();
       unlistenPlugins();
