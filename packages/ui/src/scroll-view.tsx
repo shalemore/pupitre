@@ -12,7 +12,7 @@ const MIN_THUMB = 24;
 
 export interface ScrollViewProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "onScroll" | "class"> {
   /** The element to render, for lists and landmarks that must keep their own tag. */
-  as?: ValidComponent;
+  as?: ValidComponent | keyof JSX.IntrinsicElements;
   class?: string | undefined;
 }
 

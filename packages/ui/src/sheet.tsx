@@ -1,5 +1,6 @@
-import { Dialog } from "@kobalte/core/dialog";
-import type { Component, JSX } from "solid-js";
+import type { JSX } from "@solidjs/web";
+import { Dialog, DialogBackdrop, DialogContent, DialogTitle } from "@ui-sdk/solid/dialog";
+import type { Component } from "solid-js";
 import { css, cx } from "./styled-system/css";
 import { FLOATING_PANEL, srOnly } from "./styles";
 
@@ -53,7 +54,7 @@ const centered = css({
 });
 
 /**
- * A panel over the window, holding a query and the rows it picks. Kobalte traps the focus, gives it
+ * A panel over the window, holding a query and the rows it picks. UI SDK traps the focus, gives it
  * back, and closes the sheet on a press beside it or on Escape. It is drawn outside the window's
  * own tree, because the title bar clips its children and the sheet covers them.
  */
@@ -64,16 +65,14 @@ export const Sheet: Component<SheetProps> = (props) => (
       if (!open) props.onClose();
     }}
   >
-    <Dialog.Portal>
-      <Dialog.Overlay data-slot="sheet-backdrop" class={backdrop} />
-      <Dialog.Content
-        data-slot="sheet"
-        class={cx(FLOATING_PANEL, panel, props.placement === "top" ? atTop : centered)}
-        onKeyDown={props.onKeyDown}
-      >
-        <Dialog.Title class={srOnly}>{props.title}</Dialog.Title>
-        {props.children}
-      </Dialog.Content>
-    </Dialog.Portal>
+    <DialogBackdrop data-slot="sheet-backdrop" class={backdrop} />
+    <DialogContent
+      data-slot="sheet"
+      class={cx(FLOATING_PANEL, panel, props.placement === "top" ? atTop : centered)}
+      onKeyDown={props.onKeyDown}
+    >
+      <DialogTitle class={srOnly}>{props.title}</DialogTitle>
+      {props.children}
+    </DialogContent>
   </Dialog>
 );

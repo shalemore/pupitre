@@ -1,12 +1,39 @@
-import { Tabs as KobalteTabs } from "@kobalte/core/tabs";
-import type { JSX } from "solid-js";
+import type { JSX } from "@solidjs/web";
+import {
+  Tabs as UiTabs,
+  TabsList as UiTabsList,
+  TabsPanel,
+  TabsTab,
+  type TabsOrientation,
+} from "@ui-sdk/solid/tabs";
 import { css, cx } from "./styled-system/css";
 
+export interface TabsProps {
+  value?: string | null | undefined;
+  defaultValue?: string | null | undefined;
+  onValueChange?: (value: string | null) => void;
+  orientation?: TabsOrientation;
+  class?: string | undefined;
+  children: JSX.Element;
+}
+
 /**
- * Vertical tabs for the settings window sidebar. Arrow-key navigation, focus management and ARIA attributes are handled by Kobalte,
- * so this only provides the styling.
+ * Vertical tabs for the settings window sidebar. Arrow-key navigation, focus management and ARIA
+ * attributes are handled by UI SDK, so this only provides the styling.
  */
-export const Tabs = KobalteTabs;
+export function Tabs(props: TabsProps) {
+  return (
+    <UiTabs
+      value={props.value}
+      defaultValue={props.defaultValue}
+      onValueChange={props.onValueChange ? (value) => props.onValueChange?.(value) : undefined}
+      orientation={props.orientation ?? "horizontal"}
+      class={props.class}
+    >
+      {props.children}
+    </UiTabs>
+  );
+}
 
 const list = css({ display: "flex", flexDirection: "column", gap: "0.5", outlineStyle: "none" });
 const trigger = css({
@@ -35,25 +62,21 @@ const trigger = css({
 const content = css({ outlineStyle: "none" });
 
 export function TabsList(props: { class?: string; children: JSX.Element }) {
-  return (
-    <KobalteTabs.List data-slot="tabs-list" class={cx(list, props.class)}>
-      {props.children}
-    </KobalteTabs.List>
-  );
+  return <UiTabsList class={cx(list, props.class)}>{props.children}</UiTabsList>;
 }
 
 export function TabsTrigger(props: { value: string; children: JSX.Element }) {
   return (
-    <KobalteTabs.Trigger data-slot="tabs-trigger" value={props.value} class={trigger}>
+    <TabsTab value={props.value} class={trigger}>
       {props.children}
-    </KobalteTabs.Trigger>
+    </TabsTab>
   );
 }
 
 export function TabsContent(props: { value: string; children: JSX.Element }) {
   return (
-    <KobalteTabs.Content data-slot="tabs-content" value={props.value} class={content}>
+    <TabsPanel value={props.value} class={content}>
       {props.children}
-    </KobalteTabs.Content>
+    </TabsPanel>
   );
 }

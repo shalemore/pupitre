@@ -1,4 +1,10 @@
-import { Slider as KobalteSlider } from "@kobalte/core/slider";
+import {
+  Slider as UiSlider,
+  SliderControl,
+  SliderIndicator,
+  SliderThumb,
+  SliderTrack,
+} from "@ui-sdk/solid/slider";
 import { createEffect, createSignal } from "solid-js";
 import { css } from "./styled-system/css";
 
@@ -19,6 +25,7 @@ const root = css({
   userSelect: "none",
   alignItems: "center",
 });
+const control = css({ display: "flex", width: "full", alignItems: "center", paddingBlock: "1.5" });
 const track = css({
   position: "relative",
   height: "1",
@@ -28,12 +35,17 @@ const track = css({
 });
 const fill = css({
   position: "absolute",
+  left: "[var(--slider-indicator-start)]",
+  width: "[var(--slider-indicator-size)]",
   height: "full",
   borderRadius: "full",
   backgroundColor: "brand",
 });
 const thumb = css({
-  top: "-1.5",
+  position: "absolute",
+  top: "[50%]",
+  left: "[var(--slider-thumb-position)]",
+  translate: "[-50% -50%]",
   display: "block",
   width: "4",
   height: "4",
@@ -52,47 +64,48 @@ export function Slider(props: SliderProps) {
   const [value, setValue] = createSignal(props.value);
   let dragging = false;
 
-  createEffect(() => {
-    const next = props.value;
-    if (!dragging) setValue(next);
-  });
+  createEffect(
+    () => props.value,
+    (next) => {
+      if (!dragging) setValue(next);
+    },
+  );
 
   return (
-    <KobalteSlider
-      data-slot="slider"
-      value={[value()]}
-      minValue={props.min}
-      maxValue={props.max}
+    <UiSlider
+      value={value()}
+      min={props.min}
+      max={props.max}
       step={props.step}
-      onChange={([next]) => {
-        if (next === undefined) return;
+      onValueChange={(next) => {
+        if (typeof next !== "number") return;
         setValue(next);
         props.onChange(next);
       }}
-      onChangeEnd={() => {
+      onValueCommit={() => {
         dragging = false;
       }}
       aria-label={props["aria-label"]}
       class={root}
     >
-      <KobalteSlider.Track
-        data-slot="slider-track"
-        class={track}
+      <SliderControl
+        class={control}
         onPointerDown={() => {
           dragging = true;
         }}
       >
-        <KobalteSlider.Fill data-slot="slider-fill" class={fill} />
-        <KobalteSlider.Thumb
-          data-slot="slider-thumb"
-          class={thumb}
-          onPointerDown={() => {
-            dragging = true;
-          }}
-        >
-          <KobalteSlider.Input />
-        </KobalteSlider.Thumb>
-      </KobalteSlider.Track>
-    </KobalteSlider>
+        <SliderTrack class={track}>
+          <SliderIndicator class={fill} />
+          <SliderThumb
+            index={0}
+            class={thumb}
+            aria-label={props["aria-label"]}
+            onPointerDown={() => {
+              dragging = true;
+            }}
+          />
+        </SliderTrack>
+      </SliderControl>
+    </UiSlider>
   );
 }

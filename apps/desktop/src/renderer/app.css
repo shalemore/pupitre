@@ -16,7 +16,7 @@
  * reads is defined. @keyframes are the exception: they have no layers and a later definition wins,
  * so a theme replaces one by defining it again.
  */
-@layer reset, base, editor, theme, components, utilities, document-theme, plugin, preferences;
+@layer ui-sdk, reset, base, editor, theme, components, utilities, document-theme, plugin, preferences;
 
 @import "./features/editor/editor.css";
 

@@ -1,5 +1,10 @@
-import { SegmentedControl as KobalteSegmentedControl } from "@kobalte/core/segmented-control";
-import { For, type JSX } from "solid-js";
+import type { JSX } from "@solidjs/web";
+import {
+  SegmentedControl as UiSegmentedControl,
+  SegmentedControlIndicator,
+  SegmentedControlItem,
+} from "@ui-sdk/solid/segmented-control";
+import { For } from "solid-js";
 import { css, cx } from "./styled-system/css";
 import { truncate } from "./styles";
 
@@ -26,18 +31,21 @@ const root = css({
 });
 const indicator = css({
   position: "absolute",
-  top: "0.5",
-  left: "0.5",
+  top: "[var(--segmented-control-indicator-top)]",
+  left: "[var(--segmented-control-indicator-left)]",
+  width: "[var(--segmented-control-indicator-width)]",
+  height: "[var(--segmented-control-indicator-height)]",
   borderRadius: "md",
   backgroundColor: "segmented.thumb",
   boxShadow: "segmentedThumb",
-  transitionProperty: "transform, width",
+  transitionProperty: "left, width",
   transitionDuration: "snap",
   transitionTimingFunction: "snap",
 });
-const item = css({ position: "relative", flex: "1" });
 const label = css({
   layerStyle: "interactive",
+  position: "relative",
+  flex: "1",
   display: "flex",
   height: "6",
   cursor: "pointer",
@@ -47,7 +55,8 @@ const label = css({
   borderRadius: "md",
   paddingInline: "2",
   color: "muted.foreground",
-  _peerFocusVisible: { boxShadow: "focus" },
+  outlineStyle: "none",
+  _focusVisible: { boxShadow: "focus" },
   _hover: { color: "foreground" },
   "&[data-checked]": { fontWeight: "medium", color: "foreground" },
   "& svg": { width: "3.5", height: "3.5", flexShrink: 0 },
@@ -55,32 +64,27 @@ const label = css({
 
 /**
  * A row of mutually exclusive options on a recessed track, with a thumb that slides to the
- * selected one. Kobalte measures the selected item and positions the indicator.
+ * selected one. UI SDK measures the selected item and positions the indicator.
  */
 export function SegmentedControl<T extends string>(props: SegmentedControlProps<T>) {
   return (
-    <KobalteSegmentedControl
-      data-slot="segmented-control"
+    <UiSegmentedControl
       value={props.value}
-      onChange={(value) => {
+      onValueChange={(value) => {
         const option = props.options.find((candidate) => candidate.value === value);
         if (option) props.onChange(option.value);
       }}
       class={cx(root, props.class)}
     >
-      <KobalteSegmentedControl.Indicator data-slot="segmented-indicator" class={indicator} />
+      <SegmentedControlIndicator class={indicator} />
       <For each={props.options}>
         {(option) => (
-          <KobalteSegmentedControl.Item value={option.value} class={item}>
-            {/* `_peerFocusVisible` reads this marker class beside the label */}
-            <KobalteSegmentedControl.ItemInput class="peer" />
-            <KobalteSegmentedControl.ItemLabel data-slot="segmented-item" class={label}>
-              {option.icon}
-              <span class={truncate}>{option.label}</span>
-            </KobalteSegmentedControl.ItemLabel>
-          </KobalteSegmentedControl.Item>
+          <SegmentedControlItem value={option.value} class={label}>
+            {option.icon}
+            <span class={truncate}>{option.label}</span>
+          </SegmentedControlItem>
         )}
       </For>
-    </KobalteSegmentedControl>
+    </UiSegmentedControl>
   );
 }
