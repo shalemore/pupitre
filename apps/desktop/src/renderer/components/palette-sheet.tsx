@@ -1,4 +1,4 @@
-import { Input, ScrollView, Sheet, type ScrollViewProps } from "@pupitre/ui";
+import { Input, ScrollView, Sheet } from "@pupitre/ui";
 import type { JSX } from "@solidjs/web";
 import { Command, CommandInput, CommandItem, CommandList } from "@ui-sdk/solid/command";
 import { createMemo, createSignal, For, onSettled, Show } from "solid-js";
@@ -105,12 +105,7 @@ export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
         />
         <CommandList
           render={(listProps) => (
-            <ScrollView
-              as="ul"
-              {...(listProps as ScrollViewProps)}
-              aria-label={props.title}
-              class={list}
-            />
+            <ScrollView as="ul" {...listProps} aria-label={props.title} class={list} />
           )}
         >
           <For each={shown()}>

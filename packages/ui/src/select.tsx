@@ -13,7 +13,7 @@ import { Check, ChevronDown } from "lucide-solid";
 import { For, Show } from "solid-js";
 import { Badge } from "./badge";
 import { popupLayer } from "./popup-layer";
-import { ScrollView, type ScrollViewProps } from "./scroll-view";
+import { ScrollView } from "./scroll-view";
 import { cva, css, cx } from "./styled-system/css";
 import { FLOATING_PANEL, truncate, truncateStyle } from "./styles";
 
@@ -207,7 +207,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
           render={(listProps) => (
             <ScrollView
               as="ul"
-              {...(listProps as ScrollViewProps)}
+              {...listProps}
               class={listbox}
               style={{
                 "max-height": "min(18rem, calc(var(--available-height, 30rem) - 0.5rem))",

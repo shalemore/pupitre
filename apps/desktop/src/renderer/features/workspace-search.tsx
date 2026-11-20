@@ -6,14 +6,7 @@ import type {
 } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
-import {
-  Badge,
-  Input,
-  ScrollView,
-  Sheet,
-  ToggleIconButton,
-  type ScrollViewProps,
-} from "@pupitre/ui";
+import { Badge, Input, ScrollView, Sheet, ToggleIconButton } from "@pupitre/ui";
 import { truncateStyle } from "@pupitre/ui/styles";
 import { debounce } from "@solid-primitives/scheduled";
 import type { JSX } from "@solidjs/web";
@@ -296,11 +289,7 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
 
         <CommandList
           render={(listProps) => (
-            <ScrollView
-              {...(listProps as ScrollViewProps)}
-              aria-label={t().workspaceSearch.title}
-              class={list}
-            />
+            <ScrollView {...listProps} aria-label={t().workspaceSearch.title} class={list} />
           )}
         >
           <For each={groups()}>
