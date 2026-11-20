@@ -1,6 +1,16 @@
-import { Select as KobalteSelect } from "@kobalte/core/select";
+import type { JSX } from "@solidjs/web";
+import {
+  Select as UiSelect,
+  SelectContent,
+  SelectItem,
+  SelectItemIndicator,
+  SelectItemText,
+  SelectList,
+  SelectTrigger,
+  SelectValue,
+} from "@ui-sdk/solid/select";
 import { Check, ChevronDown } from "lucide-solid";
-import { type JSX, Show } from "solid-js";
+import { For, Show } from "solid-js";
 import { Badge } from "./badge";
 import { popupLayer } from "./popup-layer";
 import { ScrollView, type ScrollViewProps } from "./scroll-view";
@@ -30,7 +40,6 @@ export interface SelectProps<T extends string> {
   "aria-label"?: string;
 }
 
-// Kobalte treats a selected key of "" as "nothing selected" and shows the placeholder instead of the label, so an option with an empty value needs a stand-in key
 const EMPTY_VALUE_KEY = "__empty__";
 
 // An option keeps the height of the trigger it belongs to, so the open list does not look top-heavy
@@ -130,112 +139,116 @@ const chevron = css({
   transitionProperty: "transform",
   transitionDuration: "base",
   transitionTimingFunction: "outExpo",
-  _expanded: { transform: "rotate(180deg)" },
+  "[data-open] &": { transform: "rotate(180deg)" },
 });
 const content = css({
   zIndex: "50",
-  minWidth: "var(--kb-popper-anchor-width)",
+  minWidth: "var(--anchor-width)",
   borderRadius: "sm",
-  transformOrigin: "var(--kb-popper-content-transform-origin)",
+  transformOrigin: "var(--transform-origin)",
   padding: "0.5",
 });
 const listbox = css({ outlineStyle: "none" });
 
-/** A dropdown on top of Kobalte, which handles keyboard navigation, typeahead and ARIA. */
+/** A dropdown on top of UI SDK, which handles keyboard navigation, typeahead and ARIA. */
 export function Select<T extends string>(props: SelectProps<T>) {
+  const keyOf = (val: T): string => (val === "" ? EMPTY_VALUE_KEY : val);
   const selected = () => props.options.find((option) => option.value === props.value);
 
   return (
-    <KobalteSelect<SelectOption<T>>
-      options={[...props.options]}
-      optionValue={(option) => (option.value === "" ? EMPTY_VALUE_KEY : option.value)}
-      optionTextValue="label"
-      value={selected() ?? null}
-      onChange={(option) => {
+    <UiSelect<string>
+      value={keyOf(props.value)}
+      onValueChange={(next) => {
+        if (next === null) return;
+        const option = props.options.find((candidate) => keyOf(candidate.value) === next);
         if (option) props.onChange(option.value);
       }}
-      gutter={6}
-      placement="bottom-end"
-      // A long list near the bottom of the window shifts or flips inside it and scrolls instead
-      slide
-      fitViewport
-      overflowPadding={8}
-      itemComponent={(itemProps) => (
-        <KobalteSelect.Item
-          data-slot="select-item"
-          item={itemProps.item}
-          class={cx("group", item({ compact: props.variant === "ghost" }))}
-        >
-          <span class={itemText}>
-            <span class={itemLine}>
-              <KobalteSelect.ItemLabel class={itemLabel} style={itemProps.item.rawValue.style}>
-                {itemProps.item.rawValue.label}
-              </KobalteSelect.ItemLabel>
-              <Show when={itemProps.item.rawValue.hint}>
-                {(hint) => <span class={itemHint}>/ {hint()}</span>}
-              </Show>
-              <Show when={itemProps.item.rawValue.badge}>
-                {(badge) => (
-                  <Badge variant="muted" size="sm">
-                    {badge()}
-                  </Badge>
-                )}
-              </Show>
-            </span>
-            <Show when={itemProps.item.rawValue.description}>
-              {(description) => (
-                <KobalteSelect.ItemDescription class={itemHint}>
-                  {description()}
-                </KobalteSelect.ItemDescription>
-              )}
-            </Show>
-          </span>
-          <KobalteSelect.ItemIndicator>
-            <Check class={check} />
-          </KobalteSelect.ItemIndicator>
-        </KobalteSelect.Item>
-      )}
     >
-      <KobalteSelect.Trigger
-        data-slot="select-trigger"
+      <SelectTrigger
         aria-label={props["aria-label"]}
         class={cx(trigger({ variant: props.variant }), props.class)}
       >
-        <KobalteSelect.Value<SelectOption<T>> class={value}>
-          {(state) => (
-            <>
-              <span class={truncate} style={state.selectedOption().style}>
-                {state.selectedOption().label}
-              </span>
-              <Show when={state.selectedOption().hint}>
-                {(hint) => <span class={itemHint}>/ {hint()}</span>}
-              </Show>
-              <Show when={state.selectedOption().badge}>
-                {(badge) => (
-                  <Badge variant="muted" size="sm">
-                    {badge()}
-                  </Badge>
-                )}
-              </Show>
-            </>
-          )}
-        </KobalteSelect.Value>
-        <KobalteSelect.Icon class={chevron}>
+        <SelectValue class={value}>
+          <Show when={selected()}>
+            {(option) => (
+              <>
+                <span class={truncate} style={option().style}>
+                  {option().label}
+                </span>
+                <Show when={option().hint}>
+                  {(hint) => <span class={itemHint}>/ {hint()}</span>}
+                </Show>
+                <Show when={option().badge}>
+                  {(badge) => (
+                    <Badge variant="muted" size="sm">
+                      {badge()}
+                    </Badge>
+                  )}
+                </Show>
+              </>
+            )}
+          </Show>
+        </SelectValue>
+        <span aria-hidden="true" class={chevron}>
           <ChevronDown class={chevronIcon({ variant: props.variant })} />
-        </KobalteSelect.Icon>
-      </KobalteSelect.Trigger>
-      <KobalteSelect.Portal mount={popupLayer()}>
-        <KobalteSelect.Content data-slot="select-content" class={cx(FLOATING_PANEL, content)}>
-          <KobalteSelect.Listbox
-            as={(listboxProps: ScrollViewProps) => <ScrollView as="ul" {...listboxProps} />}
-            class={listbox}
-            style={{
-              "max-height":
-                "min(18rem, calc(var(--kb-popper-content-available-height, 30rem) - 0.5rem))",
-            }}
-          />
-        </KobalteSelect.Content>
-      </KobalteSelect.Portal>
-    </KobalteSelect>
+        </span>
+      </SelectTrigger>
+      <SelectContent
+        side="bottom"
+        align="end"
+        sideOffset={6}
+        collisionPadding={8}
+        container={popupLayer()}
+        class={cx(FLOATING_PANEL, content)}
+      >
+        <SelectList
+          render={(listProps) => (
+            <ScrollView
+              as="ul"
+              {...(listProps as ScrollViewProps)}
+              class={listbox}
+              style={{
+                "max-height":
+                  "min(18rem, calc(var(--available-height, 30rem) - 0.5rem))",
+              }}
+            />
+          )}
+        >
+          <For each={props.options}>
+            {(option) => (
+              <SelectItem
+                value={keyOf(option.value)}
+                label={option.label}
+                class={cx("group", item({ compact: props.variant === "ghost" }))}
+              >
+                <span class={itemText}>
+                  <span class={itemLine}>
+                    <SelectItemText class={itemLabel} style={option.style ?? {}}>
+                      {option.label}
+                    </SelectItemText>
+                    <Show when={option.hint}>
+                      {(hint) => <span class={itemHint}>/ {hint()}</span>}
+                    </Show>
+                    <Show when={option.badge}>
+                      {(badge) => (
+                        <Badge variant="muted" size="sm">
+                          {badge()}
+                        </Badge>
+                      )}
+                    </Show>
+                  </span>
+                  <Show when={option.description}>
+                    {(description) => <span class={itemHint}>{description()}</span>}
+                  </Show>
+                </span>
+                <SelectItemIndicator>
+                  <Check class={check} />
+                </SelectItemIndicator>
+              </SelectItem>
+            )}
+          </For>
+        </SelectList>
+      </SelectContent>
+    </UiSelect>
   );
 }
