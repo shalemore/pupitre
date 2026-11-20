@@ -1,13 +1,12 @@
 import {
+  Menu,
   MenuCheckboxItem,
   MenuContent,
   MenuItem,
-  MenuPortal,
-  MenuRoot,
   MenuSub,
   MenuSubContent,
   MenuSubTrigger,
-} from "@kobalte/core/menu";
+} from "@ui-sdk/solid/menu";
 import type { MenuEntry } from "@pupitre/desktop-api/menu";
 import { Separator } from "@pupitre/ui";
 import { FLOATING_PANEL, menuPanel, rtlFlip, truncate } from "@pupitre/ui/styles";
@@ -134,9 +133,10 @@ export const MenuEntries: Component<{
                   }
                 >
                   <MenuCheckboxItem
+                    value={itemEntry().id}
                     checked={checked(itemEntry())}
                     disabled={itemEntry().enabled === false}
-                    onSelect={() => props.onSelect(itemEntry())}
+                    onCheckedChange={() => props.onSelect(itemEntry())}
                     class={item}
                   >
                     <ItemContent
@@ -157,11 +157,9 @@ export const MenuEntries: Component<{
                   />
                   <ChevronRight class={cx(submenuChevron, rtlFlip)} />
                 </MenuSubTrigger>
-                <MenuPortal>
-                  <MenuSubContent class={cx(FLOATING_PANEL, menuPanel)}>
-                    <MenuEntries entries={itemEntry().submenu ?? []} onSelect={props.onSelect} />
-                  </MenuSubContent>
-                </MenuPortal>
+                <MenuSubContent class={cx(FLOATING_PANEL, menuPanel)}>
+                  <MenuEntries entries={itemEntry().submenu ?? []} onSelect={props.onSelect} />
+                </MenuSubContent>
               </MenuSub>
             </Show>
           )}
@@ -172,34 +170,33 @@ export const MenuEntries: Component<{
 };
 
 /**
- * A menu drawn by the window, under the title bar or at the pointer. Kobalte places it, moves the
+ * A menu drawn by the window, under the title bar or at the pointer. UI SDK places it, moves the
  * highlight with the keyboard and closes it; the bar keeps it open while the pointer is over it.
  */
 export const MenuPopup: Component<MenuPopupProps> = (props) => (
-  <MenuRoot
+  <Menu
     open={!props.closing}
     modal={false}
-    placement={isRtl() ? "bottom-end" : "bottom-start"}
-    gutter={2}
-    fitViewport
-    getAnchorRect={() => props.anchor}
-    onOpenChange={(open) => {
-      if (!open) props.onClose();
+    onOpenChange={(open, details) => {
+      if (open) return;
+      const target = details.event?.target;
+      // A click in the bar is the bar's business: it switches or closes the menu itself
+      if (target instanceof Element && target.closest("[data-menu-bar]") !== null) {
+        details.cancel();
+        return;
+      }
+      props.onClose();
     }}
   >
-    <MenuPortal>
-      <MenuContent
-        data-menu-panel=""
-        onInteractOutside={(event) => {
-          // A click in the bar is the bar's business: it switches or closes the menu itself
-          if (event.target instanceof Element && event.target.closest("[data-menu-bar]") !== null) {
-            event.preventDefault();
-          }
-        }}
-        class={cx(FLOATING_PANEL, menuPanel)}
-      >
-        <MenuEntries entries={props.entries} onSelect={props.onSelect} />
-      </MenuContent>
-    </MenuPortal>
-  </MenuRoot>
+    <MenuContent
+      data-menu-panel=""
+      anchor={{ getBoundingClientRect: () => props.anchor }}
+      side="bottom"
+      align={isRtl() ? "end" : "start"}
+      sideOffset={2}
+      class={cx(FLOATING_PANEL, menuPanel)}
+    >
+      <MenuEntries entries={props.entries} onSelect={props.onSelect} />
+    </MenuContent>
+  </Menu>
 );

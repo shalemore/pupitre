@@ -1,4 +1,5 @@
-import { Menubar } from "@kobalte/core/menubar";
+import { Menu as UiMenu, MenuContent, MenuTrigger } from "@ui-sdk/solid/menu";
+import { Menubar } from "@ui-sdk/solid/menubar";
 import { desktop } from "@pupitre/desktop-api/client";
 import { TOP_MENUS, type MenuEntry, type Menus, type TopMenu } from "@pupitre/desktop-api/menu";
 import { t } from "@pupitre/i18n/solid";
@@ -140,42 +141,41 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
     >
       <For each={TOP_MENUS}>
         {(menu) => (
-          <Menubar.Menu
-            value={menu}
-            // Kobalte opens a menu when its trigger is pressed, and moves to the next one while a
-            // menu is open and the pointer is over the bar; the bar only follows it
-            onOpenChange={(isOpen) => {
-              if (isOpen) show(menu);
-              else if (open() === menu) hide();
+          <UiMenu
+            open={open() === menu}
+            onOpenChange={(isOpen, details) => {
+              if (isOpen) {
+                show(menu);
+                return;
+              }
+              // A press on the bar is the bar's business: it switches or closes the menu itself.
+              // Without this, a press on another trigger folds the open menu first, and the menu
+              // the click brings up arrives with the rise instead of taking its place.
+              const target = details.event?.target;
+              if (target instanceof Element && target.closest("[data-menu-bar]") !== null) {
+                details.cancel();
+                return;
+              }
+              if (open() === menu) hide();
             }}
           >
-            <Menubar.Trigger class={trigger}>{t().menu[menu]}</Menubar.Trigger>
-            <Menubar.Portal>
-              <Menubar.Content
-                data-instant={instant() === menu ? "" : undefined}
-                // A press on the bar is the bar's business: it switches or closes the menu itself.
-                // Without this, a press on another trigger folds the open menu first, and the menu
-                // the click brings up arrives with the rise instead of taking its place.
-                onInteractOutside={(event) => {
-                  if (
-                    event.target instanceof Element &&
-                    event.target.closest("[data-menu-bar]") !== null
-                  ) {
-                    event.preventDefault();
-                  }
+            <MenuTrigger class={trigger}>{t().menu[menu]}</MenuTrigger>
+            <MenuContent
+              side="bottom"
+              align="start"
+              sideOffset={8}
+              data-instant={instant() === menu ? "" : undefined}
+              class={cx(FLOATING_PANEL, menuPanel, menuBarPanel)}
+            >
+              <MenuEntries
+                entries={entries()[menu] ?? []}
+                onSelect={(entry) => {
+                  hide();
+                  void desktop.invoke("menu:click", entry.id);
                 }}
-                class={cx(FLOATING_PANEL, menuPanel, menuBarPanel)}
-              >
-                <MenuEntries
-                  entries={entries()[menu] ?? []}
-                  onSelect={(entry) => {
-                    hide();
-                    void desktop.invoke("menu:click", entry.id);
-                  }}
-                />
-              </Menubar.Content>
-            </Menubar.Portal>
-          </Menubar.Menu>
+              />
+            </MenuContent>
+          </UiMenu>
         )}
       </For>
     </Menubar>
@@ -234,7 +234,7 @@ export const MenuButton: Component<MenuButtonProps> = (props) => {
         data-menu-bar
         label={t().menu.menu}
         aria-haspopup="menu"
-        aria-expanded={panel.open() !== undefined}
+        aria-expanded={panel.open() !== undefined ? "true" : "false"}
         class={menuButton}
         // The button does not take the focus from the editor, so closing the menu gives typing back
         onPointerDown={(event) => event.preventDefault()}
