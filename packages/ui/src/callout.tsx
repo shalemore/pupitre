@@ -1,4 +1,5 @@
-import { type JSX, splitProps } from "solid-js";
+import type { JSX } from "@solidjs/web";
+import { omit } from "solid-js";
 import { cva, cx, type RecipeVariantProps } from "./styled-system/css";
 
 const calloutVariants = cva({
@@ -23,17 +24,17 @@ const calloutVariants = cva({
   },
 });
 
-export type CalloutProps = JSX.HTMLAttributes<HTMLDivElement> &
-  RecipeVariantProps<typeof calloutVariants>;
+export type CalloutProps = Omit<JSX.HTMLAttributes<HTMLDivElement>, "class"> &
+  RecipeVariantProps<typeof calloutVariants> & { class?: string | undefined };
 
 /** A tinted panel for a status message, such as the state of an update. */
 export function Callout(props: CalloutProps) {
-  const [local, rest] = splitProps(props, ["class", "variant"]);
+  const rest = omit(props, "class", "variant");
 
   return (
     <div
       data-slot="callout"
-      class={cx(calloutVariants({ variant: local.variant }), local.class)}
+      class={cx(calloutVariants({ variant: props.variant }), props.class)}
       {...rest}
     />
   );

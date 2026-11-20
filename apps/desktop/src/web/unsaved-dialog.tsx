@@ -1,7 +1,7 @@
 import type { UnsavedChoice } from "@pupitre/desktop-api";
 import { Button } from "@pupitre/ui";
-import { onMount, type Component } from "solid-js";
-import { render } from "solid-js/web";
+import { render } from "@solidjs/web";
+import { onSettled, type Component } from "solid-js";
 import { css, cx } from "@/styled-system/css";
 
 const panel = css({
@@ -42,7 +42,7 @@ const UnsavedDialog: Component<UnsavedDialogProps> = (props) => {
     props.onChoose(choice);
   };
 
-  onMount(() => dialog?.showModal());
+  onSettled(() => dialog?.showModal());
 
   return (
     <dialog

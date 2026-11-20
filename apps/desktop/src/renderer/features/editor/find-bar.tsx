@@ -9,7 +9,8 @@ import {
   WholeWord,
   X,
 } from "lucide-solid";
-import { createEffect, createSignal, on, Show, type Component, type JSX } from "solid-js";
+import type { JSX } from "@solidjs/web";
+import { createEffect, createSignal, Show, type Component } from "solid-js";
 import { css, cx } from "@/styled-system/css";
 import type { MatchStats, SearchOptions } from "./search";
 
@@ -117,36 +118,35 @@ export const FindBar: Component<FindBarProps> = (props) => {
   let searchInput: HTMLInputElement | undefined;
   let replaceInput: HTMLInputElement | undefined;
 
-  createEffect(() => {
-    props.onSearchChange({
+  createEffect(
+    () => ({
       search: searchText(),
       replace: replaceText(),
       caseSensitive: caseSensitive(),
       wholeWord: wholeWord(),
       regexp: regexp(),
-    });
-  });
+    }),
+    (options) => {
+      props.onSearchChange(options);
+    },
+  );
 
   // Each time the bar is reopened (or switched to replace), focus the matching input and select its text
   createEffect(
-    on(
-      () => props.showReplace,
-      (showReplace) => {
-        const input = showReplace ? replaceInput : searchInput;
-        input?.focus();
-        input?.select();
-      },
-    ),
+    () => props.showReplace,
+    (showReplace) => {
+      const input = showReplace ? replaceInput : searchInput;
+      input?.focus();
+      input?.select();
+    },
   );
 
   createEffect(
-    on(
-      () => props.initialSearch,
-      (text) => {
-        if (text) setSearchText(text);
-        searchInput?.select();
-      },
-    ),
+    () => props.initialSearch,
+    (text) => {
+      if (text) setSearchText(text);
+      searchInput?.select();
+    },
   );
 
   const handleKeyDown = (e: KeyboardEvent, onEnter: () => void, onShiftEnter: () => void) => {

@@ -3,8 +3,8 @@ import type { ChangeSpec } from "@codemirror/state";
 import type { EditorView } from "@codemirror/view";
 import { columnCount, editCell, imageIn, insertRow, type TableModel } from "@pupitre/markdown";
 import { css, cx } from "@pupitre/ui";
-import { type Accessor, type Component, createSelector, Index, type Setter, Show } from "solid-js";
-import { Dynamic } from "solid-js/web";
+import { Dynamic } from "@solidjs/web";
+import { type Accessor, type Component, createMemo, Repeat, type Setter, Show } from "solid-js";
 import { InlineContent } from "./inline-view";
 import { type CellPosition, TableCellImage } from "./table-cell";
 import { TableToolbar } from "./table-toolbar";
@@ -32,12 +32,11 @@ export const TableView: Component<TableViewProps> = (props) => {
   const { view } = props;
   const columns = () => columnCount(props.model());
   const rows = () => props.model().rows.length;
-  // Each cell subscribes to its own boolean, so moving the editing touches two cells, not the table
-  const activeCell = createSelector(() => {
-    const cell = props.active();
-    return cell === undefined ? "" : `${cell.row}:${cell.column}`;
-  });
-  const isActive = (row: number, column: number) => activeCell(`${row}:${column}`);
+  const isActive = (row: number, column: number) =>
+    createMemo(() => {
+      const cell = props.active();
+      return cell?.row === row && cell.column === column;
+    })();
 
   /** Applies an edit built from the current table, then moves the editing to `focus`. */
   const run = (edit: (model: TableModel) => ChangeSpec, focus?: CellPosition) => {
@@ -244,26 +243,26 @@ export const TableView: Component<TableViewProps> = (props) => {
       <div class={scrollX}>
         <table class={cx("md-table-view", "md-text-cursor", tableElement)}>
           <thead>
-            <Index each={header()}>
+            <Repeat count={header().length}>
               {() => (
                 <tr>
-                  <Index each={columnIndexes()}>
-                    {(column) => <Cell row={0} column={column()} />}
-                  </Index>
+                  <Repeat count={columnIndexes().length}>
+                    {(column) => <Cell row={0} column={column} />}
+                  </Repeat>
                 </tr>
               )}
-            </Index>
+            </Repeat>
           </thead>
           <tbody>
-            <Index each={body()}>
-              {(_, index) => (
+            <Repeat count={body().length}>
+              {(index) => (
                 <tr>
-                  <Index each={columnIndexes()}>
-                    {(column) => <Cell row={index + 1} column={column()} />}
-                  </Index>
+                  <Repeat count={columnIndexes().length}>
+                    {(column) => <Cell row={index + 1} column={column} />}
+                  </Repeat>
                 </tr>
               )}
-            </Index>
+            </Repeat>
           </tbody>
         </table>
       </div>

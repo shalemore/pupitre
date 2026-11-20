@@ -5,7 +5,8 @@ import { localize, type LocalizedText } from "@pupitre/plugin-sdk";
 import { Button, IconButton, Input, Select, SettingRow, Switch } from "@pupitre/ui";
 import { messageOf } from "@pupitre/utils";
 import { FolderOpen, Plus, Trash2 } from "lucide-solid";
-import { For, onMount, Show, type Component, type JSX } from "solid-js";
+import type { JSX } from "@solidjs/web";
+import { For, onSettled, Show, type Component } from "solid-js";
 import { reportFailure } from "@/lib/errors";
 import { loadPlugins, plugins } from "@/lib/plugins";
 import { settings, updateSettings } from "@/lib/settings";
@@ -255,7 +256,7 @@ const PluginRow: Component<{ plugin: PluginInfo }> = (props) => {
 };
 
 export const PluginsSection: Component = () => {
-  onMount(loadPlugins);
+  onSettled(loadPlugins);
 
   return (
     <SettingsSection title={t().settings.plugins}>

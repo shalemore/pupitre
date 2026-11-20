@@ -1,4 +1,5 @@
-import { type JSX, splitProps } from "solid-js";
+import type { JSX } from "@solidjs/web";
+import { omit } from "solid-js";
 import { cva, cx, type RecipeVariantProps } from "./styled-system/css";
 
 const inputVariants = cva({
@@ -31,17 +32,17 @@ const inputVariants = cva({
 });
 
 // The native `size` attribute (width in characters) is never used; the name is taken by the variant
-export type InputProps = Omit<JSX.InputHTMLAttributes<HTMLInputElement>, "size"> &
-  RecipeVariantProps<typeof inputVariants>;
+export type InputProps = Omit<JSX.InputHTMLAttributes<HTMLInputElement>, "size" | "class"> &
+  RecipeVariantProps<typeof inputVariants> & { class?: string | undefined };
 
 export function Input(props: InputProps) {
-  const [local, rest] = splitProps(props, ["class", "type", "size"]);
+  const rest = omit(props, "class", "type", "size");
 
   return (
     <input
-      type={local.type ?? "text"}
+      type={props.type ?? "text"}
       data-slot="input"
-      class={cx(inputVariants({ size: local.size }), local.class)}
+      class={cx(inputVariants({ size: props.size }), props.class)}
       {...rest}
     />
   );

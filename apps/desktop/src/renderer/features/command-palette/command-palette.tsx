@@ -1,8 +1,9 @@
+import type { Menus } from "@pupitre/desktop-api/menu";
 import { desktop } from "@pupitre/desktop-api/client";
 import { currentLocale, t } from "@pupitre/i18n/solid";
 import { Kbd } from "@pupitre/ui";
 import { dim, shrinkNone, truncateGrow } from "@pupitre/ui/styles";
-import { createMemo, createResource, onMount, Show } from "solid-js";
+import { createMemo, createSignal, onSettled, Show } from "solid-js";
 import { PaletteSheet } from "@/components/palette-sheet";
 import { loadPlugins, plugins } from "@/lib/plugins";
 import { commandsFromMenus, filterCommands, pluginCommands, type PaletteCommand } from "./commands";
@@ -17,14 +18,23 @@ export interface CommandPaletteProps {
  * time the palette opens, because they follow the open document, the settings and the recent files.
  */
 export function CommandPalette(props: CommandPaletteProps) {
-  onMount(loadPlugins);
-  const [snapshot] = createResource(() => desktop.invoke("menu:items"));
+  const [snapshot, setSnapshot] = createSignal<Menus>();
+  const [ready, setReady] = createSignal(false);
+  onSettled(() => {
+    loadPlugins();
+    void desktop
+      .invoke("menu:items")
+      .then(
+        (menus) => setSnapshot(menus),
+        () => undefined,
+      )
+      .finally(() => setReady(true));
+  });
 
   const commands = createMemo(() => {
     // A menu that cannot be read lists nothing, which reads the same as no match
-    if (snapshot.state !== "ready") return [];
     const menus = snapshot();
-    if (menus === undefined) return [];
+    if (!ready() || menus === undefined) return [];
     const dictionary = t();
     return [
       ...commandsFromMenus(
@@ -51,7 +61,7 @@ export function CommandPalette(props: CommandPaletteProps) {
       placeholder={t().commandPalette.placeholder}
       rows={(query) => filterCommands(commands(), query)}
       // Nothing is listed before the menu answers, so an empty list here really is a miss
-      emptyMessage={snapshot.state === "ready" ? t().commandPalette.noResults : undefined}
+      emptyMessage={ready() ? t().commandPalette.noResults : undefined}
       onPick={run}
       onClose={props.onClose}
     >

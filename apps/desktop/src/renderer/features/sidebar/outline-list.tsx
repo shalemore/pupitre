@@ -3,7 +3,7 @@ import { headingKey, type OutlineHeading } from "@pupitre/markdown";
 import { ListItem, rowIndent } from "@pupitre/ui";
 import { OUTLINE_ROW, truncateStyle } from "@pupitre/ui/styles";
 import { ChevronRight } from "lucide-solid";
-import { createMemo, createSelector, Index, Show, type Component } from "solid-js";
+import { createMemo, Repeat, Show, type Component } from "solid-js";
 import { css, cx } from "@/styled-system/css";
 
 interface OutlineListProps {
@@ -92,7 +92,7 @@ export const OutlineList: Component<OutlineListProps> = (props) => {
   });
 
   const folded = (heading: OutlineHeading) => props.collapsed.has(headingKey(heading));
-  const isActive = createSelector(() => props.activeIndex);
+  const isActive = (index: number) => props.activeIndex === index;
 
   return (
     <div class={list}>
@@ -101,51 +101,57 @@ export const OutlineList: Component<OutlineListProps> = (props) => {
         fallback={<div class={empty}>{t().sidebar.noHeadings}</div>}
       >
         {/* Rows are positional: a heading inserted above or a folded section shifts every row
-            below it. Index keeps the DOM and updates the row in place instead of rebuilding the
+            below it. Repeat keeps the DOM and updates the row in place instead of rebuilding the
             whole list, while the heading itself stays the source of every label and action. */}
-        <Index each={rows()}>
-          {(row) => (
-            <div
-              data-folded={row().hidden ? "" : undefined}
-              inert={row().hidden}
-              aria-hidden={row().hidden ? "true" : undefined}
-              class={cx(OUTLINE_ROW, rowStyle)}
-            >
-              <Show when={row().hasChildren} fallback={<span aria-hidden="true" class={spacer} />}>
-                <button
-                  type="button"
-                  aria-expanded={!folded(row().heading)}
-                  aria-label={
-                    folded(row().heading) ? t().sidebar.expandSection : t().sidebar.collapseSection
-                  }
-                  onClick={() => props.onToggleCollapsed(row().heading)}
-                  class={toggle}
+        <Repeat count={rows().length}>
+          {(i) => (
+            <Show when={rows()[i]}>
+              {(row) => (
+                <div
+                  data-folded={row().hidden ? "" : undefined}
+                  inert={row().hidden}
+                  aria-hidden={row().hidden ? "true" : undefined}
+                  class={cx(OUTLINE_ROW, rowStyle)}
                 >
-                  <ChevronRight
-                    class={folded(row().heading) ? chevron : cx(chevron, chevronOpen)}
-                  />
-                </button>
-              </Show>
-              <ListItem
-                active={isActive(row().index)}
-                aria-current={isActive(row().index) ? "location" : undefined}
-                onClick={() => props.onSelectHeading(row().heading)}
-                style={rowIndent(row().heading.level - 1, 10)}
-                class={cx(item, row().heading.level === 1 && topLevelItem)}
-                title={row().heading.text.trim() || t().sidebar.untitled}
-              >
-                <Show
-                  when={row().heading.text.trim()}
-                  fallback={<span class={untitled}>{t().sidebar.untitled}</span>}
-                >
-                  <bdi dir="auto" class={title}>
-                    {row().heading.text}
-                  </bdi>
-                </Show>
-              </ListItem>
-            </div>
+                  <Show when={row().hasChildren} fallback={<span aria-hidden="true" class={spacer} />}>
+                    <button
+                      type="button"
+                      aria-expanded={!folded(row().heading) ? "true" : "false"}
+                      aria-label={
+                        folded(row().heading)
+                          ? t().sidebar.expandSection
+                          : t().sidebar.collapseSection
+                      }
+                      onClick={() => props.onToggleCollapsed(row().heading)}
+                      class={toggle}
+                    >
+                      <ChevronRight
+                        class={folded(row().heading) ? chevron : cx(chevron, chevronOpen)}
+                      />
+                    </button>
+                  </Show>
+                  <ListItem
+                    active={isActive(row().index)}
+                    aria-current={isActive(row().index) ? "location" : undefined}
+                    onClick={() => props.onSelectHeading(row().heading)}
+                    style={rowIndent(row().heading.level - 1, 10)}
+                    class={cx(item, row().heading.level === 1 && topLevelItem)}
+                    title={row().heading.text.trim() || t().sidebar.untitled}
+                  >
+                    <Show
+                      when={row().heading.text.trim()}
+                      fallback={<span class={untitled}>{t().sidebar.untitled}</span>}
+                    >
+                      <bdi dir="auto" class={title}>
+                        {row().heading.text}
+                      </bdi>
+                    </Show>
+                  </ListItem>
+                </div>
+              )}
+            </Show>
           )}
-        </Index>
+        </Repeat>
       </Show>
     </div>
   );

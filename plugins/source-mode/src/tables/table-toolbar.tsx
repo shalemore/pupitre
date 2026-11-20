@@ -33,7 +33,8 @@ import {
   TextAlignStart,
   X,
 } from "lucide-solid";
-import { type Accessor, type Component, type JSX, Show } from "solid-js";
+import type { JSX } from "@solidjs/web";
+import { type Accessor, type Component, Show } from "solid-js";
 import type { CellPosition } from "./table-cell";
 
 const ToolButton: Component<{

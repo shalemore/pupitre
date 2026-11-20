@@ -20,9 +20,12 @@
   },
   "dependencies": {
     "@kobalte/core": "^0.13.14",
-    "@solid-primitives/event-listener": "^2.4.6",
-    "@solid-primitives/scheduled": "^1.5.3",
-    "lucide-solid": "^1.16.0"
+    "@solid-primitives/event-listener": "^3.0.0",
+    "@solid-primitives/scheduled": "^2.0.0",
+    "@solidjs/web": "^2.0.3",
+    "@ui-sdk/core": "^0.1.0-beta.13",
+    "@ui-sdk/solid": "^0.1.0-beta.13",
+    "lucide-solid": "^1.77.0"
   },
   "devDependencies": {
     "@pandacss/dev": "^2.4.0",
@@ -31,6 +34,7 @@
     "@pupitre/panda-preset": "workspace:*"
   },
   "peerDependencies": {
-    "solid-js": "^1.9.5"
+    "@solidjs/web": "^2.0.3",
+    "solid-js": "^2.0.3"
   }
 }

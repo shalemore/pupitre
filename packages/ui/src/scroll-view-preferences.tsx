@@ -1,4 +1,5 @@
-import { type Accessor, createContext, type JSX, useContext } from "solid-js";
+import type { JSX } from "@solidjs/web";
+import { type Accessor, createContext, useContext } from "solid-js";
 
 export type ScrollbarVisibility = "auto" | "always" | "never";
 
@@ -18,9 +19,9 @@ export function ScrollViewPreferencesProvider(props: {
   children: JSX.Element;
 }) {
   return (
-    <ScrollViewPreferencesContext.Provider value={props.value}>
+    <ScrollViewPreferencesContext value={props.value}>
       {props.children}
-    </ScrollViewPreferencesContext.Provider>
+    </ScrollViewPreferencesContext>
   );
 }
 

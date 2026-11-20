@@ -1,4 +1,5 @@
-import { type JSX, splitProps } from "solid-js";
+import type { JSX } from "@solidjs/web";
+import { omit } from "solid-js";
 import { css, cx } from "./styled-system/css";
 
 const kbd = css({
@@ -10,8 +11,8 @@ const kbd = css({
 });
 
 /** A keyboard shortcut shown next to an action; it takes the color of its surroundings. */
-export function Kbd(props: JSX.HTMLAttributes<HTMLElement>) {
-  const [local, rest] = splitProps(props, ["class"]);
+export function Kbd(props: Omit<JSX.HTMLAttributes<HTMLElement>, "class"> & { class?: string | undefined }) {
+  const rest = omit(props, "class");
 
-  return <kbd data-slot="kbd" class={cx(kbd, local.class)} {...rest} />;
+  return <kbd data-slot="kbd" class={cx(kbd, props.class)} {...rest} />;
 }

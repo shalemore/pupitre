@@ -1,6 +1,6 @@
 import { t } from "@pupitre/i18n/solid";
 import { Button, css, Input, Sheet } from "@pupitre/ui";
-import { createSignal, onMount, type Component } from "solid-js";
+import { createSignal, onSettled, type Component } from "solid-js";
 
 /** The rows count the header, so three rows are a header row and two body rows. */
 const ROWS = { min: 1, max: 20, initial: 3 } as const;
@@ -64,7 +64,7 @@ export const TableSizeDialog: Component<TableSizeDialogProps> = (props) => {
   const [columns, setColumns] = createSignal(String(COLUMNS.initial));
   let rowsInput: HTMLInputElement | undefined;
 
-  onMount(() => {
+  onSettled(() => {
     rowsInput?.focus();
     rowsInput?.select();
   });

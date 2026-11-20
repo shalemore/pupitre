@@ -1,4 +1,4 @@
-import { splitProps } from "solid-js";
+import { omit } from "solid-js";
 import { Button, type ButtonProps } from "./button";
 
 export interface IconButtonProps extends Omit<
@@ -13,18 +13,18 @@ export interface IconButtonProps extends Omit<
 
 /** A button that shows an icon alone; ghost and small unless it says otherwise. */
 export function IconButton(props: IconButtonProps) {
-  const [local, rest] = splitProps(props, ["label", "variant", "size", "class", "children"]);
+  const rest = omit(props, "label", "variant", "size", "class", "children");
 
   return (
     <Button
       {...rest}
-      variant={local.variant ?? "ghost"}
-      size={local.size ?? "icon-xs"}
-      title={local.label}
-      aria-label={local.label}
-      class={local.class}
+      variant={props.variant ?? "ghost"}
+      size={props.size ?? "icon-xs"}
+      title={props.label}
+      aria-label={props.label}
+      class={props.class}
     >
-      {local.children}
+      {props.children}
     </Button>
   );
 }

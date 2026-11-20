@@ -64,7 +64,7 @@ import { ScrollView } from "@pupitre/ui";
 import { escapeHtml, messageOf } from "@pupitre/utils";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { debounce } from "@solid-primitives/scheduled";
-import { createEffect, on, onCleanup, onMount, type Component } from "solid-js";
+import { createEffect, createRoot, onSettled, type Component } from "solid-js";
 import {
   type DocumentPosition,
   flushDocumentPositions,
@@ -222,7 +222,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
   const uploadImage = async (file: File): Promise<string> =>
     props.documentPath ? saveImageNextTo(props.documentPath, file) : props.pendingImages.add(file);
 
-  onMount(() => {
+  onSettled(() => {
     if (!container) return;
     // CodeMirror scrolls a document taller than the window in the ScrollView around it rather than
     // in its own scroller, so that is where a place in the document is measured from
@@ -233,6 +233,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     // The props follow the document the window shows, and by the time this editor is cleaned up
     // that is already the next one; what it showed itself is kept here instead
     let path = props.documentPath;
+    let disposeEffects: (() => void) | undefined;
     const stats = createStatsTracker((next) => props.onStatsChange(next));
     const matches = createMatchCounter((next) => props.onMatchStatsChange(next));
     const outline = createOutlineTracker((next) => props.onOutlineChange(next));
@@ -388,8 +389,8 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
 
     // Only the characters that pair change, so the setting swaps that one extension and keeps the
     // text, the caret and the undo history as they are
-    createEffect(
-      on(
+    disposeEffects = createRoot((dispose) => {
+      createEffect(
         () => settings().autoPairMarkdown,
         (autoPairMarkdown) => {
           if (!markdown) return;
@@ -398,38 +399,35 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           });
         },
         { defer: true },
-      ),
-    );
+      );
 
-    // A built-in plugin reads the app's own settings. A change swaps the extensions it adds and
-    // lets it react to what an extension alone cannot, such as scrolling to the caret.
-    let previousSettings = settings();
-    createEffect(() => {
-      const next = settings();
-      const previous = previousSettings;
-      previousSettings = next;
-      const reconfigure = () =>
-        view.dispatch({
-          effects: [
-            pluginsCompartment.reconfigure(pluginExtensions(next)),
-            spellcheckCompartment.reconfigure(
-              EditorView.contentAttributes.of({ spellcheck: String(next.spellcheck) }),
-            ),
-            cursorCompartment.reconfigure(cursorStyle(next.cursorShape, next.cursorBlink)),
-          ],
-        });
-      // Source mode changes every line's height at once: the window cross-fades the two states
-      // instead of the document flashing from one to the other
-      if (markdown && next.sourceMode !== previous.sourceMode) withViewTransition(reconfigure);
-      else reconfigure();
-      sourceConfigured = next.sourceMode;
-      pluginSettingsChanged(view, next, previous);
-    });
+      // A built-in plugin reads the app's own settings. A change swaps the extensions it adds and
+      // lets it react to what an extension alone cannot, such as scrolling to the caret.
+      let previousSettings = settings();
+      createEffect(settings, (next) => {
+        const previous = previousSettings;
+        previousSettings = next;
+        const reconfigure = () =>
+          view.dispatch({
+            effects: [
+              pluginsCompartment.reconfigure(pluginExtensions(next)),
+              spellcheckCompartment.reconfigure(
+                EditorView.contentAttributes.of({ spellcheck: String(next.spellcheck) }),
+              ),
+              cursorCompartment.reconfigure(cursorStyle(next.cursorShape, next.cursorBlink)),
+            ],
+          });
+        // Source mode changes every line's height at once: the window cross-fades the two states
+        // instead of the document flashing from one to the other
+        if (markdown && next.sourceMode !== previous.sourceMode) withViewTransition(reconfigure);
+        else reconfigure();
+        sourceConfigured = next.sourceMode;
+        pluginSettingsChanged(view, next, previous);
+      });
 
-    // Save As and a rename move the document without rebuilding the editor, and the place it is at
-    // belongs to the file it now lives in
-    createEffect(
-      on(
+      // Save As and a rename move the document without rebuilding the editor, and the place it is at
+      // belongs to the file it now lives in
+      createEffect(
         () => props.documentPath,
         (nextPath) => {
           path = nextPath;
@@ -438,31 +436,29 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
           });
         },
         { defer: true },
-      ),
-    );
+      );
 
-    // Save As moves the document without rebuilding the editor; relative images resolve from the new folder
-    createEffect(
-      on(
+      // Save As moves the document without rebuilding the editor; relative images resolve from the new folder
+      createEffect(
         () => props.baseUrl,
         (baseUrl) =>
           view.dispatch({ effects: baseUrlCompartment.reconfigure(documentBaseUrl.of(baseUrl)) }),
         { defer: true },
-      ),
-    );
+      );
 
-    // Diagrams copy the theme's colors and the body font, so they are drawn again when either
-    // changes. The appearance effects that set them were created first and have run by now.
-    createEffect(
-      on(
-        [themeApplied, () => settings().bodyFont, () => settings().fallbackFont],
+      // Diagrams copy the theme's colors and the body font, so they are drawn again when either
+      // changes. The appearance effects that set them were created first and have run by now.
+      createEffect(
+        () => [themeApplied(), settings().bodyFont, settings().fallbackFont] as const,
         () =>
           view.dispatch({
             effects: diagramThemeCompartment.reconfigure(diagramTheme.of(readDiagramTheme())),
           }),
         { defer: true },
-      ),
-    );
+      );
+
+      return dispose;
+    });
 
     // CodeMirror keeps the text as a rope, so the string it was built from is the same text the
     // editor holds; copying it back would duplicate a large document for no reason. A lone carriage
@@ -674,8 +670,9 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       },
     });
 
-    onCleanup(() => {
+    return () => {
       disposed = true;
+      disposeEffects?.();
       outline.dispose();
       schedulePositionSave.clear();
       matches.cancel();
@@ -684,7 +681,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
       savePosition();
       flushDocumentPositions();
       view.destroy();
-    });
+    };
   });
 
   return <ScrollView ref={(element) => (container = element)} class={scrollArea} />;

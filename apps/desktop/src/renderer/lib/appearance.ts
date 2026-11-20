@@ -37,31 +37,46 @@ export function setupAppearance(): void {
 
     // Effects run in creation order: the theme is applied before anything reads its values
     let shownTheme: string | undefined;
-    createEffect(() => {
-      // A theme folder added, changed or removed while the app runs replaces the active CSS too
-      importedThemes();
-      const id = activeTheme();
-      const apply = () => {
-        applyTheme(id);
-        void desktop.invoke("window:set-colors", { ...readWindowColors(), dark: isDark() });
-      };
-      // The theme the window opens with is already the first paint; a later one cross-fades its
-      // colors in, together with the window frame the main process draws. The list of imported
-      // themes arriving changes nothing to fade.
-      if (shownTheme !== undefined && shownTheme !== id) withViewTransition(apply);
-      else apply();
-      shownTheme = id;
-    });
-    createEffect(() => {
-      root.lang = currentLocale();
-      root.dir = currentDirection();
-    });
-    createEffect(() => {
-      root.dataset["motion"] = settings().animations;
-    });
+    createEffect(
+      () => {
+        // A theme folder added, changed or removed while the app runs replaces the active CSS too
+        importedThemes();
+        return activeTheme();
+      },
+      (id) => {
+        const apply = () => {
+          applyTheme(id);
+          void desktop.invoke("window:set-colors", { ...readWindowColors(), dark: isDark() });
+        };
+        // The theme the window opens with is already the first paint; a later one cross-fades its
+        // colors in, together with the window frame the main process draws. The list of imported
+        // themes arriving changes nothing to fade.
+        if (shownTheme !== undefined && shownTheme !== id) withViewTransition(apply);
+        else apply();
+        shownTheme = id;
+      },
+    );
+    createEffect(
+      () => [currentLocale(), currentDirection()] as const,
+      ([locale, direction]) => {
+        root.lang = locale;
+        root.dir = direction;
+      },
+    );
+    createEffect(
+      () => settings().animations,
+      (animations) => {
+        root.dataset["motion"] = animations;
+      },
+    );
     // Layout and typography preferences become CSS variables, read by the stylesheet
-    createEffect(() => {
-      const {
+    createEffect(
+      () => {
+        // The theme brings the fonts the stacks below fall back to, so a change of theme rebuilds them
+        activeTheme();
+        return settings();
+      },
+      ({
         fontSize,
         lineHeight,
         contentWidth,
@@ -70,26 +85,25 @@ export function setupAppearance(): void {
         fallbackFont,
         codeFont,
         uiFont,
-      } = settings();
-      // The theme brings the fonts the stacks below fall back to, so a change of theme rebuilds them
-      activeTheme();
-      const themeStyle = getComputedStyle(root);
-      const themeFonts = readToken(themeStyle, "font-document");
-      const fontStackIntent =
-        readToken(themeStyle, "font-stack-intent") === "mono" ? "mono" : "text";
-      writeToken(root.style, "pref-font-size", `${fontSize}px`);
-      writeToken(root.style, "pref-line-height", String(lineHeight));
-      writeToken(root.style, "pref-content-width", CONTENT_WIDTHS[contentWidth]);
-      writeToken(root.style, "pref-immersive-gap", `${immersiveGap}px`);
-      setOptionalProperty(
-        "pref-font-family",
-        documentFontFamily(bodyFont, fallbackFont, themeFonts, fontStackIntent),
-      );
-      setOptionalProperty(
-        "pref-code-font",
-        codeFontFamily(codeFont, fallbackFont, readToken(themeStyle, "font-mono"), fontStackIntent),
-      );
-      setOptionalProperty("pref-ui-font", interfaceFontFamily(uiFont, fallbackFont));
-    });
+      }) => {
+        const themeStyle = getComputedStyle(root);
+        const themeFonts = readToken(themeStyle, "font-document");
+        const fontStackIntent =
+          readToken(themeStyle, "font-stack-intent") === "mono" ? "mono" : "text";
+        writeToken(root.style, "pref-font-size", `${fontSize}px`);
+        writeToken(root.style, "pref-line-height", String(lineHeight));
+        writeToken(root.style, "pref-content-width", CONTENT_WIDTHS[contentWidth]);
+        writeToken(root.style, "pref-immersive-gap", `${immersiveGap}px`);
+        setOptionalProperty(
+          "pref-font-family",
+          documentFontFamily(bodyFont, fallbackFont, themeFonts, fontStackIntent),
+        );
+        setOptionalProperty(
+          "pref-code-font",
+          codeFontFamily(codeFont, fallbackFont, readToken(themeStyle, "font-mono"), fontStackIntent),
+        );
+        setOptionalProperty("pref-ui-font", interfaceFontFamily(uiFont, fallbackFont));
+      },
+    );
   });
 }

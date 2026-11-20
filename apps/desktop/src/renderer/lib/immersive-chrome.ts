@@ -55,7 +55,9 @@ export function createImmersiveChrome(options: ChromeOptions) {
 
   // The traffic lights belong to the title bar
   if (isMacOS) {
-    createEffect(() => void desktop.invoke("window:set-buttons-visible", titleBarVisible()));
+    createEffect(titleBarVisible, (visible) => {
+      void desktop.invoke("window:set-buttons-visible", visible);
+    });
   }
 
   const hide = () => {

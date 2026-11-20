@@ -1,13 +1,14 @@
 import { imageStyle, renderMath, type InlineImage, type InlineItem } from "@pupitre/markdown";
-import { type Component, createResource, For, type JSX, Match, Switch } from "solid-js";
-import { Dynamic } from "solid-js/web";
+import { Dynamic, type JSX } from "@solidjs/web";
+import { type Component, createMemo, For, Loading, Match, Switch } from "solid-js";
 
 const MathItem: Component<{ tex: string; display: boolean }> = (props) => {
-  const [svg] = createResource(
-    () => ({ tex: props.tex, display: props.display }),
-    (formula) => renderMath(formula.tex, formula.display),
+  const svg = createMemo(() => renderMath(props.tex, props.display));
+  return (
+    <Loading fallback={<span class="md-math" />}>
+      <span class="md-math" innerHTML={svg()} />
+    </Loading>
   );
-  return <span class="md-math" innerHTML={svg() ?? ""} />;
 };
 
 export const InlineContent: Component<{

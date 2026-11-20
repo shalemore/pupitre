@@ -1,11 +1,13 @@
-import { type JSX, Show, splitProps } from "solid-js";
+import type { JSX } from "@solidjs/web";
+import { omit, Show } from "solid-js";
 import { css, cx } from "./styled-system/css";
 
-export interface SettingRowProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "title"> {
+export interface SettingRowProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "title" | "class"> {
   title: JSX.Element;
   description?: JSX.Element | undefined;
   /** Draws the row as the heading of the settings under it, with its own control on the right. */
   heading?: boolean | undefined;
+  class?: string | undefined;
 }
 
 const row = css({
@@ -28,19 +30,19 @@ const description = css({
 const actions = css({ display: "flex", flexShrink: 0, alignItems: "center", gap: "2" });
 
 export function SettingRow(props: SettingRowProps) {
-  const [local, rest] = splitProps(props, ["class", "title", "description", "heading", "children"]);
+  const rest = omit(props, "class", "title", "description", "heading", "children");
 
   return (
-    <div data-slot="setting-row" class={cx(row, local.class)} {...rest}>
+    <div data-slot="setting-row" class={cx(row, props.class)} {...rest}>
       <div class={text}>
-        <Show when={local.heading} fallback={<span class={title}>{local.title}</span>}>
-          <h3 class={cx(title, headingTitle)}>{local.title}</h3>
+        <Show when={props.heading} fallback={<span class={title}>{props.title}</span>}>
+          <h3 class={cx(title, headingTitle)}>{props.title}</h3>
         </Show>
-        <Show when={local.description}>
-          <span class={description}>{local.description}</span>
+        <Show when={props.description}>
+          <span class={description}>{props.description}</span>
         </Show>
       </div>
-      <div class={actions}>{local.children}</div>
+      <div class={actions}>{props.children}</div>
     </div>
   );
 }

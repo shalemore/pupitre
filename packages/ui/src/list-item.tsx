@@ -1,4 +1,5 @@
-import { type JSX, splitProps } from "solid-js";
+import type { JSX } from "@solidjs/web";
+import { omit } from "solid-js";
 import { cva, cx, type RecipeVariantProps } from "./styled-system/css";
 
 const listItemVariants = cva({
@@ -36,8 +37,8 @@ const listItemVariants = cva({
   },
 });
 
-export type ListItemProps = JSX.ButtonHTMLAttributes<HTMLButtonElement> &
-  RecipeVariantProps<typeof listItemVariants>;
+export type ListItemProps = Omit<JSX.ButtonHTMLAttributes<HTMLButtonElement>, "class"> &
+  RecipeVariantProps<typeof listItemVariants> & { class?: string | undefined };
 
 /** How far one level of nesting moves a row past `base`, the start padding a row without nesting has. */
 export function rowIndent(depth: number, base: number) {
@@ -50,13 +51,13 @@ export function rowIndent(depth: number, base: number) {
  * The inline start padding is left to the caller, because tree rows indent by depth.
  */
 export function ListItem(props: ListItemProps) {
-  const [local, rest] = splitProps(props, ["class", "active", "tone"]);
+  const rest = omit(props, "class", "active", "tone");
 
   return (
     <button
       type="button"
       data-slot="list-item"
-      class={cx(listItemVariants({ active: local.active, tone: local.tone }), local.class)}
+      class={cx(listItemVariants({ active: props.active, tone: props.tone }), props.class)}
       {...rest}
     />
   );

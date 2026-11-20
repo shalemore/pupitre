@@ -3,7 +3,8 @@ import { desktop, isMacOS } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
 import { Combobox, IconButton, type SelectOption } from "@pupitre/ui";
 import { RefreshCw } from "lucide-solid";
-import { createResource, createRoot, type Component, type JSX, Show } from "solid-js";
+import type { JSX } from "@solidjs/web";
+import { createRoot, createSignal, type Component, Show } from "solid-js";
 import { GENERIC_FAMILIES, listFontFamilies, type FontFamily } from "@/lib/fonts";
 import { themeApplied } from "@/lib/theme";
 import { readToken, type TokenName } from "@/lib/tokens";
@@ -43,11 +44,16 @@ export function themeFontLabel(token: TokenName): string {
 
 // The three font pickers share one font list that is queried once; the refresh button queries again
 const fonts = createRoot(() => {
-  const [list, { refetch }] = createResource(
-    () => 0,
-    async (_, info): Promise<FontFamily[]> => listFontFamilies(info.refetching === true),
-  );
-  return { list, refresh: () => void refetch(true) };
+  const [list, setList] = createSignal<readonly FontFamily[]>([]);
+  const [loading, setLoading] = createSignal(false);
+  const refresh = (force = true) => {
+    setLoading(true);
+    void listFontFamilies(force)
+      .then(setList, () => undefined)
+      .finally(() => setLoading(false));
+  };
+  refresh(false);
+  return { list, loading, refresh: () => refresh(true) };
 });
 
 const spin = css({ animation: "spin" });
@@ -68,7 +74,7 @@ export interface FontSelectProps {
 export const FontSelect: Component<FontSelectProps> = (props) => {
   const options = (): SelectOption[] => [
     { value: "", label: props.emptyLabel },
-    ...(fonts.list() ?? []).map(({ family, localizedName }) => ({
+    ...(fonts.list()).map(({ family, localizedName }) => ({
       value: family,
       label: family,
       description: localizedName,
@@ -103,6 +109,6 @@ export const FontSelect: Component<FontSelectProps> = (props) => {
 
 export const RefreshFontsButton: Component = () => (
   <IconButton label={t().settings.refreshFonts} size="icon-2xs" onClick={fonts.refresh}>
-    <RefreshCw class={cx(fonts.list.loading && spin)} />
+    <RefreshCw class={cx(fonts.loading() && spin)} />
   </IconButton>
 );

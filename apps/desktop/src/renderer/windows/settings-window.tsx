@@ -1,7 +1,7 @@
 import { t } from "@pupitre/i18n/solid";
 import { ScrollView, Tabs, TabsContent } from "@pupitre/ui";
 import { makeEventListener } from "@solid-primitives/event-listener";
-import { createEffect, onMount, type Component } from "solid-js";
+import { createEffect, onSettled, type Component } from "solid-js";
 import { PopupLayer } from "@/components/popup-layer";
 import { TitleBar } from "@/components/title-bar";
 import { AboutSection } from "@/features/settings/about-section";
@@ -38,12 +38,15 @@ const page = css({
 });
 
 export const SettingsWindow: Component = () => {
-  createEffect(() => {
-    document.title = t().settings.title;
-  });
+  createEffect(
+    () => t().settings.title,
+    (pageTitle) => {
+      document.title = pageTitle;
+    },
+  );
 
-  onMount(() => {
-    makeEventListener(window, "keydown", (e) => {
+  onSettled(() => {
+    return makeEventListener(window, "keydown", (e) => {
       if (e.key === "Escape" && !e.defaultPrevented) window.close();
     });
   });

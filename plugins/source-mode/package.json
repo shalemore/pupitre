@@ -33,16 +33,18 @@
     "@pupitre/plugin-sdk": "workspace:*",
     "@pupitre/ui": "workspace:*",
     "@pupitre/utils": "workspace:*",
-    "@solid-primitives/scheduled": "^1.5.3",
+    "@solid-primitives/scheduled": "^2.0.0",
     "dompurify": "^3.4.17",
-    "lucide-solid": "^1.16.0"
+    "lucide-solid": "^1.77.0"
   },
   "devDependencies": {
+    "@solidjs/web": "^2.0.3",
     "@tsconfig/strictest": "^2.0.8",
-    "solid-js": "^1.9.5",
+    "solid-js": "^2.0.3",
     "vitest": "^5.0.5"
   },
   "peerDependencies": {
-    "solid-js": "^1.9.5"
+    "@solidjs/web": "^2.0.3",
+    "solid-js": "^2.0.3"
   }
 }

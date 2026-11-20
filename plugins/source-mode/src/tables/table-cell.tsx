@@ -1,7 +1,7 @@
 import type { EditorView } from "@codemirror/view";
 import { imageIn, InlineImage, setImageLayout } from "@pupitre/markdown";
 import { css } from "@pupitre/ui";
-import { type Component, createEffect, onCleanup } from "solid-js";
+import { type Component, createEffect } from "solid-js";
 import { imageDom } from "#images/image-widget";
 
 export interface CellPosition {
@@ -12,18 +12,20 @@ export interface CellPosition {
 /** A picture in a cell, with the handle and bar that write a size back into the cell's source. */
 export const TableCellImage: Component<{ view: EditorView; image: InlineImage }> = (props) => {
   let host: HTMLSpanElement | undefined;
-  createEffect(() => {
-    const item = props.image;
-    const image = imageIn(props.view.state, item.from, item.to);
-    if (host === undefined || image === undefined) return;
-    host.replaceChildren(
-      imageDom(props.view, item.src, item.alt, item.title, item, true, undefined, (change) => {
-        const current = imageIn(props.view.state, item.from, item.to);
-        if (current !== undefined) setImageLayout(props.view, current, change(current));
-      }),
-    );
-    onCleanup(() => host?.replaceChildren());
-  });
+  createEffect(
+    () => props.image,
+    (item) => {
+      const image = imageIn(props.view.state, item.from, item.to);
+      if (host === undefined || image === undefined) return;
+      host.replaceChildren(
+        imageDom(props.view, item.src, item.alt, item.title, item, true, undefined, (change) => {
+          const current = imageIn(props.view.state, item.from, item.to);
+          if (current !== undefined) setImageLayout(props.view, current, change(current));
+        }),
+      );
+      return () => host?.replaceChildren();
+    },
+  );
   return (
     <span
       ref={(element) => {

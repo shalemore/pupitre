@@ -26,8 +26,7 @@ function loadPluginStyles(): void {
  * Injects the plugins' styles into the `plugin` cascade layer, scoped to the document so a plugin
  * cannot restyle the window around it. The user's preferences sit above that layer and win.
  */
-function applyPluginStyles(): void {
-  const css = settings().pluginEffects ? styles() : [];
+function applyPluginStyles(css: readonly PluginStyle[]): void {
   styleElement().textContent = css
     .map((style) => `@layer plugin {\n@scope (.md-document) {\n${style.css}\n}\n}`)
     .join("\n");
@@ -37,5 +36,8 @@ function applyPluginStyles(): void {
 export function setupPluginStyles(): void {
   desktop.on("plugins:changed", loadPluginStyles);
   loadPluginStyles();
-  createEffect(applyPluginStyles);
+  createEffect(
+    () => (settings().pluginEffects ? styles() : []),
+    (css) => applyPluginStyles(css),
+  );
 }

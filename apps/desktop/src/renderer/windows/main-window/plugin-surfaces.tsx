@@ -1,6 +1,6 @@
 import type { PluginInfo } from "@pupitre/desktop-api";
 import type { Permission, PointerKind, PointerSample, SurfaceKind } from "@pupitre/plugin-sdk";
-import { createEffect, createSignal, on, onCleanup, onMount, Show, type Component } from "solid-js";
+import { createEffect, createSignal, onSettled, Show, type Component } from "solid-js";
 import { isSurfaceReady, surfaceTheme } from "@/lib/plugin-surface";
 import { plugins } from "@/lib/plugins";
 import { settings } from "@/lib/settings";
@@ -52,14 +52,14 @@ const SurfaceHost: Component<{ plugin: PluginInfo; kind: SurfaceKind }> = (props
   };
 
   createEffect(
-    on(
-      () => [settings().theme, settings().darkTheme, settings().colorScheme, settings().animations],
-      () => requestAnimationFrame(sendTheme),
-      { defer: true },
-    ),
+    () => [settings().theme, settings().darkTheme, settings().colorScheme, settings().animations] as const,
+    () => {
+      requestAnimationFrame(sendTheme);
+    },
+    { defer: true },
   );
 
-  onMount(() => {
+  onSettled(() => {
     let queue: PointerSample[] = [];
     let pending = 0;
     const flush = () => {
@@ -104,11 +104,11 @@ const SurfaceHost: Component<{ plugin: PluginInfo; kind: SurfaceKind }> = (props
       );
     }
 
-    onCleanup(() => {
+    return () => {
       window.removeEventListener("message", onMessage);
       if (pending !== 0) cancelAnimationFrame(pending);
       for (const remove of listeners) remove();
-    });
+    };
   });
 
   return (
@@ -119,7 +119,7 @@ const SurfaceHost: Component<{ plugin: PluginInfo; kind: SurfaceKind }> = (props
       sandbox="allow-scripts"
       referrerpolicy="no-referrer"
       aria-hidden="true"
-      tabIndex={-1}
+      tabindex={-1}
       class={props.kind === "background" ? backgroundFrame : pointerFrame}
     />
   );

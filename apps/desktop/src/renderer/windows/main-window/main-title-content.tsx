@@ -1,6 +1,7 @@
 import { isMacOS } from "@pupitre/desktop-api/client";
 import { truncate } from "@pupitre/ui/styles";
-import { Show, type Component, type JSX } from "solid-js";
+import type { JSX } from "@solidjs/web";
+import { Show, type Component } from "solid-js";
 import { MenuBar, MenuButton } from "@/features/menu-bar";
 import { TabsBar } from "@/features/tabs-bar";
 import type { Tab } from "@/lib/document/tab";

@@ -1,4 +1,5 @@
-import { type JSX, splitProps } from "solid-js";
+import type { JSX } from "@solidjs/web";
+import { omit } from "solid-js";
 import { cva, cx, type RecipeVariantProps } from "./styled-system/css";
 import { PRESSABLE } from "./styles";
 
@@ -135,20 +136,20 @@ export const buttonVariants = cva({
   },
 });
 
-export type ButtonProps = JSX.ButtonHTMLAttributes<HTMLButtonElement> &
-  RecipeVariantProps<typeof buttonVariants>;
+export type ButtonProps = Omit<JSX.ButtonHTMLAttributes<HTMLButtonElement>, "class"> &
+  RecipeVariantProps<typeof buttonVariants> & { class?: string | undefined };
 
 export function Button(props: ButtonProps) {
-  const [local, rest] = splitProps(props, ["class", "variant", "size", "type"]);
+  const rest = omit(props, "class", "variant", "size", "type");
 
   return (
     <button
-      type={local.type ?? "button"}
+      type={props.type ?? "button"}
       data-slot="button"
       class={cx(
         PRESSABLE,
-        buttonVariants({ variant: local.variant, size: local.size }),
-        local.class,
+        buttonVariants({ variant: props.variant, size: props.size }),
+        props.class,
       )}
       {...rest}
     />

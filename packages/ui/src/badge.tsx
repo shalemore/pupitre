@@ -1,4 +1,5 @@
-import { type JSX, splitProps } from "solid-js";
+import type { JSX } from "@solidjs/web";
+import { omit } from "solid-js";
 import { cva, cx, type RecipeVariantProps } from "./styled-system/css";
 
 const badgeVariants = cva({
@@ -58,16 +59,16 @@ const badgeVariants = cva({
   },
 });
 
-export type BadgeProps = JSX.HTMLAttributes<HTMLSpanElement> &
-  RecipeVariantProps<typeof badgeVariants>;
+export type BadgeProps = Omit<JSX.HTMLAttributes<HTMLSpanElement>, "class"> &
+  RecipeVariantProps<typeof badgeVariants> & { class?: string | undefined };
 
 export function Badge(props: BadgeProps) {
-  const [local, rest] = splitProps(props, ["class", "variant", "size"]);
+  const rest = omit(props, "class", "variant", "size");
 
   return (
     <span
       data-slot="badge"
-      class={cx(badgeVariants({ variant: local.variant, size: local.size }), local.class)}
+      class={cx(badgeVariants({ variant: props.variant, size: props.size }), props.class)}
       {...rest}
     />
   );

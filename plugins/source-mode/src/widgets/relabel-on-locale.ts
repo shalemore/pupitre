@@ -9,11 +9,13 @@ import { createEffect, createRoot } from "solid-js";
 const relabeling = new Set<() => void>();
 
 createRoot(() =>
-  createEffect(() => {
-    currentLocale();
-    // A relabel that finds its element gone removes itself; a Set iterator allows that
-    for (const relabel of relabeling) relabel();
-  }),
+  createEffect(
+    () => currentLocale(),
+    () => {
+      // A relabel that finds its element gone removes itself; a Set iterator allows that
+      for (const relabel of relabeling) relabel();
+    },
+  ),
 );
 
 export function relabelOnLocaleChange(element: HTMLElement, relabel: () => void): void {

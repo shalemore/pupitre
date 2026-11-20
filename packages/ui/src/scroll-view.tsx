@@ -1,14 +1,6 @@
 import { debounce } from "@solid-primitives/scheduled";
-import {
-  createSignal,
-  type JSX,
-  onCleanup,
-  onMount,
-  Show,
-  splitProps,
-  type ValidComponent,
-} from "solid-js";
-import { Dynamic } from "solid-js/web";
+import { Dynamic, type JSX } from "@solidjs/web";
+import { createSignal, omit, onSettled, Show, type ValidComponent } from "solid-js";
 import { useScrollViewPreferences } from "./scroll-view-preferences";
 import { css, cx } from "./styled-system/css";
 import { SCROLL_FADE } from "./styles";
@@ -18,9 +10,10 @@ const IDLE_MS = 1200;
 const TRACK_INSET = 8;
 const MIN_THUMB = 24;
 
-export interface ScrollViewProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "onScroll"> {
+export interface ScrollViewProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "onScroll" | "class"> {
   /** The element to render, for lists and landmarks that must keep their own tag. */
   as?: ValidComponent;
+  class?: string | undefined;
 }
 
 interface ThumbGeometry {
@@ -102,7 +95,7 @@ const thumbHidden = css({ opacity: 0 });
  * towards an edge while there is more to scroll past it.
  */
 export function ScrollView(props: ScrollViewProps) {
-  const [local, rest] = splitProps(props, ["as", "class", "children", "ref"]);
+  const rest = omit(props, "as", "class", "children", "ref");
   const [thumbGeometry, setThumb] = createSignal(NO_THUMB);
   const [overflow, setOverflow] = createSignal("");
   const [scrolling, setScrolling] = createSignal(false);
@@ -136,7 +129,7 @@ export function ScrollView(props: ScrollViewProps) {
     );
   };
 
-  onMount(() => {
+  onSettled(() => {
     if (!element) return;
     // Content growing or shrinking changes the thumb without any scroll event
     const resize = new ResizeObserver(update);
@@ -150,23 +143,23 @@ export function ScrollView(props: ScrollViewProps) {
     const mutation = new MutationObserver(observeChildren);
     mutation.observe(element, { childList: true });
     observeChildren();
-    onCleanup(() => {
+    return () => {
       resize.disconnect();
       mutation.disconnect();
-    });
+    };
   });
 
   return (
     <Dynamic
-      component={local.as ?? "div"}
+      component={props.as ?? "div"}
       ref={(node: HTMLDivElement) => {
         element = node;
-        if (typeof local.ref === "function") local.ref(node);
+        if (typeof props.ref === "function") props.ref(node);
       }}
       data-slot="scroll-view"
       data-overflow={overflow() || undefined}
       data-scroll-view
-      class={cx(view, preferences().fade && SCROLL_FADE, local.class)}
+      class={cx(view, preferences().fade && SCROLL_FADE, props.class)}
       onScroll={() => {
         update();
         setScrolling(true);
@@ -219,7 +212,7 @@ export function ScrollView(props: ScrollViewProps) {
           </div>
         </Show>
       </div>
-      {local.children}
+      {props.children}
     </Dynamic>
   );
 }

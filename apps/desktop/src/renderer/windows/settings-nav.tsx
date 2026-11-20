@@ -3,8 +3,8 @@ import { t } from "@pupitre/i18n/solid";
 import { Select, TabsList, TabsTrigger } from "@pupitre/ui";
 import pkg from "@root/package.json";
 import { FileCode2, Info, Palette, Printer, Puzzle, Settings2, Type } from "lucide-solid";
+import { Dynamic } from "@solidjs/web";
 import { For, Show, type Component } from "solid-js";
-import { Dynamic } from "solid-js/web";
 import { workspace } from "@/lib/workspace";
 import { css } from "@/styled-system/css";
 

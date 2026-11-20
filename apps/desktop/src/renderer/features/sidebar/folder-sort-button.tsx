@@ -49,7 +49,7 @@ export const FolderSortButton: Component<{
         label={t().sidebar.sort}
         size="icon-2xs"
         aria-haspopup="menu"
-        aria-expanded={panel.open() !== undefined}
+        aria-expanded={panel.open() !== undefined ? "true" : "false"}
         class={quietButton}
         onClick={(event) => {
           if (panel.open() !== undefined) panel.close();
