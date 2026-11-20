@@ -218,8 +218,10 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
   let container: HTMLDivElement | undefined;
 
   // Saved documents store pasted images in a folder next to them; unsaved ones keep them in memory
-  const uploadImage = async (file: File): Promise<string> =>
-    props.documentPath ? saveImageNextTo(props.documentPath, file) : props.pendingImages.add(file);
+  const uploadImage = async (file: File): Promise<string> => {
+    const documentPath = untrack(() => props.documentPath);
+    return documentPath ? saveImageNextTo(documentPath, file) : props.pendingImages.add(file);
+  };
 
   const isMarkdown = () => documentKind(props.documentPath) === "markdown";
 
@@ -241,8 +243,9 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
   // where the editor starts; the effect below follows the setting from then on
   let sourceConfigured = untrack(() => settings().sourceMode);
   // The props follow the document the window shows, and by the time this editor is cleaned up that
-  // is already the next one; what it showed itself is kept here instead
-  let path = props.documentPath;
+  // is already the next one; what it showed itself is kept here instead. It starts as the document
+  // the editor is built for, and the effect below keeps it current
+  let path = untrack(() => props.documentPath);
 
   /**
    * Applies `value` to the editor once it exists, and again whenever the value changes: the view is
