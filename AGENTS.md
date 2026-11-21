@@ -244,6 +244,9 @@ only make code generation easier.
 - **Minimise side effects.** Derive values with plain functions or `createMemo` instead of
   syncing state with `createEffect`. Use effects only to talk to the outside world (DOM APIs,
   IPC, timers) and always clean up listeners.
+- **Solid 2 & `@ui-sdk/solid`.** The app uses Solid 2.0's strict reactivity model and
+  `@ui-sdk/solid`. Read [docs/solid-2.md](docs/solid-2.md) before touching reactive primitives,
+  UI primitives or Solid-backed CodeMirror widgets.
 - **Use the design scales.** Sizes, radii, durations and curves come from the tokens in
   `panda.config.ts` (they alias the custom properties in `app.css`, so a theme can still change
   them), and colors from the semantic tokens; no arbitrary values such as `2.875rem`,
