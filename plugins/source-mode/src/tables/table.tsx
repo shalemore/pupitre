@@ -8,8 +8,8 @@ import { TableView } from "./table-view";
 import { fadeOut } from "#leave";
 
 interface Mounted {
-  setModel: Setter<TableModel>;
-  setActive: Setter<CellPosition | undefined>;
+  setModel: (model: TableModel) => void;
+  setActive: (pos: CellPosition | undefined) => void;
   dispose: () => void;
 }
 
@@ -31,13 +31,42 @@ export class TableWidget extends WidgetType {
   toDOM(view: EditorView): HTMLElement {
     const container = document.createElement("div");
     container.className = "md-table-block";
-    const [model, setModel] = createSignal(this.model);
-    const [active, setActive] = createSignal<CellPosition>();
-    const dispose = render(
-      () => <TableView view={view} model={model} active={active} setActive={setActive} />,
-      container,
-    );
-    mounted.set(container, { setModel, setActive, dispose });
+    let pendingModel = this.model;
+    let pendingActive: CellPosition | undefined;
+    let disposed = false;
+    let setModelSignal: Setter<TableModel> | undefined;
+    let setActiveSignal: Setter<CellPosition | undefined> | undefined;
+    let disposeRoot: (() => void) | undefined;
+
+    mounted.set(container, {
+      setModel: (next) => {
+        pendingModel = next;
+        setModelSignal?.(next);
+      },
+      setActive: (next) => {
+        pendingActive = next;
+        setActiveSignal?.(next);
+      },
+      dispose: () => {
+        disposed = true;
+        disposeRoot?.();
+      },
+    });
+
+    // Defer Solid's render() past CodeMirror's EditorView.update and any enclosing Solid onSettled:
+    // Solid 2 flushes synchronously inside render(), which would re-enter EditorView.update or
+    // throw PRIMITIVE_IN_FORBIDDEN_SCOPE during initial mount.
+    queueMicrotask(() => {
+      if (disposed) return;
+      const [model, setModel] = createSignal(pendingModel);
+      const [active, setActive] = createSignal<CellPosition | undefined>(pendingActive);
+      setModelSignal = setModel;
+      setActiveSignal = setActive;
+      disposeRoot = render(
+        () => <TableView view={view} model={model} active={active} setActive={setActive} />,
+        container,
+      );
+    });
     return container;
   }
 

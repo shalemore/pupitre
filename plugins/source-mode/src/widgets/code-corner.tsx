@@ -260,10 +260,22 @@ export class CodeCornerWidget extends WidgetType {
     // Above the code lines it overlaps while the fence line is shrunk; interface rather than
     // document, so it is sized in rem and does not shrink with the block's em
     container.className = cx(corner, this.belowRendering ? cornerAtBottom : cornerAtTop);
-    disposers.set(
-      container,
-      render(() => <CodeCorner view={view} container={container} fence={this.fence} />, container),
-    );
+    let disposed = false;
+    let dispose: (() => void) | undefined;
+    disposers.set(container, () => {
+      disposed = true;
+      dispose?.();
+    });
+    // Defer Solid's render() past CodeMirror's EditorView.update and any enclosing Solid onSettled:
+    // Solid 2 flushes synchronously inside render(), which would re-enter EditorView.update or
+    // throw PRIMITIVE_IN_FORBIDDEN_SCOPE during initial mount.
+    queueMicrotask(() => {
+      if (disposed) return;
+      dispose = render(
+        () => <CodeCorner view={view} container={container} fence={this.fence} />,
+        container,
+      );
+    });
     return container;
   }
 
