@@ -196,8 +196,8 @@ export const TableView: Component<TableViewProps> = (props) => {
             class="md-table-input"
             dir="auto"
             spellcheck={false}
+            defaultValue={source()?.text ?? ""}
             ref={(input) => {
-              input.value = source()?.text ?? "";
               queueMicrotask(() => {
                 input.focus();
                 input.setSelectionRange(input.value.length, input.value.length);
