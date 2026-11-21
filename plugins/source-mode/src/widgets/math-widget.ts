@@ -8,6 +8,11 @@ import { onReveal, onScrollbar } from "#widget-events";
  * cannot replace it. A rendered block keeps its element across edits (updateDOM).
  */
 const showing = new WeakMap<Element, string>();
+// Keeping recent SVGs lets a formula keep its size synchronously when switching between closed and
+// open states instead of collapsing to 0px for a frame while renderMath resolves
+const MAX_CACHED_MATH = 200;
+const rendered = new Map<string, string>();
+const cacheKey = (tex: string, display: boolean) => `${display ? "1" : "0"}:${tex}`;
 
 export class MathWidget extends WidgetType {
   constructor(
@@ -52,8 +57,17 @@ export class MathWidget extends WidgetType {
   }
 
   private renderInto(element: HTMLElement, view: EditorView): void {
+    const key = cacheKey(this.tex, this.display);
+    const cached = rendered.get(key);
+    if (cached !== undefined) {
+      showing.set(element, this.tex);
+      element.innerHTML = cached;
+      return;
+    }
     showing.set(element, this.tex);
     void renderMath(this.tex, this.display).then((svg) => {
+      if (rendered.size >= MAX_CACHED_MATH) rendered.clear();
+      rendered.set(key, svg);
       if (!element.isConnected || showing.get(element) !== this.tex) return;
       element.innerHTML = svg;
       view.requestMeasure();
