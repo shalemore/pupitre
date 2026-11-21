@@ -4,7 +4,7 @@ import { t } from "@pupitre/i18n/solid";
 import { Combobox, IconButton, type SelectOption } from "@pupitre/ui";
 import type { JSX } from "@solidjs/web";
 import { RefreshCw } from "lucide-solid";
-import { createRoot, createSignal, type Component, Show } from "solid-js";
+import { createSignal, type Component, Show } from "solid-js";
 import { GENERIC_FAMILIES, listFontFamilies, type FontFamily } from "@/lib/fonts";
 import { themeApplied } from "@/lib/theme";
 import { readToken, type TokenName } from "@/lib/tokens";
@@ -43,18 +43,16 @@ export function themeFontLabel(token: TokenName): string {
 }
 
 // The three font pickers share one font list that is queried once; the refresh button queries again
-const fonts = createRoot(() => {
-  const [list, setList] = createSignal<readonly FontFamily[]>([]);
-  const [loading, setLoading] = createSignal(false);
-  const refresh = (force = true) => {
-    setLoading(true);
-    void listFontFamilies(force)
-      .then(setList, () => undefined)
-      .finally(() => setLoading(false));
-  };
-  refresh(false);
-  return { list, loading, refresh: () => refresh(true) };
-});
+const [fontList, setFontList] = createSignal<readonly FontFamily[]>([]);
+const [fontsLoading, setFontsLoading] = createSignal(false);
+const refreshFonts = (force = true) => {
+  setFontsLoading(true);
+  void listFontFamilies(force)
+    .then(setFontList, () => undefined)
+    .finally(() => setFontsLoading(false));
+};
+refreshFonts(false);
+const fonts = { list: fontList, loading: fontsLoading, refresh: () => refreshFonts(true) };
 
 const spin = css({ animation: "spin" });
 const optionRow = css({ display: "flex", alignItems: "center", gap: "1.5" });
