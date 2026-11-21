@@ -1144,7 +1144,7 @@
   }
 
   @starting-style {
-    .md-code-block {
+    .md-code-block:not(.md-code-render) {
       background-color: transparent;
       border-color: transparent;
     }
