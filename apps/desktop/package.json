@@ -31,8 +31,7 @@
     "check:bundle": "node scripts/check-bundle-size.ts",
     "typecheck": "tsrs -b",
     "check:css": "node scripts/check-css.ts",
-    "check:architecture": "node scripts/check-architecture.ts",
-    "prepare": "panda codegen"
+    "check:architecture": "node scripts/check-architecture.ts"
   },
   "dependencies": {
     "electron-log": "^5.4.4",
@@ -50,15 +49,10 @@
     "@electron/fuses": "^1.8.0",
     "@joplin/turndown-plugin-gfm": "^1.0.68",
     "@lezer/common": "^1.5.4",
-    "@pandacss/dev": "^2.4.0",
-    "@pandacss/preset-base": "^2.4.0",
-    "@pandacss/preset-panda": "^2.4.0",
-    "@pandacss/vite": "^2.4.0",
     "@playwright/test": "^1.64.1",
     "@pupitre/desktop-api": "workspace:*",
     "@pupitre/i18n": "workspace:*",
     "@pupitre/markdown": "workspace:*",
-    "@pupitre/panda-preset": "workspace:*",
     "@pupitre/plugin-sdk": "workspace:*",
     "@pupitre/plugin-source-mode": "workspace:*",
     "@pupitre/plugin-writing-modes": "workspace:*",

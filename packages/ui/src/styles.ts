@@ -1,13 +1,4 @@
-import { css } from "./styled-system/css";
-
-/** A single line of text clipped with an ellipsis, to compose as `css(truncateStyle, { … })`. */
-export const truncateStyle = css.raw({
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
-});
-
-/** The same clip as a class, for an element that needs nothing else. */
+/** A single line of text clipped with an ellipsis. */
 export const truncate = "truncate";
 
 /** A glyph that points the other way in a right-to-left window. */
@@ -53,11 +44,3 @@ export const listboxReset = "outline-none";
 /** The caret that turns while the popup it names is open. */
 export const chevronTurnClass =
   "transition-transform duration-base ease-out-expo [[data-open]_&]:rotate-180";
-
-/** The caret that turns while the popup it names is open. */
-export const chevronTurn = css.raw({
-  transitionProperty: "transform",
-  transitionDuration: "base",
-  transitionTimingFunction: "outExpo",
-  "[data-open] &": { transform: "rotate(180deg)" },
-});

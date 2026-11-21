@@ -6,10 +6,7 @@
 /apps/desktop/playwright-report
 /apps/desktop/blob-report
 /apps/desktop/coverage
-/apps/desktop/src/renderer/styled-system
 /apps/desktop/.perf-fixtures
-/packages/*/styled-system
-/packages/*/src/styled-system
 /packages/*/dist
 /plugins/*/dist
 pnpm-debug.log*

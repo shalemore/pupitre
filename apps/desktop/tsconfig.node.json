@@ -17,15 +17,12 @@
     { "path": "../../packages/settings" },
     { "path": "../../packages/desktop-api" },
     { "path": "../../packages/plugin-sdk" },
-    { "path": "../../packages/panda-preset" },
     { "path": "../../packages/utils" }
   ],
   "include": [
     "../../oxlint.config.ts",
     "electron.vite.config.ts",
     "vite.shared.ts",
-    "panda.config.ts",
-    "../../packages/*/panda.config.ts",
     "vite.web.config.ts",
     "vitest.config.ts",
     "vitest.bench.config.ts",

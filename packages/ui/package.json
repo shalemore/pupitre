@@ -15,9 +15,6 @@
       "import": "./src/styles.ts"
     }
   },
-  "scripts": {
-    "prepare": "panda codegen"
-  },
   "dependencies": {
     "@pupitre/utils": "workspace:*",
     "@solidjs/web": "^2.0.3",
@@ -26,12 +23,6 @@
     "class-variance-authority": "^0.7.1",
     "cn": "^0.5.2",
     "lucide-solid": "^1.77.0"
-  },
-  "devDependencies": {
-    "@pandacss/dev": "^2.4.0",
-    "@pandacss/preset-base": "^2.4.0",
-    "@pandacss/preset-panda": "^2.4.0",
-    "@pupitre/panda-preset": "workspace:*"
   },
   "peerDependencies": {
     "@solidjs/web": "^2.0.3",

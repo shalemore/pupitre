@@ -12,7 +12,7 @@
         "src/renderer/plugin-host/host.ts",
         "src/renderer/plugin-host/surface.ts",
         // The plugin the end-to-end suite installs; the app loads its modules, not the test
-        "e2e/fixtures/plugins/*/*.js",
+        "e2e/fixtures/plugins/*/*.{js,css}",
       ],
     },
     "packages/*": {
