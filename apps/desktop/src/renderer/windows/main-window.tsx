@@ -66,6 +66,7 @@ const EMPTY_SEARCH: SearchOptions = {
   wholeWord: false,
   regexp: false,
 };
+const EMPTY_STATS: TextStats = { words: 0, characters: 0, cjk: 0 };
 /** The outline of a document nothing is folded in yet, and of no document at all. */
 const OPEN_SECTIONS: ReadonlySet<string> = new Set();
 
@@ -129,9 +130,20 @@ export const MainWindow: Component = () => {
       (document.path === undefined || MARKDOWN_FILE.test(document.path))
     );
   };
-  const [outline, setOutline] = createSignal<OutlineHeading[]>([]);
-  const [activeHeading, setActiveHeading] = createSignal(-1);
-  const [stats, setStats] = createSignal<TextStats>({ words: 0, characters: 0, cjk: 0 });
+  const activeDocumentId = () => session.activeDocument()?.id;
+  // Writable derived signals reset in the same flush when switching or closing a document
+  const [outline, setOutline] = createSignal<OutlineHeading[]>(() => {
+    activeDocumentId();
+    return [];
+  });
+  const [activeHeading, setActiveHeading] = createSignal(() => {
+    activeDocumentId();
+    return -1;
+  });
+  const [stats, setStats] = createSignal<TextStats>(() => {
+    activeDocumentId();
+    return EMPTY_STATS;
+  });
   // The count ends the bar in either layout: beside the tabs, or at the end of the title's grid
   const wordCount = () => (
     <Show
@@ -145,8 +157,11 @@ export const MainWindow: Component = () => {
   const [openedFolder, setOpenedFolder] = createSignal<string | undefined>(
     desktop.initialState.folder,
   );
-  // A folder just opened on purpose, shown even while a document outside it stays on show
-  const [folderView, setFolderView] = createSignal<string>();
+  // A folder just opened on purpose, shown until another document is chosen
+  const [folderView, setFolderView] = createSignal<string | undefined>(() => {
+    activeDocumentId();
+    return undefined;
+  });
   const [preferredMode, setPreferredMode] = createSignal<SidebarMode>("outline");
   const [findMode, setFindMode] = createSignal<FindMode>("closed");
   const [overlay, setOverlay] = createSignal<Overlay>();
@@ -219,12 +234,6 @@ export const MainWindow: Component = () => {
     if (doc?.path !== undefined && !isInsideFolder(opened, doc.path)) return doc.folder;
     return opened;
   });
-  // Choosing another document hands the sidebar back to that document's folder
-  createEffect(
-    () => session.activeDocument()?.id,
-    () => setFolderView(undefined),
-    { defer: true },
-  );
   createEffect(
     openedFolder,
     (folder) => {
@@ -374,11 +383,6 @@ export const MainWindow: Component = () => {
       if (shown.id === previous?.id) return;
       setFindMode("closed");
       if (shown.overlay === "history") closeOverlay();
-      // A picture has no outline, counts or heading; the editor fills these in again when it
-      // shows the text of the next document
-      setOutline([]);
-      setActiveHeading(-1);
-      setStats({ words: 0, characters: 0, cjk: 0 });
       chrome.show();
     },
   );
