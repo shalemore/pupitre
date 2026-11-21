@@ -15,6 +15,32 @@ function setOptionalProperty(name: TokenName, value: string | undefined): void {
   else writeToken(document.documentElement.style, name, value);
 }
 
+const appearance = createRoot(() => {
+  const isDark = createPrefersDark();
+
+  const activeTheme = createMemo(() => {
+    const { theme, darkTheme } = settings();
+    const available = (id: string) => themes().some((candidate) => candidate.id === id);
+    // A theme folder removed since it was chosen gives the light theme back to the default
+    const light = available(theme) ? theme : DEFAULT_THEME;
+    if (isDark() && darkTheme !== "") return available(darkTheme) ? darkTheme : light;
+    return light;
+  });
+
+  // The CSS is resolved where the change is seen: a theme folder added, changed or removed while
+  // the app runs replaces the stylesheet of the theme that uses it, and the memo hands the effect
+  // a new value only when the theme, that CSS or the dark preference changed
+  const shown = createMemo(() => {
+    const id = activeTheme();
+    return { id, css: themeCss(id), dark: isDark() };
+  });
+
+  return { activeTheme, shown };
+});
+
+/** The active theme, its CSS and the dark preference; read it to redo work that copies theme colors. */
+export const shownTheme = appearance.shown;
+
 /**
  * Makes the window follow the settings: theme, text direction, motion and typography.
  * Called once per window before the first render, so the first paint already uses the theme.
@@ -22,27 +48,9 @@ function setOptionalProperty(name: TokenName, value: string | undefined): void {
 export function setupAppearance(): void {
   const root = document.documentElement;
   root.dataset["platform"] = desktop.platform;
+  const { activeTheme } = appearance;
 
   createRoot(() => {
-    const isDark = createPrefersDark();
-
-    const activeTheme = createMemo(() => {
-      const { theme, darkTheme } = settings();
-      const available = (id: string) => themes().some((candidate) => candidate.id === id);
-      // A theme folder removed since it was chosen gives the light theme back to the default
-      const light = available(theme) ? theme : DEFAULT_THEME;
-      if (isDark() && darkTheme !== "") return available(darkTheme) ? darkTheme : light;
-      return light;
-    });
-
-    // The CSS is resolved where the change is seen: a theme folder added, changed or removed while
-    // the app runs replaces the stylesheet of the theme that uses it, and the memo hands the effect
-    // a new value only when the theme, that CSS or the dark preference changed
-    const shownTheme = createMemo(() => {
-      const id = activeTheme();
-      return { id, css: themeCss(id), dark: isDark() };
-    });
-
     // Effects run in creation order: the theme is applied before anything reads its values
     let appliedTheme: string | undefined;
     createEffect(shownTheme, ({ id, css, dark }) => {

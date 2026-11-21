@@ -5,8 +5,8 @@ import { Combobox, IconButton, type SelectOption } from "@pupitre/ui";
 import type { JSX } from "@solidjs/web";
 import { RefreshCw } from "lucide-solid";
 import { createSignal, type Component, Show } from "solid-js";
+import { shownTheme } from "@/lib/appearance";
 import { GENERIC_FAMILIES, listFontFamilies, type FontFamily } from "@/lib/fonts";
-import { themeApplied } from "@/lib/theme";
 import { readToken, type TokenName } from "@/lib/tokens";
 import { css, cx } from "@/styled-system/css";
 
@@ -21,7 +21,7 @@ const WINDOWS_FAMILIES = new Set([
 /** The first face the active theme's stack names, so a setting can show what it would fall back to. */
 function themeFontName(token: TokenName): string | undefined {
   // Read again after a theme switch, which rewrites the variables
-  themeApplied();
+  shownTheme();
   const stack = readToken(getComputedStyle(document.documentElement), token);
   const families = stack
     .split(",")

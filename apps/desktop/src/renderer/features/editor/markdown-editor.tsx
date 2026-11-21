@@ -63,6 +63,7 @@ import {
 import { ScrollView } from "@pupitre/ui";
 import { debounce, escapeHtml, messageOf } from "@pupitre/utils";
 import { createEffect, createSignal, onSettled, untrack, type Component } from "solid-js";
+import { shownTheme } from "@/lib/appearance";
 import {
   type DocumentPosition,
   flushDocumentPositions,
@@ -74,7 +75,6 @@ import { listen } from "@/lib/listen";
 import { type PendingImages } from "@/lib/pending-images";
 import { settings } from "@/lib/settings";
 import { type TextStats } from "@/lib/text-stats";
-import { themeApplied } from "@/lib/theme";
 import { withViewTransition } from "@/lib/view-transition";
 import { pluginExtensions, pluginSettingsChanged, restoresScroll } from "@/plugins/registry";
 import { cursorStyle, restartCursorBlink } from "./cursor";
@@ -325,7 +325,7 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
   // Diagrams copy the theme's colors and the body font, so they are drawn again when either
   // changes. The appearance effects that set them were created first and have run by now.
   applyToEditor(
-    () => [themeApplied(), settings().bodyFont, settings().fallbackFont] as const,
+    () => [shownTheme(), settings().bodyFont, settings().fallbackFont] as const,
     (view) =>
       view.dispatch({
         effects: diagramThemeCompartment.reconfigure(diagramTheme.of(readDiagramTheme())),

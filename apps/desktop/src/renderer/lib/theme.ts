@@ -182,8 +182,6 @@ export function themes(): readonly ThemeInfo[] {
   return allThemes();
 }
 
-const [applied, setApplied] = createSignal(undefined, { equals: false });
-
 /**
  * The element that carries the active theme, found in the document rather than kept in a module
  * variable: a second instance of this module, such as one a hot update leaves behind, must still
@@ -197,12 +195,6 @@ function themeStyleElement(): HTMLStyleElement {
   document.head.append(element);
   return element;
 }
-
-/**
- * Notifies every time the theme is applied, including a switch of the color scheme. Read it to
- * redo work that copies theme colors outside CSS, such as diagrams.
- */
-export const themeApplied = applied;
 
 function cssFor(id: string): string | undefined {
   const found = imported().find((theme) => `${theme.source}:${theme.folder}` === id);
@@ -218,10 +210,9 @@ export function themeCss(id: string): string {
   return cssFor(id) ?? cssFor(DEFAULT_THEME) ?? "";
 }
 
-/** Puts a theme's stylesheet in the document, and tells whoever copies its colors that it moved. */
+/** Puts a theme's stylesheet in the document. */
 export function applyThemeCss(css: string): void {
   themeStyleElement().textContent = `@layer document-theme {\n${css}\n}`;
-  setApplied();
 }
 
 /**
