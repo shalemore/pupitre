@@ -1,6 +1,5 @@
 import type { EditorView } from "@codemirror/view";
 import { imageIn, InlineImage, setImageLayout } from "@pupitre/markdown";
-import { css } from "@pupitre/ui";
 import { type Component, createEffect } from "solid-js";
 import { imageDom } from "#images/image-widget";
 
@@ -31,9 +30,7 @@ export const TableCellImage: Component<{ view: EditorView; image: InlineImage }>
       ref={(element) => {
         host = element;
       }}
-      class={hiddenHost}
+      class="block w-full"
     />
   );
 };
-
-const hiddenHost = css({ display: "block", width: "full" });

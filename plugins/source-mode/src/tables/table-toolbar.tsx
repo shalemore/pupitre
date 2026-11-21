@@ -14,7 +14,7 @@ import {
   moveRow,
   type TableModel,
 } from "@pupitre/markdown";
-import { css, cx, IconButton, Separator } from "@pupitre/ui";
+import { cn, IconButton, Separator } from "@pupitre/ui";
 import { rtlFlip } from "@pupitre/ui/styles";
 import type { JSX } from "@solidjs/web";
 import {
@@ -45,7 +45,7 @@ const ToolButton: Component<{
 }> = (props) => (
   <IconButton
     label={props.label}
-    class={cx(props.danger && dangerButton)}
+    class={cn(props.danger && "hover:bg-destructive/10 hover:text-destructive")}
     // Keeps the focus, and with it the cell being edited, in the table
     onMouseDown={(event) => event.preventDefault()}
     onClick={() => props.onClick()}
@@ -54,42 +54,13 @@ const ToolButton: Component<{
   </IconButton>
 );
 
-const dangerButton = css({
-  _hover: { backgroundColor: "destructive/10", color: "destructive" },
-});
-const deleted = css({ position: "relative", display: "inline-flex" });
-const deletedCross = css({
-  position: "absolute",
-  insetInlineEnd: "-0.5",
-  insetBlockEnd: "-0.5",
-  width: "2",
-  height: "2",
-});
-const toolbar = css({
-  position: "absolute",
-  insetBlockEnd: "[100%]",
-  insetInlineStart: "0",
-  zIndex: "10",
-  marginBlockEnd: "1",
-  display: "flex",
-  alignItems: "center",
-  gap: "0.5",
-  borderRadius: "lg",
-  backgroundColor: "popover",
-  padding: "0.5",
-  boxShadow: "float",
-  animationName: "fadeInUpSmall",
-  animationDuration: "base",
-  animationTimingFunction: "enter",
-  _print: { display: "none" },
-});
-const toolbarSeparator = css({ marginInline: "0.5", height: "4" });
+const toolbarSeparator = "mx-0.5 h-4";
 
 /** A row or column with a cross on it, the way `Grid2x2X` marks a table that is deleted whole. */
 const Deleted = (props: { children: JSX.Element }) => (
-  <span class={deleted}>
+  <span class="relative inline-flex">
     {props.children}
-    <X class={deletedCross} stroke-width={2} />
+    <X class="absolute -end-0.5 -bottom-0.5 size-2" stroke-width={2} />
   </span>
 );
 
@@ -110,7 +81,7 @@ export const TableToolbar: Component<{
     props.run((model) => alignColumn(state(), model, column(), value), props.cell);
 
   return (
-    <div class={toolbar}>
+    <div class="absolute bottom-full start-0 z-10 mb-1 flex items-center gap-0.5 rounded-lg bg-popover p-0.5 shadow-float animate-fade-in-up-small print:hidden">
       <ToolButton label={labels().alignStart} onClick={() => align("start")}>
         <TextAlignStart class={rtlFlip} />
       </ToolButton>

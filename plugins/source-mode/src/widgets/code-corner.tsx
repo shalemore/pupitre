@@ -3,8 +3,6 @@ import { type EditorView, WidgetType } from "@codemirror/view";
 import { desktop } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
 import { codeLanguages, fencedText } from "@pupitre/markdown";
-import { css } from "@pupitre/ui";
-import { truncateStyle } from "@pupitre/ui/styles";
 import { debounce } from "@pupitre/utils";
 import { Check, Copy } from "lucide-solid";
 import { createMemo, createSignal, For, onCleanup, Show, type Component } from "solid-js";
@@ -12,55 +10,12 @@ import { mountWidget, unmountWidget } from "#mount-widget";
 
 const COPIED_MS = 1500;
 
-const languagePicker = css(truncateStyle, {
-  fieldSizing: "content",
-  maxWidth: "32",
-  minWidth: "0",
-  marginInline: "-1",
-  appearance: "none",
-  borderRadius: "sm",
-  borderWidth: "[0]",
-  backgroundColor: "transparent",
-  paddingInline: "1",
-  paddingBlock: "0.5",
-  cursor: "pointer",
-  layerStyle: "interactive",
-  _hover: { backgroundColor: "accent", color: "foreground" },
-  _focusVisible: { outlineStyle: "none", boxShadow: "focus" },
-});
-const corner = css({
-  position: "absolute",
-  top: "var(--md-code-corner-gap)",
-  zIndex: "1",
-  insetInlineEnd: "2",
-  display: "flex",
-  alignItems: "center",
-  gap: "1.5",
-  fontFamily: "sans",
-  fontSize: "xs",
-  lineHeight: "[1]",
-  color: "tertiary",
-  userSelect: "none",
-});
-const copy = css({
-  display: "grid",
-  width: "var(--md-code-corner-size)",
-  height: "var(--md-code-corner-size)",
-  placeItems: "center",
-  borderRadius: "sm",
-  borderWidth: "[0]",
-  backgroundColor: "transparent",
-  padding: "0",
-  opacity: 0.6,
-  cursor: "pointer",
-  transitionProperty: "opacity, color, background-color",
-  transitionDuration: "ui",
-  transitionTimingFunction: "outExpo",
-  _hover: { backgroundColor: "accent", color: "foreground", opacity: 1 },
-  "&[data-copied]": { opacity: 1, color: "success" },
-  "& svg": { width: "3.5", height: "3.5" },
-  _print: { display: "none" },
-});
+const languagePicker =
+  "interactive truncate [field-sizing:content] max-w-32 min-w-0 -mx-1 appearance-none rounded-sm border-0 bg-transparent px-1 py-0.5 cursor-pointer hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:shadow-focus";
+const corner =
+  "absolute top-(--md-code-corner-gap) z-1 end-2 flex items-center gap-1.5 font-sans text-xs leading-none text-tertiary select-none";
+const copy =
+  "grid size-(--md-code-corner-size) place-items-center rounded-sm border-0 bg-transparent p-0 opacity-60 cursor-pointer transition-[opacity,color,background-color] duration-ui ease-out-expo hover:bg-accent hover:text-foreground hover:opacity-100 data-[copied]:opacity-100 data-[copied]:text-success [&>svg]:size-3.5 print:hidden";
 
 /**
  * The part of a fence line that names the language: everything after the opening backticks. A pick
