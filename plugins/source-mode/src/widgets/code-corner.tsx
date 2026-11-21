@@ -6,9 +6,9 @@ import { codeLanguages, fencedText } from "@pupitre/markdown";
 import { css } from "@pupitre/ui";
 import { truncateStyle } from "@pupitre/ui/styles";
 import { debounce } from "@solid-primitives/scheduled";
-import { render } from "@solidjs/web";
 import { Check, Copy } from "lucide-solid";
 import { createMemo, createSignal, For, Show, type Component } from "solid-js";
+import { mountWidget, unmountWidget } from "#mount-widget";
 
 const COPIED_MS = 1500;
 
@@ -221,8 +221,6 @@ const CodeCorner: Component<{
   );
 };
 
-const disposers = new WeakMap<HTMLElement, () => void>();
-
 /** Whether two corners stand for the same pick at the same place in the document. */
 function sameFence(a: FenceInfo | undefined, b: FenceInfo | undefined): boolean {
   if (!a || !b) return a === b;
@@ -253,27 +251,14 @@ export class CodeCornerWidget extends WidgetType {
     // Above the code lines it overlaps while the fence line is shrunk; interface rather than
     // document, so it is sized in rem and does not shrink with the block's em
     container.className = corner;
-    let disposed = false;
-    let dispose: (() => void) | undefined;
-    disposers.set(container, () => {
-      disposed = true;
-      dispose?.();
-    });
-    // Defer Solid's render() past CodeMirror's EditorView.update and any enclosing Solid onSettled:
-    // Solid 2 flushes synchronously inside render(), which would re-enter EditorView.update or
-    // throw PRIMITIVE_IN_FORBIDDEN_SCOPE during initial mount.
-    queueMicrotask(() => {
-      if (disposed) return;
-      dispose = render(
-        () => <CodeCorner view={view} container={container} fence={this.fence} />,
-        container,
-      );
-    });
+    mountWidget(container, () => (
+      <CodeCorner view={view} container={container} fence={this.fence} />
+    ));
     return container;
   }
 
   override destroy(dom: HTMLElement): void {
-    disposers.get(dom)?.();
+    unmountWidget(dom);
   }
 
   override ignoreEvent(): boolean {

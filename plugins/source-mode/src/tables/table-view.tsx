@@ -4,7 +4,7 @@ import type { EditorView } from "@codemirror/view";
 import { columnCount, editCell, imageIn, insertRow, type TableModel } from "@pupitre/markdown";
 import { css, cx } from "@pupitre/ui";
 import { Dynamic } from "@solidjs/web";
-import { type Accessor, type Component, createMemo, Repeat, type Setter, Show } from "solid-js";
+import { type Accessor, type Component, createMemo, Repeat, Show } from "solid-js";
 import { InlineContent } from "./inline-view";
 import { type CellPosition, TableCellImage } from "./table-cell";
 import { TableToolbar } from "./table-toolbar";
@@ -21,7 +21,7 @@ interface TableViewProps {
   view: EditorView;
   model: Accessor<TableModel>;
   active: Accessor<CellPosition | undefined>;
-  setActive: Setter<CellPosition | undefined>;
+  setActive: (pos: CellPosition | undefined) => void;
 }
 
 const tableRoot = css({ position: "relative" });

@@ -1,19 +1,17 @@
 import { syntaxTree } from "@codemirror/language";
 import { type EditorView, ViewPlugin, type ViewUpdate, WidgetType } from "@codemirror/view";
 import { readTable, type TableModel } from "@pupitre/markdown";
-import { render } from "@solidjs/web";
-import { createSignal, type Setter } from "solid-js";
 import type { CellPosition } from "./table-cell";
 import { TableView } from "./table-view";
 import { fadeOut } from "#leave";
+import { createStatefulWidgets } from "#mount-widget";
 
-interface Mounted {
-  setModel: (model: TableModel) => void;
-  setActive: (pos: CellPosition | undefined) => void;
-  dispose: () => void;
+interface TableWidgetState {
+  model: TableModel;
+  active: CellPosition | undefined;
 }
 
-const mounted = new WeakMap<HTMLElement, Mounted>();
+const tables = createStatefulWidgets<TableWidgetState>();
 
 /** A rendered, editable table; its DOM is kept across edits so the field being typed in stays. */
 export class TableWidget extends WidgetType {
@@ -31,55 +29,24 @@ export class TableWidget extends WidgetType {
   toDOM(view: EditorView): HTMLElement {
     const container = document.createElement("div");
     container.className = "md-table-block";
-    let pendingModel = this.model;
-    let pendingActive: CellPosition | undefined;
-    let disposed = false;
-    let setModelSignal: Setter<TableModel> | undefined;
-    let setActiveSignal: Setter<CellPosition | undefined> | undefined;
-    let disposeRoot: (() => void) | undefined;
-
-    mounted.set(container, {
-      setModel: (next) => {
-        pendingModel = next;
-        setModelSignal?.(next);
-      },
-      setActive: (next) => {
-        pendingActive = next;
-        setActiveSignal?.(next);
-      },
-      dispose: () => {
-        disposed = true;
-        disposeRoot?.();
-      },
-    });
-
-    // Defer Solid's render() past CodeMirror's EditorView.update and any enclosing Solid onSettled:
-    // Solid 2 flushes synchronously inside render(), which would re-enter EditorView.update or
-    // throw PRIMITIVE_IN_FORBIDDEN_SCOPE during initial mount.
-    queueMicrotask(() => {
-      if (disposed) return;
-      const [model, setModel] = createSignal(pendingModel);
-      const [active, setActive] = createSignal<CellPosition | undefined>(pendingActive);
-      setModelSignal = setModel;
-      setActiveSignal = setActive;
-      disposeRoot = render(
-        () => <TableView view={view} model={model} active={active} setActive={setActive} />,
-        container,
-      );
-    });
+    tables.mount(container, { model: this.model, active: undefined }, (state, update) => (
+      <TableView
+        view={view}
+        model={() => state().model}
+        active={() => state().active}
+        setActive={(active) => update((current) => ({ ...current, active }))}
+      />
+    ));
     return container;
   }
 
   override updateDOM(dom: HTMLElement): boolean {
-    const table = mounted.get(dom);
-    if (!table) return false;
-    table.setModel(this.model);
-    return true;
+    return tables.update(dom, (current) => ({ ...current, model: this.model }));
   }
 
   override destroy(dom: HTMLElement): void {
     fadeOut(dom);
-    mounted.get(dom)?.dispose();
+    tables.unmount(dom);
   }
 
   override ignoreEvent(): boolean {
@@ -91,7 +58,7 @@ export class TableWidget extends WidgetType {
 function focusCell(view: EditorView, tableFrom: number, row: number, column: number): void {
   for (const dom of view.contentDOM.querySelectorAll<HTMLElement>(".md-table-block")) {
     if (view.posAtDOM(dom) !== tableFrom) continue;
-    mounted.get(dom)?.setActive({ row, column });
+    tables.update(dom, (current) => ({ ...current, active: { row, column } }));
     return;
   }
 }
