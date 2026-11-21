@@ -3,7 +3,7 @@ import { type EditorView, WidgetType } from "@codemirror/view";
 import { desktop } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
 import { codeLanguages, fencedText } from "@pupitre/markdown";
-import { css, cx } from "@pupitre/ui";
+import { css } from "@pupitre/ui";
 import { truncateStyle } from "@pupitre/ui/styles";
 import { debounce } from "@solid-primitives/scheduled";
 import { render } from "@solidjs/web";
@@ -30,6 +30,7 @@ const languagePicker = css(truncateStyle, {
 });
 const corner = css({
   position: "absolute",
+  top: "var(--md-code-corner-gap)",
   zIndex: "1",
   insetInlineEnd: "2",
   display: "flex",
@@ -41,10 +42,6 @@ const corner = css({
   color: "tertiary",
   userSelect: "none",
 });
-const cornerAtTop = css({ top: "var(--md-code-corner-gap)" });
-// The line holding a rendering starts at the rendering; the fence sits at its bottom edge, which
-// is where the corner belongs
-const cornerAtBottom = css({ bottom: "0" });
 const copy = css({
   display: "grid",
   width: "var(--md-code-corner-size)",
@@ -243,23 +240,19 @@ function sameFence(a: FenceInfo | undefined, b: FenceInfo | undefined): boolean 
  * hidden, and a button that copies the code without the fences.
  */
 export class CodeCornerWidget extends WidgetType {
-  constructor(
-    readonly fence: FenceInfo | undefined,
-    /** Whether the opening line also holds a rendering, which puts the fence at its bottom. */
-    readonly belowRendering = false,
-  ) {
+  constructor(readonly fence: FenceInfo | undefined) {
     super();
   }
 
   override eq(other: CodeCornerWidget): boolean {
-    return sameFence(other.fence, this.fence) && other.belowRendering === this.belowRendering;
+    return sameFence(other.fence, this.fence);
   }
 
   toDOM(view: EditorView): HTMLElement {
     const container = document.createElement("span");
     // Above the code lines it overlaps while the fence line is shrunk; interface rather than
     // document, so it is sized in rem and does not shrink with the block's em
-    container.className = cx(corner, this.belowRendering ? cornerAtBottom : cornerAtTop);
+    container.className = corner;
     let disposed = false;
     let dispose: (() => void) | undefined;
     disposers.set(container, () => {

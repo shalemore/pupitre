@@ -120,7 +120,7 @@ export function showsRendering(state: EditorState, node: SyntaxNode): boolean {
 
 /**
  * The source of an HTML block that shows its rendering above it once the selection is inside: the
- * same code card a fence uses, with the copy button, so the block reads as one piece.
+ * same code card a fence uses, with the copy button.
  */
 export function visitHtmlSource(builder: DecorationBuilder, node: SyntaxNode): void {
   if (!touches(builder.ranges, ...lineRange(builder.state, node))) return;
@@ -128,40 +128,27 @@ export function visitHtmlSource(builder: DecorationBuilder, node: SyntaxNode): v
   const last = builder.lineAt(node.to).number;
   builder.eachLine(node.from, node.to, (line, number) => {
     line.classes.add("md-code-block");
-    if (number === first) {
-      line.classes.add("md-code-block-start");
-      line.classes.add("md-code-render");
-    }
+    if (number === first) line.classes.add("md-code-block-start");
     if (number === last) line.classes.add("md-code-block-end");
   });
-  // No fence names a language here; the corner is the copy button alone, under the rendering
-  const widget = new CodeCornerWidget(undefined, true);
-  builder.decorations.push(
-    Decoration.widget({ widget, side: -1 }).range(builder.lineAt(node.from).to),
-  );
+  const widget = new CodeCornerWidget(undefined);
+  builder.decorations.push(Decoration.widget({ widget, side: -1 }).range(node.from));
 }
 
 export function visitCodeBlock(builder: DecorationBuilder, node: SyntaxNode): void {
   const first = builder.lineAt(node.from).number;
   const last = builder.lineAt(node.to).number;
   const active = touches(builder.ranges, ...lineRange(builder.state, node));
-  const rendering = active && showsRendering(builder.state, node);
   builder.eachLine(node.from, node.to, (line, number) => {
     line.classes.add("md-code-block");
-    if (number === first) {
-      line.classes.add("md-code-block-start");
-      // The line holding the rendering takes it over its own padding and line box (editor.css)
-      if (rendering) line.classes.add("md-code-render");
-    }
+    if (number === first) line.classes.add("md-code-block-start");
     if (number === last) line.classes.add("md-code-block-end");
   });
   const info = node.getChild("CodeInfo");
-  // The corner stands at the end of the opening line: the fence names the language, and the same
-  // line carries the button that copies the block, so the source starts right under it. A closed
-  // block keeps it at the start of the line the rendering takes over.
-  const widget = new CodeCornerWidget(fenceInfo(builder, node, active), rendering);
-  const corner = rendering ? builder.lineAt(node.from).to : node.from;
-  builder.decorations.push(Decoration.widget({ widget, side: -1 }).range(corner));
+  // The corner stands at the start of the opening line: the fence names the language, and the
+  // same line carries the button that copies the block, so the source starts right under it.
+  const widget = new CodeCornerWidget(fenceInfo(builder, node, active));
+  builder.decorations.push(Decoration.widget({ widget, side: -1 }).range(node.from));
   if (node.name === "CodeBlock") return;
 
   for (const fence of node.getChildren(node.name === "BlockMath" ? "MathMark" : "CodeMark")) {

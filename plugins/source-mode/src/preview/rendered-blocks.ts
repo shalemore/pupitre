@@ -190,10 +190,9 @@ function buildDecorations(state: EditorState): RenderedBlocksState {
       if (node.name === "Table" || !touched) {
         hideLines(node.from, node.to, widget);
       } else {
-        // Math, diagrams, HTML and pictures open in the first line of their source, which is a
-        // code card, so the rendering and the source stay one piece instead of becoming two
-        // blocks of their own, in that order whichever the construct is
-        decorations.push(Decoration.widget({ widget, side: 1 }).range(from));
+        // Place the rendering as its own block before the source lines so the source card and its
+        // framing stay separate from the rendered preview
+        decorations.push(Decoration.widget({ widget, block: true, side: -1 }).range(from));
       }
       return false;
     },

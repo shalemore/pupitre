@@ -40,7 +40,7 @@ export const layeredStyles = EditorView.theme({
   ".cm-line": { padding: "revert-layer" },
   // A rendering fills the top of a code card, and a picture the top of the line its source stands
   // in (editor.css), so the buffers that stand around the widget would leave a line box above it
-  ".cm-line:is(.md-code-render, .md-image-source) > .cm-widgetBuffer": { display: "revert-layer" },
+  ".cm-line.md-image-source > .cm-widgetBuffer": { display: "revert-layer" },
   "&.cm-editor .cm-searchMatch, &.cm-editor .cm-searchMatch-selected": {
     backgroundColor: "revert-layer",
   },
