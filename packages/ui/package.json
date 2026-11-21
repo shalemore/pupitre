@@ -23,6 +23,8 @@
     "@solidjs/web": "^2.0.3",
     "@ui-sdk/core": "^0.1.0-beta.13",
     "@ui-sdk/solid": "^0.1.0-beta.13",
+    "class-variance-authority": "^0.7.1",
+    "cn": "^0.5.2",
     "lucide-solid": "^1.77.0"
   },
   "devDependencies": {

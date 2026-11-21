@@ -1,3 +1,4 @@
+import { TITLE_BAR_HEIGHT } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import { currentDirection, currentLocale } from "@pupitre/i18n/solid";
 import { CONTENT_WIDTHS } from "@pupitre/settings";
@@ -48,6 +49,7 @@ export const shownTheme = appearance.shown;
 export function setupAppearance(): void {
   const root = document.documentElement;
   root.dataset["platform"] = desktop.platform;
+  root.style.setProperty("--title-bar-height", `${TITLE_BAR_HEIGHT}px`);
   const { activeTheme } = appearance;
 
   createRoot(() => {

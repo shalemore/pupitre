@@ -18,6 +18,184 @@
  */
 @layer ui-sdk, reset, base, editor, theme, components, utilities, document-theme, plugin, preferences;
 
+@import "tailwindcss/theme" layer(theme);
+@import "tailwindcss/preflight" layer(reset);
+@import "tailwindcss/utilities" layer(utilities);
+
+@source "../../../../packages/ui/src";
+@source "../../../../plugins/*/src";
+@source "../web";
+
+@theme inline {
+  --color-border: var(--border);
+  --color-border-subtle: var(--ui-alpha-1);
+  --color-border-strong: var(--ui-alpha-3);
+  --color-input: var(--input);
+  --color-field: var(--ui-field);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-tertiary: var(--ui-text-muted);
+  --color-accent: var(--accent);
+  --color-destructive: var(--destructive);
+  --color-success: var(--ui-success);
+  --color-popover: var(--popover);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-hover: var(--ui-brand-hover);
+  --color-selected: var(--ui-alpha-2);
+  --color-surface-0: var(--ui-surface-0);
+  --color-surface-1: var(--ui-surface-1);
+  --color-surface-2: var(--ui-surface-2);
+  --color-surface-3: var(--ui-surface-3);
+  --color-segmented-track: var(--ui-segmented-track);
+  --color-segmented-thumb: var(--ui-segmented-thumb);
+  --color-knob: var(--ui-knob);
+  --color-window-close: var(--color-window-close);
+  --color-window-close-foreground: var(--color-window-close-foreground);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  --text-2xs: var(--text-2xs);
+  --text-2xs--line-height: calc(1 / 0.6875);
+  --text-xs: var(--text-xs);
+  --text-xs--line-height: 1rem;
+  --text-sm: var(--text-sm);
+  --text-sm--line-height: 1.25rem;
+  --text-base: var(--text-base);
+  --text-base--line-height: 1.5rem;
+  --text-xl: var(--text-xl);
+  --text-xl--line-height: 1.75rem;
+
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+  --radius-full: var(--radius-full);
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-float: var(--shadow-float);
+  --shadow-focus: var(--shadow-focus);
+  --shadow-segmented-thumb: var(--shadow-segmented-thumb);
+
+  --spacing-title-bar: var(--title-bar-height);
+  --spacing-caption-button: 2.875rem;
+
+  --ease-out-expo: var(--ease-out-expo);
+  --ease-snap: var(--ease-snap);
+  --ease-enter: var(--ease-enter);
+  --ease-spring: var(--ease-spring);
+
+  --animate-fade-in: fadeIn var(--transition-duration-base) var(--ease-enter);
+  --animate-fade-in-down: fadeInDown var(--transition-duration-base) var(--ease-enter);
+  --animate-fade-in-down-small: fadeInDownSmall var(--transition-duration-base) var(--ease-enter);
+  --animate-fade-in-up-small: fadeInUpSmall var(--transition-duration-base) var(--ease-enter);
+  --animate-zoom-in: zoomIn var(--transition-duration-fast) var(--ease-out-expo);
+  --animate-appear: appear var(--transition-duration-base) var(--ease-enter);
+}
+
+@utility interactive {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-duration: var(--transition-duration-ui);
+  transition-timing-function: var(--ease-out-expo);
+}
+
+@utility border-hairline {
+  border-width: var(--ui-border-width);
+}
+
+@utility duration-fast {
+  transition-duration: var(--transition-duration-fast);
+}
+
+@utility duration-snap {
+  transition-duration: var(--transition-duration-snap);
+}
+
+@utility duration-ui {
+  transition-duration: var(--transition-duration-ui);
+}
+
+@utility duration-base {
+  transition-duration: var(--transition-duration-base);
+}
+
+@utility duration-sheet {
+  transition-duration: var(--transition-duration-sheet);
+}
+
+@utility duration-slow {
+  transition-duration: var(--transition-duration-slow);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDownSmall {
+  from {
+    opacity: 0;
+    transform: translateY(-0.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    scale: 0.5;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes fadeInUpSmall {
+  from {
+    opacity: 0;
+    transform: translateY(0.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    scale: 0.75;
+  }
+}
+
 @import "./features/editor/editor.css";
 
 /*

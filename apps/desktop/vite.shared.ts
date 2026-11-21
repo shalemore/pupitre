@@ -1,6 +1,7 @@
 import { resolve } from "node:path";
 import { pandacss } from "@pandacss/vite";
 import solid from "@solidjs/vite-plugin";
+import tailwindcss from "@tailwindcss/vite";
 import type { AliasOptions } from "vite";
 import { thirdPartyNotices } from "./scripts/third-party-notices.js";
 
@@ -29,6 +30,7 @@ export function rendererConfig() {
         // Static style objects become class strings at build time, so a render does no style work
         transform: true,
       }),
+      tailwindcss(),
       solid(),
       thirdPartyNotices(),
     ],
