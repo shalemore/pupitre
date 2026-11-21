@@ -5,7 +5,7 @@ import {
   SliderThumb,
   SliderTrack,
 } from "@ui-sdk/solid/slider";
-import { createEffect, createSignal } from "solid-js";
+import { createSignal } from "solid-js";
 import { css } from "./styled-system/css";
 
 export interface SliderProps {
@@ -61,30 +61,24 @@ const thumb = css({
 export function Slider(props: SliderProps) {
   // A drag moves a local value: the settings change travels to the main process and back, and the
   // echo must not pull the thumb back under the pointer while it moves
-  const [value, setValue] = createSignal(props.value);
+  const [draft, setDraft] = createSignal<number>();
   let dragging = false;
-
-  createEffect(
-    () => props.value,
-    (next) => {
-      if (!dragging) setValue(next);
-    },
-  );
 
   return (
     <UiSlider
       data-slot="slider"
-      value={value()}
+      value={draft() ?? props.value}
       min={props.min}
       max={props.max}
       step={props.step}
       onValueChange={(next) => {
         if (typeof next !== "number") return;
-        setValue(next);
+        if (dragging) setDraft(next);
         props.onChange(next);
       }}
       onValueCommit={() => {
         dragging = false;
+        setDraft(undefined);
       }}
       aria-label={props["aria-label"]}
       class={root}
