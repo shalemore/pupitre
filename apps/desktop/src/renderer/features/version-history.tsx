@@ -7,7 +7,6 @@ import { type Component, createEffect, createMemo, createSignal } from "solid-js
 import { formatFileSize } from "@shared/file-size";
 import { PaletteSheet } from "@/components/palette-sheet";
 import { dateTimeFormat } from "@/lib/date-format";
-import { css } from "@/styled-system/css";
 
 export interface VersionHistoryProps {
   /** The file whose kept versions are listed. */
@@ -27,12 +26,6 @@ interface VersionRow {
  * The versions a document had before its file was written over, newest first. Picking one puts its
  * text back into the editor; nothing on disk changes until the document is saved again.
  */
-const size = css({
-  flexShrink: 0,
-  fontVariantNumeric: "tabular-nums",
-  opacity: 0.6,
-});
-
 export const VersionHistory: Component<VersionHistoryProps> = (props) => {
   // Asked once, when the panel opens: what a save adds while it is open belongs to its next opening
   const [versions, setVersions] = createSignal<readonly HistoryEntry[]>([]);
@@ -96,7 +89,9 @@ export const VersionHistory: Component<VersionHistoryProps> = (props) => {
       {(row) => (
         <>
           <span class={truncateGrow}>{row.time}</span>
-          <span class={size}>{formatFileSize(row.entry.bytes, intlLocale(currentLocale()))}</span>
+          <span class="shrink-0 opacity-60 tabular-nums">
+            {formatFileSize(row.entry.bytes, intlLocale(currentLocale()))}
+          </span>
         </>
       )}
     </PaletteSheet>

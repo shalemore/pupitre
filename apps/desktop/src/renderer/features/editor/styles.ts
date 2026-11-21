@@ -1,12 +1,6 @@
 import { EditorView } from "@codemirror/view";
-import { css } from "@/styled-system/css";
 
-export const scrollArea = css({
-  width: "full",
-  height: "full",
-  overflowX: "hidden",
-  _print: { height: "auto", overflow: "visible" },
-});
+export const scrollArea = "size-full overflow-x-hidden print:h-auto print:overflow-visible";
 
 /**
  * CodeMirror injects its base styles outside every cascade layer, where they would beat the editor

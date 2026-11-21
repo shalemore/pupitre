@@ -1,7 +1,7 @@
 import { desktop } from "@pupitre/desktop-api/client";
 import { TOP_MENUS, type MenuEntry, type Menus, type TopMenu } from "@pupitre/desktop-api/menu";
 import { t } from "@pupitre/i18n/solid";
-import { IconButton } from "@pupitre/ui";
+import { cn, IconButton } from "@pupitre/ui";
 import { FLOATING_PANEL, menuPanel } from "@pupitre/ui/styles";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { Menu as UiMenu, MenuContent, MenuTrigger } from "@ui-sdk/solid/menu";
@@ -10,35 +10,12 @@ import { Menu } from "lucide-solid";
 import { createSignal, For, Show, type Component } from "solid-js";
 import { MenuEntries, MenuPopup } from "@/components/menu-popup";
 import { createMenu } from "@/lib/menu-state";
-import { css, cx } from "@/styled-system/css";
 
 /** How soon after a menu closes the next one is still taking its place rather than arriving. */
 const SWITCH_WINDOW_MS = 100;
 
-const bar = css({
-  display: "flex",
-  flexShrink: 0,
-  alignItems: "center",
-  textStyle: "xs",
-  userSelect: "none",
-});
-const trigger = css({
-  layerStyle: "interactive",
-  flexShrink: 0,
-  whiteSpace: "nowrap",
-  paddingInline: "2.5",
-  paddingBlock: "1",
-  borderRadius: "md",
-  color: "muted.foreground",
-  outlineStyle: "none",
-  cursor: "pointer",
-  _hover: { color: "foreground", backgroundColor: "accent" },
-  _focusVisible: { color: "foreground", backgroundColor: "accent" },
-  _expanded: { color: "foreground", backgroundColor: "accent" },
-});
-const menuButton = css({ color: "muted.foreground" });
-/** The menu bar has no gutter option; the margin leaves the same gap as the other menus. */
-const menuBarPanel = css({ marginBlockStart: "2" });
+const trigger =
+  "interactive shrink-0 cursor-pointer rounded-md px-2.5 py-1 whitespace-nowrap text-muted-foreground outline-none hover:bg-accent hover:text-foreground focus-visible:bg-accent focus-visible:text-foreground aria-expanded:bg-accent aria-expanded:text-foreground";
 
 interface MenuBarProps {
   /** Told whether a menu is open, so an immersive title bar can stay unfolded under it. */
@@ -137,7 +114,7 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
             document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
         }
       }}
-      class={bar}
+      class="flex shrink-0 items-center text-xs select-none"
     >
       <For each={TOP_MENUS}>
         {(menu) => (
@@ -165,7 +142,7 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
               align="start"
               sideOffset={8}
               data-instant={instant() === menu ? "" : undefined}
-              class={cx(FLOATING_PANEL, menuPanel, menuBarPanel)}
+              class={cn(FLOATING_PANEL, menuPanel, "mt-2")}
             >
               <MenuEntries
                 entries={entries()[menu] ?? []}
@@ -235,7 +212,7 @@ export const MenuButton: Component<MenuButtonProps> = (props) => {
         label={t().menu.menu}
         aria-haspopup="menu"
         aria-expanded={panel.open() !== undefined ? "true" : "false"}
-        class={menuButton}
+        class="text-muted-foreground"
         // The button does not take the focus from the editor, so closing the menu gives typing back
         onPointerDown={(event) => event.preventDefault()}
         onClick={() => void toggle()}

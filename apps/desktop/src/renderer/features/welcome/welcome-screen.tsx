@@ -1,12 +1,10 @@
 import { desktop, isMacOS } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
 import { Button, Kbd, ListItem, ScrollView } from "@pupitre/ui";
-import { truncateStyle } from "@pupitre/ui/styles";
 import { fileNameOf } from "@pupitre/utils";
 import { FilePlus, FolderOpen } from "lucide-solid";
 import { For, Show, type Component } from "solid-js";
 import { PUBLIC_LOGO } from "@/lib/public-asset";
-import { css, cx } from "@/styled-system/css";
 import { LookChooser } from "./look-chooser";
 
 interface WelcomeScreenProps {
@@ -20,124 +18,57 @@ const modifier = isMacOS ? "⌘" : "Ctrl+";
 /** The menus list every recent file; the welcome screen keeps a short reminder of them. */
 const RECENT_FILES_SHOWN = 5;
 
-const screen = css({
-  height: "full",
-  paddingInline: "4",
-  paddingBlock: "12",
-  userSelect: "none",
-  animationName: "fadeIn",
-  animationDuration: "sheet",
-  animationTimingFunction: "enter",
-});
-const content = css({
-  minHeight: "full",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-  textAlign: "center",
-});
-const logo = css({
-  width: "14",
-  height: "14",
-  userSelect: "none",
-  marginBlockEnd: "4",
-  opacity: 0.9,
-  filter: "[drop-shadow(0 1px 2px rgb(0 0 0 / 0.15))]",
-});
-const title = css({
-  textStyle: "xl",
-  fontWeight: "semibold",
-  letterSpacing: "[-0.025em]",
-  color: "foreground",
-  marginBlockEnd: "6",
-});
-const actions = css({
-  display: "flex",
-  flexWrap: "wrap",
-  alignItems: "center",
-  justifyContent: "center",
-  gap: "3",
-  marginBlockEnd: "8",
-});
-const recentList = css({
-  width: "full",
-  maxWidth: "sm",
-  display: "flex",
-  flexDirection: "column",
-  gap: "0.5",
-  textAlign: "start",
-  marginBlockEnd: "6",
-});
-const recentLabel = css({
-  textStyle: "2xs",
-  fontWeight: "medium",
-  color: "muted.foreground",
-  paddingInline: "2.5",
-  marginBlockEnd: "1",
-});
-const recentItem = css({
-  justifyContent: "space-between",
-  gap: "2",
-  paddingInlineStart: "2.5",
-});
-const recentName = css(truncateStyle, {
-  minWidth: "0",
-  fontWeight: "medium",
-  color: "foreground",
-  layerStyle: "interactive",
-  _groupHover: { color: "brand" },
-});
-const recentPath = css(truncateStyle, {
-  textStyle: "2xs",
-  fontFamily: "mono",
-  color: "tertiary",
-  maxWidth: "40",
-});
-const hint = css({ textStyle: "2xs", color: "tertiary" });
-const actionIcon = css({ width: "3.5", height: "3.5" });
-const shortcut = css({ marginInlineStart: "1" });
-
 export const WelcomeScreen: Component<WelcomeScreenProps> = (props) => {
   return (
-    <ScrollView data-slot="welcome" class={screen}>
-      <div class={content}>
-        <img src={PUBLIC_LOGO} alt="" class={logo} />
+    <ScrollView
+      data-slot="welcome"
+      class="h-full px-4 py-12 select-none animate-[fadeIn_var(--transition-duration-sheet)_var(--ease-enter)]"
+    >
+      <div class="flex min-h-full flex-col items-center justify-center text-center">
+        <img
+          src={PUBLIC_LOGO}
+          alt=""
+          class="mb-4 size-14 opacity-90 drop-shadow-[0_1px_2px_rgb(0_0_0/0.15)] select-none"
+        />
 
-        <h1 class={title}>{t().common.appName}</h1>
+        <h1 class="mb-6 text-xl font-semibold tracking-[-0.025em] text-foreground">
+          {t().common.appName}
+        </h1>
 
         <Show when={desktop.initialState.firstRun}>
           <LookChooser />
         </Show>
 
-        <div class={actions}>
+        <div class="mb-8 flex flex-wrap items-center justify-center gap-3">
           <Button variant="brand" onClick={props.onNewDocument}>
-            <FilePlus class={actionIcon} />
+            <FilePlus class="size-3.5" />
             <span>{t().actions.newDoc}</span>
-            <Kbd class={shortcut}>{modifier}N</Kbd>
+            <Kbd class="ms-1">{modifier}N</Kbd>
           </Button>
 
           <Button variant="outline" onClick={props.onOpenFile}>
-            <FolderOpen class={actionIcon} />
+            <FolderOpen class="size-3.5" />
             <span>{t().actions.openDoc}</span>
-            <Kbd class={shortcut}>{modifier}O</Kbd>
+            <Kbd class="ms-1">{modifier}O</Kbd>
           </Button>
         </div>
 
         <Show when={props.recentFiles.length > 0}>
-          <div class={recentList}>
-            <span class={recentLabel}>{t().menu.openRecent}</span>
+          <div class="mb-6 flex w-full max-w-sm flex-col gap-0.5 text-start">
+            <span class="mb-1 px-2.5 text-2xs font-medium text-muted-foreground">
+              {t().menu.openRecent}
+            </span>
             <For each={props.recentFiles.slice(0, RECENT_FILES_SHOWN)}>
               {(path) => (
                 <ListItem
                   onClick={() => props.onOpenRecent(path)}
                   title={path}
-                  class={cx("group", recentItem)}
+                  class="group justify-between gap-2 ps-2.5"
                 >
-                  <span class={recentName}>
+                  <span class="interactive min-w-0 truncate font-medium text-foreground group-hover:text-brand">
                     <bdi dir="auto">{fileNameOf(path)}</bdi>
                   </span>
-                  <span dir="auto" class={recentPath}>
+                  <span dir="auto" class="max-w-40 truncate font-mono text-2xs text-tertiary">
                     {path}
                   </span>
                 </ListItem>
@@ -146,7 +77,7 @@ export const WelcomeScreen: Component<WelcomeScreenProps> = (props) => {
           </div>
         </Show>
 
-        <p class={hint}>{t().welcome.dragDropHint}</p>
+        <p class="text-2xs text-tertiary">{t().welcome.dragDropHint}</p>
       </div>
     </ScrollView>
   );

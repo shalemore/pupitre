@@ -7,7 +7,6 @@ import type {
 import { desktop } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
 import { Badge, Input, ScrollView, Sheet, ToggleIconButton } from "@pupitre/ui";
-import { truncateStyle } from "@pupitre/ui/styles";
 import { debounce } from "@pupitre/utils";
 import type { JSX } from "@solidjs/web";
 import {
@@ -28,73 +27,6 @@ import {
   Show,
   type Component,
 } from "solid-js";
-import { css } from "@/styled-system/css";
-
-const optionButton = css({
-  color: "muted.foreground",
-  "&[data-pressed]": { backgroundColor: "brand/15" },
-});
-const mark = css({ borderRadius: "xs", backgroundColor: "brand/20", color: "foreground" });
-const item = css({
-  layerStyle: "interactive",
-  display: "flex",
-  width: "full",
-  cursor: "pointer",
-  alignItems: "center",
-  gap: "2",
-  borderRadius: "md",
-  paddingBlock: "1.5",
-  paddingInlineEnd: "2.5",
-  paddingInlineStart: "6",
-  textAlign: "start",
-  textStyle: "xs",
-  color: "muted.foreground",
-  outlineStyle: "none",
-  _highlighted: { backgroundColor: "selected", fontWeight: "medium", color: "foreground" },
-});
-const lineNumber = css({
-  width: "6",
-  flexShrink: 0,
-  textAlign: "end",
-  textStyle: "2xs",
-  color: "tertiary",
-  fontVariantNumeric: "tabular-nums",
-});
-const matchText = css(truncateStyle, {
-  minWidth: "0",
-  flex: "1",
-});
-const section = css({
-  display: "flex",
-  alignItems: "center",
-  gap: "1.5",
-  paddingInline: "2.5",
-  paddingBlockStart: "1.5",
-});
-const sectionLabel = css(truncateStyle, {
-  minWidth: "0",
-  flex: "1",
-  fontWeight: "medium",
-});
-const control = css({ display: "flex", alignItems: "center", gap: "1.5" });
-const optionRow = css({ display: "flex", flexShrink: 0, alignItems: "center", gap: "0.5" });
-const optionWrap = css({ display: "flex" });
-const status = css({ paddingInline: "2.5", paddingBlock: "1.5", color: "muted.foreground" });
-const statusError = css({ paddingInline: "2.5", paddingBlock: "1.5", color: "destructive" });
-const countLabel = css({
-  paddingInline: "2.5",
-  textStyle: "2xs",
-  color: "tertiary",
-  fontVariantNumeric: "tabular-nums",
-});
-const list = css({
-  display: "flex",
-  maxHeight: "80",
-  minHeight: "0",
-  flexDirection: "column",
-  gap: "0.5",
-  marginBlockStart: "2",
-});
 
 /** Typing must not ask the main process for the whole folder once per keystroke. */
 const SEARCH_DELAY_MS = 150;
@@ -128,13 +60,13 @@ const OptionButton: Component<{
   children: JSX.Element;
 }> = (props) => (
   // A press on the toggle must not take the focus from the query
-  <span class={optionWrap} onMouseDown={(event) => event.preventDefault()}>
+  <span class="flex" onMouseDown={(event) => event.preventDefault()}>
     <ToggleIconButton
       pressed={props.pressed}
       onChange={props.onChange}
       label={props.label}
       size="icon-xs"
-      class={optionButton}
+      class="text-muted-foreground data-pressed:bg-brand/15"
     >
       {props.children}
     </ToggleIconButton>
@@ -147,7 +79,9 @@ const MatchLine: Component<{ match: WorkspaceMatch }> = (props) => {
   return (
     <>
       {props.match.text.slice(0, props.match.column)}
-      <mark class={mark}>{props.match.text.slice(props.match.column, end())}</mark>
+      <mark class="rounded-xs bg-brand/20 text-foreground">
+        {props.match.text.slice(props.match.column, end())}
+      </mark>
       {props.match.text.slice(end())}
     </>
   );
@@ -229,7 +163,7 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
           if (row !== undefined) open(row);
         }}
       >
-        <div class={control}>
+        <div class="flex items-center gap-1.5">
           <CommandInput
             render={(inputProps) => (
               <Input
@@ -245,7 +179,7 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
               />
             )}
           />
-          <div class={optionRow}>
+          <div class="flex shrink-0 items-center gap-0.5">
             <OptionButton
               pressed={caseSensitive()}
               onChange={setCaseSensitive}
@@ -267,36 +201,40 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
         </div>
 
         <Show when={props.root === undefined}>
-          <p role="status" class={status}>
+          <p role="status" class="px-2.5 py-1.5 text-muted-foreground">
             {t().workspaceSearch.noFolder}
           </p>
         </Show>
         <Show when={answer()?.kind === "invalid-regexp"}>
-          <p role="status" class={statusError}>
+          <p role="status" class="px-2.5 py-1.5 text-destructive">
             {t().workspaceSearch.invalidRegexp}
           </p>
         </Show>
         <Show when={noResults()}>
-          <p role="status" class={status}>
+          <p role="status" class="px-2.5 py-1.5 text-muted-foreground">
             {t().workspaceSearch.noResults}
           </p>
         </Show>
         <Show when={matchCount() > 0}>
-          <p role="status" class={countLabel}>
+          <p role="status" class="px-2.5 text-2xs text-tertiary tabular-nums">
             {t().workspaceSearch.matchCount(matchCount())}
           </p>
         </Show>
 
         <CommandList
           render={(listProps) => (
-            <ScrollView {...listProps} aria-label={t().workspaceSearch.title} class={list} />
+            <ScrollView
+              {...listProps}
+              aria-label={t().workspaceSearch.title}
+              class="mt-2 flex max-h-80 min-h-0 flex-col gap-0.5"
+            />
           )}
         >
           <For each={groups()}>
             {(group) => (
               <CommandGroup>
-                <CommandGroupLabel class={section}>
-                  <span dir="auto" class={sectionLabel}>
+                <CommandGroupLabel class="flex items-center gap-1.5 px-2.5 pt-1.5">
+                  <span dir="auto" class="min-w-0 flex-1 truncate font-medium">
                     {group.file.relative}
                   </span>
                   <Badge variant="muted" size="sm">
@@ -305,9 +243,14 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
                 </CommandGroupLabel>
                 <For each={group.matches}>
                   {(matchRow) => (
-                    <CommandItem value={String(matchRow.index)} class={item}>
-                      <span class={lineNumber}>{matchRow.match.line}</span>
-                      <span dir="auto" class={matchText}>
+                    <CommandItem
+                      value={String(matchRow.index)}
+                      class="interactive flex w-full cursor-pointer items-center gap-2 rounded-md py-1.5 ps-6 pe-2.5 text-start text-xs text-muted-foreground outline-none data-highlighted:bg-selected data-highlighted:font-medium data-highlighted:text-foreground"
+                    >
+                      <span class="w-6 shrink-0 text-end text-2xs text-tertiary tabular-nums">
+                        {matchRow.match.line}
+                      </span>
+                      <span dir="auto" class="min-w-0 flex-1 truncate">
                         <MatchLine match={matchRow.match} />
                       </span>
                     </CommandItem>

@@ -1,11 +1,11 @@
 import type { FolderFile } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
+import { cn } from "@pupitre/ui";
 import { dim, truncateGrow } from "@pupitre/ui/styles";
 import { createEffect, createMemo, createSignal, For, type Component } from "solid-js";
 import { PaletteSheet } from "@/components/palette-sheet";
 import { matchRanges, type MatchRange } from "@/lib/fuzzy";
-import { css, cx } from "@/styled-system/css";
 
 export interface QuickOpenProps {
   /** The folder whose documents are offered; there is nothing to offer while none is open. */
@@ -64,13 +64,12 @@ const MatchedText: Component<MatchedTextProps> = (props) => {
 
   return (
     <For each={pieces()}>
-      {(piece) => (piece.matched ? <span class={matched}>{piece.text}</span> : piece.text)}
+      {(piece) =>
+        piece.matched ? <span class="font-semibold text-brand">{piece.text}</span> : piece.text
+      }
     </For>
   );
 };
-
-const matched = css({ color: "brand", fontWeight: "semibold" });
-const folderGap = css({ marginInlineStart: "2" });
 
 const QuickOpenRow: Component<{ file: FoundFile }> = (props) => {
   const name = createMemo(() => {
@@ -87,7 +86,7 @@ const QuickOpenRow: Component<{ file: FoundFile }> = (props) => {
       <bdi dir="auto">
         <MatchedText text={name()} ranges={props.file.ranges} offset={folder().length} />
       </bdi>
-      <span class={cx(dim, folderGap)}>
+      <span class={cn(dim, "ms-2")}>
         <bdi dir="auto">
           <MatchedText text={folder()} ranges={props.file.ranges} offset={0} />
         </bdi>

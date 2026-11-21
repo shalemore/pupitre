@@ -3,7 +3,7 @@ import { desktop } from "@pupitre/desktop-api/client";
 import type { MenuEntry } from "@pupitre/desktop-api/menu";
 import { t } from "@pupitre/i18n/solid";
 import { excerptOf } from "@pupitre/markdown";
-import { IconButton, ListItem, rowIndent } from "@pupitre/ui";
+import { cn, IconButton, ListItem, rowIndent } from "@pupitre/ui";
 import { FLOATING_PANEL, menuPanel } from "@pupitre/ui/styles";
 import { Menu, MenuContent, MenuContextTrigger } from "@ui-sdk/solid/menu";
 import { ArrowRight, ChevronRight, CircleAlert, FileText, Folder } from "lucide-solid";
@@ -20,7 +20,6 @@ import {
 import { MenuEntries } from "@/components/menu-popup";
 import { dateTimeFormat } from "@/lib/date-format";
 import { settings } from "@/lib/settings";
-import { cx } from "@/styled-system/css";
 import {
   arrow,
   blockTruncate,
@@ -181,7 +180,7 @@ const RenameField: Component<{
     // rows do, and the indent stays outside the box rather than spanning the whole sidebar
     <div class={renameRow} style={rowIndent(props.depth, 6)}>
       <Show when={props.directory} fallback={<span class={indentIcon} />}>
-        <ChevronRight class={cx(chevron, props.expanded && chevronOpen)} />
+        <ChevronRight class={cn(chevron, props.expanded && chevronOpen)} />
       </Show>
       <Show when={props.directory} fallback={<FileText class={fileIcon} />}>
         <Folder class={fileIcon} />
@@ -249,7 +248,7 @@ export const FolderRow: Component<{
 
   return (
     <>
-      <div class={cx("group", groupRow)}>
+      <div class={cn("group", groupRow)}>
         <Show
           when={props.tree.renaming() === props.entry.path}
           fallback={
@@ -274,10 +273,10 @@ export const FolderRow: Component<{
                     }}
                     style={rowIndent(props.depth, 6)}
                     title={failure() ?? props.entry.name}
-                    class={cx((excerpt() || date()) && itemsStart, isDirectory() && rowDirectory)}
+                    class={cn((excerpt() || date()) && itemsStart, isDirectory() && rowDirectory)}
                   >
                     <Show when={isDirectory()} fallback={<span class={indentIcon} />}>
-                      <ChevronRight class={cx(chevron, expanded() && chevronOpen)} />
+                      <ChevronRight class={cn(chevron, expanded() && chevronOpen)} />
                     </Show>
                     <Show
                       when={isDirectory()}
@@ -285,16 +284,16 @@ export const FolderRow: Component<{
                         <Show
                           when={failure()}
                           fallback={
-                            <FileText class={cx(fileIcon, (excerpt() || date()) && iconOffset)} />
+                            <FileText class={cn(fileIcon, (excerpt() || date()) && iconOffset)} />
                           }
                         >
-                          <CircleAlert class={cx(fileIcon, (excerpt() || date()) && iconOffset)} />
+                          <CircleAlert class={cn(fileIcon, (excerpt() || date()) && iconOffset)} />
                         </Show>
                       }
                     >
                       <Folder class={fileIcon} />
                     </Show>
-                    <span class={cx(nameMin, excerpt() || date() ? nameGrow : blockTruncate)}>
+                    <span class={cn(nameMin, excerpt() || date() ? nameGrow : blockTruncate)}>
                       <span class={blockTruncate}>
                         <bdi dir="auto">{props.entry.name}</bdi>
                       </span>
@@ -311,7 +310,7 @@ export const FolderRow: Component<{
                   </ListItem>
                 )}
               />
-              <MenuContent class={cx(FLOATING_PANEL, menuPanel)}>
+              <MenuContent class={cn(FLOATING_PANEL, menuPanel)}>
                 {(() => {
                   const menu = props.tree.menuOf(props.entry);
                   return (

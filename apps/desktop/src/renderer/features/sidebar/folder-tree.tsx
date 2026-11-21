@@ -2,7 +2,7 @@ import type { FolderEntry } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import type { MenuEntry } from "@pupitre/desktop-api/menu";
 import { t } from "@pupitre/i18n/solid";
-import { ListItem, rowIndent } from "@pupitre/ui";
+import { cn, ListItem, rowIndent } from "@pupitre/ui";
 import { FLOATING_PANEL, menuPanel } from "@pupitre/ui/styles";
 import { messageOf } from "@pupitre/utils";
 import { Menu, MenuContent, MenuContextTrigger } from "@ui-sdk/solid/menu";
@@ -12,7 +12,6 @@ import { isInsideFolder, relativeToFolder } from "@shared/paths";
 import { MenuEntries } from "@/components/menu-popup";
 import { reportFailure } from "@/lib/errors";
 import { parentFolder } from "@/lib/file";
-import { cx } from "@/styled-system/css";
 import { FolderChildren, FolderRow, type RowMenu, type TreeContext } from "./folder-tree-rows";
 import {
   blockTruncate,
@@ -310,7 +309,7 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
         </Show>
         <FolderChildren path={props.root} depth={0} tree={tree} />
       </MenuContextTrigger>
-      <MenuContent class={cx(FLOATING_PANEL, menuPanel)}>
+      <MenuContent class={cn(FLOATING_PANEL, menuPanel)}>
         {(() => {
           const menu = menuOf({ name: props.root, path: props.root, kind: "directory" });
           return (

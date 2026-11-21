@@ -1,108 +1,30 @@
-import { truncateStyle } from "@pupitre/ui/styles";
-import { css } from "@/styled-system/css";
-
 /** The classes of the folder tree: its rows, the field that renames one, and the tree itself. */
 
-export const errorText = css({
-  paddingInline: "2.5",
-  paddingBlock: "1.5",
-  textStyle: "2xs",
-  color: "destructive",
-});
-export const renameRow = css({
-  display: "flex",
-  alignItems: "center",
-  gap: "1.5",
-  paddingInlineEnd: "2.5",
-});
-export const indentIcon = css({ width: "3", height: "3", flexShrink: 0 });
-export const chevron = css({
-  width: "3",
-  height: "3",
-  flexShrink: 0,
-  transitionProperty: "transform",
-  transitionDuration: "base",
-  transitionTimingFunction: "outExpo",
-  _rtl: { scale: "[-1 1]" },
-});
-export const chevronOpen = css({ rotate: "[90deg]", _rtl: { rotate: "[-90deg]" } });
-export const fileIcon = css({ width: "3.5", height: "3.5", flexShrink: 0 });
-export const renameField = css({
-  minWidth: "0",
-  flex: "1",
-  borderRadius: "md",
-  borderWidth: "hairline",
-  borderStyle: "solid",
-  borderColor: "border",
-  backgroundColor: "surface.2",
-  paddingInlineStart: "0",
-  paddingInlineEnd: "2.5",
-  paddingBlock: "1",
-  textStyle: "xs",
-  color: "foreground",
-  outlineStyle: "none",
-  _focusVisible: { boxShadow: "focus" },
-});
-export const groupRow = css({ position: "relative" });
-export const itemsStart = css({ alignItems: "flex-start" });
-export const rowDirectory = css({ paddingInlineEnd: "8" });
-export const nameMin = css({ minWidth: "0" });
-export const nameGrow = css({ flex: "1" });
-export const blockTruncate = css(truncateStyle, {
-  display: "block",
-});
-export const secondaryLine = css({
-  display: "block",
-  textStyle: "2xs",
-  fontWeight: "normal",
-  color: "tertiary",
-  fontVariantNumeric: "tabular-nums",
-});
-export const excerptLine = css({
-  marginBlockStart: "0.5",
-  lineClamp: 2,
-  textStyle: "2xs",
-  fontWeight: "normal",
-  color: "tertiary",
-});
-export const openButton = css({
-  position: "absolute",
-  insetInlineEnd: "1",
-  top: "[50%]",
-  translate: "[0 -50%]",
-  opacity: 0,
-  transitionProperty: "opacity",
-  transitionDuration: "ui",
-  transitionTimingFunction: "outExpo",
-  _groupHover: { opacity: 1 },
-  _focusVisible: { opacity: 1 },
-});
-export const arrow = css({ width: "3", height: "3", _rtl: { scale: "[-1 1]" } });
-export const iconOffset = css({ marginBlockStart: "0.5" });
-export const stack = css({ "& > * + *": { marginBlockStart: "0.5" } });
-export const expandAnimation = css({
-  "& > * + *": { marginBlockStart: "0.5" },
-  animationName: "fadeInDownSmall",
-  animationDuration: "base",
-  animationTimingFunction: "enter",
-});
-export const treeRoot = css({
-  padding: "2",
-  minHeight: "full",
-  "& > * + *": { marginBlockStart: "0.5" },
-});
-export const sectionLabel = css({
-  paddingInline: "2.5",
-  paddingBlockStart: "1",
-  textStyle: "2xs",
-  fontWeight: "medium",
-  letterSpacing: "wider",
-  color: "tertiary",
-  textTransform: "uppercase",
-});
-export const divider = css({
-  marginInline: "2.5",
-  borderBlockStartWidth: "hairline",
-  borderBlockStartStyle: "solid",
-  borderBlockStartColor: "border.subtle",
-});
+export const errorText = "px-2.5 py-1.5 text-2xs text-destructive";
+export const renameRow = "flex items-center gap-1.5 pe-2.5";
+export const indentIcon = "size-3 shrink-0";
+export const chevron =
+  "size-3 shrink-0 transition-transform duration-base ease-out-expo rtl:-scale-x-100";
+export const chevronOpen = "rotate-90 rtl:-rotate-90";
+export const fileIcon = "size-3.5 shrink-0";
+export const renameField =
+  "min-w-0 flex-1 rounded-md border border-hairline border-border bg-surface-2 py-1 ps-0 pe-2.5 text-xs text-foreground outline-none focus-visible:shadow-focus";
+export const groupRow = "relative";
+export const itemsStart = "items-start";
+export const rowDirectory = "pe-8";
+export const nameMin = "min-w-0";
+export const nameGrow = "flex-1";
+export const blockTruncate = "block truncate";
+export const secondaryLine = "block text-2xs font-normal text-tertiary tabular-nums";
+export const excerptLine = "mt-0.5 line-clamp-2 text-2xs font-normal text-tertiary";
+export const openButton =
+  "absolute end-1 top-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-ui ease-out-expo group-hover:opacity-100 focus-visible:opacity-100";
+export const arrow = "size-3 rtl:-scale-x-100";
+export const iconOffset = "mt-0.5";
+export const stack = "space-y-0.5";
+export const expandAnimation =
+  "space-y-0.5 animate-[fadeInDownSmall_var(--transition-duration-base)_var(--ease-enter)]";
+export const treeRoot = "min-h-full space-y-0.5 p-2";
+export const sectionLabel =
+  "px-2.5 pt-1 text-2xs font-medium tracking-wider text-tertiary uppercase";
+export const divider = "mx-2.5 border-t border-hairline border-border-subtle";

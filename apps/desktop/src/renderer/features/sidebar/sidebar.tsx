@@ -1,12 +1,11 @@
 import { t } from "@pupitre/i18n/solid";
-import { IconButton, ScrollView, SegmentedControl, ToggleIconButton } from "@pupitre/ui";
-import { quietButton, rtlFlip, truncateStyle } from "@pupitre/ui/styles";
+import { cn, IconButton, ScrollView, SegmentedControl, ToggleIconButton } from "@pupitre/ui";
+import { quietButton, rtlFlip } from "@pupitre/ui/styles";
 import type { JSX } from "@solidjs/web";
 import { ChevronRight, Folder, ListTree, Pin } from "lucide-solid";
 import { createSignal, type Component, Show } from "solid-js";
 import { distanceFromEnd, distanceFromStart, isRtl } from "@/lib/rtl";
 import { SIDEBAR_WIDTH, type SidebarSide } from "@/lib/sidebar";
-import { css, cx } from "@/styled-system/css";
 import type { SidebarControl } from "./sidebar-control";
 
 export type SidebarMode = "outline" | "folder";
@@ -21,98 +20,6 @@ export interface SidebarRail {
 }
 
 const KEYBOARD_STEP = 16;
-
-const slot = css({
-  position: "relative",
-  flexShrink: 0,
-  overflow: "hidden",
-  _print: { display: "none" },
-});
-const resizing = css({
-  transitionProperty: "width",
-  transitionDuration: "sheet",
-  transitionTimingFunction: "outExpo",
-});
-const fullHeight = css({ height: "full" });
-const handle = css({
-  layerStyle: "interactive",
-  position: "absolute",
-  insetBlock: "0",
-  zIndex: "10",
-  width: "1",
-  cursor: "col-resize",
-  outlineStyle: "none",
-  borderStyle: "solid",
-  borderColor: "transparent",
-  _hover: { borderColor: "brand/30" },
-  _focusVisible: { borderColor: "brand/30" },
-});
-const handleAtStart = css({ insetInlineEnd: "0", borderInlineEndWidth: "hairline" });
-const handleAtEnd = css({ insetInlineStart: "0", borderInlineStartWidth: "hairline" });
-const handleDragging = css({ borderColor: "brand/40" });
-const railBase = css({
-  position: "absolute",
-  insetBlock: "0",
-  insetInline: "0",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  backgroundColor: "surface.0",
-});
-const railAtStart = css({
-  borderInlineEndWidth: "hairline",
-  borderInlineEndStyle: "solid",
-  borderInlineEndColor: "border",
-});
-const railAtEnd = css({
-  borderInlineStartWidth: "hairline",
-  borderInlineStartStyle: "solid",
-  borderInlineStartColor: "border",
-});
-const frame = css({
-  display: "flex",
-  flexDirection: "column",
-  backgroundColor: "surface.0",
-  userSelect: "none",
-  flexShrink: 0,
-  textStyle: "xs",
-  width: "full",
-  height: "full",
-  _print: { display: "none" },
-});
-const rotated = css({ rotate: "[45deg]" });
-const rotate180 = css({ rotate: "[180deg]" });
-const titleRow = css({
-  display: "flex",
-  alignItems: "center",
-  gap: "1",
-  paddingInlineStart: "4",
-  paddingInlineEnd: "2",
-  paddingBlockStart: "2",
-});
-const titleMain = css({
-  display: "flex",
-  minWidth: "0",
-  flex: "1",
-  alignItems: "center",
-  gap: "1",
-});
-const titleText = css(truncateStyle, {
-  minWidth: "0",
-  textStyle: "2xs",
-  fontWeight: "medium",
-  color: "muted.foreground",
-});
-const modeRow = css({
-  margin: "2",
-  marginBlockEnd: "0",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  gap: "1",
-});
-const grow = css({ minWidth: "0", flex: "1" });
-const hidden = css({ display: "none" });
 
 interface SidebarSlotProps {
   side: SidebarSide;
@@ -154,25 +61,32 @@ export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
       style={{
         width: props.shown ? `${shownWidth()}px` : folded() ? `${RAIL_WIDTH}px` : "0px",
       }}
-      class={cx(
-        slot,
+      class={cn(
+        "relative shrink-0 overflow-hidden print:hidden",
         // Following the pointer while dragging must not lag behind an animation
-        !dragging() && resizing,
+        !dragging() && "transition-[width] duration-sheet ease-out-expo",
       )}
     >
-      <div class={fullHeight} inert={!props.shown} style={{ width: `${shownWidth()}px` }}>
+      <div class="h-full" inert={!props.shown} style={{ width: `${shownWidth()}px` }}>
         {props.children}
       </div>
       <Show when={!props.shown ? props.rail : undefined}>
         {(rail) => (
-          <div class={cx(railBase, props.side === "start" ? railAtStart : railAtEnd)}>
+          <div
+            class={cn(
+              "absolute inset-0 flex items-center justify-center bg-surface-0",
+              props.side === "start"
+                ? "border-e border-hairline border-border"
+                : "border-s border-hairline border-border",
+            )}
+          >
             <IconButton
               label={rail().label}
               size="icon-2xs"
               class={quietButton}
               onClick={() => rail().onExpand()}
             >
-              <ChevronRight class={cx(rtlFlip, props.side === "end" && rotate180)} />
+              <ChevronRight class={cn(rtlFlip, props.side === "end" && "rotate-180")} />
             </IconButton>
           </div>
         )}
@@ -186,10 +100,12 @@ export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
           aria-valuemin={SIDEBAR_WIDTH.min}
           aria-valuemax={SIDEBAR_WIDTH.max}
           tabindex="0"
-          class={cx(
-            handle,
-            props.side === "start" ? handleAtStart : handleAtEnd,
-            dragging() && handleDragging,
+          class={cn(
+            "interactive absolute inset-y-0 z-10 w-1 cursor-col-resize border-solid border-transparent outline-none hover:border-brand/30 focus-visible:border-brand/30",
+            props.side === "start"
+              ? "end-0 border-e border-hairline"
+              : "start-0 border-s border-hairline",
+            dragging() && "border-brand/40",
           )}
           onPointerDown={(event) => {
             event.preventDefault();
@@ -215,7 +131,16 @@ export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
 const SidebarFrame: Component<{
   class?: string | undefined;
   children: JSX.Element;
-}> = (props) => <aside class={cx(frame, props.class)}>{props.children}</aside>;
+}> = (props) => (
+  <aside
+    class={cn(
+      "flex size-full shrink-0 flex-col bg-surface-0 text-xs select-none print:hidden",
+      props.class,
+    )}
+  >
+    {props.children}
+  </aside>
+);
 
 /** Keeps the sidebars of an immersive window open while the user writes. Quiet until it is hovered or on. */
 const PinButton: Component<{ pinned: boolean; onChange: (pinned: boolean) => void }> = (props) => (
@@ -226,7 +151,7 @@ const PinButton: Component<{ pinned: boolean; onChange: (pinned: boolean) => voi
     size="icon-2xs"
     class={quietButton}
   >
-    <Pin class={props.pinned ? "" : rotated} />
+    <Pin class={props.pinned ? "" : "rotate-45"} />
   </ToggleIconButton>
 );
 
@@ -246,7 +171,9 @@ const CollapseButton: Component<{
     size="icon-2xs"
     class={quietButton}
   >
-    <ChevronRight class={cx(rtlFlip, (props.side === "start") !== props.collapsed && rotate180)} />
+    <ChevronRight
+      class={cn(rtlFlip, (props.side === "start") !== props.collapsed && "rotate-180")}
+    />
   </ToggleIconButton>
 );
 
@@ -278,9 +205,13 @@ const SidebarTitle: Component<
     side: SidebarSide;
   } & ControlProps
 > = (props) => (
-  <div class={titleRow}>
-    <div class={titleMain}>
-      <div dir="auto" class={titleText} title={props.title}>
+  <div class="flex items-center gap-1 ps-4 pe-2 pt-2">
+    <div class="flex min-w-0 flex-1 items-center gap-1">
+      <div
+        dir="auto"
+        class="min-w-0 truncate text-2xs font-medium text-muted-foreground"
+        title={props.title}
+      >
         {props.title}
       </div>
     </div>
@@ -309,7 +240,7 @@ export const SidebarPanel: Component<
       side={props.side}
       control={props.control}
     />
-    <ScrollView class={grow}>{props.children}</ScrollView>
+    <ScrollView class="min-w-0 flex-1">{props.children}</ScrollView>
   </SidebarFrame>
 );
 
@@ -334,10 +265,10 @@ export const Sidebar: Component<SidebarProps> = (props) => {
   return (
     <SidebarFrame class={props.class}>
       <Show when={both() || props.control}>
-        <div class={modeRow}>
+        <div class="m-2 mb-0 flex items-center justify-end gap-1">
           <Show when={both()}>
             <SegmentedControl<SidebarMode>
-              class={grow}
+              class="min-w-0 flex-1"
               value={props.mode}
               onChange={props.onModeChange}
               options={[
@@ -355,8 +286,12 @@ export const Sidebar: Component<SidebarProps> = (props) => {
         <SidebarTitle title={props.folderName} action={props.folderAction} side="start" />
       </Show>
       {/* Both stay mounted so the expanded folders survive a switch to the outline */}
-      <ScrollView class={cx(grow, props.mode !== "outline" && hidden)}>{props.outline}</ScrollView>
-      <ScrollView class={cx(grow, props.mode !== "folder" && hidden)}>{props.folder}</ScrollView>
+      <ScrollView class={cn("min-w-0 flex-1", props.mode !== "outline" && "hidden")}>
+        {props.outline}
+      </ScrollView>
+      <ScrollView class={cn("min-w-0 flex-1", props.mode !== "folder" && "hidden")}>
+        {props.folder}
+      </ScrollView>
     </SidebarFrame>
   );
 };
