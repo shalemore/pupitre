@@ -170,7 +170,7 @@ export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
               label={rail().label}
               size="icon-2xs"
               class={quietButton}
-              onClick={rail().onExpand}
+              onClick={() => rail().onExpand()}
             >
               <ChevronRight class={cx(rtlFlip, props.side === "end" && rotate180)} />
             </IconButton>
