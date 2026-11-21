@@ -8,11 +8,8 @@ import { formatPercent } from "@/lib/number-format";
 import { isImmersive, settings, updateSetting, updateSettings } from "@/lib/settings";
 import { sidebarState, type SidebarSide } from "@/lib/sidebar";
 import { DEFAULT_THEME, type ThemeInfo, themeDisplayName, themes } from "@/lib/theme";
-import { css } from "@/styled-system/css";
 import { FontSelect, themeFontLabel } from "./font-select";
 import { SettingField, SettingGroup, SettingsSection } from "./settings-section";
-
-const stack = css({ "& > :not(:last-child)": { marginBlockEnd: "1" } });
 
 function schemeLabel(theme: ThemeInfo): string {
   if (theme.schemes.length > 1) return t().settings.schemeBoth;
@@ -111,7 +108,7 @@ const SidebarStateField: Component<{ side: SidebarSide }> = (props) => {
 export const AppearanceSection: Component = () => (
   <SettingsSection title={t().settings.appearance}>
     <Show when={missingThemeMessages().length > 0}>
-      <Callout variant="destructive" class={stack}>
+      <Callout variant="destructive" class="space-y-1">
         <For each={missingThemeMessages()}>{(message) => <p>{message}</p>}</For>
       </Callout>
     </Show>

@@ -10,45 +10,7 @@ import { For, onSettled, Show, type Component } from "solid-js";
 import { reportFailure } from "@/lib/errors";
 import { loadPlugins, plugins } from "@/lib/plugins";
 import { settings, updateSettings } from "@/lib/settings";
-import { css } from "@/styled-system/css";
 import { SettingGroup, SettingsSection } from "./settings-section";
-
-const toolbar = css({ marginBlockEnd: "4" });
-const empty = css({ textStyle: "xs", color: "muted.foreground" });
-const titleRow = css({ display: "flex", alignItems: "baseline", gap: "2" });
-const version = css({
-  textStyle: "2xs",
-  color: "tertiary",
-  fontVariantNumeric: "tabular-nums",
-});
-const permissions = css({
-  display: "flex",
-  flexWrap: "wrap",
-  alignItems: "center",
-  gap: "1.5",
-  marginBlockStart: "1",
-});
-const permissionChip = css({
-  paddingInline: "1.5",
-  paddingBlock: "0.5",
-  borderRadius: "sm",
-  backgroundColor: "surface.2",
-  fontFamily: "mono",
-  textStyle: "2xs",
-  color: "muted.foreground",
-});
-
-const form = css({
-  display: "flex",
-  flexDirection: "column",
-  paddingInlineStart: "5",
-  "& > * + *": {
-    borderTopWidth: "hairline",
-    borderTopStyle: "solid",
-    borderColor: "border.subtle",
-  },
-});
-const fieldInput = css({ width: "48" });
 
 /** One property of the JSON Schema a plugin sent; only the kinds a form can draw are read. */
 interface SchemaField {
@@ -92,7 +54,7 @@ function fieldControl(
   if (field.type === "number" || field.type === "integer") {
     return (
       <Input
-        class={fieldInput}
+        class="w-48"
         type="number"
         aria-label={label}
         value={typeof value === "number" ? String(value) : ""}
@@ -122,7 +84,7 @@ function fieldControl(
     }
     return (
       <Input
-        class={fieldInput}
+        class="w-48"
         aria-label={label}
         value={typeof value === "string" ? value : ""}
         onChange={(event) => onChange(event.currentTarget.value)}
@@ -151,7 +113,7 @@ const PluginSettingsForm: Component<{ plugin: PluginInfo }> = (props) => {
 
   return (
     <Show when={fields().length > 0}>
-      <div class={form}>
+      <div class="flex flex-col ps-5 [&>*+*]:border-t [&>*+*]:border-hairline [&>*+*]:border-border-subtle">
         <For each={fields()}>
           {([key, field]) => {
             const label = () => textOf(props.plugin.settings?.fields?.[key]?.title) ?? key;
@@ -199,10 +161,14 @@ const PluginRow: Component<{ plugin: PluginInfo }> = (props) => {
         <Show when={description()}>{(text) => <>{text()}</>}</Show>
         <Show when={author()}>{(value) => <>{` · ${value()}`}</>}</Show>
         <Show when={props.plugin.manifest.permissions.length > 0}>
-          <div class={permissions}>
+          <div class="mt-1 flex flex-wrap items-center gap-1.5">
             <span>{t().settings.permissions}</span>
             <For each={props.plugin.manifest.permissions}>
-              {(permission) => <code class={permissionChip}>{permission}</code>}
+              {(permission) => (
+                <code class="rounded-sm bg-surface-2 px-1.5 py-0.5 font-mono text-2xs text-muted-foreground">
+                  {permission}
+                </code>
+              )}
             </For>
           </div>
         </Show>
@@ -223,9 +189,11 @@ const PluginRow: Component<{ plugin: PluginInfo }> = (props) => {
       <SettingRow
         heading
         title={
-          <span class={titleRow}>
+          <span class="flex items-baseline gap-2">
             <span>{name()}</span>
-            <span class={version}>v{props.plugin.manifest.version}</span>
+            <span class="text-2xs text-tertiary tabular-nums">
+              v{props.plugin.manifest.version}
+            </span>
           </span>
         }
         description={details()}
@@ -260,7 +228,7 @@ export const PluginsSection: Component = () => {
 
   return (
     <SettingsSection title={t().settings.plugins}>
-      <div class={toolbar}>
+      <div class="mb-4">
         <Button
           variant="outline"
           size="sm"
@@ -284,7 +252,10 @@ export const PluginsSection: Component = () => {
           </SettingRow>
         </SettingGroup>
       </Show>
-      <Show when={plugins().length > 0} fallback={<p class={empty}>{t().settings.noPlugins}</p>}>
+      <Show
+        when={plugins().length > 0}
+        fallback={<p class="text-xs text-muted-foreground">{t().settings.noPlugins}</p>}
+      >
         <SettingGroup>
           <For each={plugins()}>{(plugin) => <PluginRow plugin={plugin} />}</For>
         </SettingGroup>

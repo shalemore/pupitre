@@ -8,7 +8,6 @@ import { createSignal, type Component, Show } from "solid-js";
 import { shownTheme } from "@/lib/appearance";
 import { GENERIC_FAMILIES, listFontFamilies, type FontFamily } from "@/lib/fonts";
 import { readToken, type TokenName } from "@/lib/tokens";
-import { css, cx } from "@/styled-system/css";
 
 const APPLE_SYSTEM_ALIASES = new Set(["-apple-system", "blinkmacsystemfont"]);
 const WINDOWS_FAMILIES = new Set([
@@ -54,11 +53,6 @@ const refreshFonts = (force = true) => {
 refreshFonts(false);
 const fonts = { list: fontList, loading: fontsLoading, refresh: () => refreshFonts(true) };
 
-const spin = css({ animation: "spin" });
-const optionRow = css({ display: "flex", alignItems: "center", gap: "1.5" });
-const grow = css({ minWidth: "0", flex: "1" });
-const hint = css({ marginBlockStart: "1", textStyle: "2xs", color: "muted.foreground" });
-
 export interface FontSelectProps {
   value: string;
   onChange: (family: string) => void;
@@ -83,9 +77,9 @@ export const FontSelect: Component<FontSelectProps> = (props) => {
 
   return (
     <div>
-      <div class={optionRow}>
+      <div class="flex items-center gap-1.5">
         {props.leading}
-        <div class={grow}>
+        <div class="min-w-0 flex-1">
           <Combobox
             value={props.value}
             onChange={props.onChange}
@@ -99,7 +93,7 @@ export const FontSelect: Component<FontSelectProps> = (props) => {
       </div>
       {/* What a chosen font overrides; the row's reset button gives the theme's own font back */}
       <Show when={props.value !== ""}>
-        <p class={hint}>{props.emptyLabel}</p>
+        <p class="mt-1 text-2xs text-muted-foreground">{props.emptyLabel}</p>
       </Show>
     </div>
   );
@@ -107,6 +101,6 @@ export const FontSelect: Component<FontSelectProps> = (props) => {
 
 export const RefreshFontsButton: Component = () => (
   <IconButton label={t().settings.refreshFonts} size="icon-2xs" onClick={fonts.refresh}>
-    <RefreshCw class={cx(fonts.loading() && spin)} />
+    <RefreshCw class={fonts.loading() ? "animate-spin" : ""} />
   </IconButton>
 );
