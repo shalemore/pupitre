@@ -1,4 +1,4 @@
-import { debounce } from "@solid-primitives/scheduled";
+import { debounce } from "@pupitre/utils";
 import { Dynamic, type JSX } from "@solidjs/web";
 import { createSignal, omit, onSettled, Show, type ValidComponent } from "solid-js";
 import { useScrollViewPreferences } from "./scroll-view-preferences";
@@ -148,6 +148,7 @@ export function ScrollView(props: ScrollViewProps) {
     mutation.observe(element, { childList: true });
     observeChildren();
     return () => {
+      stopScrolling.clear();
       resize.disconnect();
       mutation.disconnect();
     };

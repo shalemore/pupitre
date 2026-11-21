@@ -5,9 +5,9 @@ import { t } from "@pupitre/i18n/solid";
 import { codeLanguages, fencedText } from "@pupitre/markdown";
 import { css } from "@pupitre/ui";
 import { truncateStyle } from "@pupitre/ui/styles";
-import { debounce } from "@solid-primitives/scheduled";
+import { debounce } from "@pupitre/utils";
 import { Check, Copy } from "lucide-solid";
-import { createMemo, createSignal, For, Show, type Component } from "solid-js";
+import { createMemo, createSignal, For, onCleanup, Show, type Component } from "solid-js";
 import { mountWidget, unmountWidget } from "#mount-widget";
 
 const COPIED_MS = 1500;
@@ -139,6 +139,7 @@ const CodeCorner: Component<{
 }> = (props) => {
   const [copied, setCopied] = createSignal(false);
   const resetCopied = debounce(() => setCopied(false), COPIED_MS);
+  onCleanup(resetCopied.clear);
 
   const language = createMemo(() => namedLanguage(props.fence?.language ?? ""));
 

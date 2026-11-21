@@ -533,9 +533,9 @@ importers:
 
   packages/ui:
     dependencies:
-      '@solid-primitives/scheduled':
-        specifier: ^2.0.0
-        version: 2.0.0(@solidjs/web@2.0.3(solid-js@2.0.3))(solid-js@2.0.3)
+      '@pupitre/utils':
+        specifier: workspace:*
+        version: link:../utils
       '@solidjs/web':
         specifier: ^2.0.3
         version: 2.0.3(solid-js@2.0.3)
@@ -612,9 +612,6 @@ importers:
       '@pupitre/utils':
         specifier: workspace:*
         version: link:../../packages/utils
-      '@solid-primitives/scheduled':
-        specifier: ^2.0.0
-        version: 2.0.0(@solidjs/web@2.0.3(solid-js@2.0.3))(solid-js@2.0.3)
       dompurify:
         specifier: ^3.4.17
         version: 3.4.17
@@ -2173,12 +2170,6 @@ packages:
 
   '@solid-primitives/rootless@2.0.0':
     resolution: {integrity: sha512-+JJAa9xNfrmNpOXC7wGZSBItn1jm8maMZ4TMnJrDfTOUh0nHGw/mk5UMTmBUfkEbCi5ws9TpAsZY6Jtc5MWGTQ==}
-    peerDependencies:
-      '@solidjs/web': ^2.0.0
-      solid-js: ^2.0.0
-
-  '@solid-primitives/scheduled@2.0.0':
-    resolution: {integrity: sha512-NBfY37wR/rgXRTjf8y1oPUZnENEf3aXYXGfSkc5eWWty1rxKhtBPVoGWX3O9OFkuFsZsiovfBQUXKz/BbjkCqg==}
     peerDependencies:
       '@solidjs/web': ^2.0.0
       solid-js: ^2.0.0
@@ -6098,11 +6089,6 @@ snapshots:
   '@solid-primitives/rootless@2.0.0(@solidjs/web@2.0.3(solid-js@2.0.3))(solid-js@2.0.3)':
     dependencies:
       '@solid-primitives/utils': 7.0.0(@solidjs/web@2.0.3(solid-js@2.0.3))(solid-js@2.0.3)
-      '@solidjs/web': 2.0.3(solid-js@2.0.3)
-      solid-js: 2.0.3
-
-  '@solid-primitives/scheduled@2.0.0(@solidjs/web@2.0.3(solid-js@2.0.3))(solid-js@2.0.3)':
-    dependencies:
       '@solidjs/web': 2.0.3(solid-js@2.0.3)
       solid-js: 2.0.3
 
