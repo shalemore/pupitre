@@ -10,18 +10,17 @@ import {
   WholeWord,
   X,
 } from "lucide-solid";
-import { createEffect, createSignal, Show, type Component } from "solid-js";
+import { createEffect, Show, type Component } from "solid-js";
 import { css, cx } from "@/styled-system/css";
 import type { MatchStats, SearchOptions } from "./search";
 
 export interface FindBarProps {
   showReplace: boolean;
-  /** Search text prefilled on open, usually the text selected in the editor. */
-  initialSearch: string;
+  options: SearchOptions;
   matchStats: MatchStats;
   onToggleReplace: () => void;
   onClose: () => void;
-  onSearchChange: (options: SearchOptions) => void;
+  onOptionsChange: (options: SearchOptions) => void;
   onFindNext: () => void;
   onFindPrevious: () => void;
   onReplaceNext: () => void;
@@ -109,27 +108,12 @@ const replaceRow = css({
 const grow = css({ flex: "1", minWidth: "28" });
 
 export const FindBar: Component<FindBarProps> = (props) => {
-  const [searchText, setSearchText] = createSignal(props.initialSearch);
-  const [replaceText, setReplaceText] = createSignal("");
-  const [caseSensitive, setCaseSensitive] = createSignal(false);
-  const [wholeWord, setWholeWord] = createSignal(false);
-  const [regexp, setRegexp] = createSignal(false);
   const hasMatches = () => props.matchStats.pending === true || props.matchStats.total > 0;
   let searchInput: HTMLInputElement | undefined;
   let replaceInput: HTMLInputElement | undefined;
 
-  createEffect(
-    () => ({
-      search: searchText(),
-      replace: replaceText(),
-      caseSensitive: caseSensitive(),
-      wholeWord: wholeWord(),
-      regexp: regexp(),
-    }),
-    (next) => {
-      props.onSearchChange(next);
-    },
-  );
+  const update = (patch: Partial<SearchOptions>) =>
+    props.onOptionsChange({ ...props.options, ...patch });
 
   // Each time the bar is reopened (or switched to replace), focus the matching input and select its text
   createEffect(
@@ -138,14 +122,6 @@ export const FindBar: Component<FindBarProps> = (props) => {
       const input = showReplace ? replaceInput : searchInput;
       input?.focus();
       input?.select();
-    },
-  );
-
-  createEffect(
-    () => props.initialSearch,
-    (text) => {
-      if (text) setSearchText(text);
-      searchInput?.select();
     },
   );
 
@@ -189,8 +165,8 @@ export const FindBar: Component<FindBarProps> = (props) => {
             ref={(element) => (searchInput = element)}
             size="sm"
             dir="auto"
-            value={searchText()}
-            onInput={(e) => setSearchText(e.currentTarget.value)}
+            value={props.options.search}
+            onInput={(e) => update({ search: e.currentTarget.value })}
             onKeyDown={(e) => handleKeyDown(e, props.onFindNext, props.onFindPrevious)}
             placeholder={t().editor.findPlaceholder}
             class={searchField}
@@ -198,23 +174,31 @@ export const FindBar: Component<FindBarProps> = (props) => {
 
           <div class={options}>
             <FindToggle
-              pressed={caseSensitive()}
-              onChange={setCaseSensitive}
+              pressed={props.options.caseSensitive}
+              onChange={(value) => update({ caseSensitive: value })}
               title={t().editor.matchCase}
             >
               <CaseSensitive />
             </FindToggle>
-            <FindToggle pressed={wholeWord()} onChange={setWholeWord} title={t().editor.wholeWord}>
+            <FindToggle
+              pressed={props.options.wholeWord}
+              onChange={(value) => update({ wholeWord: value })}
+              title={t().editor.wholeWord}
+            >
               <WholeWord />
             </FindToggle>
-            <FindToggle pressed={regexp()} onChange={setRegexp} title={t().editor.useRegex}>
+            <FindToggle
+              pressed={props.options.regexp}
+              onChange={(value) => update({ regexp: value })}
+              title={t().editor.useRegex}
+            >
               <Regex />
             </FindToggle>
           </div>
         </div>
 
         <div class={count}>
-          <Show when={searchText()}>
+          <Show when={props.options.search}>
             <Badge variant={hasMatches() ? "secondary" : "destructive"} size="sm" dir="ltr">
               {matchLabel()}
             </Badge>
@@ -246,8 +230,8 @@ export const FindBar: Component<FindBarProps> = (props) => {
             ref={(element) => (replaceInput = element)}
             size="sm"
             dir="auto"
-            value={replaceText()}
-            onInput={(e) => setReplaceText(e.currentTarget.value)}
+            value={props.options.replace}
+            onInput={(e) => update({ replace: e.currentTarget.value })}
             onKeyDown={(e) => handleKeyDown(e, props.onReplaceNext, props.onReplaceAll)}
             placeholder={t().editor.replacePlaceholder}
             class={grow}

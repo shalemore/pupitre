@@ -26,7 +26,7 @@ import { PopupLayer } from "@/components/popup-layer";
 import { TitleBar } from "@/components/title-bar";
 import { FindBar } from "@/features/editor/find-bar";
 import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
-import type { MatchStats } from "@/features/editor/search";
+import type { MatchStats, SearchOptions } from "@/features/editor/search";
 import { FolderTree } from "@/features/sidebar/folder-tree";
 import { OutlineList } from "@/features/sidebar/outline-list";
 import type { SidebarMode, SidebarRail } from "@/features/sidebar/sidebar";
@@ -59,6 +59,13 @@ import { WordCount } from "./main-window/word-count";
 import { barDivider, windowFrame } from "./window-chrome";
 
 type FindMode = "closed" | "find" | "replace";
+const EMPTY_SEARCH: SearchOptions = {
+  search: "",
+  replace: "",
+  caseSensitive: false,
+  wholeWord: false,
+  regexp: false,
+};
 /** The outline of a document nothing is folded in yet, and of no document at all. */
 const OPEN_SECTIONS: ReadonlySet<string> = new Set();
 
@@ -153,7 +160,7 @@ export const MainWindow: Component = () => {
   const [matchToReveal, setMatchToReveal] = createSignal<
     { path: string; from: number; to: number } | undefined
   >();
-  const [initialSearch, setInitialSearch] = createSignal("");
+  const [searchOptions, setSearchOptions] = createSignal<SearchOptions>(EMPTY_SEARCH);
   const [matchStats, setMatchStats] = createSignal<MatchStats>({ current: 0, total: 0 });
   // The outline sections the user folded, by headingKey, each document with its own: a fold belongs
   // to the document it was made in and survives every edit of it
@@ -264,20 +271,14 @@ export const MainWindow: Component = () => {
   let contentArea: HTMLDivElement | undefined;
   // A menu pick is an interaction with the chrome; it stays unfolded until the pointer moves again,
   // rather than folding under the pointer that is still where the picked entry was
-  createEffect(
-    menuOpen,
-    (open) => {
-      if (!open) chrome.keepVisible();
-    },
-    { defer: true },
-  );
-  createEffect(
-    startSidebarHeld,
-    (held) => {
-      if (!held) chrome.keepVisible();
-    },
-    { defer: true },
-  );
+  const handleMenuOpenChange = (open: boolean) => {
+    if (!open) chrome.keepVisible();
+    setMenuOpen(open);
+  };
+  const handleStartSidebarHeld = (held: boolean) => {
+    if (!held) chrome.keepVisible();
+    setStartSidebarHeld(held);
+  };
   // Turning tabs off returns the window to one document. The others close after the usual save
   // prompt, and a cancel keeps tabs on: there would be no strip to reach the tab it kept.
   createEffect(
@@ -333,7 +334,7 @@ export const MainWindow: Component = () => {
         if (folderView() === oldPath) setFolderView(newPath);
         void session.handleRename(oldPath, newPath);
       }}
-      onHoldOpenChange={setStartSidebarHeld}
+      onHoldOpenChange={handleStartSidebarHeld}
       onHiddenChange={setFolderHasHidden}
     />
   );
@@ -410,21 +411,32 @@ export const MainWindow: Component = () => {
 
   const openFind = (mode: Exclude<FindMode, "closed">) => {
     if (!session.activeDocument() || editor() === undefined) return;
-    setInitialSearch(editor()?.getSelectedText().trim() ?? "");
+    const selected = editor()?.getSelectedText().trim() ?? "";
+    setSearchOptions((prev) => ({
+      ...(findMode() === "closed" ? EMPTY_SEARCH : prev),
+      ...(selected ? { search: selected } : {}),
+    }));
     setFindMode(mode);
   };
 
   const closeFind = () => {
     setFindMode("closed");
-    editor()?.setSearch({
-      search: "",
-      replace: "",
-      caseSensitive: false,
-      wholeWord: false,
-      regexp: false,
-    });
+    setSearchOptions(EMPTY_SEARCH);
+    editor()?.setSearch(EMPTY_SEARCH);
     editor()?.focus();
   };
+
+  createEffect(
+    () => {
+      const handle = editor();
+      const open = findMode() !== "closed";
+      const options = searchOptions();
+      return handle && open ? { handle, options } : undefined;
+    },
+    (next) => {
+      if (next) setMatchStats(next.handle.setSearch(next.options));
+    },
+  );
 
   const runSearch = (action: (handle: MarkdownEditorHandle) => MatchStats) => {
     const handle = editor();
@@ -652,7 +664,7 @@ export const MainWindow: Component = () => {
           onActivate={session.activateTab}
           onClose={(id) => void closeTabToEditor(id)}
           count={wordCount()}
-          onMenuOpenChange={setMenuOpen}
+          onMenuOpenChange={handleMenuOpenChange}
         />
       </TitleBar>
 
@@ -686,7 +698,7 @@ export const MainWindow: Component = () => {
               hasHidden={folderHasHidden()}
               showHidden={settings().showHidden}
               onShowHiddenChange={(showHidden) => void updateSettings({ showHidden })}
-              onHoldOpenChange={setStartSidebarHeld}
+              onHoldOpenChange={handleStartSidebarHeld}
             />
           }
           outline={outlineList()}
@@ -723,15 +735,13 @@ export const MainWindow: Component = () => {
                     <Show when={findMode() !== "closed"}>
                       <FindBar
                         showReplace={findMode() === "replace"}
-                        initialSearch={initialSearch()}
+                        options={searchOptions()}
                         matchStats={matchStats()}
                         onToggleReplace={() =>
                           setFindMode(findMode() === "replace" ? "find" : "replace")
                         }
                         onClose={closeFind}
-                        onSearchChange={(options) =>
-                          runSearch((handle) => handle.setSearch(options))
-                        }
+                        onOptionsChange={setSearchOptions}
                         onFindNext={() => runSearch((handle) => handle.findNext())}
                         onFindPrevious={() => runSearch((handle) => handle.findPrevious())}
                         onReplaceNext={() => runSearch((handle) => handle.replaceNext())}
