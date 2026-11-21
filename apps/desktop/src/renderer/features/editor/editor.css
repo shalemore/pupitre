@@ -846,9 +846,18 @@
     visibility: hidden;
   }
 
-  /* A rendering that opens above its source stands as its own block before the source card */
+  /* A rendering that opens above its source keeps the card's surface and top corners as one piece,
+     while staying outside .md-code-block so its start bar only marks the source lines below */
   :is(.md-mermaid, .md-math-block, .md-html-block):has(+ .md-code-block-start) {
-    margin-block-end: 0.25em;
+    background: var(--ui-surface-0);
+    border-block-end: var(--ui-border-width) solid var(--ui-alpha-2);
+    border-start-start-radius: var(--radius-lg);
+    border-start-end-radius: var(--radius-lg);
+  }
+
+  :is(.md-mermaid, .md-math-block, .md-html-block) + .md-code-block-start {
+    border-start-start-radius: 0;
+    border-start-end-radius: 0;
   }
 
   /* A picture standing in an `<img>` block would be pushed down by the buffer the line keeps around it */
