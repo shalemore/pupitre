@@ -4,8 +4,8 @@ import {
   SegmentedControlIndicator,
   SegmentedControlItem,
 } from "@ui-sdk/solid/segmented-control";
+import { cn } from "cn";
 import { For } from "solid-js";
-import { css, cx } from "./styled-system/css";
 import { truncate } from "./styles";
 
 export interface SegmentedOption<T extends string> {
@@ -21,47 +21,6 @@ export interface SegmentedControlProps<T extends string> {
   class?: string;
 }
 
-const root = css({
-  position: "relative",
-  display: "flex",
-  borderRadius: "lg",
-  backgroundColor: "segmented.track",
-  padding: "0.5",
-  textStyle: "xs",
-});
-const indicator = css({
-  position: "absolute",
-  top: "[var(--segmented-control-indicator-top)]",
-  left: "[var(--segmented-control-indicator-left)]",
-  width: "[var(--segmented-control-indicator-width)]",
-  height: "[var(--segmented-control-indicator-height)]",
-  borderRadius: "md",
-  backgroundColor: "segmented.thumb",
-  boxShadow: "segmentedThumb",
-  transitionProperty: "left, width",
-  transitionDuration: "snap",
-  transitionTimingFunction: "snap",
-});
-const label = css({
-  layerStyle: "interactive",
-  position: "relative",
-  flex: "1",
-  display: "flex",
-  height: "6",
-  cursor: "pointer",
-  alignItems: "center",
-  justifyContent: "center",
-  gap: "1.5",
-  borderRadius: "md",
-  paddingInline: "2",
-  color: "muted.foreground",
-  outlineStyle: "none",
-  _focusVisible: { boxShadow: "focus" },
-  _hover: { color: "foreground" },
-  "&[data-checked]": { fontWeight: "medium", color: "foreground" },
-  "& svg": { width: "3.5", height: "3.5", flexShrink: 0 },
-});
-
 /**
  * A row of mutually exclusive options on a recessed track, with a thumb that slides to the
  * selected one. UI SDK measures the selected item and positions the indicator.
@@ -75,12 +34,19 @@ export function SegmentedControl<T extends string>(props: SegmentedControlProps<
         const option = props.options.find((candidate) => candidate.value === value);
         if (option) props.onChange(option.value);
       }}
-      class={cx(root, props.class)}
+      class={cn("relative flex rounded-lg bg-segmented-track p-0.5 text-xs", props.class)}
     >
-      <SegmentedControlIndicator data-slot="segmented-indicator" class={indicator} />
+      <SegmentedControlIndicator
+        data-slot="segmented-indicator"
+        class="absolute top-(--segmented-control-indicator-top) left-(--segmented-control-indicator-left) h-(--segmented-control-indicator-height) w-(--segmented-control-indicator-width) rounded-md bg-segmented-thumb shadow-segmented-thumb transition-[left,width] duration-snap ease-snap"
+      />
       <For each={props.options}>
         {(option) => (
-          <SegmentedControlItem data-slot="segmented-item" value={option.value} class={label}>
+          <SegmentedControlItem
+            data-slot="segmented-item"
+            value={option.value}
+            class="interactive relative flex h-6 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-md px-2 text-muted-foreground outline-none hover:text-foreground focus-visible:shadow-focus data-[checked]:font-medium data-[checked]:text-foreground [&>svg]:size-3.5 [&>svg]:shrink-0"
+          >
             {option.icon}
             <span class={truncate}>{option.label}</span>
           </SegmentedControlItem>

@@ -1,143 +1,44 @@
 import type { JSX } from "@solidjs/web";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "cn";
 import { omit } from "solid-js";
-import { cva, cx, type RecipeVariantProps } from "./styled-system/css";
 import { PRESSABLE } from "./styles";
 
-export const buttonVariants = cva({
-  base: {
-    display: "inline-flex",
-    flexShrink: 0,
-    cursor: "pointer",
-    alignItems: "center",
-    justifyContent: "center",
-    fontWeight: "medium",
-    whiteSpace: "nowrap",
-    outlineStyle: "none",
-    userSelect: "none",
-    _focusVisible: { boxShadow: "focus" },
-    _disabled: {
-      pointerEvents: "none",
-      cursor: "not-allowed",
-      opacity: 0.5,
-    },
-    // An icon keeps the size its own component gives it
-    "& svg:not([class*='size-'])": { pointerEvents: "none", flexShrink: 0 },
-  },
-  variants: {
-    variant: {
-      default: {
-        backgroundColor: "primary",
-        color: "primary.foreground",
-        _hover: { opacity: 0.9 },
+export const buttonVariants = cva(
+  "inline-flex shrink-0 cursor-pointer items-center justify-center font-medium whitespace-nowrap outline-none select-none focus-visible:shadow-focus disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&>svg:not([class*='size-'])]:pointer-events-none [&>svg:not([class*='size-'])]:shrink-0",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:opacity-90",
+        brand: "bg-brand text-brand-foreground shadow-sm hover:bg-brand-hover",
+        outline:
+          "border-hairline border-solid border-border bg-transparent text-foreground hover:bg-accent",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-selected",
+        ghost: "bg-transparent text-muted-foreground hover:bg-accent hover:text-foreground",
+        destructive: "bg-destructive/10 text-destructive hover:bg-destructive/20",
+        link: "text-primary underline-offset-4 hover:underline",
       },
-      brand: {
-        backgroundColor: "brand",
-        color: "brand.foreground",
-        boxShadow: "sm",
-        _hover: { backgroundColor: "brand.hover" },
-      },
-      outline: {
-        borderWidth: "hairline",
-        borderStyle: "solid",
-        borderColor: "border",
-        backgroundColor: "transparent",
-        color: "foreground",
-        _hover: { backgroundColor: "accent" },
-      },
-      secondary: {
-        backgroundColor: "secondary",
-        color: "secondary.foreground",
-        _hover: { backgroundColor: "selected" },
-      },
-      ghost: {
-        backgroundColor: "transparent",
-        color: "muted.foreground",
-        _hover: { backgroundColor: "accent", color: "foreground" },
-      },
-      destructive: {
-        backgroundColor: "destructive/10",
-        color: "destructive",
-        _hover: { backgroundColor: "destructive/20" },
-      },
-      link: {
-        color: "primary",
-        textUnderlineOffset: "4px",
-        _hover: { textDecoration: "underline" },
+      size: {
+        default: "h-8 gap-1.5 rounded-md px-3 text-xs [&>svg:not([class*='size-'])]:size-4",
+        xs: "h-6 gap-1 rounded-md px-2 text-2xs [&>svg:not([class*='size-'])]:size-3",
+        sm: "h-7 gap-1.5 rounded-md px-2.5 text-xs [&>svg:not([class*='size-'])]:size-3.5",
+        lg: "h-10 gap-2 rounded-lg px-4 text-sm [&>svg:not([class*='size-'])]:size-4",
+        icon: "size-8 rounded-md [&>svg:not([class*='size-'])]:size-4",
+        "icon-2xs": "size-5 rounded-sm [&>svg:not([class*='size-'])]:size-3",
+        "icon-xs": "size-6 rounded-md [&>svg:not([class*='size-'])]:size-3.5",
+        "icon-sm": "size-7 rounded-md [&>svg:not([class*='size-'])]:size-3.5",
+        "icon-lg": "size-10 rounded-lg [&>svg:not([class*='size-'])]:size-5",
       },
     },
-    size: {
-      default: {
-        height: "8",
-        gap: "1.5",
-        borderRadius: "md",
-        paddingInline: "3",
-        textStyle: "xs",
-        "& svg:not([class*='size-'])": { width: "4", height: "4" },
-      },
-      xs: {
-        height: "6",
-        gap: "1",
-        borderRadius: "md",
-        paddingInline: "2",
-        textStyle: "2xs",
-        "& svg:not([class*='size-'])": { width: "3", height: "3" },
-      },
-      sm: {
-        height: "7",
-        gap: "1.5",
-        borderRadius: "md",
-        paddingInline: "2.5",
-        textStyle: "xs",
-        "& svg:not([class*='size-'])": { width: "3.5", height: "3.5" },
-      },
-      lg: {
-        height: "10",
-        gap: "2",
-        borderRadius: "lg",
-        paddingInline: "4",
-        textStyle: "sm",
-        "& svg:not([class*='size-'])": { width: "4", height: "4" },
-      },
-      icon: {
-        width: "8",
-        height: "8",
-        borderRadius: "md",
-        "& svg:not([class*='size-'])": { width: "4", height: "4" },
-      },
-      "icon-2xs": {
-        width: "5",
-        height: "5",
-        borderRadius: "sm",
-        "& svg:not([class*='size-'])": { width: "3", height: "3" },
-      },
-      "icon-xs": {
-        width: "6",
-        height: "6",
-        borderRadius: "md",
-        "& svg:not([class*='size-'])": { width: "3.5", height: "3.5" },
-      },
-      "icon-sm": {
-        width: "7",
-        height: "7",
-        borderRadius: "md",
-        "& svg:not([class*='size-'])": { width: "3.5", height: "3.5" },
-      },
-      "icon-lg": {
-        width: "10",
-        height: "10",
-        borderRadius: "lg",
-        "& svg:not([class*='size-'])": { width: "5", height: "5" },
-      },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
     },
   },
-  defaultVariants: {
-    variant: "default",
-    size: "default",
-  },
-});
+);
 
 export type ButtonProps = Omit<JSX.ButtonHTMLAttributes<HTMLButtonElement>, "class"> &
-  RecipeVariantProps<typeof buttonVariants> & { class?: string | undefined };
+  VariantProps<typeof buttonVariants> & { class?: string | undefined };
 
 export function Button(props: ButtonProps) {
   const rest = omit(props, "class", "variant", "size", "type");
@@ -147,7 +48,7 @@ export function Button(props: ButtonProps) {
     <button
       type={type()}
       data-slot="button"
-      class={cx(
+      class={cn(
         PRESSABLE,
         buttonVariants({ variant: props.variant, size: props.size }),
         props.class,

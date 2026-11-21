@@ -6,7 +6,6 @@ import {
   SliderTrack,
 } from "@ui-sdk/solid/slider";
 import { createSignal } from "solid-js";
-import { css } from "./styled-system/css";
 
 export interface SliderProps {
   value: number;
@@ -16,47 +15,6 @@ export interface SliderProps {
   onChange: (value: number) => void;
   "aria-label"?: string;
 }
-
-const root = css({
-  position: "relative",
-  display: "flex",
-  width: "36",
-  touchAction: "none",
-  userSelect: "none",
-  alignItems: "center",
-});
-const control = css({ display: "flex", width: "full", alignItems: "center", paddingBlock: "1.5" });
-const track = css({
-  position: "relative",
-  height: "1",
-  width: "full",
-  borderRadius: "full",
-  backgroundColor: "input",
-});
-const fill = css({
-  position: "absolute",
-  left: "[var(--slider-indicator-start)]",
-  width: "[var(--slider-indicator-size)]",
-  height: "full",
-  borderRadius: "full",
-  backgroundColor: "brand",
-});
-const thumb = css({
-  position: "absolute",
-  top: "[50%]",
-  left: "[var(--slider-thumb-position)]",
-  translate: "[-50% -50%]",
-  display: "block",
-  width: "4",
-  height: "4",
-  borderRadius: "full",
-  backgroundColor: "knob",
-  boxShadow: "segmentedThumb",
-  outlineStyle: "none",
-  cursor: "grab",
-  _active: { cursor: "grabbing" },
-  _focusVisible: { boxShadow: "focus" },
-});
 
 export function Slider(props: SliderProps) {
   // A drag moves a local value: the settings change travels to the main process and back, and the
@@ -81,21 +39,24 @@ export function Slider(props: SliderProps) {
         setDraft(undefined);
       }}
       aria-label={props["aria-label"]}
-      class={root}
+      class="relative flex w-36 touch-none items-center select-none"
     >
       <SliderControl
         data-slot="slider-control"
-        class={control}
+        class="flex w-full items-center py-1.5"
         onPointerDown={() => {
           dragging = true;
         }}
       >
-        <SliderTrack data-slot="slider-track" class={track}>
-          <SliderIndicator data-slot="slider-fill" class={fill} />
+        <SliderTrack data-slot="slider-track" class="relative h-1 w-full rounded-full bg-input">
+          <SliderIndicator
+            data-slot="slider-fill"
+            class="absolute left-(--slider-indicator-start) h-full w-(--slider-indicator-size) rounded-full bg-brand"
+          />
           <SliderThumb
             data-slot="slider-thumb"
             index={0}
-            class={thumb}
+            class="absolute top-1/2 left-(--slider-thumb-position) block size-4 -translate-x-1/2 -translate-y-1/2 cursor-grab rounded-full bg-knob shadow-segmented-thumb outline-none focus-visible:shadow-focus active:cursor-grabbing"
             aria-label={props["aria-label"]}
             onPointerDown={() => {
               dragging = true;

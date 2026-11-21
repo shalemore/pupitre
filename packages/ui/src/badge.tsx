@@ -1,66 +1,36 @@
 import type { JSX } from "@solidjs/web";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "cn";
 import { omit } from "solid-js";
-import { cva, cx, type RecipeVariantProps } from "./styled-system/css";
 
-const badgeVariants = cva({
-  base: {
-    layerStyle: "interactive",
-    display: "inline-flex",
-    width: "fit",
-    maxWidth: "full",
-    flexShrink: 0,
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "1",
-    overflow: "hidden",
-    borderRadius: "sm",
-    borderWidth: "hairline",
-    borderStyle: "solid",
-    borderColor: "transparent",
-    fontWeight: "medium",
-    whiteSpace: "nowrap",
-    userSelect: "none",
-    "& > svg": { pointerEvents: "none", flexShrink: 0 },
-  },
-  variants: {
-    variant: {
-      default: { backgroundColor: "primary", color: "primary.foreground" },
-      secondary: { backgroundColor: "secondary", color: "secondary.foreground" },
-      muted: { backgroundColor: "muted", color: "muted.foreground", fontWeight: "normal" },
-      outline: { borderColor: "border", color: "foreground" },
-      brand: { backgroundColor: "brand", color: "brand.foreground" },
-      success: { backgroundColor: "success/15", color: "success" },
-      destructive: { backgroundColor: "destructive/15", color: "destructive" },
-    },
-    size: {
-      sm: {
-        height: "4.5",
-        paddingInline: "1.5",
-        textStyle: "2xs",
-        "& > svg": { width: "2.5", height: "2.5" },
+const badgeVariants = cva(
+  "interactive inline-flex w-fit max-w-full shrink-0 items-center justify-center gap-1 overflow-hidden rounded-sm border-hairline border-solid border-transparent font-medium whitespace-nowrap select-none [&>svg]:pointer-events-none [&>svg]:shrink-0",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground",
+        secondary: "bg-secondary text-secondary-foreground",
+        muted: "bg-muted text-muted-foreground font-normal",
+        outline: "border-border text-foreground",
+        brand: "bg-brand text-brand-foreground",
+        success: "bg-success/15 text-success",
+        destructive: "bg-destructive/15 text-destructive",
       },
-      default: {
-        height: "5",
-        paddingInline: "1.5",
-        textStyle: "xs",
-        "& > svg": { width: "3", height: "3" },
-      },
-      lg: {
-        height: "6",
-        paddingInline: "2",
-        textStyle: "xs",
-        "& > svg": { width: "3.5", height: "3.5" },
+      size: {
+        sm: "h-4.5 px-1.5 text-2xs [&>svg]:size-2.5",
+        default: "h-5 px-1.5 text-xs [&>svg]:size-3",
+        lg: "h-6 px-2 text-xs [&>svg]:size-3.5",
       },
     },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
   },
-  defaultVariants: {
-    variant: "default",
-    size: "default",
-  },
-});
+);
 
 export type BadgeProps = Omit<JSX.HTMLAttributes<HTMLSpanElement>, "class"> &
-  RecipeVariantProps<typeof badgeVariants> & { class?: string | undefined };
+  VariantProps<typeof badgeVariants> & { class?: string | undefined };
 
 export function Badge(props: BadgeProps) {
   const rest = omit(props, "class", "variant", "size");
@@ -68,7 +38,7 @@ export function Badge(props: BadgeProps) {
   return (
     <span
       data-slot="badge"
-      class={cx(badgeVariants({ variant: props.variant, size: props.size }), props.class)}
+      class={cn(badgeVariants({ variant: props.variant, size: props.size }), props.class)}
       {...rest}
     />
   );

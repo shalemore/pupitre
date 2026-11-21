@@ -8,21 +8,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@ui-sdk/solid/select";
+import { cva } from "class-variance-authority";
+import { cn } from "cn";
 import { Check, ChevronDown } from "lucide-solid";
 import { For, Show } from "solid-js";
 import { Badge } from "./badge";
 import { optionKey, optionOfKey, type SelectOption } from "./option";
 import { popupLayer } from "./popup-layer";
 import { ScrollView } from "./scroll-view";
-import { cva, css, cx } from "./styled-system/css";
 import {
   FLOATING_PANEL,
   PANEL_COLLISION_PADDING,
   PANEL_SIDE_OFFSET,
-  chevronTurn,
+  chevronTurnClass,
   listboxReset,
   truncate,
-  truncateStyle,
 } from "./styles";
 
 export interface SelectProps<T extends string> {
@@ -36,105 +36,43 @@ export interface SelectProps<T extends string> {
 }
 
 // An option keeps the height of the trigger it belongs to, so the open list does not look top-heavy
-const item = cva({
-  base: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: "4",
-    borderRadius: "sm",
-    paddingInline: "2.5",
-    paddingBlock: "1",
-    textStyle: "xs",
-    outlineStyle: "none",
-    cursor: "pointer",
-    _highlighted: { backgroundColor: "accent" },
-  },
-  variants: {
-    compact: {
-      true: { minHeight: "6" },
-      false: { minHeight: "8" },
+const item = cva(
+  "flex cursor-pointer items-center justify-between gap-4 rounded-sm px-2.5 py-1 text-xs outline-none data-[highlighted]:bg-accent",
+  {
+    variants: {
+      compact: {
+        true: "min-h-6",
+        false: "min-h-8",
+      },
     },
+    defaultVariants: { compact: false },
   },
-  defaultVariants: { compact: false },
-});
-const itemLabel = css(truncateStyle, {
-  minWidth: "0",
-  fontWeight: "medium",
-  color: "foreground",
-  ".group[data-selected] &": { color: "brand" },
-});
-const itemHint = css(truncateStyle, {
-  textStyle: "2xs",
-  color: "muted.foreground",
-});
-const itemText = css({ display: "flex", minWidth: "0", flexDirection: "column" });
-const itemLine = css({ display: "flex", minWidth: "0", alignItems: "center", gap: "1.5" });
-const check = css({ width: "3", height: "3", flexShrink: 0, color: "brand" });
-const chevronIcon = cva({
+);
+
+const chevronIcon = cva("", {
   variants: {
     variant: {
-      default: { width: "3.5", height: "3.5" },
-      ghost: { width: "3", height: "3" },
+      default: "size-3.5",
+      ghost: "size-3",
     },
   },
   defaultVariants: { variant: "default" },
 });
 
-const trigger = cva({
-  base: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: "2",
-    borderRadius: "sm",
-    outlineStyle: "none",
-    cursor: "pointer",
-    layerStyle: "interactive",
-    _focusVisible: { boxShadow: "focus" },
-  },
-  variants: {
-    variant: {
-      default: {
-        height: "8",
-        minWidth: "36",
-        borderWidth: "hairline",
-        borderStyle: "solid",
-        borderColor: "input",
-        backgroundColor: "field",
-        paddingInline: "2.5",
-        textStyle: "xs",
-        color: "foreground",
-        _hover: { backgroundColor: "surface.0" },
-        _expanded: { borderColor: "brand" },
-      },
-      ghost: {
-        height: "6",
-        paddingInline: "1.5",
-        textStyle: "2xs",
-        color: "tertiary",
-        _hover: { backgroundColor: "accent", color: "foreground" },
-        _expanded: { color: "foreground" },
+const trigger = cva(
+  "interactive flex cursor-pointer items-center justify-between gap-2 rounded-sm outline-none focus-visible:shadow-focus",
+  {
+    variants: {
+      variant: {
+        default:
+          "h-8 min-w-36 border-hairline border-solid border-input bg-field px-2.5 text-xs text-foreground hover:bg-surface-0 data-[expanded]:border-brand",
+        ghost:
+          "h-6 px-1.5 text-2xs text-tertiary hover:bg-accent hover:text-foreground data-[expanded]:text-foreground",
       },
     },
+    defaultVariants: { variant: "default" },
   },
-  defaultVariants: { variant: "default" },
-});
-const value = css(truncateStyle, {
-  display: "flex",
-  minWidth: "0",
-  flex: "1",
-  alignItems: "center",
-  gap: "1.5",
-});
-const chevron = css({ color: "muted.foreground" }, chevronTurn);
-const content = css({
-  zIndex: "50",
-  minWidth: "var(--anchor-width)",
-  borderRadius: "sm",
-  transformOrigin: "var(--transform-origin)",
-  padding: "0.5",
-});
+);
 
 /** A dropdown on top of UI SDK, which handles keyboard navigation, typeahead and ARIA. */
 export function Select<T extends string>(props: SelectProps<T>) {
@@ -151,9 +89,9 @@ export function Select<T extends string>(props: SelectProps<T>) {
       <SelectTrigger
         data-slot="select-trigger"
         aria-label={props["aria-label"]}
-        class={cx(trigger({ variant: props.variant }), props.class)}
+        class={cn(trigger({ variant: props.variant }), props.class)}
       >
-        <SelectValue class={value}>
+        <SelectValue class="flex min-w-0 flex-1 items-center gap-1.5 truncate">
           <Show when={selected()}>
             {(option) => (
               <>
@@ -161,7 +99,9 @@ export function Select<T extends string>(props: SelectProps<T>) {
                   {option().label}
                 </span>
                 <Show when={option().hint}>
-                  {(hint) => <span class={itemHint}>/ {hint()}</span>}
+                  {(hint) => (
+                    <span class="truncate text-2xs text-muted-foreground">/ {hint()}</span>
+                  )}
                 </Show>
                 <Show when={option().badge}>
                   {(badge) => (
@@ -174,7 +114,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
             )}
           </Show>
         </SelectValue>
-        <span aria-hidden="true" class={chevron}>
+        <span aria-hidden="true" class={cn("text-muted-foreground", chevronTurnClass)}>
           <ChevronDown class={chevronIcon({ variant: props.variant })} />
         </span>
       </SelectTrigger>
@@ -185,7 +125,10 @@ export function Select<T extends string>(props: SelectProps<T>) {
         sideOffset={PANEL_SIDE_OFFSET}
         collisionPadding={PANEL_COLLISION_PADDING}
         container={popupLayer()}
-        class={cx(FLOATING_PANEL, content)}
+        class={cn(
+          FLOATING_PANEL,
+          "z-50 min-w-(--anchor-width) origin-(--transform-origin) rounded-sm p-0.5",
+        )}
       >
         <SelectList
           render={(listProps) => (
@@ -205,15 +148,20 @@ export function Select<T extends string>(props: SelectProps<T>) {
                 data-slot="select-item"
                 value={optionKey(option.value)}
                 label={option.label}
-                class={cx("group", item({ compact: props.variant === "ghost" }))}
+                class={cn("group", item({ compact: props.variant === "ghost" }))}
               >
-                <span class={itemText}>
-                  <span class={itemLine}>
-                    <SelectItemText class={itemLabel} style={option.style ?? {}}>
+                <span class="flex min-w-0 flex-col">
+                  <span class="flex min-w-0 items-center gap-1.5">
+                    <SelectItemText
+                      class="min-w-0 truncate font-medium text-foreground group-data-[selected]:text-brand"
+                      style={option.style ?? {}}
+                    >
                       {option.label}
                     </SelectItemText>
                     <Show when={option.hint}>
-                      {(hint) => <span class={itemHint}>/ {hint()}</span>}
+                      {(hint) => (
+                        <span class="truncate text-2xs text-muted-foreground">/ {hint()}</span>
+                      )}
                     </Show>
                     <Show when={option.badge}>
                       {(badge) => (
@@ -224,11 +172,13 @@ export function Select<T extends string>(props: SelectProps<T>) {
                     </Show>
                   </span>
                   <Show when={option.description}>
-                    {(description) => <span class={itemHint}>{description()}</span>}
+                    {(description) => (
+                      <span class="truncate text-2xs text-muted-foreground">{description()}</span>
+                    )}
                   </Show>
                 </span>
                 <SelectItemIndicator>
-                  <Check class={check} />
+                  <Check class="size-3 shrink-0 text-brand" />
                 </SelectItemIndicator>
               </SelectItem>
             )}

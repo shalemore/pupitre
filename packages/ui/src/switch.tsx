@@ -1,5 +1,4 @@
 import { Switch as UiSwitch, SwitchThumb } from "@ui-sdk/solid/switch";
-import { css } from "./styled-system/css";
 
 export interface SwitchProps {
   checked: boolean;
@@ -7,37 +6,6 @@ export interface SwitchProps {
   disabled?: boolean;
   "aria-label"?: string;
 }
-
-const control = css({
-  display: "inline-flex",
-  height: "4.5",
-  width: "8",
-  flexShrink: 0,
-  alignItems: "center",
-  borderRadius: "full",
-  backgroundColor: "input",
-  padding: "0.5",
-  cursor: "pointer",
-  outlineStyle: "none",
-  transitionProperty: "background-color",
-  transitionDuration: "ui",
-  transitionTimingFunction: "outExpo",
-  _focusVisible: { boxShadow: "focus" },
-  "&[data-checked]": { backgroundColor: "brand" },
-  "&[data-disabled]": { cursor: "not-allowed", opacity: 0.5 },
-});
-const thumb = css({
-  width: "3.5",
-  height: "3.5",
-  borderRadius: "full",
-  backgroundColor: "knob",
-  boxShadow: "sm",
-  transitionProperty: "transform",
-  transitionDuration: "snap",
-  transitionTimingFunction: "snap",
-  "&[data-checked]": { transform: "translateX(0.875rem)" },
-  _rtl: { "&[data-checked]": { transform: "translateX(-0.875rem)" } },
-});
 
 export function Switch(props: SwitchProps) {
   const disabled = () => props.disabled ?? false;
@@ -49,9 +17,9 @@ export function Switch(props: SwitchProps) {
       onCheckedChange={props.onChange}
       disabled={disabled()}
       aria-label={props["aria-label"]}
-      class={control}
+      class="inline-flex h-4.5 w-8 shrink-0 cursor-pointer items-center rounded-full bg-input p-0.5 transition-colors duration-ui ease-out-expo outline-none focus-visible:shadow-focus data-[checked]:bg-brand data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50"
     >
-      <SwitchThumb class={thumb} />
+      <SwitchThumb class="size-3.5 rounded-full bg-knob shadow-sm transition-transform duration-snap ease-snap data-[checked]:translate-x-3.5 rtl:data-[checked]:-translate-x-3.5" />
     </UiSwitch>
   );
 }

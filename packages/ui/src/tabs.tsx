@@ -6,7 +6,7 @@ import {
   TabsTab,
   type TabsOrientation,
 } from "@ui-sdk/solid/tabs";
-import { css, cx } from "./styled-system/css";
+import { cn } from "cn";
 
 export interface TabsProps {
   value?: string | null | undefined;
@@ -37,39 +37,20 @@ export function Tabs(props: TabsProps) {
   );
 }
 
-const list = css({ display: "flex", flexDirection: "column", gap: "0.5", outlineStyle: "none" });
-const trigger = css({
-  layerStyle: "interactive",
-  display: "flex",
-  width: "full",
-  alignItems: "center",
-  gap: "2.5",
-  borderRadius: "md",
-  paddingInline: "2.5",
-  paddingBlock: "2",
-  textAlign: "start",
-  textStyle: "xs",
-  color: "muted.foreground",
-  outlineStyle: "none",
-  cursor: "pointer",
-  _hover: { backgroundColor: "accent", color: "foreground" },
-  _focusVisible: { boxShadow: "focus" },
-  "&[data-selected]": {
-    backgroundColor: "selected",
-    fontWeight: "medium",
-    color: "foreground",
-  },
-  "& svg": { width: "4", height: "4", flexShrink: 0 },
-});
-const content = css({ outlineStyle: "none" });
-
 export function TabsList(props: { class?: string; children: JSX.Element }) {
-  return <UiTabsList class={cx(list, props.class)}>{props.children}</UiTabsList>;
+  return (
+    <UiTabsList class={cn("flex flex-col gap-0.5 outline-none", props.class)}>
+      {props.children}
+    </UiTabsList>
+  );
 }
 
 export function TabsTrigger(props: { value: string; children: JSX.Element }) {
   return (
-    <TabsTab value={props.value} class={trigger}>
+    <TabsTab
+      value={props.value}
+      class="interactive flex w-full cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2 text-start text-xs text-muted-foreground outline-none hover:bg-accent hover:text-foreground focus-visible:shadow-focus data-[selected]:bg-selected data-[selected]:font-medium data-[selected]:text-foreground [&>svg]:size-4 [&>svg]:shrink-0"
+    >
       {props.children}
     </TabsTab>
   );
@@ -77,7 +58,7 @@ export function TabsTrigger(props: { value: string; children: JSX.Element }) {
 
 export function TabsContent(props: { value: string; children: JSX.Element }) {
   return (
-    <TabsPanel value={props.value} class={content}>
+    <TabsPanel value={props.value} class="outline-none">
       {props.children}
     </TabsPanel>
   );

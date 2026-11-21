@@ -8,52 +8,30 @@ export const truncateStyle = css.raw({
 });
 
 /** The same clip as a class, for an element that needs nothing else. */
-export const truncate = css(truncateStyle);
+export const truncate = "truncate";
 
 /** A glyph that points the other way in a right-to-left window. */
-export const rtlFlip = css({ _rtl: { scale: "[-1 1]" } });
+export const rtlFlip = "rtl:scale-x-[-1]";
 
 /** A small control that stays quiet until the pointer or the focus reaches it. */
-export const quietButton = css({
-  flexShrink: 0,
-  color: "tertiary",
-  opacity: 0.5,
-  transitionProperty: "opacity",
-  transitionDuration: "ui",
-  transitionTimingFunction: "outExpo",
-  _hover: { opacity: 1 },
-  _focusVisible: { opacity: 1 },
-  "&[data-pressed]": { opacity: 1 },
-});
+export const quietButton =
+  "shrink-0 text-tertiary opacity-50 transition-opacity duration-ui ease-out-expo hover:opacity-100 focus-visible:opacity-100 data-[pressed]:opacity-100";
 
 /** The list inside a floating panel: every menu, dropdown and context menu shares it. */
-export const menuPanel = css({
-  zIndex: "50",
-  display: "flex",
-  minWidth: "52",
-  maxHeight: "var(--kb-popper-content-available-height)",
-  flexDirection: "column",
-  overflowY: "auto",
-  overscrollBehavior: "contain",
-  borderRadius: "sm",
-  padding: "1",
-  textStyle: "xs",
-  color: "foreground",
-  outlineStyle: "none",
-  userSelect: "none",
-});
+export const menuPanel =
+  "z-50 flex min-w-52 max-h-(--kb-popper-content-available-height) flex-col overflow-y-auto overscroll-contain rounded-sm p-1 text-xs text-foreground outline-none select-none";
 
 /** A line that takes the room left in a row and clips what does not fit. */
-export const truncateGrow = css(truncateStyle, { minWidth: "0", flex: "1" });
+export const truncateGrow = "truncate min-w-0 flex-1";
 
 /** A control that keeps its size in a row that may be too narrow. */
-export const shrinkNone = css({ flexShrink: 0 });
+export const shrinkNone = "shrink-0";
 
 /** Text that stands beside the important part of a row. */
-export const dim = css({ opacity: 0.6 });
+export const dim = "opacity-60";
 
 /** A name a screen reader reads and the window does not show. */
-export const srOnly = css({ srOnly: true });
+export const srOnly = "sr-only";
 
 /*
  * Classes app.css defines for a theme to replace. TypeScript names them so a component cannot
@@ -70,7 +48,11 @@ export const PANEL_SIDE_OFFSET = 6;
 export const PANEL_COLLISION_PADDING = 8;
 
 /** The list a dropdown or a combobox lays its rows in: the panel draws the surface. */
-export const listboxReset = css({ outlineStyle: "none" });
+export const listboxReset = "outline-none";
+
+/** The caret that turns while the popup it names is open. */
+export const chevronTurnClass =
+  "transition-transform duration-base ease-out-expo [[data-open]_&]:rotate-180";
 
 /** The caret that turns while the popup it names is open. */
 export const chevronTurn = css.raw({

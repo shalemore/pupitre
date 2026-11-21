@@ -8,19 +8,18 @@ import {
   ComboboxList,
   ComboboxTrigger,
 } from "@ui-sdk/solid/combobox";
+import { cn } from "cn";
 import { Check, ChevronDown } from "lucide-solid";
 import { createMemo, createSignal, For, Show } from "solid-js";
 import { optionKey, optionOfKey, type SelectOption } from "./option";
 import { popupLayer } from "./popup-layer";
 import { ScrollView } from "./scroll-view";
-import { css, cx } from "./styled-system/css";
 import {
   FLOATING_PANEL,
   PANEL_COLLISION_PADDING,
   PANEL_SIDE_OFFSET,
-  chevronTurn,
+  chevronTurnClass,
   listboxReset,
-  truncateStyle,
 } from "./styles";
 
 export interface ComboboxProps {
@@ -42,73 +41,6 @@ function matches(option: SelectOption, query: string): boolean {
   );
 }
 
-const item = css({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  gap: "3",
-  borderRadius: "sm",
-  paddingInline: "2.5",
-  paddingBlock: "1.5",
-  textStyle: "xs",
-  outlineStyle: "none",
-  cursor: "pointer",
-  _highlighted: { backgroundColor: "accent" },
-});
-const itemLine = css({ display: "flex", alignItems: "baseline", gap: "2", minWidth: "0" });
-const itemLabel = css(truncateStyle, {
-  color: "foreground",
-  ".group[data-selected] &": { color: "brand" },
-});
-const itemDescription = css(truncateStyle, {
-  textStyle: "2xs",
-  color: "muted.foreground",
-});
-const check = css({ width: "3", height: "3", flexShrink: 0, color: "brand" });
-const chevronIcon = css({ width: "3.5", height: "3.5" });
-
-const control = css({
-  display: "flex",
-  height: "8",
-  width: "56",
-  alignItems: "center",
-  borderRadius: "md",
-  borderWidth: "hairline",
-  borderStyle: "solid",
-  borderColor: "input",
-  backgroundColor: "field",
-  textStyle: "xs",
-  layerStyle: "interactive",
-  _focusWithin: { boxShadow: "focus" },
-  "&:has([data-open])": { borderColor: "brand" },
-});
-const input = css({
-  height: "full",
-  minWidth: "0",
-  flex: "1",
-  backgroundColor: "transparent",
-  paddingInline: "2.5",
-  color: "foreground",
-  outlineStyle: "none",
-  _placeholder: { color: "muted.foreground" },
-});
-const trigger = css({
-  display: "flex",
-  height: "full",
-  alignItems: "center",
-  paddingInline: "2",
-  color: "muted.foreground",
-  cursor: "pointer",
-});
-const icon = css(chevronTurn);
-const content = css({
-  zIndex: "50",
-  width: "var(--anchor-width)",
-  minWidth: "64",
-  borderRadius: "sm",
-  transformOrigin: "var(--transform-origin)",
-  padding: "1",
-});
 /**
  * A searchable dropdown for long lists such as fonts; descriptions (such as localized font names)
  * are searchable too. Opening it lists everything and brings the current value into view; the
@@ -155,18 +87,27 @@ export function Combobox(props: ComboboxProps) {
         });
       }}
     >
-      <div data-slot="combobox-control" class={cx(control, props.class)}>
+      <div
+        data-slot="combobox-control"
+        class={cn(
+          "interactive flex h-8 w-56 items-center rounded-md border-hairline border-solid border-input bg-field text-xs focus-within:shadow-focus has-[[data-open]]:border-brand",
+          props.class,
+        )}
+      >
         <ComboboxInput
           data-slot="combobox-input"
           aria-label={ariaLabel()}
           placeholder={placeholder()}
-          class={input}
+          class="h-full min-w-0 flex-1 bg-transparent px-2.5 text-foreground outline-none placeholder:text-muted-foreground"
           onFocus={(e) => e.currentTarget.select()}
           style={selected()?.style ?? {}}
         />
-        <ComboboxTrigger data-slot="combobox-trigger" class={trigger}>
-          <span aria-hidden="true" class={icon}>
-            <ChevronDown class={chevronIcon} />
+        <ComboboxTrigger
+          data-slot="combobox-trigger"
+          class="flex h-full cursor-pointer items-center px-2 text-muted-foreground"
+        >
+          <span aria-hidden="true" class={chevronTurnClass}>
+            <ChevronDown class="size-3.5" />
           </span>
         </ComboboxTrigger>
       </div>
@@ -177,7 +118,10 @@ export function Combobox(props: ComboboxProps) {
         sideOffset={PANEL_SIDE_OFFSET}
         collisionPadding={collisionPadding()}
         container={popupLayer()}
-        class={cx(FLOATING_PANEL, content)}
+        class={cn(
+          FLOATING_PANEL,
+          "z-50 w-(--anchor-width) min-w-64 origin-(--transform-origin) rounded-sm p-1",
+        )}
       >
         <ComboboxList
           render={(listProps) => (
@@ -202,18 +146,23 @@ export function Combobox(props: ComboboxProps) {
                 data-slot="combobox-item"
                 value={optionKey(option.value)}
                 label={option.label}
-                class={cx("group", item)}
+                class="group flex cursor-pointer items-center justify-between gap-3 rounded-sm px-2.5 py-1.5 text-xs outline-none data-[highlighted]:bg-accent"
               >
-                <span class={itemLine}>
-                  <ComboboxItemText class={itemLabel} style={option.style ?? {}}>
+                <span class="flex min-w-0 items-baseline gap-2">
+                  <ComboboxItemText
+                    class="truncate text-foreground group-data-[selected]:text-brand"
+                    style={option.style ?? {}}
+                  >
                     {option.label}
                   </ComboboxItemText>
                   <Show when={option.description}>
-                    {(description) => <span class={itemDescription}>{description()}</span>}
+                    {(description) => (
+                      <span class="truncate text-2xs text-muted-foreground">{description()}</span>
+                    )}
                   </Show>
                 </span>
                 <ComboboxItemIndicator>
-                  <Check class={check} />
+                  <Check class="size-3 shrink-0 text-brand" />
                 </ComboboxItemIndicator>
               </ComboboxItem>
             )}
