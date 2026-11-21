@@ -6,25 +6,6 @@ import { Dynamic } from "@solidjs/web";
 import { FileCode2, Info, Palette, Printer, Puzzle, Settings2, Type } from "lucide-solid";
 import { For, Show, type Component } from "solid-js";
 import { workspace } from "@/lib/workspace";
-import { css } from "@/styled-system/css";
-
-const groupTitle = css({
-  paddingInline: "2.5",
-  marginBlockStart: "5",
-  marginBlockEnd: "1.5",
-  textStyle: "2xs",
-  fontWeight: "medium",
-  color: "muted.foreground",
-  "&:first-child": { marginBlockStart: "0" },
-});
-const footer = css({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  marginBlockStart: "auto",
-  paddingInline: "2.5",
-});
-const version = css({ flexShrink: 0, textStyle: "2xs", color: "tertiary" });
 
 /** The settings pages, each group named above its pages. */
 const GROUPS = [
@@ -57,7 +38,9 @@ export const SettingsNav: Component = () => (
       <For each={GROUPS}>
         {(group) => (
           <>
-            <span class={groupTitle}>{group.title()}</span>
+            <span class="mt-5 mb-1.5 px-2.5 text-2xs font-medium text-muted-foreground first:mt-0">
+              {group.title()}
+            </span>
             <For each={group.pages}>
               {(page) => (
                 <TabsTrigger value={page.value}>
@@ -70,8 +53,8 @@ export const SettingsNav: Component = () => (
         )}
       </For>
     </TabsList>
-    <footer class={footer}>
-      <span class={version}>v{pkg.version}</span>
+    <footer class="mt-auto flex items-center justify-between px-2.5">
+      <span class="shrink-0 text-2xs text-tertiary">v{pkg.version}</span>
       <Show when={workspace().root}>
         <Select<"global" | "folder">
           variant="ghost"

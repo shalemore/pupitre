@@ -2,7 +2,6 @@ import { Input, ScrollView, Sheet } from "@pupitre/ui";
 import type { JSX } from "@solidjs/web";
 import { Command, CommandInput, CommandItem, CommandList } from "@ui-sdk/solid/command";
 import { createMemo, createSignal, For, onSettled, Show } from "solid-js";
-import { css } from "@/styled-system/css";
 
 export interface PaletteSheetProps<Item> {
   /** Names the sheet and the list it holds, for anyone who cannot see it. */
@@ -21,37 +20,8 @@ export interface PaletteSheetProps<Item> {
   children: (item: Item) => JSX.Element;
 }
 
-const paletteItem = css({
-  layerStyle: "interactive",
-  display: "flex",
-  width: "full",
-  cursor: "pointer",
-  alignItems: "center",
-  gap: "3",
-  borderRadius: "md",
-  paddingBlock: "1.5",
-  paddingInline: "2.5",
-  textAlign: "start",
-  textStyle: "xs",
-  color: "muted.foreground",
-  outlineStyle: "none",
-  _highlighted: { backgroundColor: "selected", fontWeight: "medium", color: "foreground" },
-});
-const list = css({
-  display: "flex",
-  maxHeight: "80",
-  minHeight: "0",
-  flexDirection: "column",
-  gap: "0.5",
-  marginBlockStart: "2",
-});
-const empty = css({ paddingInline: "2.5", paddingBlock: "1.5", color: "muted.foreground" });
-const hint = css({
-  paddingInline: "2.5",
-  paddingBlockEnd: "1",
-  textStyle: "2xs",
-  color: "muted.foreground",
-});
+const paletteItem =
+  "interactive flex w-full cursor-pointer items-center gap-3 rounded-md px-2.5 py-1.5 text-start text-xs text-muted-foreground outline-none data-highlighted:bg-selected data-highlighted:font-medium data-highlighted:text-foreground";
 
 /**
  * The panel a palette is: a query field over the rows it picks, walked with the arrow keys and run
@@ -105,7 +75,12 @@ export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
         />
         <CommandList
           render={(listProps) => (
-            <ScrollView as="ul" {...listProps} aria-label={props.title} class={list} />
+            <ScrollView
+              as="ul"
+              {...listProps}
+              aria-label={props.title}
+              class="mt-2 flex max-h-80 min-h-0 flex-col gap-0.5"
+            />
           )}
         >
           <For each={shown()}>
@@ -118,11 +93,13 @@ export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
         </CommandList>
       </Command>
       <Show when={shown().length === 0 && props.emptyMessage !== undefined}>
-        <p role="status" class={empty}>
+        <p role="status" class="px-2.5 py-1.5 text-muted-foreground">
           {props.emptyMessage}
         </p>
       </Show>
-      <Show when={props.hint}>{(hintText) => <p class={hint}>{hintText()}</p>}</Show>
+      <Show when={props.hint}>
+        {(hintText) => <p class="px-2.5 pb-1 text-2xs text-muted-foreground">{hintText()}</p>}
+      </Show>
     </Sheet>
   );
 }

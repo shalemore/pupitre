@@ -1,6 +1,6 @@
 import { desktop } from "@pupitre/desktop-api/client";
+import { cn } from "@pupitre/ui";
 import { onSettled, Show, type ParentComponent } from "solid-js";
-import { css, cx } from "@/styled-system/css";
 import { CaptionButtons } from "./caption-buttons";
 
 /**
@@ -10,23 +10,8 @@ import { CaptionButtons } from "./caption-buttons";
  */
 const GIVE_WAY = ["count"];
 
-const titleBar = css({
-  width: "full",
-  height: "titleBar",
-  overflow: "hidden",
-  flexShrink: 0,
-  display: "flex",
-  alignItems: "center",
-  gap: "2",
-  userSelect: "none",
-  backgroundColor: "surface.0",
-  textStyle: "xs",
-  transitionProperty: "height",
-  transitionDuration: "sheet",
-  transitionTimingFunction: "outExpo",
-  "&[data-folded]": { height: "0" },
-  _print: { display: "none" },
-});
+const titleBar =
+  "flex h-title-bar w-full shrink-0 items-center gap-2 overflow-hidden bg-surface-0 text-xs transition-[height] duration-sheet ease-out-expo select-none data-folded:h-0 print:hidden";
 
 /**
  * The window title bar. It is draggable as a whole and leaves room for the native caption buttons
@@ -94,7 +79,7 @@ export const TitleBar: ParentComponent<{ class?: string; folded?: boolean }> = (
       data-caption-side={layoutSide}
       data-folded={props.folded ? "" : undefined}
       inert={props.folded}
-      class={cx(
+      class={cn(
         // The horizontal padding comes from .app-title-bar, which leaves room for the caption buttons
         "app-title-bar",
         titleBar,

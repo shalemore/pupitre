@@ -1,5 +1,5 @@
 import type { MenuEntry } from "@pupitre/desktop-api/menu";
-import { Separator } from "@pupitre/ui";
+import { cn, Separator } from "@pupitre/ui";
 import { FLOATING_PANEL, menuPanel, rtlFlip, truncate } from "@pupitre/ui/styles";
 import {
   Menu,
@@ -14,7 +14,6 @@ import { Check, ChevronRight } from "lucide-solid";
 import { For, Show, createMemo, type Component } from "solid-js";
 import { isRtl } from "@/lib/rtl";
 import { settings } from "@/lib/settings";
-import { css, cx } from "@/styled-system/css";
 
 type MenuItemEntry = Extract<MenuEntry, { type: "item" }>;
 
@@ -28,64 +27,36 @@ export interface MenuPopupProps {
   onClose: () => void;
 }
 
-const check = css({ width: "3", height: "3", flexShrink: 0 });
-const hidden = css({ visibility: "hidden" });
-const row = css({ display: "flex", minWidth: "0", flex: "1", alignItems: "center", gap: "1.5" });
-const label = css({ minWidth: "0" });
-const block = css({ display: "block" });
-const detail = css({ display: "block", textStyle: "2xs", color: "tertiary" });
-const shortcut = css({ textStyle: "2xs", color: "tertiary", fontVariantNumeric: "tabular-nums" });
-const item = css({
-  display: "flex",
-  width: "full",
-  alignItems: "center",
-  gap: "6",
-  borderRadius: "sm",
-  paddingInline: "2.5",
-  paddingBlock: "1.5",
-  textAlign: "start",
-  outlineStyle: "none",
-  transition: "colors",
-  transitionDuration: "fast",
-  transitionTimingFunction: "outExpo",
-  _disabled: { color: "tertiary" },
-  _highlighted: { backgroundColor: "accent", color: "foreground" },
-});
-const submenuChevron = css({
-  width: "3.5",
-  height: "3.5",
-  flexShrink: 0,
-  color: "tertiary",
-});
-const separator = css({ marginBlock: "1", backgroundColor: "border.subtle" });
+const item =
+  "flex w-full items-center gap-6 rounded-sm px-2.5 py-1.5 text-start outline-none transition-colors duration-fast ease-out-expo disabled:text-tertiary data-highlighted:bg-accent data-highlighted:text-foreground";
 
 const ItemContent: Component<{ item: MenuItemEntry; checked: boolean; hasChecks: boolean }> = (
   props,
 ) => (
   <>
-    <span class={row}>
+    <span class="flex min-w-0 flex-1 items-center gap-1.5">
       <Show when={props.hasChecks}>
-        <Check class={cx(check, !props.checked && hidden)} stroke-width={2} />
+        <Check class={cn("size-3 shrink-0", !props.checked && "invisible")} stroke-width={2} />
       </Show>
-      <span class={label}>
+      <span class="min-w-0">
         <Show
           when={props.item.detail}
-          fallback={<span class={cx(truncate, block)}>{props.item.label}</span>}
+          fallback={<span class={cn(truncate, "block")}>{props.item.label}</span>}
         >
           {/* A recent file's name is document text, not a UI label; its path is isolated below */}
-          <bdi dir="auto" class={cx(truncate, block)}>
+          <bdi dir="auto" class={cn(truncate, "block")}>
             {props.item.label}
           </bdi>
         </Show>
         <Show when={props.item.detail}>
-          <bdi dir="auto" class={cx(truncate, block, detail)}>
+          <bdi dir="auto" class={cn(truncate, "block text-2xs text-tertiary")}>
             {props.item.detail}
           </bdi>
         </Show>
       </span>
     </span>
     <Show when={props.item.shortcut}>
-      <bdi dir="ltr" class={shortcut}>
+      <bdi dir="ltr" class="text-2xs text-tertiary tabular-nums">
         {props.item.shortcut}
       </bdi>
     </Show>
@@ -123,7 +94,7 @@ export const MenuEntries: Component<{
             const entry = keyedEntry().entry;
             return entry.type === "item" ? entry : undefined;
           })()}
-          fallback={<Separator class={separator} />}
+          fallback={<Separator class="my-1 bg-border-subtle" />}
         >
           {(itemEntry) => (
             <Show
@@ -168,9 +139,9 @@ export const MenuEntries: Component<{
                     checked={checked(itemEntry())}
                     hasChecks={hasChecks()}
                   />
-                  <ChevronRight class={cx(submenuChevron, rtlFlip)} />
+                  <ChevronRight class={cn("size-3.5 shrink-0 text-tertiary", rtlFlip)} />
                 </MenuSubTrigger>
-                <MenuSubContent class={cx(FLOATING_PANEL, menuPanel)}>
+                <MenuSubContent class={cn(FLOATING_PANEL, menuPanel)}>
                   <MenuEntries entries={itemEntry().submenu ?? []} onSelect={props.onSelect} />
                 </MenuSubContent>
               </MenuSub>
@@ -207,7 +178,7 @@ export const MenuPopup: Component<MenuPopupProps> = (props) => (
       side="bottom"
       align={isRtl() ? "end" : "start"}
       sideOffset={2}
-      class={cx(FLOATING_PANEL, menuPanel)}
+      class={cn(FLOATING_PANEL, menuPanel)}
     >
       <MenuEntries entries={props.entries} onSelect={props.onSelect} />
     </MenuContent>

@@ -4,29 +4,12 @@ import { createEffect, createSignal, onSettled, Show, type Component } from "sol
 import { isSurfaceReady, surfaceTheme } from "@/lib/plugin-surface";
 import { plugins } from "@/lib/plugins";
 import { settings } from "@/lib/settings";
-import { css } from "@/styled-system/css";
 
 // Behind the text: the editor area isolates its children, so a negative layer paints over the
 // card but under everything the editor draws
-const backgroundFrame = css({
-  position: "absolute",
-  inset: "0",
-  width: "full",
-  height: "full",
-  borderStyle: "none",
-  zIndex: "behind",
-  pointerEvents: "none",
-});
+const backgroundFrame = "pointer-events-none absolute inset-0 z-behind size-full border-none";
 
-const pointerFrame = css({
-  position: "fixed",
-  inset: "0",
-  width: "full",
-  height: "full",
-  borderStyle: "none",
-  zIndex: "50",
-  pointerEvents: "none",
-});
+const pointerFrame = "pointer-events-none fixed inset-0 z-50 size-full border-none";
 
 function surfaceUrl(plugin: PluginInfo, kind: SurfaceKind): string {
   const module = plugin.manifest.surfaces?.[kind] ?? "";
