@@ -7,7 +7,7 @@ import {
 import { desktop } from "@pupitre/desktop-api/client";
 import { currentLocale, t } from "@pupitre/i18n/solid";
 import { debounce, fileNameOf, messageOf } from "@pupitre/utils";
-import { createEffect, createMemo, createSignal, onCleanup } from "solid-js";
+import { createEffect, createMemo, createSignal, onCleanup, untrack } from "solid-js";
 import { reportFailure } from "@/lib/errors";
 import { withTrailingNewline } from "@/lib/file";
 import { createPendingImages, type PendingImages } from "@/lib/pending-images";
@@ -754,7 +754,7 @@ export function createDocumentSession(getEditor: () => DocumentEditorWithImages 
     openSample,
     closeTab,
     /** Closes everything but the document on show, for when tabs are turned off. */
-    closeOtherTabs: () => closeTabsExcept(activeTabId()),
+    closeOtherTabs: () => untrack(() => closeTabsExcept(activeTabId())),
     canReopenTab,
     reopenTab,
     activateTab,
