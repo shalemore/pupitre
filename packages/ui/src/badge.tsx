@@ -4,7 +4,7 @@ import { cn } from "cn";
 import { omit } from "solid-js";
 
 const badgeVariants = cva(
-  "inline-flex w-fit max-w-full shrink-0 items-center justify-center gap-1 overflow-hidden rounded-sm border-hairline border-solid border-transparent font-medium whitespace-nowrap interactive select-none [&>svg]:pointer-events-none [&>svg]:shrink-0",
+  "__INTERACTIVE__ inline-flex w-fit max-w-full shrink-0 items-center justify-center gap-1 overflow-hidden rounded-sm border-hairline border-solid border-transparent font-medium whitespace-nowrap select-none [&>svg]:pointer-events-none [&>svg]:shrink-0",
   {
     variants: {
       variant: {

@@ -18,7 +18,7 @@ const CaptionButton: Component<{
     title={props.label}
     onClick={props.onClick}
     class={cn(
-      "flex w-caption-button items-center justify-center text-muted-foreground interactive",
+      "__INTERACTIVE__ flex w-caption-button items-center justify-center text-muted-foreground",
       props.class,
     )}
   >

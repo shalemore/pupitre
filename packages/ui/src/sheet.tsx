@@ -36,7 +36,7 @@ export const Sheet: Component<SheetProps> = (props) => (
     <DialogContent
       data-sheet="panel"
       class={cn(
-        "floating-panel fixed left-1/2 z-50 flex w-[calc(100%-2rem)] flex-col gap-2 p-2 text-xs",
+        "__FLOATING_PANEL__ fixed left-1/2 z-50 flex w-[calc(100%-2rem)] flex-col gap-2 p-2 text-xs",
         props.placement === "top"
           ? "top-16 max-h-[calc(100vh-5rem)] max-w-xl -translate-x-1/2 translate-y-0 [--panel-translate-x:-50%] [--panel-translate-y:0px]"
           : "top-1/2 max-h-[calc(100vh-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 [--panel-translate-x:-50%] [--panel-translate-y:-50%]",

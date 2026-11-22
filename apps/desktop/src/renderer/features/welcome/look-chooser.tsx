@@ -14,7 +14,7 @@ interface LookOptionProps {
 const LookOption = (props: LookOptionProps) => (
   <Radio
     value={props.value}
-    class="pressable flex w-48 max-w-full cursor-pointer flex-col gap-2 rounded-lg border-hairline border-solid border-border p-2 text-start outline-none hover:bg-accent focus-visible:shadow-focus data-checked:border-brand data-checked:bg-accent"
+    class="__PRESSABLE__ flex w-48 max-w-full cursor-pointer flex-col gap-2 rounded-lg border-hairline border-solid border-border p-2 text-start outline-none hover:bg-accent focus-visible:shadow-focus data-checked:border-brand data-checked:bg-accent"
   >
     <div>{props.preview}</div>
     <div class="px-0.5">

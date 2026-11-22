@@ -245,7 +245,7 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
                   {(matchRow) => (
                     <CommandItem
                       value={String(matchRow.index)}
-                      class="flex w-full cursor-pointer items-center gap-2 rounded-md py-1.5 ps-6 pe-2.5 text-start text-xs text-muted-foreground interactive outline-none data-highlighted:bg-selected data-highlighted:font-medium data-highlighted:text-foreground"
+                      class="__INTERACTIVE__ flex w-full cursor-pointer items-center gap-2 rounded-md py-1.5 ps-6 pe-2.5 text-start text-xs text-muted-foreground outline-none data-highlighted:bg-selected data-highlighted:font-medium data-highlighted:text-foreground"
                     >
                       <span class="w-6 shrink-0 text-end text-2xs text-tertiary tabular-nums">
                         {matchRow.match.line}

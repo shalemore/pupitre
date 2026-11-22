@@ -136,7 +136,7 @@ export function ScrollView(props: ScrollViewProps) {
       data-scroll-view
       class={cn(
         "scrollbar-none overflow-y-auto print:mask-none",
-        preferences().fade && "scroll-fade",
+        preferences().fade && "__SCROLL_FADE__",
         props.class,
       )}
       onScroll={() => {

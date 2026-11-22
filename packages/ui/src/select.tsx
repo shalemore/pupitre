@@ -53,7 +53,7 @@ const chevronIcon = cva("", {
 });
 
 const trigger = cva(
-  "flex cursor-pointer items-center justify-between gap-2 rounded-sm interactive outline-none focus-visible:shadow-focus",
+  "__INTERACTIVE__ flex cursor-pointer items-center justify-between gap-2 rounded-sm outline-none focus-visible:shadow-focus",
   {
     variants: {
       variant: {
@@ -121,7 +121,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
         sideOffset={PANEL_SIDE_OFFSET}
         collisionPadding={PANEL_COLLISION_PADDING}
         container={popupLayer()}
-        class="floating-panel z-50 min-w-(--anchor-width) origin-(--transform-origin) rounded-sm p-0.5"
+        class="__FLOATING_PANEL__ z-50 min-w-(--anchor-width) origin-(--transform-origin) rounded-sm p-0.5"
       >
         <SelectList
           render={(listProps) => (

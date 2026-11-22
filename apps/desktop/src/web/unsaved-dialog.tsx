@@ -28,7 +28,7 @@ const UnsavedDialog: Component<UnsavedDialogProps> = (props) => {
   return (
     <dialog
       ref={(element) => (dialog = element)}
-      class="floating-panel m-auto w-[min(24rem,calc(100vw-2rem))] border-0 p-6 text-sm text-foreground backdrop:bg-black/30"
+      class="__FLOATING_PANEL__ m-auto w-[min(24rem,calc(100vw-2rem))] border-0 p-6 text-sm text-foreground backdrop:bg-black/30"
       aria-labelledby="pupitre-unsaved-message"
       onCancel={(event) => {
         event.preventDefault();

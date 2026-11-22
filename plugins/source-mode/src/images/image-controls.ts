@@ -44,7 +44,7 @@ const handleStyle =
 const toolbarStyle =
   "absolute gap-0.5 rounded-lg bg-surface-3 p-0.5 shadow-float select-none opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto";
 const alignButton =
-  "interactive grid size-6 place-items-center rounded-md border-0 bg-transparent p-0 text-tertiary cursor-pointer hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:shadow-focus aria-[pressed=true]:bg-selected aria-[pressed=true]:text-foreground";
+  "__INTERACTIVE__ grid size-6 place-items-center rounded-md border-0 bg-transparent p-0 text-tertiary cursor-pointer hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:shadow-focus aria-[pressed=true]:bg-selected aria-[pressed=true]:text-foreground";
 
 /**
  * The corner handle that sizes the picture. It drags the picture on the screen and writes the width

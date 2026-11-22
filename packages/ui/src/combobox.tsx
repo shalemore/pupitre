@@ -84,7 +84,7 @@ export function Combobox(props: ComboboxProps) {
       <div
         data-slot="combobox-control"
         class={cn(
-          "flex h-8 w-56 items-center rounded-md border-hairline border-solid border-input bg-field text-xs interactive focus-within:shadow-focus has-data-open:border-brand",
+          "__INTERACTIVE__ flex h-8 w-56 items-center rounded-md border-hairline border-solid border-input bg-field text-xs focus-within:shadow-focus has-data-open:border-brand",
           props.class,
         )}
       >
@@ -115,7 +115,7 @@ export function Combobox(props: ComboboxProps) {
         sideOffset={PANEL_SIDE_OFFSET}
         collisionPadding={collisionPadding()}
         container={popupLayer()}
-        class="floating-panel z-50 w-(--anchor-width) min-w-64 origin-(--transform-origin) rounded-sm p-1"
+        class="__FLOATING_PANEL__ z-50 w-(--anchor-width) min-w-64 origin-(--transform-origin) rounded-sm p-1"
       >
         <ComboboxList
           render={(listProps) => (

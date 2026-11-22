@@ -132,7 +132,7 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
               if (open() === menu) hide();
             }}
           >
-            <MenuTrigger class="shrink-0 cursor-pointer rounded-md px-2.5 py-1 whitespace-nowrap text-muted-foreground interactive outline-none hover:bg-accent hover:text-foreground focus-visible:bg-accent focus-visible:text-foreground aria-expanded:bg-accent aria-expanded:text-foreground">
+            <MenuTrigger class="__INTERACTIVE__ shrink-0 cursor-pointer rounded-md px-2.5 py-1 whitespace-nowrap text-muted-foreground outline-none hover:bg-accent hover:text-foreground focus-visible:bg-accent focus-visible:text-foreground aria-expanded:bg-accent aria-expanded:text-foreground">
               {t().menu[menu]}
             </MenuTrigger>
             <MenuPanel

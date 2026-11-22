@@ -28,7 +28,7 @@ export interface MenuPopupProps {
 }
 
 const menuPanel = cva(
-  "floating-panel z-50 flex max-h-(--kb-popper-content-available-height) min-w-52 flex-col overflow-y-auto overscroll-contain rounded-sm p-1 text-xs text-foreground outline-none select-none",
+  "__FLOATING_PANEL__ z-50 flex max-h-(--kb-popper-content-available-height) min-w-52 flex-col overflow-y-auto overscroll-contain rounded-sm p-1 text-xs text-foreground outline-none select-none",
 );
 
 export type MenuPanelProps = Parameters<typeof MenuContent>[0];

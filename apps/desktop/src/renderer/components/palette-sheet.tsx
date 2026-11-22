@@ -84,7 +84,7 @@ export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
             {(row, index) => (
               <CommandItem
                 value={String(index())}
-                class="flex w-full cursor-pointer items-center gap-3 rounded-md px-2.5 py-1.5 text-start text-xs text-muted-foreground interactive outline-none data-highlighted:bg-selected data-highlighted:font-medium data-highlighted:text-foreground"
+                class="__INTERACTIVE__ flex w-full cursor-pointer items-center gap-3 rounded-md px-2.5 py-1.5 text-start text-xs text-muted-foreground outline-none data-highlighted:bg-selected data-highlighted:font-medium data-highlighted:text-foreground"
               >
                 {props.children(row)}
               </CommandItem>

@@ -112,10 +112,12 @@
   --animate-appear: appear var(--transition-duration-base) var(--ease-enter);
 }
 
-@utility interactive {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
-  transition-duration: var(--transition-duration-ui);
-  transition-timing-function: var(--ease-out-expo);
+@layer utilities {
+  .__INTERACTIVE__ {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-duration: var(--transition-duration-ui);
+    transition-timing-function: var(--ease-out-expo);
+  }
 }
 
 @keyframes fadeIn {
@@ -531,7 +533,7 @@
 }
 
 @layer components {
-  .floating-panel {
+  .__FLOATING_PANEL__ {
     border-radius: var(--radius-xl);
     background-color: var(--popover);
     box-shadow: var(--ui-shadow-popover);
@@ -567,7 +569,7 @@
  * it the row closes at once.
  */
 @layer components {
-  .outline-row {
+  .__OUTLINE_ROW__ {
     interpolate-size: allow-keywords;
     block-size: auto;
     overflow: clip;
@@ -588,7 +590,7 @@
  * the regular hover timing; only the scale uses the spring.
  */
 @layer components {
-  .pressable {
+  .__PRESSABLE__ {
     transition-property: scale, color, background-color, border-color, box-shadow, opacity;
     transition-duration:
       var(--transition-duration-slow), var(--transition-duration-ui), var(--transition-duration-ui),
@@ -630,7 +632,7 @@
     transform-origin: var(--kb-popper-content-transform-origin, center);
   }
 
-  .scroll-fade {
+  .__SCROLL_FADE__ {
     /*
      * The edge fades along a curve rather than a straight ramp: opacity is read non-linearly, so a
      * two-stop gradient leaves a visible edge where the fade begins.

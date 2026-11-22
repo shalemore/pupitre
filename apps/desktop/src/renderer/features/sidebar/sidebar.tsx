@@ -100,7 +100,7 @@ export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
           aria-valuemax={SIDEBAR_WIDTH.max}
           tabindex="0"
           class={cn(
-            "absolute inset-y-0 z-10 w-1 cursor-col-resize border-solid border-transparent interactive outline-none hover:border-brand/30 focus-visible:border-brand/30",
+            "__INTERACTIVE__ absolute inset-y-0 z-10 w-1 cursor-col-resize border-solid border-transparent outline-none hover:border-brand/30 focus-visible:border-brand/30",
             props.side === "start" ? "inset-e-0 border-e-hairline" : "inset-s-0 border-s-hairline",
             dragging() && "border-brand/40",
           )}

@@ -69,7 +69,7 @@ export const OutlineList: Component<OutlineListProps> = (props) => {
                   data-folded={row().hidden ? "" : undefined}
                   inert={row().hidden}
                   aria-hidden={row().hidden ? "true" : undefined}
-                  class="outline-row flex items-center"
+                  class="__OUTLINE_ROW__ flex items-center"
                 >
                   <Show
                     when={row().hasChildren}
@@ -84,7 +84,7 @@ export const OutlineList: Component<OutlineListProps> = (props) => {
                           : t().sidebar.collapseSection
                       }
                       onClick={() => props.onToggleCollapsed(row().heading)}
-                      class="grid size-4 shrink-0 place-items-center rounded-sm text-tertiary interactive outline-none hover:text-foreground focus-visible:shadow-focus"
+                      class="__INTERACTIVE__ grid size-4 shrink-0 place-items-center rounded-sm text-tertiary outline-none hover:text-foreground focus-visible:shadow-focus"
                     >
                       <ChevronRight
                         class={cn(

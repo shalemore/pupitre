@@ -135,7 +135,7 @@ const CodeCorner: Component<{
       <Show when={props.fence}>
         <select
           // Interface rather than document, sized in rem so the block's smaller em does not shrink it
-          class="-mx-1 field-sizing-content max-w-32 min-w-0 cursor-pointer appearance-none truncate rounded-sm border-0 bg-transparent px-1 py-0.5 interactive hover:bg-accent hover:text-foreground focus-visible:shadow-focus focus-visible:outline-none"
+          class="__INTERACTIVE__ -mx-1 field-sizing-content max-w-32 min-w-0 cursor-pointer appearance-none truncate rounded-sm border-0 bg-transparent px-1 py-0.5 hover:bg-accent hover:text-foreground focus-visible:shadow-focus focus-visible:outline-none"
           aria-label={t().editor.codeLanguage}
           title={t().editor.codeLanguage}
           value={current()}

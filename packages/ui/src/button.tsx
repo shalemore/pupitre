@@ -4,7 +4,7 @@ import { cn } from "cn";
 import { omit } from "solid-js";
 
 export const buttonVariants = cva(
-  "pressable inline-flex shrink-0 cursor-pointer items-center justify-center font-medium whitespace-nowrap outline-none select-none focus-visible:shadow-focus disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg:not([class*='size-'])]:pointer-events-none [&_svg:not([class*='size-'])]:shrink-0",
+  "__PRESSABLE__ inline-flex shrink-0 cursor-pointer items-center justify-center font-medium whitespace-nowrap outline-none select-none focus-visible:shadow-focus disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg:not([class*='size-'])]:pointer-events-none [&_svg:not([class*='size-'])]:shrink-0",
   {
     variants: {
       variant: {

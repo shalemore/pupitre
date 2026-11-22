@@ -4,7 +4,7 @@ import { cn } from "cn";
 import { omit } from "solid-js";
 
 const listItemVariants = cva(
-  "flex w-full cursor-pointer items-center gap-1.5 rounded-md py-1.5 pe-2.5 text-start text-xs interactive outline-none focus-visible:shadow-focus",
+  "__INTERACTIVE__ flex w-full cursor-pointer items-center gap-1.5 rounded-md py-1.5 pe-2.5 text-start text-xs outline-none focus-visible:shadow-focus",
   {
     variants: {
       active: {
