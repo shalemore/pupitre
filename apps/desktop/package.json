@@ -22,6 +22,7 @@
     "build": "electron-vite build",
     "build:web": "vite build --config vite.web.config.ts",
     "dist": "electron-vite build && electron-builder",
+    "check:fuses": "electron-fuses read --app release/linux-unpacked/pupitre",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
