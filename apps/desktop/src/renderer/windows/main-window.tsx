@@ -11,6 +11,7 @@ import { headingKey, type OutlineHeading } from "@pupitre/markdown";
 import { ImagePreview } from "@pupitre/plugin-source-mode";
 import { messageOf } from "@pupitre/utils";
 import { makeEventListener } from "@solid-primitives/event-listener";
+import { cva } from "class-variance-authority";
 import {
   createEffect,
   createMemo,
@@ -44,7 +45,6 @@ import { isImmersive, settings, updateSettings } from "@/lib/settings";
 import { SIDEBAR_WIDTH } from "@/lib/sidebar";
 import type { TextStats } from "@/lib/text-stats";
 import { createDocumentActions } from "./document-actions";
-import { card, content, documentArea, editorArea, welcomeArea } from "./main-window-styles";
 import { FolderActions } from "./main-window/folder-actions";
 import { MainTitleContent } from "./main-window/main-title-content";
 import { Overlays, type Overlay } from "./main-window/overlays";
@@ -57,6 +57,39 @@ import { SidebarRegion } from "./main-window/sidebar-region";
 import { createSidebarWidths } from "./main-window/sidebar-widths";
 import { WordCount } from "./main-window/word-count";
 import { barDivider, windowFrame } from "./window-chrome";
+
+/**
+ * The row the card and the sidebars stand in. An immersive window keeps an even gap to its edges,
+ * and in a split layout the end sidebar reaches the window edge.
+ */
+const content = cva("flex min-h-0 flex-1 overflow-hidden print:block print:overflow-visible", {
+  variants: {
+    immersive: {
+      true: "gap-(--pref-immersive-gap) py-(--pref-immersive-gap) ps-0 print:p-0",
+    },
+    split: { true: "", false: "" },
+  },
+  compoundVariants: [
+    { immersive: true, split: true, class: "pe-0" },
+    { immersive: true, split: false, class: "pe-(--pref-immersive-gap)" },
+  ],
+});
+
+/** The document stands on a card of its own in an immersive window, and lies flat on a classic one. */
+const card = cva(
+  "flex min-w-0 flex-1 flex-col overflow-hidden print:block print:overflow-visible",
+  {
+    variants: {
+      immersive: {
+        true: "rounded-lg bg-surface-1 shadow-sm print:rounded-none print:shadow-none",
+      },
+      // A background plugin draws on the window, so the card must not paint over it
+      clear: {
+        true: "bg-transparent shadow-none",
+      },
+    },
+  },
+);
 
 type FindMode = "closed" | "find" | "replace";
 const EMPTY_SEARCH: SearchOptions = {
@@ -711,7 +744,7 @@ export const MainWindow: Component = () => {
         >
           {/* An immersive window shows the document as a card on the window background, which also holds the title bar and the sidebar */}
           <div class={card({ immersive: isImmersive(), clear: hasBackgroundPlugin() })}>
-            <div class={documentArea}>
+            <div class="flex min-h-0 flex-1 overflow-hidden print:block print:overflow-visible">
               <Show
                 when={session.activeTab()}
                 fallback={
@@ -720,9 +753,9 @@ export const MainWindow: Component = () => {
                   // the welcome screen from flashing and then giving way to the document coming back.
                   <Show
                     when={isPending(() => session.activeTab())}
-                    fallback={<main class={welcomeArea} />}
+                    fallback={<main class="flex-1" />}
                   >
-                    <main class={welcomeArea}>
+                    <main class="flex-1">
                       <WelcomeScreen
                         recentFiles={recentFiles()}
                         onNewDocument={session.newDocument}
@@ -734,7 +767,7 @@ export const MainWindow: Component = () => {
                 }
               >
                 {(tab) => (
-                  <main class={editorArea}>
+                  <main class="relative isolate h-full flex-1 overflow-hidden print:h-auto print:overflow-visible">
                     <PluginBackground />
                     <Show when={findMode() !== "closed"}>
                       <FindBar

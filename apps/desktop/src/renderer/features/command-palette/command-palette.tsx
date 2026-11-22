@@ -2,7 +2,6 @@ import { desktop } from "@pupitre/desktop-api/client";
 import type { Menus } from "@pupitre/desktop-api/menu";
 import { currentLocale, t } from "@pupitre/i18n/solid";
 import { Kbd } from "@pupitre/ui";
-import { dim, shrinkNone, truncateGrow } from "@pupitre/ui/styles";
 import { createMemo, createSignal, onSettled, Show } from "solid-js";
 import { PaletteSheet } from "@/components/palette-sheet";
 import { loadPlugins, plugins } from "@/lib/plugins";
@@ -68,8 +67,8 @@ export function CommandPalette(props: CommandPaletteProps) {
       {(command) => (
         <>
           {/* The path keeps the row's own color, at less weight, so a highlight moves both */}
-          <span class={truncateGrow}>
-            <span class={dim}>
+          <span class="min-w-0 flex-1 truncate">
+            <span class="opacity-60">
               {command.parent}
               {t().commandPalette.separator}
             </span>
@@ -77,7 +76,7 @@ export function CommandPalette(props: CommandPaletteProps) {
           </span>
           <Show when={command.shortcut}>
             {(shortcut) => (
-              <Kbd dir="ltr" class={shrinkNone}>
+              <Kbd dir="ltr" class="shrink-0">
                 {shortcut()}
               </Kbd>
             )}

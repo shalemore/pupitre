@@ -1,7 +1,5 @@
 import { EditorView } from "@codemirror/view";
 
-export const scrollArea = "size-full overflow-x-hidden print:h-auto print:overflow-visible";
-
 /**
  * CodeMirror injects its base styles outside every cascade layer, where they would beat the editor
  * layer, the theme and the preferences alike. `revert-layer` hands these properties back to the

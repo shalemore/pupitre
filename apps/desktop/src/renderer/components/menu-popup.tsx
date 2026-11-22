@@ -1,6 +1,5 @@
 import type { MenuEntry } from "@pupitre/desktop-api/menu";
 import { cn, Separator } from "@pupitre/ui";
-import { FLOATING_PANEL, menuPanel, rtlFlip, truncate } from "@pupitre/ui/styles";
 import {
   Menu,
   MenuCheckboxItem,
@@ -10,6 +9,7 @@ import {
   MenuSubContent,
   MenuSubTrigger,
 } from "@ui-sdk/solid/menu";
+import { cva } from "class-variance-authority";
 import { Check, ChevronRight } from "lucide-solid";
 import { For, Show, createMemo, type Component } from "solid-js";
 import { isRtl } from "@/lib/rtl";
@@ -27,8 +27,9 @@ export interface MenuPopupProps {
   onClose: () => void;
 }
 
-const item =
-  "flex w-full items-center gap-6 rounded-sm px-2.5 py-1.5 text-start outline-none transition-colors duration-fast ease-out-expo disabled:text-tertiary data-highlighted:bg-accent data-highlighted:text-foreground";
+const item = cva(
+  "flex w-full items-center gap-6 rounded-sm px-2.5 py-1.5 text-start outline-none transition-colors duration-fast ease-out-expo disabled:text-tertiary data-highlighted:bg-accent data-highlighted:text-foreground",
+);
 
 const ItemContent: Component<{ item: MenuItemEntry; checked: boolean; hasChecks: boolean }> = (
   props,
@@ -41,15 +42,15 @@ const ItemContent: Component<{ item: MenuItemEntry; checked: boolean; hasChecks:
       <span class="min-w-0">
         <Show
           when={props.item.detail}
-          fallback={<span class={cn(truncate, "block")}>{props.item.label}</span>}
+          fallback={<span class="block truncate">{props.item.label}</span>}
         >
           {/* A recent file's name is document text, not a UI label; its path is isolated below */}
-          <bdi dir="auto" class={cn(truncate, "block")}>
+          <bdi dir="auto" class="block truncate">
             {props.item.label}
           </bdi>
         </Show>
         <Show when={props.item.detail}>
-          <bdi dir="auto" class={cn(truncate, "block text-2xs text-tertiary")}>
+          <bdi dir="auto" class="block truncate text-2xs text-tertiary">
             {props.item.detail}
           </bdi>
         </Show>
@@ -106,7 +107,7 @@ export const MenuEntries: Component<{
                     <MenuItem
                       disabled={itemEntry().enabled === false}
                       onSelect={() => props.onSelect(itemEntry())}
-                      class={item}
+                      class={item()}
                     >
                       <ItemContent
                         item={itemEntry()}
@@ -121,7 +122,7 @@ export const MenuEntries: Component<{
                     checked={checked(itemEntry())}
                     disabled={itemEntry().enabled === false}
                     onCheckedChange={() => props.onSelect(itemEntry())}
-                    class={item}
+                    class={item()}
                   >
                     <ItemContent
                       item={itemEntry()}
@@ -133,15 +134,15 @@ export const MenuEntries: Component<{
               }
             >
               <MenuSub>
-                <MenuSubTrigger disabled={itemEntry().enabled === false} class={item}>
+                <MenuSubTrigger disabled={itemEntry().enabled === false} class={item()}>
                   <ItemContent
                     item={itemEntry()}
                     checked={checked(itemEntry())}
                     hasChecks={hasChecks()}
                   />
-                  <ChevronRight class={cn("size-3.5 shrink-0 text-tertiary", rtlFlip)} />
+                  <ChevronRight class="rtl-flip size-3.5 shrink-0 text-tertiary" />
                 </MenuSubTrigger>
-                <MenuSubContent class={cn(FLOATING_PANEL, menuPanel)}>
+                <MenuSubContent class="floating-panel menu-panel">
                   <MenuEntries entries={itemEntry().submenu ?? []} onSelect={props.onSelect} />
                 </MenuSubContent>
               </MenuSub>
@@ -178,7 +179,7 @@ export const MenuPopup: Component<MenuPopupProps> = (props) => (
       side="bottom"
       align={isRtl() ? "end" : "start"}
       sideOffset={2}
-      class={cn(FLOATING_PANEL, menuPanel)}
+      class="floating-panel menu-panel"
     >
       <MenuEntries entries={props.entries} onSelect={props.onSelect} />
     </MenuContent>

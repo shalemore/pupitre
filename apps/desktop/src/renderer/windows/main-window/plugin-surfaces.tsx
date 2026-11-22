@@ -5,12 +5,6 @@ import { isSurfaceReady, surfaceTheme } from "@/lib/plugin-surface";
 import { plugins } from "@/lib/plugins";
 import { settings } from "@/lib/settings";
 
-// Behind the text: the editor area isolates its children, so a negative layer paints over the
-// card but under everything the editor draws
-const backgroundFrame = "pointer-events-none absolute inset-0 z-behind size-full border-none";
-
-const pointerFrame = "pointer-events-none fixed inset-0 z-50 size-full border-none";
-
 function surfaceUrl(plugin: PluginInfo, kind: SurfaceKind): string {
   const module = plugin.manifest.surfaces?.[kind] ?? "";
   const query = new URLSearchParams({ id: plugin.id, kind, module });
@@ -109,7 +103,13 @@ const SurfaceHost: Component<{ plugin: PluginInfo; kind: SurfaceKind }> = (props
       referrerpolicy="no-referrer"
       aria-hidden="true"
       tabindex={-1}
-      class={props.kind === "background" ? backgroundFrame : pointerFrame}
+      // Behind the text: the editor area isolates its children, so a negative layer paints over the
+      // card but under everything the editor draws
+      class={
+        props.kind === "background"
+          ? "pointer-events-none absolute inset-0 z-behind size-full border-none"
+          : "pointer-events-none fixed inset-0 z-50 size-full border-none"
+      }
     />
   );
 };

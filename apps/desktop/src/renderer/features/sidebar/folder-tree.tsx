@@ -2,8 +2,7 @@ import type { FolderEntry } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import type { MenuEntry } from "@pupitre/desktop-api/menu";
 import { t } from "@pupitre/i18n/solid";
-import { cn, ListItem, rowIndent } from "@pupitre/ui";
-import { FLOATING_PANEL, menuPanel } from "@pupitre/ui/styles";
+import { ListItem, rowIndent } from "@pupitre/ui";
 import { messageOf } from "@pupitre/utils";
 import { Menu, MenuContent, MenuContextTrigger } from "@ui-sdk/solid/menu";
 import { Folder } from "lucide-solid";
@@ -13,15 +12,6 @@ import { MenuEntries } from "@/components/menu-popup";
 import { reportFailure } from "@/lib/errors";
 import { parentFolder } from "@/lib/file";
 import { FolderChildren, FolderRow, type RowMenu, type TreeContext } from "./folder-tree-rows";
-import {
-  blockTruncate,
-  divider,
-  fileIcon,
-  indentIcon,
-  sectionLabel,
-  stack,
-  treeRoot,
-} from "./folder-tree-styles";
 
 interface FolderTreeProps {
   root: string;
@@ -279,17 +269,19 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
     // The empty space of the tree stands for the folder it shows, so a file can be created at its
     // root; it reaches the bottom of the sidebar, so the native menu does not take over there
     <Menu onOpenChange={setMenuOpen}>
-      <MenuContextTrigger class={treeRoot}>
+      <MenuContextTrigger class="min-h-full space-y-0.5 p-2">
         <Show when={pinnedEntries().length > 0}>
-          <div class={stack}>
-            <div class={sectionLabel}>{t().sidebar.pinned}</div>
+          <div class="space-y-0.5">
+            <div class="px-2.5 pt-1 text-2xs font-medium tracking-wider text-tertiary uppercase">
+              {t().sidebar.pinned}
+            </div>
             <For each={pinnedEntries()}>
               {(entry) => (
                 <FolderRow entry={entry} depth={0} tree={tree} previews={() => undefined} />
               )}
             </For>
           </div>
-          <div class={divider} />
+          <div class="mx-2.5 border-t border-hairline border-border-subtle" />
         </Show>
         <Show when={parent()}>
           {(target) => (
@@ -301,15 +293,15 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
               onClick={() => target().goUp(target().path)}
               onContextMenu={(event) => event.stopPropagation()}
             >
-              <span class={indentIcon} />
-              <Folder class={fileIcon} />
-              <span class={blockTruncate}>..</span>
+              <span class="size-3 shrink-0" />
+              <Folder class="size-3.5 shrink-0" />
+              <span class="block truncate">..</span>
             </ListItem>
           )}
         </Show>
         <FolderChildren path={props.root} depth={0} tree={tree} />
       </MenuContextTrigger>
-      <MenuContent class={cn(FLOATING_PANEL, menuPanel)}>
+      <MenuContent class="floating-panel menu-panel">
         {(() => {
           const menu = menuOf({ name: props.root, path: props.root, kind: "directory" });
           return (

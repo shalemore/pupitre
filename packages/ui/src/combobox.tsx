@@ -14,13 +14,7 @@ import { createMemo, createSignal, For, Show } from "solid-js";
 import { optionKey, optionOfKey, type SelectOption } from "./option";
 import { popupLayer } from "./popup-layer";
 import { ScrollView } from "./scroll-view";
-import {
-  FLOATING_PANEL,
-  PANEL_COLLISION_PADDING,
-  PANEL_SIDE_OFFSET,
-  chevronTurnClass,
-  listboxReset,
-} from "./styles";
+import { FLOATING_PANEL, PANEL_COLLISION_PADDING, PANEL_SIDE_OFFSET } from "./styles";
 
 export interface ComboboxProps {
   value: string;
@@ -106,7 +100,7 @@ export function Combobox(props: ComboboxProps) {
           data-slot="combobox-trigger"
           class="flex h-full cursor-pointer items-center px-2 text-muted-foreground"
         >
-          <span aria-hidden="true" class={chevronTurnClass}>
+          <span aria-hidden="true" class="chevron-turn">
             <ChevronDown class="size-3.5" />
           </span>
         </ComboboxTrigger>
@@ -133,7 +127,7 @@ export function Combobox(props: ComboboxProps) {
                 const listRef = listProps["ref"];
                 if (typeof listRef === "function") listRef(element);
               }}
-              class={listboxReset}
+              class="outline-none"
               style={{
                 "max-height": "min(20rem, calc(var(--available-height, 40rem) - 0.5rem))",
               }}

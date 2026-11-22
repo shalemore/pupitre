@@ -20,9 +20,6 @@ export interface PaletteSheetProps<Item> {
   children: (item: Item) => JSX.Element;
 }
 
-const paletteItem =
-  "interactive flex w-full cursor-pointer items-center gap-3 rounded-md px-2.5 py-1.5 text-start text-xs text-muted-foreground outline-none data-highlighted:bg-selected data-highlighted:font-medium data-highlighted:text-foreground";
-
 /**
  * The panel a palette is: a query field over the rows it picks, walked with the arrow keys and run
  * with Enter. It covers the window and hands the focus back to whatever held it before, whichever
@@ -85,7 +82,10 @@ export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
         >
           <For each={shown()}>
             {(row, index) => (
-              <CommandItem value={String(index())} class={paletteItem}>
+              <CommandItem
+                value={String(index())}
+                class="interactive flex w-full cursor-pointer items-center gap-3 rounded-md px-2.5 py-1.5 text-start text-xs text-muted-foreground outline-none data-highlighted:bg-selected data-highlighted:font-medium data-highlighted:text-foreground"
+              >
                 {props.children(row)}
               </CommandItem>
             )}

@@ -1,5 +1,5 @@
 import type { UnsavedChoice } from "@pupitre/desktop-api";
-import { Button, cn } from "@pupitre/ui";
+import { Button } from "@pupitre/ui";
 import { render } from "@solidjs/web";
 import { onSettled, type Component } from "solid-js";
 
@@ -28,9 +28,7 @@ const UnsavedDialog: Component<UnsavedDialogProps> = (props) => {
   return (
     <dialog
       ref={(element) => (dialog = element)}
-      class={cn(
-        "floating-panel m-auto w-[min(24rem,calc(100vw-2rem))] border-0 p-6 text-sm text-foreground backdrop:bg-black/30",
-      )}
+      class="floating-panel m-auto w-[min(24rem,calc(100vw-2rem))] border-0 p-6 text-sm text-foreground backdrop:bg-black/30"
       aria-labelledby="pupitre-unsaved-message"
       onCancel={(event) => {
         event.preventDefault();

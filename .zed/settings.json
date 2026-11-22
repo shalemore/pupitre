@@ -37,6 +37,16 @@
           }
         }
       }
+    },
+    "tailwindcss-language-server": {
+      "settings": {
+        "tailwindCSS": {
+          "classFunctions": ["cn", "cva"],
+          "experimental": {
+            "configFile": "apps/desktop/src/renderer/app.css"
+          }
+        }
+      }
     }
   },
   "languages": {

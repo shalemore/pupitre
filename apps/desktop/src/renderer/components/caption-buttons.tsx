@@ -2,11 +2,29 @@ import type { CaptionSide } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
 import { cn } from "@pupitre/ui";
+import type { JSX } from "@solidjs/web";
 import { Copy, Minus, Square, X } from "lucide-solid";
 import { createSignal, onCleanup, Show, type Component } from "solid-js";
 
-const buttonBase =
-  "interactive flex w-caption-button items-center justify-center text-muted-foreground";
+const CaptionButton: Component<{
+  label: string;
+  onClick: () => void;
+  class?: string;
+  children: JSX.Element;
+}> = (props) => (
+  <button
+    type="button"
+    aria-label={props.label}
+    title={props.label}
+    onClick={props.onClick}
+    class={cn(
+      "interactive flex w-caption-button items-center justify-center text-muted-foreground",
+      props.class,
+    )}
+  >
+    {props.children}
+  </button>
+);
 
 /**
  * Minimize, maximize and close, drawn by the page for the main window on Windows and Linux,
@@ -19,40 +37,34 @@ export const CaptionButtons: Component<{ side: CaptionSide }> = (props) => {
   const labels = () => t().window;
 
   const close = (
-    <button
-      type="button"
-      aria-label={labels().close}
-      title={labels().close}
+    <CaptionButton
+      label={labels().close}
       onClick={() => void desktop.invoke("window:close")}
-      class={cn(buttonBase, "hover:bg-window-close hover:text-window-close-foreground")}
+      class="hover:bg-window-close hover:text-window-close-foreground"
     >
       <X class="size-4" stroke-width={1.25} />
-    </button>
+    </CaptionButton>
   );
 
   return (
     <div dir="ltr" class="app-no-drag flex h-full shrink-0 items-stretch">
       <Show when={props.side === "left"}>{close}</Show>
-      <button
-        type="button"
-        aria-label={labels().minimize}
-        title={labels().minimize}
+      <CaptionButton
+        label={labels().minimize}
         onClick={() => void desktop.invoke("window:minimize")}
-        class={cn(buttonBase, "hover:bg-accent hover:text-foreground")}
+        class="hover:bg-accent hover:text-foreground"
       >
         <Minus class="size-4" stroke-width={1.25} />
-      </button>
-      <button
-        type="button"
-        aria-label={maximized() ? labels().restore : labels().maximize}
-        title={maximized() ? labels().restore : labels().maximize}
+      </CaptionButton>
+      <CaptionButton
+        label={maximized() ? labels().restore : labels().maximize}
         onClick={() => void desktop.invoke("window:toggle-maximize")}
-        class={cn(buttonBase, "hover:bg-accent hover:text-foreground")}
+        class="hover:bg-accent hover:text-foreground"
       >
         <Show when={maximized()} fallback={<Square class="size-3.5" stroke-width={1.25} />}>
           <Copy class="size-3.5 -scale-x-100" stroke-width={1.25} />
         </Show>
-      </button>
+      </CaptionButton>
       <Show when={props.side === "right"}>{close}</Show>
     </div>
   );

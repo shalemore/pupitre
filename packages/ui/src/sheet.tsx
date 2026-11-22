@@ -2,7 +2,7 @@ import type { JSX } from "@solidjs/web";
 import { Dialog, DialogBackdrop, DialogContent, DialogTitle } from "@ui-sdk/solid/dialog";
 import { cn } from "cn";
 import type { Component } from "solid-js";
-import { FLOATING_PANEL, srOnly } from "./styles";
+import { FLOATING_PANEL } from "./styles";
 
 export interface SheetProps {
   /** Names the dialog, for anyone who cannot see the window it covers. */
@@ -45,7 +45,7 @@ export const Sheet: Component<SheetProps> = (props) => (
       )}
       onKeyDown={props.onKeyDown}
     >
-      <DialogTitle class={srOnly}>{props.title}</DialogTitle>
+      <DialogTitle class="sr-only">{props.title}</DialogTitle>
       {props.children}
     </DialogContent>
   </Dialog>

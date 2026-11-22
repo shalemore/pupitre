@@ -1,8 +1,7 @@
 import { desktop } from "@pupitre/desktop-api/client";
 import { TOP_MENUS, type MenuEntry, type Menus, type TopMenu } from "@pupitre/desktop-api/menu";
 import { t } from "@pupitre/i18n/solid";
-import { cn, IconButton } from "@pupitre/ui";
-import { FLOATING_PANEL, menuPanel } from "@pupitre/ui/styles";
+import { IconButton } from "@pupitre/ui";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { Menu as UiMenu, MenuContent, MenuTrigger } from "@ui-sdk/solid/menu";
 import { Menubar } from "@ui-sdk/solid/menubar";
@@ -13,9 +12,6 @@ import { createMenu } from "@/lib/menu-state";
 
 /** How soon after a menu closes the next one is still taking its place rather than arriving. */
 const SWITCH_WINDOW_MS = 100;
-
-const trigger =
-  "interactive shrink-0 cursor-pointer rounded-md px-2.5 py-1 whitespace-nowrap text-muted-foreground outline-none hover:bg-accent hover:text-foreground focus-visible:bg-accent focus-visible:text-foreground aria-expanded:bg-accent aria-expanded:text-foreground";
 
 interface MenuBarProps {
   /** Told whether a menu is open, so an immersive title bar can stay unfolded under it. */
@@ -136,13 +132,15 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
               if (open() === menu) hide();
             }}
           >
-            <MenuTrigger class={trigger}>{t().menu[menu]}</MenuTrigger>
+            <MenuTrigger class="interactive shrink-0 cursor-pointer rounded-md px-2.5 py-1 whitespace-nowrap text-muted-foreground outline-none hover:bg-accent hover:text-foreground focus-visible:bg-accent focus-visible:text-foreground aria-expanded:bg-accent aria-expanded:text-foreground">
+              {t().menu[menu]}
+            </MenuTrigger>
             <MenuContent
               side="bottom"
               align="start"
               sideOffset={8}
               data-instant={instant() === menu ? "" : undefined}
-              class={cn(FLOATING_PANEL, menuPanel, "mt-2")}
+              class="floating-panel menu-panel mt-2"
             >
               <MenuEntries
                 entries={entries()[menu] ?? []}

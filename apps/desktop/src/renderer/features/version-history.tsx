@@ -2,7 +2,6 @@ import type { HistoryEntry } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import { intlLocale } from "@pupitre/i18n";
 import { currentLocale, t } from "@pupitre/i18n/solid";
-import { truncateGrow } from "@pupitre/ui/styles";
 import { type Component, createEffect, createMemo, createSignal } from "solid-js";
 import { formatFileSize } from "@shared/file-size";
 import { PaletteSheet } from "@/components/palette-sheet";
@@ -88,7 +87,7 @@ export const VersionHistory: Component<VersionHistoryProps> = (props) => {
     >
       {(row) => (
         <>
-          <span class={truncateGrow}>{row.time}</span>
+          <span class="min-w-0 flex-1 truncate">{row.time}</span>
           <span class="shrink-0 opacity-60 tabular-nums">
             {formatFileSize(row.entry.bytes, intlLocale(currentLocale()))}
           </span>

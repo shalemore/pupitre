@@ -25,9 +25,6 @@ interface OutlineRow {
   hidden: boolean;
 }
 
-const chevron =
-  "size-3 transition-[transform,rotate,scale] duration-base ease-out-expo rtl:-scale-x-100";
-
 export const OutlineList: Component<OutlineListProps> = (props) => {
   // Every row stays mounted, even under a folded section, so its height can close and open with
   // the list. A heading belongs to the last one before it that is shallower, so the sections still
@@ -91,7 +88,10 @@ export const OutlineList: Component<OutlineListProps> = (props) => {
                       class="interactive grid size-4 shrink-0 place-items-center rounded-sm text-tertiary outline-none hover:text-foreground focus-visible:shadow-focus"
                     >
                       <ChevronRight
-                        class={cn(chevron, !folded(row().heading) && "rotate-90 rtl:-rotate-90")}
+                        class={cn(
+                          "size-3 transition-[transform,rotate,scale] duration-base ease-out-expo rtl:-scale-x-100",
+                          !folded(row().heading) && "rotate-90 rtl:-rotate-90",
+                        )}
                       />
                     </button>
                   </Show>

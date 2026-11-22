@@ -1,8 +1,6 @@
 import type { FolderFile } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
-import { cn } from "@pupitre/ui";
-import { dim, truncateGrow } from "@pupitre/ui/styles";
 import { createEffect, createMemo, createSignal, For, type Component } from "solid-js";
 import { PaletteSheet } from "@/components/palette-sheet";
 import { matchRanges, type MatchRange } from "@/lib/fuzzy";
@@ -82,11 +80,11 @@ const QuickOpenRow: Component<{ file: FoundFile }> = (props) => {
   );
 
   return (
-    <span class={truncateGrow}>
+    <span class="min-w-0 flex-1 truncate">
       <bdi dir="auto">
         <MatchedText text={name()} ranges={props.file.ranges} offset={folder().length} />
       </bdi>
-      <span class={cn(dim, "ms-2")}>
+      <span class="ms-2 opacity-60">
         <bdi dir="auto">
           <MatchedText text={folder()} ranges={props.file.ranges} offset={0} />
         </bdi>

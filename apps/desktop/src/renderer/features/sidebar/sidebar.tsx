@@ -1,6 +1,5 @@
 import { t } from "@pupitre/i18n/solid";
 import { cn, IconButton, ScrollView, SegmentedControl, ToggleIconButton } from "@pupitre/ui";
-import { quietButton, rtlFlip } from "@pupitre/ui/styles";
 import type { JSX } from "@solidjs/web";
 import { ChevronRight, Folder, ListTree, Pin } from "lucide-solid";
 import { createSignal, type Component, Show } from "solid-js";
@@ -83,10 +82,10 @@ export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
             <IconButton
               label={rail().label}
               size="icon-2xs"
-              class={quietButton}
+              class="quiet-button"
               onClick={() => rail().onExpand()}
             >
-              <ChevronRight class={cn(rtlFlip, props.side === "end" && "rotate-180")} />
+              <ChevronRight class={cn("rtl-flip", props.side === "end" && "rotate-180")} />
             </IconButton>
           </div>
         )}
@@ -149,7 +148,7 @@ const PinButton: Component<{ pinned: boolean; onChange: (pinned: boolean) => voi
     onChange={props.onChange}
     label={t().settings.pinSidebars}
     size="icon-2xs"
-    class={quietButton}
+    class="quiet-button"
   >
     <Pin class={props.pinned ? "" : "rotate-45"} />
   </ToggleIconButton>
@@ -169,10 +168,10 @@ const CollapseButton: Component<{
     onChange={props.onChange}
     label={props.collapsed ? t().sidebar.expandSidebar : t().sidebar.collapseSidebar}
     size="icon-2xs"
-    class={quietButton}
+    class="quiet-button"
   >
     <ChevronRight
-      class={cn(rtlFlip, (props.side === "start") !== props.collapsed && "rotate-180")}
+      class={cn("rtl-flip", (props.side === "start") !== props.collapsed && "rotate-180")}
     />
   </ToggleIconButton>
 );

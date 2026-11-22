@@ -10,9 +10,6 @@ import { CaptionButtons } from "./caption-buttons";
  */
 const GIVE_WAY = ["count"];
 
-const titleBar =
-  "flex h-title-bar w-full shrink-0 items-center gap-2 overflow-hidden bg-surface-0 text-xs transition-[height] duration-sheet ease-out-expo select-none data-folded:h-0 print:hidden";
-
 /**
  * The window title bar. It is draggable as a whole and leaves room for the native caption buttons
  * or traffic lights (see .app-title-bar in app.css); the main window on Windows and Linux gets
@@ -81,8 +78,7 @@ export const TitleBar: ParentComponent<{ class?: string; folded?: boolean }> = (
       inert={props.folded}
       class={cn(
         // The horizontal padding comes from .app-title-bar, which leaves room for the caption buttons
-        "app-title-bar",
-        titleBar,
+        "app-title-bar flex h-title-bar w-full shrink-0 items-center gap-2 overflow-hidden bg-surface-0 text-xs transition-[height] duration-sheet ease-out-expo select-none data-folded:h-0 print:hidden",
         props.class,
       )}
     >

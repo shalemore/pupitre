@@ -101,7 +101,7 @@ import {
   type SearchOptions,
   selectedSearchText,
 } from "./search";
-import { layeredStyles, scrollArea } from "./styles";
+import { layeredStyles } from "./styles";
 import editorCss from "./editor.css?raw";
 
 export interface MarkdownEditorHandle {
@@ -715,5 +715,10 @@ export const MarkdownEditor: Component<MarkdownEditorProps> = (props) => {
     };
   });
 
-  return <ScrollView ref={(element) => (container = element)} class={scrollArea} />;
+  return (
+    <ScrollView
+      ref={(element) => (container = element)}
+      class="size-full overflow-x-hidden print:h-auto print:overflow-visible"
+    />
+  );
 };

@@ -6,7 +6,6 @@ import {
 } from "@ui-sdk/solid/segmented-control";
 import { cn } from "cn";
 import { For } from "solid-js";
-import { truncate } from "./styles";
 
 export interface SegmentedOption<T extends string> {
   value: T;
@@ -48,7 +47,7 @@ export function SegmentedControl<T extends string>(props: SegmentedControlProps<
             class="interactive relative flex h-6 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-md px-2 text-muted-foreground outline-none hover:text-foreground focus-visible:shadow-focus data-[checked]:font-medium data-[checked]:text-foreground [&>svg]:size-3.5 [&>svg]:shrink-0"
           >
             {option.icon}
-            <span class={truncate}>{option.label}</span>
+            <span class="truncate">{option.label}</span>
           </SegmentedControlItem>
         )}
       </For>

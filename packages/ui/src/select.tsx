@@ -16,14 +16,7 @@ import { Badge } from "./badge";
 import { optionKey, optionOfKey, type SelectOption } from "./option";
 import { popupLayer } from "./popup-layer";
 import { ScrollView } from "./scroll-view";
-import {
-  FLOATING_PANEL,
-  PANEL_COLLISION_PADDING,
-  PANEL_SIDE_OFFSET,
-  chevronTurnClass,
-  listboxReset,
-  truncate,
-} from "./styles";
+import { FLOATING_PANEL, PANEL_COLLISION_PADDING, PANEL_SIDE_OFFSET } from "./styles";
 
 export interface SelectProps<T extends string> {
   value: T;
@@ -95,7 +88,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
           <Show when={selected()}>
             {(option) => (
               <>
-                <span class={truncate} style={option().style}>
+                <span class="truncate" style={option().style}>
                   {option().label}
                 </span>
                 <Show when={option().hint}>
@@ -114,7 +107,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
             )}
           </Show>
         </SelectValue>
-        <span aria-hidden="true" class={cn("text-muted-foreground", chevronTurnClass)}>
+        <span aria-hidden="true" class="chevron-turn text-muted-foreground">
           <ChevronDown class={chevronIcon({ variant: props.variant })} />
         </span>
       </SelectTrigger>
@@ -135,7 +128,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
             <ScrollView
               as="ul"
               {...listProps}
-              class={listboxReset}
+              class="outline-none"
               style={{
                 "max-height": "min(18rem, calc(var(--available-height, 30rem) - 0.5rem))",
               }}

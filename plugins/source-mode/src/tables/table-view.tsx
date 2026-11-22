@@ -2,7 +2,6 @@ import { redo, undo } from "@codemirror/commands";
 import type { ChangeSpec } from "@codemirror/state";
 import type { EditorView } from "@codemirror/view";
 import { columnCount, editCell, imageIn, insertRow, type TableModel } from "@pupitre/markdown";
-import { cn } from "@pupitre/ui";
 import { Dynamic } from "@solidjs/web";
 import { type Accessor, type Component, createMemo, Repeat, Show } from "solid-js";
 import { InlineContent } from "./inline-view";
@@ -237,7 +236,7 @@ export const TableView: Component<TableViewProps> = (props) => {
         {(cell) => <TableToolbar cell={cell()} model={props.model} run={run} view={view} />}
       </Show>
       <div class="overflow-x-auto">
-        <table class={cn("md-table-view", "md-text-cursor", "border-collapse")}>
+        <table class="md-table-view md-text-cursor border-collapse">
           <thead>
             <Repeat count={header().length}>
               {() => (

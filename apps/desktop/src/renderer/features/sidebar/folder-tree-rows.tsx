@@ -4,7 +4,6 @@ import type { MenuEntry } from "@pupitre/desktop-api/menu";
 import { t } from "@pupitre/i18n/solid";
 import { excerptOf } from "@pupitre/markdown";
 import { cn, IconButton, ListItem, rowIndent } from "@pupitre/ui";
-import { FLOATING_PANEL, menuPanel } from "@pupitre/ui/styles";
 import { Menu, MenuContent, MenuContextTrigger } from "@ui-sdk/solid/menu";
 import { ArrowRight, ChevronRight, CircleAlert, FileText, Folder } from "lucide-solid";
 import {
@@ -20,27 +19,15 @@ import {
 import { MenuEntries } from "@/components/menu-popup";
 import { dateTimeFormat } from "@/lib/date-format";
 import { settings } from "@/lib/settings";
-import {
-  arrow,
-  blockTruncate,
-  chevron,
-  chevronOpen,
-  errorText,
-  excerptLine,
-  expandAnimation,
-  fileIcon,
-  groupRow,
-  iconOffset,
-  indentIcon,
-  itemsStart,
-  nameGrow,
-  nameMin,
-  openButton,
-  renameField,
-  renameRow,
-  rowDirectory,
-  secondaryLine,
-} from "./folder-tree-styles";
+
+const TreeChevron: Component<{ expanded: boolean }> = (props) => (
+  <ChevronRight
+    class={cn(
+      "size-3 shrink-0 transition-transform duration-base ease-out-expo rtl:-scale-x-100",
+      props.expanded && "rotate-90 rtl:-rotate-90",
+    )}
+  />
+);
 
 export interface RowMenu {
   entries: readonly MenuEntry[];
@@ -151,7 +138,12 @@ export const FolderChildren: Component<FolderChildrenProps> = (props) => {
   );
 
   return (
-    <Show when={!entriesError()} fallback={<p class={errorText}>{t().sidebar.folderUnreadable}</p>}>
+    <Show
+      when={!entriesError()}
+      fallback={
+        <p class="px-2.5 py-1.5 text-2xs text-destructive">{t().sidebar.folderUnreadable}</p>
+      }
+    >
       <For each={shownEntries()}>
         {(entry) => (
           <FolderRow entry={entry} depth={props.depth} tree={props.tree} previews={shownPreviews} />
@@ -178,19 +170,19 @@ const RenameField: Component<{
   return (
     // The field keeps the row's chevron and icon, so its box starts where the names of the other
     // rows do, and the indent stays outside the box rather than spanning the whole sidebar
-    <div class={renameRow} style={rowIndent(props.depth, 6)}>
-      <Show when={props.directory} fallback={<span class={indentIcon} />}>
-        <ChevronRight class={cn(chevron, props.expanded && chevronOpen)} />
+    <div class="flex items-center gap-1.5 pe-2.5" style={rowIndent(props.depth, 6)}>
+      <Show when={props.directory} fallback={<span class="size-3 shrink-0" />}>
+        <TreeChevron expanded={props.expanded} />
       </Show>
-      <Show when={props.directory} fallback={<FileText class={fileIcon} />}>
-        <Folder class={fileIcon} />
+      <Show when={props.directory} fallback={<FileText class="size-3.5 shrink-0" />}>
+        <Folder class="size-3.5 shrink-0" />
       </Show>
       <input
         type="text"
         value={props.initial}
         dir="auto"
         aria-label={t().sidebar.rename}
-        class={renameField}
+        class="min-w-0 flex-1 rounded-md border border-hairline border-border bg-surface-2 py-1 ps-0 pe-2.5 text-xs text-foreground outline-none focus-visible:shadow-focus"
         // Focused once it is in the document, so typing replaces the selected name right away
         ref={(element) =>
           requestAnimationFrame(() => {
@@ -248,7 +240,7 @@ export const FolderRow: Component<{
 
   return (
     <>
-      <div class={cn("group", groupRow)}>
+      <div class="group relative">
         <Show
           when={props.tree.renaming() === props.entry.path}
           fallback={
@@ -273,10 +265,10 @@ export const FolderRow: Component<{
                     }}
                     style={rowIndent(props.depth, 6)}
                     title={failure() ?? props.entry.name}
-                    class={cn((excerpt() || date()) && itemsStart, isDirectory() && rowDirectory)}
+                    class={cn((excerpt() || date()) && "items-start", isDirectory() && "pe-8")}
                   >
-                    <Show when={isDirectory()} fallback={<span class={indentIcon} />}>
-                      <ChevronRight class={cn(chevron, expanded() && chevronOpen)} />
+                    <Show when={isDirectory()} fallback={<span class="size-3 shrink-0" />}>
+                      <TreeChevron expanded={expanded()} />
                     </Show>
                     <Show
                       when={isDirectory()}
@@ -284,25 +276,37 @@ export const FolderRow: Component<{
                         <Show
                           when={failure()}
                           fallback={
-                            <FileText class={cn(fileIcon, (excerpt() || date()) && iconOffset)} />
+                            <FileText
+                              class={cn("size-3.5 shrink-0", (excerpt() || date()) && "mt-0.5")}
+                            />
                           }
                         >
-                          <CircleAlert class={cn(fileIcon, (excerpt() || date()) && iconOffset)} />
+                          <CircleAlert
+                            class={cn("size-3.5 shrink-0", (excerpt() || date()) && "mt-0.5")}
+                          />
                         </Show>
                       }
                     >
-                      <Folder class={fileIcon} />
+                      <Folder class="size-3.5 shrink-0" />
                     </Show>
-                    <span class={cn(nameMin, excerpt() || date() ? nameGrow : blockTruncate)}>
-                      <span class={blockTruncate}>
+                    <span class={cn("min-w-0", excerpt() || date() ? "flex-1" : "block truncate")}>
+                      <span class="block truncate">
                         <bdi dir="auto">{props.entry.name}</bdi>
                       </span>
                       <Show when={date()}>
-                        {(label) => <span class={secondaryLine}>{label()}</span>}
+                        {(label) => (
+                          <span class="block text-2xs font-normal text-tertiary tabular-nums">
+                            {label()}
+                          </span>
+                        )}
                       </Show>
                       <Show when={excerpt()}>
                         {/* Isolated, so an excerpt in another script never turns the row around */}
-                        <bdi dir="auto" aria-hidden="true" class={excerptLine}>
+                        <bdi
+                          dir="auto"
+                          aria-hidden="true"
+                          class="mt-0.5 line-clamp-2 text-2xs font-normal text-tertiary"
+                        >
                           {excerpt()}
                         </bdi>
                       </Show>
@@ -310,7 +314,7 @@ export const FolderRow: Component<{
                   </ListItem>
                 )}
               />
-              <MenuContent class={cn(FLOATING_PANEL, menuPanel)}>
+              <MenuContent class="floating-panel menu-panel">
                 {(() => {
                   const menu = props.tree.menuOf(props.entry);
                   return (
@@ -339,18 +343,18 @@ export const FolderRow: Component<{
             label={t().menu.openFolder}
             size="icon-2xs"
             data-slot="folder-open"
-            class={openButton}
+            class="absolute end-1 top-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-ui ease-out-expo group-hover:opacity-100 focus-visible:opacity-100"
             onClick={(event) => {
               event.stopPropagation();
               props.tree.onOpenFolder(props.entry.path);
             }}
           >
-            <ArrowRight class={arrow} />
+            <ArrowRight class="size-3 rtl:-scale-x-100" />
           </IconButton>
         </Show>
       </div>
       <Show when={expanded()}>
-        <div class={expandAnimation}>
+        <div class="space-y-0.5 animate-[fadeInDownSmall_var(--transition-duration-base)_var(--ease-enter)]">
           <FolderChildren path={props.entry.path} depth={props.depth + 1} tree={props.tree} />
         </div>
       </Show>
