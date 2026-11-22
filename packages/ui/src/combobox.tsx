@@ -102,7 +102,7 @@ export function Combobox(props: ComboboxProps) {
         >
           <span
             aria-hidden="true"
-            class="transition-transform duration-base ease-out-expo [[data-open]_&]:rotate-180"
+            class="transition-transform duration-base ease-out-expo in-data-open:rotate-180"
           >
             <ChevronDown class="size-3.5" />
           </span>

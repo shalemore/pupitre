@@ -32,6 +32,7 @@
       "settings": {
         "css": {
           "lint": {
+            "unknownAtRules": "ignore",
             "validProperties": ["text-autospace", "caret-animation"]
           }
         }

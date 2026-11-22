@@ -8,6 +8,6 @@ import type { Component } from "solid-js";
 export const PopupLayer: Component = () => (
   <div
     data-popup-layer
-    class="pointer-events-none fixed inset-x-0 top-title-bar bottom-0 z-50 overflow-hidden [&>*]:pointer-events-auto"
+    class="pointer-events-none fixed inset-x-0 top-title-bar bottom-0 z-50 overflow-hidden *:pointer-events-auto"
   />
 );

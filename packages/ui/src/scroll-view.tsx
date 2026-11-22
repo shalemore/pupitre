@@ -136,7 +136,7 @@ export function ScrollView(props: ScrollViewProps) {
       data-overflow={overflow() || undefined}
       data-scroll-view
       class={cn(
-        "scrollbar-none overflow-y-auto print:mask-none [&::-webkit-scrollbar]:hidden",
+        "scrollbar-none overflow-y-auto print:mask-none",
         preferences().fade && SCROLL_FADE,
         props.class,
       )}

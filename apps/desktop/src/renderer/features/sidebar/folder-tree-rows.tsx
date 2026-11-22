@@ -354,7 +354,7 @@ export const FolderRow: Component<{
         </Show>
       </div>
       <Show when={expanded()}>
-        <div class="animate-[fadeInDownSmall_var(--transition-duration-base)_var(--ease-enter)] space-y-0.5">
+        <div class="animate-fade-in-down-small space-y-0.5">
           <FolderChildren path={props.entry.path} depth={props.depth + 1} tree={props.tree} />
         </div>
       </Show>

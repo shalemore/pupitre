@@ -107,7 +107,7 @@ export const TabsBar: Component<TabsBarProps> = (props) => (
         event.preventDefault();
         strip.scrollLeft += event.deltaY;
       }}
-      class="flex h-full min-w-0 flex-1 scrollbar-none items-stretch overflow-x-auto overscroll-x-contain print:hidden [&::-webkit-scrollbar]:hidden"
+      class="flex h-full min-w-0 flex-1 scrollbar-none items-stretch overflow-x-auto overscroll-x-contain print:hidden"
     >
       <For each={props.tabs}>
         {(tab) => (

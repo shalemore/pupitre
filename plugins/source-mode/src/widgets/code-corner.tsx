@@ -10,13 +10,6 @@ import { mountWidget, unmountWidget } from "#mount-widget";
 
 const COPIED_MS = 1500;
 
-const languagePicker =
-  "interactive truncate [field-sizing:content] max-w-32 min-w-0 -mx-1 appearance-none rounded-sm border-0 bg-transparent px-1 py-0.5 cursor-pointer hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:shadow-focus";
-const corner =
-  "absolute top-(--md-code-corner-gap) z-1 end-2 flex items-center gap-1.5 font-sans text-xs leading-none text-tertiary select-none";
-const copy =
-  "grid size-(--md-code-corner-size) place-items-center rounded-sm border-0 bg-transparent p-0 opacity-60 cursor-pointer transition-[opacity,color,background-color] duration-ui ease-out-expo hover:bg-accent hover:text-foreground hover:opacity-100 data-[copied]:opacity-100 data-[copied]:text-success [&>svg]:size-3.5 print:hidden";
-
 /**
  * The part of a fence line that names the language: everything after the opening backticks. A pick
  * replaces it, so a fence without a language gets one and one that has a language keeps the
@@ -142,7 +135,7 @@ const CodeCorner: Component<{
       <Show when={props.fence}>
         <select
           // Interface rather than document, sized in rem so the block's smaller em does not shrink it
-          class={languagePicker}
+          class="-mx-1 field-sizing-content max-w-32 min-w-0 cursor-pointer appearance-none truncate rounded-sm border-0 bg-transparent px-1 py-0.5 interactive hover:bg-accent hover:text-foreground focus-visible:shadow-focus focus-visible:outline-none"
           aria-label={t().editor.codeLanguage}
           title={t().editor.codeLanguage}
           value={current()}
@@ -155,7 +148,7 @@ const CodeCorner: Component<{
       </Show>
       <button
         type="button"
-        class={copy}
+        class="grid size-(--md-code-corner-size) cursor-pointer place-items-center rounded-sm border-0 bg-transparent p-0 opacity-60 transition-[opacity,color,background-color] duration-ui ease-out-expo hover:bg-accent hover:text-foreground hover:opacity-100 data-copied:text-success data-copied:opacity-100 print:hidden [&>svg]:size-3.5"
         title={t().common.copy}
         aria-label={t().common.copy}
         data-copied={copied() ? "" : undefined}
@@ -206,7 +199,8 @@ export class CodeCornerWidget extends WidgetType {
     const container = document.createElement("span");
     // Above the code lines it overlaps while the fence line is shrunk; interface rather than
     // document, so it is sized in rem and does not shrink with the block's em
-    container.className = corner;
+    container.className =
+      "absolute top-(--md-code-corner-gap) inset-e-2 z-1 flex items-center gap-1.5 font-sans text-xs leading-none text-tertiary select-none";
     mountWidget(container, () => (
       <CodeCorner view={view} container={container} fence={this.fence} />
     ));

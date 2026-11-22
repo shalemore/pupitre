@@ -89,7 +89,7 @@ export const FindBar: Component<FindBarProps> = (props) => {
     <div
       data-slot="find-bar"
       class={cn(
-        "absolute inset-x-5 top-3 z-40 flex max-w-sm animate-[fadeInDown_var(--transition-duration-base)_var(--ease-enter)] flex-col gap-2 rounded-xl bg-popover/95 p-2 text-xs shadow-float backdrop-blur-md select-none print:hidden",
+        "absolute inset-x-5 top-3 z-40 flex max-w-sm animate-fade-in-down flex-col gap-2 rounded-xl bg-popover/95 p-2 text-xs shadow-float backdrop-blur-md select-none print:hidden",
         props.class,
       )}
       onKeyDown={(event) => {
@@ -173,7 +173,7 @@ export const FindBar: Component<FindBarProps> = (props) => {
       </div>
 
       <Show when={props.showReplace}>
-        <div class="flex animate-[fadeInDownSmall_var(--transition-duration-base)_var(--ease-enter)] flex-wrap items-center gap-1.5 ps-7">
+        <div class="flex animate-fade-in-down-small flex-wrap items-center gap-1.5 ps-7">
           <Input
             ref={(element) => (replaceInput = element)}
             size="sm"
