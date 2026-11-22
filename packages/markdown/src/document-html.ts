@@ -214,7 +214,7 @@ async function codeBlock(ctx: ExportContext, block: SyntaxNode): Promise<string>
   // Markup that goes to another application carries the code font and keeps the code's own line breaks
   const pre = styleOf(ctx, `${CODE_FONT};white-space:pre-wrap`);
   const classes = ctx.inlineStyles ? "" : `class="${CODE_BLOCK_CLASSES}"`;
-  return `<pre${classes}${pre}><code${attribute}${styleOf(ctx, CODE_FONT)}>${highlighted ?? escapeHtml(text)}</code></pre>`;
+  return `<pre${classes === "" ? "" : ` ${classes}`}${pre}><code${attribute}${styleOf(ctx, CODE_FONT)}>${highlighted ?? escapeHtml(text)}</code></pre>`;
 }
 
 function alignmentStyle(alignment: string | undefined): string {

@@ -25,9 +25,9 @@
     }
   },
   "devDependencies": {
-    "@tsconfig/strictest": "^2.0.8",
+    "@tsconfig/strictest": "^2.0.9",
     "solid-js": "^2.0.3",
-    "vitest": "^5.0.5"
+    "vitest": "^5.1.1"
   },
   "peerDependencies": {
     "solid-js": "^2.0.3"
