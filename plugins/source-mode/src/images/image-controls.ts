@@ -39,13 +39,6 @@ function focusNewHandle(view: EditorView, pos: number): void {
   });
 }
 
-const handleStyle =
-  "absolute -bottom-1 -end-1 size-3 rounded-full border-hairline border-solid border-surface-1 bg-brand shadow-sm cursor-nwse-resize rtl:cursor-nesw-resize select-none opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto focus-visible:shadow-focus";
-const toolbarStyle =
-  "absolute gap-0.5 rounded-lg bg-surface-3 p-0.5 shadow-float select-none opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto";
-const alignButton =
-  "__INTERACTIVE__ grid size-6 place-items-center rounded-md border-0 bg-transparent p-0 text-tertiary cursor-pointer hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:shadow-focus aria-[pressed=true]:bg-selected aria-[pressed=true]:text-foreground";
-
 /**
  * The corner handle that sizes the picture. It drags the picture on the screen and writes the width
  * into its source once, when the pointer is released, so that one drag is one change to undo.
@@ -58,7 +51,10 @@ export function resizeHandle(
 ): HTMLElement {
   const handle = document.createElement("span");
   // Interface rather than document, sized in rem like the corner of a code block
-  handle.className = cn("md-image-handle", handleStyle);
+  handle.className = cn(
+    "md-image-handle",
+    "pointer-events-none absolute -inset-e-1 -bottom-1 size-3 cursor-nwse-resize rounded-full border-hairline border-solid border-surface-1 bg-brand opacity-0 shadow-sm select-none group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-hover:pointer-events-auto group-hover:opacity-100 focus-visible:shadow-focus rtl:cursor-nesw-resize",
+  );
   handle.tabIndex = 0;
   handle.setAttribute("role", "button");
   relabelOnLocaleChange(handle, () => {
@@ -147,7 +143,10 @@ export function alignmentToolbar(
   size: ImageSize,
 ): HTMLElement {
   const toolbar = document.createElement("span");
-  toolbar.className = cn("md-image-toolbar", toolbarStyle);
+  toolbar.className = cn(
+    "md-image-toolbar",
+    "pointer-events-none absolute gap-0.5 rounded-lg bg-surface-3 p-0.5 opacity-0 shadow-float select-none group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-hover:pointer-events-auto group-hover:opacity-100",
+  );
   const choices: readonly { alignment: ImageAlignment; label: () => string }[] = [
     { alignment: "left", label: () => t().editor.image.alignLeft },
     { alignment: "center", label: () => t().editor.image.alignCenter },
@@ -157,7 +156,10 @@ export function alignmentToolbar(
   for (const { alignment, label } of choices) {
     const button = document.createElement("button");
     button.type = "button";
-    button.className = cn("md-image-align", alignButton);
+    button.className = cn(
+      "md-image-align",
+      "__INTERACTIVE__ grid size-6 cursor-pointer place-items-center rounded-md border-0 bg-transparent p-0 text-tertiary hover:bg-accent hover:text-foreground focus-visible:shadow-focus focus-visible:outline-none aria-pressed:bg-selected aria-pressed:text-foreground",
+    );
     button.setAttribute("data-alignment", alignment);
     relabelOnLocaleChange(button, () => {
       const text = label();
