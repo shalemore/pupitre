@@ -135,28 +135,28 @@ export function Select<T extends string>(props: SelectProps<T>) {
             />
           )}
         >
-          <For each={props.options}>
+          <For each={props.options} keyed={(option) => optionKey(option.value)}>
             {(option) => (
               <SelectItem
                 data-slot="select-item"
-                value={optionKey(option.value)}
-                label={option.label}
+                value={optionKey(option().value)}
+                label={option().label}
                 class={cn("group", item({ compact: props.variant === "ghost" }))}
               >
                 <span class="flex min-w-0 flex-col">
                   <span class="flex min-w-0 items-center gap-1.5">
                     <SelectItemText
                       class="min-w-0 truncate font-medium text-foreground group-data-selected:text-brand"
-                      style={option.style ?? {}}
+                      style={option().style ?? {}}
                     >
-                      {option.label}
+                      {option().label}
                     </SelectItemText>
-                    <Show when={option.hint}>
+                    <Show when={option().hint}>
                       {(hint) => (
                         <span class="truncate text-2xs text-muted-foreground">/ {hint()}</span>
                       )}
                     </Show>
-                    <Show when={option.badge}>
+                    <Show when={option().badge}>
                       {(badge) => (
                         <Badge variant="muted" size="sm">
                           {badge()}
@@ -164,7 +164,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
                       )}
                     </Show>
                   </span>
-                  <Show when={option.description}>
+                  <Show when={option().description}>
                     {(description) => (
                       <span class="truncate text-2xs text-muted-foreground">{description()}</span>
                     )}

@@ -134,22 +134,22 @@ export function Combobox(props: ComboboxProps) {
             />
           )}
         >
-          <For each={filtered()}>
+          <For each={filtered()} keyed={(option) => optionKey(option.value)}>
             {(option) => (
               <ComboboxItem
                 data-slot="combobox-item"
-                value={optionKey(option.value)}
-                label={option.label}
+                value={optionKey(option().value)}
+                label={option().label}
                 class="group flex cursor-pointer items-center justify-between gap-3 rounded-sm px-2.5 py-1.5 text-xs outline-none data-highlighted:bg-accent"
               >
                 <span class="flex min-w-0 items-baseline gap-2">
                   <ComboboxItemText
                     class="truncate text-foreground group-data-selected:text-brand"
-                    style={option.style ?? {}}
+                    style={option().style ?? {}}
                   >
-                    {option.label}
+                    {option().label}
                   </ComboboxItemText>
-                  <Show when={option.description}>
+                  <Show when={option().description}>
                     {(description) => (
                       <span class="truncate text-2xs text-muted-foreground">{description()}</span>
                     )}

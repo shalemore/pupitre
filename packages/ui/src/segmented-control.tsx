@@ -39,15 +39,15 @@ export function SegmentedControl<T extends string>(props: SegmentedControlProps<
         data-slot="segmented-indicator"
         class="absolute top-(--segmented-control-indicator-top) left-(--segmented-control-indicator-left) h-(--segmented-control-indicator-height) w-(--segmented-control-indicator-width) rounded-md bg-segmented-thumb shadow-segmented-thumb transition-[left,width] duration-snap ease-snap"
       />
-      <For each={props.options}>
+      <For each={props.options} keyed={(option) => option.value}>
         {(option) => (
           <SegmentedControlItem
             data-slot="segmented-item"
-            value={option.value}
+            value={option().value}
             class="__INTERACTIVE__ relative flex h-6 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-md px-2 text-muted-foreground outline-none hover:text-foreground focus-visible:shadow-focus data-checked:font-medium data-checked:text-foreground [&>svg]:size-3.5 [&>svg]:shrink-0"
           >
-            {option.icon}
-            <span class="truncate">{option.label}</span>
+            {option().icon}
+            <span class="truncate">{option().label}</span>
           </SegmentedControlItem>
         )}
       </For>

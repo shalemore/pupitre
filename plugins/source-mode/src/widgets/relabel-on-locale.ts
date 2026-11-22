@@ -1,5 +1,5 @@
 import { currentLocale } from "@pupitre/i18n/solid";
-import { createEffect, createRoot } from "solid-js";
+import { createEffect, createRoot, untrack } from "solid-js";
 
 /**
  * Text a widget writes into its own DOM sits outside the Solid tree, so a language change does not
@@ -13,7 +13,9 @@ createRoot(() =>
     () => currentLocale(),
     () => {
       // A relabel that finds its element gone removes itself; a Set iterator allows that
-      for (const relabel of relabeling) relabel();
+      untrack(() => {
+        for (const relabel of relabeling) relabel();
+      });
     },
   ),
 );
