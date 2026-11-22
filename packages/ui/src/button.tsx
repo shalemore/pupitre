@@ -5,7 +5,7 @@ import { omit } from "solid-js";
 import { PRESSABLE } from "./styles";
 
 export const buttonVariants = cva(
-  "inline-flex shrink-0 cursor-pointer items-center justify-center font-medium whitespace-nowrap outline-none select-none focus-visible:shadow-focus disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&>svg:not([class*='size-'])]:pointer-events-none [&>svg:not([class*='size-'])]:shrink-0",
+  "inline-flex shrink-0 cursor-pointer items-center justify-center font-medium whitespace-nowrap outline-none select-none focus-visible:shadow-focus disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg:not([class*='size-'])]:pointer-events-none [&_svg:not([class*='size-'])]:shrink-0",
   {
     variants: {
       variant: {
@@ -15,19 +15,21 @@ export const buttonVariants = cva(
           "border-hairline border-solid border-border bg-transparent text-foreground hover:bg-accent",
         secondary: "bg-secondary text-secondary-foreground hover:bg-selected",
         ghost: "bg-transparent text-muted-foreground hover:bg-accent hover:text-foreground",
+        quiet:
+          "bg-transparent text-tertiary opacity-50 transition-opacity duration-ui ease-out-expo hover:bg-accent hover:text-foreground hover:opacity-100 focus-visible:opacity-100 data-pressed:opacity-100",
         destructive: "bg-destructive/10 text-destructive hover:bg-destructive/20",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-8 gap-1.5 rounded-md px-3 text-xs [&>svg:not([class*='size-'])]:size-4",
-        xs: "h-6 gap-1 rounded-md px-2 text-2xs [&>svg:not([class*='size-'])]:size-3",
-        sm: "h-7 gap-1.5 rounded-md px-2.5 text-xs [&>svg:not([class*='size-'])]:size-3.5",
-        lg: "h-10 gap-2 rounded-lg px-4 text-sm [&>svg:not([class*='size-'])]:size-4",
-        icon: "size-8 rounded-md [&>svg:not([class*='size-'])]:size-4",
-        "icon-2xs": "size-5 rounded-sm [&>svg:not([class*='size-'])]:size-3",
-        "icon-xs": "size-6 rounded-md [&>svg:not([class*='size-'])]:size-3.5",
-        "icon-sm": "size-7 rounded-md [&>svg:not([class*='size-'])]:size-3.5",
-        "icon-lg": "size-10 rounded-lg [&>svg:not([class*='size-'])]:size-5",
+        default: "h-8 gap-1.5 rounded-md px-3 text-xs [&_svg:not([class*='size-'])]:size-4",
+        xs: "h-6 gap-1 rounded-md px-2 text-2xs [&_svg:not([class*='size-'])]:size-3",
+        sm: "h-7 gap-1.5 rounded-md px-2.5 text-xs [&_svg:not([class*='size-'])]:size-3.5",
+        lg: "h-10 gap-2 rounded-lg px-4 text-sm [&_svg:not([class*='size-'])]:size-4",
+        icon: "size-8 rounded-md [&_svg:not([class*='size-'])]:size-4",
+        "icon-2xs": "size-5 rounded-sm [&_svg:not([class*='size-'])]:size-3",
+        "icon-xs": "size-6 rounded-md [&_svg:not([class*='size-'])]:size-3.5",
+        "icon-sm": "size-7 rounded-md [&_svg:not([class*='size-'])]:size-3.5",
+        "icon-lg": "size-10 rounded-lg [&_svg:not([class*='size-'])]:size-5",
       },
     },
     defaultVariants: {

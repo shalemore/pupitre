@@ -107,7 +107,7 @@ const SurfaceHost: Component<{ plugin: PluginInfo; kind: SurfaceKind }> = (props
       // card but under everything the editor draws
       class={
         props.kind === "background"
-          ? "pointer-events-none absolute inset-0 z-behind size-full border-none"
+          ? "pointer-events-none absolute inset-0 -z-1 size-full border-none"
           : "pointer-events-none fixed inset-0 z-50 size-full border-none"
       }
     />

@@ -81,11 +81,11 @@ export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
           >
             <IconButton
               label={rail().label}
+              variant="quiet"
               size="icon-2xs"
-              class="quiet-button"
               onClick={() => rail().onExpand()}
             >
-              <ChevronRight class={cn("rtl-flip", props.side === "end" && "rotate-180")} />
+              <ChevronRight class={cn("rtl:-scale-x-100", props.side === "end" && "rotate-180")} />
             </IconButton>
           </div>
         )}
@@ -101,9 +101,7 @@ export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
           tabindex="0"
           class={cn(
             "absolute inset-y-0 z-10 w-1 cursor-col-resize border-solid border-transparent interactive outline-none hover:border-brand/30 focus-visible:border-brand/30",
-            props.side === "start"
-              ? "inset-e-0 border-hairline border-e"
-              : "inset-s-0 border-hairline border-s",
+            props.side === "start" ? "inset-e-0 border-e-hairline" : "inset-s-0 border-s-hairline",
             dragging() && "border-brand/40",
           )}
           onPointerDown={(event) => {
@@ -147,8 +145,8 @@ const PinButton: Component<{ pinned: boolean; onChange: (pinned: boolean) => voi
     pressed={props.pinned}
     onChange={props.onChange}
     label={t().settings.pinSidebars}
+    variant="quiet"
     size="icon-2xs"
-    class="quiet-button"
   >
     <Pin class={props.pinned ? "" : "rotate-45"} />
   </ToggleIconButton>
@@ -167,11 +165,11 @@ const CollapseButton: Component<{
     pressed={props.collapsed}
     onChange={props.onChange}
     label={props.collapsed ? t().sidebar.expandSidebar : t().sidebar.collapseSidebar}
+    variant="quiet"
     size="icon-2xs"
-    class="quiet-button"
   >
     <ChevronRight
-      class={cn("rtl-flip", (props.side === "start") !== props.collapsed && "rotate-180")}
+      class={cn("rtl:-scale-x-100", (props.side === "start") !== props.collapsed && "rotate-180")}
     />
   </ToggleIconButton>
 );

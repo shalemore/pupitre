@@ -20,8 +20,8 @@ export const FolderActions: Component<FolderActionsProps> = (props) => (
         pressed={props.showHidden}
         onChange={props.onShowHiddenChange}
         label={t().settings.showHidden}
+        variant="quiet"
         size="icon-2xs"
-        class="quiet-button"
       >
         <Eye />
       </ToggleIconButton>

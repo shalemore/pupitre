@@ -43,5 +43,13 @@
     "apps/desktop/src/renderer/styled-system/**",
     "packages/*/src/styled-system/**",
     "plugins/*/dist/**"
+  ],
+  "overrides": [
+    {
+      "files": ["*.jsonc"],
+      "options": {
+        "trailingComma": "none"
+      }
+    }
   ]
 }

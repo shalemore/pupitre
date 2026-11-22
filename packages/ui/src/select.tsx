@@ -107,7 +107,10 @@ export function Select<T extends string>(props: SelectProps<T>) {
             )}
           </Show>
         </SelectValue>
-        <span aria-hidden="true" class="chevron-turn text-muted-foreground">
+        <span
+          aria-hidden="true"
+          class="text-muted-foreground transition-transform duration-base ease-out-expo [[data-open]_&]:rotate-180"
+        >
           <ChevronDown class={chevronIcon({ variant: props.variant })} />
         </span>
       </SelectTrigger>

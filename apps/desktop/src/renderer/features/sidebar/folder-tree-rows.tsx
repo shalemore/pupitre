@@ -4,7 +4,7 @@ import type { MenuEntry } from "@pupitre/desktop-api/menu";
 import { t } from "@pupitre/i18n/solid";
 import { excerptOf } from "@pupitre/markdown";
 import { cn, IconButton, ListItem, rowIndent } from "@pupitre/ui";
-import { Menu, MenuContent, MenuContextTrigger } from "@ui-sdk/solid/menu";
+import { Menu, MenuContextTrigger } from "@ui-sdk/solid/menu";
 import { ArrowRight, ChevronRight, CircleAlert, FileText, Folder } from "lucide-solid";
 import {
   type Component,
@@ -16,7 +16,7 @@ import {
   onSettled,
   Show,
 } from "solid-js";
-import { MenuEntries } from "@/components/menu-popup";
+import { MenuEntries, MenuPanel } from "@/components/menu-popup";
 import { dateTimeFormat } from "@/lib/date-format";
 import { settings } from "@/lib/settings";
 
@@ -314,7 +314,7 @@ export const FolderRow: Component<{
                   </ListItem>
                 )}
               />
-              <MenuContent class="floating-panel menu-panel">
+              <MenuPanel>
                 {(() => {
                   const menu = props.tree.menuOf(props.entry);
                   return (
@@ -324,7 +324,7 @@ export const FolderRow: Component<{
                     />
                   );
                 })()}
-              </MenuContent>
+              </MenuPanel>
             </Menu>
           }
         >

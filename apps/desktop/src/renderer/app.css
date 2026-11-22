@@ -22,8 +22,9 @@
 @import "tailwindcss/preflight" layer(reset);
 @import "tailwindcss/utilities" layer(utilities);
 
+@source ".";
 @source "../../../../packages/ui/src";
-@source "../../../../plugins/*/src";
+@source "../../../../plugins";
 @source "../web";
 
 @theme inline {
@@ -112,6 +113,14 @@
   border-width: var(--ui-border-width);
 }
 
+@utility border-s-hairline {
+  border-inline-start-width: var(--ui-border-width);
+}
+
+@utility border-e-hairline {
+  border-inline-end-width: var(--ui-border-width);
+}
+
 @utility duration-fast {
   transition-duration: var(--transition-duration-fast);
 }
@@ -134,26 +143,6 @@
 
 @utility duration-slow {
   transition-duration: var(--transition-duration-slow);
-}
-
-@utility z-behind {
-  z-index: -1;
-}
-
-@utility rtl-flip {
-  @apply rtl:scale-x-[-1];
-}
-
-@utility quiet-button {
-  @apply shrink-0 text-tertiary opacity-50 transition-opacity duration-ui ease-out-expo hover:opacity-100 focus-visible:opacity-100 data-[pressed]:opacity-100;
-}
-
-@utility menu-panel {
-  @apply z-50 flex max-h-(--kb-popper-content-available-height) min-w-52 flex-col overflow-y-auto overscroll-contain rounded-sm p-1 text-xs text-foreground outline-none select-none;
-}
-
-@utility chevron-turn {
-  @apply transition-transform duration-base ease-out-expo [[data-open]_&]:rotate-180;
 }
 
 @keyframes fadeIn {

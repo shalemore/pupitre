@@ -3,11 +3,11 @@ import { TOP_MENUS, type MenuEntry, type Menus, type TopMenu } from "@pupitre/de
 import { t } from "@pupitre/i18n/solid";
 import { IconButton } from "@pupitre/ui";
 import { makeEventListener } from "@solid-primitives/event-listener";
-import { Menu as UiMenu, MenuContent, MenuTrigger } from "@ui-sdk/solid/menu";
+import { Menu as UiMenu, MenuTrigger } from "@ui-sdk/solid/menu";
 import { Menubar } from "@ui-sdk/solid/menubar";
 import { Menu } from "lucide-solid";
 import { createSignal, For, Show, type Component } from "solid-js";
-import { MenuEntries, MenuPopup } from "@/components/menu-popup";
+import { MenuEntries, MenuPanel, MenuPopup } from "@/components/menu-popup";
 import { createMenu } from "@/lib/menu-state";
 
 /** How soon after a menu closes the next one is still taking its place rather than arriving. */
@@ -135,12 +135,12 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
             <MenuTrigger class="shrink-0 cursor-pointer rounded-md px-2.5 py-1 whitespace-nowrap text-muted-foreground interactive outline-none hover:bg-accent hover:text-foreground focus-visible:bg-accent focus-visible:text-foreground aria-expanded:bg-accent aria-expanded:text-foreground">
               {t().menu[menu]}
             </MenuTrigger>
-            <MenuContent
+            <MenuPanel
               side="bottom"
               align="start"
               sideOffset={8}
               data-instant={instant() === menu ? "" : undefined}
-              class="floating-panel menu-panel mt-2"
+              class="mt-2"
             >
               <MenuEntries
                 entries={entries()[menu] ?? []}
@@ -149,7 +149,7 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
                   void desktop.invoke("menu:click", entry.id);
                 }}
               />
-            </MenuContent>
+            </MenuPanel>
           </UiMenu>
         )}
       </For>

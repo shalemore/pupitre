@@ -82,13 +82,13 @@ export const TableToolbar: Component<{
   return (
     <div class="absolute inset-s-0 bottom-full z-10 mb-1 flex animate-fade-in-up-small items-center gap-0.5 rounded-lg bg-popover p-0.5 shadow-float print:hidden">
       <ToolButton label={labels().alignStart} onClick={() => align("start")}>
-        <TextAlignStart class="rtl-flip" />
+        <TextAlignStart class="rtl:-scale-x-100" />
       </ToolButton>
       <ToolButton label={labels().alignCenter} onClick={() => align("center")}>
         <TextAlignCenter />
       </ToolButton>
       <ToolButton label={labels().alignEnd} onClick={() => align("end")}>
-        <TextAlignEnd class="rtl-flip" />
+        <TextAlignEnd class="rtl:-scale-x-100" />
       </ToolButton>
       <ToolbarSeparator />
       <Show when={row() > 0}>
@@ -114,7 +114,7 @@ export const TableToolbar: Component<{
         label={labels().insertColumnBefore}
         onClick={() => props.run((model) => insertColumn(state(), model, column()), props.cell)}
       >
-        <BetweenVerticalStart class="rtl-flip" />
+        <BetweenVerticalStart class="rtl:-scale-x-100" />
       </ToolButton>
       <ToolButton
         label={labels().insertColumnAfter}
@@ -125,7 +125,7 @@ export const TableToolbar: Component<{
           })
         }
       >
-        <BetweenVerticalEnd class="rtl-flip" />
+        <BetweenVerticalEnd class="rtl:-scale-x-100" />
       </ToolButton>
       {/* Only body rows move: the header line says what the columns hold and stays first */}
       <Show when={row() > 1}>
@@ -164,7 +164,7 @@ export const TableToolbar: Component<{
             })
           }
         >
-          <ArrowLeft class="rtl-flip" />
+          <ArrowLeft class="rtl:-scale-x-100" />
         </ToolButton>
       </Show>
       <Show when={column() < columnTotal() - 1}>
@@ -177,7 +177,7 @@ export const TableToolbar: Component<{
             })
           }
         >
-          <ArrowRight class="rtl-flip" />
+          <ArrowRight class="rtl:-scale-x-100" />
         </ToolButton>
       </Show>
       <ToolbarSeparator />

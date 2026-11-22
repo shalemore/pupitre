@@ -46,10 +46,10 @@ export const FolderSortButton: Component<{
     <>
       <IconButton
         label={t().sidebar.sort}
+        variant="quiet"
         size="icon-2xs"
         aria-haspopup="menu"
         aria-expanded={panel.open() !== undefined ? "true" : "false"}
-        class="quiet-button"
         onClick={(event) => {
           if (panel.open() !== undefined) panel.close();
           // A press on the button while the menu is open closes it from outside first, and the

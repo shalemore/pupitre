@@ -11,7 +11,7 @@ import {
 } from "@ui-sdk/solid/menu";
 import { cva } from "class-variance-authority";
 import { Check, ChevronRight } from "lucide-solid";
-import { For, Show, createMemo, type Component } from "solid-js";
+import { For, omit, Show, createMemo, type Component } from "solid-js";
 import { isRtl } from "@/lib/rtl";
 import { settings } from "@/lib/settings";
 
@@ -26,6 +26,18 @@ export interface MenuPopupProps {
   onSelect: (entry: MenuItemEntry) => void;
   onClose: () => void;
 }
+
+const menuPanel = cva(
+  "floating-panel z-50 flex max-h-(--kb-popper-content-available-height) min-w-52 flex-col overflow-y-auto overscroll-contain rounded-sm p-1 text-xs text-foreground outline-none select-none",
+);
+
+export type MenuPanelProps = Parameters<typeof MenuContent>[0];
+
+/** The shared floating menu surface used by title-bar menus and context menus. */
+export const MenuPanel: Component<MenuPanelProps> = (props) => {
+  const rest = omit(props, "class");
+  return <MenuContent {...rest} class={cn(menuPanel(), props.class)} />;
+};
 
 const item = cva(
   "flex w-full items-center gap-6 rounded-sm px-2.5 py-1.5 text-start transition-colors duration-fast ease-out-expo outline-none disabled:text-tertiary data-highlighted:bg-accent data-highlighted:text-foreground",
@@ -140,9 +152,9 @@ export const MenuEntries: Component<{
                     checked={checked(itemEntry())}
                     hasChecks={hasChecks()}
                   />
-                  <ChevronRight class="size-3.5 shrink-0 rtl-flip text-tertiary" />
+                  <ChevronRight class="size-3.5 shrink-0 text-tertiary rtl:-scale-x-100" />
                 </MenuSubTrigger>
-                <MenuSubContent class="floating-panel menu-panel">
+                <MenuSubContent class={menuPanel()}>
                   <MenuEntries entries={itemEntry().submenu ?? []} onSelect={props.onSelect} />
                 </MenuSubContent>
               </MenuSub>
@@ -173,15 +185,14 @@ export const MenuPopup: Component<MenuPopupProps> = (props) => (
       props.onClose();
     }}
   >
-    <MenuContent
+    <MenuPanel
       data-menu-panel=""
       anchor={{ getBoundingClientRect: () => props.anchor }}
       side="bottom"
       align={isRtl() ? "end" : "start"}
       sideOffset={2}
-      class="floating-panel menu-panel"
     >
       <MenuEntries entries={props.entries} onSelect={props.onSelect} />
-    </MenuContent>
+    </MenuPanel>
   </Menu>
 );

@@ -4,11 +4,11 @@ import type { MenuEntry } from "@pupitre/desktop-api/menu";
 import { t } from "@pupitre/i18n/solid";
 import { ListItem, rowIndent } from "@pupitre/ui";
 import { messageOf } from "@pupitre/utils";
-import { Menu, MenuContent, MenuContextTrigger } from "@ui-sdk/solid/menu";
+import { Menu, MenuContextTrigger } from "@ui-sdk/solid/menu";
 import { Folder } from "lucide-solid";
 import { type Component, createEffect, createMemo, createSignal, For, Show } from "solid-js";
 import { isInsideFolder, relativeToFolder } from "@shared/paths";
-import { MenuEntries } from "@/components/menu-popup";
+import { MenuEntries, MenuPanel } from "@/components/menu-popup";
 import { reportFailure } from "@/lib/errors";
 import { parentFolder } from "@/lib/file";
 import { FolderChildren, FolderRow, type RowMenu, type TreeContext } from "./folder-tree-rows";
@@ -301,7 +301,7 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
         </Show>
         <FolderChildren path={props.root} depth={0} tree={tree} />
       </MenuContextTrigger>
-      <MenuContent class="floating-panel menu-panel">
+      <MenuPanel>
         {(() => {
           const menu = menuOf({ name: props.root, path: props.root, kind: "directory" });
           return (
@@ -311,7 +311,7 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
             />
           );
         })()}
-      </MenuContent>
+      </MenuPanel>
     </Menu>
   );
 };

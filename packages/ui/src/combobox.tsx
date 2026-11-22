@@ -84,7 +84,7 @@ export function Combobox(props: ComboboxProps) {
       <div
         data-slot="combobox-control"
         class={cn(
-          "flex h-8 w-56 items-center rounded-md border-hairline border-solid border-input bg-field text-xs interactive focus-within:shadow-focus has-[[data-open]]:border-brand",
+          "flex h-8 w-56 items-center rounded-md border-hairline border-solid border-input bg-field text-xs interactive focus-within:shadow-focus has-data-open:border-brand",
           props.class,
         )}
       >
@@ -100,7 +100,10 @@ export function Combobox(props: ComboboxProps) {
           data-slot="combobox-trigger"
           class="flex h-full cursor-pointer items-center px-2 text-muted-foreground"
         >
-          <span aria-hidden="true" class="chevron-turn">
+          <span
+            aria-hidden="true"
+            class="transition-transform duration-base ease-out-expo [[data-open]_&]:rotate-180"
+          >
             <ChevronDown class="size-3.5" />
           </span>
         </ComboboxTrigger>
