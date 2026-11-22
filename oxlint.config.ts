@@ -21,19 +21,7 @@ export default defineConfig({
     // A type and a value from the same module may stay apart; two value imports may not
     "no-duplicate-imports": ["error", { allowSeparateTypeImports: true }],
     "unicorn/consistent-function-scoping": "off",
-    "tailwindcss/no-conflicting-classes": [
-      "error",
-      {
-        allow: [
-          "duration-fast",
-          "duration-snap",
-          "duration-ui",
-          "duration-base",
-          "duration-sheet",
-          "duration-slow",
-        ],
-      },
-    ],
+    "tailwindcss/no-conflicting-classes": "error",
     "tailwindcss/no-contradicting-variants": "warn",
     "tailwindcss/no-duplicate-classes": "warn",
     "tailwindcss/no-dynamic-classes": "error",

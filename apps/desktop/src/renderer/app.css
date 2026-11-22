@@ -90,6 +90,15 @@
   --spacing-title-bar: var(--title-bar-height);
   --spacing-caption-button: 2.875rem;
 
+  --border-width-hairline: var(--ui-border-width);
+
+  --transition-duration-fast: var(--transition-duration-fast);
+  --transition-duration-snap: var(--transition-duration-snap);
+  --transition-duration-ui: var(--transition-duration-ui);
+  --transition-duration-base: var(--transition-duration-base);
+  --transition-duration-sheet: var(--transition-duration-sheet);
+  --transition-duration-slow: var(--transition-duration-slow);
+
   --ease-out-expo: var(--ease-out-expo);
   --ease-snap: var(--ease-snap);
   --ease-enter: var(--ease-enter);
@@ -107,42 +116,6 @@
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
   transition-duration: var(--transition-duration-ui);
   transition-timing-function: var(--ease-out-expo);
-}
-
-@utility border-hairline {
-  border-width: var(--ui-border-width);
-}
-
-@utility border-s-hairline {
-  border-inline-start-width: var(--ui-border-width);
-}
-
-@utility border-e-hairline {
-  border-inline-end-width: var(--ui-border-width);
-}
-
-@utility duration-fast {
-  transition-duration: var(--transition-duration-fast);
-}
-
-@utility duration-snap {
-  transition-duration: var(--transition-duration-snap);
-}
-
-@utility duration-ui {
-  transition-duration: var(--transition-duration-ui);
-}
-
-@utility duration-base {
-  transition-duration: var(--transition-duration-base);
-}
-
-@utility duration-sheet {
-  transition-duration: var(--transition-duration-sheet);
-}
-
-@utility duration-slow {
-  transition-duration: var(--transition-duration-slow);
 }
 
 @keyframes fadeIn {
