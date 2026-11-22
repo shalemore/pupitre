@@ -1,7 +1,6 @@
 import { t } from "@pupitre/i18n/solid";
 import { headingKey, type OutlineHeading } from "@pupitre/markdown";
 import { cn, ListItem, rowIndent } from "@pupitre/ui";
-import { OUTLINE_ROW } from "@pupitre/ui/styles";
 import { ChevronRight } from "lucide-solid";
 import { createMemo, Repeat, Show, type Component } from "solid-js";
 
@@ -70,7 +69,7 @@ export const OutlineList: Component<OutlineListProps> = (props) => {
                   data-folded={row().hidden ? "" : undefined}
                   inert={row().hidden}
                   aria-hidden={row().hidden ? "true" : undefined}
-                  class={cn(OUTLINE_ROW, "flex items-center")}
+                  class="outline-row flex items-center"
                 >
                   <Show
                     when={row().hasChildren}

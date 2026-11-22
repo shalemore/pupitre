@@ -2,10 +2,9 @@ import type { JSX } from "@solidjs/web";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "cn";
 import { omit } from "solid-js";
-import { PRESSABLE } from "./styles";
 
 export const buttonVariants = cva(
-  "inline-flex shrink-0 cursor-pointer items-center justify-center font-medium whitespace-nowrap outline-none select-none focus-visible:shadow-focus disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg:not([class*='size-'])]:pointer-events-none [&_svg:not([class*='size-'])]:shrink-0",
+  "pressable inline-flex shrink-0 cursor-pointer items-center justify-center font-medium whitespace-nowrap outline-none select-none focus-visible:shadow-focus disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg:not([class*='size-'])]:pointer-events-none [&_svg:not([class*='size-'])]:shrink-0",
   {
     variants: {
       variant: {
@@ -50,11 +49,7 @@ export function Button(props: ButtonProps) {
     <button
       type={type()}
       data-slot="button"
-      class={cn(
-        PRESSABLE,
-        buttonVariants({ variant: props.variant, size: props.size }),
-        props.class,
-      )}
+      class={cn(buttonVariants({ variant: props.variant, size: props.size }), props.class)}
       {...rest}
     />
   );

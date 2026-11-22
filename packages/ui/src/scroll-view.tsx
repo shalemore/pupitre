@@ -3,7 +3,6 @@ import { Dynamic, type JSX } from "@solidjs/web";
 import { cn } from "cn";
 import { createSignal, omit, onSettled, Show, type ValidComponent } from "solid-js";
 import { useScrollViewPreferences } from "./scroll-view-preferences";
-import { SCROLL_FADE } from "./styles";
 
 const IDLE_MS = 1200;
 /** Space kept free at both ends of the track, so the thumb clears rounded corners. */
@@ -137,7 +136,7 @@ export function ScrollView(props: ScrollViewProps) {
       data-scroll-view
       class={cn(
         "scrollbar-none overflow-y-auto print:mask-none",
-        preferences().fade && SCROLL_FADE,
+        preferences().fade && "scroll-fade",
         props.class,
       )}
       onScroll={() => {

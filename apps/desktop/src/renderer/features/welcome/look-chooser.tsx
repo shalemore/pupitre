@@ -1,7 +1,5 @@
 import { t } from "@pupitre/i18n/solid";
 import type { Settings } from "@pupitre/settings";
-import { cn } from "@pupitre/ui";
-import { PRESSABLE } from "@pupitre/ui/styles";
 import type { JSX } from "@solidjs/web";
 import { Radio, RadioGroup } from "@ui-sdk/solid/radio";
 import { settings, updateSettings } from "@/lib/settings";
@@ -16,10 +14,7 @@ interface LookOptionProps {
 const LookOption = (props: LookOptionProps) => (
   <Radio
     value={props.value}
-    class={cn(
-      PRESSABLE,
-      "flex w-48 max-w-full cursor-pointer flex-col gap-2 rounded-lg border-hairline border-solid border-border p-2 text-start outline-none hover:bg-accent focus-visible:shadow-focus data-checked:border-brand data-checked:bg-accent",
-    )}
+    class="pressable flex w-48 max-w-full cursor-pointer flex-col gap-2 rounded-lg border-hairline border-solid border-border p-2 text-start outline-none hover:bg-accent focus-visible:shadow-focus data-checked:border-brand data-checked:bg-accent"
   >
     <div>{props.preview}</div>
     <div class="px-0.5">

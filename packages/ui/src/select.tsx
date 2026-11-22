@@ -16,7 +16,7 @@ import { Badge } from "./badge";
 import { optionKey, optionOfKey, type SelectOption } from "./option";
 import { popupLayer } from "./popup-layer";
 import { ScrollView } from "./scroll-view";
-import { FLOATING_PANEL, PANEL_COLLISION_PADDING, PANEL_SIDE_OFFSET } from "./styles";
+import { PANEL_COLLISION_PADDING, PANEL_SIDE_OFFSET } from "./styles";
 
 export interface SelectProps<T extends string> {
   value: T;
@@ -121,10 +121,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
         sideOffset={PANEL_SIDE_OFFSET}
         collisionPadding={PANEL_COLLISION_PADDING}
         container={popupLayer()}
-        class={cn(
-          FLOATING_PANEL,
-          "z-50 min-w-(--anchor-width) origin-(--transform-origin) rounded-sm p-0.5",
-        )}
+        class="floating-panel z-50 min-w-(--anchor-width) origin-(--transform-origin) rounded-sm p-0.5"
       >
         <SelectList
           render={(listProps) => (

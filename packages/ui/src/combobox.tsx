@@ -14,7 +14,7 @@ import { createMemo, createSignal, For, Show } from "solid-js";
 import { optionKey, optionOfKey, type SelectOption } from "./option";
 import { popupLayer } from "./popup-layer";
 import { ScrollView } from "./scroll-view";
-import { FLOATING_PANEL, PANEL_COLLISION_PADDING, PANEL_SIDE_OFFSET } from "./styles";
+import { PANEL_COLLISION_PADDING, PANEL_SIDE_OFFSET } from "./styles";
 
 export interface ComboboxProps {
   value: string;
@@ -115,10 +115,7 @@ export function Combobox(props: ComboboxProps) {
         sideOffset={PANEL_SIDE_OFFSET}
         collisionPadding={collisionPadding()}
         container={popupLayer()}
-        class={cn(
-          FLOATING_PANEL,
-          "z-50 w-(--anchor-width) min-w-64 origin-(--transform-origin) rounded-sm p-1",
-        )}
+        class="floating-panel z-50 w-(--anchor-width) min-w-64 origin-(--transform-origin) rounded-sm p-1"
       >
         <ComboboxList
           render={(listProps) => (

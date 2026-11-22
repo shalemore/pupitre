@@ -2,7 +2,6 @@ import type { JSX } from "@solidjs/web";
 import { Dialog, DialogBackdrop, DialogContent, DialogTitle } from "@ui-sdk/solid/dialog";
 import { cn } from "cn";
 import type { Component } from "solid-js";
-import { FLOATING_PANEL } from "./styles";
 
 export interface SheetProps {
   /** Names the dialog, for anyone who cannot see the window it covers. */
@@ -37,8 +36,7 @@ export const Sheet: Component<SheetProps> = (props) => (
     <DialogContent
       data-sheet="panel"
       class={cn(
-        FLOATING_PANEL,
-        "fixed left-1/2 z-50 flex w-[calc(100%-2rem)] flex-col gap-2 p-2 text-xs",
+        "floating-panel fixed left-1/2 z-50 flex w-[calc(100%-2rem)] flex-col gap-2 p-2 text-xs",
         props.placement === "top"
           ? "top-16 max-h-[calc(100vh-5rem)] max-w-xl -translate-x-1/2 translate-y-0 [--panel-translate-x:-50%] [--panel-translate-y:0px]"
           : "top-1/2 max-h-[calc(100vh-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 [--panel-translate-x:-50%] [--panel-translate-y:-50%]",
