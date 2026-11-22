@@ -75,8 +75,8 @@ export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
             class={cn(
               "absolute inset-0 flex items-center justify-center bg-surface-0",
               props.side === "start"
-                ? "border-hairline border-e border-border"
-                : "border-hairline border-s border-border",
+                ? "border-e-hairline border-border"
+                : "border-s-hairline border-border",
             )}
           >
             <IconButton

@@ -38,7 +38,7 @@ function TabButton(props: TabButtonProps) {
     <div
       ref={(node) => (element = node)}
       class={cn(
-        "group __INTERACTIVE__ relative flex h-full max-w-48 min-w-0 shrink-0 items-center border-hairline border-e border-border-subtle last:border-e-0",
+        "group __INTERACTIVE__ relative flex h-full max-w-48 min-w-0 shrink-0 items-center border-e-hairline border-border-subtle last:border-e-0",
         props.active ? "bg-surface-1" : "hover:bg-accent",
       )}
     >

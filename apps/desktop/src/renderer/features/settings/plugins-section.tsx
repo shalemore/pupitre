@@ -113,7 +113,7 @@ const PluginSettingsForm: Component<{ plugin: PluginInfo }> = (props) => {
 
   return (
     <Show when={fields().length > 0}>
-      <div class="flex flex-col ps-5 [&>*+*]:border-hairline [&>*+*]:border-t [&>*+*]:border-border-subtle">
+      <div class="flex flex-col ps-5 [&>*+*]:border-t-hairline [&>*+*]:border-border-subtle">
         <For each={fields()}>
           {([key, field]) => {
             const label = () => textOf(props.plugin.settings?.fields?.[key]?.title) ?? key;

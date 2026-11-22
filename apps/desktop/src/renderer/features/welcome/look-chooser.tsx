@@ -63,9 +63,9 @@ export const LookChooser = () => (
               class="flex h-16 flex-col overflow-hidden rounded-md border-hairline border-solid border-border"
               aria-hidden="true"
             >
-              <div class="h-2.5 border-hairline border-b border-border bg-surface-0" />
+              <div class="h-2.5 border-b-hairline border-border bg-surface-0" />
               <div class="flex flex-1">
-                <div class="w-1/4 border-hairline border-e border-border bg-surface-0" />
+                <div class="w-1/4 border-e-hairline border-border bg-surface-0" />
                 <div class="flex-1 bg-surface-1" />
               </div>
             </div>

@@ -41,7 +41,7 @@ export const SettingsWindow: Component = () => {
         defaultValue="general"
         class="flex min-h-0 flex-1 overflow-hidden"
       >
-        <aside class="flex w-52 shrink-0 flex-col border-hairline border-e border-border bg-surface-0 px-3 py-4 md:w-60">
+        <aside class="flex w-52 shrink-0 flex-col border-e-hairline border-border bg-surface-0 px-3 py-4 md:w-60">
           <SettingsNav />
         </aside>
 
