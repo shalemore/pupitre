@@ -1,5 +1,5 @@
 {
-  "$schema": "../../../../agents/skills/theming-pupitre/theme.schema.json",
+  "$schema": "../../../../../agents/skills/theming-pupitre/theme.schema.json",
   "name": {
     "ar": "مكتب الكتابة",
     "cs-CZ": "Psací stůl",
