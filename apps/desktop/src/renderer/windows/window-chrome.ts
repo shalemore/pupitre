@@ -18,7 +18,7 @@ export const windowFrame = cva(
 export const barDivider = cva("", {
   variants: {
     classic: {
-      true: "border-b border-hairline border-border",
+      true: "border-hairline border-b border-border",
     },
   },
 });
@@ -32,12 +32,12 @@ export const sidebarDivider = cva("", {
     {
       side: "start",
       classic: true,
-      class: "border-e border-hairline border-border",
+      class: "border-hairline border-e border-border",
     },
     {
       side: "end",
       classic: true,
-      class: "border-s border-hairline border-border",
+      class: "border-hairline border-s border-border",
     },
   ],
 });

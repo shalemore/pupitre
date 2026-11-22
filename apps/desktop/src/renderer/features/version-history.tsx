@@ -88,7 +88,7 @@ export const VersionHistory: Component<VersionHistoryProps> = (props) => {
       {(row) => (
         <>
           <span class="min-w-0 flex-1 truncate">{row.time}</span>
-          <span class="shrink-0 opacity-60 tabular-nums">
+          <span class="shrink-0 tabular-nums opacity-60">
             {formatFileSize(row.entry.bytes, intlLocale(currentLocale()))}
           </span>
         </>

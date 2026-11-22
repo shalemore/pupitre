@@ -84,7 +84,7 @@ export function Combobox(props: ComboboxProps) {
       <div
         data-slot="combobox-control"
         class={cn(
-          "interactive flex h-8 w-56 items-center rounded-md border-hairline border-solid border-input bg-field text-xs focus-within:shadow-focus has-[[data-open]]:border-brand",
+          "flex h-8 w-56 items-center rounded-md border-hairline border-solid border-input bg-field text-xs interactive focus-within:shadow-focus has-[[data-open]]:border-brand",
           props.class,
         )}
       >
@@ -140,11 +140,11 @@ export function Combobox(props: ComboboxProps) {
                 data-slot="combobox-item"
                 value={optionKey(option.value)}
                 label={option.label}
-                class="group flex cursor-pointer items-center justify-between gap-3 rounded-sm px-2.5 py-1.5 text-xs outline-none data-[highlighted]:bg-accent"
+                class="group flex cursor-pointer items-center justify-between gap-3 rounded-sm px-2.5 py-1.5 text-xs outline-none data-highlighted:bg-accent"
               >
                 <span class="flex min-w-0 items-baseline gap-2">
                   <ComboboxItemText
-                    class="truncate text-foreground group-data-[selected]:text-brand"
+                    class="truncate text-foreground group-data-selected:text-brand"
                     style={option.style ?? {}}
                   >
                     {option.label}

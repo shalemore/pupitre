@@ -38,7 +38,7 @@ function TabButton(props: TabButtonProps) {
     <div
       ref={(node) => (element = node)}
       class={cn(
-        "group interactive relative flex h-full min-w-0 max-w-48 shrink-0 items-center border-e border-hairline border-border-subtle last:border-e-0",
+        "group relative flex h-full max-w-48 min-w-0 shrink-0 items-center border-hairline border-e border-border-subtle interactive last:border-e-0",
         props.active ? "bg-surface-1" : "hover:bg-accent",
       )}
     >
@@ -107,7 +107,7 @@ export const TabsBar: Component<TabsBarProps> = (props) => (
         event.preventDefault();
         strip.scrollLeft += event.deltaY;
       }}
-      class="flex h-full min-w-0 flex-1 items-stretch overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden print:hidden"
+      class="flex h-full min-w-0 flex-1 scrollbar-none items-stretch overflow-x-auto overscroll-x-contain print:hidden [&::-webkit-scrollbar]:hidden"
     >
       <For each={props.tabs}>
         {(tab) => (

@@ -18,7 +18,7 @@ const LookOption = (props: LookOptionProps) => (
     value={props.value}
     class={cn(
       PRESSABLE,
-      "flex w-48 max-w-full cursor-pointer flex-col gap-2 rounded-lg border border-hairline border-border p-2 text-start outline-none hover:bg-accent focus-visible:shadow-focus data-checked:border-brand data-checked:bg-accent",
+      "flex w-48 max-w-full cursor-pointer flex-col gap-2 rounded-lg border-hairline border-solid border-border p-2 text-start outline-none hover:bg-accent focus-visible:shadow-focus data-checked:border-brand data-checked:bg-accent",
     )}
   >
     <div>{props.preview}</div>
@@ -65,12 +65,12 @@ export const LookChooser = () => (
           description={t().welcome.lookClassicDesc}
           preview={
             <div
-              class="flex h-16 flex-col overflow-hidden rounded-md border border-hairline border-border"
+              class="flex h-16 flex-col overflow-hidden rounded-md border-hairline border-solid border-border"
               aria-hidden="true"
             >
-              <div class="h-2.5 border-b border-hairline border-border bg-surface-0" />
+              <div class="h-2.5 border-hairline border-b border-border bg-surface-0" />
               <div class="flex flex-1">
-                <div class="w-1/4 border-e border-hairline border-border bg-surface-0" />
+                <div class="w-1/4 border-hairline border-e border-border bg-surface-0" />
                 <div class="flex-1 bg-surface-1" />
               </div>
             </div>

@@ -30,7 +30,7 @@ export interface SelectProps<T extends string> {
 
 // An option keeps the height of the trigger it belongs to, so the open list does not look top-heavy
 const item = cva(
-  "flex cursor-pointer items-center justify-between gap-4 rounded-sm px-2.5 py-1 text-xs outline-none data-[highlighted]:bg-accent",
+  "flex cursor-pointer items-center justify-between gap-4 rounded-sm px-2.5 py-1 text-xs outline-none data-highlighted:bg-accent",
   {
     variants: {
       compact: {
@@ -53,14 +53,14 @@ const chevronIcon = cva("", {
 });
 
 const trigger = cva(
-  "interactive flex cursor-pointer items-center justify-between gap-2 rounded-sm outline-none focus-visible:shadow-focus",
+  "flex cursor-pointer items-center justify-between gap-2 rounded-sm interactive outline-none focus-visible:shadow-focus",
   {
     variants: {
       variant: {
         default:
-          "h-8 min-w-36 border-hairline border-solid border-input bg-field px-2.5 text-xs text-foreground hover:bg-surface-0 data-[expanded]:border-brand",
+          "h-8 min-w-36 border-hairline border-solid border-input bg-field px-2.5 text-xs text-foreground hover:bg-surface-0 data-expanded:border-brand",
         ghost:
-          "h-6 px-1.5 text-2xs text-tertiary hover:bg-accent hover:text-foreground data-[expanded]:text-foreground",
+          "h-6 px-1.5 text-2xs text-tertiary hover:bg-accent hover:text-foreground data-expanded:text-foreground",
       },
     },
     defaultVariants: { variant: "default" },
@@ -146,7 +146,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
                 <span class="flex min-w-0 flex-col">
                   <span class="flex min-w-0 items-center gap-1.5">
                     <SelectItemText
-                      class="min-w-0 truncate font-medium text-foreground group-data-[selected]:text-brand"
+                      class="min-w-0 truncate font-medium text-foreground group-data-selected:text-brand"
                       style={option.style ?? {}}
                     >
                       {option.label}

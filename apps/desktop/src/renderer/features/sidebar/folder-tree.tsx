@@ -281,7 +281,7 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
               )}
             </For>
           </div>
-          <div class="mx-2.5 border-t border-hairline border-border-subtle" />
+          <div class="mx-2.5 border-hairline border-t border-border-subtle" />
         </Show>
         <Show when={parent()}>
           {(target) => (

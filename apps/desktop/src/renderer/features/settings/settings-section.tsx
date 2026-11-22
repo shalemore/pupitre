@@ -26,7 +26,7 @@ export const SettingsSection: ParentComponent<{ title: string; description?: str
 
 /** Settings that belong together: hairlines between the rows, more space between groups. */
 export const SettingGroup: ParentComponent = (props) => (
-  <div class="[&>:not(:last-child)]:border-b [&>:not(:last-child)]:border-hairline [&>:not(:last-child)]:border-border-subtle">
+  <div class="[&>:not(:last-child)]:border-hairline [&>:not(:last-child)]:border-b [&>:not(:last-child)]:border-border-subtle">
     {props.children}
   </div>
 );

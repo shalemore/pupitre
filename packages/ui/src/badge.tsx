@@ -4,13 +4,13 @@ import { cn } from "cn";
 import { omit } from "solid-js";
 
 const badgeVariants = cva(
-  "interactive inline-flex w-fit max-w-full shrink-0 items-center justify-center gap-1 overflow-hidden rounded-sm border-hairline border-solid border-transparent font-medium whitespace-nowrap select-none [&>svg]:pointer-events-none [&>svg]:shrink-0",
+  "inline-flex w-fit max-w-full shrink-0 items-center justify-center gap-1 overflow-hidden rounded-sm border-hairline border-solid border-transparent font-medium whitespace-nowrap interactive select-none [&>svg]:pointer-events-none [&>svg]:shrink-0",
   {
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground",
         secondary: "bg-secondary text-secondary-foreground",
-        muted: "bg-muted text-muted-foreground font-normal",
+        muted: "bg-muted font-normal text-muted-foreground",
         outline: "border-border text-foreground",
         brand: "bg-brand text-brand-foreground",
         success: "bg-success/15 text-success",

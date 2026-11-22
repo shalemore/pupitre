@@ -49,7 +49,7 @@ export function TabsTrigger(props: { value: string; children: JSX.Element }) {
   return (
     <TabsTab
       value={props.value}
-      class="interactive flex w-full cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2 text-start text-xs text-muted-foreground outline-none hover:bg-accent hover:text-foreground focus-visible:shadow-focus data-[selected]:bg-selected data-[selected]:font-medium data-[selected]:text-foreground [&>svg]:size-4 [&>svg]:shrink-0"
+      class="flex w-full cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2 text-start text-xs text-muted-foreground interactive outline-none hover:bg-accent hover:text-foreground focus-visible:shadow-focus data-selected:bg-selected data-selected:font-medium data-selected:text-foreground [&>svg]:size-4 [&>svg]:shrink-0"
     >
       {props.children}
     </TabsTab>

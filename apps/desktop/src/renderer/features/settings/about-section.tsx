@@ -21,7 +21,7 @@ export const AboutSection: Component = () => {
   return (
     <SettingsSection title={t().settings.about}>
       <div class="flex flex-col gap-3">
-        <div class="flex items-center gap-4 rounded-lg border border-hairline border-border bg-surface-2 p-5">
+        <div class="flex items-center gap-4 rounded-lg border-hairline border-solid border-border bg-surface-2 p-5">
           <img src={PUBLIC_LOGO} alt="" class="size-12 shrink-0 rounded-xl shadow-sm" />
           <div class="min-w-0 flex-1">
             <div class="text-base font-semibold text-foreground">Pupitre</div>

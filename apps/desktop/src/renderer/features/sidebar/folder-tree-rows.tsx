@@ -182,7 +182,7 @@ const RenameField: Component<{
         value={props.initial}
         dir="auto"
         aria-label={t().sidebar.rename}
-        class="min-w-0 flex-1 rounded-md border border-hairline border-border bg-surface-2 py-1 ps-0 pe-2.5 text-xs text-foreground outline-none focus-visible:shadow-focus"
+        class="min-w-0 flex-1 rounded-md border-hairline border-solid border-border bg-surface-2 py-1 ps-0 pe-2.5 text-xs text-foreground outline-none focus-visible:shadow-focus"
         // Focused once it is in the document, so typing replaces the selected name right away
         ref={(element) =>
           requestAnimationFrame(() => {
@@ -343,7 +343,7 @@ export const FolderRow: Component<{
             label={t().menu.openFolder}
             size="icon-2xs"
             data-slot="folder-open"
-            class="absolute end-1 top-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-ui ease-out-expo group-hover:opacity-100 focus-visible:opacity-100"
+            class="absolute inset-e-1 top-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-ui ease-out-expo group-hover:opacity-100 focus-visible:opacity-100"
             onClick={(event) => {
               event.stopPropagation();
               props.tree.onOpenFolder(props.entry.path);
@@ -354,7 +354,7 @@ export const FolderRow: Component<{
         </Show>
       </div>
       <Show when={expanded()}>
-        <div class="space-y-0.5 animate-[fadeInDownSmall_var(--transition-duration-base)_var(--ease-enter)]">
+        <div class="animate-[fadeInDownSmall_var(--transition-duration-base)_var(--ease-enter)] space-y-0.5">
           <FolderChildren path={props.entry.path} depth={props.depth + 1} tree={props.tree} />
         </div>
       </Show>

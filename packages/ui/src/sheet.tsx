@@ -32,7 +32,7 @@ export const Sheet: Component<SheetProps> = (props) => (
   >
     <DialogBackdrop
       data-sheet="backdrop"
-      class="fixed inset-0 z-50 bg-surface-0/60 backdrop-blur-[4px] animate-fade-in"
+      class="fixed inset-0 z-50 animate-fade-in bg-surface-0/60 backdrop-blur-[4px]"
     />
     <DialogContent
       data-sheet="panel"

@@ -31,7 +31,7 @@ export function ToggleIconButton(props: ToggleIconButtonProps) {
       aria-label={props.label}
       class={cn(
         buttonVariants({ variant: variant(), size: size() }),
-        "data-[pressed]:text-brand",
+        "data-pressed:text-brand",
         props.class,
       )}
     >

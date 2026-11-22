@@ -30,7 +30,7 @@ export function SettingRow(props: SettingRowProps) {
           <h3 class="text-sm font-semibold text-foreground">{props.title}</h3>
         </Show>
         <Show when={props.description}>
-          <span class="text-2xs leading-relaxed text-muted-foreground [overflow-wrap:anywhere]">
+          <span class="text-2xs leading-relaxed wrap-anywhere text-muted-foreground">
             {props.description}
           </span>
         </Show>

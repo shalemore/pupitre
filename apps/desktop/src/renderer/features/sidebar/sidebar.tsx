@@ -75,8 +75,8 @@ export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
             class={cn(
               "absolute inset-0 flex items-center justify-center bg-surface-0",
               props.side === "start"
-                ? "border-e border-hairline border-border"
-                : "border-s border-hairline border-border",
+                ? "border-hairline border-e border-border"
+                : "border-hairline border-s border-border",
             )}
           >
             <IconButton
@@ -100,10 +100,10 @@ export const SidebarSlot: Component<SidebarSlotProps> = (props) => {
           aria-valuemax={SIDEBAR_WIDTH.max}
           tabindex="0"
           class={cn(
-            "interactive absolute inset-y-0 z-10 w-1 cursor-col-resize border-solid border-transparent outline-none hover:border-brand/30 focus-visible:border-brand/30",
+            "absolute inset-y-0 z-10 w-1 cursor-col-resize border-solid border-transparent interactive outline-none hover:border-brand/30 focus-visible:border-brand/30",
             props.side === "start"
-              ? "end-0 border-e border-hairline"
-              : "start-0 border-s border-hairline",
+              ? "inset-e-0 border-hairline border-e"
+              : "inset-s-0 border-hairline border-s",
             dragging() && "border-brand/40",
           )}
           onPointerDown={(event) => {

@@ -44,7 +44,7 @@ export function SegmentedControl<T extends string>(props: SegmentedControlProps<
           <SegmentedControlItem
             data-slot="segmented-item"
             value={option.value}
-            class="interactive relative flex h-6 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-md px-2 text-muted-foreground outline-none hover:text-foreground focus-visible:shadow-focus data-[checked]:font-medium data-[checked]:text-foreground [&>svg]:size-3.5 [&>svg]:shrink-0"
+            class="relative flex h-6 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-md px-2 text-muted-foreground interactive outline-none hover:text-foreground focus-visible:shadow-focus data-checked:font-medium data-checked:text-foreground [&>svg]:size-3.5 [&>svg]:shrink-0"
           >
             {option.icon}
             <span class="truncate">{option.label}</span>

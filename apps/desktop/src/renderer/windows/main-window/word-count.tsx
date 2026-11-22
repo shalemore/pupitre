@@ -31,7 +31,7 @@ export const WordCount: Component<{ stats: TextStats }> = (props) => {
     <div
       data-bar-part="count"
       title={`${wordsText()} · ${charsText()}`}
-      class="me-2 flex shrink-0 items-center gap-1.5 whitespace-nowrap text-2xs text-muted-foreground tabular-nums"
+      class="me-2 flex shrink-0 items-center gap-1.5 text-2xs whitespace-nowrap text-muted-foreground tabular-nums"
     >
       <span>{wordsText()}</span>
       <Show when={kind() === "character"}>

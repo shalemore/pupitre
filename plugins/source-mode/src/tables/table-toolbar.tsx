@@ -59,7 +59,7 @@ const ToolbarSeparator: Component = () => <Separator orientation="vertical" clas
 const Deleted = (props: { children: JSX.Element }) => (
   <span class="relative inline-flex">
     {props.children}
-    <X class="absolute -end-0.5 -bottom-0.5 size-2" stroke-width={2} />
+    <X class="absolute -inset-e-0.5 -bottom-0.5 size-2" stroke-width={2} />
   </span>
 );
 
@@ -80,7 +80,7 @@ export const TableToolbar: Component<{
     props.run((model) => alignColumn(state(), model, column(), value), props.cell);
 
   return (
-    <div class="absolute bottom-full start-0 z-10 mb-1 flex items-center gap-0.5 rounded-lg bg-popover p-0.5 shadow-float animate-fade-in-up-small print:hidden">
+    <div class="absolute inset-s-0 bottom-full z-10 mb-1 flex animate-fade-in-up-small items-center gap-0.5 rounded-lg bg-popover p-0.5 shadow-float print:hidden">
       <ToolButton label={labels().alignStart} onClick={() => align("start")}>
         <TextAlignStart class="rtl-flip" />
       </ToolButton>

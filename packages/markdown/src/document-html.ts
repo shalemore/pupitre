@@ -213,7 +213,7 @@ async function codeBlock(ctx: ExportContext, block: SyntaxNode): Promise<string>
   const highlighted = await codeHtml(text, language);
   // Markup that goes to another application carries the code font and keeps the code's own line breaks
   const pre = styleOf(ctx, `${CODE_FONT};white-space:pre-wrap`);
-  const classes = ctx.inlineStyles ? "" : ` class="${CODE_BLOCK_CLASSES}"`;
+  const classes = ctx.inlineStyles ? "" : `class="${CODE_BLOCK_CLASSES}"`;
   return `<pre${classes}${pre}><code${attribute}${styleOf(ctx, CODE_FONT)}>${highlighted ?? escapeHtml(text)}</code></pre>`;
 }
 

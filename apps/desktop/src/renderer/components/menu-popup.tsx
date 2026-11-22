@@ -28,7 +28,7 @@ export interface MenuPopupProps {
 }
 
 const item = cva(
-  "flex w-full items-center gap-6 rounded-sm px-2.5 py-1.5 text-start outline-none transition-colors duration-fast ease-out-expo disabled:text-tertiary data-highlighted:bg-accent data-highlighted:text-foreground",
+  "flex w-full items-center gap-6 rounded-sm px-2.5 py-1.5 text-start transition-colors duration-fast ease-out-expo outline-none disabled:text-tertiary data-highlighted:bg-accent data-highlighted:text-foreground",
 );
 
 const ItemContent: Component<{ item: MenuItemEntry; checked: boolean; hasChecks: boolean }> = (
@@ -140,7 +140,7 @@ export const MenuEntries: Component<{
                     checked={checked(itemEntry())}
                     hasChecks={hasChecks()}
                   />
-                  <ChevronRight class="rtl-flip size-3.5 shrink-0 text-tertiary" />
+                  <ChevronRight class="size-3.5 shrink-0 rtl-flip text-tertiary" />
                 </MenuSubTrigger>
                 <MenuSubContent class="floating-panel menu-panel">
                   <MenuEntries entries={itemEntry().submenu ?? []} onSelect={props.onSelect} />
