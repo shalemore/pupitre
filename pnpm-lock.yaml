@@ -177,7 +177,7 @@ overrides:
 
 patchedDependencies:
   '@lezer/markdown@1.8.1': 2f8773288f0213ea3dfa6ccf7df9e0fa7d078e7d18f7cec8bd858ce1398b6681
-  lucide-solid@1.77.0: 60c81d792c02d763a99f40ac21fb0951cc499275ab3fe231ab01e04aacc80349
+  lucide-solid@1.77.0: c3082f6d95ff3ec2311807d30638c237c139b9903551c9ac56e5bc582eaf5398
 
 importers:
 
@@ -336,7 +336,7 @@ importers:
         version: 31.0.1(@noble/hashes@1.8.0)
       lucide-solid:
         specifier: ^1.77.0
-        version: 1.77.0(patch_hash=60c81d792c02d763a99f40ac21fb0951cc499275ab3fe231ab01e04aacc80349)(solid-js@2.0.3)
+        version: 1.77.0(patch_hash=c3082f6d95ff3ec2311807d30638c237c139b9903551c9ac56e5bc582eaf5398)(solid-js@2.0.3)
       move-file:
         specifier: ^4.1.0
         version: 4.1.0
@@ -540,7 +540,7 @@ importers:
         version: 0.5.2
       lucide-solid:
         specifier: ^1.77.0
-        version: 1.77.0(patch_hash=60c81d792c02d763a99f40ac21fb0951cc499275ab3fe231ab01e04aacc80349)(solid-js@2.0.3)
+        version: 1.77.0(patch_hash=c3082f6d95ff3ec2311807d30638c237c139b9903551c9ac56e5bc582eaf5398)(solid-js@2.0.3)
       solid-js:
         specifier: ^2.0.3
         version: 2.0.3
@@ -597,7 +597,7 @@ importers:
         version: 3.4.18
       lucide-solid:
         specifier: ^1.77.0
-        version: 1.77.0(patch_hash=60c81d792c02d763a99f40ac21fb0951cc499275ab3fe231ab01e04aacc80349)(solid-js@2.0.3)
+        version: 1.77.0(patch_hash=c3082f6d95ff3ec2311807d30638c237c139b9903551c9ac56e5bc582eaf5398)(solid-js@2.0.3)
     devDependencies:
       '@solidjs/web':
         specifier: ^2.0.3
@@ -7098,7 +7098,7 @@ snapshots:
     dependencies:
       yallist: 4.0.0
 
-  lucide-solid@1.77.0(patch_hash=60c81d792c02d763a99f40ac21fb0951cc499275ab3fe231ab01e04aacc80349)(solid-js@2.0.3):
+  lucide-solid@1.77.0(patch_hash=c3082f6d95ff3ec2311807d30638c237c139b9903551c9ac56e5bc582eaf5398)(solid-js@2.0.3):
     dependencies:
       solid-js: 2.0.3
 
