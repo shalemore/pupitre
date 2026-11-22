@@ -69,7 +69,7 @@ export const OutlineList: Component<OutlineListProps> = (props) => {
                   data-folded={row().hidden ? "" : undefined}
                   inert={row().hidden}
                   aria-hidden={row().hidden ? "true" : undefined}
-                  class="__OUTLINE_ROW__ flex items-center"
+                  class="flex items-center overflow-clip transition-[block-size,opacity] duration-sheet ease-out-expo [interpolate-size:allow-keywords] block-auto data-folded:mt-0 data-folded:opacity-0 data-folded:block-0"
                 >
                   <Show
                     when={row().hasChildren}

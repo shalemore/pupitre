@@ -64,7 +64,7 @@ export const SettingField: ParentComponent<SettingFieldProps> = (props) => {
               label={t().settings.resetToDefault}
               size="icon-2xs"
               onClick={() => void resetSetting(props.name)}
-              class="-my-0.5 animate-[appear_var(--transition-duration-snap)]"
+              class="-my-0.5 animate-appear"
             >
               <RotateCcw />
             </IconButton>

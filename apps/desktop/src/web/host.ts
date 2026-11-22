@@ -79,6 +79,8 @@ function emit<K extends keyof RendererEvents>(channel: K, payload: RendererEvent
 // stylesheets are switched to match the setting instead.
 const originalQueries = new WeakMap<CSSMediaRule, string>();
 function followColorScheme(): void {
+  document.documentElement.style.colorScheme =
+    settings.colorScheme === "system" ? "" : settings.colorScheme;
   const visit = (rules: CSSRuleList): void => {
     for (const rule of rules) {
       if (rule instanceof CSSMediaRule) {

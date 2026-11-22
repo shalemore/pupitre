@@ -1,5 +1,5 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { TOKEN_NAMES } from "../src/shared/design-tokens.ts";
 
 /**
@@ -15,8 +15,21 @@ import { TOKEN_NAMES } from "../src/shared/design-tokens.ts";
  */
 
 const APP_CSS = "src/renderer/app.css";
-const EDITOR_CSS = "src/renderer/features/editor/editor.css";
 const THEMES = "src/renderer/themes";
+
+function collectStylesheets(entry: string, seen = new Set<string>()): string[] {
+  if (seen.has(entry)) return [];
+  seen.add(entry);
+  const css = stripComments(readFileSync(entry, "utf8"));
+  const files = [entry];
+  for (const match of css.matchAll(/@import\s+["'](\.[^"']+)["']/g)) {
+    const specifier = match[1];
+    if (specifier !== undefined) {
+      files.push(...collectStylesheets(join(dirname(entry), specifier), seen));
+    }
+  }
+  return files;
+}
 
 /** At-rules that are statements rather than style rules, so they may sit outside a layer. */
 const TOP_LEVEL_AT_RULES = [
@@ -90,12 +103,10 @@ function usedTokens(css: string): Map<string, number> {
 
 const problems: Problem[] = [];
 
-const app = readFileSync(APP_CSS, "utf8");
-const editor = readFileSync(EDITOR_CSS, "utf8");
-for (const { file, css } of [
-  { file: APP_CSS, css: app },
-  { file: EDITOR_CSS, css: editor },
-]) {
+const appStylesheets = collectStylesheets(APP_CSS);
+const known = new Set<string>();
+for (const file of appStylesheets) {
+  const css = readFileSync(file, "utf8");
   for (const rule of unlayeredRules(css)) {
     problems.push({
       file,
@@ -103,11 +114,8 @@ for (const { file, css } of [
       message: `\`${rule.selector}\` is outside every layer, so no theme can override it`,
     });
   }
+  for (const token of definedTokens(css)) known.add(token);
 }
-
-const baseTokens = definedTokens(app);
-const editorTokens = definedTokens(editor);
-const known = new Set([...baseTokens, ...editorTokens]);
 
 // A folder without an index.css is not a theme: lib/theme.ts finds a theme by that file, and a
 // folder being written may not have one yet

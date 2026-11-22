@@ -47,7 +47,7 @@ export const MainTitleContent: Component<MainTitleContentProps> = (props) => (
               <Show when={props.dirty}>
                 <span
                   aria-hidden="true"
-                  class="size-1.5 shrink-0 animate-[zoomIn_var(--transition-duration-snap)_var(--ease-out-expo)] rounded-full bg-brand"
+                  class="size-1.5 shrink-0 animate-zoom-in rounded-full bg-brand"
                 />
               </Show>
               <bdi dir="auto" class="truncate">

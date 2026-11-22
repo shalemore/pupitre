@@ -1,0 +1,196 @@
+@layer base {
+  /* The element each window renders into */
+  #root {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+  }
+
+  html,
+  body {
+    background-color: var(--ui-surface-1);
+    color: var(--ui-text-primary);
+    font-family: var(--pref-ui-font, var(--font-sans));
+    -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: auto;
+    text-rendering: auto;
+    user-select: none;
+    -webkit-user-select: none;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  :root[data-platform="darwin"],
+  :root[data-platform="darwin"] :is(body, input, textarea, button, select) {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  input,
+  textarea,
+  button,
+  select {
+    font-family: inherit;
+    letter-spacing: inherit;
+    -webkit-font-smoothing: inherit;
+    -moz-osx-font-smoothing: inherit;
+  }
+
+  textarea {
+    field-sizing: content;
+  }
+
+  /*
+   * Lines break for reading: a heading keeps its lines balanced, and a paragraph does not end with
+   * a lone word. Chromium does both while it lays the text out, so this measures nothing.
+   */
+  :is(h1, h2, h3, h4) {
+    text-wrap: balance;
+  }
+
+  :is(p, li, dd, blockquote) {
+    text-wrap: pretty;
+  }
+
+  ::-webkit-scrollbar {
+    width: var(--ui-scrollbar-thickness);
+    height: var(--ui-scrollbar-thickness);
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--ui-alpha-2);
+    border-radius: var(--radius-full);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--ui-alpha-3);
+  }
+
+  html {
+    color-scheme: light dark;
+    scroll-behavior: smooth;
+  }
+
+  /*
+   * View transitions (withViewTransition): the browser paints the window before and after an update
+   * and cross-fades the two images, which is how a swap that reflows every line can move without
+   * CodeMirror's measurements ever seeing the animation. The default cross-fade keeps the app's timing.
+   */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: var(--motion-view-duration);
+    animation-timing-function: var(--motion-view-ease);
+  }
+
+  :root {
+    /* Three w-11.5 caption buttons; the title grid reaches under them to center on the window */
+    --caption-buttons-width: 8.625rem;
+  }
+
+  :root[data-platform="darwin"] {
+    /* The traffic lights the native bar draws */
+    --caption-buttons-width: 80px;
+  }
+
+  /*
+   * The window title bar is draggable except for interactive controls. On Windows and Linux the
+   * native caption buttons are drawn by the Window Controls Overlay; the titlebar-area variables
+   * describe the free space between them, so the padding works whichever side the buttons are on
+   * (GNOME can put them on the left). On macOS the traffic lights sit on the left.
+   * Caption buttons do not flip with the text direction, hence physical padding.
+   */
+  .app-title-bar {
+    -webkit-app-region: drag;
+    padding-left: max(0.75rem, env(titlebar-area-x, 0px));
+    padding-right: max(
+      0.75rem,
+      calc(100vw - env(titlebar-area-x, 0px) - env(titlebar-area-width, 100vw))
+    );
+
+    &[data-caption-buttons="left"] {
+      padding-left: 0;
+    }
+
+    &[data-caption-buttons="right"] {
+      padding-right: 0;
+    }
+
+    & :is(button, input, select, a) {
+      -webkit-app-region: no-drag;
+    }
+  }
+
+  :root[data-platform="darwin"] .app-title-bar {
+    padding-left: 80px;
+  }
+
+  .app-no-drag {
+    -webkit-app-region: no-drag;
+  }
+
+  /* Exporting to PDF and printing keep only the document; interface elements carry `print:hidden` */
+  @media print {
+    html,
+    body {
+      height: auto;
+      overflow: visible;
+    }
+  }
+}
+
+/* Animation setting: system follows the OS "reduce motion" preference, off always disables, on always enables */
+@media (prefers-reduced-motion: reduce) {
+  :root[data-motion="system"] *,
+  :root[data-motion="system"] *::before,
+  :root[data-motion="system"] *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:root[data-motion="off"] *,
+:root[data-motion="off"] *::before,
+:root[data-motion="off"] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+/*
+ * The title bar hides the parts it can do without as it narrows, and the menu bar clips its own
+ * items once nothing is left to hide (see GIVE_WAY in title-bar.tsx). These belong to the utilities
+ * layer, where their selectors outweigh the `flex` and `shrink-0` classes on those parts.
+ */
+@layer utilities {
+  .app-title-bar[data-compact~="count"] [data-bar-part="count"] {
+    display: none;
+  }
+
+  /*
+   * The title is centered in the window, not in the room left beside the caption buttons: the
+   * grid reaches under them on their side, and its end keeps its content clear of them.
+   */
+  .app-title-bar[data-caption-side="right"] [data-title-grid] {
+    margin-inline-end: calc(-1 * var(--caption-buttons-width));
+
+    & > :last-child {
+      padding-inline-end: var(--caption-buttons-width);
+    }
+  }
+
+  .app-title-bar[data-caption-side="left"] [data-title-grid] {
+    margin-inline-start: calc(-1 * var(--caption-buttons-width));
+
+    & > :first-child {
+      padding-inline-start: var(--caption-buttons-width);
+    }
+  }
+}
