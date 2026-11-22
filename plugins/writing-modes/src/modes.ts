@@ -199,10 +199,71 @@ const TYPEWRITER_ALIGN: Record<Settings["typewriterPosition"], "center" | "start
 const TYPEWRITER_EDGE_MARGIN = 64;
 
 /** The scroll that puts the line holding `head` where typewriter mode holds it. */
-export function holdLine(head: number, position: Settings["typewriterPosition"]) {
+function holdLine(head: number, position: Settings["typewriterPosition"]) {
   return EditorView.scrollIntoView(head, {
     y: TYPEWRITER_ALIGN[position],
     yMargin: position === "center" ? 5 : TYPEWRITER_EDGE_MARGIN,
+  });
+}
+
+function prefersSmoothScroll(animations: Settings["animations"]): boolean {
+  if (animations === "off") return false;
+  if (animations === "on") return true;
+  return !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function findVerticalScroller(root: HTMLElement): HTMLElement {
+  let current: HTMLElement | null = root;
+  while (current !== null) {
+    const { overflowY } = getComputedStyle(current);
+    if (
+      (overflowY === "auto" || overflowY === "scroll") &&
+      current.scrollHeight > current.clientHeight
+    ) {
+      return current;
+    }
+    current = current.parentElement;
+  }
+  return root;
+}
+
+/** Smoothly scrolls the active line to the typewriter hold position when motion is enabled. */
+export function scrollToHoldLine(
+  view: EditorView,
+  head: number,
+  position: Settings["typewriterPosition"],
+  animations: Settings["animations"],
+): void {
+  if (!prefersSmoothScroll(animations)) {
+    view.dispatch({ effects: holdLine(head, position) });
+    return;
+  }
+  view.requestMeasure({
+    read: () => {
+      const rect = view.coordsAtPos(head);
+      if (rect === null) return null;
+      const scroller = findVerticalScroller(view.scrollDOM);
+      const box = scroller.getBoundingClientRect();
+      const currentY =
+        position === "center"
+          ? (rect.top + rect.bottom) / 2
+          : position === "top"
+            ? rect.top
+            : rect.bottom;
+      const targetY =
+        position === "center"
+          ? box.top + box.height / 2
+          : position === "top"
+            ? box.top + TYPEWRITER_EDGE_MARGIN
+            : box.bottom - TYPEWRITER_EDGE_MARGIN;
+      const delta = currentY - targetY;
+      if (Math.abs(delta) < 1) return null;
+      return { scroller, top: Math.max(0, scroller.scrollTop + delta) };
+    },
+    write: (target) => {
+      if (target === null) return;
+      target.scroller.scrollTo({ top: target.top, behavior: "smooth" });
+    },
   });
 }
 
@@ -216,6 +277,7 @@ export function holdLine(head: number, position: Settings["typewriterPosition"])
 export function typewriterMode(
   position: Settings["typewriterPosition"],
   fixed: boolean,
+  animations: Settings["animations"],
 ): Extension {
   return [
     // The stylesheet needs the edge margin to leave exactly that much room above the first line
@@ -226,9 +288,17 @@ export function typewriterMode(
       style: `--typewriter-edge: ${TYPEWRITER_EDGE_MARGIN}px`,
     }),
     EditorState.transactionExtender.of((tr) =>
-      (tr.docChanged || tr.selection) && !tr.isUserEvent("select.pointer")
+      !prefersSmoothScroll(animations) &&
+      (tr.docChanged || tr.selection) &&
+      !tr.isUserEvent("select.pointer")
         ? { effects: holdLine(tr.newSelection.main.head, position) }
         : null,
     ),
+    EditorView.updateListener.of((update) => {
+      if (!prefersSmoothScroll(animations)) return;
+      if (!update.docChanged && !update.selectionSet) return;
+      if (update.transactions.some((tr) => tr.isUserEvent("select.pointer"))) return;
+      scrollToHoldLine(update.view, update.state.selection.main.head, position, animations);
+    }),
   ];
 }
