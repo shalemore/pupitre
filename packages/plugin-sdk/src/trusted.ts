@@ -8,6 +8,8 @@ import type { EditorView } from "@codemirror/view";
 export interface TrustedPlugin<S extends object = Record<string, unknown>> {
   /** Names the plugin in the app and its diagnostics. */
   id: string;
+  /** Optional stylesheet contributed by the plugin (layered CSS). */
+  styles?: string | undefined;
   /** The editor extensions for the current settings; empty while the plugin does nothing. */
   editor(settings: S): Extension;
   /**

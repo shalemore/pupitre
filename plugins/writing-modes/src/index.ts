@@ -1,6 +1,7 @@
 import { defineTrustedPlugin } from "@pupitre/plugin-sdk/trusted";
 import type { Settings } from "@pupitre/settings";
 import { focusMode, scrollToHoldLine, typewriterMode } from "./modes";
+import styles from "./styles.css?inline";
 
 type WritingModesSettings = Pick<
   Settings,
@@ -15,6 +16,7 @@ type WritingModesSettings = Pick<
 /** Focus mode and typewriter mode, each on only while its setting is. */
 export const writingModes = defineTrustedPlugin<WritingModesSettings>({
   id: "writing-modes",
+  styles,
   editor: (value) => [
     value.focusMode ? focusMode(value.focusModeGrain) : [],
     value.typewriterMode
