@@ -2,11 +2,11 @@ import type { PluginInfo } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import { currentLocale, t } from "@pupitre/i18n/solid";
 import { localize, type LocalizedText } from "@pupitre/plugin-sdk";
-import { Button, IconButton, Input, Select, SettingRow, Switch } from "@pupitre/ui";
+import { Badge, Button, IconButton, Input, Select, SettingRow, Sheet, Switch } from "@pupitre/ui";
 import { messageOf } from "@pupitre/utils";
 import type { JSX } from "@solidjs/web";
 import { FolderOpen, Plus, Trash2 } from "lucide-solid";
-import { For, onSettled, Show, type Component } from "solid-js";
+import { createSignal, For, onSettled, Show, type Component } from "solid-js";
 import { reportFailure } from "@/lib/errors";
 import { loadPlugins, plugins } from "@/lib/plugins";
 import { settings, updateSettings } from "@/lib/settings";
@@ -18,6 +18,7 @@ interface SchemaField {
   enum?: unknown;
   minimum?: unknown;
   maximum?: unknown;
+  default?: unknown;
 }
 
 function fieldEntries(schema: Readonly<Record<string, unknown>>): [string, SchemaField][] {
@@ -62,6 +63,16 @@ function fieldControl(
         max={typeof field.maximum === "number" ? field.maximum : undefined}
         step={field.type === "integer" ? 1 : "any"}
         onChange={(event) => {
+          if (event.currentTarget.value.trim() === "") {
+            const fallback =
+              typeof field.default === "number"
+                ? field.default
+                : typeof field.minimum === "number"
+                  ? field.minimum
+                  : 0;
+            onChange(fallback);
+            return;
+          }
           const parsed = event.currentTarget.valueAsNumber;
           if (Number.isFinite(parsed)) onChange(parsed);
         }}
@@ -91,7 +102,11 @@ function fieldControl(
       />
     );
   }
-  return undefined;
+  return (
+    <Badge variant="muted" size="sm" class="font-mono">
+      {typeof field.type === "string" ? field.type : "unknown"}
+    </Badge>
+  );
 }
 
 /** The fields a plugin declared, drawn from its schema and named in its own words. */
@@ -142,12 +157,17 @@ function attempt(run: () => Promise<unknown>): void {
 }
 
 const PluginRow: Component<{ plugin: PluginInfo }> = (props) => {
+  const [confirmKind, setConfirmKind] = createSignal<"permissions" | "uninstall" | null>(null);
   const name = () => localize(props.plugin.manifest.name, currentLocale());
   const description = () => {
     const text = props.plugin.manifest.description;
     return text === undefined ? undefined : localize(text, currentLocale());
   };
   const author = () => props.plugin.manifest.author;
+  const ungrantedPermissions = () =>
+    props.plugin.manifest.permissions.filter(
+      (permission) => !props.plugin.granted.includes(permission),
+    );
   const details = () => {
     if (
       description() === undefined &&
@@ -165,9 +185,9 @@ const PluginRow: Component<{ plugin: PluginInfo }> = (props) => {
             <span>{t().settings.permissions}</span>
             <For each={props.plugin.manifest.permissions}>
               {(permission) => (
-                <code class="rounded-sm bg-surface-2 px-1.5 py-0.5 font-mono text-2xs text-muted-foreground">
+                <Badge variant="muted" size="sm" class="font-mono">
                   {permission}
-                </code>
+                </Badge>
               )}
             </For>
           </div>
@@ -176,13 +196,26 @@ const PluginRow: Component<{ plugin: PluginInfo }> = (props) => {
     );
   };
 
-  const setEnabled = (enabled: boolean) =>
+  const setEnabled = (enabled: boolean) => {
+    if (enabled && ungrantedPermissions().length > 0) {
+      setConfirmKind("permissions");
+      return;
+    }
+    attempt(() => desktop.invoke("plugins:set-enabled", props.plugin.id, enabled));
+  };
+
+  const confirmPermissions = () => {
+    setConfirmKind(null);
     attempt(async () => {
-      // Turning a plugin on is the consent: it receives exactly what its manifest asks for
-      if (enabled)
-        await desktop.invoke("plugins:grant", props.plugin.id, props.plugin.manifest.permissions);
-      await desktop.invoke("plugins:set-enabled", props.plugin.id, enabled);
+      await desktop.invoke("plugins:grant", props.plugin.id, props.plugin.manifest.permissions);
+      await desktop.invoke("plugins:set-enabled", props.plugin.id, true);
     });
+  };
+
+  const confirmUninstall = () => {
+    setConfirmKind(null);
+    attempt(() => desktop.invoke("plugins:uninstall", props.plugin.id));
+  };
 
   return (
     <>
@@ -208,7 +241,7 @@ const PluginRow: Component<{ plugin: PluginInfo }> = (props) => {
         <IconButton
           label={t().sidebar.moveToTrash}
           size="icon-2xs"
-          onClick={() => attempt(() => desktop.invoke("plugins:uninstall", props.plugin.id))}
+          onClick={() => setConfirmKind("uninstall")}
         >
           <Trash2 />
         </IconButton>
@@ -219,6 +252,48 @@ const PluginRow: Component<{ plugin: PluginInfo }> = (props) => {
         />
       </SettingRow>
       <PluginSettingsForm plugin={props.plugin} />
+      <Show when={confirmKind() !== null}>
+        <Sheet
+          title={
+            confirmKind() === "permissions"
+              ? `${name()} — ${t().settings.permissions}`
+              : `${t().sidebar.moveToTrash}: ${name()}`
+          }
+          onClose={() => setConfirmKind(null)}
+        >
+          <div class="flex flex-col gap-4 p-4">
+            <Show when={confirmKind() === "permissions"}>
+              <div class="flex flex-wrap gap-1.5">
+                <For each={props.plugin.manifest.permissions}>
+                  {(permission) => (
+                    <Badge variant="muted" size="sm" class="font-mono">
+                      {permission}
+                    </Badge>
+                  )}
+                </For>
+              </div>
+              <div class="flex justify-end gap-2">
+                <Button variant="ghost" size="sm" onClick={() => setConfirmKind(null)}>
+                  {t().dialogs.cancel}
+                </Button>
+                <Button variant="brand" size="sm" onClick={confirmPermissions}>
+                  {t().dialogs.okButton}
+                </Button>
+              </div>
+            </Show>
+            <Show when={confirmKind() === "uninstall"}>
+              <div class="flex justify-end gap-2">
+                <Button variant="ghost" size="sm" onClick={() => setConfirmKind(null)}>
+                  {t().dialogs.cancel}
+                </Button>
+                <Button variant="destructive" size="sm" onClick={confirmUninstall}>
+                  {t().sidebar.moveToTrash}
+                </Button>
+              </div>
+            </Show>
+          </div>
+        </Sheet>
+      </Show>
     </>
   );
 };
