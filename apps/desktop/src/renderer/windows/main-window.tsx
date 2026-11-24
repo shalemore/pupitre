@@ -8,6 +8,7 @@ import {
 import { desktop } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
 import { headingKey, type OutlineHeading } from "@pupitre/markdown";
+import type { PluginDocumentInfo } from "@pupitre/plugin-sdk";
 import { messageOf } from "@pupitre/utils";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { cva } from "class-variance-authority";
@@ -39,7 +40,7 @@ import { isolateFileName } from "@/lib/file";
 import { createImmersiveChrome } from "@/lib/immersive-chrome";
 import { listen } from "@/lib/listen";
 import { setupPluginStyles } from "@/lib/plugin-styles";
-import { loadPlugins } from "@/lib/plugins";
+import { loadPlugins, plugins } from "@/lib/plugins";
 import { recentFiles } from "@/lib/recent-files";
 import { isImmersive, settings, updateSettings } from "@/lib/settings";
 import { SIDEBAR_WIDTH } from "@/lib/sidebar";
@@ -118,7 +119,9 @@ function unhandledCommand(command: never): never {
 function answerDocumentRequest(
   handle: MarkdownEditorHandle | undefined,
   request: PluginDocumentRequest,
+  info: PluginDocumentInfo | null,
 ): PluginDocumentResponse {
+  if (request.method === "info") return { ok: true, value: info };
   if (handle === undefined) return { ok: false, message: "No document is open" };
   try {
     switch (request.method) {
@@ -668,12 +671,55 @@ export const MainWindow: Component = () => {
     cleanups.push(desktop.on("app:command", runCommand));
     cleanups.push(
       desktop.on("plugin:document-request", (request) => {
+        const doc = session.activeDocument();
+        const info: PluginDocumentInfo | null =
+          doc === undefined
+            ? null
+            : { path: doc.path ?? null, title: session.fileName(), dirty: session.isDirty() };
         void desktop.invoke(
           "plugin:document-response",
           request.id,
-          answerDocumentRequest(editor(), request),
+          answerDocumentRequest(editor(), request, info),
         );
       }),
+    );
+
+    let lastDocSnapshot: { id: number; path: string | undefined; dirty: boolean } | undefined;
+    createEffect(
+      () => {
+        const doc = session.activeDocument();
+        if (doc === undefined) return undefined;
+        return {
+          id: doc.id,
+          path: doc.path,
+          dirty: session.isDirty(),
+          title: session.fileName(),
+        };
+      },
+      (current) => {
+        if (current === undefined) {
+          lastDocSnapshot = undefined;
+          return;
+        }
+        const hasReader = plugins().some(
+          (plugin) => plugin.enabled && plugin.granted.includes("document:read"),
+        );
+        const prev = lastDocSnapshot;
+        lastDocSnapshot = { id: current.id, path: current.path, dirty: current.dirty };
+        if (!hasReader) return;
+        const info: PluginDocumentInfo = {
+          path: current.path ?? null,
+          title: current.title,
+          dirty: current.dirty,
+        };
+        if (prev === undefined || prev.id !== current.id || prev.path !== current.path) {
+          void desktop.invoke("plugins:document-event", { event: "open", info });
+        } else if (prev.dirty && !current.dirty) {
+          void desktop.invoke("plugins:document-event", { event: "save", info });
+        } else {
+          void desktop.invoke("plugins:document-event", { event: "change", info });
+        }
+      },
     );
 
     return () => {

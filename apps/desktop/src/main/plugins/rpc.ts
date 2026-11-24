@@ -31,6 +31,7 @@ import { deleteValue, getValue, setValue } from "./storage";
 /** The permission each method needs; a method not named here cannot be called. */
 const PERMISSIONS = {
   "document.read": "document:read",
+  "document.info": "document:read",
   "document.replace": "document:write",
   "document.insert": "document:write",
   "document.selection": "editor:selection",
@@ -98,6 +99,8 @@ async function execute(
   switch (method) {
     case "document.read":
       return requestDocument({ method: "read" });
+    case "document.info":
+      return requestDocument({ method: "info" });
     case "document.replace":
       return requestDocument({ method: "replace", text: textParams.parse(params).text });
     case "document.insert":

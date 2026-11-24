@@ -1,7 +1,10 @@
 import { join } from "node:path";
+import type { PluginDocumentEventPayload } from "@pupitre/desktop-api";
 import type { PluginManifest } from "@pupitre/plugin-sdk";
-import { BrowserWindow, session, type WebContents } from "electron";
+import { app, BrowserWindow, session, type WebContents } from "electron";
 import log from "electron-log/main";
+import { pluginsFolder } from "./paths";
+import { readPlugin } from "./plugin-files";
 import { handlePluginProtocolForSession } from "./protocol";
 
 const hosts = new Map<string, BrowserWindow>();
@@ -55,7 +58,7 @@ export async function startPlugin(
       contextIsolation: true,
       nodeIntegration: false,
       webviewTag: false,
-      devTools: false,
+      devTools: !app.isPackaged,
       // The page is never shown, so the timers a plugin starts must still run
       backgroundThrottling: false,
       partition,
@@ -121,4 +124,21 @@ export async function stopPluginAndWait(id: string): Promise<void> {
 /** Closes every plugin page, so the app can quit without them holding the process open. */
 export function stopAllPlugins(): void {
   for (const id of hosts.keys()) stopPlugin(id);
+}
+
+/** Forwards document lifecycle events to running plugins granted `document:read`. */
+export function broadcastPluginDocumentEvent(payload: PluginDocumentEventPayload): void {
+  for (const [id, window] of hosts) {
+    if (window.isDestroyed()) continue;
+    const plugin = readPlugin(join(pluginsFolder(), id));
+    if (
+      plugin === undefined ||
+      !plugin.enabled ||
+      !plugin.manifest.permissions.includes("document:read") ||
+      !plugin.granted.includes("document:read")
+    ) {
+      continue;
+    }
+    window.webContents.send("plugin:document-event", payload);
+  }
 }

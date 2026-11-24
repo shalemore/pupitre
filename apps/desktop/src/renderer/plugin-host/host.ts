@@ -2,6 +2,8 @@ import type {
   PluginBridge,
   PluginContext,
   PluginDefinition,
+  PluginDocumentEvent,
+  PluginDocumentInfo,
   PluginResponse,
   PluginSelection,
 } from "@pupitre/plugin-sdk";
@@ -67,9 +69,50 @@ async function selection(): Promise<PluginSelection | null> {
   return value;
 }
 
+function isDocumentInfo(value: unknown): value is PluginDocumentInfo {
+  return (
+    isRecord(value) &&
+    (value["path"] === null || typeof value["path"] === "string") &&
+    typeof value["title"] === "string" &&
+    typeof value["dirty"] === "boolean"
+  );
+}
+
+function isDocumentEvent(value: unknown): value is PluginDocumentEvent {
+  return value === "open" || value === "change" || value === "save";
+}
+
+async function documentInfo(): Promise<PluginDocumentInfo | null> {
+  const value = await bridge.invoke("document.info");
+  if (value === null) return null;
+  if (!isDocumentInfo(value)) throw new Error("document.info did not return document info");
+  return value;
+}
+
+const documentListeners: Record<PluginDocumentEvent, Set<(info: PluginDocumentInfo) => void>> = {
+  open: new Set(),
+  change: new Set(),
+  save: new Set(),
+};
+
+bridge.onDocumentEvent((payload) => {
+  if (!isRecord(payload)) return;
+  if (!isDocumentEvent(payload["event"]) || !isDocumentInfo(payload["info"])) return;
+  for (const listener of documentListeners[payload["event"]]) listener(payload["info"]);
+});
+
+let currentSettings: Record<string, unknown> = {};
+
 const context: PluginContext = {
   document: {
     read: () => text("document.read"),
+    info: documentInfo,
+    on: (event, listener) => {
+      documentListeners[event].add(listener);
+      return () => {
+        documentListeners[event].delete(listener);
+      };
+    },
     replace: async (value) => {
       await bridge.invoke("document.replace", { text: value });
     },
@@ -112,6 +155,9 @@ const context: PluginContext = {
       return value;
     },
   },
+  get settings() {
+    return currentSettings;
+  },
 };
 
 try {
@@ -133,7 +179,11 @@ try {
 
   if (definition.commands !== undefined && definition.commands.length > 0) {
     await bridge.invoke("host.commands", {
-      commands: definition.commands.map((command) => ({ id: command.id, title: command.title })),
+      commands: definition.commands.map((command) => ({
+        id: command.id,
+        title: command.title,
+        shortcut: command.shortcut,
+      })),
     });
   }
 
@@ -147,7 +197,8 @@ try {
     return declared.schema.parse({});
   }
 
-  await definition.activate(context, valuesFrom(await bridge.invoke("settings.get")));
+  currentSettings = valuesFrom(await bridge.invoke("settings.get"));
+  await definition.activate(context, currentSettings);
 
   bridge.onCommand((commandId) => {
     const command = definition.commands?.find((entry) => entry.id === commandId);
@@ -166,7 +217,8 @@ try {
     settingsQueue = settingsQueue.then(async () => {
       try {
         await definition.deactivate?.();
-        await definition.activate(context, valuesFrom(next));
+        currentSettings = valuesFrom(next);
+        await definition.activate(context, currentSettings);
       } catch (error: unknown) {
         console.error("The plugin could not apply its settings", error);
       }

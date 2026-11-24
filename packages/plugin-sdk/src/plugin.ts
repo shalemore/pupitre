@@ -9,10 +9,22 @@ export interface PluginSelection {
   text: string;
 }
 
+export interface PluginDocumentInfo {
+  path: string | null;
+  title: string;
+  dirty: boolean;
+}
+
+export type PluginDocumentEvent = "open" | "change" | "save";
+
 /** The open document. Each method needs the permission named beside it. */
 export interface PluginDocument {
   /** The whole Markdown source. `document:read`. */
   read(): Promise<string>;
+  /** Metadata about the active document, or null when no document is open. `document:read`. */
+  info(): Promise<PluginDocumentInfo | null>;
+  /** Subscribes to document lifecycle events (`open`, `change`, `save`). Requires `document:read`. */
+  on(event: PluginDocumentEvent, listener: (info: PluginDocumentInfo) => void): () => void;
   /** Replaces the whole document, keeping the undo history. `document:write`. */
   replace(text: string): Promise<void>;
   /** Replaces the selection, or inserts at the caret when nothing is selected. `document:write`. */
@@ -67,12 +79,14 @@ export interface PluginContext {
   readonly notifications: PluginNotifications;
   readonly storage: PluginStorage;
   readonly network: PluginNetwork;
+  readonly settings: Readonly<Record<string, unknown>>;
 }
 
 export interface PluginCommand {
   /** Unique within the plugin; the host namespaces it, so two plugins may reuse a name. */
   id: string;
   title: LocalizedText;
+  shortcut?: string | undefined;
   run(context: PluginContext): void | Promise<void>;
 }
 

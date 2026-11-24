@@ -5,6 +5,7 @@ import { getMainWindow } from "../windows/windows";
 /** What a plugin asks the editor, before the bridge gives the request an id. */
 export type DocumentRequestInput =
   | { method: "read" }
+  | { method: "info" }
   | { method: "replace"; text: string }
   | { method: "insert"; text: string }
   | { method: "selection" }

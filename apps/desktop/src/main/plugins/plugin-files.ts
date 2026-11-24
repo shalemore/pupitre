@@ -25,6 +25,7 @@ const COMMANDS_FILE = "commands.json";
 export const pluginCommandSchema = z.object({
   id: z.string().min(1).max(128),
   title: localizedTextSchema,
+  shortcut: z.string().min(1).max(64).optional(),
 });
 const commandsSchema = z.array(pluginCommandSchema);
 

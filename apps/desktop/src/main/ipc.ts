@@ -77,6 +77,7 @@ import { currentLocale, t } from "./i18n";
 import { showAboutDialog } from "./menus/about";
 import { clickMenuItem, menuSnapshot, setDocumentState } from "./menus/menu";
 import { handleDocumentResponse } from "./plugins/document-bridge";
+import { broadcastPluginDocumentEvent } from "./plugins/host";
 import {
   grantPluginPermissions,
   installPlugin,
@@ -680,4 +681,5 @@ export function registerIpcHandlers(): void {
   handle("plugin:document-response", (_event, id, response) =>
     handleDocumentResponse(id, response),
   );
+  handle("plugins:document-event", (_event, payload) => broadcastPluginDocumentEvent(payload));
 }

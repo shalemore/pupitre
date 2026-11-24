@@ -29,4 +29,8 @@ function onCommand(listener: (commandId: string) => void): void {
   ipcRenderer.on("plugin:command", (_event, commandId: string) => listener(commandId));
 }
 
-contextBridge.exposeInMainWorld("__pupitre", { invoke, onSettings, onCommand });
+function onDocumentEvent(listener: (payload: unknown) => void): void {
+  ipcRenderer.on("plugin:document-event", (_event, payload: unknown) => listener(payload));
+}
+
+contextBridge.exposeInMainWorld("__pupitre", { invoke, onSettings, onCommand, onDocumentEvent });

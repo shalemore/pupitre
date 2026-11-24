@@ -69,7 +69,7 @@ export function pluginCommands(plugins: readonly PluginInfo[], locale: string): 
         id: command.id,
         label: localize(command.title, locale),
         parent,
-        shortcut: undefined,
+        shortcut: command.shortcut,
       });
     }
   }

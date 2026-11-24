@@ -331,6 +331,7 @@ const handlers: Handlers = {
   "plugins:reveal": nothing,
   "plugins:update-settings": nothing,
   "plugins:run-command": nothing,
+  "plugins:document-event": nothing,
   "plugin:document-response": nothing,
   "workspace:set": nothing,
   "workspace:get": () => ({
