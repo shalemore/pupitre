@@ -57,16 +57,21 @@ export function activePluginWorkspaceRoot(): string | undefined {
 /** The plugins installed under the user's data folder, sorted by id. */
 export function listPlugins(): readonly PluginInfo[] {
   const workspaceRoot = activePluginWorkspaceRoot();
-  return installedPlugins().map(({ folder, info }) => {
-    if (info.settings === undefined || workspaceRoot === undefined) return info;
-    return {
-      ...info,
-      settings: {
-        ...info.settings,
-        values: readEffectiveSettingsValues(folder, info.id, workspaceRoot),
-      },
-    };
-  });
+  const result: PluginInfo[] = [];
+  for (const { folder, info } of installedPlugins()) {
+    if (info.settings !== undefined && workspaceRoot !== undefined) {
+      result.push({
+        ...info,
+        settings: {
+          ...info.settings,
+          values: readEffectiveSettingsValues(folder, info.id, workspaceRoot),
+        },
+      });
+    } else {
+      result.push(info);
+    }
+  }
+  return result;
 }
 
 /** The stylesheets of the running plugins that were granted `ui:styles`. */
