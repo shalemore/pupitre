@@ -28,11 +28,85 @@ function unsafeUrl(css: string): string | undefined {
   return undefined;
 }
 
-function styleProblem(css: string): string | undefined {
-  for (const [pattern, name] of FORBIDDEN) {
-    if (pattern.test(css)) return name;
+/**
+ * Scans CSS outside strings and comments to reject unbalanced braces, unclosed comments/strings,
+ * and returns comment-free, escape-decoded text for forbidden-construct checks.
+ */
+function sanitizeScan(css: string): { ok: true; stripped: string } | { ok: false; reason: string } {
+  let stripped = "";
+  let depth = 0;
+  let quote: '"' | "'" | undefined;
+  let inComment = false;
+
+  for (let i = 0; i < css.length; i++) {
+    const ch = css[i];
+    const next = css[i + 1];
+
+    if (inComment) {
+      if (ch === "*" && next === "/") {
+        inComment = false;
+        i++;
+      }
+      continue;
+    }
+
+    if (quote !== undefined) {
+      if (ch === "\\") {
+        stripped += ch + (next ?? "");
+        i++;
+        continue;
+      }
+      stripped += ch;
+      if (ch === quote) quote = undefined;
+      continue;
+    }
+
+    if (ch === "/" && next === "*") {
+      inComment = true;
+      i++;
+      continue;
+    }
+
+    if (ch === '"' || ch === "'") {
+      quote = ch;
+      stripped += ch;
+      continue;
+    }
+
+    if (ch === "\\") {
+      const hex = /^\\([0-9a-fA-F]{1,6})[ \t\r\n\f]?/.exec(css.slice(i));
+      if (hex?.[1] !== undefined) {
+        const code = Number.parseInt(hex[1], 16);
+        stripped += code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : "";
+        i += hex[0].length - 1;
+      } else if (next !== undefined) {
+        stripped += next;
+        i++;
+      }
+      continue;
+    }
+
+    if (ch === "{") depth++;
+    else if (ch === "}") {
+      depth--;
+      if (depth < 0) return { ok: false, reason: "unbalanced braces" };
+    }
+    stripped += ch;
   }
-  return unsafeUrl(css);
+
+  if (inComment) return { ok: false, reason: "unclosed comment" };
+  if (quote !== undefined) return { ok: false, reason: "unclosed string" };
+  if (depth !== 0) return { ok: false, reason: "unbalanced braces" };
+  return { ok: true, stripped };
+}
+
+function styleProblem(css: string): string | undefined {
+  const scan = sanitizeScan(css);
+  if (!scan.ok) return scan.reason;
+  for (const [pattern, name] of FORBIDDEN) {
+    if (pattern.test(scan.stripped)) return name;
+  }
+  return unsafeUrl(scan.stripped);
 }
 
 /**
