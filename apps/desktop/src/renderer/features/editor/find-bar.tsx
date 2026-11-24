@@ -89,7 +89,7 @@ export const FindBar: Component<FindBarProps> = (props) => {
             onInput={(e) => update({ search: e.currentTarget.value })}
             onKeyDown={(e) => handleKeyDown(e, props.onFindNext, props.onFindPrevious)}
             placeholder={t().editor.findPlaceholder}
-            class="pe-[4.5rem]"
+            class="pe-18"
           />
 
           <SearchOptionToggles

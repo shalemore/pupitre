@@ -20,18 +20,11 @@ const RECENT_FILES_SHOWN = 5;
 
 export const WelcomeScreen: Component<WelcomeScreenProps> = (props) => {
   return (
-    <ScrollView
-      data-slot="welcome"
-      class="h-full animate-[fadeIn_var(--transition-duration-sheet)_var(--ease-enter)] px-4 py-12 select-none"
-    >
+    <ScrollView data-slot="welcome" class="h-full animate-fade-in-sheet px-4 py-12 select-none">
       <div class="flex min-h-full flex-col items-center justify-center text-center">
-        <img
-          src={PUBLIC_LOGO}
-          alt=""
-          class="mb-4 size-14 opacity-90 drop-shadow-[0_1px_2px_rgb(0_0_0/0.15)] select-none"
-        />
+        <img src={PUBLIC_LOGO} alt="" class="mb-4 size-14 opacity-90 drop-shadow-sm select-none" />
 
-        <h1 class="mb-6 text-xl font-semibold tracking-[-0.025em] text-foreground">
+        <h1 class="mb-6 text-xl font-semibold tracking-tight text-foreground">
           {t().common.appName}
         </h1>
 

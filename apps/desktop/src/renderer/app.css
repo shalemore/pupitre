@@ -123,6 +123,7 @@
   );
 
   --animate-fade-in: fadeIn var(--transition-duration-base) var(--ease-enter);
+  --animate-fade-in-sheet: fadeIn var(--transition-duration-sheet) var(--ease-enter);
   --animate-fade-in-down: fadeInDown var(--transition-duration-base) var(--ease-enter);
   --animate-fade-in-down-small: fadeInDownSmall var(--transition-duration-base) var(--ease-enter);
   --animate-fade-in-up-small: fadeInUpSmall var(--transition-duration-base) var(--ease-enter);

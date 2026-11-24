@@ -19,7 +19,7 @@ const LookOption = (props: LookOptionProps) => (
     <div>{props.preview}</div>
     <div class="px-0.5">
       <span class="block text-xs font-medium text-foreground">{props.label}</span>
-      <span class="block text-2xs leading-[1.375] text-muted-foreground">{props.description}</span>
+      <span class="block text-2xs leading-snug text-muted-foreground">{props.description}</span>
     </div>
   </Radio>
 );
