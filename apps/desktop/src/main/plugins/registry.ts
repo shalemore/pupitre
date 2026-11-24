@@ -160,10 +160,75 @@ export function runPluginCommand(id: string, commandId: string): void {
   window.webContents.send("plugin:command", commandId);
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function validateSchemaField(key: string, field: Record<string, unknown>, value: unknown): void {
+  const type = field["type"];
+  if (type === "boolean" && typeof value !== "boolean") {
+    throw new Error(`Plugin setting "${key}" must be a boolean`);
+  }
+  if (type === "number" || type === "integer") {
+    if (typeof value !== "number" || !Number.isFinite(value)) {
+      throw new Error(`Plugin setting "${key}" must be a number`);
+    }
+    if (type === "integer" && !Number.isInteger(value)) {
+      throw new Error(`Plugin setting "${key}" must be an integer`);
+    }
+    if (typeof field["minimum"] === "number" && value < field["minimum"]) {
+      throw new Error(`Plugin setting "${key}" must be >= ${field["minimum"]}`);
+    }
+    if (typeof field["maximum"] === "number" && value > field["maximum"]) {
+      throw new Error(`Plugin setting "${key}" must be <= ${field["maximum"]}`);
+    }
+  }
+  if (type === "string") {
+    if (typeof value !== "string") {
+      throw new Error(`Plugin setting "${key}" must be a string`);
+    }
+    if (typeof field["minLength"] === "number" && value.length < field["minLength"]) {
+      throw new Error(`Plugin setting "${key}" must have length >= ${field["minLength"]}`);
+    }
+    if (typeof field["maxLength"] === "number" && value.length > field["maxLength"]) {
+      throw new Error(`Plugin setting "${key}" must have length <= ${field["maxLength"]}`);
+    }
+  }
+  if (Array.isArray(field["enum"]) && !field["enum"].includes(value)) {
+    throw new Error(`Plugin setting "${key}" must be one of the allowed values`);
+  }
+}
+
+function validateSettingsValues(
+  schema: Readonly<Record<string, unknown>>,
+  values: Readonly<Record<string, unknown>>,
+): void {
+  const properties = isRecord(schema["properties"]) ? schema["properties"] : undefined;
+  const required = Array.isArray(schema["required"]) ? schema["required"] : [];
+  for (const key of required) {
+    if (typeof key === "string" && values[key] === undefined) {
+      throw new Error(`Missing required plugin setting "${key}"`);
+    }
+  }
+  for (const [key, value] of Object.entries(values)) {
+    if (value === undefined) continue;
+    const field = properties?.[key];
+    if (field === undefined) {
+      if (schema["additionalProperties"] === false) {
+        throw new Error(`Unknown plugin setting "${key}"`);
+      }
+      continue;
+    }
+    if (isRecord(field)) validateSchemaField(key, field, value);
+  }
+}
+
 /** The form the settings window drew sends the whole set of values back. */
 export function updatePluginSettings(id: string, values: Readonly<Record<string, unknown>>): void {
   const { folder } = installed(id);
-  if (readSettingsMeta(folder) === undefined) throw new Error("The plugin declares no settings");
+  const meta = readSettingsMeta(folder);
+  if (meta === undefined) throw new Error("The plugin declares no settings");
+  validateSettingsValues(meta.schema, values);
   const text = JSON.stringify(values);
   if (text === undefined || Buffer.byteLength(text, "utf8") > MAX_SETTINGS_BYTES) {
     throw new Error("The plugin settings are too large");

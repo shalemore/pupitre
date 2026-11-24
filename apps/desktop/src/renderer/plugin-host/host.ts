@@ -161,15 +161,16 @@ try {
     })();
   });
 
+  let settingsQueue = Promise.resolve();
   bridge.onSettings((next) => {
-    void (async () => {
+    settingsQueue = settingsQueue.then(async () => {
       try {
         await definition.deactivate?.();
         await definition.activate(context, valuesFrom(next));
       } catch (error: unknown) {
         console.error("The plugin could not apply its settings", error);
       }
-    })();
+    });
   });
 } catch (error: unknown) {
   console.error(`The plugin ${id} failed to initialize`, error);
