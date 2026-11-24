@@ -9,6 +9,7 @@ import {
 } from "@pupitre/plugin-sdk";
 import { messageOf } from "@pupitre/utils";
 import { clipboard, ipcMain, net, Notification } from "electron";
+import log from "electron-log/main";
 import { z } from "zod";
 import { currentLocale } from "../i18n";
 import { requestDocument } from "./document-bridge";
@@ -24,7 +25,7 @@ import {
   writeSettingsValues,
   type StoredSettingsMeta,
 } from "./plugin-files";
-import { publishPlugins } from "./registry";
+import { disableFailedPlugin, publishPlugins } from "./registry";
 import { deleteValue, getValue, setValue } from "./storage";
 
 /** The permission each method needs; a method not named here cannot be called. */
@@ -44,7 +45,7 @@ const PERMISSIONS = {
 } as const satisfies Record<string, Permission>;
 
 /** Methods the app itself calls through the same bridge; they need no permission. */
-const HOST_METHODS = ["host.settings", "host.commands", "settings.get"] as const;
+const HOST_METHODS = ["host.settings", "host.commands", "host.failed", "settings.get"] as const;
 
 type HostMethod = (typeof HOST_METHODS)[number];
 type Method = keyof typeof PERMISSIONS | HostMethod;
@@ -146,6 +147,12 @@ async function execute(
       const { commands } = z.object({ commands: z.array(pluginCommandSchema) }).parse(params);
       writeCommands(folder, commands);
       publishPlugins();
+      return undefined;
+    }
+    case "host.failed": {
+      const { message } = z.object({ message: z.string() }).parse(params);
+      log.error(`The plugin ${id} failed to initialize: ${message}`);
+      disableFailedPlugin(id);
       return undefined;
     }
     case "settings.get":

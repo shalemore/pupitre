@@ -6,9 +6,9 @@ import { handleOpenFileRequests, launchFileFromArgv } from "./files/open-files";
 import { onRecentFilesChange } from "./files/recent-files";
 import { registerIpcHandlers } from "./ipc";
 import { rebuildApplicationMenu } from "./menus/menu";
-import { startPlugin, stopAllPlugins } from "./plugins/host";
+import { stopAllPlugins } from "./plugins/host";
 import { handlePluginProtocol, registerPluginScheme } from "./plugins/protocol";
-import { listPlugins } from "./plugins/registry";
+import { listPlugins, startEnabledPlugin } from "./plugins/registry";
 import { registerPluginRpc } from "./plugins/rpc";
 import { getSettings, onSettingsChange } from "./settings/settings-store";
 import { startThemeWatcher, stopThemeWatcher } from "./settings/themes";
@@ -54,7 +54,7 @@ if (!app.requestSingleInstanceLock({ file: launchFileFromArgv() })) {
     rebuildApplicationMenu();
     createMainWindow();
     for (const plugin of listPlugins()) {
-      if (plugin.enabled) void startPlugin(plugin.id, plugin.manifest);
+      if (plugin.enabled) startEnabledPlugin(plugin.id, plugin.manifest);
     }
     applySpellCheck();
     onSettingsChange(rebuildApplicationMenu);

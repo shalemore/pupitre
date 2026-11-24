@@ -28,7 +28,11 @@ function hostUrl(id: string, main: string): string {
  * Starts the page that runs one plugin's code: a hidden window with no Node, its own in-memory
  * session and a preload that exposes nothing but the RPC bridge.
  */
-export async function startPlugin(id: string, manifest: PluginManifest): Promise<void> {
+export async function startPlugin(
+  id: string,
+  manifest: PluginManifest,
+  onFailure?: (id: string) => void,
+): Promise<void> {
   if (manifest.main === undefined || hosts.has(id)) return;
   const partition = `plugin:${id}`;
   const pluginSession = session.fromPartition(partition);
@@ -67,6 +71,7 @@ export async function startPlugin(id: string, manifest: PluginManifest): Promise
   window.webContents.on("render-process-gone", (_event, details) => {
     log.error(`The plugin ${id} stopped: ${details.reason}`);
     stopPlugin(id);
+    onFailure?.(id);
   });
   window.on("closed", () => {
     plugins.delete(webContentsId);
@@ -78,6 +83,7 @@ export async function startPlugin(id: string, manifest: PluginManifest): Promise
   } catch (error: unknown) {
     log.error(`The plugin ${id} could not start`, error);
     stopPlugin(id);
+    onFailure?.(id);
   }
 }
 

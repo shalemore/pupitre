@@ -95,12 +95,27 @@ export async function installPlugin(window: BrowserWindow): Promise<PluginInfo |
   return plugin;
 }
 
+export function disableFailedPlugin(id: string): void {
+  const folder = join(pluginsFolder(), id);
+  const plugin = readPlugin(folder);
+  if (plugin !== undefined) {
+    const state = readState(folder, plugin.manifest);
+    if (state.enabled) writeState(folder, { ...state, enabled: false });
+  }
+  stopPlugin(id);
+  publishPlugins();
+}
+
+export function startEnabledPlugin(id: string, manifest: PluginManifest): void {
+  void startPlugin(id, manifest, disableFailedPlugin);
+}
+
 export function setPluginEnabled(id: string, enabled: boolean): void {
   const { folder, manifest } = installed(id);
   const state = readState(folder, manifest);
   if (enabled) requireGrants(manifest, state.granted);
   writeState(folder, { ...state, enabled, version: manifest.version });
-  if (enabled) void startPlugin(id, manifest);
+  if (enabled) startEnabledPlugin(id, manifest);
   else stopPlugin(id);
   publishPlugins();
 }
