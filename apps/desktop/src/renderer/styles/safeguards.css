@@ -39,4 +39,32 @@
     visibility: visible;
     font-size: inherit;
   }
+
+  /* Interaction & selection: themes and plugins cannot disable editing or text selection */
+  .md-document,
+  .md-document .cm-content,
+  .md-document .cm-line {
+    user-select: text;
+    -webkit-user-select: text;
+    pointer-events: auto;
+  }
+
+  /* Line geometry: CodeMirror relies on block lines without vertical margins and break-spaces */
+  .md-document .cm-content {
+    white-space: break-spaces;
+  }
+
+  .md-document .cm-line {
+    display: block;
+    margin-block: 0;
+  }
+
+  /* Cursor & selection layers must stay visible on screen (print hides them in preferences.css) */
+  @media not print {
+    .md-document .cm-cursorLayer,
+    .md-document .cm-selectionLayer {
+      display: block;
+      visibility: visible;
+    }
+  }
 }
