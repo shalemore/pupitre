@@ -2,7 +2,7 @@ import type { FolderEntry } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import type { MenuEntry } from "@pupitre/desktop-api/menu";
 import { t } from "@pupitre/i18n/solid";
-import { ListItem, rowIndent } from "@pupitre/ui";
+import { ListItem, rowIndent, Separator } from "@pupitre/ui";
 import { messageOf } from "@pupitre/utils";
 import { Menu, MenuContextTrigger } from "@ui-sdk/solid/menu";
 import { Folder } from "lucide-solid";
@@ -281,7 +281,7 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
               )}
             </For>
           </div>
-          <div class="mx-2.5 border-t-hairline border-border-subtle" />
+          <Separator class="mx-2.5 bg-border-subtle" />
         </Show>
         <Show when={parent()}>
           {(target) => (

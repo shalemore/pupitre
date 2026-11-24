@@ -3,7 +3,7 @@ import { desktop } from "@pupitre/desktop-api/client";
 import type { MenuEntry } from "@pupitre/desktop-api/menu";
 import { t } from "@pupitre/i18n/solid";
 import { excerptOf } from "@pupitre/markdown";
-import { cn, IconButton, ListItem, rowIndent } from "@pupitre/ui";
+import { cn, IconButton, Input, ListItem, rowIndent } from "@pupitre/ui";
 import { Menu, MenuContextTrigger } from "@ui-sdk/solid/menu";
 import { ArrowRight, ChevronRight, CircleAlert, FileText, Folder } from "lucide-solid";
 import {
@@ -177,12 +177,12 @@ const RenameField: Component<{
       <Show when={props.directory} fallback={<FileText class="size-3.5 shrink-0" />}>
         <Folder class="size-3.5 shrink-0" />
       </Show>
-      <input
+      <Input
         type="text"
         value={props.initial}
         dir="auto"
         aria-label={t().sidebar.rename}
-        class="min-w-0 flex-1 rounded-md border-hairline border-solid border-border bg-surface-2 py-1 ps-0 pe-2.5 text-xs text-foreground outline-none focus-visible:shadow-focus"
+        class="min-w-0 flex-1 py-1 ps-0 pe-2.5 text-xs"
         // Focused once it is in the document, so typing replaces the selected name right away
         ref={(element) =>
           requestAnimationFrame(() => {

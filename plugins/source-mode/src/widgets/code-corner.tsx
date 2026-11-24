@@ -3,6 +3,7 @@ import { type EditorView, WidgetType } from "@codemirror/view";
 import { desktop } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
 import { codeLanguages, fencedText } from "@pupitre/markdown";
+import { IconButton } from "@pupitre/ui";
 import { debounce } from "@pupitre/utils";
 import { Check, Copy } from "lucide-solid";
 import { createMemo, createSignal, For, onCleanup, Show, type Component } from "solid-js";
@@ -146,11 +147,10 @@ const CodeCorner: Component<{
           </For>
         </select>
       </Show>
-      <button
-        type="button"
-        class="grid size-(--md-code-corner-size) cursor-pointer place-items-center rounded-sm border-0 bg-transparent p-0 opacity-60 transition-[opacity,color,background-color] duration-ui ease-out-expo hover:bg-accent hover:text-foreground hover:opacity-100 data-copied:text-success data-copied:opacity-100 print:hidden [&>svg]:size-3.5"
-        title={t().common.copy}
-        aria-label={t().common.copy}
+      <IconButton
+        label={t().common.copy}
+        size="icon-2xs"
+        class="size-(--md-code-corner-size) opacity-60 hover:opacity-100 data-copied:text-success data-copied:opacity-100 print:hidden [&>svg]:size-3.5"
         data-copied={copied() ? "" : undefined}
         // Keeps the editor's selection; the button is not a place to put the cursor
         onMouseDown={(event) => event.preventDefault()}
@@ -165,7 +165,7 @@ const CodeCorner: Component<{
         <Show when={copied()} fallback={<Copy />}>
           <Check />
         </Show>
-      </button>
+      </IconButton>
     </>
   );
 };

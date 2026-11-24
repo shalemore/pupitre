@@ -1,5 +1,5 @@
 import type { MenuEntry } from "@pupitre/desktop-api/menu";
-import { cn, Separator } from "@pupitre/ui";
+import { cn, ScrollView, Separator } from "@pupitre/ui";
 import {
   Menu,
   MenuCheckboxItem,
@@ -28,15 +28,23 @@ export interface MenuPopupProps {
 }
 
 const menuPanel = cva(
-  "__FLOATING_PANEL__ z-50 flex max-h-(--kb-popper-content-available-height) min-w-52 flex-col overflow-y-auto overscroll-contain rounded-sm p-1 text-xs text-foreground outline-none select-none",
+  "__FLOATING_PANEL__ z-50 flex max-h-(--kb-popper-content-available-height) min-w-52 flex-col overflow-hidden rounded-sm p-1 text-xs text-foreground outline-none select-none",
 );
 
 export type MenuPanelProps = Parameters<typeof MenuContent>[0];
 
 /** The shared floating menu surface used by title-bar menus and context menus. */
 export const MenuPanel: Component<MenuPanelProps> = (props) => {
-  const rest = omit(props, "class");
-  return <MenuContent {...rest} class={cn(menuPanel(), props.class)} />;
+  const rest = omit(props, "class", "children");
+  return (
+    <MenuContent {...rest} class={cn(menuPanel(), props.class)}>
+      {(state) => (
+        <ScrollView class="flex flex-col">
+          {typeof props.children === "function" ? props.children(state) : props.children}
+        </ScrollView>
+      )}
+    </MenuContent>
+  );
 };
 
 const item = cva(
