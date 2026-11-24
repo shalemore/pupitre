@@ -20,6 +20,24 @@ export interface PaletteSheetProps<Item> {
   children: (item: Item) => JSX.Element;
 }
 
+export const PALETTE_ITEM_CLASS =
+  "__INTERACTIVE__ flex w-full cursor-pointer items-center gap-3 rounded-md px-2.5 py-1.5 text-start text-xs text-muted-foreground outline-none data-highlighted:bg-selected data-highlighted:font-medium data-highlighted:text-foreground";
+
+export const PALETTE_STATUS_CLASS = "px-2.5 py-1.5 text-muted-foreground";
+
+/** Focuses `input` and stops Enter during IME composition from triggering a command item. */
+export function useCommandInputGuard(getInput: () => HTMLInputElement | undefined): void {
+  onSettled(() => {
+    const input = getInput();
+    input?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.isComposing) event.stopPropagation();
+    };
+    input?.addEventListener("keydown", onKeyDown, true);
+    return () => input?.removeEventListener("keydown", onKeyDown, true);
+  });
+}
+
 /**
  * The panel a palette is: a query field over the rows it picks, walked with the arrow keys and run
  * with Enter. It covers the window and hands the focus back to whatever held it before, whichever
@@ -30,15 +48,7 @@ export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
   const shown = createMemo(() => props.rows(query()));
   let input: HTMLInputElement | undefined;
 
-  // An input method commits its candidate with Enter, which must not run the row under it
-  onSettled(() => {
-    input?.focus();
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.isComposing) event.stopPropagation();
-    };
-    input?.addEventListener("keydown", onKeyDown, true);
-    return () => input?.removeEventListener("keydown", onKeyDown, true);
-  });
+  useCommandInputGuard(() => input);
 
   const pick = (index: number) => {
     const item = shown()[index];
@@ -82,10 +92,7 @@ export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
         >
           <For each={shown()}>
             {(row, index) => (
-              <CommandItem
-                value={String(index())}
-                class="__INTERACTIVE__ flex w-full cursor-pointer items-center gap-3 rounded-md px-2.5 py-1.5 text-start text-xs text-muted-foreground outline-none data-highlighted:bg-selected data-highlighted:font-medium data-highlighted:text-foreground"
-              >
+              <CommandItem value={String(index())} class={PALETTE_ITEM_CLASS}>
                 {props.children(row)}
               </CommandItem>
             )}
@@ -93,7 +100,7 @@ export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
         </CommandList>
       </Command>
       <Show when={shown().length === 0 && props.emptyMessage !== undefined}>
-        <p role="status" class="px-2.5 py-1.5 text-muted-foreground">
+        <p role="status" class={PALETTE_STATUS_CLASS}>
           {props.emptyMessage}
         </p>
       </Show>

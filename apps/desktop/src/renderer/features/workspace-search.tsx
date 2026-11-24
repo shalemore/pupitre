@@ -6,9 +6,8 @@ import type {
 } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
-import { Badge, Input, ScrollView, Sheet, ToggleIconButton } from "@pupitre/ui";
+import { Badge, cn, Input, ScrollView, Sheet } from "@pupitre/ui";
 import { debounce } from "@pupitre/utils";
-import type { JSX } from "@solidjs/web";
 import {
   Command,
   CommandGroup,
@@ -17,16 +16,13 @@ import {
   CommandItem,
   CommandList,
 } from "@ui-sdk/solid/command";
-import { CaseSensitive, Regex, WholeWord } from "lucide-solid";
+import { createEffect, createMemo, createSignal, For, Show, type Component } from "solid-js";
 import {
-  createEffect,
-  createMemo,
-  createSignal,
-  For,
-  onSettled,
-  Show,
-  type Component,
-} from "solid-js";
+  PALETTE_ITEM_CLASS,
+  PALETTE_STATUS_CLASS,
+  useCommandInputGuard,
+} from "@/components/palette-sheet";
+import { SearchOptionToggles } from "@/components/search-option-toggles";
 
 /** Typing must not ask the main process for the whole folder once per keystroke. */
 const SEARCH_DELAY_MS = 150;
@@ -51,27 +47,6 @@ export interface WorkspaceSearchProps {
   onOpenMatch: (path: string, from: number, to: number) => void;
   onClose: () => void;
 }
-
-/** A match option of the bar, such as case sensitivity; pressed options are shown in the accent color. */
-const OptionButton: Component<{
-  pressed: boolean;
-  label: string;
-  onChange: (pressed: boolean) => void;
-  children: JSX.Element;
-}> = (props) => (
-  // A press on the toggle must not take the focus from the query
-  <span class="flex" onMouseDown={(event) => event.preventDefault()}>
-    <ToggleIconButton
-      pressed={props.pressed}
-      onChange={props.onChange}
-      label={props.label}
-      size="icon-xs"
-      class="text-muted-foreground data-pressed:bg-brand/15"
-    >
-      {props.children}
-    </ToggleIconButton>
-  </span>
-);
 
 /** The line a match is on, with the matched part marked. */
 const MatchLine: Component<{ match: WorkspaceMatch }> = (props) => {
@@ -140,15 +115,7 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
     { defer: true },
   );
 
-  // An input method commits its candidate with Enter, which must not open the match under it
-  onSettled(() => {
-    input?.focus();
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.isComposing) event.stopPropagation();
-    };
-    input?.addEventListener("keydown", onKeyDown, true);
-    return () => input?.removeEventListener("keydown", onKeyDown, true);
-  });
+  useCommandInputGuard(() => input);
 
   const open = (row: MatchRow) => props.onOpenMatch(row.path, row.match.from, row.match.to);
 
@@ -179,29 +146,19 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
               />
             )}
           />
-          <div class="flex shrink-0 items-center gap-0.5">
-            <OptionButton
-              pressed={caseSensitive()}
-              onChange={setCaseSensitive}
-              label={t().editor.matchCase}
-            >
-              <CaseSensitive />
-            </OptionButton>
-            <OptionButton
-              pressed={wholeWord()}
-              onChange={setWholeWord}
-              label={t().editor.wholeWord}
-            >
-              <WholeWord />
-            </OptionButton>
-            <OptionButton pressed={regexp()} onChange={setRegexp} label={t().editor.useRegex}>
-              <Regex />
-            </OptionButton>
-          </div>
+          <SearchOptionToggles
+            size="icon-xs"
+            caseSensitive={caseSensitive()}
+            wholeWord={wholeWord()}
+            regexp={regexp()}
+            onCaseSensitiveChange={setCaseSensitive}
+            onWholeWordChange={setWholeWord}
+            onRegexpChange={setRegexp}
+          />
         </div>
 
         <Show when={props.root === undefined}>
-          <p role="status" class="px-2.5 py-1.5 text-muted-foreground">
+          <p role="status" class={PALETTE_STATUS_CLASS}>
             {t().workspaceSearch.noFolder}
           </p>
         </Show>
@@ -211,7 +168,7 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
           </p>
         </Show>
         <Show when={noResults()}>
-          <p role="status" class="px-2.5 py-1.5 text-muted-foreground">
+          <p role="status" class={PALETTE_STATUS_CLASS}>
             {t().workspaceSearch.noResults}
           </p>
         </Show>
@@ -245,7 +202,7 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
                   {(matchRow) => (
                     <CommandItem
                       value={String(matchRow.index)}
-                      class="__INTERACTIVE__ flex w-full cursor-pointer items-center gap-2 rounded-md py-1.5 ps-6 pe-2.5 text-start text-xs text-muted-foreground outline-none data-highlighted:bg-selected data-highlighted:font-medium data-highlighted:text-foreground"
+                      class={cn(PALETTE_ITEM_CLASS, "gap-2 ps-6")}
                     >
                       <span class="w-6 shrink-0 text-end text-2xs text-tertiary tabular-nums">
                         {matchRow.match.line}

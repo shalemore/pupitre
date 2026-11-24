@@ -80,7 +80,7 @@ export const TableToolbar: Component<{
     props.run((model) => alignColumn(state(), model, column(), value), props.cell);
 
   return (
-    <div class="absolute inset-s-0 bottom-full z-10 mb-1 flex animate-fade-in-up-small items-center gap-0.5 rounded-lg bg-popover p-0.5 shadow-float print:hidden">
+    <div class="__FLOATING_PANEL__ absolute inset-s-0 bottom-full z-10 mb-1 flex animate-fade-in-up-small items-center gap-0.5 p-0.5 print:hidden">
       <ToolButton label={labels().alignStart} onClick={() => align("start")}>
         <TextAlignStart class="rtl:-scale-x-100" />
       </ToolButton>

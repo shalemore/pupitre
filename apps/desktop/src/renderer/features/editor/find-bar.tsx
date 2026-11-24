@@ -1,16 +1,8 @@
 import { t } from "@pupitre/i18n/solid";
-import { Badge, Button, cn, IconButton, Input, ToggleIconButton } from "@pupitre/ui";
-import type { JSX } from "@solidjs/web";
-import {
-  CaseSensitive,
-  ChevronDown,
-  ChevronRight,
-  ChevronUp,
-  Regex,
-  WholeWord,
-  X,
-} from "lucide-solid";
+import { Badge, Button, cn, IconButton, Input } from "@pupitre/ui";
+import { ChevronDown, ChevronRight, ChevronUp, X } from "lucide-solid";
 import { createEffect, Show, type Component } from "solid-js";
+import { SearchOptionToggles } from "@/components/search-option-toggles";
 import type { MatchStats, SearchOptions } from "./search";
 
 export interface FindBarProps {
@@ -26,26 +18,6 @@ export interface FindBarProps {
   onReplaceAll: () => void;
   class?: string;
 }
-
-const FindToggle: Component<{
-  pressed: boolean;
-  onChange: (pressed: boolean) => void;
-  title: string;
-  children: JSX.Element;
-}> = (props) => (
-  // A press on the toggle must not take the focus from the query, or the next typed key goes to the button
-  <span class="flex" onMouseDown={(event) => event.preventDefault()}>
-    <ToggleIconButton
-      pressed={props.pressed}
-      onChange={props.onChange}
-      label={props.title}
-      size="icon-2xs"
-      class="data-pressed:bg-brand/15"
-    >
-      {props.children}
-    </ToggleIconButton>
-  </span>
-);
 
 export const FindBar: Component<FindBarProps> = (props) => {
   const hasMatches = () => props.matchStats.pending === true || props.matchStats.total > 0;
@@ -89,7 +61,7 @@ export const FindBar: Component<FindBarProps> = (props) => {
     <div
       data-slot="find-bar"
       class={cn(
-        "absolute inset-x-5 top-3 z-40 flex max-w-sm animate-fade-in-down flex-col gap-2 rounded-xl bg-popover/95 p-2 text-xs shadow-float backdrop-blur-md select-none print:hidden",
+        "__FLOATING_PANEL__ absolute inset-x-5 top-3 z-40 flex max-w-sm animate-fade-in-down flex-col gap-2 p-2 text-xs select-none print:hidden",
         props.class,
       )}
       onKeyDown={(event) => {
@@ -120,29 +92,15 @@ export const FindBar: Component<FindBarProps> = (props) => {
             class="pe-[4.5rem]"
           />
 
-          <div class="absolute inset-e-1 flex items-center gap-0.5">
-            <FindToggle
-              pressed={props.options.caseSensitive}
-              onChange={(value) => update({ caseSensitive: value })}
-              title={t().editor.matchCase}
-            >
-              <CaseSensitive />
-            </FindToggle>
-            <FindToggle
-              pressed={props.options.wholeWord}
-              onChange={(value) => update({ wholeWord: value })}
-              title={t().editor.wholeWord}
-            >
-              <WholeWord />
-            </FindToggle>
-            <FindToggle
-              pressed={props.options.regexp}
-              onChange={(value) => update({ regexp: value })}
-              title={t().editor.useRegex}
-            >
-              <Regex />
-            </FindToggle>
-          </div>
+          <SearchOptionToggles
+            class="absolute inset-e-1"
+            caseSensitive={props.options.caseSensitive}
+            wholeWord={props.options.wholeWord}
+            regexp={props.options.regexp}
+            onCaseSensitiveChange={(value) => update({ caseSensitive: value })}
+            onWholeWordChange={(value) => update({ wholeWord: value })}
+            onRegexpChange={(value) => update({ regexp: value })}
+          />
         </div>
 
         <div class="shrink-0 tabular-nums">
