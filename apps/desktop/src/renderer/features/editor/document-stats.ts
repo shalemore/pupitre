@@ -1,7 +1,7 @@
 import { ensureSyntaxTree } from "@codemirror/language";
 import type { ChangeSet, EditorState } from "@codemirror/state";
 import { readableText } from "@pupitre/markdown";
-import { debounce } from "@solid-primitives/scheduled";
+import { debounce } from "@pupitre/utils";
 import { countText, countTextFast, type TextStats } from "@/lib/text-stats";
 import { nextSlice } from "@/lib/time-slice";
 

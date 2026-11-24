@@ -1,32 +1,9 @@
 import type { PluginInfo } from "@pupitre/desktop-api";
 import type { Permission, PointerKind, PointerSample, SurfaceKind } from "@pupitre/plugin-sdk";
-import { createEffect, createSignal, on, onCleanup, onMount, Show, type Component } from "solid-js";
-import { isSurfaceReady, surfaceTheme } from "@/lib/plugin-surface";
+import { createEffect, createSignal, For, onSettled, Show, type Component } from "solid-js";
+import { isSurfaceError, isSurfaceReady, surfaceTheme } from "@/lib/plugin-surface";
 import { plugins } from "@/lib/plugins";
 import { settings } from "@/lib/settings";
-import { css } from "@/styled-system/css";
-
-// Behind the text: the editor area isolates its children, so a negative layer paints over the
-// card but under everything the editor draws
-const backgroundFrame = css({
-  position: "absolute",
-  inset: "0",
-  width: "full",
-  height: "full",
-  borderStyle: "none",
-  zIndex: "behind",
-  pointerEvents: "none",
-});
-
-const pointerFrame = css({
-  position: "fixed",
-  inset: "0",
-  width: "full",
-  height: "full",
-  borderStyle: "none",
-  zIndex: "50",
-  pointerEvents: "none",
-});
 
 function surfaceUrl(plugin: PluginInfo, kind: SurfaceKind): string {
   const module = plugin.manifest.surfaces?.[kind] ?? "";
@@ -37,9 +14,11 @@ function surfaceUrl(plugin: PluginInfo, kind: SurfaceKind): string {
     : `/plugin-host/surface.html?${query.toString()}`;
 }
 
-const SurfaceHost: Component<{ plugin: PluginInfo; kind: SurfaceKind }> = (props) => {
+const SurfaceHost: Component<{ id: string; kind: SurfaceKind }> = (props) => {
   let frame: HTMLIFrameElement | undefined;
   const [ready, setReady] = createSignal(false);
+  const [failed, setFailed] = createSignal(false);
+  const plugin = () => plugins().find((entry) => entry.id === props.id);
 
   const post = (message: Record<string, unknown>) => {
     frame?.contentWindow?.postMessage(
@@ -52,14 +31,20 @@ const SurfaceHost: Component<{ plugin: PluginInfo; kind: SurfaceKind }> = (props
   };
 
   createEffect(
-    on(
-      () => [settings().theme, settings().darkTheme, settings().colorScheme, settings().animations],
-      () => requestAnimationFrame(sendTheme),
-      { defer: true },
-    ),
+    () =>
+      [
+        settings().theme,
+        settings().darkTheme,
+        settings().colorScheme,
+        settings().animations,
+      ] as const,
+    () => {
+      requestAnimationFrame(sendTheme);
+    },
+    { defer: true },
   );
 
-  onMount(() => {
+  onSettled(() => {
     let queue: PointerSample[] = [];
     let pending = 0;
     const flush = () => {
@@ -73,8 +58,12 @@ const SurfaceHost: Component<{ plugin: PluginInfo; kind: SurfaceKind }> = (props
     };
 
     const onMessage = (event: MessageEvent) => {
-      if (event.source !== frame?.contentWindow || !isSurfaceReady(event.data)) return;
-      if (event.data.kind !== props.kind) return;
+      if (event.source !== frame?.contentWindow) return;
+      if (isSurfaceError(event.data) && event.data.kind === props.kind) {
+        setFailed(true);
+        return;
+      }
+      if (!isSurfaceReady(event.data) || event.data.kind !== props.kind) return;
       setReady(true);
       sendTheme();
     };
@@ -104,24 +93,34 @@ const SurfaceHost: Component<{ plugin: PluginInfo; kind: SurfaceKind }> = (props
       );
     }
 
-    onCleanup(() => {
+    return () => {
       window.removeEventListener("message", onMessage);
       if (pending !== 0) cancelAnimationFrame(pending);
       for (const remove of listeners) remove();
-    });
+    };
   });
 
   return (
-    <iframe
-      ref={(element) => (frame = element)}
-      src={surfaceUrl(props.plugin, props.kind)}
-      title=""
-      sandbox="allow-scripts"
-      referrerpolicy="no-referrer"
-      aria-hidden="true"
-      tabIndex={-1}
-      class={props.kind === "background" ? backgroundFrame : pointerFrame}
-    />
+    <Show when={!failed() && plugin()}>
+      {(info) => (
+        <iframe
+          ref={(element) => (frame = element)}
+          src={surfaceUrl(info(), props.kind)}
+          title=""
+          sandbox="allow-scripts"
+          referrerpolicy="no-referrer"
+          aria-hidden="true"
+          tabindex={-1}
+          // Behind the text: the editor area isolates its children, so a negative layer paints over the
+          // card but under everything the editor draws
+          class={
+            props.kind === "background"
+              ? "pointer-events-none absolute inset-0 -z-1 size-full border-none"
+              : "pointer-events-none fixed inset-0 z-50 size-full border-none"
+          }
+        />
+      )}
+    </Show>
   );
 };
 
@@ -130,31 +129,30 @@ const SURFACE_PERMISSION: Readonly<Record<SurfaceKind, Permission>> = {
   pointer: "ui:pointer",
 };
 
-/** The first running plugin granted its layer, either behind the document or over the window. */
-function surfacePlugin(kind: SurfaceKind): PluginInfo | undefined {
-  if (!settings().pluginEffects) return undefined;
-  return plugins().find(
-    (plugin) =>
-      plugin.enabled &&
-      plugin.granted.includes(SURFACE_PERMISSION[kind]) &&
-      plugin.manifest.surfaces?.[kind] !== undefined,
-  );
+function surfacePluginIds(kind: SurfaceKind): string[] {
+  if (!settings().pluginEffects) return [];
+  return plugins()
+    .filter(
+      (plugin) =>
+        plugin.enabled &&
+        plugin.granted.includes(SURFACE_PERMISSION[kind]) &&
+        plugin.manifest.surfaces?.[kind] !== undefined,
+    )
+    .map((plugin) => plugin.id);
 }
 
-/** A canvas page behind the document, from the first running plugin that offers one. */
+/** Canvas pages behind the document, stacked in plugin order. */
 export const PluginBackground: Component = () => (
-  <Show when={surfacePlugin("background")}>
-    {(plugin) => <SurfaceHost plugin={plugin()} kind="background" />}
-  </Show>
+  <For each={surfacePluginIds("background")}>
+    {(id) => <SurfaceHost id={id} kind="background" />}
+  </For>
 );
 
 export const PluginPointer: Component = () => (
-  <Show when={surfacePlugin("pointer")}>
-    {(plugin) => <SurfaceHost plugin={plugin()} kind="pointer" />}
-  </Show>
+  <For each={surfacePluginIds("pointer")}>{(id) => <SurfaceHost id={id} kind="pointer" />}</For>
 );
 
 /** Whether a background canvas is taking the document's place behind the text. */
 export function hasBackgroundPlugin(): boolean {
-  return surfacePlugin("background") !== undefined;
+  return surfacePluginIds("background").length > 0;
 }

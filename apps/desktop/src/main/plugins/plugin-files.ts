@@ -25,6 +25,7 @@ const COMMANDS_FILE = "commands.json";
 export const pluginCommandSchema = z.object({
   id: z.string().min(1).max(128),
   title: localizedTextSchema,
+  shortcut: z.string().min(1).max(64).optional(),
 });
 const commandsSchema = z.array(pluginCommandSchema);
 
@@ -95,6 +96,29 @@ export function writeSettingsValues(folder: string, values: Record<string, unkno
   writeJsonFile(join(folder, SETTINGS_FILE), values);
 }
 
+function readWorkspaceSettingsValues(workspaceRoot: string, id: string): Record<string, unknown> {
+  const value = readJsonFile(join(workspaceRoot, ".pupitre", "plugins", `${id}.json`));
+  return isRecord(value) ? value : {};
+}
+
+export function writeWorkspaceSettingsValues(
+  workspaceRoot: string,
+  id: string,
+  values: Record<string, unknown>,
+): void {
+  writeJsonFile(join(workspaceRoot, ".pupitre", "plugins", `${id}.json`), values);
+}
+
+export function readEffectiveSettingsValues(
+  folder: string,
+  id: string,
+  workspaceRoot: string | undefined,
+): Record<string, unknown> {
+  const base = readSettingsValues(folder);
+  if (workspaceRoot === undefined) return base;
+  return { ...base, ...readWorkspaceSettingsValues(workspaceRoot, id) };
+}
+
 export function readCommands(folder: string): PluginCommandInfo[] | undefined {
   const parsed = commandsSchema.safeParse(readJsonFile(join(folder, COMMANDS_FILE)));
   return parsed.success ? parsed.data : undefined;
@@ -162,8 +186,77 @@ function assertPlainTree(folder: string): void {
   }
 }
 
+function parseSemver(version: string): [number, number, number] | undefined {
+  const clean = version.trim().split(/[-+]/, 1)[0];
+  if (clean === undefined) return undefined;
+  const parts = clean.split(".");
+  if (parts.length !== 3) return undefined;
+  const nums = parts.map((p) => (/^\d+$/.test(p) ? Number(p) : Number.NaN));
+  const [major, minor, patch] = nums;
+  if (
+    major === undefined ||
+    minor === undefined ||
+    patch === undefined ||
+    !Number.isInteger(major) ||
+    !Number.isInteger(minor) ||
+    !Number.isInteger(patch)
+  ) {
+    return undefined;
+  }
+  return [major, minor, patch];
+}
+
+function compareSemver(a: [number, number, number], b: [number, number, number]): number {
+  if (a[0] !== b[0]) return a[0] - b[0];
+  if (a[1] !== b[1]) return a[1] - b[1];
+  return a[2] - b[2];
+}
+
+function satisfiesComparator(actual: [number, number, number], token: string): boolean {
+  if (token === "*" || token === "x") return true;
+  if (token.startsWith("^")) {
+    const base = parseSemver(token.slice(1));
+    if (base === undefined) return false;
+    if (compareSemver(actual, base) < 0) return false;
+    const upper: [number, number, number] =
+      base[0] > 0 ? [base[0] + 1, 0, 0] : base[1] > 0 ? [0, base[1] + 1, 0] : [0, 0, base[2] + 1];
+    return compareSemver(actual, upper) < 0;
+  }
+  if (token.startsWith("~")) {
+    const base = parseSemver(token.slice(1));
+    if (base === undefined) return false;
+    return compareSemver(actual, base) >= 0 && compareSemver(actual, [base[0], base[1] + 1, 0]) < 0;
+  }
+  const match = /^(>=|<=|>|<|=)?(.*)$/.exec(token);
+  if (match === null) return false;
+  const target = parseSemver(match[2] ?? "");
+  if (target === undefined) return false;
+  const cmp = compareSemver(actual, target);
+  switch (match[1]) {
+    case ">=":
+      return cmp >= 0;
+    case "<=":
+      return cmp <= 0;
+    case ">":
+      return cmp > 0;
+    case "<":
+      return cmp < 0;
+    default:
+      return cmp === 0;
+  }
+}
+
+export function satisfiesPupitreEngine(appVersion: string, range: string): boolean {
+  const actual = parseSemver(appVersion);
+  if (actual === undefined) return true;
+  return range.split("||").some((part) => {
+    const tokens = part.trim().split(/\s+/).filter(Boolean);
+    return tokens.length > 0 && tokens.every((token) => satisfiesComparator(actual, token));
+  });
+}
+
 /** Copies the plugin at `source` into `root`, where it starts disabled and ungranted. */
-export function installCopy(source: string, root: string): PluginInfo {
+export function installCopy(source: string, root: string, pupitreVersion?: string): PluginInfo {
   const sourceStat = lstatSync(source);
   if (!sourceStat.isDirectory() || sourceStat.isSymbolicLink()) {
     throw new Error("A plugin is installed from a folder");
@@ -174,6 +267,15 @@ export function installCopy(source: string, root: string): PluginInfo {
     manifest = parseManifest(readJsonFile(join(source, MANIFEST_FILE)));
   } catch (error: unknown) {
     throw new Error(`The plugin has no valid ${MANIFEST_FILE}`, { cause: error });
+  }
+  if (
+    pupitreVersion !== undefined &&
+    manifest.engines?.pupitre !== undefined &&
+    !satisfiesPupitreEngine(pupitreVersion, manifest.engines.pupitre)
+  ) {
+    throw new Error(
+      `The plugin requires Pupitre ${manifest.engines.pupitre} (running ${pupitreVersion})`,
+    );
   }
   const problem = moduleProblem(source, manifest);
   if (problem !== undefined) throw new Error(`The plugin cannot be installed: ${problem}`);

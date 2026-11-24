@@ -1,7 +1,11 @@
-import { SegmentedControl as KobalteSegmentedControl } from "@kobalte/core/segmented-control";
-import { For, type JSX } from "solid-js";
-import { css, cx } from "./styled-system/css";
-import { truncate } from "./styles";
+import type { JSX } from "@solidjs/web";
+import {
+  SegmentedControl as UiSegmentedControl,
+  SegmentedControlIndicator,
+  SegmentedControlItem,
+} from "@ui-sdk/solid/segmented-control";
+import { cn } from "cn";
+import { For } from "solid-js";
 
 export interface SegmentedOption<T extends string> {
   value: T;
@@ -16,71 +20,37 @@ export interface SegmentedControlProps<T extends string> {
   class?: string;
 }
 
-const root = css({
-  position: "relative",
-  display: "flex",
-  borderRadius: "lg",
-  backgroundColor: "segmented.track",
-  padding: "0.5",
-  textStyle: "xs",
-});
-const indicator = css({
-  position: "absolute",
-  top: "0.5",
-  left: "0.5",
-  borderRadius: "md",
-  backgroundColor: "segmented.thumb",
-  boxShadow: "segmentedThumb",
-  transitionProperty: "transform, width",
-  transitionDuration: "snap",
-  transitionTimingFunction: "snap",
-});
-const item = css({ position: "relative", flex: "1" });
-const label = css({
-  layerStyle: "interactive",
-  display: "flex",
-  height: "6",
-  cursor: "pointer",
-  alignItems: "center",
-  justifyContent: "center",
-  gap: "1.5",
-  borderRadius: "md",
-  paddingInline: "2",
-  color: "muted.foreground",
-  _peerFocusVisible: { boxShadow: "focus" },
-  _hover: { color: "foreground" },
-  "&[data-checked]": { fontWeight: "medium", color: "foreground" },
-  "& svg": { width: "3.5", height: "3.5", flexShrink: 0 },
-});
-
 /**
  * A row of mutually exclusive options on a recessed track, with a thumb that slides to the
- * selected one. Kobalte measures the selected item and positions the indicator.
+ * selected one. UI SDK measures the selected item and positions the indicator.
  */
 export function SegmentedControl<T extends string>(props: SegmentedControlProps<T>) {
   return (
-    <KobalteSegmentedControl
+    <UiSegmentedControl
       data-slot="segmented-control"
       value={props.value}
-      onChange={(value) => {
+      onValueChange={(value) => {
         const option = props.options.find((candidate) => candidate.value === value);
         if (option) props.onChange(option.value);
       }}
-      class={cx(root, props.class)}
+      class={cn("relative flex rounded-lg bg-segmented-track p-0.5 text-xs", props.class)}
     >
-      <KobalteSegmentedControl.Indicator data-slot="segmented-indicator" class={indicator} />
-      <For each={props.options}>
+      <SegmentedControlIndicator
+        data-slot="segmented-indicator"
+        class="absolute top-(--segmented-control-indicator-top) left-(--segmented-control-indicator-left) h-(--segmented-control-indicator-height) w-(--segmented-control-indicator-width) rounded-md bg-segmented-thumb shadow-segmented-thumb transition-[left,width] duration-snap ease-snap"
+      />
+      <For each={props.options} keyed={(option) => option.value}>
         {(option) => (
-          <KobalteSegmentedControl.Item value={option.value} class={item}>
-            {/* `_peerFocusVisible` reads this marker class beside the label */}
-            <KobalteSegmentedControl.ItemInput class="peer" />
-            <KobalteSegmentedControl.ItemLabel data-slot="segmented-item" class={label}>
-              {option.icon}
-              <span class={truncate}>{option.label}</span>
-            </KobalteSegmentedControl.ItemLabel>
-          </KobalteSegmentedControl.Item>
+          <SegmentedControlItem
+            data-slot="segmented-item"
+            value={option().value}
+            class="__INTERACTIVE__ relative flex h-6 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-md px-2 text-muted-foreground outline-none hover:text-foreground focus-visible:shadow-focus data-checked:font-medium data-checked:text-foreground [&>svg]:size-3.5 [&>svg]:shrink-0"
+          >
+            {option().icon}
+            <span class="truncate">{option().label}</span>
+          </SegmentedControlItem>
         )}
       </For>
-    </KobalteSegmentedControl>
+    </UiSegmentedControl>
   );
 }

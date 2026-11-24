@@ -15,6 +15,7 @@ let started = false;
 let projectRoot: string | undefined;
 let current: readonly ImportedTheme[] = [];
 let watchers: FSWatcher[] = [];
+let watchedRoots: string[] = [];
 
 function globalRoot(): string {
   return join(app.getPath("userData"), "themes");
@@ -54,12 +55,16 @@ function watchRoot(root: string): void {
 }
 
 function rewatch(): void {
+  const nextRoots = [
+    ...new Set(
+      [globalRoot(), projectThemes()].filter((root): root is string => root !== undefined),
+    ),
+  ];
+  if (isDeepStrictEqual(nextRoots, watchedRoots)) return;
   for (const watcher of watchers) void watcher.close();
   watchers = [];
-  const roots = [globalRoot(), projectThemes()].filter(
-    (root): root is string => root !== undefined,
-  );
-  for (const root of new Set(roots)) watchRoot(root);
+  watchedRoots = nextRoots;
+  for (const root of nextRoots) watchRoot(root);
 }
 
 /** Reads the global theme folder and starts watching it for changes. */

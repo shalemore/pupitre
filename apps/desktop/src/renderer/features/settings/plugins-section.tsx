@@ -2,52 +2,15 @@ import type { PluginInfo } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import { currentLocale, t } from "@pupitre/i18n/solid";
 import { localize, type LocalizedText } from "@pupitre/plugin-sdk";
-import { Button, IconButton, Input, Select, SettingRow, Switch } from "@pupitre/ui";
+import { Badge, Button, IconButton, Input, Select, SettingRow, Sheet, Switch } from "@pupitre/ui";
 import { messageOf } from "@pupitre/utils";
+import type { JSX } from "@solidjs/web";
 import { FolderOpen, Plus, Trash2 } from "lucide-solid";
-import { For, onMount, Show, type Component, type JSX } from "solid-js";
+import { createSignal, For, onSettled, Show, type Component } from "solid-js";
 import { reportFailure } from "@/lib/errors";
 import { loadPlugins, plugins } from "@/lib/plugins";
 import { settings, updateSettings } from "@/lib/settings";
-import { css } from "@/styled-system/css";
 import { SettingGroup, SettingsSection } from "./settings-section";
-
-const toolbar = css({ marginBlockEnd: "4" });
-const empty = css({ textStyle: "xs", color: "muted.foreground" });
-const titleRow = css({ display: "flex", alignItems: "baseline", gap: "2" });
-const version = css({
-  textStyle: "2xs",
-  color: "tertiary",
-  fontVariantNumeric: "tabular-nums",
-});
-const permissions = css({
-  display: "flex",
-  flexWrap: "wrap",
-  alignItems: "center",
-  gap: "1.5",
-  marginBlockStart: "1",
-});
-const permissionChip = css({
-  paddingInline: "1.5",
-  paddingBlock: "0.5",
-  borderRadius: "sm",
-  backgroundColor: "surface.2",
-  fontFamily: "mono",
-  textStyle: "2xs",
-  color: "muted.foreground",
-});
-
-const form = css({
-  display: "flex",
-  flexDirection: "column",
-  paddingInlineStart: "5",
-  "& > * + *": {
-    borderTopWidth: "hairline",
-    borderTopStyle: "solid",
-    borderColor: "border.subtle",
-  },
-});
-const fieldInput = css({ width: "48" });
 
 /** One property of the JSON Schema a plugin sent; only the kinds a form can draw are read. */
 interface SchemaField {
@@ -55,6 +18,7 @@ interface SchemaField {
   enum?: unknown;
   minimum?: unknown;
   maximum?: unknown;
+  default?: unknown;
 }
 
 function fieldEntries(schema: Readonly<Record<string, unknown>>): [string, SchemaField][] {
@@ -91,7 +55,7 @@ function fieldControl(
   if (field.type === "number" || field.type === "integer") {
     return (
       <Input
-        class={fieldInput}
+        class="w-48"
         type="number"
         aria-label={label}
         value={typeof value === "number" ? String(value) : ""}
@@ -99,6 +63,16 @@ function fieldControl(
         max={typeof field.maximum === "number" ? field.maximum : undefined}
         step={field.type === "integer" ? 1 : "any"}
         onChange={(event) => {
+          if (event.currentTarget.value.trim() === "") {
+            const fallback =
+              typeof field.default === "number"
+                ? field.default
+                : typeof field.minimum === "number"
+                  ? field.minimum
+                  : 0;
+            onChange(fallback);
+            return;
+          }
           const parsed = event.currentTarget.valueAsNumber;
           if (Number.isFinite(parsed)) onChange(parsed);
         }}
@@ -121,14 +95,18 @@ function fieldControl(
     }
     return (
       <Input
-        class={fieldInput}
+        class="w-48"
         aria-label={label}
         value={typeof value === "string" ? value : ""}
         onChange={(event) => onChange(event.currentTarget.value)}
       />
     );
   }
-  return undefined;
+  return (
+    <Badge variant="muted" size="sm" class="font-mono">
+      {typeof field.type === "string" ? field.type : "unknown"}
+    </Badge>
+  );
 }
 
 /** The fields a plugin declared, drawn from its schema and named in its own words. */
@@ -150,7 +128,7 @@ const PluginSettingsForm: Component<{ plugin: PluginInfo }> = (props) => {
 
   return (
     <Show when={fields().length > 0}>
-      <div class={form}>
+      <div class="flex flex-col ps-5 [&>*+*]:border-t-hairline [&>*+*]:border-border-subtle">
         <For each={fields()}>
           {([key, field]) => {
             const label = () => textOf(props.plugin.settings?.fields?.[key]?.title) ?? key;
@@ -179,12 +157,17 @@ function attempt(run: () => Promise<unknown>): void {
 }
 
 const PluginRow: Component<{ plugin: PluginInfo }> = (props) => {
+  const [confirmKind, setConfirmKind] = createSignal<"permissions" | "uninstall" | null>(null);
   const name = () => localize(props.plugin.manifest.name, currentLocale());
   const description = () => {
     const text = props.plugin.manifest.description;
     return text === undefined ? undefined : localize(text, currentLocale());
   };
   const author = () => props.plugin.manifest.author;
+  const ungrantedPermissions = () =>
+    props.plugin.manifest.permissions.filter(
+      (permission) => !props.plugin.granted.includes(permission),
+    );
   const details = () => {
     if (
       description() === undefined &&
@@ -198,10 +181,14 @@ const PluginRow: Component<{ plugin: PluginInfo }> = (props) => {
         <Show when={description()}>{(text) => <>{text()}</>}</Show>
         <Show when={author()}>{(value) => <>{` · ${value()}`}</>}</Show>
         <Show when={props.plugin.manifest.permissions.length > 0}>
-          <div class={permissions}>
+          <div class="mt-1 flex flex-wrap items-center gap-1.5">
             <span>{t().settings.permissions}</span>
             <For each={props.plugin.manifest.permissions}>
-              {(permission) => <code class={permissionChip}>{permission}</code>}
+              {(permission) => (
+                <Badge variant="muted" size="sm" class="font-mono">
+                  {permission}
+                </Badge>
+              )}
             </For>
           </div>
         </Show>
@@ -209,22 +196,37 @@ const PluginRow: Component<{ plugin: PluginInfo }> = (props) => {
     );
   };
 
-  const setEnabled = (enabled: boolean) =>
+  const setEnabled = (enabled: boolean) => {
+    if (enabled && ungrantedPermissions().length > 0) {
+      setConfirmKind("permissions");
+      return;
+    }
+    attempt(() => desktop.invoke("plugins:set-enabled", props.plugin.id, enabled));
+  };
+
+  const confirmPermissions = () => {
+    setConfirmKind(null);
     attempt(async () => {
-      // Turning a plugin on is the consent: it receives exactly what its manifest asks for
-      if (enabled)
-        await desktop.invoke("plugins:grant", props.plugin.id, props.plugin.manifest.permissions);
-      await desktop.invoke("plugins:set-enabled", props.plugin.id, enabled);
+      await desktop.invoke("plugins:grant", props.plugin.id, props.plugin.manifest.permissions);
+      await desktop.invoke("plugins:set-enabled", props.plugin.id, true);
     });
+  };
+
+  const confirmUninstall = () => {
+    setConfirmKind(null);
+    attempt(() => desktop.invoke("plugins:uninstall", props.plugin.id));
+  };
 
   return (
     <>
       <SettingRow
         heading
         title={
-          <span class={titleRow}>
+          <span class="flex items-baseline gap-2">
             <span>{name()}</span>
-            <span class={version}>v{props.plugin.manifest.version}</span>
+            <span class="text-2xs text-tertiary tabular-nums">
+              v{props.plugin.manifest.version}
+            </span>
           </span>
         }
         description={details()}
@@ -239,7 +241,7 @@ const PluginRow: Component<{ plugin: PluginInfo }> = (props) => {
         <IconButton
           label={t().sidebar.moveToTrash}
           size="icon-2xs"
-          onClick={() => attempt(() => desktop.invoke("plugins:uninstall", props.plugin.id))}
+          onClick={() => setConfirmKind("uninstall")}
         >
           <Trash2 />
         </IconButton>
@@ -250,16 +252,58 @@ const PluginRow: Component<{ plugin: PluginInfo }> = (props) => {
         />
       </SettingRow>
       <PluginSettingsForm plugin={props.plugin} />
+      <Show when={confirmKind() !== null}>
+        <Sheet
+          title={
+            confirmKind() === "permissions"
+              ? `${name()} — ${t().settings.permissions}`
+              : `${t().sidebar.moveToTrash}: ${name()}`
+          }
+          onClose={() => setConfirmKind(null)}
+        >
+          <div class="flex flex-col gap-4 p-4">
+            <Show when={confirmKind() === "permissions"}>
+              <div class="flex flex-wrap gap-1.5">
+                <For each={props.plugin.manifest.permissions}>
+                  {(permission) => (
+                    <Badge variant="muted" size="sm" class="font-mono">
+                      {permission}
+                    </Badge>
+                  )}
+                </For>
+              </div>
+              <div class="flex justify-end gap-2">
+                <Button variant="ghost" size="sm" onClick={() => setConfirmKind(null)}>
+                  {t().dialogs.cancel}
+                </Button>
+                <Button variant="brand" size="sm" onClick={confirmPermissions}>
+                  {t().dialogs.okButton}
+                </Button>
+              </div>
+            </Show>
+            <Show when={confirmKind() === "uninstall"}>
+              <div class="flex justify-end gap-2">
+                <Button variant="ghost" size="sm" onClick={() => setConfirmKind(null)}>
+                  {t().dialogs.cancel}
+                </Button>
+                <Button variant="destructive" size="sm" onClick={confirmUninstall}>
+                  {t().sidebar.moveToTrash}
+                </Button>
+              </div>
+            </Show>
+          </div>
+        </Sheet>
+      </Show>
     </>
   );
 };
 
 export const PluginsSection: Component = () => {
-  onMount(loadPlugins);
+  onSettled(loadPlugins);
 
   return (
     <SettingsSection title={t().settings.plugins}>
-      <div class={toolbar}>
+      <div class="mb-4">
         <Button
           variant="outline"
           size="sm"
@@ -283,7 +327,10 @@ export const PluginsSection: Component = () => {
           </SettingRow>
         </SettingGroup>
       </Show>
-      <Show when={plugins().length > 0} fallback={<p class={empty}>{t().settings.noPlugins}</p>}>
+      <Show
+        when={plugins().length > 0}
+        fallback={<p class="text-xs text-muted-foreground">{t().settings.noPlugins}</p>}
+      >
         <SettingGroup>
           <For each={plugins()}>{(plugin) => <PluginRow plugin={plugin} />}</For>
         </SettingGroup>

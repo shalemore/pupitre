@@ -2,7 +2,6 @@ import type { MenuEntry } from "@pupitre/desktop-api/menu";
 import { t } from "@pupitre/i18n/solid";
 import type { Settings } from "@pupitre/settings";
 import { IconButton } from "@pupitre/ui";
-import { quietButton } from "@pupitre/ui/styles";
 import { ArrowUpDown } from "lucide-solid";
 import { Show, type Component } from "solid-js";
 import { MenuPopup } from "@/components/menu-popup";
@@ -47,10 +46,10 @@ export const FolderSortButton: Component<{
     <>
       <IconButton
         label={t().sidebar.sort}
+        variant="quiet"
         size="icon-2xs"
         aria-haspopup="menu"
-        aria-expanded={panel.open() !== undefined}
-        class={quietButton}
+        aria-expanded={panel.open() !== undefined ? "true" : "false"}
         onClick={(event) => {
           if (panel.open() !== undefined) panel.close();
           // A press on the button while the menu is open closes it from outside first, and the

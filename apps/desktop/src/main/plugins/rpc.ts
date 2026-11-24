@@ -9,13 +9,15 @@ import {
 } from "@pupitre/plugin-sdk";
 import { messageOf } from "@pupitre/utils";
 import { clipboard, ipcMain, net, Notification } from "electron";
+import log from "electron-log/main";
 import { z } from "zod";
 import { currentLocale } from "../i18n";
-import { requestDocument } from "./document-bridge";
+import { DocumentBridgeTimeoutError, requestDocument } from "./document-bridge";
 import { pluginIdForSender } from "./host";
 import { pluginsFolder } from "./paths";
 import {
   pluginCommandSchema,
+  readEffectiveSettingsValues,
   readPlugin,
   readSettingsValues,
   settingsMetaSchema,
@@ -24,11 +26,13 @@ import {
   writeSettingsValues,
   type StoredSettingsMeta,
 } from "./plugin-files";
+import { activePluginWorkspaceRoot, disableFailedPlugin, publishPlugins } from "./registry";
 import { deleteValue, getValue, setValue } from "./storage";
 
 /** The permission each method needs; a method not named here cannot be called. */
 const PERMISSIONS = {
   "document.read": "document:read",
+  "document.info": "document:read",
   "document.replace": "document:write",
   "document.insert": "document:write",
   "document.selection": "editor:selection",
@@ -43,7 +47,7 @@ const PERMISSIONS = {
 } as const satisfies Record<string, Permission>;
 
 /** Methods the app itself calls through the same bridge; they need no permission. */
-const HOST_METHODS = ["host.settings", "host.commands", "settings.get"] as const;
+const HOST_METHODS = ["host.settings", "host.commands", "host.failed", "settings.get"] as const;
 
 type HostMethod = (typeof HOST_METHODS)[number];
 type Method = keyof typeof PERMISSIONS | HostMethod;
@@ -96,6 +100,8 @@ async function execute(
   switch (method) {
     case "document.read":
       return requestDocument({ method: "read" });
+    case "document.info":
+      return requestDocument({ method: "info" });
     case "document.replace":
       return requestDocument({ method: "replace", text: textParams.parse(params).text });
     case "document.insert":
@@ -138,15 +144,53 @@ async function execute(
       if (Object.keys(readSettingsValues(folder)).length === 0 && meta.defaults !== undefined) {
         writeSettingsValues(folder, meta.defaults);
       }
+      publishPlugins();
       return undefined;
     }
     case "host.commands": {
       const { commands } = z.object({ commands: z.array(pluginCommandSchema) }).parse(params);
       writeCommands(folder, commands);
+      publishPlugins();
+      return undefined;
+    }
+    case "host.failed": {
+      const { message } = z.object({ message: z.string() }).parse(params);
+      log.error(`The plugin ${id} failed to initialize: ${message}`);
+      disableFailedPlugin(id);
       return undefined;
     }
     case "settings.get":
-      return readSettingsValues(join(pluginsFolder(), id));
+      return readEffectiveSettingsValues(
+        join(pluginsFolder(), id),
+        id,
+        activePluginWorkspaceRoot(),
+      );
+  }
+}
+
+async function readChunks(
+  reader: ReadableStreamDefaultReader<Uint8Array>,
+  chunks: Uint8Array[],
+  totalBytes: number,
+): Promise<string> {
+  const { done, value } = await reader.read();
+  if (done) return Buffer.concat(chunks, totalBytes).toString("utf8");
+  const nextBytes = totalBytes + value.byteLength;
+  if (nextBytes > MAX_RESPONSE_BYTES) {
+    await reader.cancel();
+    throw new Error("The response is too large");
+  }
+  chunks.push(value);
+  return readChunks(reader, chunks, nextBytes);
+}
+
+async function readBoundedBody(response: Response): Promise<string> {
+  if (response.body === null) return "";
+  const reader = response.body.getReader();
+  try {
+    return await readChunks(reader, [], 0);
+  } finally {
+    reader.releaseLock();
   }
 }
 
@@ -162,11 +206,11 @@ async function fetchUrl(params: z.infer<typeof networkParams>): Promise<unknown>
   if (init?.body !== undefined) request.body = init.body;
   const response = await net.fetch(url.href, request);
   const declared = Number(response.headers.get("content-length") ?? 0);
-  if (declared > MAX_RESPONSE_BYTES) throw new Error("The response is too large");
-  const body = await response.text();
-  if (Buffer.byteLength(body, "utf8") > MAX_RESPONSE_BYTES) {
+  if (declared > MAX_RESPONSE_BYTES) {
+    await response.body?.cancel();
     throw new Error("The response is too large");
   }
+  const body = await readBoundedBody(response);
   return { status: response.status, headers: Object.fromEntries(response.headers), body };
 }
 
@@ -183,6 +227,13 @@ async function run(id: string, method: Method, params: unknown): Promise<RpcResu
   try {
     return { ok: true, value: await execute(id, plugin.manifest, method, params) };
   } catch (error: unknown) {
+    if (error instanceof z.ZodError) return rpcFailure("invalid", messageOf(error));
+    if (
+      error instanceof DocumentBridgeTimeoutError ||
+      (error instanceof Error && (error.name === "TimeoutError" || error.name === "AbortError"))
+    ) {
+      return rpcFailure("timeout", messageOf(error));
+    }
     return rpcFailure("internal", messageOf(error));
   }
 }

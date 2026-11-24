@@ -14,8 +14,8 @@ import {
   moveRow,
   type TableModel,
 } from "@pupitre/markdown";
-import { css, cx, IconButton, Separator } from "@pupitre/ui";
-import { rtlFlip } from "@pupitre/ui/styles";
+import { cn, IconButton, Separator } from "@pupitre/ui";
+import type { JSX } from "@solidjs/web";
 import {
   ArrowDown,
   ArrowLeft,
@@ -33,7 +33,7 @@ import {
   TextAlignStart,
   X,
 } from "lucide-solid";
-import { type Accessor, type Component, type JSX, Show } from "solid-js";
+import { type Accessor, type Component, Show } from "solid-js";
 import type { CellPosition } from "./table-cell";
 
 const ToolButton: Component<{
@@ -44,7 +44,7 @@ const ToolButton: Component<{
 }> = (props) => (
   <IconButton
     label={props.label}
-    class={cx(props.danger && dangerButton)}
+    class={cn(props.danger && "hover:bg-destructive/10 hover:text-destructive")}
     // Keeps the focus, and with it the cell being edited, in the table
     onMouseDown={(event) => event.preventDefault()}
     onClick={() => props.onClick()}
@@ -53,42 +53,13 @@ const ToolButton: Component<{
   </IconButton>
 );
 
-const dangerButton = css({
-  _hover: { backgroundColor: "destructive/10", color: "destructive" },
-});
-const deleted = css({ position: "relative", display: "inline-flex" });
-const deletedCross = css({
-  position: "absolute",
-  insetInlineEnd: "-0.5",
-  insetBlockEnd: "-0.5",
-  width: "2",
-  height: "2",
-});
-const toolbar = css({
-  position: "absolute",
-  insetBlockEnd: "[100%]",
-  insetInlineStart: "0",
-  zIndex: "10",
-  marginBlockEnd: "1",
-  display: "flex",
-  alignItems: "center",
-  gap: "0.5",
-  borderRadius: "lg",
-  backgroundColor: "popover",
-  padding: "0.5",
-  boxShadow: "float",
-  animationName: "fadeInUpSmall",
-  animationDuration: "base",
-  animationTimingFunction: "enter",
-  _print: { display: "none" },
-});
-const toolbarSeparator = css({ marginInline: "0.5", height: "4" });
+const ToolbarSeparator: Component = () => <Separator orientation="vertical" class="mx-0.5 h-4" />;
 
 /** A row or column with a cross on it, the way `Grid2x2X` marks a table that is deleted whole. */
 const Deleted = (props: { children: JSX.Element }) => (
-  <span class={deleted}>
+  <span class="relative inline-flex">
     {props.children}
-    <X class={deletedCross} stroke-width={2} />
+    <X class="absolute -inset-e-0.5 -bottom-0.5 size-2" stroke-width={2} />
   </span>
 );
 
@@ -109,17 +80,17 @@ export const TableToolbar: Component<{
     props.run((model) => alignColumn(state(), model, column(), value), props.cell);
 
   return (
-    <div class={toolbar}>
+    <div class="__FLOATING_PANEL__ absolute inset-s-0 bottom-full z-10 mb-1 flex animate-fade-in-up-small items-center gap-0.5 p-0.5 print:hidden">
       <ToolButton label={labels().alignStart} onClick={() => align("start")}>
-        <TextAlignStart class={rtlFlip} />
+        <TextAlignStart class="rtl:-scale-x-100" />
       </ToolButton>
       <ToolButton label={labels().alignCenter} onClick={() => align("center")}>
         <TextAlignCenter />
       </ToolButton>
       <ToolButton label={labels().alignEnd} onClick={() => align("end")}>
-        <TextAlignEnd class={rtlFlip} />
+        <TextAlignEnd class="rtl:-scale-x-100" />
       </ToolButton>
-      <Separator orientation="vertical" class={toolbarSeparator} />
+      <ToolbarSeparator />
       <Show when={row() > 0}>
         <ToolButton
           label={labels().insertRowAbove}
@@ -143,7 +114,7 @@ export const TableToolbar: Component<{
         label={labels().insertColumnBefore}
         onClick={() => props.run((model) => insertColumn(state(), model, column()), props.cell)}
       >
-        <BetweenVerticalStart class={rtlFlip} />
+        <BetweenVerticalStart class="rtl:-scale-x-100" />
       </ToolButton>
       <ToolButton
         label={labels().insertColumnAfter}
@@ -154,7 +125,7 @@ export const TableToolbar: Component<{
           })
         }
       >
-        <BetweenVerticalEnd class={rtlFlip} />
+        <BetweenVerticalEnd class="rtl:-scale-x-100" />
       </ToolButton>
       {/* Only body rows move: the header line says what the columns hold and stays first */}
       <Show when={row() > 1}>
@@ -193,7 +164,7 @@ export const TableToolbar: Component<{
             })
           }
         >
-          <ArrowLeft class={rtlFlip} />
+          <ArrowLeft class="rtl:-scale-x-100" />
         </ToolButton>
       </Show>
       <Show when={column() < columnTotal() - 1}>
@@ -206,10 +177,10 @@ export const TableToolbar: Component<{
             })
           }
         >
-          <ArrowRight class={rtlFlip} />
+          <ArrowRight class="rtl:-scale-x-100" />
         </ToolButton>
       </Show>
-      <Separator orientation="vertical" class={toolbarSeparator} />
+      <ToolbarSeparator />
       <Show when={row() > 0}>
         <ToolButton
           label={labels().deleteRow}

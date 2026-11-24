@@ -5,7 +5,7 @@ test("the command palette rises in place", async () => {
   const app = await launch();
   try {
     await run(app.page, { id: "view.command-palette" });
-    const sheet = app.page.locator('[data-slot="sheet"]');
+    const sheet = app.page.locator("[data-sheet=panel]");
     await expect(sheet).toBeVisible();
     const boxes = await sheet.evaluate((element) => {
       const animation = element.getAnimations()[0];

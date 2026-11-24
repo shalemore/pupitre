@@ -1,11 +1,7 @@
-import { I18nProvider } from "@kobalte/core/i18n";
-import { currentLocale } from "@pupitre/i18n/solid";
 import type { ParentComponent } from "solid-js";
 
 /**
- * Tells Kobalte the locale the app is set to. Without it Kobalte reads the direction from the
- * locale the browser was started in, which can differ from the one chosen in the settings.
+ * Keeps the locale wrapper boundary; `appearance.ts` sets `lang` and `dir` on the document root,
+ * which UI SDK reads directly from the DOM.
  */
-export const LocaleProvider: ParentComponent = (props) => (
-  <I18nProvider locale={currentLocale()}>{props.children}</I18nProvider>
-);
+export const LocaleProvider: ParentComponent = (props) => <>{props.children}</>;

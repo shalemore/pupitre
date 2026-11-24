@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { readFile, realpath, stat } from "node:fs/promises";
 import { extname, join, resolve } from "node:path";
 import { pluginIdSchema } from "@pupitre/plugin-sdk";
@@ -90,11 +91,11 @@ async function serve(request: Request): Promise<Response> {
       return fileResponse(join(renderer, "plugin-host/surface.html"), HOST_CSP);
     }
     if (path.startsWith("/assets/")) {
-      // Vite writes the host page's scripts and styles beside the renderer's; `/assets/` is the
-      // app's own, so a plugin's file of that name is served from its folder only under another name
+      // Vite writes the host page's scripts and styles beside the renderer's; fall through to the
+      // plugin's own folder when no matching app bundle asset exists
       const assets = join(renderer, "assets");
       const target = join(assets, path.slice("/assets/".length));
-      return isInside(assets, target) ? fileResponse(target, HOST_CSP) : notFound();
+      if (isInside(assets, target) && existsSync(target)) return fileResponse(target, HOST_CSP);
     }
 
     const folder = join(pluginsFolder(), id);

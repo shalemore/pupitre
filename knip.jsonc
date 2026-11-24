@@ -8,34 +8,35 @@
         // `pnpm run test:perf` runs this config; the Playwright plugin only reads playwright.config.ts
         "playwright.perf.config.ts",
         // The plugin preload and host page are entries of their own in electron.vite.config.ts
+        "src/preload/index.ts",
         "src/preload/plugin.ts",
         "src/renderer/plugin-host/host.ts",
         "src/renderer/plugin-host/surface.ts",
         // The plugin the end-to-end suite installs; the app loads its modules, not the test
-        "e2e/fixtures/plugins/*/*.js",
-      ],
+        "e2e/fixtures/plugins/*/*.{js,css}"
+      ]
     },
     "packages/*": {
-      "project": ["src/**/*.{ts,tsx}"],
+      "project": ["src/**/*.{ts,tsx}"]
     },
     "plugins/*": {
-      "project": ["src/**/*.{ts,tsx}"],
-    },
+      "project": ["src/**/*.{ts,tsx}"]
+    }
   },
   "ignoreBinaries": [
     // A Linux system tool: src/main/windows.ts reads where the desktop puts the caption buttons
-    "gsettings",
+    "gsettings"
   ],
   "ignoreDependencies": [
     // Drives the built app from throwaway scripts outside the repo, which is how a UI change is
     // checked by hand (AGENTS.md); no file in the tree imports it on purpose
-    "playwright-core",
+    "playwright-core"
   ],
   "ignoreIssues": {
     // The IPC contract: the types are what a host implements and a window calls with, so they stay
     // exported for those who write against it
     "apps/desktop/src/shared/desktop-api.ts": ["types"],
     // The ui barrel is a public boundary: a primitive's option type is exported for its callers
-    "packages/ui/src/segmented-control.tsx": ["types"],
-  },
+    "packages/ui/src/segmented-control.tsx": ["types"]
+  }
 }

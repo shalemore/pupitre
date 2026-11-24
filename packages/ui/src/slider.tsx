@@ -1,6 +1,11 @@
-import { Slider as KobalteSlider } from "@kobalte/core/slider";
-import { createEffect, createSignal } from "solid-js";
-import { css } from "./styled-system/css";
+import {
+  Slider as UiSlider,
+  SliderControl,
+  SliderIndicator,
+  SliderThumb,
+  SliderTrack,
+} from "@ui-sdk/solid/slider";
+import { createSignal } from "solid-js";
 
 export interface SliderProps {
   value: number;
@@ -11,88 +16,54 @@ export interface SliderProps {
   "aria-label"?: string;
 }
 
-const root = css({
-  position: "relative",
-  display: "flex",
-  width: "36",
-  touchAction: "none",
-  userSelect: "none",
-  alignItems: "center",
-});
-const track = css({
-  position: "relative",
-  height: "1",
-  width: "full",
-  borderRadius: "full",
-  backgroundColor: "input",
-});
-const fill = css({
-  position: "absolute",
-  height: "full",
-  borderRadius: "full",
-  backgroundColor: "brand",
-});
-const thumb = css({
-  top: "-1.5",
-  display: "block",
-  width: "4",
-  height: "4",
-  borderRadius: "full",
-  backgroundColor: "knob",
-  boxShadow: "segmentedThumb",
-  outlineStyle: "none",
-  cursor: "grab",
-  _active: { cursor: "grabbing" },
-  _focusVisible: { boxShadow: "focus" },
-});
-
 export function Slider(props: SliderProps) {
   // A drag moves a local value: the settings change travels to the main process and back, and the
   // echo must not pull the thumb back under the pointer while it moves
-  const [value, setValue] = createSignal(props.value);
+  const [draft, setDraft] = createSignal<number>();
   let dragging = false;
 
-  createEffect(() => {
-    const next = props.value;
-    if (!dragging) setValue(next);
-  });
-
   return (
-    <KobalteSlider
+    <UiSlider
       data-slot="slider"
-      value={[value()]}
-      minValue={props.min}
-      maxValue={props.max}
+      value={draft() ?? props.value}
+      min={props.min}
+      max={props.max}
       step={props.step}
-      onChange={([next]) => {
-        if (next === undefined) return;
-        setValue(next);
+      onValueChange={(next) => {
+        if (typeof next !== "number") return;
+        if (dragging) setDraft(next);
         props.onChange(next);
       }}
-      onChangeEnd={() => {
+      onValueCommit={() => {
         dragging = false;
+        setDraft(undefined);
       }}
       aria-label={props["aria-label"]}
-      class={root}
+      class="relative flex w-36 touch-none items-center select-none"
     >
-      <KobalteSlider.Track
-        data-slot="slider-track"
-        class={track}
+      <SliderControl
+        data-slot="slider-control"
+        class="flex w-full items-center py-1.5"
         onPointerDown={() => {
           dragging = true;
         }}
       >
-        <KobalteSlider.Fill data-slot="slider-fill" class={fill} />
-        <KobalteSlider.Thumb
-          data-slot="slider-thumb"
-          class={thumb}
-          onPointerDown={() => {
-            dragging = true;
-          }}
-        >
-          <KobalteSlider.Input />
-        </KobalteSlider.Thumb>
-      </KobalteSlider.Track>
-    </KobalteSlider>
+        <SliderTrack data-slot="slider-track" class="relative h-1 w-full rounded-full bg-input">
+          <SliderIndicator
+            data-slot="slider-fill"
+            class="absolute left-(--slider-indicator-start) h-full w-(--slider-indicator-size) rounded-full bg-brand"
+          />
+          <SliderThumb
+            data-slot="slider-thumb"
+            index={0}
+            class="absolute top-1/2 left-(--slider-thumb-position) block size-4 -translate-x-1/2 -translate-y-1/2 cursor-grab rounded-full bg-knob shadow-segmented-thumb outline-none focus-visible:shadow-focus active:cursor-grabbing"
+            aria-label={props["aria-label"]}
+            onPointerDown={() => {
+              dragging = true;
+            }}
+          />
+        </SliderTrack>
+      </SliderControl>
+    </UiSlider>
   );
 }

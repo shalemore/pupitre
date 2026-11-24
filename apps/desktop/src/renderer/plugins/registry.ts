@@ -1,5 +1,6 @@
 import type { Extension } from "@codemirror/state";
 import type { EditorView } from "@codemirror/view";
+import { desktop } from "@pupitre/desktop-api/client";
 import type { TrustedPlugin } from "@pupitre/plugin-sdk/trusted";
 import { configureSourceModeHost, sourceMode } from "@pupitre/plugin-source-mode";
 import { writingModes } from "@pupitre/plugin-writing-modes";
@@ -13,8 +14,27 @@ import { motionEnabled, scrollTiming } from "@/lib/motion";
  */
 const builtinPlugins: readonly TrustedPlugin<Settings>[] = [writingModes, sourceMode];
 
+if (typeof document !== "undefined") {
+  const css = builtinPlugins
+    .map((plugin) => plugin.styles)
+    .filter((entry): entry is string => entry !== undefined)
+    .join("\n");
+  if (css !== "" && document.querySelector("style[data-trusted-plugin-styles]") === null) {
+    const element = document.createElement("style");
+    element.dataset["trustedPluginStyles"] = "";
+    element.textContent = css;
+    document.head.append(element);
+  }
+}
+
 // The rendering draws with the app's own chrome and follows its animation setting
-configureSourceModeHost({ openImageMenu, motionEnabled, scrollTiming });
+configureSourceModeHost({
+  openImageMenu,
+  openFile: (path) => void desktop.invoke("app:dispatch", { id: "file.open-path", path }),
+  copyText: (text) => desktop.invoke("clipboard:write-text", text),
+  motionEnabled,
+  scrollTiming,
+});
 
 /** The editor extensions every enabled plugin contributes for these settings. */
 export function pluginExtensions(settings: Settings): Extension {

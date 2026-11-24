@@ -1,8 +1,7 @@
-import { Combobox as KobalteCombobox } from "@kobalte/core/combobox";
-import { Input, ScrollView, Sheet, type ScrollViewProps } from "@pupitre/ui";
-import { createMemo, createSignal, type JSX, onMount, Show } from "solid-js";
-import { FocusFirstRow, ShowFocusedRow } from "@/lib/combobox-rows";
-import { css } from "@/styled-system/css";
+import { Input, ScrollView, Sheet } from "@pupitre/ui";
+import type { JSX } from "@solidjs/web";
+import { Command, CommandInput, CommandItem, CommandList } from "@ui-sdk/solid/command";
+import { createMemo, createSignal, For, onSettled, Show } from "solid-js";
 
 export interface PaletteSheetProps<Item> {
   /** Names the sheet and the list it holds, for anyone who cannot see it. */
@@ -21,57 +20,23 @@ export interface PaletteSheetProps<Item> {
   children: (item: Item) => JSX.Element;
 }
 
-/** A row with the key the list knows it by; the place in the list keeps the first row first as the query narrows. */
-interface Row<Item> {
-  key: string;
-  item: Item;
-}
+export const PALETTE_ITEM_CLASS =
+  "__INTERACTIVE__ flex w-full cursor-pointer items-center gap-3 rounded-md px-2.5 py-1.5 text-start text-xs text-muted-foreground outline-none data-highlighted:bg-selected data-highlighted:font-medium data-highlighted:text-foreground";
 
-function isRowList<Item>(value: unknown): value is readonly Row<Item>[] {
-  return Array.isArray(value);
-}
+export const PALETTE_STATUS_CLASS = "px-2.5 py-1.5 text-muted-foreground";
 
-/**
- * The row a selection change carries. A single selection is typed as one option, but the combobox
- * hands the selected keys over as a list.
- */
-function selectedRow<Item>(
-  selected: Row<Item> | readonly Row<Item>[] | null,
-): Row<Item> | undefined {
-  return isRowList<Item>(selected) ? selected[0] : (selected ?? undefined);
+/** Focuses `input` and stops Enter during IME composition from triggering a command item. */
+export function useCommandInputGuard(getInput: () => HTMLInputElement | undefined): void {
+  onSettled(() => {
+    const input = getInput();
+    input?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.isComposing) event.stopPropagation();
+    };
+    input?.addEventListener("keydown", onKeyDown, true);
+    return () => input?.removeEventListener("keydown", onKeyDown, true);
+  });
 }
-
-const paletteItem = css({
-  layerStyle: "interactive",
-  display: "flex",
-  width: "full",
-  cursor: "pointer",
-  alignItems: "center",
-  gap: "3",
-  borderRadius: "md",
-  paddingBlock: "1.5",
-  paddingInline: "2.5",
-  textAlign: "start",
-  textStyle: "xs",
-  color: "muted.foreground",
-  outlineStyle: "none",
-  _highlighted: { backgroundColor: "selected", fontWeight: "medium", color: "foreground" },
-});
-const list = css({
-  display: "flex",
-  maxHeight: "80",
-  minHeight: "0",
-  flexDirection: "column",
-  gap: "0.5",
-  marginBlockStart: "2",
-});
-const empty = css({ paddingInline: "2.5", paddingBlock: "1.5", color: "muted.foreground" });
-const hint = css({
-  paddingInline: "2.5",
-  paddingBlockEnd: "1",
-  textStyle: "2xs",
-  color: "muted.foreground",
-});
 
 /**
  * The panel a palette is: a query field over the rows it picks, walked with the arrow keys and run
@@ -80,77 +45,68 @@ const hint = css({
  */
 export function PaletteSheet<Item>(props: PaletteSheetProps<Item>) {
   const [query, setQuery] = createSignal("");
-  // The list is always open; the combobox closes it on Tab, and typing opens it again
-  const [open, setOpen] = createSignal(true);
   const shown = createMemo(() => props.rows(query()));
-  const options = createMemo<Row<Item>[]>(() =>
-    shown().map((item, index) => ({ key: String(index), item })),
-  );
   let input: HTMLInputElement | undefined;
 
-  // An input method commits its candidate with Enter, which must not run the row under it
-  onMount(() => {
-    input?.focus();
-    // The key events are delegated at the document, so stopping the propagation here keeps the
-    // combobox from seeing a commit Enter at all
-    input?.addEventListener(
-      "keydown",
-      (event) => {
-        if (event.isComposing) event.stopPropagation();
-      },
-      true,
-    );
-  });
+  useCommandInputGuard(() => input);
 
-  const pick = (row: Row<Item> | undefined) => {
-    if (row === undefined) return;
-    props.onPick(row.item);
+  const pick = (index: number) => {
+    const item = shown()[index];
+    if (item === undefined) return;
+    props.onPick(item);
     props.onClose();
   };
 
   return (
     <Sheet title={props.title} onClose={props.onClose}>
-      <KobalteCombobox<Row<Item>>
-        open={open()}
-        onOpenChange={setOpen}
-        options={options()}
-        optionValue={(row) => row.key}
-        optionTextValue={() => ""}
-        // Picking closes the sheet, and the query is what the field keeps until it does
-        optionLabel={() => query()}
-        defaultFilter={() => true}
-        allowsEmptyCollection
-        closeOnSelection={false}
-        triggerMode="input"
-        onInputChange={setQuery}
-        onChange={(selected) => pick(selectedRow(selected))}
-        itemComponent={(itemProps) => (
-          <KobalteCombobox.Item item={itemProps.item} class={paletteItem}>
-            {props.children(itemProps.item.rawValue.item)}
-          </KobalteCombobox.Item>
-        )}
+      <Command
+        filter={() => true}
+        query={query()}
+        onQueryChange={(next) => setQuery(next)}
+        onAction={(value) => pick(Number(value))}
       >
-        <KobalteCombobox.Input
-          as={Input}
-          ref={(element) => (input = element)}
-          dir="auto"
-          placeholder={props.placeholder}
-          aria-label={props.title}
-        />
-        <KobalteCombobox.Listbox
-          as={(listProps: ScrollViewProps) => (
-            <ScrollView as="ul" {...listProps} aria-label={props.title} class={list} />
+        <CommandInput
+          render={(inputProps) => (
+            <Input
+              {...inputProps}
+              ref={(element) => {
+                input = element;
+                const partRef = inputProps["ref"];
+                if (typeof partRef === "function") partRef(element);
+              }}
+              dir="auto"
+              placeholder={props.placeholder}
+              aria-label={props.title}
+            />
           )}
         />
-        <FocusFirstRow />
-        <ShowFocusedRow />
-      </KobalteCombobox>
+        <CommandList
+          render={(listProps) => (
+            <ScrollView
+              as="ul"
+              {...listProps}
+              aria-label={props.title}
+              class="mt-2 flex max-h-80 min-h-0 flex-col gap-0.5"
+            />
+          )}
+        >
+          <For each={shown()}>
+            {(row, index) => (
+              <CommandItem value={String(index())} class={PALETTE_ITEM_CLASS}>
+                {props.children(row)}
+              </CommandItem>
+            )}
+          </For>
+        </CommandList>
+      </Command>
       <Show when={shown().length === 0 && props.emptyMessage !== undefined}>
-        <p role="status" class={empty}>
+        <p role="status" class={PALETTE_STATUS_CLASS}>
           {props.emptyMessage}
         </p>
       </Show>
-      <Show when={props.hint}>{(hintText) => <p class={hint}>{hintText()}</p>}</Show>
+      <Show when={props.hint}>
+        {(hintText) => <p class="px-2.5 pb-1 text-2xs text-muted-foreground">{hintText()}</p>}
+      </Show>
     </Sheet>
   );
 }

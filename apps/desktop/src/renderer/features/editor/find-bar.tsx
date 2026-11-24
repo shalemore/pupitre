@@ -1,26 +1,17 @@
 import { t } from "@pupitre/i18n/solid";
-import { Badge, Button, IconButton, Input, ToggleIconButton } from "@pupitre/ui";
-import {
-  CaseSensitive,
-  ChevronDown,
-  ChevronRight,
-  ChevronUp,
-  Regex,
-  WholeWord,
-  X,
-} from "lucide-solid";
-import { createEffect, createSignal, on, Show, type Component, type JSX } from "solid-js";
-import { css, cx } from "@/styled-system/css";
+import { Badge, Button, cn, IconButton, Input } from "@pupitre/ui";
+import { ChevronDown, ChevronRight, ChevronUp, X } from "lucide-solid";
+import { createEffect, Show, type Component } from "solid-js";
+import { SearchOptionToggles } from "@/components/search-option-toggles";
 import type { MatchStats, SearchOptions } from "./search";
 
 export interface FindBarProps {
   showReplace: boolean;
-  /** Search text prefilled on open, usually the text selected in the editor. */
-  initialSearch: string;
+  options: SearchOptions;
   matchStats: MatchStats;
   onToggleReplace: () => void;
   onClose: () => void;
-  onSearchChange: (options: SearchOptions) => void;
+  onOptionsChange: (options: SearchOptions) => void;
   onFindNext: () => void;
   onFindPrevious: () => void;
   onReplaceNext: () => void;
@@ -28,125 +19,22 @@ export interface FindBarProps {
   class?: string;
 }
 
-const FindToggle: Component<{
-  pressed: boolean;
-  onChange: (pressed: boolean) => void;
-  title: string;
-  children: JSX.Element;
-}> = (props) => (
-  // A press on the toggle must not take the focus from the query, or the next typed key goes to the button
-  <span class={toggleWrap} onMouseDown={(event) => event.preventDefault()}>
-    <ToggleIconButton
-      pressed={props.pressed}
-      onChange={props.onChange}
-      label={props.title}
-      size="icon-2xs"
-      class={pressedToggle}
-    >
-      {props.children}
-    </ToggleIconButton>
-  </span>
-);
-
-const pressedToggle = css({ "&[data-pressed]": { backgroundColor: "brand/15" } });
-const toggleWrap = css({ display: "flex" });
-const bar = css({
-  position: "absolute",
-  top: "3",
-  insetInline: "5",
-  zIndex: "40",
-  display: "flex",
-  flexDirection: "column",
-  gap: "2",
-  borderRadius: "xl",
-  backgroundColor: "popover/95",
-  padding: "2",
-  boxShadow: "float",
-  backdropFilter: "[blur(12px)]",
-  textStyle: "xs",
-  userSelect: "none",
-  animationName: "fadeInDown",
-  animationDuration: "base",
-  animationTimingFunction: "enter",
-  maxWidth: "sm",
-  _print: { display: "none" },
-});
-const row = css({ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "1.5" });
-const chevron = css({
-  transitionProperty: "transform",
-  transitionDuration: "snap",
-  transitionTimingFunction: "snap",
-  _rtl: { scale: "[-1 1]" },
-});
-const chevronOpen = css({ transform: "rotate(90deg)" });
-const searchBox = css({
-  position: "relative",
-  flex: "1",
-  display: "flex",
-  alignItems: "center",
-  minWidth: "32",
-});
-const searchField = css({ paddingInlineEnd: "[4.5rem]" });
-const options = css({
-  position: "absolute",
-  insetInlineEnd: "1",
-  display: "flex",
-  alignItems: "center",
-  gap: "0.5",
-});
-const count = css({ flexShrink: 0, fontVariantNumeric: "tabular-nums" });
-const replaceRow = css({
-  display: "flex",
-  flexWrap: "wrap",
-  alignItems: "center",
-  gap: "1.5",
-  paddingInlineStart: "7",
-  animationName: "fadeInDownSmall",
-  animationDuration: "base",
-  animationTimingFunction: "enter",
-});
-const grow = css({ flex: "1", minWidth: "28" });
-
 export const FindBar: Component<FindBarProps> = (props) => {
-  const [searchText, setSearchText] = createSignal(props.initialSearch);
-  const [replaceText, setReplaceText] = createSignal("");
-  const [caseSensitive, setCaseSensitive] = createSignal(false);
-  const [wholeWord, setWholeWord] = createSignal(false);
-  const [regexp, setRegexp] = createSignal(false);
   const hasMatches = () => props.matchStats.pending === true || props.matchStats.total > 0;
   let searchInput: HTMLInputElement | undefined;
   let replaceInput: HTMLInputElement | undefined;
 
-  createEffect(() => {
-    props.onSearchChange({
-      search: searchText(),
-      replace: replaceText(),
-      caseSensitive: caseSensitive(),
-      wholeWord: wholeWord(),
-      regexp: regexp(),
-    });
-  });
+  const update = (patch: Partial<SearchOptions>) =>
+    props.onOptionsChange({ ...props.options, ...patch });
 
   // Each time the bar is reopened (or switched to replace), focus the matching input and select its text
   createEffect(
-    on(
-      () => props.showReplace,
-      (showReplace) => {
-        const input = showReplace ? replaceInput : searchInput;
-        input?.focus();
-        input?.select();
-      },
-    ),
-  );
-
-  createEffect(
-    on(
-      () => props.initialSearch,
-      (text) => {
-        if (text) setSearchText(text);
-        searchInput?.select();
-      },
-    ),
+    () => props.showReplace,
+    (showReplace) => {
+      const input = showReplace ? replaceInput : searchInput;
+      input?.focus();
+      input?.select();
+    },
   );
 
   const handleKeyDown = (e: KeyboardEvent, onEnter: () => void, onShiftEnter: () => void) => {
@@ -172,49 +60,51 @@ export const FindBar: Component<FindBarProps> = (props) => {
   return (
     <div
       data-slot="find-bar"
-      class={cx(bar, props.class)}
+      class={cn(
+        "__FLOATING_PANEL__ absolute inset-x-5 top-3 z-40 flex max-w-sm animate-fade-in-down flex-col gap-2 p-2 text-xs select-none print:hidden",
+        props.class,
+      )}
       onKeyDown={(event) => {
         if (event.key !== "Escape" || event.defaultPrevented) return;
         event.preventDefault();
         props.onClose();
       }}
     >
-      <div class={row}>
+      <div class="flex flex-wrap items-center gap-1.5">
         <IconButton label={t().editor.toggleReplace} onClick={props.onToggleReplace}>
-          <ChevronRight class={cx(chevron, props.showReplace && chevronOpen)} />
+          <ChevronRight
+            class={cn(
+              "transition-transform duration-snap ease-snap rtl:-scale-x-100",
+              props.showReplace && "rotate-90",
+            )}
+          />
         </IconButton>
 
-        <div class={searchBox}>
+        <div class="relative flex min-w-32 flex-1 items-center">
           <Input
             ref={(element) => (searchInput = element)}
             size="sm"
             dir="auto"
-            value={searchText()}
-            onInput={(e) => setSearchText(e.currentTarget.value)}
+            value={props.options.search}
+            onInput={(e) => update({ search: e.currentTarget.value })}
             onKeyDown={(e) => handleKeyDown(e, props.onFindNext, props.onFindPrevious)}
             placeholder={t().editor.findPlaceholder}
-            class={searchField}
+            class="pe-18"
           />
 
-          <div class={options}>
-            <FindToggle
-              pressed={caseSensitive()}
-              onChange={setCaseSensitive}
-              title={t().editor.matchCase}
-            >
-              <CaseSensitive />
-            </FindToggle>
-            <FindToggle pressed={wholeWord()} onChange={setWholeWord} title={t().editor.wholeWord}>
-              <WholeWord />
-            </FindToggle>
-            <FindToggle pressed={regexp()} onChange={setRegexp} title={t().editor.useRegex}>
-              <Regex />
-            </FindToggle>
-          </div>
+          <SearchOptionToggles
+            class="absolute inset-e-1"
+            caseSensitive={props.options.caseSensitive}
+            wholeWord={props.options.wholeWord}
+            regexp={props.options.regexp}
+            onCaseSensitiveChange={(value) => update({ caseSensitive: value })}
+            onWholeWordChange={(value) => update({ wholeWord: value })}
+            onRegexpChange={(value) => update({ regexp: value })}
+          />
         </div>
 
-        <div class={count}>
-          <Show when={searchText()}>
+        <div class="shrink-0 tabular-nums">
+          <Show when={props.options.search}>
             <Badge variant={hasMatches() ? "secondary" : "destructive"} size="sm" dir="ltr">
               {matchLabel()}
             </Badge>
@@ -241,16 +131,16 @@ export const FindBar: Component<FindBarProps> = (props) => {
       </div>
 
       <Show when={props.showReplace}>
-        <div class={replaceRow}>
+        <div class="flex animate-fade-in-down-small flex-wrap items-center gap-1.5 ps-7">
           <Input
             ref={(element) => (replaceInput = element)}
             size="sm"
             dir="auto"
-            value={replaceText()}
-            onInput={(e) => setReplaceText(e.currentTarget.value)}
+            value={props.options.replace}
+            onInput={(e) => update({ replace: e.currentTarget.value })}
             onKeyDown={(e) => handleKeyDown(e, props.onReplaceNext, props.onReplaceAll)}
             placeholder={t().editor.replacePlaceholder}
-            class={grow}
+            class="min-w-28 flex-1"
           />
           <Button
             variant="outline"

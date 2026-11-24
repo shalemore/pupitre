@@ -1,26 +1,26 @@
-import { Separator as KobalteSeparator } from "@kobalte/core/separator";
-import { type JSX, splitProps } from "solid-js";
-import { css, cx } from "./styled-system/css";
+import { Separator as UiSeparator } from "@ui-sdk/solid/separator";
+import { cn } from "cn";
 
-export interface SeparatorProps extends JSX.HTMLAttributes<HTMLDivElement> {
+export interface SeparatorProps {
   orientation?: "horizontal" | "vertical";
+  decorative?: boolean;
+  class?: string | undefined;
 }
 
-// Kobalte draws a separator as <hr>, which the preflight gives a border in the text colour
-const separator = css({ flexShrink: 0, borderWidth: "[0]", backgroundColor: "border" });
-const horizontal = css({ height: "[1px]", width: "full" });
-const vertical = css({ height: "full", width: "[1px]", alignSelf: "stretch" });
-
 export function Separator(props: SeparatorProps) {
-  const [local, rest] = splitProps(props, ["class", "orientation"]);
-  const isVertical = () => local.orientation === "vertical";
+  const orientation = () => props.orientation ?? "horizontal";
+  const isVertical = () => orientation() === "vertical";
 
   return (
-    <KobalteSeparator
-      orientation={local.orientation ?? "horizontal"}
+    <UiSeparator
       data-slot="separator"
-      class={cx(separator, isVertical() ? vertical : horizontal, local.class)}
-      {...rest}
+      orientation={orientation()}
+      decorative={props.decorative ?? false}
+      class={cn(
+        "shrink-0 border-0 bg-border",
+        isVertical() ? "h-full w-px self-stretch" : "h-px w-full",
+        props.class,
+      )}
     />
   );
 }

@@ -1,43 +1,17 @@
-import { Menubar } from "@kobalte/core/menubar";
 import { desktop } from "@pupitre/desktop-api/client";
 import { TOP_MENUS, type MenuEntry, type Menus, type TopMenu } from "@pupitre/desktop-api/menu";
 import { t } from "@pupitre/i18n/solid";
 import { IconButton } from "@pupitre/ui";
-import { FLOATING_PANEL, menuPanel } from "@pupitre/ui/styles";
 import { makeEventListener } from "@solid-primitives/event-listener";
+import { Menu as UiMenu, MenuTrigger } from "@ui-sdk/solid/menu";
+import { Menubar } from "@ui-sdk/solid/menubar";
 import { Menu } from "lucide-solid";
 import { createSignal, For, Show, type Component } from "solid-js";
-import { MenuEntries, MenuPopup } from "@/components/menu-popup";
+import { MenuEntries, MenuPanel, MenuPopup } from "@/components/menu-popup";
 import { createMenu } from "@/lib/menu-state";
-import { css, cx } from "@/styled-system/css";
 
 /** How soon after a menu closes the next one is still taking its place rather than arriving. */
 const SWITCH_WINDOW_MS = 100;
-
-const bar = css({
-  display: "flex",
-  flexShrink: 0,
-  alignItems: "center",
-  textStyle: "xs",
-  userSelect: "none",
-});
-const trigger = css({
-  layerStyle: "interactive",
-  flexShrink: 0,
-  whiteSpace: "nowrap",
-  paddingInline: "2.5",
-  paddingBlock: "1",
-  borderRadius: "md",
-  color: "muted.foreground",
-  outlineStyle: "none",
-  cursor: "pointer",
-  _hover: { color: "foreground", backgroundColor: "accent" },
-  _focusVisible: { color: "foreground", backgroundColor: "accent" },
-  _expanded: { color: "foreground", backgroundColor: "accent" },
-});
-const menuButton = css({ color: "muted.foreground" });
-/** Kobalte's menubar has no gutter option; the margin leaves the same gap as the other menus. */
-const menuBarPanel = css({ marginBlockStart: "2" });
 
 interface MenuBarProps {
   /** Told whether a menu is open, so an immersive title bar can stay unfolded under it. */
@@ -136,46 +110,47 @@ export const MenuBar: Component<MenuBarProps> = (props) => {
             document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
         }
       }}
-      class={bar}
+      class="flex shrink-0 items-center text-xs select-none"
     >
       <For each={TOP_MENUS}>
         {(menu) => (
-          <Menubar.Menu
-            value={menu}
-            // Kobalte opens a menu when its trigger is pressed, and moves to the next one while a
-            // menu is open and the pointer is over the bar; the bar only follows it
-            onOpenChange={(isOpen) => {
-              if (isOpen) show(menu);
-              else if (open() === menu) hide();
+          <UiMenu
+            open={open() === menu}
+            onOpenChange={(isOpen, details) => {
+              if (isOpen) {
+                show(menu);
+                return;
+              }
+              // A press on another trigger is the bar's business: it switches or closes the menu
+              // itself. Without this, a press folds the open menu first, and the menu the click
+              // brings up arrives with the rise instead of taking its place. Hovering across the
+              // bar switches through the SDK instead, so only a press takes this path.
+              if (details.reason === "trigger-press") {
+                details.cancel();
+                return;
+              }
+              if (open() === menu) hide();
             }}
           >
-            <Menubar.Trigger class={trigger}>{t().menu[menu]}</Menubar.Trigger>
-            <Menubar.Portal>
-              <Menubar.Content
-                data-instant={instant() === menu ? "" : undefined}
-                // A press on the bar is the bar's business: it switches or closes the menu itself.
-                // Without this, a press on another trigger folds the open menu first, and the menu
-                // the click brings up arrives with the rise instead of taking its place.
-                onInteractOutside={(event) => {
-                  if (
-                    event.target instanceof Element &&
-                    event.target.closest("[data-menu-bar]") !== null
-                  ) {
-                    event.preventDefault();
-                  }
+            <MenuTrigger class="__INTERACTIVE__ shrink-0 cursor-pointer rounded-md px-2.5 py-1 whitespace-nowrap text-muted-foreground outline-none hover:bg-accent hover:text-foreground focus-visible:bg-accent focus-visible:text-foreground aria-expanded:bg-accent aria-expanded:text-foreground">
+              {t().menu[menu]}
+            </MenuTrigger>
+            <MenuPanel
+              side="bottom"
+              align="start"
+              sideOffset={8}
+              data-instant={instant() === menu ? "" : undefined}
+              class="mt-2"
+            >
+              <MenuEntries
+                entries={entries()[menu] ?? []}
+                onSelect={(entry) => {
+                  hide();
+                  void desktop.invoke("menu:click", entry.id);
                 }}
-                class={cx(FLOATING_PANEL, menuPanel, menuBarPanel)}
-              >
-                <MenuEntries
-                  entries={entries()[menu] ?? []}
-                  onSelect={(entry) => {
-                    hide();
-                    void desktop.invoke("menu:click", entry.id);
-                  }}
-                />
-              </Menubar.Content>
-            </Menubar.Portal>
-          </Menubar.Menu>
+              />
+            </MenuPanel>
+          </UiMenu>
         )}
       </For>
     </Menubar>
@@ -234,8 +209,8 @@ export const MenuButton: Component<MenuButtonProps> = (props) => {
         data-menu-bar
         label={t().menu.menu}
         aria-haspopup="menu"
-        aria-expanded={panel.open() !== undefined}
-        class={menuButton}
+        aria-expanded={panel.open() !== undefined ? "true" : "false"}
+        class="text-muted-foreground"
         // The button does not take the focus from the editor, so closing the menu gives typing back
         onPointerDown={(event) => event.preventDefault()}
         onClick={() => void toggle()}

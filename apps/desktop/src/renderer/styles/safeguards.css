@@ -1,0 +1,70 @@
+/*
+ * Editing safeguards: sit above `document-theme`, `plugin`, and `preferences` so themes and
+ * plugins cannot obscure source casing, syntax markers, or CodeMirror editing invariants.
+ */
+@layer safeguards {
+  /* Source legibility: keep exact character casing and spacing when editing headings or markers */
+  .md-document .md-heading:has(.md-mark),
+  .md-document .md-heading .md-code,
+  .md-document .md-mark,
+  .md-document .md-html-mark,
+  .md-document .md-math-source,
+  .md-document .md-front-matter,
+  .md-document .md-html {
+    text-transform: none;
+    font-variant: normal;
+    font-variant-ligatures: none;
+  }
+
+  .md-document .md-heading .md-code,
+  .md-document .md-mark,
+  .md-document .md-html-mark {
+    letter-spacing: normal;
+    word-spacing: normal;
+  }
+
+  .md-document .md-mark,
+  .md-document .md-html-mark {
+    font-style: normal;
+    text-decoration: none;
+  }
+
+  .md-document .cm-line:has(.md-mark) {
+    hyphens: none;
+  }
+
+  .md-document .md-mark:not(.md-code-block.md-syntax-line .md-mark),
+  .md-document .md-html-mark {
+    display: inline;
+    visibility: visible;
+    font-size: inherit;
+  }
+
+  /* Interaction & selection: themes and plugins cannot disable editing or text selection */
+  .md-document,
+  .md-document .cm-content,
+  .md-document .cm-line {
+    user-select: text;
+    -webkit-user-select: text;
+    pointer-events: auto;
+  }
+
+  /* Line geometry: CodeMirror relies on block lines without vertical margins and break-spaces */
+  .md-document .cm-content {
+    white-space: break-spaces;
+  }
+
+  .md-document .cm-line {
+    display: block;
+    margin-block: 0;
+  }
+
+  /* Cursor & selection layers must stay visible on screen (print hides them in preferences.css) */
+  @media not print {
+    .md-document .cm-cursorLayer,
+    .md-document .cm-selectionLayer {
+      display: block;
+      visibility: visible;
+    }
+  }
+}

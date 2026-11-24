@@ -1,8 +1,7 @@
 import "@/app.css";
 import "@/lib/locale";
 import { ScrollViewPreferencesProvider } from "@pupitre/ui";
-import type { JSX } from "solid-js";
-import { render } from "solid-js/web";
+import { render, type JSX } from "@solidjs/web";
 import { LocaleProvider } from "@/components/locale-provider";
 import { setupAppearance } from "@/lib/appearance";
 import { settings } from "@/lib/settings";

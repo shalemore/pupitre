@@ -1,6 +1,5 @@
 import { t } from "@pupitre/i18n/solid";
 import { ToggleIconButton } from "@pupitre/ui";
-import { quietButton } from "@pupitre/ui/styles";
 import { Eye } from "lucide-solid";
 import { Show, type Component } from "solid-js";
 import { FolderSortButton } from "@/features/sidebar/folder-sort-button";
@@ -21,8 +20,8 @@ export const FolderActions: Component<FolderActionsProps> = (props) => (
         pressed={props.showHidden}
         onChange={props.onShowHiddenChange}
         label={t().settings.showHidden}
+        variant="quiet"
         size="icon-2xs"
-        class={quietButton}
       >
         <Eye />
       </ToggleIconButton>

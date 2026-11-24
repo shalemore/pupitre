@@ -1,26 +1,21 @@
-import { debounce } from "@solid-primitives/scheduled";
-import {
-  createSignal,
-  type JSX,
-  onCleanup,
-  onMount,
-  Show,
-  splitProps,
-  type ValidComponent,
-} from "solid-js";
-import { Dynamic } from "solid-js/web";
+import { debounce } from "@pupitre/utils";
+import { Dynamic, type JSX } from "@solidjs/web";
+import { cn } from "cn";
+import { createSignal, omit, onSettled, Show, type ValidComponent } from "solid-js";
 import { useScrollViewPreferences } from "./scroll-view-preferences";
-import { css, cx } from "./styled-system/css";
-import { SCROLL_FADE } from "./styles";
 
 const IDLE_MS = 1200;
 /** Space kept free at both ends of the track, so the thumb clears rounded corners. */
 const TRACK_INSET = 8;
 const MIN_THUMB = 24;
 
-export interface ScrollViewProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "onScroll"> {
+export interface ScrollViewProps extends Omit<
+  JSX.HTMLAttributes<HTMLDivElement>,
+  "onScroll" | "class"
+> {
   /** The element to render, for lists and landmarks that must keep their own tag. */
-  as?: ValidComponent;
+  as?: ValidComponent | keyof JSX.IntrinsicElements;
+  class?: string | undefined;
 }
 
 interface ThumbGeometry {
@@ -65,35 +60,6 @@ function hiddenEdges(element: HTMLElement): string {
     .join(" ");
 }
 
-const view = css({
-  overflowY: "auto",
-  // The native scrollbar cannot fade, so it gives way to the thumb drawn below
-  scrollbarWidth: "none",
-  "&::-webkit-scrollbar": { display: "none" },
-  _print: { maskImage: "none" },
-});
-const sticky = css({
-  position: "sticky",
-  top: "0",
-  zIndex: "10",
-  height: "0",
-  _print: { display: "none" },
-});
-const track = css({ position: "absolute", insetInlineEnd: "0", top: "0", width: "3" });
-const thumb = css({
-  position: "absolute",
-  insetInlineEnd: "0.5",
-  width: "var(--ui-scrollbar-thickness)",
-  borderRadius: "full",
-  backgroundColor: "border",
-  transitionProperty: "opacity",
-  transitionDuration: "sheet",
-  transitionTimingFunction: "outExpo",
-  _hover: { backgroundColor: "border.strong" },
-});
-const thumbShown = css({ opacity: 1 });
-const thumbHidden = css({ opacity: 0 });
-
 /**
  * A vertically scrolling container with its own overlay scrollbar. Every scrollable area uses it,
  * so the scrollbar setting (auto-hide, always show, always hide) applies everywhere. The native
@@ -102,7 +68,8 @@ const thumbHidden = css({ opacity: 0 });
  * towards an edge while there is more to scroll past it.
  */
 export function ScrollView(props: ScrollViewProps) {
-  const [local, rest] = splitProps(props, ["as", "class", "children", "ref"]);
+  const rest = omit(props, "as", "class", "children", "ref");
+  const component = () => props.as ?? "div";
   const [thumbGeometry, setThumb] = createSignal(NO_THUMB);
   const [overflow, setOverflow] = createSignal("");
   const [scrolling, setScrolling] = createSignal(false);
@@ -136,7 +103,7 @@ export function ScrollView(props: ScrollViewProps) {
     );
   };
 
-  onMount(() => {
+  onSettled(() => {
     if (!element) return;
     // Content growing or shrinking changes the thumb without any scroll event
     const resize = new ResizeObserver(update);
@@ -150,23 +117,28 @@ export function ScrollView(props: ScrollViewProps) {
     const mutation = new MutationObserver(observeChildren);
     mutation.observe(element, { childList: true });
     observeChildren();
-    onCleanup(() => {
+    return () => {
+      stopScrolling.clear();
       resize.disconnect();
       mutation.disconnect();
-    });
+    };
   });
 
   return (
     <Dynamic
-      component={local.as ?? "div"}
+      component={component()}
       ref={(node: HTMLDivElement) => {
         element = node;
-        if (typeof local.ref === "function") local.ref(node);
+        if (typeof props.ref === "function") props.ref(node);
       }}
       data-slot="scroll-view"
       data-overflow={overflow() || undefined}
       data-scroll-view
-      class={cx(view, preferences().fade && SCROLL_FADE, local.class)}
+      class={cn(
+        "scrollbar-none overflow-y-auto print:mask-none",
+        preferences().fade && "__SCROLL_FADE__",
+        props.class,
+      )}
       onScroll={() => {
         update();
         setScrolling(true);
@@ -177,13 +149,13 @@ export function ScrollView(props: ScrollViewProps) {
       {/* Zero height and sticky: it follows the scroll port without taking part in the layout. It must stay the first child, because a sticky element placed after the content never reaches the top of the port */}
       <div
         aria-hidden="true"
-        class={sticky}
+        class="sticky top-0 z-10 h-0 print:hidden"
         style={{ "margin-inline-end": `-${thumbGeometry().padding}px` }}
       >
         <Show when={preferences().scrollbar !== "never" && thumbGeometry().height > 0}>
           <div
             ref={(node) => (trackElement = node)}
-            class={track}
+            class="absolute inset-e-0 top-0 w-3"
             // The sticky child sits after the top padding; reach back over it so the track spans
             // the port instead of adding the padding to the scroll range
             style={{
@@ -200,7 +172,10 @@ export function ScrollView(props: ScrollViewProps) {
           >
             <div
               data-slot="scroll-thumb"
-              class={cx(thumb, visible() ? thumbShown : thumbHidden)}
+              class={cn(
+                "absolute inset-e-0.5 w-(--ui-scrollbar-thickness) rounded-full bg-border transition-opacity duration-sheet ease-out-expo hover:bg-border-strong",
+                visible() ? "opacity-100" : "opacity-0",
+              )}
               style={{ top: `${thumbGeometry().top}px`, height: `${thumbGeometry().height}px` }}
               onPointerDown={(event) => {
                 if (!element) return;
@@ -219,7 +194,7 @@ export function ScrollView(props: ScrollViewProps) {
           </div>
         </Show>
       </div>
-      {local.children}
+      {props.children}
     </Dynamic>
   );
 }

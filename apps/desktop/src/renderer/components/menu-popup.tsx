@@ -1,21 +1,19 @@
+import type { MenuEntry } from "@pupitre/desktop-api/menu";
+import { cn, ScrollView, Separator } from "@pupitre/ui";
 import {
+  Menu,
   MenuCheckboxItem,
   MenuContent,
   MenuItem,
-  MenuPortal,
-  MenuRoot,
   MenuSub,
   MenuSubContent,
   MenuSubTrigger,
-} from "@kobalte/core/menu";
-import type { MenuEntry } from "@pupitre/desktop-api/menu";
-import { Separator } from "@pupitre/ui";
-import { FLOATING_PANEL, menuPanel, rtlFlip, truncate } from "@pupitre/ui/styles";
+} from "@ui-sdk/solid/menu";
+import { cva } from "class-variance-authority";
 import { Check, ChevronRight } from "lucide-solid";
-import { For, Show, type Component } from "solid-js";
+import { For, omit, Show, createMemo, type Component } from "solid-js";
 import { isRtl } from "@/lib/rtl";
 import { settings } from "@/lib/settings";
-import { css, cx } from "@/styled-system/css";
 
 type MenuItemEntry = Extract<MenuEntry, { type: "item" }>;
 
@@ -29,64 +27,57 @@ export interface MenuPopupProps {
   onClose: () => void;
 }
 
-const check = css({ width: "3", height: "3", flexShrink: 0 });
-const hidden = css({ visibility: "hidden" });
-const row = css({ display: "flex", minWidth: "0", flex: "1", alignItems: "center", gap: "1.5" });
-const label = css({ minWidth: "0" });
-const block = css({ display: "block" });
-const detail = css({ display: "block", textStyle: "2xs", color: "tertiary" });
-const shortcut = css({ textStyle: "2xs", color: "tertiary", fontVariantNumeric: "tabular-nums" });
-const item = css({
-  display: "flex",
-  width: "full",
-  alignItems: "center",
-  gap: "6",
-  borderRadius: "sm",
-  paddingInline: "2.5",
-  paddingBlock: "1.5",
-  textAlign: "start",
-  outlineStyle: "none",
-  transition: "colors",
-  transitionDuration: "fast",
-  transitionTimingFunction: "outExpo",
-  _disabled: { color: "tertiary" },
-  _highlighted: { backgroundColor: "accent", color: "foreground" },
-});
-const submenuChevron = css({
-  width: "3.5",
-  height: "3.5",
-  flexShrink: 0,
-  color: "tertiary",
-});
-const separator = css({ marginBlock: "1", backgroundColor: "border.subtle" });
+const menuPanel = cva(
+  "__FLOATING_PANEL__ z-50 flex max-h-(--kb-popper-content-available-height) min-w-52 flex-col overflow-hidden rounded-sm p-1 text-xs text-foreground outline-none select-none",
+);
+
+export type MenuPanelProps = Parameters<typeof MenuContent>[0];
+
+/** The shared floating menu surface used by title-bar menus and context menus. */
+export const MenuPanel: Component<MenuPanelProps> = (props) => {
+  const rest = omit(props, "class", "children");
+  return (
+    <MenuContent {...rest} class={cn(menuPanel(), props.class)}>
+      {(state) => (
+        <ScrollView class="flex flex-col">
+          {typeof props.children === "function" ? props.children(state) : props.children}
+        </ScrollView>
+      )}
+    </MenuContent>
+  );
+};
+
+const item = cva(
+  "flex w-full items-center gap-6 rounded-sm px-2.5 py-1.5 text-start transition-colors duration-fast ease-out-expo outline-none disabled:text-tertiary data-highlighted:bg-accent data-highlighted:text-foreground",
+);
 
 const ItemContent: Component<{ item: MenuItemEntry; checked: boolean; hasChecks: boolean }> = (
   props,
 ) => (
   <>
-    <span class={row}>
+    <span class="flex min-w-0 flex-1 items-center gap-1.5">
       <Show when={props.hasChecks}>
-        <Check class={cx(check, !props.checked && hidden)} stroke-width={2} />
+        <Check class={cn("size-3 shrink-0", !props.checked && "invisible")} stroke-width={2} />
       </Show>
-      <span class={label}>
+      <span class="min-w-0">
         <Show
           when={props.item.detail}
-          fallback={<span class={cx(truncate, block)}>{props.item.label}</span>}
+          fallback={<span class="block truncate">{props.item.label}</span>}
         >
           {/* A recent file's name is document text, not a UI label; its path is isolated below */}
-          <bdi dir="auto" class={cx(truncate, block)}>
+          <bdi dir="auto" class="block truncate">
             {props.item.label}
           </bdi>
         </Show>
         <Show when={props.item.detail}>
-          <bdi dir="auto" class={cx(truncate, block, detail)}>
+          <bdi dir="auto" class="block truncate text-2xs text-tertiary">
             {props.item.detail}
           </bdi>
         </Show>
       </span>
     </span>
     <Show when={props.item.shortcut}>
-      <bdi dir="ltr" class={shortcut}>
+      <bdi dir="ltr" class="text-2xs text-tertiary tabular-nums">
         {props.item.shortcut}
       </bdi>
     </Show>
@@ -105,13 +96,26 @@ export const MenuEntries: Component<{
     entry.setting === undefined
       ? entry.checked === true
       : settings()[entry.setting] !== (entry.invert === true);
+  // The host rebuilds a menu's entries each time it opens, so every record arrives as a fresh
+  // object. A row is keyed by its id, not its identity, so its DOM and highlight survive a re-fetch;
+  // a separator has no id and no state to lose, so its place in the list names it.
+  const keyed = createMemo(() => {
+    let separators = 0;
+    return props.entries.map((entry) => ({
+      key: entry.type === "item" ? entry.id : `separator:${separators++}`,
+      entry,
+    }));
+  });
 
   return (
-    <For each={props.entries}>
-      {(entry) => (
+    <For each={keyed()} keyed={(keyedEntry) => keyedEntry.key}>
+      {(keyedEntry) => (
         <Show
-          when={entry.type === "item" ? entry : undefined}
-          fallback={<Separator class={separator} />}
+          when={(() => {
+            const entry = keyedEntry().entry;
+            return entry.type === "item" ? entry : undefined;
+          })()}
+          fallback={<Separator class="my-1 bg-border-subtle" />}
         >
           {(itemEntry) => (
             <Show
@@ -123,7 +127,7 @@ export const MenuEntries: Component<{
                     <MenuItem
                       disabled={itemEntry().enabled === false}
                       onSelect={() => props.onSelect(itemEntry())}
-                      class={item}
+                      class={item()}
                     >
                       <ItemContent
                         item={itemEntry()}
@@ -134,10 +138,11 @@ export const MenuEntries: Component<{
                   }
                 >
                   <MenuCheckboxItem
+                    value={itemEntry().id}
                     checked={checked(itemEntry())}
                     disabled={itemEntry().enabled === false}
-                    onSelect={() => props.onSelect(itemEntry())}
-                    class={item}
+                    onCheckedChange={() => props.onSelect(itemEntry())}
+                    class={item()}
                   >
                     <ItemContent
                       item={itemEntry()}
@@ -149,19 +154,17 @@ export const MenuEntries: Component<{
               }
             >
               <MenuSub>
-                <MenuSubTrigger disabled={itemEntry().enabled === false} class={item}>
+                <MenuSubTrigger disabled={itemEntry().enabled === false} class={item()}>
                   <ItemContent
                     item={itemEntry()}
                     checked={checked(itemEntry())}
                     hasChecks={hasChecks()}
                   />
-                  <ChevronRight class={cx(submenuChevron, rtlFlip)} />
+                  <ChevronRight class="size-3.5 shrink-0 text-tertiary rtl:-scale-x-100" />
                 </MenuSubTrigger>
-                <MenuPortal>
-                  <MenuSubContent class={cx(FLOATING_PANEL, menuPanel)}>
-                    <MenuEntries entries={itemEntry().submenu ?? []} onSelect={props.onSelect} />
-                  </MenuSubContent>
-                </MenuPortal>
+                <MenuSubContent class={menuPanel()}>
+                  <MenuEntries entries={itemEntry().submenu ?? []} onSelect={props.onSelect} />
+                </MenuSubContent>
               </MenuSub>
             </Show>
           )}
@@ -172,34 +175,32 @@ export const MenuEntries: Component<{
 };
 
 /**
- * A menu drawn by the window, under the title bar or at the pointer. Kobalte places it, moves the
+ * A menu drawn by the window, under the title bar or at the pointer. UI SDK places it, moves the
  * highlight with the keyboard and closes it; the bar keeps it open while the pointer is over it.
  */
 export const MenuPopup: Component<MenuPopupProps> = (props) => (
-  <MenuRoot
+  <Menu
     open={!props.closing}
     modal={false}
-    placement={isRtl() ? "bottom-end" : "bottom-start"}
-    gutter={2}
-    fitViewport
-    getAnchorRect={() => props.anchor}
-    onOpenChange={(open) => {
-      if (!open) props.onClose();
+    onOpenChange={(open, details) => {
+      if (open) return;
+      const target = details.event?.target;
+      // A click in the bar is the bar's business: it switches or closes the menu itself
+      if (target instanceof Element && target.closest("[data-menu-bar]") !== null) {
+        details.cancel();
+        return;
+      }
+      props.onClose();
     }}
   >
-    <MenuPortal>
-      <MenuContent
-        data-menu-panel=""
-        onInteractOutside={(event) => {
-          // A click in the bar is the bar's business: it switches or closes the menu itself
-          if (event.target instanceof Element && event.target.closest("[data-menu-bar]") !== null) {
-            event.preventDefault();
-          }
-        }}
-        class={cx(FLOATING_PANEL, menuPanel)}
-      >
-        <MenuEntries entries={props.entries} onSelect={props.onSelect} />
-      </MenuContent>
-    </MenuPortal>
-  </MenuRoot>
+    <MenuPanel
+      data-menu-panel=""
+      anchor={{ getBoundingClientRect: () => props.anchor }}
+      side="bottom"
+      align={isRtl() ? "end" : "start"}
+      sideOffset={2}
+    >
+      <MenuEntries entries={props.entries} onSelect={props.onSelect} />
+    </MenuPanel>
+  </Menu>
 );

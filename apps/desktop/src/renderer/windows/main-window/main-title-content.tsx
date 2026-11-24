@@ -1,10 +1,9 @@
 import { isMacOS } from "@pupitre/desktop-api/client";
-import { truncate } from "@pupitre/ui/styles";
-import { Show, type Component, type JSX } from "solid-js";
+import type { JSX } from "@solidjs/web";
+import { Show, type Component } from "solid-js";
 import { MenuBar, MenuButton } from "@/features/menu-bar";
 import { TabsBar } from "@/features/tabs-bar";
 import type { Tab } from "@/lib/document/tab";
-import { dirtyDot, titleCenter, titleEnd, titleGrid, titleStart } from "../main-window-styles";
 
 interface MainTitleContentProps {
   /** Whether the bar holds the tabs, which it does with several documents. */
@@ -33,25 +32,31 @@ export const MainTitleContent: Component<MainTitleContentProps> = (props) => (
       fallback={
         // Equal side columns keep the document name in the middle of the bar, whatever the menus
         // and the count take
-        <div data-title-grid class={titleGrid}>
-          <div class={titleStart}>
+        <div
+          data-title-grid
+          class="grid min-w-0 flex-1 grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] items-center gap-2"
+        >
+          <div class="flex min-w-0 items-center gap-2 overflow-hidden">
             <Show when={!isMacOS}>
               <MenuBar onOpenChange={props.onMenuOpenChange} />
             </Show>
           </div>
 
-          <div class={titleCenter}>
+          <div class="flex min-w-0 items-center justify-center gap-2 px-4 font-medium text-foreground">
             <Show when={props.fileName !== undefined}>
               <Show when={props.dirty}>
-                <span aria-hidden="true" class={dirtyDot} />
+                <span
+                  aria-hidden="true"
+                  class="size-1.5 shrink-0 animate-zoom-in rounded-full bg-brand"
+                />
               </Show>
-              <bdi dir="auto" class={truncate}>
+              <bdi dir="auto" class="truncate">
                 {props.fileName}
               </bdi>
             </Show>
           </div>
 
-          <div class={titleEnd}>{props.count}</div>
+          <div class="flex min-w-0 items-center justify-end overflow-hidden">{props.count}</div>
         </div>
       }
     >

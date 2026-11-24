@@ -1,6 +1,5 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
-import { join } from "node:path";
-import { pandaPreset } from "@pupitre/panda-preset";
+import { dirname, join } from "node:path";
 import { TOKEN_NAMES } from "../src/shared/design-tokens.ts";
 
 /**
@@ -11,18 +10,37 @@ import { TOKEN_NAMES } from "../src/shared/design-tokens.ts";
  *    which must beat utilities and inline transitions alike.
  * 2. A theme only reads tokens that exist. A mistyped `var(--ui-brand-hovr)` is otherwise silent:
  *    the property simply falls back to its initial value.
- * 3. A Panda arbitrary value in a style object is static. Panda extracts class names from source
- *    text, so an interpolated one matches no generated rule and the element keeps its old style.
  *
  * Run by `pnpm run lint`, so a regression fails before it reaches a release.
  */
 
 const APP_CSS = "src/renderer/app.css";
-const EDITOR_CSS = "src/renderer/features/editor/editor.css";
 const THEMES = "src/renderer/themes";
 
+function collectStylesheets(entry: string, seen = new Set<string>()): string[] {
+  if (seen.has(entry)) return [];
+  seen.add(entry);
+  const css = stripComments(readFileSync(entry, "utf8"));
+  const files = [entry];
+  for (const match of css.matchAll(/@import\s+["'](\.[^"']+)["']/g)) {
+    const specifier = match[1];
+    if (specifier !== undefined) {
+      files.push(...collectStylesheets(join(dirname(entry), specifier), seen));
+    }
+  }
+  return files;
+}
+
 /** At-rules that are statements rather than style rules, so they may sit outside a layer. */
-const TOP_LEVEL_AT_RULES = ["@import", "@property", "@layer", "@keyframes"];
+const TOP_LEVEL_AT_RULES = [
+  "@import",
+  "@source",
+  "@theme",
+  "@utility",
+  "@property",
+  "@layer",
+  "@keyframes",
+];
 
 /** The motion switch is the one rule that has to outrank every layer, `!important` and all. */
 const MOTION_RULES = ["@media (prefers-reduced-motion: reduce)", ':root[data-motion="off"]'];
@@ -73,20 +91,6 @@ function definedTokens(css: string): Set<string> {
   return new Set(names);
 }
 
-/** Every custom property a value somewhere in an object refers to. */
-function referencedTokens(value: unknown, found = new Set<string>()): Set<string> {
-  if (typeof value === "string") {
-    for (const match of value.matchAll(/var\(\s*(--[a-z0-9-]+)/gi)) {
-      if (match[1] !== undefined) found.add(match[1]);
-    }
-  } else if (Array.isArray(value)) {
-    for (const item of value) referencedTokens(item, found);
-  } else if (value !== null && typeof value === "object") {
-    for (const item of Object.values(value)) referencedTokens(item, found);
-  }
-  return found;
-}
-
 function usedTokens(css: string): Map<string, number> {
   const used = new Map<string, number>();
   const source = stripComments(css);
@@ -99,12 +103,10 @@ function usedTokens(css: string): Map<string, number> {
 
 const problems: Problem[] = [];
 
-const app = readFileSync(APP_CSS, "utf8");
-const editor = readFileSync(EDITOR_CSS, "utf8");
-for (const { file, css } of [
-  { file: APP_CSS, css: app },
-  { file: EDITOR_CSS, css: editor },
-]) {
+const appStylesheets = collectStylesheets(APP_CSS);
+const known = new Set<string>();
+for (const file of appStylesheets) {
+  const css = readFileSync(file, "utf8");
   for (const rule of unlayeredRules(css)) {
     problems.push({
       file,
@@ -112,11 +114,8 @@ for (const { file, css } of [
       message: `\`${rule.selector}\` is outside every layer, so no theme can override it`,
     });
   }
+  for (const token of definedTokens(css)) known.add(token);
 }
-
-const baseTokens = definedTokens(app);
-const editorTokens = definedTokens(editor);
-const known = new Set([...baseTokens, ...editorTokens]);
 
 // A folder without an index.css is not a theme: lib/theme.ts finds a theme by that file, and a
 // folder being written may not have one yet
@@ -173,44 +172,6 @@ for (const token of TOKEN_NAMES) {
       file: "src/shared/design-tokens.ts",
       line: 1,
       message: `\`${name}\` is read from TypeScript but no stylesheet declares it`,
-    });
-  }
-}
-
-// A token the Panda preset aliases is declared too: a typo there would silently fall back
-for (const token of referencedTokens(pandaPreset.theme?.extend?.tokens)) {
-  if (!known.has(token)) {
-    problems.push({
-      file: "../../packages/panda-preset/src/index.ts",
-      line: 1,
-      message: `\`${token}\` is aliased by a Panda token but no stylesheet declares it`,
-    });
-  }
-}
-
-/** Every source file the app's Panda config scans; generated styles are not a source to read. */
-function* pandaSources(dir: string): Generator<string> {
-  for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    if (entry.name === "node_modules" || entry.name === "styled-system") continue;
-    const path = join(dir, entry.name);
-    if (entry.isDirectory()) yield* pandaSources(path);
-    else if (/\.tsx?$/.test(entry.name)) yield path;
-  }
-}
-
-const pluginSources = readdirSync("../../plugins", { withFileTypes: true })
-  .filter((entry) => entry.isDirectory())
-  .map((entry) => `../../plugins/${entry.name}/src`);
-const scanned = ["src/renderer", "../../packages/ui/src", ...pluginSources].flatMap((dir) =>
-  Array.from(pandaSources(dir)),
-);
-for (const file of scanned) {
-  const source = readFileSync(file, "utf8");
-  for (const match of source.matchAll(/`\[\$\{/g)) {
-    problems.push({
-      file,
-      line: lineOf(source, match.index ?? 0),
-      message: "an interpolated Panda arbitrary value matches no generated rule",
     });
   }
 }

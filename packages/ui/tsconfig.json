@@ -8,7 +8,7 @@
     "moduleResolution": "bundler",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "jsx": "preserve",
-    "jsxImportSource": "solid-js",
+    "jsxImportSource": "@solidjs/web",
     "types": [],
     "noEmit": false,
     "declaration": true,
@@ -16,7 +16,5 @@
     "outDir": "dist",
     "rootDir": "src"
   },
-  "references": [{ "path": "../panda-preset" }],
-  "include": ["src"],
-  "exclude": ["src/styled-system"]
+  "include": ["src"]
 }

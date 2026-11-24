@@ -14,7 +14,6 @@ import {
   detailsSection,
   diagramTheme,
   documentBaseUrl,
-  fencedText,
   hasVisibleContent,
   htmlBlockPreview,
   inlineItems,
@@ -25,6 +24,7 @@ import {
   toggledDetails,
   toggleDetails,
 } from "@pupitre/markdown";
+import { registerBlockRenderer, registerFenceRenderer, resolveBlockWidget } from "./block-registry";
 import { lineRange, printingChanged, revealingRanges, touches } from "./builder";
 import { TableWidget, tableCursor } from "#tables/table";
 import { SummaryWidget } from "#widgets/details-widget";
@@ -77,36 +77,54 @@ function sourceEnd(state: EditorState, node: SyntaxNode): number {
   return line.from > node.from ? line.from - 1 : close.from;
 }
 
+registerBlockRenderer({
+  nodeType: "Table",
+  render: (state, node) =>
+    new TableWidget(state.sliceDoc(node.from, node.to), readTable(state, node)),
+});
+
+registerBlockRenderer({
+  nodeType: "Paragraph",
+  render: (state, node) =>
+    isTocParagraph(state, node) ? new TocWidget(collectHeadings(state)) : undefined,
+});
+
+registerBlockRenderer({
+  nodeType: "HTMLBlock",
+  render: (state, node, editing) => {
+    const source = state.sliceDoc(node.from, node.to);
+    if (!isRenderableHtml(source) || htmlBlockPreview(source) !== undefined) return undefined;
+    return new HtmlBlockWidget(source, state.facet(documentBaseUrl), editing);
+  },
+});
+
+registerBlockRenderer({
+  nodeType: "BlockMath",
+  render: (state, node) => new MathWidget(mathOf(state, node).tex, true, sourceEnd(state, node)),
+});
+
+registerFenceRenderer({
+  render: (_language, _code, state, node) => {
+    const formula = mathFence(state, node);
+    return formula !== undefined
+      ? new MathWidget(formula, true, sourceEnd(state, node))
+      : undefined;
+  },
+});
+
+registerFenceRenderer({
+  render: (language, code, state, node) =>
+    language.toLowerCase() === "mermaid"
+      ? new MermaidWidget(code, state.facet(diagramTheme), sourceEnd(state, node))
+      : undefined,
+});
+
 function blockWidget(
   state: EditorState,
   node: SyntaxNode,
   editing = false,
 ): WidgetType | undefined {
-  const text = (child: SyntaxNode | null | undefined) =>
-    child ? state.sliceDoc(child.from, child.to) : "";
-  if (node.name === "Table") {
-    return new TableWidget(state.sliceDoc(node.from, node.to), readTable(state, node));
-  }
-  if (node.name === "Paragraph") {
-    return isTocParagraph(state, node) ? new TocWidget(collectHeadings(state)) : undefined;
-  }
-  if (node.name === "HTMLBlock") {
-    const source = text(node);
-    if (!isRenderableHtml(source) || htmlBlockPreview(source) !== undefined) return undefined;
-    return new HtmlBlockWidget(source, state.facet(documentBaseUrl), editing);
-  }
-  if (node.name === "BlockMath") {
-    return new MathWidget(mathOf(state, node).tex, true, sourceEnd(state, node));
-  }
-  if (node.name !== "FencedCode") return undefined;
-  const formula = mathFence(state, node);
-  if (formula !== undefined) return new MathWidget(formula, true, sourceEnd(state, node));
-  const language = text(node.getChild("CodeInfo")).trim();
-  const code = fencedText(state, node);
-  if (language.toLowerCase() === "mermaid") {
-    return new MermaidWidget(code, state.facet(diagramTheme), sourceEnd(state, node));
-  }
-  return undefined;
+  return resolveBlockWidget(state, node, editing);
 }
 
 interface SensitiveRange {
@@ -190,10 +208,9 @@ function buildDecorations(state: EditorState): RenderedBlocksState {
       if (node.name === "Table" || !touched) {
         hideLines(node.from, node.to, widget);
       } else {
-        // Math, diagrams, HTML and pictures open in the first line of their source, which is a
-        // code card, so the rendering and the source stay one piece instead of becoming two
-        // blocks of their own, in that order whichever the construct is
-        decorations.push(Decoration.widget({ widget, side: 1 }).range(from));
+        // Place the rendering as its own block before the source lines so the source card and its
+        // framing stay separate from the rendered preview
+        decorations.push(Decoration.widget({ widget, block: true, side: -1 }).range(from));
       }
       return false;
     },

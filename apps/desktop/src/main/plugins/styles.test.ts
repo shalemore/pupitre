@@ -39,9 +39,21 @@ describe("readPluginStyle", () => {
     ["@property", "@property --x { syntax: '<color>' }"],
     ["expression()", ".md-heading { width: expression(1) }"],
     ["url()", ".md-heading { background: url(https://example.com/a.png) }"],
+    ["unbalanced closing brace", ".md-heading { color: red } } body { color: blue }"],
+    ["unclosed brace", ".md-heading { color: red"],
+    ["unclosed comment", ".md-heading { color: red } /* unclosed"],
+    ["escaped !important", ".md-heading { color: red !\\69mportant }"],
+    ["escaped @import", '@\\69mport "other.css";'],
   ])("refuses %s", async (_name, css) => {
     const folder = await pluginFolder(css);
     expect(readPluginStyle(folder, "plugin.css")).toBeUndefined();
+  });
+
+  it("ignores forbidden keywords inside comments and braces inside strings", async () => {
+    const folder = await pluginFolder(
+      '/* !important @import */ .md-heading::before { content: "}"; color: red }',
+    );
+    expect(readPluginStyle(folder, "plugin.css")).toContain('content: "}"');
   });
 
   it("keeps data URLs, fragments and custom properties", async () => {

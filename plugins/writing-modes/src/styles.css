@@ -1,0 +1,70 @@
+/*
+ * Writing modes, see modes.ts. Rendered blocks (tables, math, diagrams) are widgets rather than
+ * lines and are dimmed with the rest. Sits in `@layer preferences` so themes cannot override it.
+ */
+@layer preferences {
+  .md-document.focus-mode > :not(.is-current) {
+    opacity: 0.3;
+  }
+
+  /*
+   * A line that wraps over several rows dims like the rest except where the caret is: the band is
+   * the row it holds, one line height tall from the line's padding, so it covers the row whatever
+   * the fonts make of it. modes.ts only says which row that is.
+   */
+  .md-document.focus-mode > .focus-row {
+    --focus-row-start: calc(var(--focus-pad, 0px) + var(--focus-row) * 1lh);
+    --focus-row-end: calc(var(--focus-row-start) + 1lh);
+    mask-image: linear-gradient(
+      to bottom,
+      rgb(0 0 0 / 0.3) 0 var(--focus-row-start),
+      #000 var(--focus-row-start) var(--focus-row-end),
+      rgb(0 0 0 / 0.3) var(--focus-row-end)
+    );
+  }
+
+  /* Room below the document for its last lines to reach the place the line is held at */
+  .md-document.typewriter-mode[data-typewriter="center"] {
+    padding-block-end: 50vh;
+  }
+
+  .md-document.typewriter-mode[data-typewriter="top"] {
+    padding-block-end: 100vh;
+  }
+
+  /* The margin a line held at the bottom keeps below it, even at the end of the document */
+  .md-document.typewriter-mode[data-typewriter="bottom"] {
+    padding-block-end: var(--typewriter-edge);
+  }
+
+  /*
+   * A held line keeps its place for the first and the last line too, which takes room above as
+   * well. --typewriter-edge is its edge margin (modes.ts).
+   */
+  .md-document.typewriter-mode[data-typewriter-fixed="true"][data-typewriter="center"] {
+    padding-block: 50vh;
+  }
+
+  .md-document.typewriter-mode[data-typewriter-fixed="true"][data-typewriter="top"] {
+    padding-block-start: var(--typewriter-edge);
+  }
+
+  .md-document.typewriter-mode[data-typewriter-fixed="true"][data-typewriter="bottom"] {
+    padding-block-start: calc(100vh - var(--typewriter-edge));
+    padding-block-end: var(--typewriter-edge);
+  }
+
+  @media print {
+    .md-document.typewriter-mode[data-typewriter][data-typewriter-fixed] {
+      max-width: none;
+      padding: 0;
+      padding-block: 0;
+    }
+
+    .md-document.focus-mode > :not(.is-current),
+    .md-document.focus-mode > .focus-row {
+      opacity: 1;
+      mask-image: none;
+    }
+  }
+}

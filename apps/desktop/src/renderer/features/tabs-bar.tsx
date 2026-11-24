@@ -1,11 +1,9 @@
-import { Tabs as KobalteTabs } from "@kobalte/core/tabs";
 import { t } from "@pupitre/i18n/solid";
-import { IconButton } from "@pupitre/ui";
-import { truncateStyle } from "@pupitre/ui/styles";
+import { cn, IconButton } from "@pupitre/ui";
+import { Tabs, TabsList, TabsTab } from "@ui-sdk/solid/tabs";
 import { X } from "lucide-solid";
 import { createEffect, For, Show, type Component } from "solid-js";
 import { isTabDirty, type Tab } from "@/lib/document/tab";
-import { css, cx } from "@/styled-system/css";
 
 export interface TabsBarProps {
   tabs: readonly Tab[];
@@ -24,102 +22,27 @@ interface TabButtonProps {
   onClose: () => void;
 }
 
-const tabItem = css({
-  position: "relative",
-  display: "flex",
-  height: "full",
-  minWidth: "0",
-  maxWidth: "48",
-  flexShrink: 0,
-  alignItems: "center",
-  borderInlineEndWidth: "hairline",
-  borderInlineEndStyle: "solid",
-  borderInlineEndColor: "border.subtle",
-  layerStyle: "interactive",
-  _last: { borderInlineEndWidth: "[0]" },
-});
-const tabActive = css({ backgroundColor: "surface.1" });
-const tabIdle = css({ _hover: { backgroundColor: "accent" } });
-const trigger = css({
-  display: "flex",
-  height: "full",
-  minWidth: "0",
-  flex: "1",
-  cursor: "pointer",
-  alignItems: "center",
-  gap: "1.5",
-  paddingInline: "2.5",
-  textStyle: "xs",
-  outlineStyle: "none",
-  userSelect: "none",
-});
-const triggerActive = css({ color: "foreground" });
-const triggerIdle = css({ color: "muted.foreground", _hover: { color: "foreground" } });
-const dirtyDot = css({
-  width: "1.5",
-  height: "1.5",
-  flexShrink: 0,
-  borderRadius: "full",
-  backgroundColor: "brand",
-});
-const tabName = css(truncateStyle, {
-  minWidth: "0",
-});
-const closeButton = css({
-  marginInlineEnd: "1",
-  transitionProperty: "opacity",
-  transitionDuration: "fast",
-  transitionTimingFunction: "outExpo",
-});
-const closeButtonIdle = css({
-  opacity: 0,
-  _groupHover: { opacity: 1 },
-  _groupFocusWithin: { opacity: 1 },
-});
-const activeUnderline = css({
-  pointerEvents: "none",
-  position: "absolute",
-  insetInline: "0",
-  bottom: "0",
-  height: "0.5",
-  backgroundColor: "brand",
-});
-const bar = css({
-  display: "flex",
-  height: "full",
-  minWidth: "0",
-  flex: "1",
-  alignItems: "stretch",
-});
-const tabStrip = css({
-  display: "flex",
-  height: "full",
-  minWidth: "0",
-  flex: "1",
-  alignItems: "stretch",
-  overflowX: "auto",
-  overscrollBehaviorX: "contain",
-  // The wheel and the focused tab scroll the strip; a native bar would take a band of the 40 px bar
-  scrollbarWidth: "none",
-  "&::-webkit-scrollbar": { display: "none" },
-  _print: { display: "none" },
-});
-
 /** A tab as a title bar shows it: the name, a dirty dot and a close button, over the active fill. */
 function TabButton(props: TabButtonProps) {
   let element: HTMLDivElement | undefined;
 
   // The shortcuts and a closing neighbour can bring a tab up while it sits past the edge of the strip
-  createEffect(() => {
-    if (props.active) element?.scrollIntoView({ block: "nearest", inline: "nearest" });
-  });
+  createEffect(
+    () => props.active,
+    (active) => {
+      if (active) element?.scrollIntoView({ block: "nearest", inline: "nearest" });
+    },
+  );
 
   return (
     <div
       ref={(node) => (element = node)}
-      class={cx("group", tabItem, props.active ? tabActive : tabIdle)}
+      class={cn(
+        "group __INTERACTIVE__ relative flex h-full max-w-48 min-w-0 shrink-0 items-center border-e-hairline border-border-subtle last:border-e-0",
+        props.active ? "bg-surface-1" : "hover:bg-accent",
+      )}
     >
-      <KobalteTabs.Trigger
+      <TabsTab
         value={String(props.tab.id)}
         title={props.name}
         onClick={() => props.onActivate()}
@@ -130,25 +53,34 @@ function TabButton(props: TabButtonProps) {
           event.preventDefault();
           props.onClose();
         }}
-        class={cx(trigger, props.active ? triggerActive : triggerIdle)}
+        class={cn(
+          "flex h-full min-w-0 flex-1 cursor-pointer items-center gap-1.5 px-2.5 text-xs outline-none select-none",
+          props.active ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+        )}
       >
         <Show when={isTabDirty(props.tab)}>
-          <span aria-hidden="true" class={dirtyDot} />
+          <span aria-hidden="true" class="size-1.5 shrink-0 rounded-full bg-brand" />
         </Show>
-        <bdi dir="auto" class={tabName}>
+        <bdi dir="auto" class="min-w-0 truncate">
           {props.name}
         </bdi>
-      </KobalteTabs.Trigger>
+      </TabsTab>
       <IconButton
         label={t().menu.closeTab}
         size="icon-2xs"
-        class={cx(closeButton, !props.active && closeButtonIdle)}
+        class={cn(
+          "me-1 transition-opacity duration-fast ease-out-expo",
+          !props.active && "opacity-0 group-focus-within:opacity-100 group-hover:opacity-100",
+        )}
         onClick={props.onClose}
       >
         <X />
       </IconButton>
       <Show when={props.active}>
-        <span aria-hidden="true" class={activeUnderline} />
+        <span
+          aria-hidden="true"
+          class="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 bg-brand"
+        />
       </Show>
     </div>
   );
@@ -160,8 +92,11 @@ function TabButton(props: TabButtonProps) {
  * the bar keeps the tabs inside the part that unfolds with the immersive chrome.
  */
 export const TabsBar: Component<TabsBarProps> = (props) => (
-  <KobalteTabs value={props.activeId === undefined ? "" : String(props.activeId)} class={bar}>
-    <KobalteTabs.List
+  <Tabs
+    value={props.activeId === undefined ? "" : String(props.activeId)}
+    class="flex h-full min-w-0 flex-1 items-stretch"
+  >
+    <TabsList
       aria-label={t().tabs.bar}
       // The strip scrolls sideways when the tabs overflow; the wheel follows the row, since a
       // vertical wheel over it has nothing else to do, and the scrollbar only appears when needed
@@ -172,7 +107,7 @@ export const TabsBar: Component<TabsBarProps> = (props) => (
         event.preventDefault();
         strip.scrollLeft += event.deltaY;
       }}
-      class={tabStrip}
+      class="flex h-full min-w-0 flex-1 scrollbar-none items-stretch overflow-x-auto overscroll-x-contain print:hidden"
     >
       <For each={props.tabs}>
         {(tab) => (
@@ -185,6 +120,6 @@ export const TabsBar: Component<TabsBarProps> = (props) => (
           />
         )}
       </For>
-    </KobalteTabs.List>
-  </KobalteTabs>
+    </TabsList>
+  </Tabs>
 );

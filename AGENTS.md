@@ -1,6 +1,6 @@
 # Pupitre — Agent Guide
 
-Pupitre is a desktop Markdown editor built with Electron, SolidJS, Panda CSS and TypeScript.
+Pupitre is a desktop Markdown editor built with Electron, SolidJS, Tailwind CSS v4 and TypeScript.
 This file is the single source of project conventions for humans and coding agents.
 
 ## Commands
@@ -50,10 +50,17 @@ wraps itself in `offstage-windows`, so its windows stay off the screen on Window
   `pnpm --filter pupitre exec offstage-windows playwright test` to keep the windows off the screen.
 - `patches/@lezer__markdown@1.8.1.patch` fixes an upstream incremental-parse bug: a block that a
   table ended (a paragraph, a footnote definition, a math block) is reused with its old end when
-  the table stops parsing, which splits it in two. `pnpm.patchedDependencies` applies the patch on
-  install; the dependency is pinned to 1.8.1 so the patch and the package cannot drift apart. The
-  property test includes tables and `reads a paragraph back together…` fails if the patch stops
-  applying. Remove both when the fix is in the version we use.
+  the table stops parsing, which splits it in two. Upstream fixed it after 1.8.1 — `050c69d`,
+  "Require a full blank line at the end of a fragment", closing
+  [issue #72](https://code.haverbeke.berlin/lezer/markdown/issues/72) — so the patch goes as soon
+  as a release carries that commit, which 1.8.1 does not. `pnpm.patchedDependencies` applies the
+  patch on install; the dependency is pinned to 1.8.1 so the patch and the package cannot drift
+  apart. The property test includes tables and `reads a paragraph back together…` fails if the
+  patch stops applying.
+- `patches/lucide-solid@1.77.0.patch` lets the icons run on Solid 2: 1.77.0 still imports
+  `solid-js/web` and splits props with `splitProps`, where Solid 2 renamed the entry point to
+  `@solidjs/web` and replaced the split with `omit`. Its `peerDependencies` still name `solid-js
+  ^1.4.7`, so the patch goes when a release supports Solid 2.
 
 ## Testing the running app
 
@@ -187,8 +194,9 @@ than waiting for a review to notice it.
 - A plugin types its settings as the slice of `Settings` it reads, so it never sees or changes a
   setting it does not use.
 - A plugin package's `index.ts` exports only what the host uses; everything else stays internal.
-- The app's Panda config scans `plugins/*/src`, and plugin code imports `css`/`cx` from
-  `@pupitre/ui`; the app's stylesheet remains the only generated one.
+- The app's `app.css` scans `packages/ui/src`, `plugins/*/src` and `apps/desktop/src/web` via
+  `@source`, and plugin code imports `cn` / `cva` or Tailwind utility classes; the app's
+  stylesheet remains the only generated one.
 - An installed plugin lives under `userData/plugins/<id>/`. `main/plugins/plugin-files.ts` reads
   and copies it, `registry.ts` owns its enabled/granted state, and `host.ts` runs each enabled
   plugin in a hidden window with `sandbox: true`, its own in-memory session and no Node. The
@@ -219,11 +227,10 @@ than waiting for a review to notice it.
 Write code a person can read and navigate in an IDE. Do not trade readability for shortcuts that
 only make code generation easier.
 
-- **Style with Panda.** A component builds its class from a style object (`css({ ... })` or a
-  `cva` recipe) in `@/styled-system/css`, written at module scope when it is reused and inline
-  when it is not. A token is typed: a color, size, radius, shadow, duration or curve that does not
-  exist fails to compile. `cx()` merges classes. Semantic classes the app's stylesheets define
-  (`md-*`, `pressable`, `floating-panel`) stay class names.
+- **Style with Tailwind CSS v4.** Write component classes directly on elements (with `cn()` from
+  `@pupitre/ui` when merging classes) and define multi-variant recipes locally with `cva` from
+  `class-variance-authority`. Semantic classes the app's stylesheets define (`md-*`, `pressable`,
+  `floating-panel`) stay class names.
 - **Prefer declarative UI.** Build DOM with JSX components rather than `document.createElement`
   chains or HTML strings, except inside third-party extension points that require raw DOM.
 - **Avoid indirection that hides intent:** no generic factories, registries or config-driven
@@ -237,8 +244,11 @@ only make code generation easier.
 - **Minimise side effects.** Derive values with plain functions or `createMemo` instead of
   syncing state with `createEffect`. Use effects only to talk to the outside world (DOM APIs,
   IPC, timers) and always clean up listeners.
-- **Use the design scales.** Sizes, radii, durations and curves come from the tokens in
-  `panda.config.ts` (they alias the custom properties in `app.css`, so a theme can still change
+- **Solid 2 & `@ui-sdk/solid`.** The app uses Solid 2.0's strict reactivity model and
+  `@ui-sdk/solid`. Read [docs/solid-2.md](docs/solid-2.md) before touching reactive primitives,
+  UI primitives or Solid-backed CodeMirror widgets.
+- **Use the design scales.** Sizes, radii, durations and curves come from the `@theme inline`
+  tokens in `app.css` (they alias the custom properties in `:root`, so a theme can still change
   them), and colors from the semantic tokens; no arbitrary values such as `2.875rem`,
   `200ms` or hex colors in components. Build on the `@pupitre/ui` primitives (`Button`, `Input`,
   `ListItem`, `SegmentedControl`, `Callout`, `Kbd`, `ScrollView`, …) before styling a raw

@@ -1,39 +1,36 @@
-import { type JSX, splitProps } from "solid-js";
-import { cva, cx, type RecipeVariantProps } from "./styled-system/css";
+import type { JSX } from "@solidjs/web";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "cn";
+import { omit } from "solid-js";
 
-const calloutVariants = cva({
-  base: {
-    borderRadius: "lg",
-    borderWidth: "hairline",
-    borderStyle: "solid",
-    padding: "3",
-    textStyle: "xs",
-    "& svg": { width: "4", height: "4", flexShrink: 0 },
-  },
-  variants: {
-    variant: {
-      neutral: { borderColor: "border", backgroundColor: "surface.0" },
-      brand: { borderColor: "brand/20", backgroundColor: "brand/10" },
-      success: { borderColor: "success/20", backgroundColor: "success/10" },
-      destructive: { borderColor: "destructive/20", backgroundColor: "destructive/10" },
+const calloutVariants = cva(
+  "rounded-lg border-hairline border-solid p-3 text-xs [&_svg]:size-4 [&_svg]:shrink-0",
+  {
+    variants: {
+      variant: {
+        neutral: "border-border bg-surface-0",
+        brand: "border-brand/20 bg-brand/10",
+        success: "border-success/20 bg-success/10",
+        destructive: "border-destructive/20 bg-destructive/10",
+      },
+    },
+    defaultVariants: {
+      variant: "neutral",
     },
   },
-  defaultVariants: {
-    variant: "neutral",
-  },
-});
+);
 
-export type CalloutProps = JSX.HTMLAttributes<HTMLDivElement> &
-  RecipeVariantProps<typeof calloutVariants>;
+export type CalloutProps = Omit<JSX.HTMLAttributes<HTMLDivElement>, "class"> &
+  VariantProps<typeof calloutVariants> & { class?: string | undefined };
 
 /** A tinted panel for a status message, such as the state of an update. */
 export function Callout(props: CalloutProps) {
-  const [local, rest] = splitProps(props, ["class", "variant"]);
+  const rest = omit(props, "class", "variant");
 
   return (
     <div
       data-slot="callout"
-      class={cx(calloutVariants({ variant: local.variant }), local.class)}
+      class={cn(calloutVariants({ variant: props.variant }), props.class)}
       {...rest}
     />
   );

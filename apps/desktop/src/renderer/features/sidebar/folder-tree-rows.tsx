@@ -1,48 +1,33 @@
-import { ContextMenu } from "@kobalte/core/context-menu";
 import type { FolderEntry } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import type { MenuEntry } from "@pupitre/desktop-api/menu";
 import { t } from "@pupitre/i18n/solid";
 import { excerptOf } from "@pupitre/markdown";
-import { IconButton, ListItem, rowIndent } from "@pupitre/ui";
-import { FLOATING_PANEL, menuPanel } from "@pupitre/ui/styles";
+import { cn, IconButton, Input, ListItem, rowIndent } from "@pupitre/ui";
+import { Menu, MenuContextTrigger } from "@ui-sdk/solid/menu";
 import { ArrowRight, ChevronRight, CircleAlert, FileText, Folder } from "lucide-solid";
 import {
   type Component,
   createEffect,
   createMemo,
-  createResource,
+  createSignal,
   For,
-  on,
   onCleanup,
-  onMount,
+  onSettled,
   Show,
 } from "solid-js";
-import { MenuEntries } from "@/components/menu-popup";
+import { MenuEntries, MenuPanel } from "@/components/menu-popup";
 import { dateTimeFormat } from "@/lib/date-format";
 import { settings } from "@/lib/settings";
-import { cx } from "@/styled-system/css";
-import {
-  arrow,
-  blockTruncate,
-  chevron,
-  chevronOpen,
-  errorText,
-  excerptLine,
-  expandAnimation,
-  fileIcon,
-  groupRow,
-  iconOffset,
-  indentIcon,
-  itemsStart,
-  nameGrow,
-  nameMin,
-  openButton,
-  renameField,
-  renameRow,
-  rowDirectory,
-  secondaryLine,
-} from "./folder-tree-styles";
+
+const TreeChevron: Component<{ expanded: boolean }> = (props) => (
+  <ChevronRight
+    class={cn(
+      "size-3 shrink-0 transition-transform duration-base ease-out-expo rtl:-scale-x-100",
+      props.expanded && "rotate-90 rtl:-rotate-90",
+    )}
+  />
+);
 
 export interface RowMenu {
   entries: readonly MenuEntry[];
@@ -85,60 +70,80 @@ interface FolderChildrenProps {
 }
 
 export const FolderChildren: Component<FolderChildrenProps> = (props) => {
-  const [entries, { refetch }] = createResource(
-    () => props.path,
-    (path) => desktop.invoke("folder:list", path),
+  const [entries, setEntries] = createSignal<readonly FolderEntry[]>([]);
+  const [entriesError, setEntriesError] = createSignal(false);
+  const [previews, setPreviews] = createSignal<Readonly<Record<string, string>>>();
+  const folderSort = createMemo(() => settings().folderSort);
+
+  const loadEntries = (path: string) => {
+    void desktop.invoke("folder:list", path).then(
+      (list) => {
+        setEntriesError(false);
+        setEntries(list);
+      },
+      () => {
+        setEntriesError(true);
+      },
+    );
+  };
+  const loadPreviews = (path: string) => {
+    void desktop.invoke("folder:previews", path).then(setPreviews, () => undefined);
+  };
+
+  createEffect(
+    () => [props.path, folderSort()] as const,
+    ([path]) => loadEntries(path),
   );
   // Only read while previews are on, so a folder costs nothing when its rows show names alone
-  const [previews, { refetch: refetchPreviews }] = createResource(
+  createEffect(
     () => (settings().sidebarPreview ? props.path : undefined),
-    (path) => desktop.invoke("folder:previews", path),
+    (path) => {
+      if (path !== undefined) loadPreviews(path);
+    },
   );
-  // The resource keeps its last value when previews go off, so the rows stop reading it instead
+  // The previews keep their last value when previews go off, so the rows stop reading it instead
   const shownPreviews = () => (settings().sidebarPreview ? previews() : undefined);
 
-  onMount(() => {
+  onSettled(() => {
     const { path } = props;
     void desktop.invoke("folder:watch", path);
     const unlisten = desktop.on("folder:changed", (changed) => {
       if (changed !== path) return;
-      void refetch();
-      void refetchPreviews();
+      loadEntries(path);
+      if (settings().sidebarPreview) loadPreviews(path);
     });
-    onCleanup(() => {
+    return () => {
       unlisten();
       void desktop.invoke("folder:unwatch", path);
-    });
+    };
   });
 
-  // The main process orders the rows, so a new order has to be asked for; the rows stay on screen
-  // until it arrives, and every other open folder asks for its own again the same way. The memo
-  // keeps the settings broadcast, which replaces the whole object, from asking for the same order.
-  const folderSort = createMemo(() => settings().folderSort);
-  createEffect(on(folderSort, () => void refetch(), { defer: true }));
   const showHidden = createMemo(() => settings().showHidden);
 
   // Each level a person has opened reports for itself; the tree never walks a folder just to find
   // out whether an eye is needed. The flag is there even while hidden entries are shown, so the
   // eye can turn them off again.
-  createEffect(() => {
-    props.tree.onLevelHiddenChange(
-      props.path,
-      (entries() ?? []).some(
-        (entry) => entry.hidden === true && !props.tree.pinned().has(entry.path),
-      ),
-    );
-  });
-  onCleanup(() => props.tree.onLevelHiddenChange(props.path, false));
+  createEffect(
+    () => entries().some((entry) => entry.hidden === true && !props.tree.pinned().has(entry.path)),
+    (hasHidden) => {
+      props.tree.onLevelHiddenChange(props.path, hasHidden);
+      return () => props.tree.onLevelHiddenChange(props.path, false);
+    },
+  );
 
   const shownEntries = createMemo(() =>
-    (entries() ?? []).filter(
+    entries().filter(
       (entry) => (showHidden() || entry.hidden !== true) && !props.tree.pinned().has(entry.path),
     ),
   );
 
   return (
-    <Show when={!entries.error} fallback={<p class={errorText}>{t().sidebar.folderUnreadable}</p>}>
+    <Show
+      when={!entriesError()}
+      fallback={
+        <p class="px-2.5 py-1.5 text-2xs text-destructive">{t().sidebar.folderUnreadable}</p>
+      }
+    >
       <For each={shownEntries()}>
         {(entry) => (
           <FolderRow entry={entry} depth={props.depth} tree={props.tree} previews={shownPreviews} />
@@ -165,19 +170,19 @@ const RenameField: Component<{
   return (
     // The field keeps the row's chevron and icon, so its box starts where the names of the other
     // rows do, and the indent stays outside the box rather than spanning the whole sidebar
-    <div class={renameRow} style={rowIndent(props.depth, 6)}>
-      <Show when={props.directory} fallback={<span class={indentIcon} />}>
-        <ChevronRight class={cx(chevron, props.expanded && chevronOpen)} />
+    <div class="flex items-center gap-1.5 pe-2.5" style={rowIndent(props.depth, 6)}>
+      <Show when={props.directory} fallback={<span class="size-3 shrink-0" />}>
+        <TreeChevron expanded={props.expanded} />
       </Show>
-      <Show when={props.directory} fallback={<FileText class={fileIcon} />}>
-        <Folder class={fileIcon} />
+      <Show when={props.directory} fallback={<FileText class="size-3.5 shrink-0" />}>
+        <Folder class="size-3.5 shrink-0" />
       </Show>
-      <input
+      <Input
         type="text"
         value={props.initial}
         dir="auto"
         aria-label={t().sidebar.rename}
-        class={renameField}
+        class="min-w-0 flex-1 py-1 ps-0 pe-2.5 text-xs"
         // Focused once it is in the document, so typing replaces the selected name right away
         ref={(element) =>
           requestAnimationFrame(() => {
@@ -209,17 +214,20 @@ export const FolderRow: Component<{
   const isActive = () => props.tree.isActive(props.entry.path);
   const isDirectory = () => props.entry.kind === "directory";
   // A rename takes the focused field away; the row that replaces it takes focus once it is here
-  createEffect(() => {
-    if (props.tree.focusAfterRename() !== props.entry.path) return;
-    requestAnimationFrame(() => {
-      const row = [...document.querySelectorAll<HTMLButtonElement>("[data-folder-row]")].find(
-        (element) => element.dataset["folderRow"] === props.entry.path,
-      );
-      if (row === undefined) return;
-      props.tree.onFocusAfterRename();
-      row.focus();
-    });
-  });
+  createEffect(
+    () => props.tree.focusAfterRename() === props.entry.path,
+    (shouldFocus) => {
+      if (!shouldFocus) return;
+      requestAnimationFrame(() => {
+        const row = [...document.querySelectorAll<HTMLButtonElement>("[data-folder-row]")].find(
+          (element) => element.dataset["folderRow"] === props.entry.path,
+        );
+        if (row === undefined) return;
+        props.tree.onFocusAfterRename();
+        row.focus();
+      });
+    },
+  );
   const excerpt = createMemo(
     () => excerptOf(props.previews()?.[props.entry.path] ?? "") || undefined,
   );
@@ -232,74 +240,92 @@ export const FolderRow: Component<{
 
   return (
     <>
-      <div class={cx("group", groupRow)}>
+      <div class="group relative">
         <Show
           when={props.tree.renaming() === props.entry.path}
           fallback={
-            <ContextMenu onOpenChange={props.tree.onMenuOpenChange}>
-              <ContextMenu.Trigger
-                as={ListItem}
-                data-folder-row={props.entry.path}
-                active={isActive()}
-                tone={failure() ? "danger" : "default"}
-                onClick={() =>
-                  isDirectory()
-                    ? props.tree.onToggleExpanded(props.entry.path)
-                    : props.tree.onOpenFile(props.entry.path)
-                }
-                // A row's menu is its own; the empty space behind it has the folder's
-                onContextMenu={(event) => event.stopPropagation()}
-                style={rowIndent(props.depth, 6)}
-                title={failure() ?? props.entry.name}
-                class={cx((excerpt() || date()) && itemsStart, isDirectory() && rowDirectory)}
-              >
-                <Show when={isDirectory()} fallback={<span class={indentIcon} />}>
-                  <ChevronRight class={cx(chevron, expanded() && chevronOpen)} />
-                </Show>
-                <Show
-                  when={isDirectory()}
-                  fallback={
+            <Menu onOpenChange={props.tree.onMenuOpenChange}>
+              <MenuContextTrigger
+                render={(triggerProps) => (
+                  <ListItem
+                    {...triggerProps}
+                    data-folder-row={props.entry.path}
+                    active={isActive()}
+                    tone={failure() ? "danger" : "default"}
+                    onClick={() =>
+                      isDirectory()
+                        ? props.tree.onToggleExpanded(props.entry.path)
+                        : props.tree.onOpenFile(props.entry.path)
+                    }
+                    // A row's menu is its own; the empty space behind it has the folder's
+                    onContextMenu={(event) => {
+                      event.stopPropagation();
+                      const handler = triggerProps["onContextMenu"];
+                      if (typeof handler === "function") handler(event);
+                    }}
+                    style={rowIndent(props.depth, 6)}
+                    title={failure() ?? props.entry.name}
+                    class={cn((excerpt() || date()) && "items-start", isDirectory() && "pe-8")}
+                  >
+                    <Show when={isDirectory()} fallback={<span class="size-3 shrink-0" />}>
+                      <TreeChevron expanded={expanded()} />
+                    </Show>
                     <Show
-                      when={failure()}
+                      when={isDirectory()}
                       fallback={
-                        <FileText class={cx(fileIcon, (excerpt() || date()) && iconOffset)} />
+                        <Show
+                          when={failure()}
+                          fallback={
+                            <FileText
+                              class={cn("size-3.5 shrink-0", (excerpt() || date()) && "mt-0.5")}
+                            />
+                          }
+                        >
+                          <CircleAlert
+                            class={cn("size-3.5 shrink-0", (excerpt() || date()) && "mt-0.5")}
+                          />
+                        </Show>
                       }
                     >
-                      <CircleAlert class={cx(fileIcon, (excerpt() || date()) && iconOffset)} />
+                      <Folder class="size-3.5 shrink-0" />
                     </Show>
-                  }
-                >
-                  <Folder class={fileIcon} />
-                </Show>
-                <span class={cx(nameMin, excerpt() || date() ? nameGrow : blockTruncate)}>
-                  <span class={blockTruncate}>
-                    <bdi dir="auto">{props.entry.name}</bdi>
-                  </span>
-                  <Show when={date()}>
-                    {(label) => <span class={secondaryLine}>{label()}</span>}
-                  </Show>
-                  <Show when={excerpt()}>
-                    {/* Isolated, so an excerpt in another script never turns the row around */}
-                    <bdi dir="auto" aria-hidden="true" class={excerptLine}>
-                      {excerpt()}
-                    </bdi>
-                  </Show>
-                </span>
-              </ContextMenu.Trigger>
-              <ContextMenu.Portal>
-                <ContextMenu.Content class={cx(FLOATING_PANEL, menuPanel)}>
-                  {(() => {
-                    const menu = props.tree.menuOf(props.entry);
-                    return (
-                      <MenuEntries
-                        entries={menu.entries}
-                        onSelect={(item) => menu.actions.get(item.id)?.()}
-                      />
-                    );
-                  })()}
-                </ContextMenu.Content>
-              </ContextMenu.Portal>
-            </ContextMenu>
+                    <span class={cn("min-w-0", excerpt() || date() ? "flex-1" : "block truncate")}>
+                      <span class="block truncate">
+                        <bdi dir="auto">{props.entry.name}</bdi>
+                      </span>
+                      <Show when={date()}>
+                        {(label) => (
+                          <span class="block text-2xs font-normal text-tertiary tabular-nums">
+                            {label()}
+                          </span>
+                        )}
+                      </Show>
+                      <Show when={excerpt()}>
+                        {/* Isolated, so an excerpt in another script never turns the row around */}
+                        <bdi
+                          dir="auto"
+                          aria-hidden="true"
+                          class="mt-0.5 line-clamp-2 text-2xs font-normal text-tertiary"
+                        >
+                          {excerpt()}
+                        </bdi>
+                      </Show>
+                    </span>
+                  </ListItem>
+                )}
+              />
+              <MenuPanel>
+                {(() => {
+                  const menu = props.tree.menuOf(props.entry);
+                  return (
+                    <MenuEntries
+                      entries={menu.entries}
+                      onSelect={(item) => menu.actions.get(item.id)?.()}
+                    />
+                  );
+                })()}
+              </MenuPanel>
+            </Menu>
           }
         >
           <RenameField
@@ -317,18 +343,18 @@ export const FolderRow: Component<{
             label={t().menu.openFolder}
             size="icon-2xs"
             data-slot="folder-open"
-            class={openButton}
+            class="absolute inset-e-1 top-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-ui ease-out-expo group-hover:opacity-100 focus-visible:opacity-100"
             onClick={(event) => {
               event.stopPropagation();
               props.tree.onOpenFolder(props.entry.path);
             }}
           >
-            <ArrowRight class={arrow} />
+            <ArrowRight class="size-3 rtl:-scale-x-100" />
           </IconButton>
         </Show>
       </div>
       <Show when={expanded()}>
-        <div class={expandAnimation}>
+        <div class="animate-fade-in-down-small space-y-0.5">
           <FolderChildren path={props.entry.path} depth={props.depth + 1} tree={props.tree} />
         </div>
       </Show>

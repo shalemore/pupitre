@@ -49,7 +49,9 @@ export function documentObserver(observer: DocumentObserver, scroller: HTMLEleme
     };
 
     observer.onDocChange(view.state);
-    report();
+    // The first position reads the layout, which is not measured while the view is still being
+    // built; hand it to the next frame, where CodeMirror has laid the document out.
+    schedule();
     scroller.addEventListener("scroll", schedule, { passive: true });
     return {
       update: (update) => {

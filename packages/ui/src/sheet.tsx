@@ -1,7 +1,7 @@
-import { Dialog } from "@kobalte/core/dialog";
-import type { Component, JSX } from "solid-js";
-import { css, cx } from "./styled-system/css";
-import { FLOATING_PANEL, srOnly } from "./styles";
+import type { JSX } from "@solidjs/web";
+import { Dialog, DialogBackdrop, DialogContent, DialogTitle } from "@ui-sdk/solid/dialog";
+import { cn } from "cn";
+import type { Component } from "solid-js";
 
 export interface SheetProps {
   /** Names the dialog, for anyone who cannot see the window it covers. */
@@ -14,48 +14,13 @@ export interface SheetProps {
   children: JSX.Element;
 }
 
-const backdrop = css({
-  position: "fixed",
-  inset: "0",
-  zIndex: "50",
-  backgroundColor: "surface.0/60",
-  backdropFilter: "[blur(4px)]",
-  animationName: "fadeIn",
-  animationDuration: "base",
-  animationTimingFunction: "enter",
-});
-const panel = css({
-  position: "fixed",
-  left: "[50%]",
-  zIndex: "50",
-  display: "flex",
-  width: "[calc(100% - 2rem)]",
-  flexDirection: "column",
-  gap: "2",
-  padding: "2",
-  textStyle: "xs",
-});
-const atTop = css({
-  "--panel-translate-x": "-50%",
-  "--panel-translate-y": "0px",
-  translate: "[-50% 0]",
-  top: "16",
-  maxHeight: "[calc(100vh - 5rem)]",
-  maxWidth: "xl",
-});
-const centered = css({
-  "--panel-translate-x": "-50%",
-  "--panel-translate-y": "-50%",
-  translate: "[-50% -50%]",
-  top: "[50%]",
-  maxHeight: "[calc(100vh - 2rem)]",
-  maxWidth: "lg",
-});
-
 /**
- * A panel over the window, holding a query and the rows it picks. Kobalte traps the focus, gives it
+ * A panel over the window, holding a query and the rows it picks. UI SDK traps the focus, gives it
  * back, and closes the sheet on a press beside it or on Escape. It is drawn outside the window's
  * own tree, because the title bar clips its children and the sheet covers them.
+ *
+ * The parts carry `data-sheet` rather than `data-slot`: UI SDK names its own slots with `data-slot`
+ * and its value wins over the one a caller passes, so a sheet's anchor has to be a name of its own.
  */
 export const Sheet: Component<SheetProps> = (props) => (
   <Dialog
@@ -64,16 +29,22 @@ export const Sheet: Component<SheetProps> = (props) => (
       if (!open) props.onClose();
     }}
   >
-    <Dialog.Portal>
-      <Dialog.Overlay data-slot="sheet-backdrop" class={backdrop} />
-      <Dialog.Content
-        data-slot="sheet"
-        class={cx(FLOATING_PANEL, panel, props.placement === "top" ? atTop : centered)}
-        onKeyDown={props.onKeyDown}
-      >
-        <Dialog.Title class={srOnly}>{props.title}</Dialog.Title>
-        {props.children}
-      </Dialog.Content>
-    </Dialog.Portal>
+    <DialogBackdrop
+      data-sheet="backdrop"
+      class="fixed inset-0 z-50 animate-fade-in bg-surface-0/60 backdrop-blur-xs"
+    />
+    <DialogContent
+      data-sheet="panel"
+      class={cn(
+        "__FLOATING_PANEL__ fixed left-1/2 z-50 flex w-[calc(100%-2rem)] flex-col gap-2 p-2 text-xs",
+        props.placement === "top"
+          ? "top-16 max-h-[calc(100vh-5rem)] max-w-xl -translate-x-1/2 translate-y-0 [--panel-translate-x:-50%] [--panel-translate-y:0px]"
+          : "top-1/2 max-h-[calc(100vh-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 [--panel-translate-x:-50%] [--panel-translate-y:-50%]",
+      )}
+      onKeyDown={props.onKeyDown}
+    >
+      <DialogTitle class="sr-only">{props.title}</DialogTitle>
+      {props.children}
+    </DialogContent>
   </Dialog>
 );

@@ -1,4 +1,5 @@
 export * from "./color";
+export * from "./debounce";
 export * from "./duration";
 export * from "./errors";
 export * from "./file-name";

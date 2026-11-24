@@ -1,26 +1,7 @@
 import type { UnsavedChoice } from "@pupitre/desktop-api";
 import { Button } from "@pupitre/ui";
-import { onMount, type Component } from "solid-js";
-import { render } from "solid-js/web";
-import { css, cx } from "@/styled-system/css";
-
-const panel = css({
-  margin: "auto",
-  width: "[min(24rem, calc(100vw - 2rem))]",
-  borderWidth: "[0]",
-  padding: "6",
-  textStyle: "sm",
-  color: "foreground",
-  "&::backdrop": { backgroundColor: "black/30" },
-});
-const title = css({ fontWeight: "medium" });
-const detail = css({ marginBlockStart: "2", textStyle: "xs", color: "muted.foreground" });
-const actions = css({
-  marginBlockStart: "6",
-  display: "flex",
-  justifyContent: "flex-end",
-  gap: "2",
-});
+import { render } from "@solidjs/web";
+import { onSettled, type Component } from "solid-js";
 
 interface UnsavedDialogLabels {
   message: string;
@@ -42,23 +23,23 @@ const UnsavedDialog: Component<UnsavedDialogProps> = (props) => {
     props.onChoose(choice);
   };
 
-  onMount(() => dialog?.showModal());
+  onSettled(() => dialog?.showModal());
 
   return (
     <dialog
       ref={(element) => (dialog = element)}
-      class={cx("floating-panel", panel)}
+      class="__FLOATING_PANEL__ m-auto w-[min(24rem,calc(100vw-2rem))] border-0 p-6 text-sm text-foreground backdrop:bg-black/30"
       aria-labelledby="pupitre-unsaved-message"
       onCancel={(event) => {
         event.preventDefault();
         choose("cancel");
       }}
     >
-      <p id="pupitre-unsaved-message" class={title}>
+      <p id="pupitre-unsaved-message" class="font-medium">
         {props.message}
       </p>
-      <p class={detail}>{props.detail}</p>
-      <div class={actions}>
+      <p class="mt-2 text-xs text-muted-foreground">{props.detail}</p>
+      <div class="mt-6 flex justify-end gap-2">
         <Button autofocus onClick={() => choose("save")}>
           {props.save}
         </Button>

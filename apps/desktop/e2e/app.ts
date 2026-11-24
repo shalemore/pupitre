@@ -56,6 +56,10 @@ export async function launch(options: LaunchOptions = {}): Promise<TestApp> {
   });
   const page = await app.firstWindow();
   await page.waitForLoadState("domcontentloaded");
+  if ((options.files?.length ?? 0) > 0) {
+    // Wait until the initial file has mounted the window and registered command listeners.
+    await page.locator(".cm-content").waitFor();
+  }
   return { app, page, profile, temp };
 }
 

@@ -1,7 +1,7 @@
 import type { SidebarWidths } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
-import { debounce } from "@solid-primitives/scheduled";
-import { createEffect, createSignal, on } from "solid-js";
+import { debounce } from "@pupitre/utils";
+import { createEffect, createSignal } from "solid-js";
 import { SIDEBAR_WIDTH } from "@/lib/sidebar";
 
 /** A drag reports the pointer for every pixel it moves; only the width it settles on is worth writing. */
@@ -17,7 +17,9 @@ export function createSidebarWidths(saved: SidebarWidths | undefined) {
     SAVE_DELAY,
   );
   createEffect(
-    on([start, end], ([startWidth, endWidth]) => saveSoon(startWidth, endWidth), { defer: true }),
+    () => [start(), end()] as const,
+    ([startWidth, endWidth]) => saveSoon(startWidth, endWidth),
+    { defer: true },
   );
   return { start, end, setStart, setEnd };
 }

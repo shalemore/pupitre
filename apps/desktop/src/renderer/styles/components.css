@@ -1,0 +1,204 @@
+@layer utilities {
+  .__INTERACTIVE__ {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-duration: var(--transition-duration-ui);
+    transition-timing-function: var(--ease-out-expo);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDownSmall {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeInUpSmall {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+/*
+ * The surface of a panel that floats over the window, such as a dropdown or a menu: every one of
+ * them is the same card around the p-1 its items sit in, and they all arrive the same way. Only
+ * the opacity animates: a panel's shadow is large, and scaling the panel would sweep that shadow
+ * across whatever sits beside it, such as a title bar under the menu labels. A panel leaves at
+ * once: a menu swapped for the one beside it would otherwise keep its border and shadow next to
+ * its successor for a few frames. A theme replaces this one rule to restyle every popover,
+ * dropdown and menu at once; it may also redefine the keyframes, which are global.
+ */
+@keyframes panel-enter {
+  from {
+    opacity: 0;
+    /*
+     * The panel rises from two pixels below where it is laid out. A panel that centres itself sets
+     * --panel-translate-x and -y, which are part of the value here: replacing them with a bare
+     * `0 2px` would slide a centred sheet in from its uncentred corner.
+     */
+    translate: var(--panel-translate-x, 0px) calc(var(--panel-translate-y, 0px) + 2px);
+  }
+}
+
+@keyframes panel-exit {
+  from,
+  to {
+    opacity: 0;
+  }
+}
+
+/*
+ * Scroll edge fade, set up by ScrollView when the Edge Fade setting is on: content dissolves into
+ * the edges it can still scroll past. The setting only adds the .__SCROLL_FADE__ class; how it looks
+ * is up to this rule, which a theme can replace. ScrollView sets data-overflow to the edges
+ * with more content, and the edge lengths are registered so they transition when scrolling
+ * reaches an end.
+ */
+@property --scroll-fade-top {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --scroll-fade-bottom {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@layer components {
+  .__FLOATING_PANEL__ {
+    border-radius: var(--radius-xl);
+    background-color: var(--popover);
+    box-shadow: var(--ui-shadow-popover);
+    /*
+     * Every panel arrives the same way: a short fade with a two-pixel rise. The motion depends
+     * neither on the anchor nor on the panel's size, so a dropdown, a context menu, a title-bar menu
+     * or one that opens from a side all feel alike. Keeping the movement to two pixels leaves the
+     * panel's large shadow in place instead of sweeping it over whatever sits beside the panel.
+     */
+    animation: panel-enter var(--transition-duration-base) var(--ease-enter);
+
+    /* A panel that takes another's place, such as a menu swapped across the title bar, appears at
+       once: replaying the arrival under the pointer reads as a flicker */
+    &[data-instant] {
+      animation: none;
+    }
+
+    /* A theme may keep a closing panel on screen with an animation of its own; it takes no pointer
+       while it folds away */
+    &[data-closed] {
+      pointer-events: none;
+      /* The panel leaves at once. It takes an exit animation to give the presence something to
+         wait for, and that keeps the panel's last frame invisible instead of composited over
+         whatever replaced it */
+      animation: panel-exit var(--transition-duration-fast) var(--ease-out-expo) forwards;
+    }
+  }
+
+  /*
+   * Press feedback for buttons: a quick squeeze on press and a spring back on release. Colors keep
+   * the regular hover timing; only the scale uses the spring.
+   */
+  .__PRESSABLE__ {
+    transition-property: scale, color, background-color, border-color, box-shadow, opacity;
+    transition-duration:
+      var(--transition-duration-slow), var(--transition-duration-ui), var(--transition-duration-ui),
+      var(--transition-duration-ui), var(--transition-duration-ui), var(--transition-duration-ui);
+    transition-timing-function:
+      var(--ease-spring), var(--ease-out-expo), var(--ease-out-expo), var(--ease-out-expo),
+      var(--ease-out-expo), var(--ease-out-expo);
+
+    &:active {
+      scale: 0.97;
+      transition-duration: var(--transition-duration-fast);
+      transition-timing-function: ease-out;
+    }
+  }
+
+  /* The menu grows from the corner of the button or entry it hangs from (menu-popup.tsx) */
+  [data-menu-panel] {
+    transform-origin: var(--kb-popper-content-transform-origin, center);
+  }
+
+  .__SCROLL_FADE__ {
+    /*
+     * The edge fades along a curve rather than a straight ramp: opacity is read non-linearly, so a
+     * two-stop gradient leaves a visible edge where the fade begins.
+     */
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(0 0 0 / 5%) calc(var(--scroll-fade-top) * 0.15),
+      rgb(0 0 0 / 18%) calc(var(--scroll-fade-top) * 0.32),
+      rgb(0 0 0 / 38%) calc(var(--scroll-fade-top) * 0.5),
+      rgb(0 0 0 / 64%) calc(var(--scroll-fade-top) * 0.68),
+      rgb(0 0 0 / 88%) calc(var(--scroll-fade-top) * 0.85),
+      black var(--scroll-fade-top),
+      black calc(100% - var(--scroll-fade-bottom)),
+      rgb(0 0 0 / 88%) calc(100% - var(--scroll-fade-bottom) * 0.85),
+      rgb(0 0 0 / 64%) calc(100% - var(--scroll-fade-bottom) * 0.68),
+      rgb(0 0 0 / 38%) calc(100% - var(--scroll-fade-bottom) * 0.5),
+      rgb(0 0 0 / 18%) calc(100% - var(--scroll-fade-bottom) * 0.32),
+      rgb(0 0 0 / 5%) calc(100% - var(--scroll-fade-bottom) * 0.15),
+      transparent
+    );
+    transition-property: --scroll-fade-top, --scroll-fade-bottom;
+    transition-duration: var(--transition-duration-base);
+
+    &[data-overflow~="top"] {
+      --scroll-fade-top: 1.5rem;
+    }
+
+    &[data-overflow~="bottom"] {
+      --scroll-fade-bottom: 1.5rem;
+    }
+  }
+}

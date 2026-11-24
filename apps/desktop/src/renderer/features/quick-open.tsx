@@ -1,11 +1,9 @@
 import type { FolderFile } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
-import { dim, truncateGrow } from "@pupitre/ui/styles";
-import { createMemo, createResource, For, type Component } from "solid-js";
+import { createEffect, createMemo, createSignal, For, type Component } from "solid-js";
 import { PaletteSheet } from "@/components/palette-sheet";
 import { matchRanges, type MatchRange } from "@/lib/fuzzy";
-import { css, cx } from "@/styled-system/css";
 
 export interface QuickOpenProps {
   /** The folder whose documents are offered; there is nothing to offer while none is open. */
@@ -64,13 +62,12 @@ const MatchedText: Component<MatchedTextProps> = (props) => {
 
   return (
     <For each={pieces()}>
-      {(piece) => (piece.matched ? <span class={matched}>{piece.text}</span> : piece.text)}
+      {(piece) =>
+        piece.matched ? <span class="font-semibold text-brand">{piece.text}</span> : piece.text
+      }
     </For>
   );
 };
-
-const matched = css({ color: "brand", fontWeight: "semibold" });
-const folderGap = css({ marginInlineStart: "2" });
 
 const QuickOpenRow: Component<{ file: FoundFile }> = (props) => {
   const name = createMemo(() => {
@@ -83,11 +80,11 @@ const QuickOpenRow: Component<{ file: FoundFile }> = (props) => {
   );
 
   return (
-    <span class={truncateGrow}>
+    <span class="min-w-0 flex-1 truncate">
       <bdi dir="auto">
         <MatchedText text={name()} ranges={props.file.ranges} offset={folder().length} />
       </bdi>
-      <span class={cx(dim, folderGap)}>
+      <span class="ms-2 opacity-60">
         <bdi dir="auto">
           <MatchedText text={folder()} ranges={props.file.ranges} offset={0} />
         </bdi>
@@ -98,9 +95,25 @@ const QuickOpenRow: Component<{ file: FoundFile }> = (props) => {
 
 /** Every document of the open folder, found by typing part of its path, opened where it was picked. */
 export function QuickOpen(props: QuickOpenProps) {
-  const [files] = createResource(
+  const [files, setFiles] = createSignal<readonly FolderFile[]>();
+  createEffect(
     () => props.root,
-    (root) => desktop.invoke("folder:files", root),
+    (root) => {
+      setFiles(undefined);
+      if (root === undefined) return;
+      let cancelled = false;
+      void desktop.invoke("folder:files", root).then(
+        (result) => {
+          if (!cancelled) setFiles(result);
+        },
+        () => {
+          if (!cancelled) setFiles([]);
+        },
+      );
+      return () => {
+        cancelled = true;
+      };
+    },
   );
 
   // What an empty list means: a folder to open, a miss, or documents still on their way

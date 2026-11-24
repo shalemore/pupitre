@@ -1,6 +1,8 @@
 import type {
   LocalizedText,
   Permission,
+  PluginDocumentEvent,
+  PluginDocumentInfo,
   PluginManifest,
   PluginSettingText,
 } from "@pupitre/plugin-sdk";
@@ -217,6 +219,7 @@ export interface WorkspaceState {
 export interface PluginCommandInfo {
   id: string;
   title: LocalizedText;
+  shortcut?: string | undefined;
 }
 
 /** What a plugin's settings form draws, and the values it starts from. */
@@ -252,10 +255,16 @@ export interface PluginStyle {
 /** What a plugin page asks the open editor for; the main process forwards one of these. */
 export type PluginDocumentRequest =
   | { id: number; method: "read" }
+  | { id: number; method: "info" }
   | { id: number; method: "replace"; text: string }
   | { id: number; method: "insert"; text: string }
   | { id: number; method: "selection" }
   | { id: number; method: "scrollToLine"; line: number };
+
+export interface PluginDocumentEventPayload {
+  event: PluginDocumentEvent;
+  info: PluginDocumentInfo;
+}
 
 /** The editor's answer to a plugin's request; a failure crosses back as a message. */
 export type PluginDocumentResponse = { ok: true; value: unknown } | { ok: false; message: string };
@@ -543,6 +552,7 @@ export interface InvokeChannels {
   "plugins:run-command": (id: string, commandId: string) => void;
   /** The window's answer to a plugin's request for the open document. */
   "plugin:document-response": (id: number, response: PluginDocumentResponse) => void;
+  "plugins:document-event": (payload: PluginDocumentEventPayload) => void;
 }
 
 /** Events the main process pushes to the renderer through `webContents.send`. */

@@ -1,4 +1,4 @@
-import solid from "vite-plugin-solid";
+import solid from "@solidjs/vite-plugin";
 import { defineConfig } from "vitest/config";
 import { alias } from "./vite.shared.js";
 
@@ -33,7 +33,7 @@ export default defineConfig({
       },
       {
         extends: true,
-        plugins: [solid({ hot: false })],
+        plugins: [solid()],
         test: {
           name: "renderer",
           environment: "jsdom",

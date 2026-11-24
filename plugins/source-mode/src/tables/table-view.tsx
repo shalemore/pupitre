@@ -2,9 +2,8 @@ import { redo, undo } from "@codemirror/commands";
 import type { ChangeSpec } from "@codemirror/state";
 import type { EditorView } from "@codemirror/view";
 import { columnCount, editCell, imageIn, insertRow, type TableModel } from "@pupitre/markdown";
-import { css, cx } from "@pupitre/ui";
-import { type Accessor, type Component, createSelector, Index, type Setter, Show } from "solid-js";
-import { Dynamic } from "solid-js/web";
+import { Dynamic } from "@solidjs/web";
+import { type Accessor, type Component, createMemo, Repeat, Show } from "solid-js";
 import { InlineContent } from "./inline-view";
 import { type CellPosition, TableCellImage } from "./table-cell";
 import { TableToolbar } from "./table-toolbar";
@@ -21,23 +20,18 @@ interface TableViewProps {
   view: EditorView;
   model: Accessor<TableModel>;
   active: Accessor<CellPosition | undefined>;
-  setActive: Setter<CellPosition | undefined>;
+  setActive: (pos: CellPosition | undefined) => void;
 }
-
-const tableRoot = css({ position: "relative" });
-const scrollX = css({ overflowX: "auto" });
-const tableElement = css({ borderCollapse: "collapse" });
 
 export const TableView: Component<TableViewProps> = (props) => {
   const { view } = props;
   const columns = () => columnCount(props.model());
   const rows = () => props.model().rows.length;
-  // Each cell subscribes to its own boolean, so moving the editing touches two cells, not the table
-  const activeCell = createSelector(() => {
-    const cell = props.active();
-    return cell === undefined ? "" : `${cell.row}:${cell.column}`;
-  });
-  const isActive = (row: number, column: number) => activeCell(`${row}:${column}`);
+  const isActive = (row: number, column: number) =>
+    createMemo(() => {
+      const cell = props.active();
+      return cell?.row === row && cell.column === column;
+    })();
 
   /** Applies an edit built from the current table, then moves the editing to `focus`. */
   const run = (edit: (model: TableModel) => ChangeSpec, focus?: CellPosition) => {
@@ -197,8 +191,8 @@ export const TableView: Component<TableViewProps> = (props) => {
             class="md-table-input"
             dir="auto"
             spellcheck={false}
+            defaultValue={source()?.text ?? ""}
             ref={(input) => {
-              input.value = source()?.text ?? "";
               queueMicrotask(() => {
                 input.focus();
                 input.setSelectionRange(input.value.length, input.value.length);
@@ -229,7 +223,7 @@ export const TableView: Component<TableViewProps> = (props) => {
 
   return (
     <div
-      class={tableRoot}
+      class="relative"
       onFocusOut={(event) => {
         const container = event.currentTarget;
         // Moving to another cell swaps one field for another; only leaving the table ends editing
@@ -241,29 +235,29 @@ export const TableView: Component<TableViewProps> = (props) => {
       <Show when={props.active()}>
         {(cell) => <TableToolbar cell={cell()} model={props.model} run={run} view={view} />}
       </Show>
-      <div class={scrollX}>
-        <table class={cx("md-table-view", "md-text-cursor", tableElement)}>
+      <div class="overflow-x-auto">
+        <table class="md-table-view md-text-cursor border-collapse">
           <thead>
-            <Index each={header()}>
+            <Repeat count={header().length}>
               {() => (
                 <tr>
-                  <Index each={columnIndexes()}>
-                    {(column) => <Cell row={0} column={column()} />}
-                  </Index>
+                  <Repeat count={columnIndexes().length}>
+                    {(column) => <Cell row={0} column={column} />}
+                  </Repeat>
                 </tr>
               )}
-            </Index>
+            </Repeat>
           </thead>
           <tbody>
-            <Index each={body()}>
-              {(_, index) => (
+            <Repeat count={body().length}>
+              {(index) => (
                 <tr>
-                  <Index each={columnIndexes()}>
-                    {(column) => <Cell row={index + 1} column={column()} />}
-                  </Index>
+                  <Repeat count={columnIndexes().length}>
+                    {(column) => <Cell row={index + 1} column={column} />}
+                  </Repeat>
                 </tr>
               )}
-            </Index>
+            </Repeat>
           </tbody>
         </table>
       </div>

@@ -61,6 +61,11 @@ export function themeDisplayName(theme: ThemeInfo, locale: SupportedLocale): str
   return localizedText(theme.names, locale) ?? theme.name;
 }
 
+/** The theme's localized description, if its `theme.json` provides one. */
+export function themeDescription(theme: ThemeInfo, locale: SupportedLocale): string | undefined {
+  return theme.descriptions === undefined ? undefined : localizedText(theme.descriptions, locale);
+}
+
 /**
  * Every theme is src/renderer/themes/<name>/index.css. Vite inlines the processed CSS (relative
  * url()s to fonts or images next to the theme keep working), and the active one is injected into
@@ -112,7 +117,7 @@ function themeMetadata(name: string): ThemeMetadata {
  */
 export function readColorScheme(css: string): ColorScheme[] {
   const source = css.replace(/\/\*[\s\S]*?\*\//g, "");
-  for (const [, body = ""] of source.matchAll(/:root[^{}]*\{([^{}]*)\}/g)) {
+  for (const [, body = ""] of source.matchAll(/(?:^|[\s,}])(?::root|html)[^{}]*\{([^{}]*)\}/gi)) {
     const declared = /(?:^|[^-a-z])color-scheme\s*:\s*([^;]+)/i.exec(body)?.[1];
     if (declared === undefined) continue;
     const schemes = declared
@@ -143,10 +148,8 @@ const builtInThemes: readonly ThemeInfo[] = Object.entries(themeStyles).map(
   },
 );
 
+/** The folders the main process found in the global and project theme folders, and their CSS. */
 const [imported, setImported] = createSignal<readonly ImportedTheme[]>(desktop.initialState.themes);
-
-/** The folders the main process found in the global and project theme folders. */
-export const importedThemes = imported;
 
 void desktop.invoke("themes:list").then(setImported);
 desktop.on("themes:changed", (list) => setImported(list));
@@ -184,8 +187,6 @@ export function themes(): readonly ThemeInfo[] {
   return allThemes();
 }
 
-const [applied, setApplied] = createSignal(undefined, { equals: false });
-
 /**
  * The element that carries the active theme, found in the document rather than kept in a module
  * variable: a second instance of this module, such as one a hot update leaves behind, must still
@@ -200,21 +201,65 @@ function themeStyleElement(): HTMLStyleElement {
   return element;
 }
 
-/**
- * Notifies every time the theme is applied, including a switch of the color scheme. Read it to
- * redo work that copies theme colors outside CSS, such as diagrams.
- */
-export const themeApplied = applied;
-
 function cssFor(id: string): string | undefined {
   const found = imported().find((theme) => `${theme.source}:${theme.folder}` === id);
   return found?.css ?? builtInCss[id];
 }
 
-export function applyTheme(id: string): void {
-  const css = cssFor(id) ?? cssFor(DEFAULT_THEME) ?? "";
-  themeStyleElement().textContent = `@layer document-theme {\n${css}\n}`;
-  setApplied();
+/**
+ * The stylesheet of a theme: the folder the main process found, or the one built in. Read it where
+ * a change is tracked, such as the compute function of an effect; a theme folder that changes while
+ * the app runs replaces the CSS of the theme that uses it.
+ */
+export function themeCss(id: string): string {
+  return cssFor(id) ?? cssFor(DEFAULT_THEME) ?? "";
+}
+
+function hasBalancedCss(css: string): boolean {
+  let depth = 0;
+  let quote: '"' | "'" | undefined;
+  let inComment = false;
+  for (let i = 0; i < css.length; i++) {
+    const ch = css[i];
+    const next = css[i + 1];
+    if (inComment) {
+      if (ch === "*" && next === "/") {
+        inComment = false;
+        i++;
+      }
+      continue;
+    }
+    if (quote !== undefined) {
+      if (ch === "\\") {
+        i++;
+        continue;
+      }
+      if (ch === quote) quote = undefined;
+      continue;
+    }
+    if (ch === "/" && next === "*") {
+      inComment = true;
+      i++;
+      continue;
+    }
+    if (ch === '"' || ch === "'") {
+      quote = ch;
+      continue;
+    }
+    if (ch === "{") depth++;
+    else if (ch === "}") {
+      depth--;
+      if (depth < 0) return false;
+    }
+  }
+  return !inComment && quote === undefined && depth === 0;
+}
+
+/** Puts a theme's stylesheet in the document. */
+export function applyThemeCss(css: string): void {
+  const safeCss = hasBalancedCss(css) ? css : (cssFor(DEFAULT_THEME) ?? "");
+  if (safeCss !== css) console.warn("Ignored malformed theme CSS and fell back to default theme");
+  themeStyleElement().textContent = `@layer document-theme {\n${safeCss}\n}`;
 }
 
 /**
@@ -227,11 +272,20 @@ export function activeThemeCss(): string {
   return element instanceof HTMLStyleElement ? (element.textContent ?? "") : "";
 }
 
+function safeHex(value: string, fallback: string): string {
+  if (value === "") return fallback;
+  try {
+    return toHex(value);
+  } catch {
+    return fallback;
+  }
+}
+
 /** The active theme's canvas and secondary text colors, for the window background and caption buttons. */
 export function readWindowColors(): { background: string; symbol: string } {
   const style = getComputedStyle(document.documentElement);
   return {
-    background: toHex(readToken(style, "ui-surface-1")),
-    symbol: toHex(readToken(style, "ui-text-secondary")),
+    background: safeHex(readToken(style, "ui-surface-1"), "#ffffff"),
+    symbol: safeHex(readToken(style, "ui-text-secondary"), "#000000"),
   };
 }

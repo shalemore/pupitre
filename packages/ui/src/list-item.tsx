@@ -1,43 +1,30 @@
-import { type JSX, splitProps } from "solid-js";
-import { cva, cx, type RecipeVariantProps } from "./styled-system/css";
+import type { JSX } from "@solidjs/web";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "cn";
+import { omit } from "solid-js";
 
-const listItemVariants = cva({
-  base: {
-    layerStyle: "interactive",
-    display: "flex",
-    width: "full",
-    cursor: "pointer",
-    alignItems: "center",
-    gap: "1.5",
-    borderRadius: "md",
-    paddingBlock: "1.5",
-    paddingInlineEnd: "2.5",
-    textAlign: "start",
-    textStyle: "xs",
-    outlineStyle: "none",
-    _focusVisible: { boxShadow: "focus" },
-  },
-  variants: {
-    active: {
-      true: { backgroundColor: "selected", fontWeight: "medium", color: "foreground" },
-      false: {
-        color: "muted.foreground",
-        _hover: { backgroundColor: "accent", color: "foreground" },
+const listItemVariants = cva(
+  "__INTERACTIVE__ flex w-full cursor-pointer items-center gap-1.5 rounded-md py-1.5 pe-2.5 text-start text-xs outline-none focus-visible:shadow-focus",
+  {
+    variants: {
+      active: {
+        true: "bg-selected font-medium text-foreground",
+        false: "text-muted-foreground hover:bg-accent hover:text-foreground",
+      },
+      tone: {
+        default: "",
+        danger: "text-destructive hover:text-destructive",
       },
     },
-    tone: {
-      default: {},
-      danger: { color: "destructive", _hover: { color: "destructive" } },
+    defaultVariants: {
+      active: false,
+      tone: "default",
     },
   },
-  defaultVariants: {
-    active: false,
-    tone: "default",
-  },
-});
+);
 
-export type ListItemProps = JSX.ButtonHTMLAttributes<HTMLButtonElement> &
-  RecipeVariantProps<typeof listItemVariants>;
+export type ListItemProps = Omit<JSX.ButtonHTMLAttributes<HTMLButtonElement>, "class"> &
+  VariantProps<typeof listItemVariants> & { class?: string | undefined };
 
 /** How far one level of nesting moves a row past `base`, the start padding a row without nesting has. */
 export function rowIndent(depth: number, base: number) {
@@ -50,13 +37,13 @@ export function rowIndent(depth: number, base: number) {
  * The inline start padding is left to the caller, because tree rows indent by depth.
  */
 export function ListItem(props: ListItemProps) {
-  const [local, rest] = splitProps(props, ["class", "active", "tone"]);
+  const rest = omit(props, "class", "active", "tone");
 
   return (
     <button
       type="button"
       data-slot="list-item"
-      class={cx(listItemVariants({ active: local.active, tone: local.tone }), local.class)}
+      class={cn(listItemVariants({ active: props.active, tone: props.tone }), props.class)}
       {...rest}
     />
   );

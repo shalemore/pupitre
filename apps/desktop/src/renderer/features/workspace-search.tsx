@@ -1,4 +1,3 @@
-import { Combobox as KobalteCombobox } from "@kobalte/core/combobox";
 import type {
   WorkspaceFileMatches,
   WorkspaceMatch,
@@ -7,95 +6,23 @@ import type {
 } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
+import { Badge, cn, Input, ScrollView, Sheet } from "@pupitre/ui";
+import { debounce } from "@pupitre/utils";
 import {
-  Badge,
-  Input,
-  ScrollView,
-  Sheet,
-  ToggleIconButton,
-  type ScrollViewProps,
-} from "@pupitre/ui";
-import { truncateStyle } from "@pupitre/ui/styles";
-import { debounce } from "@solid-primitives/scheduled";
-import { CaseSensitive, Regex, WholeWord } from "lucide-solid";
+  Command,
+  CommandGroup,
+  CommandGroupLabel,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@ui-sdk/solid/command";
+import { createEffect, createMemo, createSignal, For, Show, type Component } from "solid-js";
 import {
-  createEffect,
-  createMemo,
-  createSignal,
-  type Component,
-  type JSX,
-  on,
-  onMount,
-  Show,
-} from "solid-js";
-import { FocusFirstRow, ShowFocusedRow } from "@/lib/combobox-rows";
-import { css } from "@/styled-system/css";
-
-const optionButton = css({
-  color: "muted.foreground",
-  "&[data-pressed]": { backgroundColor: "brand/15" },
-});
-const mark = css({ borderRadius: "xs", backgroundColor: "brand/20", color: "foreground" });
-const item = css({
-  layerStyle: "interactive",
-  display: "flex",
-  width: "full",
-  cursor: "pointer",
-  alignItems: "center",
-  gap: "2",
-  borderRadius: "md",
-  paddingBlock: "1.5",
-  paddingInlineEnd: "2.5",
-  paddingInlineStart: "6",
-  textAlign: "start",
-  textStyle: "xs",
-  color: "muted.foreground",
-  outlineStyle: "none",
-  _highlighted: { backgroundColor: "selected", fontWeight: "medium", color: "foreground" },
-});
-const lineNumber = css({
-  width: "6",
-  flexShrink: 0,
-  textAlign: "end",
-  textStyle: "2xs",
-  color: "tertiary",
-  fontVariantNumeric: "tabular-nums",
-});
-const matchText = css(truncateStyle, {
-  minWidth: "0",
-  flex: "1",
-});
-const section = css({
-  display: "flex",
-  alignItems: "center",
-  gap: "1.5",
-  paddingInline: "2.5",
-  paddingBlockStart: "1.5",
-});
-const sectionLabel = css(truncateStyle, {
-  minWidth: "0",
-  flex: "1",
-  fontWeight: "medium",
-});
-const control = css({ display: "flex", alignItems: "center", gap: "1.5" });
-const optionRow = css({ display: "flex", flexShrink: 0, alignItems: "center", gap: "0.5" });
-const optionWrap = css({ display: "flex" });
-const status = css({ paddingInline: "2.5", paddingBlock: "1.5", color: "muted.foreground" });
-const statusError = css({ paddingInline: "2.5", paddingBlock: "1.5", color: "destructive" });
-const countLabel = css({
-  paddingInline: "2.5",
-  textStyle: "2xs",
-  color: "tertiary",
-  fontVariantNumeric: "tabular-nums",
-});
-const list = css({
-  display: "flex",
-  maxHeight: "80",
-  minHeight: "0",
-  flexDirection: "column",
-  gap: "0.5",
-  marginBlockStart: "2",
-});
+  PALETTE_ITEM_CLASS,
+  PALETTE_STATUS_CLASS,
+  useCommandInputGuard,
+} from "@/components/palette-sheet";
+import { SearchOptionToggles } from "@/components/search-option-toggles";
 
 /** Typing must not ask the main process for the whole folder once per keystroke. */
 const SEARCH_DELAY_MS = 150;
@@ -121,34 +48,15 @@ export interface WorkspaceSearchProps {
   onClose: () => void;
 }
 
-/** A match option of the bar, such as case sensitivity; pressed options are shown in the accent color. */
-const OptionButton: Component<{
-  pressed: boolean;
-  label: string;
-  onChange: (pressed: boolean) => void;
-  children: JSX.Element;
-}> = (props) => (
-  // A press on the toggle must not take the focus from the query
-  <span class={optionWrap} onMouseDown={(event) => event.preventDefault()}>
-    <ToggleIconButton
-      pressed={props.pressed}
-      onChange={props.onChange}
-      label={props.label}
-      size="icon-xs"
-      class={optionButton}
-    >
-      {props.children}
-    </ToggleIconButton>
-  </span>
-);
-
 /** The line a match is on, with the matched part marked. */
 const MatchLine: Component<{ match: WorkspaceMatch }> = (props) => {
   const end = () => props.match.column + props.match.to - props.match.from;
   return (
     <>
       {props.match.text.slice(0, props.match.column)}
-      <mark class={mark}>{props.match.text.slice(props.match.column, end())}</mark>
+      <mark class="rounded-xs bg-brand/20 text-foreground">
+        {props.match.text.slice(props.match.column, end())}
+      </mark>
       {props.match.text.slice(end())}
     </>
   );
@@ -175,9 +83,8 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
       matches: file.matches.map((match) => ({ path: file.path, match, index: index++ })),
     }));
   });
-  const matchCount = createMemo(() =>
-    groups().reduce((count, group) => count + group.matches.length, 0),
-  );
+  const rowByIndex = createMemo(() => groups().flatMap((group) => group.matches));
+  const matchCount = createMemo(() => rowByIndex().length);
   const noResults = () =>
     props.root !== undefined && query() !== "" && answer()?.kind === "ok" && matchCount() === 0;
 
@@ -203,122 +110,114 @@ export const WorkspaceSearch: Component<WorkspaceSearchProps> = (props) => {
   const searchSoon = debounce(() => void search(), SEARCH_DELAY_MS);
 
   createEffect(
-    on([() => props.root, query, caseSensitive, wholeWord, regexp], () => searchSoon(), {
-      defer: true,
-    }),
+    () => [props.root, query(), caseSensitive(), wholeWord(), regexp()] as const,
+    () => searchSoon(),
+    { defer: true },
   );
 
-  // An input method commits its candidate with Enter, which must not open the match under it
-  onMount(() => {
-    input?.focus();
-    // The key events are delegated at the document, so stopping the propagation here keeps the
-    // combobox from seeing a commit Enter at all
-    input?.addEventListener(
-      "keydown",
-      (event) => {
-        if (event.isComposing) event.stopPropagation();
-      },
-      true,
-    );
-  });
+  useCommandInputGuard(() => input);
 
   const open = (row: MatchRow) => props.onOpenMatch(row.path, row.match.from, row.match.to);
 
   return (
     <Sheet title={t().workspaceSearch.title} placement="top" onClose={props.onClose}>
-      <KobalteCombobox<MatchRow, MatchGroup>
-        open
-        options={groups()}
-        optionGroupChildren="matches"
-        optionValue={(row) => String(row.index)}
-        optionTextValue={() => ""}
-        // Picking closes the sheet, and the query is what the field keeps until it does
-        optionLabel={() => query()}
-        defaultFilter={() => true}
-        allowsEmptyCollection
-        closeOnSelection={false}
-        triggerMode="input"
-        onInputChange={setQuery}
-        onChange={(row) => {
-          if (row !== null) open(row);
+      <Command
+        filter={() => true}
+        query={query()}
+        onQueryChange={(next) => setQuery(next)}
+        onAction={(value) => {
+          const row = rowByIndex()[Number(value)];
+          if (row !== undefined) open(row);
         }}
-        itemComponent={(itemProps) => (
-          <KobalteCombobox.Item item={itemProps.item} class={item}>
-            <span class={lineNumber}>{itemProps.item.rawValue.match.line}</span>
-            <span dir="auto" class={matchText}>
-              <MatchLine match={itemProps.item.rawValue.match} />
-            </span>
-          </KobalteCombobox.Item>
-        )}
-        sectionComponent={(sectionProps) => (
-          <KobalteCombobox.Section class={section}>
-            <span dir="auto" class={sectionLabel}>
-              {sectionProps.section.rawValue.file.relative}
-            </span>
-            <Badge variant="muted" size="sm">
-              {sectionProps.section.rawValue.matches.length}
-            </Badge>
-          </KobalteCombobox.Section>
-        )}
       >
-        <KobalteCombobox.Control class={control}>
-          <KobalteCombobox.Input
-            as={Input}
-            ref={(element) => (input = element)}
-            dir="auto"
-            placeholder={t().workspaceSearch.placeholder}
-            aria-label={t().workspaceSearch.title}
+        <div class="flex items-center gap-1.5">
+          <CommandInput
+            render={(inputProps) => (
+              <Input
+                {...inputProps}
+                ref={(element) => {
+                  input = element;
+                  const partRef = inputProps["ref"];
+                  if (typeof partRef === "function") partRef(element);
+                }}
+                dir="auto"
+                placeholder={t().workspaceSearch.placeholder}
+                aria-label={t().workspaceSearch.title}
+              />
+            )}
           />
-          <div class={optionRow}>
-            <OptionButton
-              pressed={caseSensitive()}
-              onChange={setCaseSensitive}
-              label={t().editor.matchCase}
-            >
-              <CaseSensitive />
-            </OptionButton>
-            <OptionButton
-              pressed={wholeWord()}
-              onChange={setWholeWord}
-              label={t().editor.wholeWord}
-            >
-              <WholeWord />
-            </OptionButton>
-            <OptionButton pressed={regexp()} onChange={setRegexp} label={t().editor.useRegex}>
-              <Regex />
-            </OptionButton>
-          </div>
-        </KobalteCombobox.Control>
+          <SearchOptionToggles
+            size="icon-xs"
+            caseSensitive={caseSensitive()}
+            wholeWord={wholeWord()}
+            regexp={regexp()}
+            onCaseSensitiveChange={setCaseSensitive}
+            onWholeWordChange={setWholeWord}
+            onRegexpChange={setRegexp}
+          />
+        </div>
 
         <Show when={props.root === undefined}>
-          <p role="status" class={status}>
+          <p role="status" class={PALETTE_STATUS_CLASS}>
             {t().workspaceSearch.noFolder}
           </p>
         </Show>
         <Show when={answer()?.kind === "invalid-regexp"}>
-          <p role="status" class={statusError}>
+          <p role="status" class="px-2.5 py-1.5 text-destructive">
             {t().workspaceSearch.invalidRegexp}
           </p>
         </Show>
         <Show when={noResults()}>
-          <p role="status" class={status}>
+          <p role="status" class={PALETTE_STATUS_CLASS}>
             {t().workspaceSearch.noResults}
           </p>
         </Show>
         <Show when={matchCount() > 0}>
-          <p role="status" class={countLabel}>
+          <p role="status" class="px-2.5 text-2xs text-tertiary tabular-nums">
             {t().workspaceSearch.matchCount(matchCount())}
           </p>
         </Show>
 
-        <KobalteCombobox.Listbox
-          as={(listProps: ScrollViewProps) => (
-            <ScrollView {...listProps} aria-label={t().workspaceSearch.title} class={list} />
+        <CommandList
+          render={(listProps) => (
+            <ScrollView
+              {...listProps}
+              aria-label={t().workspaceSearch.title}
+              class="mt-2 flex max-h-80 min-h-0 flex-col gap-0.5"
+            />
           )}
-        />
-        <FocusFirstRow />
-        <ShowFocusedRow />
-      </KobalteCombobox>
+        >
+          <For each={groups()}>
+            {(group) => (
+              <CommandGroup>
+                <CommandGroupLabel class="flex items-center gap-1.5 px-2.5 pt-1.5">
+                  <span dir="auto" class="min-w-0 flex-1 truncate font-medium">
+                    {group.file.relative}
+                  </span>
+                  <Badge variant="muted" size="sm">
+                    {group.matches.length}
+                  </Badge>
+                </CommandGroupLabel>
+                <For each={group.matches}>
+                  {(matchRow) => (
+                    <CommandItem
+                      value={String(matchRow.index)}
+                      class={cn(PALETTE_ITEM_CLASS, "gap-2 ps-6")}
+                    >
+                      <span class="w-6 shrink-0 text-end text-2xs text-tertiary tabular-nums">
+                        {matchRow.match.line}
+                      </span>
+                      <span dir="auto" class="min-w-0 flex-1 truncate">
+                        <MatchLine match={matchRow.match} />
+                      </span>
+                    </CommandItem>
+                  )}
+                </For>
+              </CommandGroup>
+            )}
+          </For>
+        </CommandList>
+      </Command>
     </Sheet>
   );
 };

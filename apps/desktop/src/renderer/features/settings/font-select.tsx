@@ -2,12 +2,12 @@ import { TITLE_BAR_CLEARANCE } from "@pupitre/desktop-api";
 import { desktop, isMacOS } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
 import { Combobox, IconButton, type SelectOption } from "@pupitre/ui";
+import type { JSX } from "@solidjs/web";
 import { RefreshCw } from "lucide-solid";
-import { createResource, createRoot, type Component, type JSX, Show } from "solid-js";
+import { createSignal, type Component, Show } from "solid-js";
+import { shownTheme } from "@/lib/appearance";
 import { GENERIC_FAMILIES, listFontFamilies, type FontFamily } from "@/lib/fonts";
-import { themeApplied } from "@/lib/theme";
 import { readToken, type TokenName } from "@/lib/tokens";
-import { css, cx } from "@/styled-system/css";
 
 const APPLE_SYSTEM_ALIASES = new Set(["-apple-system", "blinkmacsystemfont"]);
 const WINDOWS_FAMILIES = new Set([
@@ -20,7 +20,7 @@ const WINDOWS_FAMILIES = new Set([
 /** The first face the active theme's stack names, so a setting can show what it would fall back to. */
 function themeFontName(token: TokenName): string | undefined {
   // Read again after a theme switch, which rewrites the variables
-  themeApplied();
+  shownTheme();
   const stack = readToken(getComputedStyle(document.documentElement), token);
   const families = stack
     .split(",")
@@ -42,18 +42,16 @@ export function themeFontLabel(token: TokenName): string {
 }
 
 // The three font pickers share one font list that is queried once; the refresh button queries again
-const fonts = createRoot(() => {
-  const [list, { refetch }] = createResource(
-    () => 0,
-    async (_, info): Promise<FontFamily[]> => listFontFamilies(info.refetching === true),
-  );
-  return { list, refresh: () => void refetch(true) };
-});
-
-const spin = css({ animation: "spin" });
-const optionRow = css({ display: "flex", alignItems: "center", gap: "1.5" });
-const grow = css({ minWidth: "0", flex: "1" });
-const hint = css({ marginBlockStart: "1", textStyle: "2xs", color: "muted.foreground" });
+const [fontList, setFontList] = createSignal<readonly FontFamily[]>([]);
+const [fontsLoading, setFontsLoading] = createSignal(false);
+const refreshFonts = (force = true) => {
+  setFontsLoading(true);
+  void listFontFamilies(force)
+    .then(setFontList, () => undefined)
+    .finally(() => setFontsLoading(false));
+};
+refreshFonts(false);
+const fonts = { list: fontList, loading: fontsLoading, refresh: () => refreshFonts(true) };
 
 export interface FontSelectProps {
   value: string;
@@ -68,7 +66,7 @@ export interface FontSelectProps {
 export const FontSelect: Component<FontSelectProps> = (props) => {
   const options = (): SelectOption[] => [
     { value: "", label: props.emptyLabel },
-    ...(fonts.list() ?? []).map(({ family, localizedName }) => ({
+    ...fonts.list().map(({ family, localizedName }) => ({
       value: family,
       label: family,
       description: localizedName,
@@ -79,9 +77,9 @@ export const FontSelect: Component<FontSelectProps> = (props) => {
 
   return (
     <div>
-      <div class={optionRow}>
+      <div class="flex items-center gap-1.5">
         {props.leading}
-        <div class={grow}>
+        <div class="min-w-0 flex-1">
           <Combobox
             value={props.value}
             onChange={props.onChange}
@@ -95,7 +93,7 @@ export const FontSelect: Component<FontSelectProps> = (props) => {
       </div>
       {/* What a chosen font overrides; the row's reset button gives the theme's own font back */}
       <Show when={props.value !== ""}>
-        <p class={hint}>{props.emptyLabel}</p>
+        <p class="mt-1 text-2xs text-muted-foreground">{props.emptyLabel}</p>
       </Show>
     </div>
   );
@@ -103,6 +101,6 @@ export const FontSelect: Component<FontSelectProps> = (props) => {
 
 export const RefreshFontsButton: Component = () => (
   <IconButton label={t().settings.refreshFonts} size="icon-2xs" onClick={fonts.refresh}>
-    <RefreshCw class={cx(fonts.list.loading && spin)} />
+    <RefreshCw class={fonts.loading() ? "animate-spin" : ""} />
   </IconButton>
 );

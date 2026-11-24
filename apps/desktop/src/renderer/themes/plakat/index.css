@@ -22,88 +22,52 @@
 
   --ui-radius-scale: 0;
 
-  --ui-surface-0: oklch(0.925 0.002 80);
-  --ui-surface-1: oklch(0.975 0.002 80);
-  --ui-surface-2: oklch(0.982 0.002 80);
-  --ui-surface-3: oklch(0.99 0.001 80);
-  --ui-text-primary: oklch(0.16 0 0);
-  --ui-text-secondary: oklch(0.38 0 0);
-  --ui-text-muted: oklch(0.56 0 0);
-  --ui-brand: oklch(0.56 0.22 28);
-  --ui-brand-hover: oklch(0.5 0.21 28);
-  /* The brand is dark in this scheme, so white text stays readable on it */
-  --brand-foreground: oklch(1 0 0);
-  --ui-danger: oklch(0.52 0.21 28);
-  --ui-success: oklch(0.5 0.1 150);
-  --ui-segmented-thumb: oklch(0.99 0.001 80);
-  --ui-knob: oklch(0.99 0.001 80);
+  --ui-surface-0: light-dark(oklch(0.925 0.002 80), oklch(0.13 0 0));
+  --ui-surface-1: light-dark(oklch(0.975 0.002 80), oklch(0.165 0 0));
+  --ui-surface-2: light-dark(oklch(0.982 0.002 80), oklch(0.185 0 0));
+  --ui-surface-3: light-dark(oklch(0.99 0.001 80), oklch(0.215 0 0));
+  --ui-text-primary: light-dark(oklch(0.16 0 0), oklch(0.94 0.002 80));
+  --ui-text-secondary: light-dark(oklch(0.38 0 0), oklch(0.74 0 0));
+  --ui-text-muted: light-dark(oklch(0.56 0 0), oklch(0.54 0 0));
+  --ui-brand: light-dark(oklch(0.56 0.22 28), oklch(0.64 0.21 28));
+  --ui-brand-hover: light-dark(oklch(0.5 0.21 28), oklch(0.7 0.19 29));
+  --brand-foreground: light-dark(oklch(1 0 0), oklch(0.18 0 0));
+  --ui-danger: light-dark(oklch(0.52 0.21 28), oklch(0.66 0.2 28));
+  --ui-success: light-dark(oklch(0.5 0.1 150), oklch(0.74 0.11 150));
+  --ui-segmented-thumb: light-dark(oklch(0.99 0.001 80), oklch(0.3 0 0));
+  --ui-knob: light-dark(oklch(0.99 0.001 80), oklch(0.94 0.002 80));
 
   /* <mark>: a wash of the red */
-  --plakat-highlight: oklch(from var(--ui-brand) l c h / 16%);
+  --plakat-highlight: light-dark(
+    oklch(from var(--ui-brand) l c h / 16%),
+    oklch(from var(--ui-brand) l c h / 28%)
+  );
   /*
    * The banner and the mark wash are the accent already, so a selection tinted with the accent
    * would vanish on them.
    */
   --ui-selection: oklch(from var(--ui-text-primary) l c h / 22%);
   /* The title banner and the text printed on it */
-  --plakat-banner: var(--ui-brand);
-  --plakat-on-banner: oklch(0.99 0 0);
+  --plakat-banner: light-dark(var(--ui-brand), oklch(0.56 0.21 28));
+  --plakat-on-banner: light-dark(oklch(0.99 0 0), oklch(0.98 0 0));
 
-  --syntax-keyword: oklch(0.52 0.21 28);
-  --syntax-string: oklch(0.45 0.07 250);
-  --syntax-special-string: oklch(0.45 0.1 280);
-  --syntax-number: oklch(0.56 0.15 50);
-  --syntax-definition: oklch(0.38 0.12 260);
-  --syntax-function: oklch(0.38 0.12 260);
-  --syntax-type: oklch(0.56 0.15 50);
-  --syntax-property: oklch(0.45 0.07 250);
+  --syntax-keyword: light-dark(oklch(0.52 0.21 28), oklch(0.7 0.18 28));
+  --syntax-string: light-dark(oklch(0.45 0.07 250), oklch(0.78 0.06 250));
+  --syntax-special-string: light-dark(oklch(0.45 0.1 280), oklch(0.76 0.09 280));
+  --syntax-number: light-dark(oklch(0.56 0.15 50), oklch(0.78 0.13 60));
+  --syntax-definition: light-dark(oklch(0.38 0.12 260), oklch(0.78 0.09 255));
+  --syntax-function: light-dark(oklch(0.38 0.12 260), oklch(0.78 0.09 255));
+  --syntax-type: light-dark(oklch(0.56 0.15 50), oklch(0.78 0.13 60));
+  --syntax-property: light-dark(oklch(0.45 0.07 250), oklch(0.78 0.06 250));
   --syntax-operator: var(--ui-text-secondary);
 
   --diagram-stroke: var(--ui-text-secondary);
 
-  --alert-note: oklch(0.45 0.1 255);
-  --alert-tip: oklch(0.5 0.1 150);
+  --alert-note: light-dark(oklch(0.45 0.1 255), oklch(0.74 0.09 255));
+  --alert-tip: light-dark(oklch(0.5 0.1 150), oklch(0.74 0.11 150));
   --alert-important: var(--ui-brand);
-  --alert-warning: oklch(0.62 0.14 65);
-  --alert-caution: oklch(0.48 0.2 28);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ui-surface-0: oklch(0.13 0 0);
-    --ui-surface-1: oklch(0.165 0 0);
-    --ui-surface-2: oklch(0.185 0 0);
-    --ui-surface-3: oklch(0.215 0 0);
-    --ui-text-primary: oklch(0.94 0.002 80);
-    --ui-text-secondary: oklch(0.74 0 0);
-    --ui-text-muted: oklch(0.54 0 0);
-    --ui-brand: oklch(0.64 0.21 28);
-    --ui-brand-hover: oklch(0.7 0.19 29);
-    /* The brand is bright in this scheme, so text on it turns dark to stay readable */
-    --brand-foreground: oklch(0.18 0 0);
-    --ui-danger: oklch(0.66 0.2 28);
-    --ui-success: oklch(0.74 0.11 150);
-    --ui-segmented-thumb: oklch(0.3 0 0);
-    --ui-knob: oklch(0.94 0.002 80);
-
-    --plakat-highlight: oklch(from var(--ui-brand) l c h / 28%);
-    --plakat-banner: oklch(0.56 0.21 28);
-    --plakat-on-banner: oklch(0.98 0 0);
-
-    --syntax-keyword: oklch(0.7 0.18 28);
-    --syntax-string: oklch(0.78 0.06 250);
-    --syntax-special-string: oklch(0.76 0.09 280);
-    --syntax-number: oklch(0.78 0.13 60);
-    --syntax-definition: oklch(0.78 0.09 255);
-    --syntax-function: oklch(0.78 0.09 255);
-    --syntax-type: oklch(0.78 0.13 60);
-    --syntax-property: oklch(0.78 0.06 250);
-
-    --alert-note: oklch(0.74 0.09 255);
-    --alert-tip: oklch(0.74 0.11 150);
-    --alert-warning: oklch(0.8 0.13 70);
-    --alert-caution: oklch(0.68 0.19 28);
-  }
+  --alert-warning: light-dark(oklch(0.62 0.14 65), oklch(0.8 0.13 70));
+  --alert-caution: light-dark(oklch(0.48 0.2 28), oklch(0.68 0.19 28));
 }
 
 /* The page: top and bottom padding, body font, ink color and a red caret */

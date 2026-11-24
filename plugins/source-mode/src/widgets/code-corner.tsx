@@ -1,69 +1,15 @@
 import { LanguageDescription, syntaxTree } from "@codemirror/language";
 import { type EditorView, WidgetType } from "@codemirror/view";
-import { desktop } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
 import { codeLanguages, fencedText } from "@pupitre/markdown";
-import { css, cx } from "@pupitre/ui";
-import { truncateStyle } from "@pupitre/ui/styles";
-import { debounce } from "@solid-primitives/scheduled";
+import { IconButton } from "@pupitre/ui";
+import { debounce } from "@pupitre/utils";
 import { Check, Copy } from "lucide-solid";
-import { createMemo, createSignal, For, Show, type Component } from "solid-js";
-import { render } from "solid-js/web";
+import { createMemo, createSignal, For, onCleanup, Show, type Component } from "solid-js";
+import { sourceModeHost } from "#host";
+import { mountWidget, unmountWidget } from "#mount-widget";
 
 const COPIED_MS = 1500;
-
-const languagePicker = css(truncateStyle, {
-  fieldSizing: "content",
-  maxWidth: "32",
-  minWidth: "0",
-  marginInline: "-1",
-  appearance: "none",
-  borderRadius: "sm",
-  borderWidth: "[0]",
-  backgroundColor: "transparent",
-  paddingInline: "1",
-  paddingBlock: "0.5",
-  cursor: "pointer",
-  layerStyle: "interactive",
-  _hover: { backgroundColor: "accent", color: "foreground" },
-  _focusVisible: { outlineStyle: "none", boxShadow: "focus" },
-});
-const corner = css({
-  position: "absolute",
-  zIndex: "1",
-  insetInlineEnd: "2",
-  display: "flex",
-  alignItems: "center",
-  gap: "1.5",
-  fontFamily: "sans",
-  fontSize: "xs",
-  lineHeight: "[1]",
-  color: "tertiary",
-  userSelect: "none",
-});
-const cornerAtTop = css({ top: "var(--md-code-corner-gap)" });
-// The line holding a rendering starts at the rendering; the fence sits at its bottom edge, which
-// is where the corner belongs
-const cornerAtBottom = css({ bottom: "0" });
-const copy = css({
-  display: "grid",
-  width: "var(--md-code-corner-size)",
-  height: "var(--md-code-corner-size)",
-  placeItems: "center",
-  borderRadius: "sm",
-  borderWidth: "[0]",
-  backgroundColor: "transparent",
-  padding: "0",
-  opacity: 0.6,
-  cursor: "pointer",
-  transitionProperty: "opacity, color, background-color",
-  transitionDuration: "ui",
-  transitionTimingFunction: "outExpo",
-  _hover: { backgroundColor: "accent", color: "foreground", opacity: 1 },
-  "&[data-copied]": { opacity: 1, color: "success" },
-  "& svg": { width: "3.5", height: "3.5" },
-  _print: { display: "none" },
-});
 
 /**
  * The part of a fence line that names the language: everything after the opening backticks. A pick
@@ -142,6 +88,7 @@ const CodeCorner: Component<{
 }> = (props) => {
   const [copied, setCopied] = createSignal(false);
   const resetCopied = debounce(() => setCopied(false), COPIED_MS);
+  onCleanup(resetCopied.clear);
 
   const language = createMemo(() => namedLanguage(props.fence?.language ?? ""));
 
@@ -189,7 +136,7 @@ const CodeCorner: Component<{
       <Show when={props.fence}>
         <select
           // Interface rather than document, sized in rem so the block's smaller em does not shrink it
-          class={languagePicker}
+          class="__INTERACTIVE__ -mx-1 field-sizing-content max-w-32 min-w-0 cursor-pointer appearance-none truncate rounded-sm border-0 bg-transparent px-1 py-0.5 hover:bg-accent hover:text-foreground focus-visible:shadow-focus focus-visible:outline-none"
           aria-label={t().editor.codeLanguage}
           title={t().editor.codeLanguage}
           value={current()}
@@ -200,31 +147,30 @@ const CodeCorner: Component<{
           </For>
         </select>
       </Show>
-      <button
-        type="button"
-        class={copy}
-        title={t().common.copy}
-        aria-label={t().common.copy}
+      <IconButton
+        label={t().common.copy}
+        size="icon-2xs"
+        class="size-(--md-code-corner-size) opacity-60 hover:opacity-100 data-copied:text-success data-copied:opacity-100 print:hidden [&>svg]:size-3.5"
         data-copied={copied() ? "" : undefined}
         // Keeps the editor's selection; the button is not a place to put the cursor
         onMouseDown={(event) => event.preventDefault()}
         onClick={() => {
           const code = readBlockCode(props.view, props.container);
-          void desktop.invoke("clipboard:write-text", code).then(() => {
-            setCopied(true);
-            resetCopied();
-          });
+          void sourceModeHost()
+            .copyText(code)
+            .then(() => {
+              setCopied(true);
+              resetCopied();
+            });
         }}
       >
         <Show when={copied()} fallback={<Copy />}>
           <Check />
         </Show>
-      </button>
+      </IconButton>
     </>
   );
 };
-
-const disposers = new WeakMap<HTMLElement, () => void>();
 
 /** Whether two corners stand for the same pick at the same place in the document. */
 function sameFence(a: FenceInfo | undefined, b: FenceInfo | undefined): boolean {
@@ -243,32 +189,28 @@ function sameFence(a: FenceInfo | undefined, b: FenceInfo | undefined): boolean 
  * hidden, and a button that copies the code without the fences.
  */
 export class CodeCornerWidget extends WidgetType {
-  constructor(
-    readonly fence: FenceInfo | undefined,
-    /** Whether the opening line also holds a rendering, which puts the fence at its bottom. */
-    readonly belowRendering = false,
-  ) {
+  constructor(readonly fence: FenceInfo | undefined) {
     super();
   }
 
   override eq(other: CodeCornerWidget): boolean {
-    return sameFence(other.fence, this.fence) && other.belowRendering === this.belowRendering;
+    return sameFence(other.fence, this.fence);
   }
 
   toDOM(view: EditorView): HTMLElement {
     const container = document.createElement("span");
     // Above the code lines it overlaps while the fence line is shrunk; interface rather than
     // document, so it is sized in rem and does not shrink with the block's em
-    container.className = cx(corner, this.belowRendering ? cornerAtBottom : cornerAtTop);
-    disposers.set(
-      container,
-      render(() => <CodeCorner view={view} container={container} fence={this.fence} />, container),
-    );
+    container.className =
+      "absolute top-(--md-code-corner-gap) inset-e-2 z-1 flex items-center gap-1.5 font-sans text-xs leading-none text-tertiary select-none";
+    mountWidget(container, () => (
+      <CodeCorner view={view} container={container} fence={this.fence} />
+    ));
     return container;
   }
 
   override destroy(dom: HTMLElement): void {
-    disposers.get(dom)?.();
+    unmountWidget(dom);
   }
 
   override ignoreEvent(): boolean {

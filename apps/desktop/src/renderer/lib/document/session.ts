@@ -6,9 +6,8 @@ import {
 } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import { currentLocale, t } from "@pupitre/i18n/solid";
-import { fileNameOf, messageOf } from "@pupitre/utils";
-import { debounce } from "@solid-primitives/scheduled";
-import { batch, createEffect, createMemo, createSignal, on, onCleanup } from "solid-js";
+import { debounce, fileNameOf, messageOf } from "@pupitre/utils";
+import { createEffect, createMemo, createSignal, onCleanup, untrack } from "solid-js";
 import { reportFailure } from "@/lib/errors";
 import { withTrailingNewline } from "@/lib/file";
 import { createPendingImages, type PendingImages } from "@/lib/pending-images";
@@ -122,23 +121,21 @@ export function createDocumentSession(getEditor: () => DocumentEditorWithImages 
   ) => {
     rememberActiveText();
     const id = nextTabId++;
-    batch(() => {
-      setTabs([
-        ...tabs(),
-        {
-          id,
-          doc: { ...doc, id: nextDocumentId++ },
-          markdown,
-          savedMarkdown: text.savedMarkdown,
-          edited: markdown !== text.savedMarkdown,
-          missingOnDisk: false,
-          diskContent: text.diskContent,
-          discarded: false,
-          pendingImages,
-        },
-      ]);
-      setActiveTabId(id);
-    });
+    setTabs([
+      ...tabs(),
+      {
+        id,
+        doc: { ...doc, id: nextDocumentId++ },
+        markdown,
+        savedMarkdown: text.savedMarkdown,
+        edited: markdown !== text.savedMarkdown,
+        missingOnDisk: false,
+        diskContent: text.diskContent,
+        discarded: false,
+        pendingImages,
+      },
+    ]);
+    setActiveTabId(id);
   };
 
   /** A document with no file behind it: a new one or the sample, both kept in memory until saved. */
@@ -378,12 +375,11 @@ export function createDocumentSession(getEditor: () => DocumentEditorWithImages 
     if (closedTab.doc.path !== undefined) closedTab.pendingImages.dispose();
     rememberClosedTab(closedTab);
     const closed = tabs().filter((candidate) => candidate.id !== id);
-    batch(() => {
-      setTabs(closed);
-      if (activeTabId() !== id) return;
+    setTabs(closed);
+    if (activeTabId() === id) {
       // The tab that took its place, or the one before when it was the last
       setActiveTabId(closed[Math.min(index, closed.length - 1)]?.id);
-    });
+    }
   };
 
   /** Closes every tab but `keep`, asking about unsaved changes; false when the user keeps one. */
@@ -555,10 +551,8 @@ export function createDocumentSession(getEditor: () => DocumentEditorWithImages 
     );
     const active = restored[Math.min(session.active, restored.length - 1)];
     if (settings().tabs || restored.length < 2) {
-      batch(() => {
-        setTabs(restored);
-        setActiveTabId(active?.id);
-      });
+      setTabs(restored);
+      setActiveTabId(active?.id);
       return;
     }
     // With tabs off only the document that was on show comes back; the others wait on the closed
@@ -566,10 +560,8 @@ export function createDocumentSession(getEditor: () => DocumentEditorWithImages 
     for (const tab of restored) {
       if (tab !== active) rememberClosedTab(tab);
     }
-    batch(() => {
-      setTabs(active === undefined ? [] : [active]);
-      setActiveTabId(active?.id);
-    });
+    setTabs(active === undefined ? [] : [active]);
+    setActiveTabId(active?.id);
   };
 
   /**
@@ -686,15 +678,14 @@ export function createDocumentSession(getEditor: () => DocumentEditorWithImages 
   // tabs on every keystroke, while only opening, closing or moving one changes what is watched.
   const watchedPaths = createMemo(
     () => tabs().flatMap((tab) => (tab.doc.path === undefined ? [] : [tab.doc.path])),
-    undefined,
     {
       equals: (previous, next) =>
         previous.length === next.length && previous.every((path, index) => path === next[index]),
     },
   );
   let watched = new Set<string>();
-  createEffect(() => {
-    const paths = new Set(watchedPaths());
+  createEffect(watchedPaths, (nextPaths) => {
+    const paths = new Set(nextPaths);
     for (const path of paths) if (!watched.has(path)) void desktop.invoke("document:watch", path);
     for (const path of watched) if (!paths.has(path)) void desktop.invoke("document:unwatch", path);
     watched = paths;
@@ -708,39 +699,42 @@ export function createDocumentSession(getEditor: () => DocumentEditorWithImages 
 
   // The example document follows the interface language while it is unmodified
   createEffect(
-    on(
-      currentLocale,
-      (locale) => {
-        void getSampleDocument(locale)
-          .then((markdown) => {
-            // A later language change has its own load; this one no longer describes it
-            if (currentLocale() !== locale) return;
-            for (const tab of tabs()) {
-              if (!tab.doc.isSample || isTabDirty(tab)) continue;
-              patchTab(tab.id, {
-                doc: { ...tab.doc, id: nextDocumentId++ },
-                markdown,
-                savedMarkdown: markdown,
-                edited: false,
-              });
-            }
-          })
-          .catch(() => undefined);
-      },
-      { defer: true },
-    ),
+    currentLocale,
+    (locale) => {
+      void getSampleDocument(locale)
+        .then((markdown) => {
+          // A later language change has its own load; this one no longer describes it
+          if (currentLocale() !== locale) return;
+          for (const tab of tabs()) {
+            if (!tab.doc.isSample || isTabDirty(tab)) continue;
+            patchTab(tab.id, {
+              doc: { ...tab.doc, id: nextDocumentId++ },
+              markdown,
+              savedMarkdown: markdown,
+              edited: false,
+            });
+          }
+        })
+        .catch(() => undefined);
+    },
+    { defer: true },
   );
 
   // The draft holds every tab with unsaved changes: written once typing pauses, and dropped as soon
-  // as no tab has any left, so a crash never brings back what is already on disk
-  createEffect(() => {
-    if (!startupDone()) return;
-    if (!tabs().some((tab) => !tab.discarded && isTabDirty(tab))) {
-      drafts.dropDraft();
-      return;
-    }
-    drafts.writeDraft();
-  });
+  // as no tab has any left, so a crash never brings back what is already on disk. Nothing is read
+  // from the tabs before startup has finished, so the answer is undefined until what an earlier
+  // session left has been restored; an empty session then says nothing about the draft on disk
+  createEffect(
+    () => (startupDone() ? tabs().some((tab) => !tab.discarded && isTabDirty(tab)) : undefined),
+    (hasDraft) => {
+      if (hasDraft === undefined) return;
+      if (!hasDraft) {
+        drafts.dropDraft();
+        return;
+      }
+      drafts.writeDraft();
+    },
+  );
 
   return {
     tabs,
@@ -760,7 +754,7 @@ export function createDocumentSession(getEditor: () => DocumentEditorWithImages 
     openSample,
     closeTab,
     /** Closes everything but the document on show, for when tabs are turned off. */
-    closeOtherTabs: () => closeTabsExcept(activeTabId()),
+    closeOtherTabs: () => untrack(() => closeTabsExcept(activeTabId())),
     canReopenTab,
     reopenTab,
     activateTab,

@@ -77,6 +77,7 @@ import { currentLocale, t } from "./i18n";
 import { showAboutDialog } from "./menus/about";
 import { clickMenuItem, menuSnapshot, setDocumentState } from "./menus/menu";
 import { handleDocumentResponse } from "./plugins/document-bridge";
+import { broadcastPluginDocumentEvent } from "./plugins/host";
 import {
   grantPluginPermissions,
   installPlugin,
@@ -85,6 +86,7 @@ import {
   revealPlugin,
   runPluginCommand,
   setPluginEnabled,
+  syncWorkspacePluginSettings,
   uninstallPlugin,
   updatePluginSettings,
 } from "./plugins/registry";
@@ -413,11 +415,15 @@ export function registerIpcHandlers(): void {
   handle("themes:list", () => getImportedThemes());
   handle("themes:reveal", (_event, source) => void revealThemeFolder(source));
   handle("workspace:set", (_event, root) => {
-    setWorkspace(root);
     setProjectThemeRoot(root);
+    setWorkspace(root);
+    syncWorkspacePluginSettings();
   });
   handle("workspace:get", () => getWorkspaceState());
-  handle("workspace:use", (_event, active) => useWorkspace(active));
+  handle("workspace:use", (_event, active) => {
+    useWorkspace(active);
+    syncWorkspacePluginSettings();
+  });
   handle("workspace:reveal", () => revealWorkspaceFile());
 
   handle("document:open", async (event) => {
@@ -680,4 +686,5 @@ export function registerIpcHandlers(): void {
   handle("plugin:document-response", (_event, id, response) =>
     handleDocumentResponse(id, response),
   );
+  handle("plugins:document-event", (_event, payload) => broadcastPluginDocumentEvent(payload));
 }

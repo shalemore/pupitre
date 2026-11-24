@@ -129,11 +129,16 @@ function isSurfaceDefinition(value: unknown): value is SurfaceDefinition {
   return isRecord(value) && typeof value["setup"] === "function";
 }
 
-await loadScript(new URL(module, `pupitre-plugin://${id}/`).href);
-if (!isSurfaceDefinition(registered)) throw new Error("The plugin did not register a surface");
-const cleanup = registered.setup(kind === "pointer" ? pointerContext : context);
-window.addEventListener("pagehide", () => {
-  if (typeof cleanup === "function") cleanup();
-});
+try {
+  await loadScript(new URL(module, `pupitre-plugin://${id}/`).href);
+  if (!isSurfaceDefinition(registered)) throw new Error("The plugin did not register a surface");
+  const cleanup = registered.setup(kind === "pointer" ? pointerContext : context);
+  window.addEventListener("pagehide", () => {
+    if (typeof cleanup === "function") cleanup();
+  });
 
-window.parent.postMessage({ channel: "pupitre:surface", type: "ready", kind }, "*");
+  window.parent.postMessage({ channel: "pupitre:surface", type: "ready", kind }, "*");
+} catch (error: unknown) {
+  console.error(`The surface ${kind} for ${id} failed to initialize`, error);
+  window.parent.postMessage({ channel: "pupitre:surface", type: "error", kind }, "*");
+}

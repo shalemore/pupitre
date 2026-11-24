@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { readdirSync, readFileSync, realpathSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import type { ImportedTheme } from "@pupitre/desktop-api";
 import { nameCollator } from "@shared/name-collator";
@@ -60,9 +60,12 @@ function fileWithin(dir: string, name: string, limit: number): string | undefine
   const path = resolve(dir, name);
   if (!isInside(dir, path)) return undefined;
   try {
-    const stat = statSync(path);
+    const realDir = realpathSync(dir);
+    const realPath = realpathSync(path);
+    if (!isInside(realDir, realPath)) return undefined;
+    const stat = statSync(realPath);
     if (!stat.isFile() || stat.size > limit) return undefined;
-    return readFileSync(path, "utf8");
+    return readFileSync(realPath, "utf8");
   } catch {
     return undefined;
   }

@@ -8,18 +8,17 @@ import {
 import { desktop } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
 import { headingKey, type OutlineHeading } from "@pupitre/markdown";
-import { ImagePreview } from "@pupitre/plugin-source-mode";
+import type { PluginDocumentInfo } from "@pupitre/plugin-sdk";
 import { messageOf } from "@pupitre/utils";
 import { makeEventListener } from "@solid-primitives/event-listener";
-import { scheduleIdle } from "@solid-primitives/scheduled";
+import { cva } from "class-variance-authority";
 import {
   createEffect,
   createMemo,
   createSignal,
+  isPending,
   lazy,
-  on,
-  onCleanup,
-  onMount,
+  onSettled,
   Show,
   type Component,
 } from "solid-js";
@@ -27,8 +26,9 @@ import { isInsideFolder } from "@shared/paths";
 import { PopupLayer } from "@/components/popup-layer";
 import { TitleBar } from "@/components/title-bar";
 import { FindBar } from "@/features/editor/find-bar";
+import { ImagePreview } from "@/features/editor/image-preview";
 import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
-import type { MatchStats } from "@/features/editor/search";
+import type { MatchStats, SearchOptions } from "@/features/editor/search";
 import { FolderTree } from "@/features/sidebar/folder-tree";
 import { OutlineList } from "@/features/sidebar/outline-list";
 import type { SidebarMode, SidebarRail } from "@/features/sidebar/sidebar";
@@ -38,14 +38,14 @@ import { documentPosition } from "@/lib/document/positions";
 import { createDocumentSession } from "@/lib/document/session";
 import { isolateFileName } from "@/lib/file";
 import { createImmersiveChrome } from "@/lib/immersive-chrome";
+import { listen } from "@/lib/listen";
 import { setupPluginStyles } from "@/lib/plugin-styles";
-import { loadPlugins } from "@/lib/plugins";
+import { loadPlugins, plugins } from "@/lib/plugins";
 import { recentFiles } from "@/lib/recent-files";
 import { isImmersive, settings, updateSettings } from "@/lib/settings";
 import { SIDEBAR_WIDTH } from "@/lib/sidebar";
 import type { TextStats } from "@/lib/text-stats";
 import { createDocumentActions } from "./document-actions";
-import { card, content, documentArea, editorArea, welcomeArea } from "./main-window-styles";
 import { FolderActions } from "./main-window/folder-actions";
 import { MainTitleContent } from "./main-window/main-title-content";
 import { Overlays, type Overlay } from "./main-window/overlays";
@@ -59,7 +59,48 @@ import { createSidebarWidths } from "./main-window/sidebar-widths";
 import { WordCount } from "./main-window/word-count";
 import { barDivider, windowFrame } from "./window-chrome";
 
+/**
+ * The row the card and the sidebars stand in. An immersive window keeps an even gap to its edges,
+ * and in a split layout the end sidebar reaches the window edge.
+ */
+const content = cva("flex min-h-0 flex-1 overflow-hidden print:block print:overflow-visible", {
+  variants: {
+    immersive: {
+      true: "gap-(--pref-immersive-gap) py-(--pref-immersive-gap) ps-0 print:p-0",
+    },
+    split: { true: "", false: "" },
+  },
+  compoundVariants: [
+    { immersive: true, split: true, class: "pe-0" },
+    { immersive: true, split: false, class: "pe-(--pref-immersive-gap)" },
+  ],
+});
+
+/** The document stands on a card of its own in an immersive window, and lies flat on a classic one. */
+const card = cva(
+  "flex min-w-0 flex-1 flex-col overflow-hidden print:block print:overflow-visible",
+  {
+    variants: {
+      immersive: {
+        true: "rounded-lg bg-surface-1 shadow-sm print:rounded-none print:shadow-none",
+      },
+      // A background plugin draws on the window, so the card must not paint over it
+      clear: {
+        true: "bg-transparent shadow-none",
+      },
+    },
+  },
+);
+
 type FindMode = "closed" | "find" | "replace";
+const EMPTY_SEARCH: SearchOptions = {
+  search: "",
+  replace: "",
+  caseSensitive: false,
+  wholeWord: false,
+  regexp: false,
+};
+const EMPTY_STATS: TextStats = { words: 0, characters: 0, cjk: 0 };
 /** The outline of a document nothing is folded in yet, and of no document at all. */
 const OPEN_SECTIONS: ReadonlySet<string> = new Set();
 
@@ -78,7 +119,9 @@ function unhandledCommand(command: never): never {
 function answerDocumentRequest(
   handle: MarkdownEditorHandle | undefined,
   request: PluginDocumentRequest,
+  info: PluginDocumentInfo | null,
 ): PluginDocumentResponse {
+  if (request.method === "info") return { ok: true, value: info };
   if (handle === undefined) return { ok: false, message: "No document is open" };
   try {
     switch (request.method) {
@@ -123,9 +166,20 @@ export const MainWindow: Component = () => {
       (document.path === undefined || MARKDOWN_FILE.test(document.path))
     );
   };
-  const [outline, setOutline] = createSignal<OutlineHeading[]>([]);
-  const [activeHeading, setActiveHeading] = createSignal(-1);
-  const [stats, setStats] = createSignal<TextStats>({ words: 0, characters: 0, cjk: 0 });
+  const activeDocumentId = () => session.activeDocument()?.id;
+  // Writable derived signals reset in the same flush when switching or closing a document
+  const [outline, setOutline] = createSignal<OutlineHeading[]>(() => {
+    activeDocumentId();
+    return [];
+  });
+  const [activeHeading, setActiveHeading] = createSignal(() => {
+    activeDocumentId();
+    return -1;
+  });
+  const [stats, setStats] = createSignal<TextStats>(() => {
+    activeDocumentId();
+    return EMPTY_STATS;
+  });
   // The count ends the bar in either layout: beside the tabs, or at the end of the title's grid
   const wordCount = () => (
     <Show
@@ -139,8 +193,11 @@ export const MainWindow: Component = () => {
   const [openedFolder, setOpenedFolder] = createSignal<string | undefined>(
     desktop.initialState.folder,
   );
-  // A folder just opened on purpose, shown even while a document outside it stays on show
-  const [folderView, setFolderView] = createSignal<string>();
+  // A folder just opened on purpose, shown until another document is chosen
+  const [folderView, setFolderView] = createSignal<string | undefined>(() => {
+    activeDocumentId();
+    return undefined;
+  });
   const [preferredMode, setPreferredMode] = createSignal<SidebarMode>("outline");
   const [findMode, setFindMode] = createSignal<FindMode>("closed");
   const [overlay, setOverlay] = createSignal<Overlay>();
@@ -154,7 +211,7 @@ export const MainWindow: Component = () => {
   const [matchToReveal, setMatchToReveal] = createSignal<
     { path: string; from: number; to: number } | undefined
   >();
-  const [initialSearch, setInitialSearch] = createSignal("");
+  const [searchOptions, setSearchOptions] = createSignal<SearchOptions>(EMPTY_SEARCH);
   const [matchStats, setMatchStats] = createSignal<MatchStats>({ current: 0, total: 0 });
   // The outline sections the user folded, by headingKey, each document with its own: a fold belongs
   // to the document it was made in and survives every edit of it
@@ -213,25 +270,18 @@ export const MainWindow: Component = () => {
     if (doc?.path !== undefined && !isInsideFolder(opened, doc.path)) return doc.folder;
     return opened;
   });
-  // Choosing another document hands the sidebar back to that document's folder
   createEffect(
-    on(
-      () => session.activeDocument()?.id,
-      () => setFolderView(undefined),
-      { defer: true },
-    ),
-  );
-  createEffect(
-    on(
-      openedFolder,
-      (folder) => {
-        if (folder !== undefined) void desktop.invoke("window:set-folder", folder);
-      },
-      { defer: true },
-    ),
+    openedFolder,
+    (folder) => {
+      if (folder !== undefined) void desktop.invoke("window:set-folder", folder);
+    },
+    { defer: true },
   );
   // The folder in the sidebar is the one whose own settings file, if it has one, applies
-  createEffect(() => void desktop.invoke("workspace:set", folderRoot() ?? null));
+  createEffect(
+    () => folderRoot() ?? null,
+    (root) => void desktop.invoke("workspace:set", root),
+  );
   // What the layout has to show at all; an immersive window folds a sidebar on top of that
   const startSidebarWanted = () =>
     settings().sidebarVisible &&
@@ -266,37 +316,25 @@ export const MainWindow: Component = () => {
   let contentArea: HTMLDivElement | undefined;
   // A menu pick is an interaction with the chrome; it stays unfolded until the pointer moves again,
   // rather than folding under the pointer that is still where the picked entry was
-  createEffect(
-    on(
-      menuOpen,
-      (open) => {
-        if (!open) chrome.keepVisible();
-      },
-      { defer: true },
-    ),
-  );
-  createEffect(
-    on(
-      startSidebarHeld,
-      (held) => {
-        if (!held) chrome.keepVisible();
-      },
-      { defer: true },
-    ),
-  );
+  const handleMenuOpenChange = (open: boolean) => {
+    if (!open) chrome.keepVisible();
+    setMenuOpen(open);
+  };
+  const handleStartSidebarHeld = (held: boolean) => {
+    if (!held) chrome.keepVisible();
+    setStartSidebarHeld(held);
+  };
   // Turning tabs off returns the window to one document. The others close after the usual save
   // prompt, and a cancel keeps tabs on: there would be no strip to reach the tab it kept.
   createEffect(
-    on(
-      () => settings().tabs,
-      (tabs) => {
-        if (tabs) return;
-        void session.closeOtherTabs().then((closed) => {
-          if (!closed) void updateSettings({ tabs: true });
-        });
-      },
-      { defer: true },
-    ),
+    () => settings().tabs,
+    (tabs) => {
+      if (tabs) return;
+      void session.closeOtherTabs().then((closed) => {
+        if (!closed) void updateSettings({ tabs: true });
+      });
+    },
+    { defer: true },
   );
   const sidebarMode = (): SidebarMode => {
     if (session.activeDocument() === undefined) return "folder";
@@ -341,63 +379,60 @@ export const MainWindow: Component = () => {
         if (folderView() === oldPath) setFolderView(newPath);
         void session.handleRename(oldPath, newPath);
       }}
-      onHoldOpenChange={setStartSidebarHeld}
+      onHoldOpenChange={handleStartSidebarHeld}
       onHiddenChange={setFolderHasHidden}
     />
   );
 
   // A picture has no editor, so the handle the commands would use has to go with the editor
-  createEffect(() => {
-    if (activeIsImage()) setEditor(undefined);
+  createEffect(activeIsImage, (isImage) => {
+    if (isImage) setEditor(undefined);
   });
 
-  createEffect(() => {
-    document.title = session.activeDocument()
-      ? `${isolateFileName(session.fileName())} - Pupitre`
-      : "Pupitre";
-  });
-  createEffect(() => {
-    void desktop.invoke("window:set-document-state", {
+  createEffect(
+    () =>
+      session.activeDocument() ? `${isolateFileName(session.fileName())} - Pupitre` : "Pupitre",
+    (title) => {
+      document.title = title;
+    },
+  );
+  createEffect(
+    () => ({
       hasDocument: session.activeDocument() !== undefined,
       hasText: session.activeDocument() !== undefined && !activeIsImage(),
       isMarkdown: activeIsMarkdown(),
       hasPath: session.activeDocument()?.path !== undefined,
       isDirty: session.hasDirtyTabs(),
       canReopenTab: session.canReopenTab(),
-    });
-  });
+    }),
+    (state) => {
+      void desktop.invoke("window:set-document-state", state);
+    },
+  );
   // Close the find bar and the version history when the document changes: the old document's
   // matches and versions mean nothing to the one that replaced it
   createEffect(
-    on(
-      () => session.activeDocument()?.id,
-      (id, previous) => {
-        // A tab patch, such as a keystroke or a save, rebuilds the tabs array without changing the
-        // document; only another document is a reason to close these and unfold the chrome
-        if (id === previous) return;
-        setFindMode("closed");
-        if (overlay()?.kind === "history") closeOverlay();
-        // A picture has no outline, counts or heading; the editor fills these in again when it
-        // shows the text of the next document
-        setOutline([]);
-        setActiveHeading(-1);
-        setStats({ words: 0, characters: 0, cjk: 0 });
-        chrome.show();
-      },
-    ),
+    () => ({ id: session.activeDocument()?.id, overlay: overlay()?.kind }),
+    (shown, previous) => {
+      // A tab patch, such as a keystroke or a save, rebuilds the tabs array without changing the
+      // document; only another document is a reason to close these and unfold the chrome
+      if (shown.id === previous?.id) return;
+      setFindMode("closed");
+      if (shown.overlay === "history") closeOverlay();
+      chrome.show();
+    },
   );
 
   // The editor of a document is built after the document changed, so the match waits for the
   // handle of the new editor rather than for the document: revealing it on the one that is being
   // torn down would leave the new one at its remembered place instead of at the match
   createEffect(
-    on(editor, (handle) => {
-      const match = matchToReveal();
-      if (handle === undefined || match === undefined) return;
-      if (session.activeDocument()?.path !== match.path) return;
+    () => ({ handle: editor(), match: matchToReveal(), path: session.activeDocument()?.path }),
+    ({ handle, match, path }) => {
+      if (handle === undefined || match === undefined || path !== match.path) return;
       setMatchToReveal(undefined);
       handle.revealRange(match.from, match.to);
-    }),
+    },
   );
 
   const closeWorkspaceSearch = () => {
@@ -416,21 +451,32 @@ export const MainWindow: Component = () => {
 
   const openFind = (mode: Exclude<FindMode, "closed">) => {
     if (!session.activeDocument() || editor() === undefined) return;
-    setInitialSearch(editor()?.getSelectedText().trim() ?? "");
+    const selected = editor()?.getSelectedText().trim() ?? "";
+    setSearchOptions((prev) => ({
+      ...(findMode() === "closed" ? EMPTY_SEARCH : prev),
+      ...(selected ? { search: selected } : {}),
+    }));
     setFindMode(mode);
   };
 
   const closeFind = () => {
     setFindMode("closed");
-    editor()?.setSearch({
-      search: "",
-      replace: "",
-      caseSensitive: false,
-      wholeWord: false,
-      regexp: false,
-    });
+    setSearchOptions(EMPTY_SEARCH);
+    editor()?.setSearch(EMPTY_SEARCH);
     editor()?.focus();
   };
+
+  createEffect(
+    () => {
+      const handle = editor();
+      const open = findMode() !== "closed";
+      const options = searchOptions();
+      return handle && open ? { handle, options } : undefined;
+    },
+    (next) => {
+      if (next) setMatchStats(next.handle.setSearch(next.options));
+    },
+  );
 
   const runSearch = (action: (handle: MarkdownEditorHandle) => MatchStats) => {
     const handle = editor();
@@ -580,54 +626,106 @@ export const MainWindow: Component = () => {
     }
   };
 
-  onMount(() => {
+  onSettled(() => {
     loadPlugins();
     setupPluginStyles();
+    const cleanups: (() => void)[] = [];
     // Capture, so the wheel that folds the chrome does not also scroll the document under it
     const area = contentArea;
     if (area !== undefined) {
-      const onWheel = (event: WheelEvent) => {
-        if (!chrome.onWheel(event)) return;
-        event.preventDefault();
-        event.stopPropagation();
-      };
-      makeEventListener(area, "wheel", onWheel, { capture: true, passive: false });
+      cleanups.push(
+        listen(
+          area,
+          "wheel",
+          (event) => {
+            if (!chrome.onWheel(event)) return;
+            event.preventDefault();
+            event.stopPropagation();
+          },
+          { capture: true, passive: false },
+        ),
+      );
     }
     void session.restoreOnStartup();
     // The editor is a chunk of its own; fetch it while the welcome screen is idle, so the first
     // document does not wait for both the file and the code that shows it
-    const warmEditor = () => void import("@/features/editor/markdown-editor");
-    scheduleIdle(warmEditor, 2000)();
+    requestIdleCallback(() => void import("@/features/editor/markdown-editor"), { timeout: 2000 });
     // A window that closes before the next write of the draft was due keeps the last typing all the same
-    makeEventListener(window, "pagehide", session.flushDraft);
+    cleanups.push(listen(window, "pagehide", session.flushDraft));
     // dragover's default behavior must be prevented, otherwise drop never fires
-    makeEventListener(window, "dragover", (e) => e.preventDefault());
-    makeEventListener(window, "drop", (e) => {
-      const file = e.dataTransfer?.files[0];
-      if (file && e.dataTransfer?.items[0]?.webkitGetAsEntry()?.isDirectory) {
-        e.preventDefault();
-        showFolder(desktop.getPathForFile(file));
-        return;
-      }
-      // Images dropped into the editor are handled by the editor; this only takes over Markdown files dropped on the window
-      if (!file || file.type.startsWith("image/")) return;
-      e.preventDefault();
-      void session.openPath(desktop.getPathForFile(file));
-    });
-    const unlistenCommands = desktop.on("app:command", runCommand);
-    const unlistenPlugins = desktop.on("plugin:document-request", (request) => {
-      void desktop.invoke(
-        "plugin:document-response",
-        request.id,
-        answerDocumentRequest(editor(), request),
-      );
-    });
+    cleanups.push(listen(window, "dragover", (event) => event.preventDefault()));
+    cleanups.push(
+      listen(window, "drop", (event) => {
+        const file = event.dataTransfer?.files[0];
+        if (file && event.dataTransfer?.items[0]?.webkitGetAsEntry()?.isDirectory) {
+          event.preventDefault();
+          showFolder(desktop.getPathForFile(file));
+          return;
+        }
+        // Images dropped into the editor are handled by the editor; this only takes over Markdown files dropped on the window
+        if (!file || file.type.startsWith("image/")) return;
+        event.preventDefault();
+        void session.openPath(desktop.getPathForFile(file));
+      }),
+    );
+    cleanups.push(desktop.on("app:command", runCommand));
+    cleanups.push(
+      desktop.on("plugin:document-request", (request) => {
+        const doc = session.activeDocument();
+        const info: PluginDocumentInfo | null =
+          doc === undefined
+            ? null
+            : { path: doc.path ?? null, title: session.fileName(), dirty: session.isDirty() };
+        void desktop.invoke(
+          "plugin:document-response",
+          request.id,
+          answerDocumentRequest(editor(), request, info),
+        );
+      }),
+    );
 
-    onCleanup(() => {
+    let lastDocSnapshot: { id: number; path: string | undefined; dirty: boolean } | undefined;
+    createEffect(
+      () => {
+        const doc = session.activeDocument();
+        if (doc === undefined) return undefined;
+        return {
+          id: doc.id,
+          path: doc.path,
+          dirty: session.isDirty(),
+          title: session.fileName(),
+        };
+      },
+      (current) => {
+        if (current === undefined) {
+          lastDocSnapshot = undefined;
+          return;
+        }
+        const hasReader = plugins().some(
+          (plugin) => plugin.enabled && plugin.granted.includes("document:read"),
+        );
+        const prev = lastDocSnapshot;
+        lastDocSnapshot = { id: current.id, path: current.path, dirty: current.dirty };
+        if (!hasReader) return;
+        const info: PluginDocumentInfo = {
+          path: current.path ?? null,
+          title: current.title,
+          dirty: current.dirty,
+        };
+        if (prev === undefined || prev.id !== current.id || prev.path !== current.path) {
+          void desktop.invoke("plugins:document-event", { event: "open", info });
+        } else if (prev.dirty && !current.dirty) {
+          void desktop.invoke("plugins:document-event", { event: "save", info });
+        } else {
+          void desktop.invoke("plugins:document-event", { event: "change", info });
+        }
+      },
+    );
+
+    return () => {
+      for (const cleanup of cleanups) cleanup();
       session.dispose();
-      unlistenCommands();
-      unlistenPlugins();
-    });
+    };
   });
 
   return (
@@ -649,7 +747,7 @@ export const MainWindow: Component = () => {
           onActivate={session.activateTab}
           onClose={(id) => void closeTabToEditor(id)}
           count={wordCount()}
-          onMenuOpenChange={setMenuOpen}
+          onMenuOpenChange={handleMenuOpenChange}
         />
       </TitleBar>
 
@@ -683,7 +781,7 @@ export const MainWindow: Component = () => {
               hasHidden={folderHasHidden()}
               showHidden={settings().showHidden}
               onShowHiddenChange={(showHidden) => void updateSettings({ showHidden })}
-              onHoldOpenChange={setStartSidebarHeld}
+              onHoldOpenChange={handleStartSidebarHeld}
             />
           }
           outline={outlineList()}
@@ -692,35 +790,41 @@ export const MainWindow: Component = () => {
         >
           {/* An immersive window shows the document as a card on the window background, which also holds the title bar and the sidebar */}
           <div class={card({ immersive: isImmersive(), clear: hasBackgroundPlugin() })}>
-            <div class={documentArea}>
+            <div class="flex min-h-0 flex-1 overflow-hidden print:block print:overflow-visible">
               <Show
                 when={session.activeTab()}
                 fallback={
-                  <main class={welcomeArea}>
-                    <WelcomeScreen
-                      recentFiles={recentFiles()}
-                      onNewDocument={session.newDocument}
-                      onOpenFile={session.open}
-                      onOpenRecent={session.openPath}
-                    />
-                  </main>
+                  // While startup is restoring what an earlier session left, the tabs are being
+                  // written on the async path and the frame is held; reading the pending state keeps
+                  // the welcome screen from flashing and then giving way to the document coming back.
+                  <Show
+                    when={isPending(() => session.activeTab())}
+                    fallback={<main class="flex-1" />}
+                  >
+                    <main class="flex-1">
+                      <WelcomeScreen
+                        recentFiles={recentFiles()}
+                        onNewDocument={session.newDocument}
+                        onOpenFile={session.open}
+                        onOpenRecent={session.openPath}
+                      />
+                    </main>
+                  </Show>
                 }
               >
                 {(tab) => (
-                  <main class={editorArea}>
+                  <main class="relative isolate h-full flex-1 overflow-hidden print:h-auto print:overflow-visible">
                     <PluginBackground />
                     <Show when={findMode() !== "closed"}>
                       <FindBar
                         showReplace={findMode() === "replace"}
-                        initialSearch={initialSearch()}
+                        options={searchOptions()}
                         matchStats={matchStats()}
                         onToggleReplace={() =>
                           setFindMode(findMode() === "replace" ? "find" : "replace")
                         }
                         onClose={closeFind}
-                        onSearchChange={(options) =>
-                          runSearch((handle) => handle.setSearch(options))
-                        }
+                        onOptionsChange={setSearchOptions}
                         onFindNext={() => runSearch((handle) => handle.findNext())}
                         onFindPrevious={() => runSearch((handle) => handle.findPrevious())}
                         onReplaceNext={() => runSearch((handle) => handle.replaceNext())}

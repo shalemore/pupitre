@@ -2,20 +2,24 @@ import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import type { PluginInfo, PluginStyle } from "@pupitre/desktop-api";
 import { pluginIdSchema, type Permission, type PluginManifest } from "@pupitre/plugin-sdk";
-import { dialog, shell, type BrowserWindow } from "electron";
+import { app, dialog, shell, type BrowserWindow } from "electron";
 import log from "electron-log/main";
 import { broadcast } from "../broadcast";
-import { pluginWindow, startPlugin, stopPlugin } from "./host";
+import { getWorkspaceState } from "../settings/settings-store";
+import { pluginWindow, startPlugin, stopPlugin, stopPluginAndWait } from "./host";
 import { pluginsFolder } from "./paths";
 import {
   installCopy,
   MANIFEST_FILE,
   readCommands,
+  readEffectiveSettingsValues,
   readPlugin,
   readSettingsMeta,
   readState,
+  satisfiesPupitreEngine,
   writeSettingsValues,
   writeState,
+  writeWorkspaceSettingsValues,
 } from "./plugin-files";
 import { readPluginStyle } from "./styles";
 
@@ -45,9 +49,29 @@ function installedPlugins(): InstalledPlugin[] {
   return plugins.toSorted((a, b) => a.info.id.localeCompare(b.info.id));
 }
 
+export function activePluginWorkspaceRoot(): string | undefined {
+  const ws = getWorkspaceState();
+  return ws.active && ws.root !== null ? ws.root : undefined;
+}
+
 /** The plugins installed under the user's data folder, sorted by id. */
 export function listPlugins(): readonly PluginInfo[] {
-  return installedPlugins().map((plugin) => plugin.info);
+  const workspaceRoot = activePluginWorkspaceRoot();
+  const result: PluginInfo[] = [];
+  for (const { folder, info } of installedPlugins()) {
+    if (info.settings !== undefined && workspaceRoot !== undefined) {
+      result.push({
+        ...info,
+        settings: {
+          ...info.settings,
+          values: readEffectiveSettingsValues(folder, info.id, workspaceRoot),
+        },
+      });
+    } else {
+      result.push(info);
+    }
+  }
+  return result;
 }
 
 /** The stylesheets of the running plugins that were granted `ui:styles`. */
@@ -62,7 +86,7 @@ export function pluginStyles(): readonly PluginStyle[] {
   return styles;
 }
 
-function publish(): void {
+export function publishPlugins(): void {
   broadcast("plugins:changed", listPlugins());
 }
 
@@ -90,19 +114,54 @@ export async function installPlugin(window: BrowserWindow): Promise<PluginInfo |
   });
   const [source] = filePaths;
   if (canceled || source === undefined) return null;
-  const plugin = installCopy(source, pluginsFolder());
-  publish();
+  const plugin = installCopy(source, pluginsFolder(), app.getVersion());
+  publishPlugins();
   return plugin;
+}
+
+export function disableFailedPlugin(id: string): void {
+  const folder = join(pluginsFolder(), id);
+  const plugin = readPlugin(folder);
+  if (plugin !== undefined) {
+    const state = readState(folder, plugin.manifest);
+    if (state.enabled) writeState(folder, { ...state, enabled: false });
+  }
+  stopPlugin(id);
+  publishPlugins();
+}
+
+export function startEnabledPlugin(id: string, manifest: PluginManifest): void {
+  if (
+    manifest.engines?.pupitre !== undefined &&
+    !satisfiesPupitreEngine(app.getVersion(), manifest.engines.pupitre)
+  ) {
+    log.warn(
+      `Skipped plugin ${id}: requires Pupitre ${manifest.engines.pupitre} (running ${app.getVersion()})`,
+    );
+    disableFailedPlugin(id);
+    return;
+  }
+  void startPlugin(id, manifest, disableFailedPlugin);
 }
 
 export function setPluginEnabled(id: string, enabled: boolean): void {
   const { folder, manifest } = installed(id);
   const state = readState(folder, manifest);
-  if (enabled) requireGrants(manifest, state.granted);
+  if (enabled) {
+    requireGrants(manifest, state.granted);
+    if (
+      manifest.engines?.pupitre !== undefined &&
+      !satisfiesPupitreEngine(app.getVersion(), manifest.engines.pupitre)
+    ) {
+      throw new Error(
+        `The plugin requires Pupitre ${manifest.engines.pupitre} (running ${app.getVersion()})`,
+      );
+    }
+  }
   writeState(folder, { ...state, enabled, version: manifest.version });
-  if (enabled) void startPlugin(id, manifest);
+  if (enabled) startEnabledPlugin(id, manifest);
   else stopPlugin(id);
-  publish();
+  publishPlugins();
 }
 
 /** Keeps only what the manifest asks for; a plugin missing a grant stops running. */
@@ -117,15 +176,15 @@ export function grantPluginPermissions(id: string, permissions: readonly Permiss
     granted,
   });
   if (!complete) stopPlugin(id);
-  publish();
+  publishPlugins();
 }
 
 /** The folder goes to the system trash, so a plugin removed by mistake can be put back. */
 export async function uninstallPlugin(id: string): Promise<void> {
   pluginIdSchema.parse(id);
-  stopPlugin(id);
+  await stopPluginAndWait(id);
   await shell.trashItem(join(pluginsFolder(), id));
-  publish();
+  publishPlugins();
 }
 
 export function revealPlugin(id: string): void {
@@ -145,17 +204,97 @@ export function runPluginCommand(id: string, commandId: string): void {
   window.webContents.send("plugin:command", commandId);
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function validateSchemaField(key: string, field: Record<string, unknown>, value: unknown): void {
+  const type = field["type"];
+  if (type === "boolean" && typeof value !== "boolean") {
+    throw new Error(`Plugin setting "${key}" must be a boolean`);
+  }
+  if (type === "number" || type === "integer") {
+    if (typeof value !== "number" || !Number.isFinite(value)) {
+      throw new Error(`Plugin setting "${key}" must be a number`);
+    }
+    if (type === "integer" && !Number.isInteger(value)) {
+      throw new Error(`Plugin setting "${key}" must be an integer`);
+    }
+    if (typeof field["minimum"] === "number" && value < field["minimum"]) {
+      throw new Error(`Plugin setting "${key}" must be >= ${field["minimum"]}`);
+    }
+    if (typeof field["maximum"] === "number" && value > field["maximum"]) {
+      throw new Error(`Plugin setting "${key}" must be <= ${field["maximum"]}`);
+    }
+  }
+  if (type === "string") {
+    if (typeof value !== "string") {
+      throw new Error(`Plugin setting "${key}" must be a string`);
+    }
+    if (typeof field["minLength"] === "number" && value.length < field["minLength"]) {
+      throw new Error(`Plugin setting "${key}" must have length >= ${field["minLength"]}`);
+    }
+    if (typeof field["maxLength"] === "number" && value.length > field["maxLength"]) {
+      throw new Error(`Plugin setting "${key}" must have length <= ${field["maxLength"]}`);
+    }
+  }
+  if (Array.isArray(field["enum"]) && !field["enum"].includes(value)) {
+    throw new Error(`Plugin setting "${key}" must be one of the allowed values`);
+  }
+}
+
+function validateSettingsValues(
+  schema: Readonly<Record<string, unknown>>,
+  values: Readonly<Record<string, unknown>>,
+): void {
+  const properties = isRecord(schema["properties"]) ? schema["properties"] : undefined;
+  const required = Array.isArray(schema["required"]) ? schema["required"] : [];
+  for (const key of required) {
+    if (typeof key === "string" && values[key] === undefined) {
+      throw new Error(`Missing required plugin setting "${key}"`);
+    }
+  }
+  for (const [key, value] of Object.entries(values)) {
+    if (value === undefined) continue;
+    const field = properties?.[key];
+    if (field === undefined) {
+      if (schema["additionalProperties"] === false) {
+        throw new Error(`Unknown plugin setting "${key}"`);
+      }
+      continue;
+    }
+    if (isRecord(field)) validateSchemaField(key, field, value);
+  }
+}
+
 /** The form the settings window drew sends the whole set of values back. */
 export function updatePluginSettings(id: string, values: Readonly<Record<string, unknown>>): void {
   const { folder } = installed(id);
-  if (readSettingsMeta(folder) === undefined) throw new Error("The plugin declares no settings");
+  const meta = readSettingsMeta(folder);
+  if (meta === undefined) throw new Error("The plugin declares no settings");
+  validateSettingsValues(meta.schema, values);
   const text = JSON.stringify(values);
   if (text === undefined || Buffer.byteLength(text, "utf8") > MAX_SETTINGS_BYTES) {
     throw new Error("The plugin settings are too large");
   }
   const copy: Record<string, unknown> = { ...values };
-  writeSettingsValues(folder, copy);
+  const workspaceRoot = activePluginWorkspaceRoot();
+  if (workspaceRoot !== undefined) writeWorkspaceSettingsValues(workspaceRoot, id, copy);
+  else writeSettingsValues(folder, copy);
+  const effective = readEffectiveSettingsValues(folder, id, workspaceRoot);
   // The plugin page listens through the preload bridge; the values are already its own
-  pluginWindow(id)?.webContents.send("plugin:settings", copy);
-  publish();
+  pluginWindow(id)?.webContents.send("plugin:settings", effective);
+  publishPlugins();
+}
+
+export function syncWorkspacePluginSettings(): void {
+  const workspaceRoot = activePluginWorkspaceRoot();
+  for (const { folder, info } of installedPlugins()) {
+    if (!info.enabled || info.settings === undefined) continue;
+    pluginWindow(info.id)?.webContents.send(
+      "plugin:settings",
+      readEffectiveSettingsValues(folder, info.id, workspaceRoot),
+    );
+  }
+  publishPlugins();
 }

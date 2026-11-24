@@ -1,0 +1,196 @@
+/*
+ * Design tokens (following the Claude Design System collected in open-claude-ui, colors in OKLCH):
+ * - Surface steps: 0 window chrome (title bar, sidebar), 1 document canvas, 2 cards, 3 popovers, told apart by small lightness steps and hairline borders;
+ * - A single accent color, terracotta;
+ * - Alpha steps, borders and shadows are derived from the primary text color, so light and dark pair up automatically.
+ * Raw values are defaults for themes to override and live in the base layer; derived tokens are
+ * evaluated at use and follow the theme. How to write a theme: the `theming-pupitre` skill.
+ */
+@layer base {
+  :root {
+    --ui-surface-0: light-dark(oklch(0.972 0 0), oklch(0.145 0 0));
+    --ui-surface-1: light-dark(oklch(0.99 0 0), oklch(0.185 0 0));
+    --ui-surface-2: light-dark(oklch(1 0 0), oklch(0.205 0 0));
+    --ui-surface-3: light-dark(oklch(1 0 0), oklch(0.23 0 0));
+
+    --ui-text-primary: light-dark(oklch(0.185 0 0), oklch(0.97 0 0));
+    --ui-text-secondary: light-dark(oklch(0.44 0 0), oklch(0.72 0 0));
+    --ui-text-muted: light-dark(oklch(0.63 0 0), oklch(0.51 0 0));
+
+    --ui-brand: oklch(0.665 0.131 40.6);
+    --ui-brand-hover: light-dark(oklch(0.6 0.155 39), oklch(0.7 0.125 40));
+    --ui-danger: light-dark(oklch(0.637 0.237 25.3), oklch(0.704 0.191 22.2));
+    --ui-success: light-dark(oklch(0.58 0.13 155), oklch(0.76 0.14 155));
+    --ui-segmented-thumb: light-dark(oklch(1 0 0), oklch(0.36 0 0));
+    /* Thumbs of switches and sliders */
+    --ui-knob: light-dark(oklch(1 0 0), oklch(0.92 0 0));
+
+    --ui-shadow-near: light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 40%));
+    --ui-shadow-far: light-dark(oklch(0 0 0 / 8%), oklch(0 0 0 / 40%));
+    --ui-shadow-float: light-dark(oklch(0 0 0 / 12%), oklch(0 0 0 / 65%));
+
+    /* Multiplies every corner radius: 0 gives square corners, 2 rounder ones */
+    --ui-radius-scale: 1;
+
+    /* Thickness of a scrollbar, the native one and the thumb ScrollView draws in its place */
+    --ui-scrollbar-thickness: 6px;
+
+    --ui-ring-inner: 0px;
+    --ui-ring-outer: 1px;
+
+    /* Width of the hairlines that separate controls and blocks */
+    --ui-border-width: 1px;
+
+    /*
+     * How the theme wants the fallback font placed in the document stack. `mono` keeps it after the
+     * generic families, so a CJK fallback does not take a monospaced document out of its grid.
+     */
+    --font-stack-intent: text;
+
+    /*
+     * Default look of the document. A theme overrides these the way it overrides colors, and the
+     * editor's own rules read them, so a theme that changes one need not restate the rule.
+     */
+    --md-page-padding-block: 3em;
+    --md-link-underline: none;
+    --md-heading-weight: 650;
+    --md-heading-line-height: 1.3;
+    --md-strong-weight: 650;
+    --md-h1-size: 2em;
+    --md-h2-size: 1.5em;
+    --md-h3-size: 1.25em;
+    --md-h4-size: 1.1em;
+    --md-h5-size: 1em;
+    --md-h6-size: 1em;
+    --md-code-padding: 0.1em 0.25em;
+    --md-code-radius: var(--radius-xs);
+    --md-code-block-size: 0.875em;
+    --md-table-heading-weight: 600;
+    --md-footnote-underline-offset: 0.15em;
+
+    /* Code colors used by the code block highlighter (features/editor/code-highlight.ts) */
+    --syntax-keyword: light-dark(oklch(0.55 0.2 25), oklch(0.75 0.15 25));
+    --syntax-string: light-dark(oklch(0.45 0.12 145), oklch(0.8 0.12 145));
+    --syntax-special-string: light-dark(oklch(0.5 0.13 250), oklch(0.78 0.1 230));
+    --syntax-number: light-dark(oklch(0.5 0.15 250), oklch(0.78 0.1 230));
+    --syntax-variable: var(--ui-text-primary);
+    --syntax-definition: light-dark(oklch(0.5 0.13 55), oklch(0.8 0.12 65));
+    --syntax-function: light-dark(oklch(0.5 0.17 300), oklch(0.8 0.1 300));
+    --syntax-type: light-dark(oklch(0.5 0.13 55), oklch(0.8 0.12 65));
+    --syntax-property: light-dark(oklch(0.5 0.13 250), oklch(0.78 0.1 230));
+    --syntax-comment: var(--ui-text-muted);
+    --syntax-operator: light-dark(oklch(0.55 0.2 25), oklch(0.75 0.15 25));
+    --syntax-punctuation: var(--ui-text-secondary);
+    --syntax-invalid: var(--ui-danger);
+
+    --ui-alpha-1: oklch(from var(--ui-text-primary) l c h / 5%);
+    --ui-alpha-2: oklch(from var(--ui-text-primary) l c h / 10%);
+    --ui-alpha-3: oklch(from var(--ui-text-primary) l c h / 20%);
+    --ui-ring-color: oklch(from var(--ui-text-primary) l c h / 10%);
+    --ui-segmented-track: oklch(from var(--ui-text-primary) l c h / 7%);
+    /* Fill of text fields and dropdown triggers: a recess in whatever surface holds them */
+    --ui-field: light-dark(
+      oklch(from var(--ui-surface-0) l c h / 60%),
+      oklch(from var(--ui-surface-0) l c h / 40%)
+    );
+    /*
+     * What a selection washes over the text. Relative to the accent, which already has a value per
+     * colour scheme, so it needs no dark variant of its own; a theme whose accent fills blocks
+     * replaces it, since such a wash would vanish into them.
+     */
+    --ui-selection: oklch(from var(--ui-brand) l c h / 22%);
+    /* ==highlight== in the document, for themes that do not pick their own */
+    --md-highlight: light-dark(oklch(0.91 0.11 92 / 75%), oklch(0.82 0.13 88 / 28%));
+
+    --ui-shadow-sm: 0 1px 2px var(--ui-shadow-near), 0 2px 8px var(--ui-shadow-far);
+    --ui-shadow-md: 0 2px 4px var(--ui-shadow-near), 0 6px 16px var(--ui-shadow-far);
+    --ui-shadow-popover:
+      inset 0 0 0 var(--ui-ring-inner) var(--ui-ring-color),
+      0 0 0 var(--ui-ring-outer) var(--ui-ring-color), 0 8px 24px var(--ui-shadow-float),
+      0 2px 6px var(--ui-shadow-far);
+    --ui-focus-shadow:
+      inset 0 0 0 1px var(--ui-surface-1), 0 0 0 1.5px var(--ui-brand),
+      0 0 6px 1px oklch(from var(--ui-brand) l c h / 30%);
+
+    --foreground: var(--ui-text-primary);
+    --popover: var(--ui-surface-3);
+    --primary: var(--ui-text-primary);
+    --primary-foreground: var(--ui-surface-1);
+    --secondary: var(--ui-alpha-1);
+    --secondary-foreground: var(--ui-text-primary);
+    --muted: var(--ui-alpha-1);
+    --muted-foreground: var(--ui-text-secondary);
+    --accent: var(--ui-alpha-1);
+    --brand: var(--ui-brand);
+    --brand-foreground: oklch(1 0 0);
+    --destructive: var(--ui-danger);
+    --border: var(--ui-alpha-2);
+    --input: var(--ui-alpha-3);
+
+    /*
+     * Diagram (Mermaid) colors: node fill and outline, connecting lines, text and one accent for
+     * notes and highlights. They are converted to hex when a diagram is drawn, so they must be
+     * plain colors, not relative or translucent ones.
+     */
+    --diagram-fill: var(--ui-surface-0);
+    --diagram-stroke: var(--ui-text-muted);
+    --diagram-line: var(--ui-text-secondary);
+    --diagram-text: var(--ui-text-primary);
+    --diagram-accent: var(--ui-brand);
+  }
+
+  /*
+   * On a high-density screen a CSS pixel is more than one physical pixel, so a 1px border reads as
+   * a heavy line. Half a pixel lands on one physical pixel at 2x and stays crisp.
+   */
+  @media (min-resolution: 2dppx) {
+    :root {
+      --ui-border-width: 0.5px;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ui-ring-inner: 1px;
+      --ui-ring-outer: 0px;
+    }
+  }
+
+  /* In the base layer, so a theme may replace the wash itself as well as the token */
+  ::selection {
+    background-color: var(--ui-selection);
+  }
+}
+
+@layer theme {
+  :root {
+    /*
+     * The document's own motion, by what moves. This is the one place to change it: a theme sets
+     * these in its own layer, which sits above this one, so its values win without `!important`.
+     *   enter  a marker or a quote's bar appearing while the cursor moves
+     *   block  a formula, a diagram or a table arriving
+     *   line   a line of a code block growing
+     *   leave  a block fading out where the text replaced it
+     *   fold   a details section opening or closing
+     *   view   the window cross-fading a theme change or a view swap
+     */
+    --motion-enter-duration: var(--transition-duration-snap);
+    --motion-enter-ease: var(--ease-enter);
+    --motion-block-duration: var(--transition-duration-base);
+    --motion-block-ease: var(--ease-enter);
+    --motion-line-duration: var(--transition-duration-snap);
+    --motion-line-ease: var(--ease-out-expo);
+    --motion-leave-duration: var(--transition-duration-snap);
+    --motion-leave-ease: var(--ease-out-expo);
+    --motion-fold-duration: var(--transition-duration-sheet);
+    --motion-fold-ease: var(--ease-out-expo);
+    --motion-view-duration: var(--transition-duration-sheet);
+    --motion-view-ease: var(--ease-enter);
+
+    --shadow-sm: var(--ui-shadow-sm);
+    --shadow-md: var(--ui-shadow-md);
+    --shadow-float: var(--ui-shadow-popover);
+    --shadow-focus: var(--ui-focus-shadow);
+    --shadow-segmented-thumb: inset 0 0 0 1px var(--ui-alpha-2), 0 1px 2px var(--ui-shadow-far);
+  }
+}

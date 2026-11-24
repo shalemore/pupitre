@@ -1,39 +1,17 @@
-import { ContextMenu } from "@kobalte/core/context-menu";
 import type { FolderEntry } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import type { MenuEntry } from "@pupitre/desktop-api/menu";
 import { t } from "@pupitre/i18n/solid";
-import { ListItem, rowIndent } from "@pupitre/ui";
-import { FLOATING_PANEL, menuPanel } from "@pupitre/ui/styles";
+import { ListItem, rowIndent, Separator } from "@pupitre/ui";
 import { messageOf } from "@pupitre/utils";
+import { Menu, MenuContextTrigger } from "@ui-sdk/solid/menu";
 import { Folder } from "lucide-solid";
-import {
-  type Component,
-  createEffect,
-  createMemo,
-  createResource,
-  createSelector,
-  createSignal,
-  For,
-  on,
-  onCleanup,
-  Show,
-} from "solid-js";
+import { type Component, createEffect, createMemo, createSignal, For, Show } from "solid-js";
 import { isInsideFolder, relativeToFolder } from "@shared/paths";
-import { MenuEntries } from "@/components/menu-popup";
+import { MenuEntries, MenuPanel } from "@/components/menu-popup";
 import { reportFailure } from "@/lib/errors";
 import { parentFolder } from "@/lib/file";
-import { cx } from "@/styled-system/css";
 import { FolderChildren, FolderRow, type RowMenu, type TreeContext } from "./folder-tree-rows";
-import {
-  blockTruncate,
-  divider,
-  fileIcon,
-  indentIcon,
-  sectionLabel,
-  stack,
-  treeRoot,
-} from "./folder-tree-styles";
 
 interface FolderTreeProps {
   root: string;
@@ -74,28 +52,38 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
   const [expanded, setExpanded] = createSignal<ReadonlySet<string>>(new Set());
   const [menuOpen, setMenuOpen] = createSignal(false);
   const [hiddenFolders, setHiddenFolders] = createSignal<ReadonlySet<string>>(new Set());
-  const [pins, { refetch: refetchPins }] = createResource(
+  const [pins, setPinEntries] = createSignal<
+    Awaited<ReturnType<typeof desktop.invoke<"folder:pins">>>
+  >([]);
+  const loadPins = (root: string) =>
+    desktop.invoke("folder:pins", root).then(setPinEntries, () => setPinEntries([]));
+  createEffect(
     () => props.root,
-    (root) => desktop.invoke("folder:pins", root),
+    (root) => {
+      void loadPins(root);
+    },
   );
-  const pinnedPaths = createMemo(() => new Set((pins() ?? []).map((entry) => entry.path)));
-  const pinnedEntries = () => pins() ?? [];
-  // Each row subscribes to its own boolean, so opening another document touches two rows, not the tree
-  const rowIsActive = createSelector(() => props.activePath);
+  const refetchPins = () => loadPins(props.root);
+  const pinnedPaths = createMemo(() => new Set(pins().map((entry) => entry.path)));
+  const pinnedEntries = () => pins();
+  const rowIsActive = (path: string) => props.activePath === path;
   const reportHidden = (path: string, hidden: boolean) => {
     setHiddenFolders((current) => withMember(current, path, hidden));
   };
-  createEffect(() => props.onHiddenChange?.(hiddenFolders().size > 0));
-  onCleanup(() => props.onHiddenChange?.(false));
+  createEffect(
+    () => hiddenFolders().size > 0,
+    (hasHidden) => {
+      props.onHiddenChange?.(hasHidden);
+      return () => props.onHiddenChange?.(false);
+    },
+  );
   // The rename field lives in the sidebar too: folding it away under the field would drop the name
   // being typed and cancel the rename
   const heldOpen = () => menuOpen() || renaming() !== undefined;
-  createEffect(
-    on(heldOpen, (open) => {
-      props.onHoldOpenChange?.(open);
-      onCleanup(() => props.onHoldOpenChange?.(false));
-    }),
-  );
+  createEffect(heldOpen, (open) => {
+    props.onHoldOpenChange?.(open);
+    return () => props.onHoldOpenChange?.(false);
+  });
 
   const openFile = async (path: string) => {
     const message = await props.onOpenFile(path);
@@ -280,18 +268,20 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
   return (
     // The empty space of the tree stands for the folder it shows, so a file can be created at its
     // root; it reaches the bottom of the sidebar, so the native menu does not take over there
-    <ContextMenu onOpenChange={setMenuOpen}>
-      <ContextMenu.Trigger as="div" class={treeRoot}>
+    <Menu onOpenChange={setMenuOpen}>
+      <MenuContextTrigger class="min-h-full space-y-0.5 p-2">
         <Show when={pinnedEntries().length > 0}>
-          <div class={stack}>
-            <div class={sectionLabel}>{t().sidebar.pinned}</div>
+          <div class="space-y-0.5">
+            <div class="px-2.5 pt-1 text-2xs font-medium tracking-wider text-tertiary uppercase">
+              {t().sidebar.pinned}
+            </div>
             <For each={pinnedEntries()}>
               {(entry) => (
                 <FolderRow entry={entry} depth={0} tree={tree} previews={() => undefined} />
               )}
             </For>
           </div>
-          <div class={divider} />
+          <Separator class="mx-2.5 bg-border-subtle" />
         </Show>
         <Show when={parent()}>
           {(target) => (
@@ -303,27 +293,25 @@ export const FolderTree: Component<FolderTreeProps> = (props) => {
               onClick={() => target().goUp(target().path)}
               onContextMenu={(event) => event.stopPropagation()}
             >
-              <span class={indentIcon} />
-              <Folder class={fileIcon} />
-              <span class={blockTruncate}>..</span>
+              <span class="size-3 shrink-0" />
+              <Folder class="size-3.5 shrink-0" />
+              <span class="block truncate">..</span>
             </ListItem>
           )}
         </Show>
         <FolderChildren path={props.root} depth={0} tree={tree} />
-      </ContextMenu.Trigger>
-      <ContextMenu.Portal>
-        <ContextMenu.Content class={cx(FLOATING_PANEL, menuPanel)}>
-          {(() => {
-            const menu = menuOf({ name: props.root, path: props.root, kind: "directory" });
-            return (
-              <MenuEntries
-                entries={menu.entries}
-                onSelect={(item) => menu.actions.get(item.id)?.()}
-              />
-            );
-          })()}
-        </ContextMenu.Content>
-      </ContextMenu.Portal>
-    </ContextMenu>
+      </MenuContextTrigger>
+      <MenuPanel>
+        {(() => {
+          const menu = menuOf({ name: props.root, path: props.root, kind: "directory" });
+          return (
+            <MenuEntries
+              entries={menu.entries}
+              onSelect={(item) => menu.actions.get(item.id)?.()}
+            />
+          );
+        })()}
+      </MenuPanel>
+    </Menu>
   );
 };

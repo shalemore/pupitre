@@ -1,5 +1,4 @@
 {
-  "$schema": "https://zed.dev/schema/settings.json",
   "format_on_save": "on",
   "code_actions_on_format": {
     "source.fixAll.oxc": true
@@ -33,7 +32,18 @@
       "settings": {
         "css": {
           "lint": {
+            "unknownAtRules": "ignore",
             "validProperties": ["text-autospace", "caret-animation"]
+          }
+        }
+      }
+    },
+    "tailwindcss-language-server": {
+      "settings": {
+        "tailwindCSS": {
+          "classFunctions": ["cn", "cva"],
+          "experimental": {
+            "configFile": "apps/desktop/src/renderer/app.css"
           }
         }
       }

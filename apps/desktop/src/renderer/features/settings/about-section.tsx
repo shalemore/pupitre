@@ -4,40 +4,10 @@ import { Button, SettingRow } from "@pupitre/ui";
 import pkg from "@root/package.json";
 import { BookOpen, FolderOpen } from "lucide-solid";
 import { Show, type Component } from "solid-js";
+import { PUBLIC_LOGO } from "@/lib/public-asset";
 import { workspace } from "@/lib/workspace";
-import { css } from "@/styled-system/css";
 import { SettingGroup, SettingsSection } from "./settings-section";
 import { UpdateButton, UpdateStatusPanel } from "./update-section";
-
-const identity = css({ display: "flex", flexDirection: "column", gap: "3" });
-const appCard = css({
-  display: "flex",
-  alignItems: "center",
-  gap: "4",
-  padding: "5",
-  borderRadius: "lg",
-  borderWidth: "hairline",
-  borderStyle: "solid",
-  borderColor: "border",
-  backgroundColor: "surface.2",
-});
-const logo = css({
-  width: "12",
-  height: "12",
-  flexShrink: 0,
-  borderRadius: "xl",
-  boxShadow: "sm",
-});
-const nameBlock = css({ minWidth: "0", flex: "1" });
-const appName = css({ textStyle: "base", fontWeight: "semibold", color: "foreground" });
-const version = css({
-  marginBlockStart: "0.5",
-  textStyle: "2xs",
-  color: "muted.foreground",
-  fontVariantNumeric: "tabular-nums",
-});
-const status = css({ "& > * + *": { marginBlockStart: "2" } });
-const path = css({ fontFamily: "mono", textStyle: "xs" });
 
 export const AboutSection: Component = () => {
   // The file the chosen settings scope writes to, so the row follows the folder switch
@@ -50,12 +20,12 @@ export const AboutSection: Component = () => {
 
   return (
     <SettingsSection title={t().settings.about}>
-      <div class={identity}>
-        <div class={appCard}>
-          <img src="./logo.svg" alt="" class={logo} />
-          <div class={nameBlock}>
-            <div class={appName}>Pupitre</div>
-            <div class={version}>
+      <div class="flex flex-col gap-3">
+        <div class="flex items-center gap-4 rounded-lg border-hairline border-solid border-border bg-surface-2 p-5">
+          <img src={PUBLIC_LOGO} alt="" class="size-12 shrink-0 rounded-xl shadow-sm" />
+          <div class="min-w-0 flex-1">
+            <div class="text-base font-semibold text-foreground">Pupitre</div>
+            <div class="mt-0.5 text-2xs text-muted-foreground tabular-nums">
               {t().settings.version} {pkg.version}
               <Show when={desktop.electronVersion}>{(value) => <> · Electron {value()}</>}</Show>
             </div>
@@ -64,7 +34,7 @@ export const AboutSection: Component = () => {
             <UpdateButton />
           </Show>
         </div>
-        <div class={status}>
+        <div class="space-y-2">
           <UpdateStatusPanel currentVersion={pkg.version} />
         </div>
       </div>
@@ -85,7 +55,7 @@ export const AboutSection: Component = () => {
           <SettingRow
             title={t().settings.settingsFile}
             description={
-              <bdi dir="ltr" class={path}>
+              <bdi dir="ltr" class="font-mono text-xs">
                 {shownSettingsPath()}
               </bdi>
             }

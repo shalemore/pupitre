@@ -1,7 +1,6 @@
-import { I18nProvider } from "@kobalte/core/i18n";
 import { desktop } from "@pupitre/desktop-api/client";
-import { onCleanup, onMount, Show, type ParentComponent } from "solid-js";
-import { css, cx } from "@/styled-system/css";
+import { cn } from "@pupitre/ui";
+import { onSettled, Show, type ParentComponent } from "solid-js";
 import { CaptionButtons } from "./caption-buttons";
 
 /**
@@ -10,24 +9,6 @@ import { CaptionButtons } from "./caption-buttons";
  * clipping only when there is nothing left to hide.
  */
 const GIVE_WAY = ["count"];
-
-const titleBar = css({
-  width: "full",
-  height: "titleBar",
-  overflow: "hidden",
-  flexShrink: 0,
-  display: "flex",
-  alignItems: "center",
-  gap: "2",
-  userSelect: "none",
-  backgroundColor: "surface.0",
-  textStyle: "xs",
-  transitionProperty: "height",
-  transitionDuration: "sheet",
-  transitionTimingFunction: "outExpo",
-  "&[data-folded]": { height: "0" },
-  _print: { display: "none" },
-});
 
 /**
  * The window title bar. It is draggable as a whole and leaves room for the native caption buttons
@@ -68,7 +49,7 @@ export const TitleBar: ParentComponent<{ class?: string; folded?: boolean }> = (
     }
   };
 
-  onMount(() => {
+  onSettled(() => {
     if (!bar) return;
     fit();
     // The bar resizes with the window, its parts with their text: a language change widens the menus
@@ -83,7 +64,7 @@ export const TitleBar: ParentComponent<{ class?: string; folded?: boolean }> = (
         for (const child of cell.children) observer.observe(child);
       }
     }
-    onCleanup(() => observer.disconnect());
+    return () => observer.disconnect();
   });
 
   return (
@@ -95,19 +76,16 @@ export const TitleBar: ParentComponent<{ class?: string; folded?: boolean }> = (
       data-caption-side={layoutSide}
       data-folded={props.folded ? "" : undefined}
       inert={props.folded}
-      class={cx(
+      class={cn(
         // The horizontal padding comes from .app-title-bar, which leaves room for the caption buttons
-        "app-title-bar",
-        titleBar,
+        "app-title-bar flex h-title-bar w-full shrink-0 items-center gap-2 overflow-hidden bg-surface-0 text-xs transition-[height] duration-sheet ease-out-expo select-none data-folded:h-0 print:hidden",
         props.class,
       )}
     >
       <Show when={side === "left"}>
         <CaptionButtons side="left" />
       </Show>
-      {/* The bar draws its menus and tabs left to right in every UI language, so Kobalte must use
-          the same direction for the arrow keys and popup edges */}
-      <I18nProvider locale="en-US">{props.children}</I18nProvider>
+      {props.children}
       <Show when={side === "right"}>
         <CaptionButtons side="right" />
       </Show>

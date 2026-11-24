@@ -2,6 +2,8 @@ import type {
   PluginBridge,
   PluginContext,
   PluginDefinition,
+  PluginDocumentEvent,
+  PluginDocumentInfo,
   PluginResponse,
   PluginSelection,
 } from "@pupitre/plugin-sdk";
@@ -67,9 +69,50 @@ async function selection(): Promise<PluginSelection | null> {
   return value;
 }
 
+function isDocumentInfo(value: unknown): value is PluginDocumentInfo {
+  return (
+    isRecord(value) &&
+    (value["path"] === null || typeof value["path"] === "string") &&
+    typeof value["title"] === "string" &&
+    typeof value["dirty"] === "boolean"
+  );
+}
+
+function isDocumentEvent(value: unknown): value is PluginDocumentEvent {
+  return value === "open" || value === "change" || value === "save";
+}
+
+async function documentInfo(): Promise<PluginDocumentInfo | null> {
+  const value = await bridge.invoke("document.info");
+  if (value === null) return null;
+  if (!isDocumentInfo(value)) throw new Error("document.info did not return document info");
+  return value;
+}
+
+const documentListeners: Record<PluginDocumentEvent, Set<(info: PluginDocumentInfo) => void>> = {
+  open: new Set(),
+  change: new Set(),
+  save: new Set(),
+};
+
+bridge.onDocumentEvent((payload) => {
+  if (!isRecord(payload)) return;
+  if (!isDocumentEvent(payload["event"]) || !isDocumentInfo(payload["info"])) return;
+  for (const listener of documentListeners[payload["event"]]) listener(payload["info"]);
+});
+
+let currentSettings: Record<string, unknown> = {};
+
 const context: PluginContext = {
   document: {
     read: () => text("document.read"),
+    info: documentInfo,
+    on: (event, listener) => {
+      documentListeners[event].add(listener);
+      return () => {
+        documentListeners[event].delete(listener);
+      };
+    },
     replace: async (value) => {
       await bridge.invoke("document.replace", { text: value });
     },
@@ -112,61 +155,78 @@ const context: PluginContext = {
       return value;
     },
   },
+  get settings() {
+    return currentSettings;
+  },
 };
 
-await loadScript(new URL(main, `pupitre-plugin://${id}/`).href);
-const definition = registered;
-if (!isDefinition(definition)) throw new Error("The plugin did not register a definition");
+try {
+  await loadScript(new URL(main, `pupitre-plugin://${id}/`).href);
+  const definition = registered;
+  if (!isDefinition(definition)) throw new Error("The plugin did not register a definition");
 
-// The schema and the words around it belong to the plugin; the app only stores and draws them
-const settings = definition.settings;
-if (settings !== undefined) {
-  await bridge.invoke("host.settings", {
-    schema: z.toJSONSchema(settings.schema, { io: "input" }),
-    title: settings.title,
-    description: settings.description,
-    fields: settings.fields,
-    defaults: settings.schema.parse({}),
+  // The schema and the words around it belong to the plugin; the app only stores and draws them
+  const settings = definition.settings;
+  if (settings !== undefined) {
+    await bridge.invoke("host.settings", {
+      schema: z.toJSONSchema(settings.schema, { io: "input" }),
+      title: settings.title,
+      description: settings.description,
+      fields: settings.fields,
+      defaults: settings.schema.parse({}),
+    });
+  }
+
+  if (definition.commands !== undefined && definition.commands.length > 0) {
+    await bridge.invoke("host.commands", {
+      commands: definition.commands.map((command) => ({
+        id: command.id,
+        title: command.title,
+        shortcut: command.shortcut,
+      })),
+    });
+  }
+
+  const declared = definition.settings;
+  /** The settings file is the user's to edit, so it is parsed before the plugin sees it. */
+  function valuesFrom(value: unknown): Record<string, unknown> {
+    if (declared === undefined) return {};
+    const parsed = declared.schema.safeParse(isRecord(value) ? value : {});
+    if (parsed.success) return parsed.data;
+    console.error("The plugin settings do not match its schema", parsed.error);
+    return declared.schema.parse({});
+  }
+
+  currentSettings = valuesFrom(await bridge.invoke("settings.get"));
+  await definition.activate(context, currentSettings);
+
+  bridge.onCommand((commandId) => {
+    const command = definition.commands?.find((entry) => entry.id === commandId);
+    if (command === undefined) return;
+    void (async () => {
+      try {
+        await command.run(context);
+      } catch (error: unknown) {
+        console.error(`The command ${commandId} failed`, error);
+      }
+    })();
+  });
+
+  let settingsQueue = Promise.resolve();
+  bridge.onSettings((next) => {
+    settingsQueue = settingsQueue.then(async () => {
+      try {
+        await definition.deactivate?.();
+        currentSettings = valuesFrom(next);
+        await definition.activate(context, currentSettings);
+      } catch (error: unknown) {
+        console.error("The plugin could not apply its settings", error);
+      }
+    });
+  });
+} catch (error: unknown) {
+  console.error(`The plugin ${id} failed to initialize`, error);
+  await bridge.invoke("host.failed", {
+    message: error instanceof Error ? error.message : String(error),
   });
 }
-
-if (definition.commands !== undefined && definition.commands.length > 0) {
-  await bridge.invoke("host.commands", {
-    commands: definition.commands.map((command) => ({ id: command.id, title: command.title })),
-  });
-}
-
-const declared = definition.settings;
-/** The settings file is the user's to edit, so it is parsed before the plugin sees it. */
-function valuesFrom(value: unknown): Record<string, unknown> {
-  if (declared === undefined) return {};
-  const parsed = declared.schema.safeParse(isRecord(value) ? value : {});
-  if (parsed.success) return parsed.data;
-  console.error("The plugin settings do not match its schema", parsed.error);
-  return declared.schema.parse({});
-}
-
-await definition.activate(context, valuesFrom(await bridge.invoke("settings.get")));
-
-bridge.onCommand((commandId) => {
-  const command = definition.commands?.find((entry) => entry.id === commandId);
-  if (command === undefined) return;
-  void (async () => {
-    try {
-      await command.run(context);
-    } catch (error: unknown) {
-      console.error(`The command ${commandId} failed`, error);
-    }
-  })();
-});
-
-bridge.onSettings((next) => {
-  void (async () => {
-    try {
-      await definition.deactivate?.();
-      await definition.activate(context, valuesFrom(next));
-    } catch (error: unknown) {
-      console.error("The plugin could not apply its settings", error);
-    }
-  })();
-});

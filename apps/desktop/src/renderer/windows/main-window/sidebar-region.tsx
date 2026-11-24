@@ -1,6 +1,7 @@
 import { t } from "@pupitre/i18n/solid";
 import { fileNameOf } from "@pupitre/utils";
-import { Show, type Component, type JSX } from "solid-js";
+import type { JSX } from "@solidjs/web";
+import { Show, type Component } from "solid-js";
 import {
   Sidebar,
   SidebarPanel,

@@ -102,6 +102,8 @@ test("closing a tab leaves the menu bar closed", async () => {
   await writeFile(second, "Second\n");
   const app = await launch({ files: [first], settings: { tabs: true } });
   try {
+    // Wait until the initial file has mounted the window and registered command listeners
+    await expect(app.page.locator(".cm-content")).toContainText("First");
     await run(app.page, { id: "file.open-path", path: second });
     await expect(app.page.getByRole("tab")).toHaveCount(2);
     // The last tab closed gives the bar back to the menus while the pointer still sits over it

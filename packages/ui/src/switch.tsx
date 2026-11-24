@@ -1,5 +1,4 @@
-import { Switch as KobalteSwitch } from "@kobalte/core/switch";
-import { css } from "./styled-system/css";
+import { Switch as UiSwitch, SwitchThumb } from "@ui-sdk/solid/switch";
 
 export interface SwitchProps {
   checked: boolean;
@@ -8,51 +7,19 @@ export interface SwitchProps {
   "aria-label"?: string;
 }
 
-const root = css({ display: "inline-flex", alignItems: "center" });
-const control = css({
-  display: "inline-flex",
-  height: "4.5",
-  width: "8",
-  flexShrink: 0,
-  alignItems: "center",
-  borderRadius: "full",
-  backgroundColor: "input",
-  padding: "0.5",
-  cursor: "pointer",
-  transitionProperty: "background-color",
-  transitionDuration: "ui",
-  transitionTimingFunction: "outExpo",
-  _peerFocusVisible: { boxShadow: "focus" },
-  "&[data-checked]": { backgroundColor: "brand" },
-  "&[data-disabled]": { cursor: "not-allowed", opacity: 0.5 },
-});
-const thumb = css({
-  width: "3.5",
-  height: "3.5",
-  borderRadius: "full",
-  backgroundColor: "knob",
-  boxShadow: "sm",
-  transitionProperty: "transform",
-  transitionDuration: "snap",
-  transitionTimingFunction: "snap",
-  "&[data-checked]": { transform: "translateX(0.875rem)" },
-  _rtl: { "&[data-checked]": { transform: "translateX(-0.875rem)" } },
-});
-
 export function Switch(props: SwitchProps) {
+  const disabled = () => props.disabled ?? false;
+
   return (
-    <KobalteSwitch
+    <UiSwitch
       data-slot="switch"
       checked={props.checked}
-      onChange={props.onChange}
-      disabled={props.disabled ?? false}
-      class={root}
+      onCheckedChange={props.onChange}
+      disabled={disabled()}
+      aria-label={props["aria-label"]}
+      class="inline-flex h-4.5 w-8 shrink-0 cursor-pointer items-center rounded-full bg-input p-0.5 transition-colors duration-ui ease-out-expo outline-none focus-visible:shadow-focus data-checked:bg-brand data-disabled:cursor-not-allowed data-disabled:opacity-50"
     >
-      {/* `_peerFocusVisible` reads this marker class beside the control */}
-      <KobalteSwitch.Input class="peer" aria-label={props["aria-label"]} />
-      <KobalteSwitch.Control data-slot="switch-control" class={control}>
-        <KobalteSwitch.Thumb data-slot="switch-thumb" class={thumb} />
-      </KobalteSwitch.Control>
-    </KobalteSwitch>
+      <SwitchThumb class="size-3.5 rounded-full bg-knob shadow-sm transition-transform duration-snap ease-snap data-checked:translate-x-3.5 rtl:data-checked:-translate-x-3.5" />
+    </UiSwitch>
   );
 }

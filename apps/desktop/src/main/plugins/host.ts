@@ -1,7 +1,10 @@
 import { join } from "node:path";
+import type { PluginDocumentEventPayload } from "@pupitre/desktop-api";
 import type { PluginManifest } from "@pupitre/plugin-sdk";
-import { BrowserWindow, session, type WebContents } from "electron";
+import { app, BrowserWindow, session, type WebContents } from "electron";
 import log from "electron-log/main";
+import { pluginsFolder } from "./paths";
+import { readPlugin } from "./plugin-files";
 import { handlePluginProtocolForSession } from "./protocol";
 
 const hosts = new Map<string, BrowserWindow>();
@@ -28,7 +31,11 @@ function hostUrl(id: string, main: string): string {
  * Starts the page that runs one plugin's code: a hidden window with no Node, its own in-memory
  * session and a preload that exposes nothing but the RPC bridge.
  */
-export async function startPlugin(id: string, manifest: PluginManifest): Promise<void> {
+export async function startPlugin(
+  id: string,
+  manifest: PluginManifest,
+  onFailure?: (id: string) => void,
+): Promise<void> {
   if (manifest.main === undefined || hosts.has(id)) return;
   const partition = `plugin:${id}`;
   const pluginSession = session.fromPartition(partition);
@@ -51,7 +58,7 @@ export async function startPlugin(id: string, manifest: PluginManifest): Promise
       contextIsolation: true,
       nodeIntegration: false,
       webviewTag: false,
-      devTools: false,
+      devTools: !app.isPackaged,
       // The page is never shown, so the timers a plugin starts must still run
       backgroundThrottling: false,
       partition,
@@ -67,6 +74,7 @@ export async function startPlugin(id: string, manifest: PluginManifest): Promise
   window.webContents.on("render-process-gone", (_event, details) => {
     log.error(`The plugin ${id} stopped: ${details.reason}`);
     stopPlugin(id);
+    onFailure?.(id);
   });
   window.on("closed", () => {
     plugins.delete(webContentsId);
@@ -78,6 +86,7 @@ export async function startPlugin(id: string, manifest: PluginManifest): Promise
   } catch (error: unknown) {
     log.error(`The plugin ${id} could not start`, error);
     stopPlugin(id);
+    onFailure?.(id);
   }
 }
 
@@ -94,7 +103,42 @@ export function stopPlugin(id: string): void {
   if (!window.isDestroyed()) window.destroy();
 }
 
+/** Stops the plugin window and waits for it to close before releasing its partition state. */
+export async function stopPluginAndWait(id: string): Promise<void> {
+  const partition = `plugin:${id}`;
+  const window = hosts.get(id);
+  if (window !== undefined) {
+    hosts.delete(id);
+    plugins.delete(window.webContents.id);
+    if (!window.isDestroyed()) {
+      await new Promise<void>((resolve) => {
+        window.once("closed", () => resolve());
+        window.destroy();
+      });
+    }
+  }
+  protocolSessions.delete(partition);
+  await session.fromPartition(partition).clearStorageData();
+}
+
 /** Closes every plugin page, so the app can quit without them holding the process open. */
 export function stopAllPlugins(): void {
   for (const id of hosts.keys()) stopPlugin(id);
+}
+
+/** Forwards document lifecycle events to running plugins granted `document:read`. */
+export function broadcastPluginDocumentEvent(payload: PluginDocumentEventPayload): void {
+  for (const [id, window] of hosts) {
+    if (window.isDestroyed()) continue;
+    const plugin = readPlugin(join(pluginsFolder(), id));
+    if (
+      plugin === undefined ||
+      !plugin.enabled ||
+      !plugin.manifest.permissions.includes("document:read") ||
+      !plugin.granted.includes("document:read")
+    ) {
+      continue;
+    }
+    window.webContents.send("plugin:document-event", payload);
+  }
 }

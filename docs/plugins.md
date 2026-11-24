@@ -9,6 +9,13 @@ The contract is `@pupitre/plugin-sdk`. It is small on purpose: a manifest shape,
 names, the settings definition and the surface definitions. The runtime that executes a plugin
 belongs to the app, so a plugin only ships JavaScript and assets.
 
+## Built-in vs. Third-Party Plugins
+
+Pupitre uses two intentional tiers:
+
+- **Built-in `TrustedPlugin`s** (`@pupitre/plugin-sdk/trusted`): compiled into the renderer for synchronous CodeMirror extensions (`editor`, `styles`, `restoresScroll`, `onSettingsChanged`).
+- **Installed third-party `PluginDefinition`s** (`@pupitre/plugin-sdk`): executed in isolated hidden host windows via capability-checked RPC (`document`, `editor`, `clipboard`, `notifications`, `storage`, `network`) plus scoped CSS and sandboxed canvas surfaces.
+
 ## Layout
 
 ```

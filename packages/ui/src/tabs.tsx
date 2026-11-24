@@ -1,59 +1,65 @@
-import { Tabs as KobalteTabs } from "@kobalte/core/tabs";
-import type { JSX } from "solid-js";
-import { css, cx } from "./styled-system/css";
+import type { JSX } from "@solidjs/web";
+import {
+  Tabs as UiTabs,
+  TabsList as UiTabsList,
+  TabsPanel,
+  TabsTab,
+  type TabsOrientation,
+} from "@ui-sdk/solid/tabs";
+import { cn } from "cn";
+
+export interface TabsProps {
+  value?: string | null | undefined;
+  defaultValue?: string | null | undefined;
+  onValueChange?: (value: string | null) => void;
+  orientation?: TabsOrientation;
+  class?: string | undefined;
+  children: JSX.Element;
+}
 
 /**
- * Vertical tabs for the settings window sidebar. Arrow-key navigation, focus management and ARIA attributes are handled by Kobalte,
- * so this only provides the styling.
+ * Vertical tabs for the settings window sidebar. Arrow-key navigation, focus management and ARIA
+ * attributes are handled by UI SDK, so this only provides the styling.
  */
-export const Tabs = KobalteTabs;
+export function Tabs(props: TabsProps) {
+  const orientation = () => props.orientation ?? "horizontal";
 
-const list = css({ display: "flex", flexDirection: "column", gap: "0.5", outlineStyle: "none" });
-const trigger = css({
-  layerStyle: "interactive",
-  display: "flex",
-  width: "full",
-  alignItems: "center",
-  gap: "2.5",
-  borderRadius: "md",
-  paddingInline: "2.5",
-  paddingBlock: "2",
-  textAlign: "start",
-  textStyle: "xs",
-  color: "muted.foreground",
-  outlineStyle: "none",
-  cursor: "pointer",
-  _hover: { backgroundColor: "accent", color: "foreground" },
-  _focusVisible: { boxShadow: "focus" },
-  "&[data-selected]": {
-    backgroundColor: "selected",
-    fontWeight: "medium",
-    color: "foreground",
-  },
-  "& svg": { width: "4", height: "4", flexShrink: 0 },
-});
-const content = css({ outlineStyle: "none" });
+  return (
+    <UiTabs
+      value={props.value}
+      defaultValue={props.defaultValue}
+      onValueChange={props.onValueChange}
+      orientation={orientation()}
+      class={props.class}
+    >
+      {props.children}
+    </UiTabs>
+  );
+}
 
 export function TabsList(props: { class?: string; children: JSX.Element }) {
   return (
-    <KobalteTabs.List data-slot="tabs-list" class={cx(list, props.class)}>
+    <UiTabsList class={cn("flex flex-col gap-0.5 outline-none", props.class)}>
       {props.children}
-    </KobalteTabs.List>
+    </UiTabsList>
   );
 }
 
 export function TabsTrigger(props: { value: string; children: JSX.Element }) {
   return (
-    <KobalteTabs.Trigger data-slot="tabs-trigger" value={props.value} class={trigger}>
+    <TabsTab
+      value={props.value}
+      class="__INTERACTIVE__ flex w-full cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2 text-start text-xs text-muted-foreground outline-none hover:bg-accent hover:text-foreground focus-visible:shadow-focus data-selected:bg-selected data-selected:font-medium data-selected:text-foreground [&>svg]:size-4 [&>svg]:shrink-0"
+    >
       {props.children}
-    </KobalteTabs.Trigger>
+    </TabsTab>
   );
 }
 
 export function TabsContent(props: { value: string; children: JSX.Element }) {
   return (
-    <KobalteTabs.Content data-slot="tabs-content" value={props.value} class={content}>
+    <TabsPanel value={props.value} class="outline-none">
       {props.children}
-    </KobalteTabs.Content>
+    </TabsPanel>
   );
 }

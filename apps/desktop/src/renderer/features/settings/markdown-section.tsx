@@ -3,10 +3,7 @@ import type { Settings } from "@pupitre/settings";
 import { Input, Select } from "@pupitre/ui";
 import type { Component } from "solid-js";
 import { settings, updateSettings } from "@/lib/settings";
-import { css } from "@/styled-system/css";
 import { SettingField, SettingGroup, SettingsSection } from "./settings-section";
-
-const monoField = css({ width: "36", fontFamily: "mono" });
 
 export const MarkdownSection: Component = () => (
   <SettingsSection title={t().settings.markdown} description={t().settings.markdownDesc}>
@@ -117,7 +114,7 @@ export const MarkdownSection: Component = () => (
             if (imageFolder) void updateSettings({ imageFolder });
             else e.currentTarget.value = settings().imageFolder;
           }}
-          class={monoField}
+          class="w-36 font-mono"
           aria-label={t().settings.imageFolder}
         />
       </SettingField>

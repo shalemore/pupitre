@@ -1,4 +1,4 @@
-import { debounce } from "@solid-primitives/scheduled";
+import { debounce } from "@pupitre/utils";
 import { z } from "zod";
 
 export interface DocumentPosition {

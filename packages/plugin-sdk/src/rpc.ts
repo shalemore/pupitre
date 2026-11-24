@@ -27,6 +27,8 @@ export interface PluginBridge {
   onSettings(listener: (settings: unknown) => void): void;
   /** Called with a command id when the user picks one of the plugin's commands. */
   onCommand(listener: (commandId: string) => void): void;
+  /** Called when the active document opens, changes, or saves. */
+  onDocumentEvent(listener: (payload: unknown) => void): void;
 }
 
 export function rpcFailure(code: PluginErrorCode, message: string): RpcResult<never> {

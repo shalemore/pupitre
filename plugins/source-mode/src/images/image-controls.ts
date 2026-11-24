@@ -6,7 +6,7 @@ import {
   type ImageSize,
   imageAt,
 } from "@pupitre/markdown";
-import { css, cx } from "@pupitre/ui";
+import { cn } from "@pupitre/ui";
 import { applyImageWidth } from "./image-geometry";
 import { relabelOnLocaleChange } from "#widgets/relabel-on-locale";
 
@@ -39,57 +39,6 @@ function focusNewHandle(view: EditorView, pos: number): void {
   });
 }
 
-const handleStyle = css({
-  position: "absolute",
-  insetBlockEnd: "-1",
-  insetInlineEnd: "-1",
-  width: "3",
-  height: "3",
-  borderRadius: "full",
-  borderWidth: "hairline",
-  borderStyle: "solid",
-  borderColor: "surface.1",
-  backgroundColor: "brand",
-  boxShadow: "sm",
-  cursor: "nwse-resize",
-  userSelect: "none",
-  opacity: 0,
-  pointerEvents: "none",
-  _groupHover: { opacity: 1, pointerEvents: "auto" },
-  _groupFocusWithin: { opacity: 1, pointerEvents: "auto" },
-  _focusVisible: { boxShadow: "focus" },
-  _rtl: { cursor: "nesw-resize" },
-});
-const toolbarStyle = css({
-  position: "absolute",
-  gap: "0.5",
-  borderRadius: "lg",
-  backgroundColor: "surface.3",
-  padding: "0.5",
-  boxShadow: "float",
-  userSelect: "none",
-  opacity: 0,
-  pointerEvents: "none",
-  _groupHover: { opacity: 1, pointerEvents: "auto" },
-  _groupFocusWithin: { opacity: 1, pointerEvents: "auto" },
-});
-const alignButton = css({
-  display: "grid",
-  width: "6",
-  height: "6",
-  placeItems: "center",
-  borderRadius: "md",
-  borderWidth: "[0]",
-  backgroundColor: "transparent",
-  padding: "0",
-  color: "tertiary",
-  cursor: "pointer",
-  layerStyle: "interactive",
-  _hover: { backgroundColor: "accent", color: "foreground" },
-  _focusVisible: { outlineStyle: "none", boxShadow: "focus" },
-  "&[aria-pressed='true']": { backgroundColor: "selected", color: "foreground" },
-});
-
 /**
  * The corner handle that sizes the picture. It drags the picture on the screen and writes the width
  * into its source once, when the pointer is released, so that one drag is one change to undo.
@@ -102,7 +51,10 @@ export function resizeHandle(
 ): HTMLElement {
   const handle = document.createElement("span");
   // Interface rather than document, sized in rem like the corner of a code block
-  handle.className = cx("md-image-handle", handleStyle);
+  handle.className = cn(
+    "md-image-handle",
+    "pointer-events-none absolute -inset-e-1 -bottom-1 size-3 cursor-nwse-resize rounded-full border-hairline border-solid border-surface-1 bg-brand opacity-0 shadow-sm select-none group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-hover:pointer-events-auto group-hover:opacity-100 focus-visible:shadow-focus rtl:cursor-nesw-resize",
+  );
   handle.tabIndex = 0;
   handle.setAttribute("role", "button");
   relabelOnLocaleChange(handle, () => {
@@ -191,7 +143,10 @@ export function alignmentToolbar(
   size: ImageSize,
 ): HTMLElement {
   const toolbar = document.createElement("span");
-  toolbar.className = cx("md-image-toolbar", toolbarStyle);
+  toolbar.className = cn(
+    "md-image-toolbar",
+    "pointer-events-none absolute gap-0.5 rounded-lg bg-surface-3 p-0.5 opacity-0 shadow-float select-none group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-hover:pointer-events-auto group-hover:opacity-100",
+  );
   const choices: readonly { alignment: ImageAlignment; label: () => string }[] = [
     { alignment: "left", label: () => t().editor.image.alignLeft },
     { alignment: "center", label: () => t().editor.image.alignCenter },
@@ -201,7 +156,10 @@ export function alignmentToolbar(
   for (const { alignment, label } of choices) {
     const button = document.createElement("button");
     button.type = "button";
-    button.className = cx("md-image-align", alignButton);
+    button.className = cn(
+      "md-image-align",
+      "__INTERACTIVE__ grid size-6 cursor-pointer place-items-center rounded-md border-0 bg-transparent p-0 text-tertiary hover:bg-accent hover:text-foreground focus-visible:shadow-focus focus-visible:outline-none aria-pressed:bg-selected aria-pressed:text-foreground",
+    );
     button.setAttribute("data-alignment", alignment);
     relabelOnLocaleChange(button, () => {
       const text = label();

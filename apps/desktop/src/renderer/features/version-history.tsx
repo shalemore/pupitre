@@ -2,12 +2,10 @@ import type { HistoryEntry } from "@pupitre/desktop-api";
 import { desktop } from "@pupitre/desktop-api/client";
 import { intlLocale } from "@pupitre/i18n";
 import { currentLocale, t } from "@pupitre/i18n/solid";
-import { truncateGrow } from "@pupitre/ui/styles";
-import { type Component, createMemo, createResource } from "solid-js";
+import { type Component, createEffect, createMemo, createSignal } from "solid-js";
 import { formatFileSize } from "@shared/file-size";
 import { PaletteSheet } from "@/components/palette-sheet";
 import { dateTimeFormat } from "@/lib/date-format";
-import { css } from "@/styled-system/css";
 
 export interface VersionHistoryProps {
   /** The file whose kept versions are listed. */
@@ -27,20 +25,35 @@ interface VersionRow {
  * The versions a document had before its file was written over, newest first. Picking one puts its
  * text back into the editor; nothing on disk changes until the document is saved again.
  */
-const size = css({
-  flexShrink: 0,
-  fontVariantNumeric: "tabular-nums",
-  opacity: 0.6,
-});
-
 export const VersionHistory: Component<VersionHistoryProps> = (props) => {
   // Asked once, when the panel opens: what a save adds while it is open belongs to its next opening
-  const [versions] = createResource(
+  const [versions, setVersions] = createSignal<readonly HistoryEntry[]>([]);
+  const [loading, setLoading] = createSignal(true);
+  createEffect(
     () => props.path,
-    (path) => desktop.invoke("history:list", path),
+    (path) => {
+      let cancelled = false;
+      setLoading(true);
+      void desktop
+        .invoke("history:list", path)
+        .then(
+          (list) => {
+            if (!cancelled) setVersions(list);
+          },
+          () => {
+            if (!cancelled) setVersions([]);
+          },
+        )
+        .finally(() => {
+          if (!cancelled) setLoading(false);
+        });
+      return () => {
+        cancelled = true;
+      };
+    },
   );
   const rows = createMemo(() =>
-    (versions() ?? []).map((entry): VersionRow => ({
+    versions().map((entry): VersionRow => ({
       entry,
       time: dateTimeFormat().format(entry.savedAt),
     })),
@@ -66,7 +79,7 @@ export const VersionHistory: Component<VersionHistoryProps> = (props) => {
       placeholder={t().history.filterPlaceholder}
       rows={matching}
       // Nothing is listed before the host answers, so an empty list here really is no history
-      emptyMessage={versions.loading ? undefined : t().history.empty}
+      emptyMessage={loading() ? undefined : t().history.empty}
       // With no version to pick, there is nothing the hint could tell about picking one
       hint={rows().length === 0 ? undefined : t().history.restoreHint}
       onPick={restore}
@@ -74,8 +87,10 @@ export const VersionHistory: Component<VersionHistoryProps> = (props) => {
     >
       {(row) => (
         <>
-          <span class={truncateGrow}>{row.time}</span>
-          <span class={size}>{formatFileSize(row.entry.bytes, intlLocale(currentLocale()))}</span>
+          <span class="min-w-0 flex-1 truncate">{row.time}</span>
+          <span class="shrink-0 tabular-nums opacity-60">
+            {formatFileSize(row.entry.bytes, intlLocale(currentLocale()))}
+          </span>
         </>
       )}
     </PaletteSheet>
