@@ -22,17 +22,15 @@ permissions:
   pages: write
   id-token: write
 
+# A push and a release can both deploy; cancelling the earlier one marks its commit with a
+# failed check even though the deploy it replaced succeeded. Queue them instead.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
-  deploy:
-    # A push and a release can both deploy; cancelling the earlier one marks its commit with a
-    # failed check even though the deploy it replaced succeeded. Queue them instead.
-    concurrency:
-      group: pages
-      cancel-in-progress: false
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       # Full history so the latest v tag can be found; the working tree is main, which is what
       # /test/ is built from.
@@ -86,5 +84,12 @@ jobs:
         with:
           path: site
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - id: deployment
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
