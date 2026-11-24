@@ -157,11 +157,21 @@ function editorStyle(editorCss: string): string {
  */
 function themeRules(css: string, dark: boolean): string {
   if (css === "") return "";
-  return css.replace(
-    /@media\s*\(\s*prefers-color-scheme:\s*(dark|light)\s*\)/gi,
-    (_query, scheme: string) =>
-      (scheme.toLowerCase() === "dark") === dark ? "@media all" : "@media not all",
-  );
+  return css.replace(/@media([^{]+)/gi, (full, query: string) => {
+    if (!/prefers-color-scheme/i.test(query)) return full;
+    if (/^\s*\(\s*prefers-color-scheme:\s*(dark|light)\s*\)\s*$/i.test(query)) {
+      const scheme = /:\s*(dark|light)/i.exec(query)?.[1]?.toLowerCase();
+      return scheme === (dark ? "dark" : "light") ? "@media all" : "@media not all";
+    }
+    const rewritten = query.replace(
+      /\(\s*prefers-color-scheme:\s*(dark|light)\s*\)/gi,
+      (_part, scheme: string) =>
+        (scheme.toLowerCase() === "dark") === dark
+          ? "(min-width: 0px)"
+          : "(min-width: 1px) and (max-width: 0px)",
+    );
+    return `@media${rewritten}`;
+  });
 }
 
 /** The whole stylesheet of an exported document, as the text of a `<style>` element. */

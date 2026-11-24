@@ -112,7 +112,7 @@ function themeMetadata(name: string): ThemeMetadata {
  */
 export function readColorScheme(css: string): ColorScheme[] {
   const source = css.replace(/\/\*[\s\S]*?\*\//g, "");
-  for (const [, body = ""] of source.matchAll(/:root[^{}]*\{([^{}]*)\}/g)) {
+  for (const [, body = ""] of source.matchAll(/(?:^|[\s,}])(?::root|html)[^{}]*\{([^{}]*)\}/gi)) {
     const declared = /(?:^|[^-a-z])color-scheme\s*:\s*([^;]+)/i.exec(body)?.[1];
     if (declared === undefined) continue;
     const schemes = declared
@@ -210,9 +210,51 @@ export function themeCss(id: string): string {
   return cssFor(id) ?? cssFor(DEFAULT_THEME) ?? "";
 }
 
+function hasBalancedCss(css: string): boolean {
+  let depth = 0;
+  let quote: '"' | "'" | undefined;
+  let inComment = false;
+  for (let i = 0; i < css.length; i++) {
+    const ch = css[i];
+    const next = css[i + 1];
+    if (inComment) {
+      if (ch === "*" && next === "/") {
+        inComment = false;
+        i++;
+      }
+      continue;
+    }
+    if (quote !== undefined) {
+      if (ch === "\\") {
+        i++;
+        continue;
+      }
+      if (ch === quote) quote = undefined;
+      continue;
+    }
+    if (ch === "/" && next === "*") {
+      inComment = true;
+      i++;
+      continue;
+    }
+    if (ch === '"' || ch === "'") {
+      quote = ch;
+      continue;
+    }
+    if (ch === "{") depth++;
+    else if (ch === "}") {
+      depth--;
+      if (depth < 0) return false;
+    }
+  }
+  return !inComment && quote === undefined && depth === 0;
+}
+
 /** Puts a theme's stylesheet in the document. */
 export function applyThemeCss(css: string): void {
-  themeStyleElement().textContent = `@layer document-theme {\n${css}\n}`;
+  const safeCss = hasBalancedCss(css) ? css : (cssFor(DEFAULT_THEME) ?? "");
+  if (safeCss !== css) console.warn("Ignored malformed theme CSS and fell back to default theme");
+  themeStyleElement().textContent = `@layer document-theme {\n${safeCss}\n}`;
 }
 
 /**
