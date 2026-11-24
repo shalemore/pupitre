@@ -24,6 +24,7 @@ import {
   writeSettingsValues,
   type StoredSettingsMeta,
 } from "./plugin-files";
+import { publishPlugins } from "./registry";
 import { deleteValue, getValue, setValue } from "./storage";
 
 /** The permission each method needs; a method not named here cannot be called. */
@@ -138,11 +139,13 @@ async function execute(
       if (Object.keys(readSettingsValues(folder)).length === 0 && meta.defaults !== undefined) {
         writeSettingsValues(folder, meta.defaults);
       }
+      publishPlugins();
       return undefined;
     }
     case "host.commands": {
       const { commands } = z.object({ commands: z.array(pluginCommandSchema) }).parse(params);
       writeCommands(folder, commands);
+      publishPlugins();
       return undefined;
     }
     case "settings.get":

@@ -62,7 +62,7 @@ export function pluginStyles(): readonly PluginStyle[] {
   return styles;
 }
 
-function publish(): void {
+export function publishPlugins(): void {
   broadcast("plugins:changed", listPlugins());
 }
 
@@ -91,7 +91,7 @@ export async function installPlugin(window: BrowserWindow): Promise<PluginInfo |
   const [source] = filePaths;
   if (canceled || source === undefined) return null;
   const plugin = installCopy(source, pluginsFolder());
-  publish();
+  publishPlugins();
   return plugin;
 }
 
@@ -102,7 +102,7 @@ export function setPluginEnabled(id: string, enabled: boolean): void {
   writeState(folder, { ...state, enabled, version: manifest.version });
   if (enabled) void startPlugin(id, manifest);
   else stopPlugin(id);
-  publish();
+  publishPlugins();
 }
 
 /** Keeps only what the manifest asks for; a plugin missing a grant stops running. */
@@ -117,7 +117,7 @@ export function grantPluginPermissions(id: string, permissions: readonly Permiss
     granted,
   });
   if (!complete) stopPlugin(id);
-  publish();
+  publishPlugins();
 }
 
 /** The folder goes to the system trash, so a plugin removed by mistake can be put back. */
@@ -125,7 +125,7 @@ export async function uninstallPlugin(id: string): Promise<void> {
   pluginIdSchema.parse(id);
   stopPlugin(id);
   await shell.trashItem(join(pluginsFolder(), id));
-  publish();
+  publishPlugins();
 }
 
 export function revealPlugin(id: string): void {
@@ -157,5 +157,5 @@ export function updatePluginSettings(id: string, values: Readonly<Record<string,
   writeSettingsValues(folder, copy);
   // The plugin page listens through the preload bridge; the values are already its own
   pluginWindow(id)?.webContents.send("plugin:settings", copy);
-  publish();
+  publishPlugins();
 }
