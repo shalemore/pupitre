@@ -1,4 +1,4 @@
-import { readFileSync, statSync } from "node:fs";
+import { readFileSync, realpathSync, statSync } from "node:fs";
 import { extname, resolve } from "node:path";
 import { isInside } from "./is-inside";
 
@@ -23,20 +23,25 @@ const ASSET_TYPES: Readonly<Record<string, string>> = {
 
 /** Every `url()` of a stylesheet, with the quote it used; the value never contains a quote. */
 export const ASSET_URL = /url\(\s*(['"]?)([^'")]+)\1\s*\)/g;
+const COMMENT_OR_ASSET_URL = /\/\*[\s\S]*?\*\/|url\(\s*(['"]?)([^'")]+)\1\s*\)/g;
 
-/** Replaces relative `url()`s with data URLs, so the stylesheet travels without its folder. */
+/** Replaces relative `url()`s outside comments with data URLs, so the stylesheet travels without its folder. */
 export function inlineAssets(css: string, dir: string): string {
   const cache = new Map<string, string | undefined>();
-  return css.replace(ASSET_URL, (match, _quote: string, value: string) => {
-    const url = value.trim();
-    if (!isRelativeAsset(url)) return match;
-    let data = cache.get(url);
-    if (data === undefined && !cache.has(url)) {
-      data = readAsset(dir, url);
-      cache.set(url, data);
-    }
-    return data === undefined ? match : `url("${data}")`;
-  });
+  return css.replace(
+    COMMENT_OR_ASSET_URL,
+    (match, _quote: string | undefined, value: string | undefined) => {
+      if (value === undefined) return match;
+      const url = value.trim();
+      if (!isRelativeAsset(url)) return match;
+      let data = cache.get(url);
+      if (data === undefined && !cache.has(url)) {
+        data = readAsset(dir, url);
+        cache.set(url, data);
+      }
+      return data === undefined ? match : `url("${data}")`;
+    },
+  );
 }
 
 /** Whether a `url()` points at a file beside the stylesheet rather than at a scheme. */
@@ -54,11 +59,14 @@ function readAsset(dir: string, url: string): string | undefined {
   const asset = resolve(dir, path);
   if (!isInside(dir, asset)) return undefined;
   try {
-    const stat = statSync(asset);
+    const realDir = realpathSync(dir);
+    const realAsset = realpathSync(asset);
+    if (!isInside(realDir, realAsset)) return undefined;
+    const stat = statSync(realAsset);
     if (!stat.isFile() || stat.size > MAX_ASSET_BYTES) return undefined;
-    const type = ASSET_TYPES[extname(asset).toLowerCase()];
+    const type = ASSET_TYPES[extname(realAsset).toLowerCase()];
     if (type === undefined) return undefined;
-    return `data:${type};base64,${readFileSync(asset, "base64")}`;
+    return `data:${type};base64,${readFileSync(realAsset, "base64")}`;
   } catch {
     return undefined;
   }
