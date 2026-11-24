@@ -1,4 +1,4 @@
-import type { SurfaceReadyMessage, SurfaceTheme } from "@pupitre/plugin-sdk";
+import type { SurfaceKind, SurfaceReadyMessage, SurfaceTheme } from "@pupitre/plugin-sdk";
 import { toHex } from "@pupitre/utils";
 import { motionEnabled } from "./motion";
 import { readToken, type TokenName } from "./tokens";
@@ -38,5 +38,14 @@ export function isSurfaceReady(value: unknown): value is SurfaceReadyMessage {
   if (typeof value !== "object" || value === null) return false;
   if (!("channel" in value) || value.channel !== "pupitre:surface") return false;
   if (!("type" in value) || value.type !== "ready") return false;
+  return "kind" in value && (value.kind === "background" || value.kind === "pointer");
+}
+
+export function isSurfaceError(
+  value: unknown,
+): value is { channel: "pupitre:surface"; type: "error"; kind: SurfaceKind } {
+  if (typeof value !== "object" || value === null) return false;
+  if (!("channel" in value) || value.channel !== "pupitre:surface") return false;
+  if (!("type" in value) || value.type !== "error") return false;
   return "kind" in value && (value.kind === "background" || value.kind === "pointer");
 }

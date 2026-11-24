@@ -1,7 +1,7 @@
 import type { PluginInfo } from "@pupitre/desktop-api";
 import type { Permission, PointerKind, PointerSample, SurfaceKind } from "@pupitre/plugin-sdk";
 import { createEffect, createSignal, onSettled, Show, type Component } from "solid-js";
-import { isSurfaceReady, surfaceTheme } from "@/lib/plugin-surface";
+import { isSurfaceError, isSurfaceReady, surfaceTheme } from "@/lib/plugin-surface";
 import { plugins } from "@/lib/plugins";
 import { settings } from "@/lib/settings";
 
@@ -17,6 +17,7 @@ function surfaceUrl(plugin: PluginInfo, kind: SurfaceKind): string {
 const SurfaceHost: Component<{ plugin: PluginInfo; kind: SurfaceKind }> = (props) => {
   let frame: HTMLIFrameElement | undefined;
   const [ready, setReady] = createSignal(false);
+  const [failed, setFailed] = createSignal(false);
 
   const post = (message: Record<string, unknown>) => {
     frame?.contentWindow?.postMessage(
@@ -56,8 +57,12 @@ const SurfaceHost: Component<{ plugin: PluginInfo; kind: SurfaceKind }> = (props
     };
 
     const onMessage = (event: MessageEvent) => {
-      if (event.source !== frame?.contentWindow || !isSurfaceReady(event.data)) return;
-      if (event.data.kind !== props.kind) return;
+      if (event.source !== frame?.contentWindow) return;
+      if (isSurfaceError(event.data) && event.data.kind === props.kind) {
+        setFailed(true);
+        return;
+      }
+      if (!isSurfaceReady(event.data) || event.data.kind !== props.kind) return;
       setReady(true);
       sendTheme();
     };
@@ -95,22 +100,24 @@ const SurfaceHost: Component<{ plugin: PluginInfo; kind: SurfaceKind }> = (props
   });
 
   return (
-    <iframe
-      ref={(element) => (frame = element)}
-      src={surfaceUrl(props.plugin, props.kind)}
-      title=""
-      sandbox="allow-scripts"
-      referrerpolicy="no-referrer"
-      aria-hidden="true"
-      tabindex={-1}
-      // Behind the text: the editor area isolates its children, so a negative layer paints over the
-      // card but under everything the editor draws
-      class={
-        props.kind === "background"
-          ? "pointer-events-none absolute inset-0 -z-1 size-full border-none"
-          : "pointer-events-none fixed inset-0 z-50 size-full border-none"
-      }
-    />
+    <Show when={!failed()}>
+      <iframe
+        ref={(element) => (frame = element)}
+        src={surfaceUrl(props.plugin, props.kind)}
+        title=""
+        sandbox="allow-scripts"
+        referrerpolicy="no-referrer"
+        aria-hidden="true"
+        tabindex={-1}
+        // Behind the text: the editor area isolates its children, so a negative layer paints over the
+        // card but under everything the editor draws
+        class={
+          props.kind === "background"
+            ? "pointer-events-none absolute inset-0 -z-1 size-full border-none"
+            : "pointer-events-none fixed inset-0 z-50 size-full border-none"
+        }
+      />
+    </Show>
   );
 };
 
