@@ -8,7 +8,6 @@ import {
 import { desktop } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
 import { headingKey, type OutlineHeading } from "@pupitre/markdown";
-import { ImagePreview } from "@pupitre/plugin-source-mode";
 import { messageOf } from "@pupitre/utils";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { cva } from "class-variance-authority";
@@ -26,6 +25,7 @@ import { isInsideFolder } from "@shared/paths";
 import { PopupLayer } from "@/components/popup-layer";
 import { TitleBar } from "@/components/title-bar";
 import { FindBar } from "@/features/editor/find-bar";
+import { ImagePreview } from "@/features/editor/image-preview";
 import type { MarkdownEditorHandle } from "@/features/editor/markdown-editor";
 import type { MatchStats, SearchOptions } from "@/features/editor/search";
 import { FolderTree } from "@/features/sidebar/folder-tree";

@@ -1,12 +1,12 @@
 import { LanguageDescription, syntaxTree } from "@codemirror/language";
 import { type EditorView, WidgetType } from "@codemirror/view";
-import { desktop } from "@pupitre/desktop-api/client";
 import { t } from "@pupitre/i18n/solid";
 import { codeLanguages, fencedText } from "@pupitre/markdown";
 import { IconButton } from "@pupitre/ui";
 import { debounce } from "@pupitre/utils";
 import { Check, Copy } from "lucide-solid";
 import { createMemo, createSignal, For, onCleanup, Show, type Component } from "solid-js";
+import { sourceModeHost } from "#host";
 import { mountWidget, unmountWidget } from "#mount-widget";
 
 const COPIED_MS = 1500;
@@ -156,10 +156,12 @@ const CodeCorner: Component<{
         onMouseDown={(event) => event.preventDefault()}
         onClick={() => {
           const code = readBlockCode(props.view, props.container);
-          void desktop.invoke("clipboard:write-text", code).then(() => {
-            setCopied(true);
-            resetCopied();
-          });
+          void sourceModeHost()
+            .copyText(code)
+            .then(() => {
+              setCopied(true);
+              resetCopied();
+            });
         }}
       >
         <Show when={copied()} fallback={<Copy />}>

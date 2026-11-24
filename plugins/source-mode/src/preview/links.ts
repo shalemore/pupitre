@@ -3,7 +3,6 @@ import type { EditorState } from "@codemirror/state";
 import type { EditorView } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
 import { DOCUMENT_EXTENSIONS } from "@pupitre/desktop-api";
-import { desktop } from "@pupitre/desktop-api/client";
 import {
   autolinkDestination,
   collectHeadings,
@@ -12,6 +11,7 @@ import {
   referenceTarget,
 } from "@pupitre/markdown";
 import { pathFromFileUrl } from "@pupitre/utils";
+import { sourceModeHost } from "#host";
 import { scrollToDocument } from "#scroll";
 
 /**
@@ -73,6 +73,6 @@ export function followLink(view: EditorView, href: string): boolean {
   const base = view.state.facet(documentBaseUrl);
   if (!base || !DOCUMENT_LINK.test(href)) return false;
   const path = pathFromFileUrl(new URL(href, base));
-  void desktop.invoke("app:dispatch", { id: "file.open-path", path });
+  sourceModeHost().openFile(path);
   return true;
 }

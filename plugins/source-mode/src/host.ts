@@ -12,6 +12,8 @@ interface Timing {
  */
 export interface SourceModeHost {
   openImageMenu(view: EditorView, event: MouseEvent, knownImage?: DocumentImage): boolean;
+  openFile(path: string): void;
+  copyText(text: string): Promise<void>;
   motionEnabled(): boolean;
   scrollTiming(): Timing;
 }
