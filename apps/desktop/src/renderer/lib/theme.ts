@@ -225,11 +225,20 @@ export function activeThemeCss(): string {
   return element instanceof HTMLStyleElement ? (element.textContent ?? "") : "";
 }
 
+function safeHex(value: string, fallback: string): string {
+  if (value === "") return fallback;
+  try {
+    return toHex(value);
+  } catch {
+    return fallback;
+  }
+}
+
 /** The active theme's canvas and secondary text colors, for the window background and caption buttons. */
 export function readWindowColors(): { background: string; symbol: string } {
   const style = getComputedStyle(document.documentElement);
   return {
-    background: toHex(readToken(style, "ui-surface-1")),
-    symbol: toHex(readToken(style, "ui-text-secondary")),
+    background: safeHex(readToken(style, "ui-surface-1"), "#ffffff"),
+    symbol: safeHex(readToken(style, "ui-text-secondary"), "#000000"),
   };
 }

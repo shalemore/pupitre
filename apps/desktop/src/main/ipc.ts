@@ -413,8 +413,8 @@ export function registerIpcHandlers(): void {
   handle("themes:list", () => getImportedThemes());
   handle("themes:reveal", (_event, source) => void revealThemeFolder(source));
   handle("workspace:set", (_event, root) => {
-    setWorkspace(root);
     setProjectThemeRoot(root);
+    setWorkspace(root);
   });
   handle("workspace:get", () => getWorkspaceState());
   handle("workspace:use", (_event, active) => useWorkspace(active));
