@@ -5,18 +5,21 @@ import { pluginIdSchema, type Permission, type PluginManifest } from "@pupitre/p
 import { app, dialog, shell, type BrowserWindow } from "electron";
 import log from "electron-log/main";
 import { broadcast } from "../broadcast";
+import { getWorkspaceState } from "../settings/settings-store";
 import { pluginWindow, startPlugin, stopPlugin, stopPluginAndWait } from "./host";
 import { pluginsFolder } from "./paths";
 import {
   installCopy,
   MANIFEST_FILE,
   readCommands,
+  readEffectiveSettingsValues,
   readPlugin,
   readSettingsMeta,
   readState,
   satisfiesPupitreEngine,
   writeSettingsValues,
   writeState,
+  writeWorkspaceSettingsValues,
 } from "./plugin-files";
 import { readPluginStyle } from "./styles";
 
@@ -46,9 +49,24 @@ function installedPlugins(): InstalledPlugin[] {
   return plugins.toSorted((a, b) => a.info.id.localeCompare(b.info.id));
 }
 
+export function activePluginWorkspaceRoot(): string | undefined {
+  const ws = getWorkspaceState();
+  return ws.active && ws.root !== null ? ws.root : undefined;
+}
+
 /** The plugins installed under the user's data folder, sorted by id. */
 export function listPlugins(): readonly PluginInfo[] {
-  return installedPlugins().map((plugin) => plugin.info);
+  const workspaceRoot = activePluginWorkspaceRoot();
+  return installedPlugins().map(({ folder, info }) => {
+    if (info.settings === undefined || workspaceRoot === undefined) return info;
+    return {
+      ...info,
+      settings: {
+        ...info.settings,
+        values: readEffectiveSettingsValues(folder, info.id, workspaceRoot),
+      },
+    };
+  });
 }
 
 /** The stylesheets of the running plugins that were granted `ui:styles`. */
@@ -255,8 +273,23 @@ export function updatePluginSettings(id: string, values: Readonly<Record<string,
     throw new Error("The plugin settings are too large");
   }
   const copy: Record<string, unknown> = { ...values };
-  writeSettingsValues(folder, copy);
+  const workspaceRoot = activePluginWorkspaceRoot();
+  if (workspaceRoot !== undefined) writeWorkspaceSettingsValues(workspaceRoot, id, copy);
+  else writeSettingsValues(folder, copy);
+  const effective = readEffectiveSettingsValues(folder, id, workspaceRoot);
   // The plugin page listens through the preload bridge; the values are already its own
-  pluginWindow(id)?.webContents.send("plugin:settings", copy);
+  pluginWindow(id)?.webContents.send("plugin:settings", effective);
+  publishPlugins();
+}
+
+export function syncWorkspacePluginSettings(): void {
+  const workspaceRoot = activePluginWorkspaceRoot();
+  for (const { folder, info } of installedPlugins()) {
+    if (!info.enabled || info.settings === undefined) continue;
+    pluginWindow(info.id)?.webContents.send(
+      "plugin:settings",
+      readEffectiveSettingsValues(folder, info.id, workspaceRoot),
+    );
+  }
   publishPlugins();
 }

@@ -1,6 +1,6 @@
 import type { PluginInfo } from "@pupitre/desktop-api";
 import type { Permission, PointerKind, PointerSample, SurfaceKind } from "@pupitre/plugin-sdk";
-import { createEffect, createSignal, onSettled, Show, type Component } from "solid-js";
+import { createEffect, createSignal, For, onSettled, Show, type Component } from "solid-js";
 import { isSurfaceError, isSurfaceReady, surfaceTheme } from "@/lib/plugin-surface";
 import { plugins } from "@/lib/plugins";
 import { settings } from "@/lib/settings";
@@ -126,10 +126,10 @@ const SURFACE_PERMISSION: Readonly<Record<SurfaceKind, Permission>> = {
   pointer: "ui:pointer",
 };
 
-/** The first running plugin granted its layer, either behind the document or over the window. */
-function surfacePlugin(kind: SurfaceKind): PluginInfo | undefined {
-  if (!settings().pluginEffects) return undefined;
-  return plugins().find(
+/** Running plugins granted a surface layer, in alphabetical order so multiple layers stack predictably. */
+function surfacePlugins(kind: SurfaceKind): PluginInfo[] {
+  if (!settings().pluginEffects) return [];
+  return plugins().filter(
     (plugin) =>
       plugin.enabled &&
       plugin.granted.includes(SURFACE_PERMISSION[kind]) &&
@@ -137,20 +137,20 @@ function surfacePlugin(kind: SurfaceKind): PluginInfo | undefined {
   );
 }
 
-/** A canvas page behind the document, from the first running plugin that offers one. */
+/** Canvas pages behind the document, stacked in plugin order. */
 export const PluginBackground: Component = () => (
-  <Show when={surfacePlugin("background")}>
-    {(plugin) => <SurfaceHost plugin={plugin()} kind="background" />}
-  </Show>
+  <For each={surfacePlugins("background")}>
+    {(plugin) => <SurfaceHost plugin={plugin} kind="background" />}
+  </For>
 );
 
 export const PluginPointer: Component = () => (
-  <Show when={surfacePlugin("pointer")}>
-    {(plugin) => <SurfaceHost plugin={plugin()} kind="pointer" />}
-  </Show>
+  <For each={surfacePlugins("pointer")}>
+    {(plugin) => <SurfaceHost plugin={plugin} kind="pointer" />}
+  </For>
 );
 
 /** Whether a background canvas is taking the document's place behind the text. */
 export function hasBackgroundPlugin(): boolean {
-  return surfacePlugin("background") !== undefined;
+  return surfacePlugins("background").length > 0;
 }

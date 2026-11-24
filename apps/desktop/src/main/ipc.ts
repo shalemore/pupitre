@@ -86,6 +86,7 @@ import {
   revealPlugin,
   runPluginCommand,
   setPluginEnabled,
+  syncWorkspacePluginSettings,
   uninstallPlugin,
   updatePluginSettings,
 } from "./plugins/registry";
@@ -416,9 +417,13 @@ export function registerIpcHandlers(): void {
   handle("workspace:set", (_event, root) => {
     setProjectThemeRoot(root);
     setWorkspace(root);
+    syncWorkspacePluginSettings();
   });
   handle("workspace:get", () => getWorkspaceState());
-  handle("workspace:use", (_event, active) => useWorkspace(active));
+  handle("workspace:use", (_event, active) => {
+    useWorkspace(active);
+    syncWorkspacePluginSettings();
+  });
   handle("workspace:reveal", () => revealWorkspaceFile());
 
   handle("document:open", async (event) => {

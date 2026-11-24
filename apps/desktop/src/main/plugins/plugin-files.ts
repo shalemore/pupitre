@@ -96,6 +96,32 @@ export function writeSettingsValues(folder: string, values: Record<string, unkno
   writeJsonFile(join(folder, SETTINGS_FILE), values);
 }
 
+export function readWorkspaceSettingsValues(
+  workspaceRoot: string,
+  id: string,
+): Record<string, unknown> {
+  const value = readJsonFile(join(workspaceRoot, ".pupitre", "plugins", `${id}.json`));
+  return isRecord(value) ? value : {};
+}
+
+export function writeWorkspaceSettingsValues(
+  workspaceRoot: string,
+  id: string,
+  values: Record<string, unknown>,
+): void {
+  writeJsonFile(join(workspaceRoot, ".pupitre", "plugins", `${id}.json`), values);
+}
+
+export function readEffectiveSettingsValues(
+  folder: string,
+  id: string,
+  workspaceRoot: string | undefined,
+): Record<string, unknown> {
+  const base = readSettingsValues(folder);
+  if (workspaceRoot === undefined) return base;
+  return { ...base, ...readWorkspaceSettingsValues(workspaceRoot, id) };
+}
+
 export function readCommands(folder: string): PluginCommandInfo[] | undefined {
   const parsed = commandsSchema.safeParse(readJsonFile(join(folder, COMMANDS_FILE)));
   return parsed.success ? parsed.data : undefined;

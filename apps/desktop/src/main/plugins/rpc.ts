@@ -17,6 +17,7 @@ import { pluginIdForSender } from "./host";
 import { pluginsFolder } from "./paths";
 import {
   pluginCommandSchema,
+  readEffectiveSettingsValues,
   readPlugin,
   readSettingsValues,
   settingsMetaSchema,
@@ -25,7 +26,7 @@ import {
   writeSettingsValues,
   type StoredSettingsMeta,
 } from "./plugin-files";
-import { disableFailedPlugin, publishPlugins } from "./registry";
+import { activePluginWorkspaceRoot, disableFailedPlugin, publishPlugins } from "./registry";
 import { deleteValue, getValue, setValue } from "./storage";
 
 /** The permission each method needs; a method not named here cannot be called. */
@@ -159,7 +160,11 @@ async function execute(
       return undefined;
     }
     case "settings.get":
-      return readSettingsValues(join(pluginsFolder(), id));
+      return readEffectiveSettingsValues(
+        join(pluginsFolder(), id),
+        id,
+        activePluginWorkspaceRoot(),
+      );
   }
 }
 
