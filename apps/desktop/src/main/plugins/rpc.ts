@@ -160,26 +160,30 @@ async function execute(
   }
 }
 
+async function readChunks(
+  reader: ReadableStreamDefaultReader<Uint8Array>,
+  chunks: Uint8Array[],
+  totalBytes: number,
+): Promise<string> {
+  const { done, value } = await reader.read();
+  if (done) return Buffer.concat(chunks, totalBytes).toString("utf8");
+  const nextBytes = totalBytes + value.byteLength;
+  if (nextBytes > MAX_RESPONSE_BYTES) {
+    await reader.cancel();
+    throw new Error("The response is too large");
+  }
+  chunks.push(value);
+  return readChunks(reader, chunks, nextBytes);
+}
+
 async function readBoundedBody(response: Response): Promise<string> {
   if (response.body === null) return "";
   const reader = response.body.getReader();
-  const chunks: Uint8Array[] = [];
-  let totalBytes = 0;
   try {
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      totalBytes += value.byteLength;
-      if (totalBytes > MAX_RESPONSE_BYTES) {
-        await reader.cancel();
-        throw new Error("The response is too large");
-      }
-      chunks.push(value);
-    }
+    return await readChunks(reader, [], 0);
   } finally {
     reader.releaseLock();
   }
-  return Buffer.concat(chunks, totalBytes).toString("utf8");
 }
 
 async function fetchUrl(params: z.infer<typeof networkParams>): Promise<unknown> {
