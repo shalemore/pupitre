@@ -7,7 +7,14 @@ import { For, Show, type Component } from "solid-js";
 import { formatPercent } from "@/lib/number-format";
 import { isImmersive, settings, updateSetting, updateSettings } from "@/lib/settings";
 import { sidebarState, type SidebarSide } from "@/lib/sidebar";
-import { DEFAULT_THEME, type ThemeInfo, themeDisplayName, themes } from "@/lib/theme";
+import {
+  DEFAULT_THEME,
+  themeDescription,
+  themeDisplayName,
+  themes,
+  type ThemeInfo,
+} from "@/lib/theme";
+import { workspace } from "@/lib/workspace";
 import { FontSelect, themeFontLabel } from "./font-select";
 import { SettingField, SettingGroup, SettingsSection } from "./settings-section";
 
@@ -46,10 +53,9 @@ function currentThemeId(): string {
   return themes().some((theme) => theme.id === id) ? id : DEFAULT_THEME;
 }
 
-/** The folder the current theme lives in; a built-in theme opens the folder imported ones go in. */
-function themeFolder(): "global" | "project" {
+function activeThemeDescription(): string | undefined {
   const theme = themes().find((candidate) => candidate.id === currentThemeId());
-  return theme?.source === "project" ? "project" : "global";
+  return theme === undefined ? undefined : themeDescription(theme, currentLocale());
 }
 
 function currentDarkThemeId(): string {
@@ -133,25 +139,38 @@ export const AppearanceSection: Component = () => (
           <>
             {t().settings.theme}
             <IconButton
-              label={`${t().settings.theme} · ${
-                themeFolder() === "project" ? t().settings.scopeFolder : t().settings.scopeGlobal
-              }`}
+              label={`${t().settings.theme} · ${t().settings.scopeGlobal}`}
               size="icon-2xs"
-              onClick={() => void desktop.invoke("themes:reveal", themeFolder())}
+              onClick={() => void desktop.invoke("themes:reveal", "global")}
             >
-              <Show when={themeFolder() === "project"} fallback={<Globe />}>
-                <FolderOpen />
-              </Show>
+              <Globe />
             </IconButton>
+            <Show when={workspace().root !== null}>
+              <IconButton
+                label={`${t().settings.theme} · ${t().settings.scopeFolder}`}
+                size="icon-2xs"
+                onClick={() => void desktop.invoke("themes:reveal", "project")}
+              >
+                <FolderOpen />
+              </IconButton>
+            </Show>
           </>
         }
+        description={activeThemeDescription()}
       >
-        <Select
-          value={currentThemeId()}
-          onChange={(theme) => void updateSettings({ theme })}
-          options={themeOptions()}
-          aria-label={t().settings.theme}
-        />
+        <div class="flex items-center gap-2">
+          <div class="flex items-center -space-x-1" aria-hidden="true">
+            <span class="size-3 rounded-full border-hairline border-border bg-surface-1" />
+            <span class="size-3 rounded-full border-hairline border-border bg-foreground" />
+            <span class="size-3 rounded-full border-hairline border-border bg-brand" />
+          </div>
+          <Select
+            value={currentThemeId()}
+            onChange={(theme) => void updateSettings({ theme })}
+            options={themeOptions()}
+            aria-label={t().settings.theme}
+          />
+        </div>
       </SettingField>
 
       <SettingField

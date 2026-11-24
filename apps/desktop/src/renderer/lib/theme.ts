@@ -61,6 +61,11 @@ export function themeDisplayName(theme: ThemeInfo, locale: SupportedLocale): str
   return localizedText(theme.names, locale) ?? theme.name;
 }
 
+/** The theme's localized description, if its `theme.json` provides one. */
+export function themeDescription(theme: ThemeInfo, locale: SupportedLocale): string | undefined {
+  return theme.descriptions === undefined ? undefined : localizedText(theme.descriptions, locale);
+}
+
 /**
  * Every theme is src/renderer/themes/<name>/index.css. Vite inlines the processed CSS (relative
  * url()s to fonts or images next to the theme keep working), and the active one is injected into
