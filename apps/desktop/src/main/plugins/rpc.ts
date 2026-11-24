@@ -12,7 +12,7 @@ import { clipboard, ipcMain, net, Notification } from "electron";
 import log from "electron-log/main";
 import { z } from "zod";
 import { currentLocale } from "../i18n";
-import { requestDocument } from "./document-bridge";
+import { DocumentBridgeTimeoutError, requestDocument } from "./document-bridge";
 import { pluginIdForSender } from "./host";
 import { pluginsFolder } from "./paths";
 import {
@@ -215,6 +215,13 @@ async function run(id: string, method: Method, params: unknown): Promise<RpcResu
   try {
     return { ok: true, value: await execute(id, plugin.manifest, method, params) };
   } catch (error: unknown) {
+    if (error instanceof z.ZodError) return rpcFailure("invalid", messageOf(error));
+    if (
+      error instanceof DocumentBridgeTimeoutError ||
+      (error instanceof Error && (error.name === "TimeoutError" || error.name === "AbortError"))
+    ) {
+      return rpcFailure("timeout", messageOf(error));
+    }
     return rpcFailure("internal", messageOf(error));
   }
 }

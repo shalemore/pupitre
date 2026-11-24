@@ -2,10 +2,10 @@ import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import type { PluginInfo, PluginStyle } from "@pupitre/desktop-api";
 import { pluginIdSchema, type Permission, type PluginManifest } from "@pupitre/plugin-sdk";
-import { dialog, shell, type BrowserWindow } from "electron";
+import { app, dialog, shell, type BrowserWindow } from "electron";
 import log from "electron-log/main";
 import { broadcast } from "../broadcast";
-import { pluginWindow, startPlugin, stopPlugin } from "./host";
+import { pluginWindow, startPlugin, stopPlugin, stopPluginAndWait } from "./host";
 import { pluginsFolder } from "./paths";
 import {
   installCopy,
@@ -14,6 +14,7 @@ import {
   readPlugin,
   readSettingsMeta,
   readState,
+  satisfiesPupitreEngine,
   writeSettingsValues,
   writeState,
 } from "./plugin-files";
@@ -90,7 +91,7 @@ export async function installPlugin(window: BrowserWindow): Promise<PluginInfo |
   });
   const [source] = filePaths;
   if (canceled || source === undefined) return null;
-  const plugin = installCopy(source, pluginsFolder());
+  const plugin = installCopy(source, pluginsFolder(), app.getVersion());
   publishPlugins();
   return plugin;
 }
@@ -107,13 +108,33 @@ export function disableFailedPlugin(id: string): void {
 }
 
 export function startEnabledPlugin(id: string, manifest: PluginManifest): void {
+  if (
+    manifest.engines?.pupitre !== undefined &&
+    !satisfiesPupitreEngine(app.getVersion(), manifest.engines.pupitre)
+  ) {
+    log.warn(
+      `Skipped plugin ${id}: requires Pupitre ${manifest.engines.pupitre} (running ${app.getVersion()})`,
+    );
+    disableFailedPlugin(id);
+    return;
+  }
   void startPlugin(id, manifest, disableFailedPlugin);
 }
 
 export function setPluginEnabled(id: string, enabled: boolean): void {
   const { folder, manifest } = installed(id);
   const state = readState(folder, manifest);
-  if (enabled) requireGrants(manifest, state.granted);
+  if (enabled) {
+    requireGrants(manifest, state.granted);
+    if (
+      manifest.engines?.pupitre !== undefined &&
+      !satisfiesPupitreEngine(app.getVersion(), manifest.engines.pupitre)
+    ) {
+      throw new Error(
+        `The plugin requires Pupitre ${manifest.engines.pupitre} (running ${app.getVersion()})`,
+      );
+    }
+  }
   writeState(folder, { ...state, enabled, version: manifest.version });
   if (enabled) startEnabledPlugin(id, manifest);
   else stopPlugin(id);
@@ -138,7 +159,7 @@ export function grantPluginPermissions(id: string, permissions: readonly Permiss
 /** The folder goes to the system trash, so a plugin removed by mistake can be put back. */
 export async function uninstallPlugin(id: string): Promise<void> {
   pluginIdSchema.parse(id);
-  stopPlugin(id);
+  await stopPluginAndWait(id);
   await shell.trashItem(join(pluginsFolder(), id));
   publishPlugins();
 }

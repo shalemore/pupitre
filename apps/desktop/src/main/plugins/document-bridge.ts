@@ -12,6 +12,13 @@ export type DocumentRequestInput =
 
 const TIMEOUT_MS = 5000;
 
+export class DocumentBridgeTimeoutError extends Error {
+  constructor() {
+    super("The editor did not answer in time");
+    this.name = "DocumentBridgeTimeoutError";
+  }
+}
+
 let nextId = 1;
 const pending = new Map<
   number,
@@ -32,12 +39,14 @@ function withId(id: number, input: DocumentRequestInput): PluginDocumentRequest 
  */
 export function requestDocument(input: DocumentRequestInput): Promise<unknown> {
   const window = getMainWindow();
-  if (window === undefined) return Promise.reject(new Error("No document window is open"));
+  if (window === undefined || window.isDestroyed()) {
+    return Promise.reject(new Error("No document window is open"));
+  }
   const id = nextId++;
   return new Promise((resolve, reject) => {
     const timer = setTimeout(() => {
       pending.delete(id);
-      reject(new Error("The editor did not answer in time"));
+      reject(new DocumentBridgeTimeoutError());
     }, TIMEOUT_MS);
     pending.set(id, { resolve, reject, timer });
     sendTo(window.webContents, "plugin:document-request", withId(id, input));

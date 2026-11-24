@@ -100,6 +100,24 @@ export function stopPlugin(id: string): void {
   if (!window.isDestroyed()) window.destroy();
 }
 
+/** Stops the plugin window and waits for it to close before releasing its partition state. */
+export async function stopPluginAndWait(id: string): Promise<void> {
+  const partition = `plugin:${id}`;
+  const window = hosts.get(id);
+  if (window !== undefined) {
+    hosts.delete(id);
+    plugins.delete(window.webContents.id);
+    if (!window.isDestroyed()) {
+      await new Promise<void>((resolve) => {
+        window.once("closed", () => resolve());
+        window.destroy();
+      });
+    }
+  }
+  protocolSessions.delete(partition);
+  await session.fromPartition(partition).clearStorageData();
+}
+
 /** Closes every plugin page, so the app can quit without them holding the process open. */
 export function stopAllPlugins(): void {
   for (const id of hosts.keys()) stopPlugin(id);
