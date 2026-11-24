@@ -96,10 +96,7 @@ export function writeSettingsValues(folder: string, values: Record<string, unkno
   writeJsonFile(join(folder, SETTINGS_FILE), values);
 }
 
-export function readWorkspaceSettingsValues(
-  workspaceRoot: string,
-  id: string,
-): Record<string, unknown> {
+function readWorkspaceSettingsValues(workspaceRoot: string, id: string): Record<string, unknown> {
   const value = readJsonFile(join(workspaceRoot, ".pupitre", "plugins", `${id}.json`));
   return isRecord(value) ? value : {};
 }

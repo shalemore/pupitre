@@ -4,6 +4,12 @@ import { livePreview } from "./preview/live-preview";
 import { renderedBlocks } from "./preview/rendered-blocks";
 
 export { configureSourceModeHost, type SourceModeHost } from "./host";
+export {
+  registerBlockRenderer,
+  registerFenceRenderer,
+  type BlockRenderer,
+  type FenceRenderer,
+} from "./preview/block-registry";
 export { imageCaptionClick, imageInput } from "./images/image-widget";
 export { setPrinting } from "./preview/live-preview";
 export { scrollToDocument } from "./scroll";
