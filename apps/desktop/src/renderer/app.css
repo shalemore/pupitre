@@ -10,13 +10,14 @@
  *   document-theme   the active theme, injected at runtime (lib/theme.ts)
  *   plugin           a plugin's styles, scoped to the document (lib/plugin-styles.ts)
  *   preferences      user settings, applied by appearance.ts and styles/preferences.css
+ *   safeguards       core editing invariants that themes and plugins must never break
  *
  * A style rule must live in one of these layers: an unlayered rule outranks every layer and no
  * theme could ever override it. `scripts/check-css.ts` enforces that, and that every token a theme
  * reads is defined. @keyframes are the exception: they have no layers and a later definition wins,
  * so a theme replaces one by defining it again.
  */
-@layer ui-sdk, reset, base, editor, theme, components, utilities, document-theme, plugin, preferences;
+@layer ui-sdk, reset, base, editor, theme, components, utilities, document-theme, plugin, preferences, safeguards;
 
 @import "tailwindcss/theme" layer(theme);
 @import "tailwindcss/preflight" layer(reset);
@@ -27,6 +28,7 @@
 @import "./styles/chrome.css";
 @import "./features/editor/editor.css";
 @import "./styles/preferences.css";
+@import "./styles/safeguards.css";
 
 @source ".";
 @source "../../../../packages/ui/src";
