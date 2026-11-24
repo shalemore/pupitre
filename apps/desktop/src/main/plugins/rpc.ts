@@ -160,6 +160,28 @@ async function execute(
   }
 }
 
+async function readBoundedBody(response: Response): Promise<string> {
+  if (response.body === null) return "";
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let totalBytes = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      totalBytes += value.byteLength;
+      if (totalBytes > MAX_RESPONSE_BYTES) {
+        await reader.cancel();
+        throw new Error("The response is too large");
+      }
+      chunks.push(value);
+    }
+  } finally {
+    reader.releaseLock();
+  }
+  return Buffer.concat(chunks, totalBytes).toString("utf8");
+}
+
 async function fetchUrl(params: z.infer<typeof networkParams>): Promise<unknown> {
   const url = new URL(params.url);
   if (url.protocol !== "https:") throw new Error("Only https URLs can be fetched");
@@ -172,11 +194,11 @@ async function fetchUrl(params: z.infer<typeof networkParams>): Promise<unknown>
   if (init?.body !== undefined) request.body = init.body;
   const response = await net.fetch(url.href, request);
   const declared = Number(response.headers.get("content-length") ?? 0);
-  if (declared > MAX_RESPONSE_BYTES) throw new Error("The response is too large");
-  const body = await response.text();
-  if (Buffer.byteLength(body, "utf8") > MAX_RESPONSE_BYTES) {
+  if (declared > MAX_RESPONSE_BYTES) {
+    await response.body?.cancel();
     throw new Error("The response is too large");
   }
+  const body = await readBoundedBody(response);
   return { status: response.status, headers: Object.fromEntries(response.headers), body };
 }
 
